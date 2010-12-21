@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!--
-
-    Copyright (C) 2009 eXo Platform SAS.
-
-    This is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation; either version 2.1 of
-    the License, or (at your option) any later version.
-
-    This software is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this software; if not, write to the Free
-    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-    02110-1301 USA, or see the FSF site: http://www.fsf.org.
-
--->
+<!-- Copyright (C) 2009 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
+   License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
+   in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+   See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
+   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
@@ -51,18 +36,17 @@
             <property name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout" />
             <property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
 
-            <!-- property name="log4j.category.ext.BackupScheduler" value="DEBUG"/>
-            <property name="log4j.category.ext.BackupManagerImpl" value="DEBUG"/ -->
-            <property name="log4j.category.jcr.ext.RestRepositoryService" value="DEBUG"/>
-            
-            <property name="log4j.logger.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG"/>
-            <property name="log4j.logger.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG"/>
+            <!-- property name="log4j.category.ext.BackupScheduler" value="DEBUG"/> <property name="log4j.category.ext.BackupManagerImpl" value="DEBUG"/ -->
+            <property name="log4j.category.jcr.ext.RestRepositoryService" value="DEBUG" />
+
+            <property name="log4j.logger.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG" />
+            <property name="log4j.logger.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG" />
 
 
          </properties-param>
       </init-params>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.groovy.GroovyScriptService</type>
       <init-params>
@@ -83,30 +67,65 @@
          </object-param>
       </init-params>
    </component>
-   
+
    <component>
-   <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
-   <init-params>
-      <value-param>
-         <name>wsname</name>
-         <value>ws</value>
-      </value-param>
-       <value-param>
-         <name>pkgsDoc</name>
-         <value>java.math</value>
-      </value-param>
-       <value-param>
-         <name>pkgsInfo</name>
-         <value>java.math</value>
-      </value-param>
-   </init-params>
-</component>
-   
+      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+      <init-params>
+         <object-param>
+            <name>autocompletion.configuration</name>
+            <object type="org.exoplatform.ide.groovy.codeassistant.bean.GroovyAutocompletionConfig">
+               <field name="wsName">
+                  <string>ws</string>
+               </field>
+               <field name="runInThread">
+                  <boolean>false</boolean>
+               </field>
+               <field name="jarEntries">
+                  <collection type="java.util.ArrayList">
+                     <value>
+                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                           <field name="jarPath">
+                              <string>${java.src}</string>
+                           </field>
+                           <field name="includePkj">
+                              <collection type="java.util.ArrayList">
+                                 <value>
+                                    <string>java.math</string>
+                                 </value>
+                              </collection>
+                           </field>
+                        </object>
+                     </value>
+                  </collection>
+               </field>
+               <field name="jarDocs">
+                  <collection type="java.util.ArrayList">
+                     <value>
+                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                           <field name="jarPath">
+                              <string>${java.src}</string>
+                           </field>
+                           <field name="includePkj">
+                              <collection type="java.util.ArrayList">
+                                 <value>
+                                    <string>java.math</string>
+                                 </value>
+                              </collection>
+                           </field>
+                        </object>
+                     </value>
+                  </collection>
+               </field>
+            </object>
+         </object-param>
+      </init-params>
+   </component>
+
    <component>
       <key>org.exoplatform.services.jcr.RepositoryService</key>
       <type>org.exoplatform.services.jcr.impl.RepositoryServiceImpl</type>
       <component-plugins>
-      <component-plugin>
+         <component-plugin>
             <name>add.nodeType</name>
             <set-method>addPlugin</set-method>
             <type>org.exoplatform.services.jcr.impl.AddNodeTypePlugin</type>
@@ -119,18 +138,18 @@
                </values-param>
             </init-params>
          </component-plugin>
-         <component-plugin>                                                                                                                                                                                    
-            <name>add.namespaces</name>                                                                                                                                                                        
-            <set-method>addPlugin</set-method>                                                                                                                                                                 
-            <type>org.exoplatform.services.jcr.impl.AddNamespacesPlugin</type>                                                                                                                                 
-            <init-params>                                                                                                                                                                                      
-               <properties-param>                                                                                                                                                                              
-                  <name>namespaces</name>                                                                                                                                                                      
+         <component-plugin>
+            <name>add.namespaces</name>
+            <set-method>addPlugin</set-method>
+            <type>org.exoplatform.services.jcr.impl.AddNamespacesPlugin</type>
+            <init-params>
+               <properties-param>
+                  <name>namespaces</name>
                   <property name="dc" value="http://purl.org/dc/elements/1.1/" />
-                  <property name="exoide" value="http://exoplatform.org/ide/1.1.x/" />                                                                                                                              
-               </properties-param>                                                                                                                                                                             
-            </init-params>                                                                                                                                                                                     
-         </component-plugin> 
+                  <property name="exoide" value="http://exoplatform.org/ide/1.1.x/" />
+               </properties-param>
+            </init-params>
+         </component-plugin>
       </component-plugins>
    </component>
 
@@ -145,16 +164,16 @@
          </value-param>
       </init-params>
    </component>
-   
-   <component>
-    <type>org.exoplatform.services.jcr.ext.repository.RestRepositoryService</type>
-  </component>
-  
-  <component>
-  <type>org.exoplatform.services.rest.ext.groovy.GroovyJaxrsPublisher</type>
-  </component>
 
-  <component>
+   <component>
+      <type>org.exoplatform.services.jcr.ext.repository.RestRepositoryService</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.services.rest.ext.groovy.GroovyJaxrsPublisher</type>
+   </component>
+
+   <component>
       <type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
       <init-params>
          <properties-param>
@@ -168,7 +187,7 @@
       <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
    </component>
 
-  
+
 
    <component>
       <type>org.exoplatform.services.jcr.ext.resource.NodeRepresentationService</type>
@@ -194,7 +213,7 @@
    <component>
       <type>org.exoplatform.services.jcr.impl.ext.action.SessionActionCatalog</type>
    </component>
-   
+
 
    <component>
       <type>org.exoplatform.services.jcr.impl.ext.action.SessionActionCatalog</type>
@@ -269,8 +288,8 @@
          </component-plugin>
       </component-plugins>
    </component>
-   
-    
+
+
 
    <external-component-plugins>
       <target-component>org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader</target-component>
@@ -281,9 +300,9 @@
          <init-params>
             <properties-param>
                <name>repo1</name>
-               <property name="repository" value="db1"/>
-               <property name="workspace" value="ws"/>
-               <property name="path" value="/repo"/>
+               <property name="repository" value="db1" />
+               <property name="workspace" value="ws" />
+               <property name="path" value="/repo" />
             </properties-param>
          </init-params>
       </component-plugin>
@@ -319,20 +338,20 @@
          </init-params>
       </component-plugin>
    </external-component-plugins>
-   
-    <external-component-plugins>
+
+   <external-component-plugins>
       <target-component>org.exoplatform.services.rest.impl.RequestHandlerImpl</target-component>
-      <component-plugin>                                                                                                                                                                                       
-         <name>ws.rs.method.filter</name>                                                                                                                                                                      
-         <set-method>addPlugin</set-method>                                                                                                                                                                    
-         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>                                                                                                             
-         <init-params>                                                                                                                                                                                      
-            <value-param>                                                                                                                                                                                      
-               <name>method.access.filter</name>                                                                                                                                                               
-               <value>org.exoplatform.services.rest.ext.method.filter.MethodAccessFilter</value>                                                                                                               
-            </value-param>                                                                                                                                                                                     
-         </init-params>                                                                                                                                                                                      
-      </component-plugin>   
+      <component-plugin>
+         <name>ws.rs.method.filter</name>
+         <set-method>addPlugin</set-method>
+         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
+         <init-params>
+            <value-param>
+               <name>method.access.filter</name>
+               <value>org.exoplatform.services.rest.ext.method.filter.MethodAccessFilter</value>
+            </value-param>
+         </init-params>
+      </component-plugin>
       <component-plugin>
          <name>ws.rs.method.filter</name>
          <set-method>addPlugin</set-method>

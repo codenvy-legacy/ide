@@ -16,20 +16,6 @@
  */
 package org.exoplatform.ide.groovy.codeassistant;
 
-import org.codehaus.groovy.groovydoc.GroovyClassDoc;
-import org.codehaus.groovy.groovydoc.GroovyMethodDoc;
-import org.codehaus.groovy.groovydoc.GroovyParameter;
-import org.codehaus.groovy.groovydoc.GroovyRootDoc;
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.groovy.GroovyScriptService;
-import org.exoplatform.ide.groovy.codeassistant.extractors.DocExtractor;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
 import groovyjarjarantlr.RecognitionException;
 import groovyjarjarantlr.TokenStreamException;
 
@@ -37,6 +23,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,6 +39,21 @@ import javax.jcr.version.VersionException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+
+import org.codehaus.groovy.groovydoc.GroovyClassDoc;
+import org.codehaus.groovy.groovydoc.GroovyMethodDoc;
+import org.codehaus.groovy.groovydoc.GroovyParameter;
+import org.codehaus.groovy.groovydoc.GroovyRootDoc;
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.groovy.codeassistant.bean.JarEntry;
+import org.exoplatform.ide.groovy.codeassistant.extractors.DocExtractor;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
  *  Service provide save javadoc groovydoc in storage.
@@ -69,58 +71,89 @@ public class DocStorage
 
    private final String wsName;
 
-   private final static String[] defaultPkgs = {"java.lang", "java.util", "java.io", "java.math", "java.text"};
-
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(DocStorage.class);
 
-   public DocStorage(String wsName, RepositoryService repositoryService,
-      SessionProviderService sessionProviderService)
-   {
-      this(wsName, repositoryService, sessionProviderService, defaultPkgs);
-   }
-
-   public DocStorage(String wsName, RepositoryService repositoryService,
-      SessionProviderService sessionProviderService, String[] pkgs)
+   public DocStorage(String wsName, RepositoryService repositoryService, SessionProviderService sessionProviderService,
+      final List<JarEntry> jars, boolean runInThread)
    {
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;
       this.wsName = wsName;
-      try
+      Runnable run = new Runnable()
       {
-         addDocsFromJavaSrc(pkgs);
+
+         @Override
+         public void run()
+         {
+            try
+            {
+               addDocsFromJavaSrc(jars);
+            }
+            catch (Exception e)
+            {
+               e.printStackTrace();
+            }
+         }
+      };
+      runTask(run, runInThread);
+   }
+
+   private void runTask(Runnable run, boolean runInThread)
+   {
+      if (runInThread)
+      {
+         new Thread(run, "DocStorage").start();
       }
-      catch (Exception e)
+      else
       {
-         e.printStackTrace();
+         run.run();
       }
    }
 
-   private void addDocsFromJavaSrc(String[] pkgs) throws SaveDocException
+   private void addDocsFromJavaSrc(List<JarEntry> jars) throws SaveDocException
    {
       try
       {
-         String javaHome = System.getProperty("java.home");
-         String fileSeparator = System.getProperty("file.separator");
-         javaHome = javaHome.substring(0, javaHome.lastIndexOf(fileSeparator) + 1) + "src.zip";
          SessionProvider sp = sessionProviderService.getSystemSessionProvider(null);
-         Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
-         for (int i = 0; i < pkgs.length; i++)
+         Session session = sp.getSession(wsName, getRepository());
+         for (JarEntry entry : jars)
          {
-            LOG.info(">>>>>>>>>>>>>>>> Load JavaDoc from " + pkgs[i]);
-            Map<String, GroovyRootDoc> roots = DocExtractor.extract(javaHome, pkgs[i]);
-            Set<String> keys = roots.keySet();
-            for (String key : keys)
+            LOG.info(">>>>>>>>>>>>>>>> Load JavaDoc from jar - " + entry.getJarPath());
+            if (entry.getIncludePkgs() == null || entry.getIncludePkgs().isEmpty())
             {
-               GroovyClassDoc[] docs = roots.get(key).classes();
-               for (GroovyClassDoc doc : docs)
+               Map<String, GroovyRootDoc> roots = DocExtractor.extract(entry.getJarPath());
+               Set<String> keys = roots.keySet();
+               for (String key : keys)
                {
-                  putDoc(session, doc, key + "." + doc.name());
+                  GroovyClassDoc[] docs = roots.get(key).classes();
+                  for (GroovyClassDoc doc : docs)
+                  {
+                     putDoc(session, doc, key + "." + doc.name());
+                  }
+               }
+
+            }
+            else
+            {
+               for (String pkgs : entry.getIncludePkgs())
+               {
+                  LOG.info("<<<<<<<<<<<<<<< Load JavaDoc from - " + pkgs);
+                  Map<String, GroovyRootDoc> roots = DocExtractor.extract(entry.getJarPath(), pkgs);
+                  Set<String> keys = roots.keySet();
+                  for (String key : keys)
+                  {
+                     GroovyClassDoc[] docs = roots.get(key).classes();
+                     for (GroovyClassDoc doc : docs)
+                     {
+                        putDoc(session, doc, key + "." + doc.name());
+                     }
+                  }
                }
             }
          }
-
          session.save();
+         LOG.info("Load javadoc complete");
       }
       catch (RepositoryException e)
       {
@@ -171,7 +204,7 @@ public class DocStorage
       try
       {
          SessionProvider sp = sessionProviderService.getSessionProvider(null);
-         Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
+         Session session = sp.getSession(wsName, getRepository());
 
          Map<String, GroovyRootDoc> roots = DocExtractor.extract(jar, packageName);
          Set<String> keys = roots.keySet();
@@ -218,6 +251,18 @@ public class DocStorage
    }
 
    /**
+    * Get current repository
+    * @return current repository or default repository if current repository is null
+    * @throws RepositoryException
+    * @throws RepositoryConfigurationException
+    */
+   private ManageableRepository getRepository() throws RepositoryException, RepositoryConfigurationException
+   {
+      return repositoryService.getCurrentRepository() != null ? repositoryService.getCurrentRepository()
+         : repositoryService.getDefaultRepository();
+   }
+
+   /**
     * Adding to storage java doc by classes
     * 
     * @param session
@@ -226,7 +271,8 @@ public class DocStorage
     * @throws RepositoryException
     * @throws UnsupportedEncodingException 
     */
-   private void putDoc(Session session, GroovyClassDoc doc, String fqn) throws RepositoryException, UnsupportedEncodingException
+   private void putDoc(Session session, GroovyClassDoc doc, String fqn) throws RepositoryException,
+      UnsupportedEncodingException
 
    {
       Node base;
@@ -318,8 +364,8 @@ public class DocStorage
             // newInstance(Class, int)
             // newInstance(Class, int)
 
-            if (LOG.isDebugEnabled()) 
-             LOG.warn("Tryed ad name with same name and parametrs.");  
+            if (LOG.isDebugEnabled())
+               LOG.warn("Tryed ad name with same name and parameters.");
          }
 
       }

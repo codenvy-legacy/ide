@@ -16,24 +16,11 @@
  */
 package org.exoplatform.ide.groovy.codeassistant;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
-import org.exoplatform.ide.groovy.codeassistant.extractors.ClassNamesExtractor;
-import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.annotation.security.RolesAllowed;
 import javax.jcr.AccessDeniedException;
 import javax.jcr.InvalidItemStateException;
 import javax.jcr.ItemExistsException;
@@ -50,6 +37,20 @@ import javax.jcr.version.VersionException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.groovy.codeassistant.bean.JarEntry;
+import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
+import org.exoplatform.ide.groovy.codeassistant.extractors.ClassNamesExtractor;
+import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.ws.frameworks.json.impl.JsonException;
+import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 
 /**
  * Created by The eXo Platform SAS.
@@ -85,31 +86,45 @@ public class ClassInfoStrorage
 
    private final String wsName;
 
-   private final static String[] defaultPkgs = {"java.lang", "java.util", "java.io", "java.math", "java.text"};
-
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(ClassInfoStrorage.class);
 
-   public ClassInfoStrorage(SessionProviderService sessionProvider, RepositoryService repositoryService,
-      String wsName)
-   {
-      this(sessionProvider, repositoryService, wsName, defaultPkgs);
-   }
-
-   public ClassInfoStrorage(SessionProviderService sessionProvider, RepositoryService repositoryService,
-      String wsName, String[] pkgs)
+   public ClassInfoStrorage(SessionProviderService sessionProvider, RepositoryService repositoryService, String wsName,
+      final List<JarEntry> jars, boolean runInThread)
    {
       this.sessionProvider = sessionProvider;
       this.repositoryService = repositoryService;
       this.wsName = wsName;
-      try
+      Runnable run = new Runnable()
       {
-         addClassesFromJavaUtilSource(pkgs);
+
+         @Override
+         public void run()
+         {
+            try
+            {
+               addClassesFromJavaUtilSource(jars);
+            }
+            catch (SaveClassInfoException e)
+            {
+               if (LOG.isDebugEnabled())
+                  e.printStackTrace();
+            }
+         }
+      };
+
+      runTask(run, runInThread);
+   }
+
+   private void runTask(Runnable run, boolean runInThread)
+   {
+      if (runInThread)
+      {
+         new Thread(run, "ClassInfoStorage").start();
       }
-      catch (SaveClassInfoException e)
+      else
       {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
+         run.run();
       }
    }
 
@@ -131,7 +146,8 @@ public class ClassInfoStrorage
       {
          Thread thread = Thread.currentThread();
          ClassLoader classLoader = thread.getContextClassLoader();
-         Repository repository = repositoryService.getDefaultRepository();
+         Repository repository;
+         repository = getRepository();
          Session session = repository.login(wsName);
          List<String> fqns = ClassNamesExtractor.getClassesNamesInJar(jarPath, packageName);
          for (String fqn : fqns)
@@ -164,7 +180,8 @@ public class ClassInfoStrorage
       {
          Thread thread = Thread.currentThread();
          ClassLoader classLoader = thread.getContextClassLoader();
-         Repository repository = repositoryService.getDefaultRepository();
+         Repository repository;
+         repository = getRepository();
          Session session = repository.login(wsName);
          putClass(classLoader, session, fqn);
       }
@@ -174,6 +191,19 @@ public class ClassInfoStrorage
          //TODO: need think about status
          throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
+   }
+
+   /**
+    * Get current repository
+    * @return current repository or default repository if current repository is null
+    * @throws RepositoryException
+    * @throws RepositoryConfigurationException
+    */
+   private Repository getRepository() throws RepositoryException, RepositoryConfigurationException
+   {
+
+      return repositoryService.getCurrentRepository() != null ? repositoryService.getCurrentRepository()
+         : repositoryService.getDefaultRepository();
    }
 
    /**
@@ -195,9 +225,10 @@ public class ClassInfoStrorage
       {
          Thread thread = Thread.currentThread();
          ClassLoader classLoader = thread.getContextClassLoader();
-         Repository repository = repositoryService.getDefaultRepository();
+         Repository repository;
+         repository = getRepository();
          Session session = repository.login(wsName);
-         List<String> fqns = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaSrcPath, packageName);
+         List<String> fqns = ClassNamesExtractor.getClassesNamesFromJar(javaSrcPath, packageName);
          for (String fqn : fqns)
          {
             putClass(classLoader, session, fqn);
@@ -252,26 +283,46 @@ public class ClassInfoStrorage
     */
 
    //TODO:for prototype client side
-   public void addClassesFromJavaUtilSource(String[] pkgs) throws SaveClassInfoException
+   public void addClassesFromJavaUtilSource(List<JarEntry> jars) throws SaveClassInfoException
    {
       try
       {
          Thread thread = Thread.currentThread();
          ClassLoader classLoader = thread.getContextClassLoader();
-         ManageableRepository repository = repositoryService.getDefaultRepository();
-         Session session = sessionProvider.getSystemSessionProvider(null).getSession(wsName, repository);
-         String javaHome = System.getProperty("java.home");
-         String fileSeparator = System.getProperty("file.separator");
-         javaHome = javaHome.substring(0, javaHome.lastIndexOf(fileSeparator) + 1) + "src.zip";
-         for (int i = 0; i < pkgs.length; i++)
+         ManageableRepository repository;
+         if (repositoryService.getCurrentRepository() != null)
          {
-            LOG.info(" >>>>>>>>>>>>>>>> Load ClassInfo from " + pkgs[i]);
-            List<String> fqns = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaHome, pkgs[i]);
-            for (String fqn : fqns)
+            repository = repositoryService.getCurrentRepository();
+         }
+         else
+         {
+            repository = repositoryService.getDefaultRepository();
+         }
+
+         Session session = sessionProvider.getSystemSessionProvider(null).getSession(wsName, repository);
+         for (JarEntry entry : jars)
+         {
+            String path = entry.getJarPath();
+            LOG.info(">>>>>>>>>>>>>>>> Load ClassInfo from jar -" + entry.getJarPath());
+            List<String> fqns = new ArrayList<String>();
+            if (entry.getIncludePkgs() == null || entry.getIncludePkgs().isEmpty())
             {
-               putClass(classLoader, session, fqn);
+               fqns.addAll(ClassNamesExtractor.getClassesNamesFromJar(path));
+            }
+            else
+            {
+               for (String pkg : entry.getIncludePkgs())
+               {
+                  LOG.info("<<<<<<<<<<<<<< Load ClassInfo from - " + pkg);
+                  fqns.addAll(ClassNamesExtractor.getClassesNamesFromJar(path, pkg));
+               }
+               for (String fqn : fqns)
+               {
+                  putClass(classLoader, session, fqn);
+               }
             }
          }
+         LOG.info("Class info load complete");
       }
       catch (RepositoryException e)
       {

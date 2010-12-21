@@ -36,6 +36,7 @@ import org.exoplatform.ide.groovy.codeassistant.bean.ShortTypeInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
@@ -94,7 +95,9 @@ public class CodeAssistant
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:fqn='" + fqn + "'";
       try
       {
-         Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
+         Session session =
+            sp.getSession(wsName,
+               getRepository());
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
@@ -125,6 +128,18 @@ public class CodeAssistant
          //TODO:need fix status code
          throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
       }
+   }
+
+   /**
+    * Get current repository
+    * @return current repository or default repository if current repository is null
+    * @throws RepositoryException
+    * @throws RepositoryConfigurationException
+    */
+   private ManageableRepository getRepository() throws RepositoryException, RepositoryConfigurationException
+   {
+      return repositoryService.getCurrentRepository() != null ? repositoryService.getCurrentRepository()
+         : repositoryService.getDefaultRepository();
    }
 
    /**
@@ -162,7 +177,7 @@ public class CodeAssistant
 
       try
       {
-         Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
+         Session session = sp.getSession(wsName, getRepository());
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
@@ -237,7 +252,7 @@ public class CodeAssistant
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
       try
       {
-         Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
+         Session session = sp.getSession(wsName, getRepository());
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
@@ -294,7 +309,7 @@ public class CodeAssistant
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
       try
       {
-         Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
+         Session session = sp.getSession(wsName, getRepository());
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
@@ -337,7 +352,7 @@ public class CodeAssistant
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
       try
       {
-         Session session = sp.getSession(wsName, repositoryService.getDefaultRepository());
+         Session session = sp.getSession(wsName, getRepository());
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();

@@ -68,10 +68,10 @@ public class ClassNamesExtractor
     * @return set of canonical names
     * @throws IOException
     */
-   public static List<String> getClassesNamesFromJavaSrc(String javaSrcPath) throws IOException
+   public static List<String> getClassesNamesFromJar(String javaSrcPath) throws IOException
    {
       
-      return getClassesNamesFromJavaSrc(javaSrcPath, null);
+      return getClassesNamesFromJar(javaSrcPath, null);
    }
 
    /**
@@ -82,7 +82,7 @@ public class ClassNamesExtractor
     * @return set of canonical names
     * @throws IOException
     */
-   public static List<String> getClassesNamesFromJavaSrc(String javaSrcPath, String packageName) throws IOException
+   public static List<String> getClassesNamesFromJar(String javaSrcPath, String packageName) throws IOException
    {
       return extract(javaSrcPath, packageName, ".java");
    }

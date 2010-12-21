@@ -43,14 +43,14 @@ public class ClasspathBrowserTest extends TestCase
    
    public void testgetClassesNamesFromJavaSrc() throws IOException
    {
-      List<String> classes = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaHome);
+      List<String> classes = ClassNamesExtractor.getClassesNamesFromJar(javaHome);
       assertTrue(classes.contains("org.w3c.dom.Document"));
       assertTrue(classes.contains("java.lang.String"));
    }
    
    public void testgetClassesNamesFromJavaSrcPkg() throws IOException
    {
-      List<String> classes = ClassNamesExtractor.getClassesNamesFromJavaSrc(javaHome,"java.lang");
+      List<String> classes = ClassNamesExtractor.getClassesNamesFromJar(javaHome,"java.lang");
       assertTrue(classes.contains("java.lang.String"));
       assertTrue(classes.contains("java.lang.Boolean"));
       

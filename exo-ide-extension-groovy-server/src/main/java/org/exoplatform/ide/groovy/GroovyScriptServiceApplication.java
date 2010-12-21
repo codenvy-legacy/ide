@@ -24,6 +24,8 @@ import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.groovy.codeassistant.ClassInfoStrorage;
 import org.exoplatform.ide.groovy.codeassistant.CodeAssistant;
 import org.exoplatform.ide.groovy.codeassistant.DocStorage;
+import org.exoplatform.ide.groovy.codeassistant.bean.GroovyAutocompletionConfig;
+import org.exoplatform.ide.groovy.codeassistant.bean.JarEntry;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 
@@ -46,37 +48,29 @@ public class GroovyScriptServiceApplication extends Application
 
    private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
-   public GroovyScriptServiceApplication(SessionProviderService sessionProvider, 
-                                         RepositoryService repositoryService,
-                                         InitParams initParams)
+   public GroovyScriptServiceApplication(SessionProviderService sessionProvider, RepositoryService repositoryService,
+      InitParams initParams)
    {
       if (initParams != null)
       {
-         ValueParam ws = initParams.getValueParam("wsname");
-         ValueParam pkgsDoc = initParams.getValueParam("pkgsDoc");
-         if (pkgsDoc != null)
+         GroovyAutocompletionConfig config =
+            (GroovyAutocompletionConfig)initParams.getObjectParam("autocompletion.configuration").getObject();
+         System.out.println(config.getJarEntries().get(0).getJarPath());
+
+         if (config.getJarEntries() != null)
          {
-            String[] pkgs = pkgsDoc.getValue().split(",");
-            objects.add(new DocStorage(ws.getValue(), repositoryService, sessionProvider, pkgs));
+            objects.add(new ClassInfoStrorage(sessionProvider, repositoryService, config.getWsName(), config
+               .getJarEntries(), config.isRunInThread()));
          }
-         else
+
+         if (config.getJarsDocs() != null)
          {
-            objects.add(new DocStorage(ws.getValue(), repositoryService, sessionProvider));
+            objects.add(new DocStorage(config.getWsName(), repositoryService, sessionProvider, config.getJarsDocs(),
+               config.isRunInThread()));
          }
-         
-         ValueParam pkgsInfo = initParams.getValueParam("pkgsInfo");
-         if (pkgsInfo != null)
-         {
-            String[] pkgs = pkgsInfo.getValue().split(",");
-            objects.add(new ClassInfoStrorage(sessionProvider, repositoryService, ws.getValue(),pkgs));
-         }
-         else
-         {
-            objects.add(new ClassInfoStrorage(sessionProvider, repositoryService, ws.getValue()));
-         }
-         
-         objects.add(new CodeAssistant(ws.getValue(), repositoryService, sessionProvider));
-         
+
+         objects.add(new CodeAssistant(config.getWsName(), repositoryService, sessionProvider));
+
       }
       objects.add(new DevelopmentResourceMethodFilter());
       classes.add(GroovyTemplateService.class);
