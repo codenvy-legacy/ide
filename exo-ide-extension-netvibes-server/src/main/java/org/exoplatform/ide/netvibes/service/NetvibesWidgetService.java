@@ -19,18 +19,22 @@
 package org.exoplatform.ide.netvibes.service;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.common.http.client.CookieModule;
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.common.http.client.NVPair;
 import org.exoplatform.common.http.client.ParseException;
-import org.exoplatform.services.jcr.webdav.WebDavService;
-import org.exoplatform.services.rest.ExtHttpHeaders;
+import org.exoplatform.ide.netvibes.util.NetvibesUtil;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -41,56 +45,83 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 /**
+ * Service for deploying and extracting content of netvibes widgets.
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
 @Path("/ide/netvibes")
-public class NetvibesWidgetPreviewService implements ResourceContainer
+public class NetvibesWidgetService implements ResourceContainer
 {
-
-   private WebDavService webDavService;
 
    private static String NETVIBES_URL = "http://api.eco.netvibes.com";
 
    private static String SUBMIT = "/submit/?";
+   
+   private final RepositoryService repositoryService;
+   
+   private final SessionProviderService sessionProviderService;
 
-   public NetvibesWidgetPreviewService(WebDavService webDavService)
+   public NetvibesWidgetService(RepositoryService repositoryService, SessionProviderService sessionProviderService)
    {
-      this.webDavService = webDavService;
+      this.repositoryService = repositoryService;
+      this.sessionProviderService = sessionProviderService;
    }
 
+   /**
+    * Get content of netvibes widget.
+    * 
+    * @param repoName - repository name
+    * @param repoPath - path to netvibes file
+    * @return content of netvibes widget
+    */
    @GET
    @Path("/{repoName}/{repoPath:.*}/")
-   public Response showContent(@PathParam("repoName") String repoName, @PathParam("repoPath") String repoPath,
-      @HeaderParam(ExtHttpHeaders.RANGE) String rangeHeader,
-      @HeaderParam(ExtHttpHeaders.IF_MODIFIED_SINCE) String ifModifiedSince, @QueryParam("version") String version,
-      @Context UriInfo uriInfo)
+   public InputStream showContent(@PathParam("repoName") String repoName, @PathParam("repoPath") String repoPath)
    {
-
-      Response response = webDavService.get(repoName, repoPath, rangeHeader, ifModifiedSince, version, uriInfo);
-
-      if (response.getStatus() != HTTPStatus.OK)
+      String wsName = repoPath.split("/")[0];
+      String nodePath = repoPath.substring(repoPath.indexOf("/") + 1);
+      InputStream inputStream = null;
+      try
       {
-         return response;
+         Session session = getSession(repoName, wsName);
+         inputStream = NetvibesUtil.getContent(session, nodePath);
       }
-
-      return Response.fromResponse(response).type("text/html").build();
+      catch (RepositoryException e)
+      {
+         e.printStackTrace();
+      }
+      catch (RepositoryConfigurationException e)
+      {
+         e.printStackTrace();
+      }
+      
+      return inputStream;
 
    }
 
+   /**
+    * Deploy netvibes widget to netvibes eco system.
+    * 
+    * @param inputStream - input stream with data
+    * @param login - user login
+    * @param password - user password
+    * @param secretkey - secret key
+    * @param apikey - api key
+    * @return response from netvibes
+    */
    @POST
    @Path("/deploy")
    public String deployNetvibesWidget(String inputStream, @QueryParam("login") String login,
@@ -181,5 +212,20 @@ public class NetvibesWidgetPreviewService implements ResourceContainer
    protected Response createErrorResponse(Throwable t, int status)
    {
       return Response.status(status).entity(t.getMessage()).type("text/plain").build();
+   }
+   
+   private Session getSession(String repoName, String repoPath) throws RepositoryException,
+      RepositoryConfigurationException
+   {
+      ManageableRepository repo = this.repositoryService.getRepository(repoName);
+      SessionProvider sp = sessionProviderService.getSessionProvider(null);
+      if (sp == null)
+         throw new RepositoryException("SessionProvider is not properly set. Make the application calls"
+            + "SessionProviderService.setSessionProvider(..) somewhere before ("
+            + "for instance in Servlet Filter for WEB application)");
+
+      String workspace = repoPath.split("/")[0];
+
+      return sp.getSession(workspace, repo);
    }
 }
