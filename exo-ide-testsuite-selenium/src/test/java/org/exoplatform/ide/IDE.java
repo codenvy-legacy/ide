@@ -22,6 +22,7 @@ package org.exoplatform.ide;
 
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.Menu;
+import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Toolbar;
 
 import com.thoughtworks.selenium.Selenium;
@@ -44,6 +45,8 @@ public class IDE
    private Toolbar toolbar;
 
    private Editor editor;
+   
+   private Outline outline;
 
    public IDE(Selenium selenium)
    {
@@ -52,6 +55,7 @@ public class IDE
       menu = new Menu(selenium);
       toolbar = new Toolbar(selenium);
       editor = new Editor(selenium);
+      outline = new Outline(selenium);
    }
 
    public Menu menu()
@@ -67,6 +71,16 @@ public class IDE
    public Editor editor()
    {
       return editor;
+   }
+   
+   /**
+    * Get the code outline.
+    * 
+    * @return {@link Outline}
+    */
+   public Outline outline()
+   {
+      return outline;
    }
 
 }

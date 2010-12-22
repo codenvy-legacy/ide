@@ -73,6 +73,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
+      deleteCookies();
       try
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
@@ -121,11 +122,11 @@ public class CodeOutLineNetvibesTest extends BaseTest
       assertEquals("51 : 1", getCursorPositionUsingStatusBar());
       
       //close "p" tag
-      clickOpenImg(3, 1);
+      IDE.outline().clickOpenImg(3, 1);
       assertEquals("51 : 1", getCursorPositionUsingStatusBar());
       
       //open "p" tag
-      clickOpenImg(3, 1);
+      IDE.outline().clickOpenImg(3, 1);
       assertEquals("51 : 1", getCursorPositionUsingStatusBar());
       checkOutlineTreeNodeSelected(3, "p", true);
       
@@ -144,17 +145,17 @@ public class CodeOutLineNetvibesTest extends BaseTest
       
       checkOutlineTreeNodeSelected(2, "link", true);
       
-      assertEquals("html", getTitle(0, 0));
-      assertEquals("head", getTitle(1, 0));
+      assertEquals("html", IDE.outline().getTitle(0, 0));
+      assertEquals("head", IDE.outline().getTitle(1, 0));
       
-      assertEquals("link", getTitle(2, 0));
-      assertEquals("script", getTitle(3, 0));
-      assertEquals("title", getTitle(4, 0));
-      assertEquals("link", getTitle(5, 0));
-      assertEquals("widget:preferences", getTitle(6, 0));
-      assertEquals("style", getTitle(7, 0));
-      assertEquals("script", getTitle(8, 0));
-      assertEquals("body", getTitle(9, 0));
+      assertEquals("link", IDE.outline().getTitle(2, 0));
+      assertEquals("script", IDE.outline().getTitle(3, 0));
+      assertEquals("title", IDE.outline().getTitle(4, 0));
+      assertEquals("link", IDE.outline().getTitle(5, 0));
+      assertEquals("widget:preferences", IDE.outline().getTitle(6, 0));
+      assertEquals("style", IDE.outline().getTitle(7, 0));
+      assertEquals("script", IDE.outline().getTitle(8, 0));
+      assertEquals("body", IDE.outline().getTitle(9, 0));
 
    }
    
@@ -167,72 +168,43 @@ public class CodeOutLineNetvibesTest extends BaseTest
       
       //check tree correctly created:
       //all nodes closed, except root
-      assertEquals("html", getTitle(0, 0));
-      assertEquals("head", getTitle(1, 0));
-      assertEquals("body", getTitle(2, 0));
+      assertEquals("html", IDE.outline().getTitle(0, 0));
+      assertEquals("head", IDE.outline().getTitle(1, 0));
+      assertEquals("body", IDE.outline().getTitle(2, 0));
       
       //open "head" node
-      clickOpenImg(1, 0);
+      IDE.outline().clickOpenImg(1, 0);
       //check new nodes appeard
-      assertEquals("meta", getTitle(2, 0));
-      assertEquals("meta", getTitle(3, 0));
-      assertEquals("meta", getTitle(4, 0));
-      assertEquals("meta", getTitle(5, 0));
-      assertEquals("meta", getTitle(6, 0));
-      assertEquals("link", getTitle(7, 0));
-      assertEquals("script", getTitle(8, 0));
-      assertEquals("title", getTitle(9, 0));
-      assertEquals("link", getTitle(10, 0));
-      assertEquals("widget:preferences", getTitle(11, 0));
-      assertEquals("style", getTitle(12, 0));
-      assertEquals("script", getTitle(13, 0));
-      assertEquals("body", getTitle(14, 0));
+      assertEquals("meta", IDE.outline().getTitle(2, 0));
+      assertEquals("meta", IDE.outline().getTitle(3, 0));
+      assertEquals("meta", IDE.outline().getTitle(4, 0));
+      assertEquals("meta", IDE.outline().getTitle(5, 0));
+      assertEquals("meta", IDE.outline().getTitle(6, 0));
+      assertEquals("link", IDE.outline().getTitle(7, 0));
+      assertEquals("script", IDE.outline().getTitle(8, 0));
+      assertEquals("title", IDE.outline().getTitle(9, 0));
+      assertEquals("link", IDE.outline().getTitle(10, 0));
+      assertEquals("widget:preferences", IDE.outline().getTitle(11, 0));
+      assertEquals("style", IDE.outline().getTitle(12, 0));
+      assertEquals("script", IDE.outline().getTitle(13, 0));
+      assertEquals("body", IDE.outline().getTitle(14, 0));
       
       //open "script" node
-      clickOpenImg(13, 0);
-      assertEquals("YourWidgetName", getTitle(14, 0));
-      assertEquals("body", getTitle(15, 0));
+      IDE.outline().clickOpenImg(13, 0);
+      assertEquals("YourWidgetName", IDE.outline().getTitle(14, 0));
+      assertEquals("body", IDE.outline().getTitle(15, 0));
       
       //open "YourWidgetName" node
-      clickOpenImg(14, 0);
-      assertEquals("argument", getTitle(15, 0));
-      assertEquals("body", getTitle(16, 0));
+      IDE.outline().clickOpenImg(14, 0);
+      assertEquals("argument", IDE.outline().getTitle(15, 0));
+      assertEquals("body", IDE.outline().getTitle(16, 0));
       
       //close "head" node
-      clickOpenImg(1, 0);
+      IDE.outline().clickOpenImg(1, 0);
       
       //open "body" node
-      clickOpenImg(2, 0);
-      assertEquals("p", getTitle(3, 0));
-   }
-   
-   /**
-    * Get title of outline node.
-    * 
-    * @param row - row number (from 0)
-    * @param col - column number (from 0)
-    * @return title in (row, col) position in outline tree
-    */
-   private String getTitle(int row, int col)
-   {
-      return selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" 
-         + String.valueOf(row) +  "]/col[" + String.valueOf(col) + "]");
-   }
-   
-   /**
-    * Click on open icon of outline node.
-    * 
-    * Can open or close node.
-    * 
-    * @param row - row number (from 0)
-    * @param col - column number (from 0)
-    * @throws Exception
-    */
-   private void clickOpenImg(int row, int col) throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" 
-         + String.valueOf(row) + "]/col[" + String.valueOf(col) + "]/open");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.outline().clickOpenImg(2, 0);
+      assertEquals("p", IDE.outline().getTitle(3, 0));
    }
 
 }
