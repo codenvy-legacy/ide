@@ -66,5 +66,20 @@ public class Outline
          + String.valueOf(row) + "]/col[" + String.valueOf(col) + "]/open");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
+   
+   /**
+    * Select row in outline tree.
+    * 
+    * Click on 1-st column of row.
+    * 
+    * @param row - number of row (from 0).
+    * @throws Exception
+    */
+   public void select(int row) throws Exception
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" 
+         + String.valueOf(row) + "]/col[1]");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
 
 }

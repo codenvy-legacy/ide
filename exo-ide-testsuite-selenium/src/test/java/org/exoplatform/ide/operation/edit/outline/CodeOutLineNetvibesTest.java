@@ -88,14 +88,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       }
    }
    
-   private void select(int row, int col) throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" 
-         + String.valueOf(row) + "]/col[" + String.valueOf(col) + "]");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }
-
-   // IDE-175:Html Code Outline
+   // IDE-473 Issue
    @Test
    public void testCodeOutLineNetvibes() throws Exception
    {
@@ -117,7 +110,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       //------ 6 ------------
       //check navigation in tree
       //click on "p" tag
-      select(3, 1);
+      IDE.outline().select(3);
       
       assertEquals("51 : 1", getCursorPositionUsingStatusBar());
       
@@ -135,6 +128,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       checkOutlineTreeNodeSelected(2, "meta", true);
       
       //press Ctrl+D to delete lines
+      //click on editor
       selenium.clickAt("//body[@class='editbox']", "5,5");
       for (int i = 0; i < 5; i++)
       {

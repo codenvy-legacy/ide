@@ -26,6 +26,7 @@ import java.io.IOException;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -109,18 +110,15 @@ public class CodeOutLineHtmlTest extends BaseTest
       //---- 6 ----
       //check navigation in tree
       //click on td tag from tbody of first table
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[15]/col[1]");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.outline().select(15);
       assertEquals("21 : 1", getCursorPositionUsingStatusBar());
       
       //close tr tag
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[1]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(13, 1);
       assertEquals("21 : 1", getCursorPositionUsingStatusBar());
       
       //open tr tag
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[1]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(13, 1);
       assertEquals("21 : 1", getCursorPositionUsingStatusBar());
       checkOutlineTreeNodeSelected(15, "td", true);
       
@@ -130,8 +128,7 @@ public class CodeOutLineHtmlTest extends BaseTest
 //      assertEquals("46 : 1", getCursorPositionUsingStatusBar());
       
       //click on first table node in Outlite tree
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[1]");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().select(8);
       assertEquals("14 : 1", getCursorPositionUsingStatusBar());
       
       //---- 7 ----
@@ -142,18 +139,19 @@ public class CodeOutLineHtmlTest extends BaseTest
       for (int i = 0; i < 11; i++)
       {
          runHotkeyWithinEditor(0, true, false, 68);
+         Thread.sleep(TestConstants.SLEEP_SHORT);
       }
       Thread.sleep(TestConstants.SLEEP);
       
       //check updated tree
-      assertEquals("html", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
-      assertEquals("head", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
-      assertEquals("body", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
-      assertEquals("script", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
-      assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
-      assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
+      assertEquals("html", IDE.outline().getTitle(0, 0));
+      assertEquals("head", IDE.outline().getTitle(1, 0));
+      assertEquals("body", IDE.outline().getTitle(2, 0));
+      assertEquals("br", IDE.outline().getTitle(3, 0));
+      assertEquals("br", IDE.outline().getTitle(4, 0));
+      assertEquals("script", IDE.outline().getTitle(5, 0));
+      assertEquals("style", IDE.outline().getTitle(6, 0));
+      assertEquals("table", IDE.outline().getTitle(7, 0));
       
       //check, that first br tag is selected
       checkOutlineTreeNodeSelected(3, "br", true);
@@ -161,7 +159,7 @@ public class CodeOutLineHtmlTest extends BaseTest
       
       //click on editor
       clickOnEditor();
-      
+      selenium.clickAt("//body[@class='editbox']", "5,5");
       //press key DOWN to navigate in editor
       for (int i = 0; i < 18; i++){
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -171,19 +169,19 @@ public class CodeOutLineHtmlTest extends BaseTest
       assertEquals("19 : 1", getCursorPositionUsingStatusBar());
       //check updated tree
       //node script must be opened and displayGreeting selected (and opened too)
-      assertEquals("html", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
-      assertEquals("head", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
-      assertEquals("body", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
-      assertEquals("script", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
-      assertEquals("prefs", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
-      assertEquals("displayGreeting", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
-      assertEquals("today", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
-      assertEquals("time", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
-      assertEquals("html", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]"));
-      assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]"));
-      assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]"));
+      assertEquals("html", IDE.outline().getTitle(0, 0));
+      assertEquals("head", IDE.outline().getTitle(1, 0));
+      assertEquals("body", IDE.outline().getTitle(2, 0));
+      assertEquals("br", IDE.outline().getTitle(3, 0));
+      assertEquals("br", IDE.outline().getTitle(4, 0));
+      assertEquals("script", IDE.outline().getTitle(5, 0));
+      assertEquals("prefs", IDE.outline().getTitle(6, 0));
+      assertEquals("displayGreeting", IDE.outline().getTitle(7, 0));
+      assertEquals("today", IDE.outline().getTitle(8, 0));
+      assertEquals("time", IDE.outline().getTitle(9, 0));
+      assertEquals("html", IDE.outline().getTitle(10, 0));
+      assertEquals("style", IDE.outline().getTitle(11, 0));
+      assertEquals("table", IDE.outline().getTitle(12, 0));
       
       Thread.sleep(TestConstants.SLEEP);
 
@@ -195,144 +193,116 @@ public class CodeOutLineHtmlTest extends BaseTest
    private void checkTreeCorrectlyCreated() throws Exception
    {
       //check for presence of tab outline
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=isc_OutlineForm_0]/"));
-      assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[index=0]/title"));
+      assertTrue(selenium.isElementPresent(Locators.CodeHelperPanel.SC_OUTLINE_TAB_LOCATOR));
+      assertEquals("Outline", selenium.getText(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR 
+         + "/tab[index=0]/title"));
       
       //check tree correctly created:
       //all nodes closed, except root
-      assertEquals("html", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
-      assertEquals("head", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
-      assertEquals("body", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
+      assertEquals("html", IDE.outline().getTitle(0, 0));
+      assertEquals("head", IDE.outline().getTitle(1, 0));
+      assertEquals("body", IDE.outline().getTitle(2, 0));
       
       //open head node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.outline().clickOpenImg(1, 0);
       //check new nodes appeard
-      assertEquals("meta", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("link", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      assertEquals("title", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
-      assertEquals("script", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
-      assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
-      assertEquals("body", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
+      assertEquals("meta", IDE.outline().getTitle(2, 0));
+      assertEquals("link", IDE.outline().getTitle(3, 0));
+      assertEquals("title", IDE.outline().getTitle(4, 0));
+      assertEquals("script", IDE.outline().getTitle(5, 0));
+      assertEquals("style", IDE.outline().getTitle(6, 0));
+      assertEquals("body", IDE.outline().getTitle(7, 0));
+      
       Thread.sleep(TestConstants.SLEEP*2);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]/open");
+      IDE.outline().clickOpenImg(7, 0);
       Thread.sleep(TestConstants.SLEEP*2);
+      
       //check new nodes appeard
-      assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]"));
-      assertEquals("script", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]"));
-      assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]"));
-      assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[0]"));
+      assertEquals("table", IDE.outline().getTitle(8, 0));
+      assertEquals("br", IDE.outline().getTitle(9, 0));
+      assertEquals("br", IDE.outline().getTitle(10, 0));
+      assertEquals("script", IDE.outline().getTitle(11, 0));
+      assertEquals("style", IDE.outline().getTitle(12, 0));
+      assertEquals("table", IDE.outline().getTitle(13, 0));
       
       //open table node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(8, 0);
       //check subnodes of table
-      assertEquals("thead", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
-      assertEquals("tbody", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]"));
+      assertEquals("thead", IDE.outline().getTitle(9, 0));
+      assertEquals("tbody", IDE.outline().getTitle(10, 0));
       //check other nodes
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]"));
-      assertEquals("script", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[0]"));
-      assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[14]/col[0]"));
-      assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[15]/col[0]"));
+      assertEquals("br", IDE.outline().getTitle(11, 0));
+      assertEquals("br", IDE.outline().getTitle(12, 0));
+      assertEquals("script", IDE.outline().getTitle(13, 0));
+      assertEquals("style", IDE.outline().getTitle(14, 0));
+      assertEquals("table", IDE.outline().getTitle(15, 0));
       
       //open thead node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(9, 0);
       //check subnodes of thead
-      assertEquals("tr", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]"));
+      assertEquals("tr", IDE.outline().getTitle(10, 0));
       //check other nodes
-      assertEquals("tbody", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[0]"));
-      assertEquals("script", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[14]/col[0]"));
-      assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[15]/col[0]"));
-      assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[16]/col[0]"));
+      assertEquals("tbody", IDE.outline().getTitle(11, 0));
+      assertEquals("br", IDE.outline().getTitle(12, 0));
+      assertEquals("br", IDE.outline().getTitle(13, 0));
+      assertEquals("script", IDE.outline().getTitle(14, 0));
+      assertEquals("style", IDE.outline().getTitle(15, 0));
+      assertEquals("table", IDE.outline().getTitle(16, 0));
       
       //open tr node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(10, 0);
       //check subnodes of tr
-      assertEquals("td", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]"));
+      assertEquals("td", IDE.outline().getTitle(11, 0));
       //check other nodes
-      assertEquals("tbody", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[14]/col[0]"));
-      assertEquals("script", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[15]/col[0]"));
-      assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[16]/col[0]"));
-      assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[17]/col[0]"));
+      assertEquals("tbody", IDE.outline().getTitle(12, 0));
+      assertEquals("br", IDE.outline().getTitle(13, 0));
+      assertEquals("br", IDE.outline().getTitle(14, 0));
+      assertEquals("script", IDE.outline().getTitle(15, 0));
+      assertEquals("style", IDE.outline().getTitle(16, 0));
+      assertEquals("table", IDE.outline().getTitle(17, 0));
       
       //open tbody node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(12, 0);
       //check subnodes of tbody
-      assertEquals("tr", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[0]"));
+      assertEquals("tr", IDE.outline().getTitle(13, 0));
       //check other nodes
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[14]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[15]/col[0]"));
-      assertEquals("script", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[16]/col[0]"));
-      assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[17]/col[0]"));
-      assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[18]/col[0]"));
+      assertEquals("br", IDE.outline().getTitle(14, 0));
+      assertEquals("br", IDE.outline().getTitle(15, 0));
+      assertEquals("script", IDE.outline().getTitle(16, 0));
+      assertEquals("style", IDE.outline().getTitle(17, 0));
+      assertEquals("table", IDE.outline().getTitle(18, 0));
       
       //open tr node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[13]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(13, 0);
       //check subnodes of tr
-      assertEquals("td", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[14]/col[0]"));
-      assertEquals("td", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[15]/col[0]"));
-      assertEquals("td", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[16]/col[0]"));
+      assertEquals("td", IDE.outline().getTitle(14, 0));
+      assertEquals("td", IDE.outline().getTitle(15, 0));
+      assertEquals("td", IDE.outline().getTitle(16, 0));
       //check other nodes
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[17]/col[0]"));
-      assertEquals("br", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[18]/col[0]"));
-      assertEquals("script", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[19]/col[0]"));
-      assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[20]/col[0]"));
-      assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[21]/col[0]"));
+      assertEquals("br", IDE.outline().getTitle(17, 0));
+      assertEquals("br", IDE.outline().getTitle(18, 0));
+      assertEquals("script", IDE.outline().getTitle(19, 0));
+      assertEquals("style", IDE.outline().getTitle(20, 0));
+      assertEquals("table", IDE.outline().getTitle(21, 0));
       
       //open script node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[19]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(19, 0);
       //check subnodes of script
-      assertEquals("prefs", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[20]/col[0]"));
-      assertEquals("displayGreeting", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[21]/col[0]"));
+      assertEquals("prefs", IDE.outline().getTitle(20, 0));
+      assertEquals("displayGreeting", IDE.outline().getTitle(21, 0));
       //check other nodes
-      assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[22]/col[0]"));
-      assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[23]/col[0]"));
+      assertEquals("style", IDE.outline().getTitle(22, 0));
+      assertEquals("table", IDE.outline().getTitle(23, 0));
       
       //open displayGreeting node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[21]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(21, 0);
       //check subnodes of displayGreeting
-      assertEquals("today", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[22]/col[0]"));
-      assertEquals("time", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[23]/col[0]"));
-      assertEquals("html", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[24]/col[0]"));
+      assertEquals("today", IDE.outline().getTitle(22, 0));
+      assertEquals("time", IDE.outline().getTitle(23, 0));
+      assertEquals("html", IDE.outline().getTitle(24, 0));
       //check other nodes
-      assertEquals("style", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[25]/col[0]"));
-      assertEquals("table", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[26]/col[0]"));
-      
-//      //open table node
-//      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[26]/col[0]/open");
-//      Thread.sleep(TestConstants.SLEEP_SHORT);
-//      //check subnodes of table
-//      assertEquals("tr", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[27]/col[0]"));
-//      assertEquals("tr", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[28]/col[0]"));
-//      
-//      //open first tr
-//      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[27]/col[0]/open");
-//      Thread.sleep(TestConstants.SLEEP_SHORT);
-//      //check subnodes of tr
-//      assertEquals("td", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[28]/col[0]"));
-//      assertEquals("td", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[29]/col[0]"));
-//      //check other nodes
-//      assertEquals("tr", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[30]/col[0]"));
-//      
-//      //open second tr
-//      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[30]/col[0]/open");
-//      Thread.sleep(TestConstants.SLEEP_SHORT);
-//      //check subnodes of tr
-//      assertEquals("td", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[31]/col[0]"));
-//      assertEquals("td", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[32]/col[0]"));
+      assertEquals("style", IDE.outline().getTitle(25, 0));
+      assertEquals("table", IDE.outline().getTitle(26, 0));
       
       Thread.sleep(TestConstants.SLEEP);
    }
