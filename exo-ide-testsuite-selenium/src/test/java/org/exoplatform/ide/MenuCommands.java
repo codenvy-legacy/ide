@@ -205,6 +205,8 @@ public interface MenuCommands
       public static final String HELP = "Help";
 
       public static final String ABOUT = "About...";
+      
+      public static final String REST_SERVICES = "REST Services Discovery";
    }
 
    public interface Window

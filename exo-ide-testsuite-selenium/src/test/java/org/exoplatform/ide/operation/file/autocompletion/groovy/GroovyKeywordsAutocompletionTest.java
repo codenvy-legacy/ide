@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion.groovy;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
