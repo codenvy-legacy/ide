@@ -57,6 +57,8 @@ import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceHandler;
 import org.exoplatform.ide.client.module.preferences.event.ShowAboutDialogEvent;
 import org.exoplatform.ide.client.module.preferences.event.ShowAboutDialogHandler;
+import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
+import org.exoplatform.ide.client.restdiscovery.control.RestServicesDiscoveryControl;
 import org.exoplatform.ide.client.toolbar.customize.CustomizeToolbarForm;
 import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarEvent;
 import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarHandler;
@@ -101,6 +103,7 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       eventBus.fireEvent(new RegisterControlEvent(new CustomizeToolbarCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new CustomizeHotKeysCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new ShowAboutCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new RestServicesDiscoveryControl()));
 
       handlers.addHandler(ShowAboutDialogEvent.TYPE, this);
       handlers.addHandler(ControlsUpdatedEvent.TYPE, this);
@@ -111,6 +114,7 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       handlers.addHandler(SelectWorkspaceEvent.TYPE, this);
       handlers.addHandler(CustomizeToolbarEvent.TYPE, this);
       handlers.addHandler(CustomizeHotKeysEvent.TYPE, this);
+      new RestServicesDiscoveryPresenter(eventBus);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

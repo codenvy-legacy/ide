@@ -291,6 +291,11 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/help/about_Disabled.png")
    ImageResource aboutDisabled();
+   @Source("../public/images/bundled/help/restServicesDiscovery.png")
+   ImageResource restServicesDiscovery();
+   
+   @Source("../public/images/bundled/help/restServicesDiscovery_Disabled.png")
+   ImageResource restServicesDiscoveryDisabled();
 
    /*
     * OUTLINE

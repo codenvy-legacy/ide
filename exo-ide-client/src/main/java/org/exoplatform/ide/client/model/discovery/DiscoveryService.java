@@ -40,5 +40,10 @@ public abstract class DiscoveryService
    protected abstract void getEntryPoints(String url);
    
    public abstract void getDefaultEntryPoint();
+   
+   /**
+    * Get list of all deployed REST Services 
+    */
+   public abstract void getRestServices();
 
 }
