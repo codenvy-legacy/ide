@@ -67,6 +67,10 @@
    <component>
       <type>org.exoplatform.services.jcr.ext.repository.RestRepositoryService</type>
    </component>
+   
+   <component>
+      <type>org.exoplatform.services.rest.ext.service.RestServicesListApplication</type>
+   </component>
 
 
    <component>
