@@ -33,7 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Created by The eXo Platform SAS.
+ * Test for code outline for html files.
  * 
  * @author <a href="mailto:njusha.exo@gmail.com">Nadia Zavalko</a>
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
