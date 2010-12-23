@@ -542,11 +542,6 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       }
       
       if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
-         System.out.println(">>>>is read only: " + file.getProperty(ItemProperty.LOCKDISCOVERY).getValue());
-      else
-         System.out.println(">>>>lock discovery is null");
-
-      if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
       {
          return !(lockTokens.containsKey(file.getHref()));
       }
