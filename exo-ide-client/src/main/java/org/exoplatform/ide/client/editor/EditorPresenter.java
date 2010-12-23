@@ -368,7 +368,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       }
       final File file = event.getFile();
 
-      if (file.getProperty(ItemProperty.JCR_LOCKOWNER) != null)
+      if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
       {
          if (!lockTokens.containsKey(file.getHref()))
          {
@@ -540,14 +540,18 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       {
          return true;
       }
+      
+      if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
+         System.out.println(">>>>is read only: " + file.getProperty(ItemProperty.LOCKDISCOVERY).getValue());
+      else
+         System.out.println(">>>>lock discovery is null");
 
-      if (file.getProperty(ItemProperty.JCR_LOCKOWNER) != null)
+      if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
       {
          return !(lockTokens.containsKey(file.getHref()));
       }
       else
          return false;
-      //      return !(file.getProperty(ItemProperty.JCR_LOCKOWNER) != null && !lockTokens.containsKey(file.getHref()));
    }
 
    public void onFileSaved(FileSavedEvent event)

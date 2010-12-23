@@ -32,6 +32,7 @@ import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.LockToken;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
@@ -178,6 +179,20 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       String url = javaScriptEncodeURI(href);
 
       ChildrenReceivedEvent event = new ChildrenReceivedEvent(folder);
+      List<QName> propeties = new ArrayList<QName>();
+      propeties.add(ItemProperty.GETCONTENTLENGTH);
+      propeties.add(ItemProperty.RESOURCETYPE);
+      propeties.add(ItemProperty.GETCONTENTTYPE);
+      propeties.add(ItemProperty.DISPLAYNAME);
+      propeties.add(ItemProperty.CREATIONDATE);
+      propeties.add(ItemProperty.GETLASTMODIFIED);
+      propeties.add(ItemProperty.LOCKDISCOVERY);
+      propeties.add(ItemProperty.JCR_NODETYPE);
+      propeties.add(ItemProperty.JCR_PRIMARYTYPE);
+      propeties.add(ItemProperty.JCR_CONTENT);
+      
+      
+      PropFindRequestMarshaller marshaller = new PropFindRequestMarshaller(propeties);
       FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(folder, images);
 
       String errorMessage = "Service is not deployed.<br>Parent folder not found.";
@@ -188,8 +203,10 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.GET_FOLDER_CONTENT);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).header(HTTPHeader.DEPTH, "1").send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).header(HTTPHeader.DEPTH, "1")
+         .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8")
+         .data(marshaller).send(callback);
    }
 
    @Override
@@ -291,7 +308,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       loader.setMessage(Messages.GET_PROPERTIES);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).header(HTTPHeader.DEPTH, "0").data(marshaller)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
+         .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8")
+         .header(HTTPHeader.DEPTH, "0").data(marshaller)
          .send(callback);
    }
 
@@ -505,6 +524,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void lock(Item item, int timeout, String userName)
    {
       String url = javaScriptEncodeURI(item.getHref());
+      
       LockToken lockToken = new LockToken();
 
       int[] acceptStatus = new int[]{HTTPStatus.OK};

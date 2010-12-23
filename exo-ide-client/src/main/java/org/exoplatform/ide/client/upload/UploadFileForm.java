@@ -112,10 +112,7 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
    @Override
    protected FormItem[] createUploadFormItems()
    {
-      System.out.println("UploadFileForm.createUploadFormItems()");
       FormItem[] formItems = super.createUploadFormItems();
-      
-      System.out.println("create mime type");
       
       FormItem[] items = new FormItem[formItems.length + 3];
       

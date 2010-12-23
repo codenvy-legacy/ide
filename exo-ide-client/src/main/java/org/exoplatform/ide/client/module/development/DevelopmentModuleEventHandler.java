@@ -131,7 +131,6 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       if (!openOutline && wasOutlineOpened)
       {
          isClosedByUser = false;
-         System.out.println("DevelopmentModuleEventHandler.onEditorActiveFileChanged()"+isClosedByUser);
          eventBus.fireEvent(new CloseViewEvent(OutlineForm.ID));
       }
 

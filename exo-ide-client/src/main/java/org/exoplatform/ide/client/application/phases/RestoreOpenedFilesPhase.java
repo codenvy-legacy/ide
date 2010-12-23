@@ -25,6 +25,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorUtil;
@@ -36,6 +37,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
@@ -125,7 +127,12 @@ public class RestoreOpenedFilesPhase extends Phase implements ItemPropertiesRece
 
          fileToLoad = new File(href);
          filesToLoad.remove(0);
-         VirtualFileSystem.getInstance().getProperties(fileToLoad, null);
+         List<QName> propeties = new ArrayList<QName>();
+         propeties.add(ItemProperty.LOCKDISCOVERY);
+         propeties.add(ItemProperty.GETCONTENTLENGTH);
+         propeties.add(ItemProperty.RESOURCETYPE);
+         propeties.add(ItemProperty.GETCONTENTTYPE);
+         VirtualFileSystem.getInstance().getProperties(fileToLoad, propeties);
       }
       catch (Exception exc)
       {

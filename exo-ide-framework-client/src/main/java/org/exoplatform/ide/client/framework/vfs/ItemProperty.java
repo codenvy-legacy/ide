@@ -69,6 +69,8 @@ public class ItemProperty
    public static final QName CHECKEDOUT = new QName("checked-out", Namespace.DAV);
    
    public static final QName CHECKEDIN = new QName("checked-in", Namespace.DAV);
+   
+   public static final QName LOCKDISCOVERY = new QName("lockdiscovery", Namespace.DAV);
 
    /*
     * JCR_PROPERTIES

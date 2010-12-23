@@ -126,7 +126,7 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
          return;
       }
       
-      if (activeFile.getProperty(ItemProperty.JCR_LOCKOWNER) != null)
+      if (activeFile.getProperty(ItemProperty.LOCKDISCOVERY) != null)
       {
          if(!lockTokens.containsKey(activeFile.getHref()))
          {

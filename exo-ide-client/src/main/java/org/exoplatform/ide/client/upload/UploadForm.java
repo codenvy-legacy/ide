@@ -337,7 +337,6 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    public void destroy()
    {
       presenter.destroy();
-      System.out.println("UploadForm.destroy()");
       super.destroy();
    }
 

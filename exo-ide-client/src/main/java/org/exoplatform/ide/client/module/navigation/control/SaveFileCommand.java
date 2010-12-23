@@ -113,7 +113,7 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
          return;
       }
       
-      if (activeFile.getProperty(ItemProperty.JCR_LOCKOWNER) != null)
+      if (activeFile.getProperty(ItemProperty.LOCKDISCOVERY) != null)
       {
          if(!lockTokens.containsKey(activeFile.getHref()))
          {
@@ -165,7 +165,7 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
 
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
-      if (event.getFile().getProperty(ItemProperty.JCR_LOCKOWNER) != null)
+      if (event.getFile().getProperty(ItemProperty.LOCKDISCOVERY) != null)
       {
          if(!lockTokens.containsKey(event.getFile().getHref()))
          {

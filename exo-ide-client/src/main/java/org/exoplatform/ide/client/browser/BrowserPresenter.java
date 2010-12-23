@@ -417,7 +417,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       if (item instanceof File)
       {
          File file = (File)item;
-         Property lockOwnerProperty = file.getProperty(ItemProperty.JCR_LOCKOWNER);
+         Property lockOwnerProperty = file.getProperty(ItemProperty.LOCKDISCOVERY);
          file.getProperties().remove(lockOwnerProperty);
          display.updateItemState(file);
       }
@@ -434,7 +434,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
          if (item instanceof File)
          {
             File file = (File)item;
-            Property lockOwnerProperty = new Property(ItemProperty.JCR_LOCKOWNER);
+            Property lockOwnerProperty = new Property(ItemProperty.LOCKDISCOVERY);
             lockOwnerProperty.setValue("&nbsp;");
             file.getProperties().add(lockOwnerProperty);
             display.updateItemState(file);

@@ -296,7 +296,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
          return item.getName();
       }
 
-      if (item.getProperty(ItemProperty.JCR_LOCKOWNER) != null)
+      if (item.getProperty(ItemProperty.LOCKDISCOVERY) != null)
       {
          if (!locktokens.containsKey(item.getHref()))
          {

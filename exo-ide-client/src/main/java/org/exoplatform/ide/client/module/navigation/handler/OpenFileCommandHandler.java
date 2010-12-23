@@ -23,7 +23,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.webdav.Property;
+import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorUtil;
@@ -46,7 +46,9 @@ import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -122,23 +124,27 @@ public class OpenFileCommandHandler implements OpenFileHandler, FileContentRecei
       handlers.addHandler(FileContentReceivedEvent.TYPE, this);
 
       handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+      
+      List<QName> propeties = new ArrayList<QName>();
+      propeties.add(ItemProperty.LOCKDISCOVERY);
+      propeties.add(ItemProperty.GETCONTENTLENGTH);
+      propeties.add(ItemProperty.RESOURCETYPE);
+      propeties.add(ItemProperty.GETCONTENTTYPE);
+      propeties.add(ItemProperty.CREATIONDATE);
+      propeties.add(ItemProperty.GETLASTMODIFIED);
+      propeties.add(ItemProperty.JCR_NODETYPE);
+      propeties.add(ItemProperty.JCR_PRIMARYTYPE);
+      propeties.add(ItemProperty.JCR_CONTENT);
 
-      VirtualFileSystem.getInstance().getProperties(file, null);
+      VirtualFileSystem.getInstance().getProperties(file, propeties);
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       File file = (File)event.getItem();
-      for (Property p : file.getProperties())
-      {
-         if (ItemProperty.Namespace.JCR.equals(p.getName().getNamespaceURI())
-            && ItemProperty.JCR_LOCKOWNER.getLocalName().equalsIgnoreCase(p.getName().getLocalName()))
-         {
-            getFileContent((File)event.getItem());
-            return;
-         }
-      }
-
+//      if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
+//         getFileContent(file);
+      
       if (file.getContent() != null)
       {
          openFile(file);
