@@ -1,4 +1,4 @@
-The Google Gadget file is the .xml file with the special MIME type "application/x-google-gadget". With the eXo IDE, you can create such files, edit with the Code or WYSIWYG Editor, preview in the _Preview Tab_, deploy/undeploy it on the server through the shindig-library, add deployed gadgets to some pages in the portal.
+The Google Gadget file is the .xml file with the special MIME type "application/x-google-gadget". With the eXo IDE, you can create such files, edit with the Code or WYSIWYG Editor, preview in the _Preview Tab_, deploy/undeploy it on the server through the shindig-library and then add deployed gadgets to some pages in the portal if you in "administrator" role.
 
 h1. Create Google Gadget
 
@@ -11,9 +11,9 @@ For the second and third ways, do not forget to select the MIME type as _"applic
 
 !ide-gadget_operations.png!
 
-*Illustration 28. Google Gadget Operations*
+*Illustration. Google Gadget Operations*
 
-h1. Deploy/Undeploy Google Gadgets in the Portal
+h1. Deploy/Undeploy Google Gadgets in the Portal (for "administrator" role)
 
 To deploy the Google Gadget in the portal, do as follows:
 * *Step 1:* Save the file before deploying.
@@ -32,7 +32,7 @@ It means that gadget was deployed to the portal with title set in the gadget's '
 
 !ide-deploy_gadget.png!
 
-*Illustration 29. Deploy Gadget*
+*Illustration. Deploy Gadget*
 
 Otherwise, the error message will be displayed in the _Output Tab_.
 
@@ -51,5 +51,5 @@ h1. Preview Google Gadget
 
 To preview the Google Gadget, do as follows:
 * *Step 1:* Open the gadget file which was previously save.
-* *Step 2:* Click the *Show Preview* button on the _Toolbar_; or select *Run > Show Preview* on the top menu. 
+* *Step 2:* Click the *Show Preview* button on the _Toolbar_; or select *Run > Show Preview* on the top menu.
 The gadget will be opened in the _Gadget Container_ of the _Preview Tab_ as figured in the *Google Gadget Operations* illustration above.

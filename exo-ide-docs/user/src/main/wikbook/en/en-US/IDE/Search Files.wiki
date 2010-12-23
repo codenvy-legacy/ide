@@ -7,8 +7,8 @@ The found results will be displayed in the _Search Panel_ on the left of gadget:
 
 !ide-search.png!
 
-*Illustration 25. Search files*
+*Illustration. Search files*
 
 Within the _Search Panel_, you can only open found files, edit, save, save as template, or perform some specific operations like deploying for services, and going to the parent folder in the _Workspace Panel_.
 
-If you have maximized the _Editor Panel_, _Properties, Output_, or _Outline Panel_, default perspective will be restored to show the _Search Tab_ when you receive search results.
+If you have maximized the _Editor Panel_, _Properties, Output_, _Outline_ or other panels, default perspective will be restored to show the _Search Tab_ when you receive search results.

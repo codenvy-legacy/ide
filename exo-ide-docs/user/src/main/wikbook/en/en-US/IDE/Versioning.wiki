@@ -1,45 +1,56 @@
-Versioning, that is represented in IDE, gives an opportunity to work with the version history of the document: view the list of file's versions and their content in editor and restore the concrete version. A new version of the file is created each time, when content is saved ("Save" button). There are no versions in version history just after the file had been created.
+The eXo IDE realization of _Versioning_ gives user an opportunity to work with the version history of the file: 
+* view version's content;
+* view the list of versions;
+* restore to the concrete version. 
+A new version of the file is being created each time after the saving of file content, that is after the clicking the *Save* button. There are no versions in version history just after the file had been created only.
 
 h1. View Version History
 
-To view the version history of the active file (opened in editor and selected), do as follows:
-* *Step 1:* Go to *File > Version History...* on top menu
-* *Step 2:* View the list of versions with the latest one on top as below:
+To view the version history of the active file (that is file opened in editor and selected), click the *View Item Version History* button at the right part of the toolbar; or select *View > Version History...* on the topmenu. _Version Panel_ with latest version content will be opened at the right column of IDE window:
 
-!viewVersions.png|border=1!
+!versionPanel.png|border=1!
 
-*Illustration 31. View version history of active file*
+*Illustration. View version history of the active file*
 
-{note}
-If active file is version or new unsaved one, then menu item *"File > Version History..."* will be disabled.
-{note}
-
-h1. Open Version's Content
-
-To open file's version in editor, do as follows:
-* *Step 1:* Go to *File > Version History..." on top menu to open file's version history.
-* *Step 2:* Select the version in the list and double-click the selected item, or click the *Open* button.
-   The editor's tab with version has the title, which consists of the file's (version owner) name and the version's display name in bra�kets.
-
-!openVersion.png|border=1!
-
-*Illustration 32. Open version in editor*
+The version name is displayed in the title of the _Version Panel_.
 
 {note}
-Opened version in editor is in read only mode, so you can not edit and save this version.
+If opened file is not versioned yet (that is just created), the "View Version History" button and top menu item will be disabled.
 {note}
 
-When version is opened in editor, it is possible to view the older or newer version relatively active one, just clicking *"View Older Version"* (*"View->Older Version"* in top menu) or *"View Newer Version"* (*"View->Newer Version"* in top menu) accordingly(pic. 30). In this case tab with opened version will display another one : older or newer (depends on your choice). When there is no newer version, than corresponding command is disabled, the same thing when there is no older version.
+{note}
+eXo IDE opens file version in read only mode. So, you can not edit it.
+{note}
 
-!versionButtons.png|border=1!
+{note}
+After you had opened or selected another file in editor, the "Version Panel" of the previous file is closed.
+{note}
 
-*Illustration 33. Navigate versions' controls*
+h1. Version Navigation
 
-h1. Restore Version
+With eXo IDE you can navigate versions, that is view older or newer versions. 
+To view older version of created earlier and opened file, click the *View Older Version* button on the toolbar or select *View > Older Version* on the top menu. To view the newer version, use *View Newer Version* button or *View > Newer Version* menu item instead.
+When there is no newer version, then *View Newer Version* command will be disabled. And, if there is no older version, then *View Older Version* command will be disabled too.
+If you want to view the another version from the version history, do as follows:
+* *Step 1:* Click *View Item Version...* button on the toolbar; or select *View > Version...* on top menu.
+* *Step 2:* Select target version.
+* *Step 3:* Click *Open* button or double-click the version item.
 
-To restore version, click the *Restore Version* button at the right part of _Toolbar_, or go to "File > Restore Version" on top menu. 
-Then file content will be restored:
+!versionList.png|border=1!
 
+*Illustration. Open version from version list*
+
+Versions are listed in the reverse order, with the latest version first.
+
+h1. Restore File to the Version
+
+To restore file to the older version, do as follows:
+* *Step 1:* Click the *Restore To Version* button at the right part of _Toolbar_, or select *File > Restore To Version* on the top menu. 
+* *Step 2:* Click *Yes* button in the confirmation dialog to restore to version. Or click *No* to discard operation.
 !restoreVersion.png|border=1!
 
-*Illustration 34. Restore version*
+*Illustration. Restore file to version*
+
+{note}
+Restore version command is disabled, if the latest version is displayed.
+{note}

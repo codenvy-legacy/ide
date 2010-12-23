@@ -1,16 +1,29 @@
-The eXo IDE application provides the original approach to operate with _REST Service_ to *validate*, *deploy/undeploy* and *launch* applications, which are compatible with the JSR-311 specification without restarting the portal, or installing additional programs. With this application, you can validate REST Service before saving, deploying, launching or undeploying the service. Feedback from server is displayed in the _Output Tab_:
+The eXo IDE application provides the original approach to operate with _REST Service_ to *validate*, *deploy/undeploy* and *launch* applications, which are compatible with the JSR-311 specification without restarting the portal, or installing additional programs:
+*Table. Accessibility of REST Service Operations*
+|| Operation || User with "developer" role || User with "administrator" role ||
+| *Validate* | enabled | enabled |
+| *Deploy* | disabled | enabled |
+| *Undeploy* | disabled | enabled |
+| *Deploy Sandbox* | enabled | disabled |
+| *Undeploy Sandbox* | enabled | disabled |
+| *Set/Unset Autoload Property* | disabled | enabled |
+| *Run* | enabled | disabled |
+| *Launch REST Service* | disabled | enabled | 
 
-!ide-groovy_script_operations.png!
+With eXo IDE you can validate REST Service before saving, deploying, launching or undeploying the service. Feedback from server is displayed in the _Output Tab_:
 
-*Illustration 26. REST Service operations*
+!ide-groovy_script_operations.PNG!
+
+*Illustration. REST Service operations*
 
 All _REST Service_ commands are placed at the right part of the _Toolbar_ and in the *Run* on the top menu.
 
-To clear the _Output Panel_, use the special button at the right top corner of the this panel.
+To clear the _Output Panel_, use the special button at the right top corner of this panel.
+*Run > Run* REST Service command is a sequence of next operations: Save, Deploy Sandbox/Redeploy Sandbox, Launch REST Service.
 
 h1. Validate REST Service
 
-You can verify the content of _REST Service_ by using the special validation service before saving. 
+You can verify the content of _REST Service_ by using the special validation service before saving.
 To do that, simply click the *Validate REST Service* button, or go to *Run > Validate* on the top menu. In case of no errors in the service, there will be a message in the _Output Tab_:
 
 {screen}\[INFO\]rennes.groovy validated successfully".{screen}
@@ -27,15 +40,15 @@ startup failed, rennes.groovy: 4: unable to resolve class javax.ws.rs.Path1
 3 errors
 {screen}
 
-You can click on error message to go to error in REST Service file. If file is closed, than it will be opened, but sure, that you didn't delete or rename it.
+You can click on error message in the _Output Panel_ to go to line with error in REST Service file. If file had been closed, than IDE opens it. So, be sure, that you had not deleted or renamed this file after the error message had been displayed in _Outline Panel_.
 
-h1. Deploy/Undeploy REST Service
+h1. Deploy/Undeploy REST Service (for "administrator" role)
 
 To deploy some REST Services, do as follows:
 * *Step 1:* Save the file before deploying.
 * *Step 2:* Open the file in the _Content Panel_.
 * *Step 3:* Click the *Deploy REST Service* button on the _Toolbar_; or go to *Run > Deploy*.
-The deploy request will be sent to the server. In case of no errors, one message will be displayed in the Output tab as below: 
+The deploy request will be sent to the server. In case of no errors, one message will be displayed in the Output tab as below:
 {screen}\[INFO\]rennes.groovy deployed successfully{screen}
 
 Otherwise, one error message will be shown. For example,
@@ -51,16 +64,16 @@ find class for annotation
 3 errors
 {screen}
 
-{warning:title=Deploy service with the already registered URI pattern}
+{warning:title=It is impossible to deploy service with the already registered URI pattern from another service}
 It is impossible to deploy service with the registered URI pattern, if the path (including name) of new service is different than original one.
 To cope with it, first undeploy the service with the registered URI pattern.
 {warning}
 
-{warning:title=Deploy service, which uses shared groovy scripts}
+{warning:title=Validate shared groovy scripts before deploying}
 It is necessary to validate groovy scripts used by the service before deploying it by selecting: "Run > Validate" on the top menu.
 {warning}
 
-To do the *Undeploy* operation, do as follows:
+To *Undeploy* service, do as follows:
 * *Step 1:* Find the service which was previously deployed in the _Workspace_.
 * *Step 2:* Open this service in the _Content Panel_.
 * *Step 3:* Click the *Undeploy REST Service* button on the _Toolbar_, and verify if there is no error message in the _Output Tab_.
@@ -73,21 +86,20 @@ You can deploy multiple REST Services, and double-deploy the services. But, you 
 {code}
 [ERROR] /repository/collaboration/rennes.groovy
 undeploy failed. Error (400: Bad Request)
-Can't unbind script rennes.groovy, not bound or has wrong mapping to the
+Can not unbind script rennes.groovy, not bound or has wrong mapping to the
 resource class
 {code}
 
-{warning:title=Undeploy deleted service}
+{warning:title=Undeploy service before removing}
 The deletion of service will not make it undeploy. Please undeploy the service before deleting it. In other case, the workaround is to create it again in the same place and then undeploy.
 {warning}
-
-h1. Use Autoload Property
+h1. Use Autoload Property  (for "administrator" role)
 
 The _REST Service_ will be deployed automatically on the server after being saved, if the *Autoload* service property is set as _true_. You can view this property in the _Property Tab_ which is shown by clicking the *Show Properties* button. To set or unset the "Autoload" property, use *Set REST Service autoload* or *Unset REST Service autoload* commands respectively. These commands are displayed to the current status of Autoload property, so you can invert this property. The default value of *autoload* property is set as _false_. For more details, see the illustration below:
 
 !ide_change_autoload_property.png!
 
-*Illustration 27. Change Autoload service property*
+*Illustration. Change Autoload service property*
 
 h1. Launch REST Service with set parameters and Preview Server Console Messages in the _Output Tab_
 
@@ -107,6 +119,7 @@ After this application has verified whether the path is correct and send the for
 
 To learn about launching REST Service, see the *REST Service operations* illustration above.
 
+*Table. Reproducing service annotations in the "Launch REST Service" dialog*
 || REST Service Annotation || Element of "Launch REST Service" dialog ||
 | _@Path_ | The *Path* field |
 | _@GET, @POST,..._ | The *Method* field |
@@ -117,8 +130,6 @@ To learn about launching REST Service, see the *REST Service operations* illustr
 | _@QueryParam_ | The *Query Parameter* tab of bottom table |
 | _@DefaultValue_ | The *By default* column of bottom table |
 
-*Table2. Reproducing service annotations in the "Launch REST Service" dialog*
-
 h1. Get URL of REST Service
 
 From the send request window, you can also get the URL of REST Service as follows:
@@ -126,7 +137,7 @@ From the send request window, you can also get the URL of REST Service as follow
 * *Step 2:* Click the *Launch REST Service...* button to get the REST Service form.
 * *Step 3"* Click the *Get URL* button to view the URL of REST Service.
 
-h1. Review the response headers from REST Service
+h1. Review of the response headers from REST Service
 
 You can view headers, status code and status text in the _Output Panel_ after sending your requests. The message will be the following:
 
@@ -142,7 +153,22 @@ Hello steve
 {screen}
 
 
-h2. Example: REST service with complex media types output preview
+h1. Sandboxing REST Service: Deploy/Undeploy Sandbox, Run REST Service  (for "developer" role)
+
+Developer can secure deploy untested REST Service for testing in isolated environment named _Sandbox_. To do this you should click the *Deploy REST Service Sandbox* button from toolbar or go to *Run > Deploy Sandbox* on top menu item
+To undeploying from sandbox use *Undeploy REST Service Sandbox* _Toolbar_ button or go to *Run > Undeploy Sandbox* top menu item.
+
+!deploy_undeploy_sandbox.png|border=1!
+
+*Illustration. Using REST Services Sandbox*
+
+{note}
+If REST service was deployed by other user before, you would not be able to deploy it.
+{note}
+
+To run REST Service faster you can use special command *Run > Run* REST Service which is a sequence of next operations: *Save*, *Deploy Sandbox/Redeploy Sandbox*, *Launch REST Service*. Simply click the Run button at the right part of toolbar, or go to *Run > Run* on top menu.
+
+h1. Example: REST service with complex media types output preview
 
 * *Step 1:* Create, save and deploy REST service with next content:
 {code}
@@ -188,7 +214,7 @@ public class TestService {
 * *Step 2:* Select *Run > Launch REST Service...* on the top menu.
 * *Step 3:* Select the *Path* field as "/testMediaTypes", method OPTIONS, then click the *Send* button.
 IDE will send OPTIONS-request and display the received response in the _Output Tab_. For example:
-{code}<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+{code:xml}<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <application xmlns="http://research.sun.com/wadl/2006/10">
    <resources base="http://192.168.0.8:8080/rest">
       <resource path="/testMediaTypes">
@@ -199,11 +225,11 @@ IDE will send OPTIONS-request and display the received response in the _Output T
          </method>
          <resource path="InnerPath/{pathParam}">
             <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="template" 
-	     name="pathParam" />
+       name="pathParam" />
             <method name="POST" id="post1">
                <request>
                   <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="header" 
-		   name="Test-Header1" />
+       name="Test-Header1" />
                   <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="query"
                      name="Test Query Parameter 1" />
                   <representation mediaType="application/xml" />
@@ -215,7 +241,7 @@ IDE will send OPTIONS-request and display the received response in the _Output T
             <method name="POST" id="post2">
                <request>
                   <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="header" 
-		   name="Test-Header2" />
+       name="Test-Header2" />
                   <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="query"
                      name="Test Query Parameter 2" />
                   <representation mediaType="application/xml" />
@@ -229,10 +255,10 @@ IDE will send OPTIONS-request and display the received response in the _Output T
    </resources>
 </application>
 {code}
-* *Step 4:* Call the *Launch REST Service* dialog and select the *Path* field.
+* *Step 4:* Call the *Launch REST Service* dialog again and select the another *Path* field:
 {code}"/testMediaTypes/InnerPath/{pathParam}"{code}
 * *Step 5:* Select the *Response Media Type =* "text/html" item.
-* *Step 6:* Type in the *Path* filed as "/testMediaTypes/InnerPath/value1". In the _Query Parameter_ tab, set "Test Query Parameter 1"="value2". In the _Header Parameter_ tab, set "Test-Header1"="value3". In the _Body_ tab, type "example". 
+* *Step 6:* Type in the *Path* filed as "/testMediaTypes/InnerPath/value1". In the _Query Parameter_ tab, set "Test Query Parameter 1"="value2". In the _Header Parameter_ tab, set "Test-Header1"="value3". In the _Body_ tab, type "example".
 * *Step 7:* Click the *Send* button.
 
 Then eXo IDE will create request and send it. The response will be added to the _Output Tab_:

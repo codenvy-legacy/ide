@@ -1,0 +1,1 @@
+eXo IDE supports validation POGO file: similar to Validate REST Service.

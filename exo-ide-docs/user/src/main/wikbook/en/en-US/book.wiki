@@ -21,11 +21,20 @@ h1. Search Files
 h1. REST Service Operations
 {include:document="IDE/REST Service Operations.wiki" /}
 
+h1. POGO File Operations
+{include:document="IDE/POGO File Operations.wiki" /}
+
 h1. Google Gadget Operations
 {include:document="IDE/Google Gadget Operations.wiki" /}
 
 h1. Operations With ECM Groovy Templates 
 {include:document="IDE/OperationsWithECMGroovyTemplates.wiki" /}
+
+h1. Operations With Netvibes Widget 
+{include:document="IDE/Operations With Netvibes Widget.wiki" /}
+
+h1. Chromattic Data Object Usage
+{include:document="IDE/Chromattic Data Object Usage.wiki" /}
 
 h1. Versioning
 {include:document="IDE/Versioning.wiki" /}
@@ -34,7 +43,8 @@ h1. Miscellaneous and Tips
 {include:document="IDE/Miscellaneous.wiki" /}
 
 h1. Links
-* [CodeMirror usage|http://codemirror.net]
+* [Codemirror usage|http://codemirror.net]
 * [FCKeditor user guide|http://docs.cksource.com/FCKeditor_2.x/Users_Guide]
 * [What are gadgets powered by Google|http://www.google.com/webmasters/gadgets]
 * [RESTful Web Services|http://www.oracle.com/technetwork/articles/javase/index-137171.html]
+* [Netvibes Documentation|http://dev.netvibes.com/doc/]
