@@ -613,7 +613,7 @@ Connected with the JCR repository node, file properties are displayed in the _Pr
 * *Step 1:* Open the file in the _Content Panel_.
 * *Step 2:* Click the *Show Properties* button at the right part of the _Toolbar_; or go to *View > Properties* on the top menu.
 
-!ide_change_file_property.PNG!
+!ide_change_file_property.png!
 
 *Illustration. View file's properties*
 
