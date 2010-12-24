@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -41,15 +42,37 @@ public class RestServicesDiscoveryTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().runCommand(MenuCommands.Help.HELP, MenuCommands.Help.REST_SERVICES);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideRestServiceDiscovery\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideRestServiceDiscoveryOkButton\"]/"));
-      selenium.click("scLocator=//ListGrid[ID=\"ideRestServiceListGrid\"]/header/headerButton[fieldName=Path]/");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(selenium.isTextPresent("org.exoplatform.services.rest.ext.service.RestServicesList"));
-      
-      selenium.click("scLocator=//IButton[ID=\"ideRestServiceDiscoveryOkButton\"]/");
+
+      openNode(3, 0);
+
+      assertEquals("/ide/class-info-storage/jar", getTitle(5, 0));
+
+      openNode(5, 0);
+      openNode(6, 0);
+      openNode(7, 0);
+      assertEquals("Query Param", getTitle(7, 0));
+      assertEquals("POST", getTitle(6, 0));
+      assertEquals("jar-path:string", getTitle(8, 0));
+      assertEquals("package:string", getTitle(9, 0));
 
    }
-   
+   /**
+    * @throws InterruptedException
+    */
+   private void openNode(int row, int col) throws InterruptedException
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideRestServiceTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col["
+         + String.valueOf(col) + "]/open");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+
+   private String getTitle(int row, int col)
+   {
+      return selenium.getText("scLocator=//TreeGrid[ID=\"ideRestServiceTreeGrid\"]/body/row[" + String.valueOf(row)
+         + "]/col[" + String.valueOf(col) + "]");
+   }
+
 }
