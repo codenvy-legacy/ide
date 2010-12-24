@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
-import org.exoplatform.ide.client.model.discovery.marshal.RestService;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -51,7 +49,9 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
 
    private static String ID_OK = "ideRestServiceDiscoveryOkButton";
 
-   private RestServiceListGrid listGrid;
+//   private RestServiceListGrid listGrid;
+   
+   private RestServiceTreeGrid treeGrid;
 
    private IButton okButton;
 
@@ -104,11 +104,16 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
     */
    private void createGrid()
    {
-      listGrid = new RestServiceListGrid();
-      listGrid.setWidth100();
-      listGrid.setHeight100();
-
-      vLayout.addMember(listGrid);
+//      listGrid = new RestServiceListGrid();
+//      listGrid.setWidth100();
+//      listGrid.setHeight100();
+//
+//      vLayout.addMember(listGrid);
+      treeGrid = new RestServiceTreeGrid();
+      treeGrid.setWidth100();
+      treeGrid.setHeight100();
+      
+      vLayout.addMember(treeGrid);
 
    }
 
@@ -146,13 +151,6 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       return okButton;
    }
 
-   /**
-    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#getListGrid()
-    */
-   public ListGridItem<RestService> getListGrid()
-   {
-      return listGrid;
-   }
 
    /**
     * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#closeView()
@@ -160,6 +158,14 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
    public void closeView()
    {
       destroy();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#getTreeGrid()
+    */
+   public UntypedTreeGrid getTreeGrid()
+   {
+      return treeGrid;
    }
 
 }

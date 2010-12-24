@@ -217,6 +217,21 @@ public interface Images
 
    }
    
+   public interface RestService
+   {
+      public static final String REST_SERVICE = IMAGE_URL + "restservice/rest-service.png";
+      
+      public static final String IN = IMAGE_URL + "restservice/in.png";
+      
+      public static final String OUT   = IMAGE_URL + "restservice/out.png";
+      
+      public static final String METHOD   = IMAGE_URL + "restservice/method.png";
+      
+      public static final String PARAMETER   = IMAGE_URL + "restservice/parameter.png";
+      
+      public static final String VAR   = IMAGE_URL + "restservice/var.png";
+   }
+   
    public interface Editor
    {
 
