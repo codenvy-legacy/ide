@@ -124,7 +124,7 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(SetAutoloadEvent.TYPE, this);
       handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
-      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
+//      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
@@ -217,6 +217,7 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       }
 
       String url = configuration.getContext() + path;
+      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
       WadlService.getInstance().getWadl(url);
    }
 
@@ -225,6 +226,7 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
     */
    public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
    {
+      handlers.removeHandler(WadlServiceOutputReceivedEvent.TYPE);
       new GroovyServiceOutputPreviewForm(eventBus, event.getApplication(), undeployOnCancel);
    }
 
