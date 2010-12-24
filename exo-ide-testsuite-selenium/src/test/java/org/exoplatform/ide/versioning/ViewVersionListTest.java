@@ -77,7 +77,7 @@ public class ViewVersionListTest extends VersioningTest
    @Test
    public void testViewVersionList() throws Exception
    {
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Open new file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
@@ -193,9 +193,7 @@ public class ViewVersionListTest extends VersioningTest
    @Test
    public void testViewVersionListWithNavigateVersions() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      refresh();
       selectItemInWorkspaceTree(TEST_FOLDER);
       //Open new file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
