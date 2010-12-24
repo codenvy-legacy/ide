@@ -14,14 +14,13 @@
    </parent>
    <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
    <packaging>pom</packaging>
-   <name>eXo IDE :: Assemblies Tomcat with Standalone Application</name>
+   <name>eXo IDE :: Assemblies Tomcat</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-client</artifactId>
+         <artifactId>exo-ide-client-application</artifactId>
          <version>${project.version}</version>
          <type>war</type>
-         <classifier>application</classifier>
       </dependency>
    </dependencies>
    <build>
@@ -66,8 +65,8 @@
       </plugins>
    </build>
    <profiles>
-      <profile>
-         <id>base</id>
+     <profile>
+         <id>pkg-demo-site</id>
          <activation>
             <activeByDefault>false</activeByDefault>
          </activation>
@@ -77,14 +76,37 @@
                   <artifactId>maven-antrun-plugin</artifactId>
                   <executions>
                      <execution>
+                        <id>unwar-ide</id>
+                        <phase>compile</phase>
+                        <configuration>
+                           <tasks>
+                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" />
+                           </tasks>
+                        </configuration>
+                        <goals>
+                           <goal>run</goal>
+                        </goals>
+                     </execution>
+                     <execution>
                         <id>copy-war</id>
                         <phase>install</phase>
                         <configuration>
                            <tasks>
-                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-${project.version}-application.war" tofile="${project.build.directory}/tomcat-ide/webapps/IDE-application.war" />
-                              <copy todir="${project.build.directory}/tomcat-ide">
+                              <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
+                                 <fileset dir="${basedir}/src/main/resources/ide-war">
+                                    <exclude name="**/conf/*.xml" />
+                                    <exclude name="**/IDEApplication.html" />
+                                 </fileset>
+                              </copy>
+                              <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat" />
                               </copy>
+                              <move todir="${project.build.directory}/tomcat-ide/lib">
+                                 <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
+                              </move>
+                              <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
+                                 <fileset dir="${project.build.directory}/packager-conf/unwar" />
+                              </war>
                            </tasks>
                         </configuration>
                         <goals>
@@ -97,7 +119,7 @@
          </build>
       </profile>
       <profile>
-         <id>using-mysql</id>
+         <id>pkg-mysql-demo-site</id>
          <activation>
             <activeByDefault>false</activeByDefault>
          </activation>
@@ -136,7 +158,7 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-1.1.0-SNAPSHOT-application.war" dest="${project.build.directory}/packager-conf/unwar" />
+                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" />
                            </tasks>
                         </configuration>
                         <goals>
@@ -149,7 +171,9 @@
                         <configuration>
                            <tasks>
                               <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/ide-war" />
+                                 <fileset dir="${basedir}/src/main/resources/ide-war" >
+                                   <exclude name="**/IDEApplication.html" />
+                                 </fileset>
                               </copy>
                               <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat" />
@@ -157,7 +181,7 @@
                               <move todir="${project.build.directory}/tomcat-ide/lib">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
                               </move>
-                              <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE-application.war" needxmlfile="false">
+                              <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar" />
                               </war>
                               <war destfile="${project.build.directory}/tomcat-ide/webapps/rest.war" needxmlfile="false">
@@ -178,7 +202,7 @@
       <profile>
          <id>selenium-test</id>
          <activation>
-            <activeByDefault>true</activeByDefault>
+            <activeByDefault>false</activeByDefault>
          </activation>
          <build>
             <plugins>
@@ -190,7 +214,7 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-1.1.0-SNAPSHOT-application.war" dest="${project.build.directory}/packager-conf/unwar" />
+                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" />
                            </tasks>
                         </configuration>
                         <goals>
@@ -213,7 +237,7 @@
                               <move todir="${project.build.directory}/tomcat-ide/lib">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
                               </move>
-                              <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE-application.war" needxmlfile="false">
+                              <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar" />
                               </war>
                               <war destfile="${project.build.directory}/tomcat-ide/webapps/rest.war" needxmlfile="false">
@@ -231,5 +255,36 @@
             </plugins>
          </build>
       </profile>
+      <profile>                                                                                                                                                                                                
+         <id>pkg</id>                                                                                                                                                                                         
+         <activation>                                                                                                                                                                                          
+            <activeByDefault>false</activeByDefault>                                                                                                                                                           
+         </activation>                                                                                                                                                                                         
+         <build>                                                                                                                                                                                               
+            <plugins>                                                                                                                                                                                          
+               <plugin>                                                                                                                                                                                        
+                  <artifactId>maven-antrun-plugin</artifactId>                                                                                                                                                 
+                  <executions>                                                                                                                                                                                 
+                     <execution>                                                                                                                                                                               
+                        <id>copy-war</id>                                                                                                                                                                      
+                        <phase>install</phase>                                                                                                                                                                 
+                        <configuration>                                                                                                                                                                        
+                           <tasks>                                                                                                                                                                             
+                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war"
+                               tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" />
+                              <copy todir="${project.build.directory}/tomcat-ide" >                                                                                                                             
+                                 <fileset dir="${basedir}/src/main/resources/tomcat" />                                                                                                                        
+                              </copy>                                                                                                                                                                          
+                           </tasks>                                                                                                                                                                            
+                        </configuration>                                                                                                                                                                       
+                        <goals>                                                                                                                                                                                
+                           <goal>run</goal>                                                                                                                                                                    
+                        </goals>                                                                                                                                                                               
+                     </execution>                                                                                                                                                                              
+                  </executions>                                                                                                                                                                                
+               </plugin>                                                                                                                                                                                       
+            </plugins>                                                                                                                                                                                         
+         </build>                                                                                                                                                                                              
+      </profile>         
    </profiles>
 </project>

@@ -21,6 +21,10 @@
     <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
   </listener>
 
+ <listener>
+   <listener-class>org.exoplatform.ide.authentication.IdeSessionListener</listener-class>  
+ </listener>
+
 
    <filter>
     <filter-name>SetCurrentIdentityFilter</filter-name>
@@ -40,6 +44,16 @@
          <param-value>UTF-8</param-value>
       </init-param>
    </filter>
+
+   <filter>
+      <filter-name>SessionTimeoutFilter</filter-name>
+      <filter-class>org.exoplatform.ide.authentication.IdeSessionTimeoutFilter</filter-class>
+   </filter>
+
+   <filter-mapping>
+      <filter-name>SessionTimeoutFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+   </filter-mapping>
 
    <filter-mapping>
       <filter-name>RestEncodingFilter</filter-name>
@@ -151,18 +165,15 @@
       <servlet-class>org.apache.shindig.social.sample.oauth.SampleOAuthServlet</servlet-class>
    </servlet>
 
+   <servlet>
+      <servlet-name>remoteLoggerServiceImpl</servlet-name>
+      <servlet-class>com.allen_sauer.gwt.log.server.RemoteLoggerServiceImpl</servlet-class>
+   </servlet>
 
-     <servlet>
-                <servlet-name>remoteLoggerServiceImpl</servlet-name>
-                <servlet-class>com.allen_sauer.gwt.log.server.RemoteLoggerServiceImpl</servlet-class>
-        </servlet>
-
-
-
-        <servlet-mapping>
-                <servlet-name>remoteLoggerServiceImpl</servlet-name>
-                <url-pattern>/IDE/gwt-log</url-pattern>
-        </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>remoteLoggerServiceImpl</servlet-name>
+      <url-pattern>/IDE/gwt-log</url-pattern>
+   </servlet-mapping>
 
 
 
@@ -235,6 +246,10 @@
       <servlet-name>RestServer</servlet-name>
       <url-pattern>/rest/private/*</url-pattern>
    </servlet-mapping>
+
+  <session-config>
+  <session-timeout>1</session-timeout>
+</session-config>
 
 
   <security-constraint>

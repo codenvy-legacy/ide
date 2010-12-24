@@ -457,5 +457,8 @@
       <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
+      <module>exo-ide-client-application</module>
+      <module>exo-ide-client-gadget</module>
+      <module>exo-ide-packaging-standalone-tomcat</module>
    </modules>
 </project>

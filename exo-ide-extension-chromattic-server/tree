@@ -1,0 +1,164 @@
+[INFO] Scanning for projects...
+[WARNING] 
+	Profile with id: 'standalone' has not been activated.
+
+[INFO] Searching repository for plugin with prefix: 'dependency'.
+[INFO] ------------------------------------------------------------------------
+[INFO] Building eXo IDE :: Extension : Chromattic : Server
+[INFO]    task-segment: [dependency:tree]
+[INFO] ------------------------------------------------------------------------
+[WARNING] POM for 'c3p0:c3p0:pom:0.9.1.2:compile' is invalid.
+
+Its dependencies (if any) will NOT be available to the current build.
+[INFO] [dependency:tree {execution: default-cli}]
+[WARNING] POM for 'c3p0:c3p0:pom:0.9.1.2:compile' is invalid.
+
+Its dependencies (if any) will NOT be available to the current build.
+[INFO] org.exoplatform.ide:exo-ide-extension-chromattic-server:jar:1.1.0-SNAPSHOT
+[INFO] +- org.exoplatform.jcr:exo.jcr.component.core:jar:1.14.0-CR1-SNAPSHOT:compile
+[INFO] |  +- javax.jcr:jcr:jar:1.0:compile
+[INFO] |  +- org.exoplatform.kernel:exo.kernel.container:jar:2.3.0-CR1-SNAPSHOT:compile
+[INFO] |  |  +- org.exoplatform.tool:exo.tool.framework.junit:jar:1.2.1-GA:compile
+[INFO] |  |  |  +- javax.portlet:portlet-api:jar:2.0:compile
+[INFO] |  |  |  \- javax.faces:jsf-api:jar:1.2_13:compile
+[INFO] |  |  +- org.jibx:jibx-bind:jar:1.2.1:compile
+[INFO] |  |  |  \- bcel:bcel:jar:5.1:compile
+[INFO] |  |  \- org.jibx:jibx-extras:jar:1.2.1:compile
+[INFO] |  +- org.exoplatform.kernel:exo.kernel.commons:jar:2.3.0-CR1-SNAPSHOT:compile
+[INFO] |  +- org.exoplatform.kernel:exo.kernel.component.command:jar:2.3.0-CR1-SNAPSHOT:compile
+[INFO] |  |  \- commons-digester:commons-digester:jar:1.8.1:compile
+[INFO] |  +- org.exoplatform.kernel:exo.kernel.component.common:jar:2.3.0-CR1-SNAPSHOT:compile
+[INFO] |  |  +- jotm:jotm:jar:2.0.10:compile
+[INFO] |  |  |  +- jotm:jotm_jrmp_stubs:jar:2.0.10:compile
+[INFO] |  |  |  +- org.objectweb.carol:carol:jar:2.0.5:compile
+[INFO] |  |  |  \- howl:howl-logger:jar:0.1.11:compile
+[INFO] |  |  \- quartz:quartz:jar:1.5.2:compile
+[INFO] |  +- org.exoplatform.kernel:exo.kernel.component.cache:jar:2.3.0-CR1-SNAPSHOT:compile
+[INFO] |  +- org.exoplatform.core:exo.core.component.organization.api:jar:2.4.0-CR1-SNAPSHOT:compile
+[INFO] |  |  +- xdoclet:xdoclet-hibernate-module:jar:1.2.3:compile
+[INFO] |  |  |  \- xdoclet:xdoclet:jar:1.2.3:compile
+[INFO] |  |  +- xdoclet:xdoclet-xdoclet-module:jar:1.2.3:compile
+[INFO] |  |  +- xdoclet:xjavadoc:jar:1.2.3:compile
+[INFO] |  |  \- xstream:xstream:jar:1.0.2:compile
+[INFO] |  +- org.exoplatform.core:exo.core.component.document:jar:2.4.0-CR1-SNAPSHOT:compile
+[INFO] |  |  +- org.apache.pdfbox:pdfbox:jar:1.1.0:compile
+[INFO] |  |  |  +- org.apache.pdfbox:fontbox:jar:1.1.0:compile
+[INFO] |  |  |  \- org.apache.pdfbox:jempbox:jar:1.1.0:compile
+[INFO] |  |  +- com.lowagie:itext:jar:2.1.0:compile
+[INFO] |  |  |  +- bouncycastle:bcmail-jdk14:jar:136:compile
+[INFO] |  |  |  \- bouncycastle:bcprov-jdk14:jar:136:compile
+[INFO] |  |  +- org.htmlparser:htmlparser:jar:1.6:compile
+[INFO] |  |  +- org.apache.poi:poi:jar:3.6:compile
+[INFO] |  |  +- org.apache.poi:poi-scratchpad:jar:3.6:compile
+[INFO] |  |  +- org.apache.poi:poi-ooxml:jar:3.6:compile
+[INFO] |  |  |  +- org.apache.poi:poi-ooxml-schemas:jar:3.6:compile
+[INFO] |  |  |  |  \- org.apache.xmlbeans:xmlbeans:jar:2.3.0:compile
+[INFO] |  |  |  \- dom4j:dom4j:jar:1.6.1:compile
+[INFO] |  |  +- org.apache.tika:tika-core:jar:0.7:compile
+[INFO] |  |  \- org.apache.tika:tika-parsers:jar:0.7:compile
+[INFO] |  |     +- org.apache.commons:commons-compress:jar:1.0:compile
+[INFO] |  |     +- org.bouncycastle:bcmail-jdk15:jar:1.45:compile
+[INFO] |  |     +- org.bouncycastle:bcprov-jdk15:jar:1.45:compile
+[INFO] |  |     +- org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:jar:1.0.1:compile
+[INFO] |  |     +- org.ccil.cowan.tagsoup:tagsoup:jar:1.2:compile
+[INFO] |  |     +- asm:asm:jar:3.1:compile
+[INFO] |  |     \- com.drewnoakes:metadata-extractor:jar:2.4.0-beta-1:compile
+[INFO] |  +- org.apache.lucene:lucene-core:jar:2.4.1:compile
+[INFO] |  +- org.apache.lucene:lucene-spellchecker:jar:2.4.1:compile
+[INFO] |  +- org.apache.lucene:lucene-memory:jar:2.4.1:compile
+[INFO] |  +- com.sun.xml.stream:sjsxp:jar:1.0:compile
+[INFO] |  +- commons-dbcp:commons-dbcp:jar:1.2.2:compile
+[INFO] |  +- commons-pool:commons-pool:jar:1.5.4:compile
+[INFO] |  +- commons-lang:commons-lang:jar:2.4:compile
+[INFO] |  +- commons-chain:commons-chain:jar:1.0:compile
+[INFO] |  +- xml-apis:xml-apis:jar:1.0.b2:compile
+[INFO] |  +- org.slf4j:slf4j-api:jar:1.5.8:compile
+[INFO] |  +- stax:stax-api:jar:1.0.1:compile
+[INFO] |  +- org.jibx:jibx-run:jar:1.2.1:compile
+[INFO] |  |  \- org.codehaus.woodstox:wstx-asl:jar:3.2.1:compile
+[INFO] |  +- picocontainer:picocontainer:jar:1.1:compile
+[INFO] |  |  \- jmock:jmock:jar:1.0.1:compile
+[INFO] |  +- javax.resource:connector-api:jar:1.5:compile
+[INFO] |  +- javax.transaction:jta:jar:1.0.1B:compile
+[INFO] |  +- concurrent:concurrent:jar:1.3.4:compile
+[INFO] |  +- commons-collections:commons-collections:jar:3.2:compile
+[INFO] |  +- commons-beanutils:commons-beanutils:jar:1.8.0:compile
+[INFO] |  +- org.jgroups:jgroups:jar:2.10.0.GA:compile
+[INFO] |  +- commons-logging:commons-logging:jar:1.1:compile
+[INFO] |  |  +- log4j:log4j:jar:1.2.14:compile
+[INFO] |  |  \- logkit:logkit:jar:1.0.1:compile
+[INFO] |  +- javax.xml.stream:stax-api:jar:1.0:compile
+[INFO] |  +- xpp3:xpp3:jar:1.1.3.4.O:compile
+[INFO] |  +- jboss.jbossts:jbossjts:jar:4.6.1.GA:compile
+[INFO] |  +- jboss.jbossts:jbossts-common:jar:4.6.1.GA:compile
+[INFO] |  +- org.apache.ws.commons:ws-commons-util:jar:1.0.1:compile
+[INFO] |  +- org.jboss.cache:jbosscache-core:jar:3.2.6.GA:compile
+[INFO] |  |  +- jgroups:jgroups:jar:2.6.13.GA:compile
+[INFO] |  |  +- org.jboss.javaee:jboss-transaction-api:jar:1.0.1.GA:compile
+[INFO] |  |  \- org.jboss:jboss-common-core:jar:2.2.14.GA:compile
+[INFO] |  |     \- org.jboss.logging:jboss-logging-spi:jar:2.0.5.GA:compile
+[INFO] |  +- org.infinispan:infinispan-core:jar:4.1.0.FINAL:compile
+[INFO] |  |  +- org.jboss.marshalling:river:jar:1.2.3.GA:compile
+[INFO] |  |  +- org.jboss.marshalling:marshalling-api:jar:1.2.3.GA:compile
+[INFO] |  |  \- org.rhq.helpers:rhq-pluginAnnotations:jar:1.4.0.B01:compile
+[INFO] |  |     \- i18nlog:i18nlog:jar:1.0.9:compile
+[INFO] |  \- org.infinispan:infinispan-cachestore-jdbc:jar:4.1.0.FINAL:compile
+[INFO] |     \- c3p0:c3p0:jar:0.9.1.2:compile
+[INFO] +- org.exoplatform.jcr:exo.jcr.component.ext:jar:1.14.0-CR1-SNAPSHOT:compile
+[INFO] |  +- org.exoplatform.core:exo.core.component.database:jar:2.4.0-CR1-SNAPSHOT:compile
+[INFO] |  |  +- com.experlog:xapool:jar:1.5.0:compile
+[INFO] |  |  +- org.hibernate:hibernate-core:jar:3.3.2.GA:compile
+[INFO] |  |  |  \- antlr:antlr:jar:2.7.6:compile
+[INFO] |  |  \- org.hibernate:hibernate-annotations:jar:3.4.0.GA:compile
+[INFO] |  |     +- org.hibernate:ejb3-persistence:jar:1.0.2.GA:compile
+[INFO] |  |     \- org.hibernate:hibernate-commons-annotations:jar:3.1.0.GA:compile
+[INFO] |  +- org.exoplatform.ws:exo.ws.rest.ext:jar:2.2.0-CR1-SNAPSHOT:compile
+[INFO] |  |  \- org.exoplatform.core:exo.core.component.xml-processing:jar:2.4.0-CR1-SNAPSHOT:compile
+[INFO] |  +- org.exoplatform.ws:exo.ws.commons:jar:2.2.0-CR1-SNAPSHOT:compile
+[INFO] |  +- org.exoplatform.ws:exo.ws.frameworks.json:jar:2.2.0-CR1-SNAPSHOT:compile
+[INFO] |  +- javax.ws.rs:jsr311-api:jar:1.0:compile
+[INFO] |  \- commons-fileupload:commons-fileupload:jar:1.2.1:compile
+[INFO] +- org.exoplatform.jcr:exo.jcr.component.webdav:jar:1.14.0-CR1-SNAPSHOT:compile
+[INFO] |  +- javax.servlet:servlet-api:jar:2.4:compile
+[INFO] |  \- jtidy:jtidy:jar:4aug2000r7-dev:compile
+[INFO] +- org.exoplatform.ws:exo.ws.rest.core:jar:2.2.0-CR1-SNAPSHOT:compile
+[INFO] |  +- javax.mail:mail:jar:1.4:compile
+[INFO] |  +- javax.activation:activation:jar:1.1:compile
+[INFO] |  \- javax.xml.bind:jaxb-api:jar:2.1:compile
+[INFO] +- org.exoplatform.ws:exo.ws.testframework:jar:2.2.0-CR1-SNAPSHOT:test (scope not updated to compile)
+[INFO] +- org.exoplatform.core:exo.core.component.security.core:jar:2.4.0-CR1-SNAPSHOT:compile
+[INFO] +- org.exoplatform.core:exo.core.component.script.groovy:jar:2.4.0-CR1-SNAPSHOT:compile
+[INFO] +- javax.annotation:jsr250-api:jar:1.0:compile
+[INFO] +- org.slf4j:slf4j-log4j12:jar:1.5.8:test
+[INFO] +- hsqldb:hsqldb:jar:1.8.0.7:test (scope not updated to runtime)
+[INFO] +- junit:junit:jar:4.7:test (scope not updated to compile)
+[INFO] +- org.codehaus.groovy:groovy-all:jar:1.6.5:compile
+[INFO] |  +- org.apache.ant:ant:jar:1.7.1:compile
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.7.1:compile
+[INFO] |  \- jline:jline:jar:0.9.94:compile
+[INFO] +- org.chromattic:chromattic.apt:jar:1.1.0-SNAPSHOT:compile
+[INFO] |  +- org.chromattic:chromattic.metamodel:jar:1.1.0-SNAPSHOT:compile
+[INFO] |  +- org.reflext:reflext.api:jar:1.1.0-beta11:compile
+[INFO] |  +- org.reflext:reflext.core:jar:1.1.0-beta11:compile
+[INFO] |  +- org.reflext:reflext.spi:jar:1.1.0-beta11:compile
+[INFO] |  \- org.reflext:reflext.apt:jar:1.1.0-beta11:compile
+[INFO] +- org.chromattic:chromattic.api:jar:1.1.0-SNAPSHOT:compile
+[INFO] +- org.chromattic:chromattic.spi:jar:1.1.0-SNAPSHOT:compile
+[INFO] +- org.chromattic:chromattic.core:jar:1.1.0-SNAPSHOT:compile
+[INFO] |  +- org.chromattic:chromattic.common:jar:1.1.0-SNAPSHOT:compile
+[INFO] |  \- org.reflext:reflext.jlr:jar:1.1.0-beta11:compile
+[INFO] +- org.chromattic:chromattic.ext:jar:1.1.0-SNAPSHOT:compile
+[INFO] \- org.chromattic:chromattic.dataobject:jar:1.1.0-SNAPSHOT:compile
+[INFO]    \- org.chromattic:chromattic.groovy:jar:1.1.0-SNAPSHOT:compile
+[INFO]       +- org.chromattic:chromattic.cglib:jar:1.1.0-SNAPSHOT:compile
+[INFO]       |  \- cglib:cglib:jar:2.2:compile
+[INFO]       +- org.chromattic:chromattic.metamodel:test-jar:tests:1.1.0-SNAPSHOT:compile
+[INFO]       +- org.chromattic:chromattic.core:test-jar:tests:1.1.0-SNAPSHOT:compile
+[INFO]       \- com.google.code.javaparser:javaparser:jar:1.0.8:compile
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 4 seconds
+[INFO] Finished at: Wed Dec 22 10:42:40 EET 2010
+[INFO] Final Memory: 49M/236M
+[INFO] ------------------------------------------------------------------------

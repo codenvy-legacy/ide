@@ -8,7 +8,7 @@
 
 <body>
 
-<%response.sendRedirect("IDE-application/IDE/IDEApplication.html");%>
+<%response.sendRedirect("IDE/IDE/IDEApplication.html");%>
 
 </body>
 </html>

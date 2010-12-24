@@ -11,9 +11,55 @@
    <packaging>jar</packaging>
    <name>eXo IDE :: Extension : Netvibes : Server</name>
    <dependencies>
+   <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>exo.jcr.component.core</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>avalon-framework</groupId>
+               <artifactId>avalon-framework</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>bouncycastle</groupId>
+               <artifactId>bcmail-jdk14</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>bouncycastle</groupId>
+               <artifactId>bcprov-jdk14</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>c3p0</groupId>
+               <artifactId>c3p0</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.objectweb.carol</groupId>
+              <artifactId>carol</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.infinispan</groupId>
+               <artifactId>infinispan-core</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.infinispan</groupId>
+               <artifactId>infinispan-cachestore-jdbc</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>quartz</groupId>
+               <artifactId>quartz</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>stax</groupId>
+               <artifactId>stax-api</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.codehaus.woodstox</groupId>
+               <artifactId>wstx-asl</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.webdav</artifactId>
+         <artifactId>exo.jcr.component.ext</artifactId>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
@@ -25,7 +71,6 @@
          <artifactId>jsr311-api</artifactId>
          <version>1.0</version>
       </dependency>
-       
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>
