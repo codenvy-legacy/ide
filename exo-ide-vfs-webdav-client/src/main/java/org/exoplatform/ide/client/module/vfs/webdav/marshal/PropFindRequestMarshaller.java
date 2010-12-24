@@ -59,22 +59,22 @@ public class PropFindRequestMarshaller implements Marshallable
       xml += "<D:prop>";
       for (QName property : properties)
       {
-         if(ItemProperty.Namespace.DAV.equals(property.getNamespaceURI())){
-            xml += "<D:" +  property.getLocalName() +" />";
-         } else if (ItemProperty.Namespace.JCR.equals(property.getNamespaceURI())) {
-            xml += "<jcr:" +  property.getLocalName() +" xmlns:jcr=\"http://www.jcp.org/jcr/1.0\"/>";
-         } 
+         if (ItemProperty.Namespace.DAV.equals(property.getNamespaceURI()))
+         {
+            xml += "<D:" + property.getLocalName() + " />";
+         }
+         else if (ItemProperty.Namespace.JCR.equals(property.getNamespaceURI()))
+         {
+            xml += "<jcr:" + property.getLocalName() + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\"/>";
+         }
+         else if (ItemProperty.Namespace.EXO.equals(property.getNamespaceURI()))
+         {
+            xml += "<exo:" + property.getLocalName() + " xmlns:exo=\"http://www.exoplatform.com/jcr/exo/1.0\"/>";
+         }
       }
       xml += "</D:prop>";
       xml += "</D:propfind>";
       return xml;
-//      xml += "<D:propfind xmlns:D=\"DAV:\">";
-//      xml += "<D:prop>";
-//      xml += "<D:acl />";
-//      xml += "</D:prop>";
-//      xml += "</D:propfind>";
-
-//      return xml;
    }
 
 }

@@ -127,12 +127,8 @@ public class RestoreOpenedFilesPhase extends Phase implements ItemPropertiesRece
 
          fileToLoad = new File(href);
          filesToLoad.remove(0);
-         List<QName> propeties = new ArrayList<QName>();
-         propeties.add(ItemProperty.LOCKDISCOVERY);
-         propeties.add(ItemProperty.GETCONTENTLENGTH);
-         propeties.add(ItemProperty.RESOURCETYPE);
-         propeties.add(ItemProperty.GETCONTENTTYPE);
-         VirtualFileSystem.getInstance().getProperties(fileToLoad, propeties);
+
+         VirtualFileSystem.getInstance().getProperties(fileToLoad);
       }
       catch (Exception exc)
       {

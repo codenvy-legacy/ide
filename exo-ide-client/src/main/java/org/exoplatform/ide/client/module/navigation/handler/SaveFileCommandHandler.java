@@ -19,8 +19,7 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -43,7 +42,8 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHand
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -112,6 +112,7 @@ public class SaveFileCommandHandler implements FileContentSavedHandler, ItemProp
 
    public void onFileContentSaved(FileContentSavedEvent event)
    {
+      VirtualFileSystem.getInstance().getProperties(event.getFile());
       VirtualFileSystem.getInstance().getProperties(event.getFile(), null);
    }
 

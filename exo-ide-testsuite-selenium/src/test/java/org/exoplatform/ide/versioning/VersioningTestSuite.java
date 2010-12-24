@@ -29,7 +29,8 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses({ViewVersionHistoryTest.class, NavigateVersionsTest.class, ViewVersionListTest.class})
+@SuiteClasses({ViewVersionHistoryTest.class, NavigateVersionsTest.class, ViewVersionListTest.class,
+   RestoreVersionTest.class})
 public class VersioningTestSuite
 {
 

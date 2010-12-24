@@ -356,7 +356,7 @@ ExceptionThrownHandler, FileContentSavedHandler
             eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
          }
 
-         VirtualFileSystem.getInstance().getProperties(event.getItem(), null);
+         VirtualFileSystem.getInstance().getProperties(event.getItem());
       }
       else
       {

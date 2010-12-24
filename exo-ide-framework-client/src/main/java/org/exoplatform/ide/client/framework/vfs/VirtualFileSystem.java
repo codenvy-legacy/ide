@@ -77,6 +77,23 @@ public abstract class VirtualFileSystem
    public abstract void copy(Item item, String destination);
    
    /**
+    * Get default properties.
+    * 
+    * List of properties, that will be retrieved:
+    * <p>jcr:nodeType</p>
+    * <p>D:displayname</p>
+    * <p>jcr:content</p>
+    * <p>D:creationdate</p>
+    * <p>D:getlastmodified</p>
+    * <p>D:resourcetype</p>
+    * <p>D:getcontenttype</p>
+    * <p>D:getcontentlength</p>
+    * <p>jcr:primaryType</p>
+    * @param item
+    */
+   public abstract void getProperties(Item item);
+   
+   /**
     * Get properties of file or folder
     * 
     * @param item

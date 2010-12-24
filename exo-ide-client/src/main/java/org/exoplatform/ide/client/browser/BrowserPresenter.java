@@ -479,7 +479,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
 
       // TODO [IDE-307] check appConfig["entryPoint"] property
       Folder rootFolder = new Folder(event.getEntryPoint());
-      VirtualFileSystem.getInstance().getProperties(rootFolder, null);
+      VirtualFileSystem.getInstance().getProperties(rootFolder);
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
