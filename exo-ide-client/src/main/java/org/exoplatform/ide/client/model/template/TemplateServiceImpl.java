@@ -187,7 +187,7 @@ public class TemplateServiceImpl extends TemplateService
             + "<Module>\n"
             + "  <ModulePrefs title=\"Hello World!\" />\n"
             + "  <Content type=\"html\">\n"
-            + "    <![CDATA[\n"
+            + "    <![CDATA[ \n"
             + "    <div id=\"content_div\">\n"
             + "      <form name=\"sample\">\n"
             + "        Enter your name:<br>\n"
