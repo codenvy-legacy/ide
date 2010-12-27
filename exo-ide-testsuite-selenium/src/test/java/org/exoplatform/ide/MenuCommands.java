@@ -70,11 +70,11 @@ public interface MenuCommands
 
       public static final String DEPLOY_REST_SERVICE = "Deploy";
 
-      public static final String DEPLOY_SANDBOX = "Deploy Sandbox";
+      public static final String DEPLOY_SANDBOX = "Deploy to Sandbox";
 
       public static final String DEPLOY_UWA_WIDGET = "Deploy UWA widget";
 
-      public static final String UNDEPLOY_SANDBOX = "Undeploy Sandbox";
+      public static final String UNDEPLOY_SANDBOX = "Undeploy from Sandbox";
 
       public static final String SET_AUTOLOAD = "Set Autoload";
 
@@ -82,7 +82,7 @@ public interface MenuCommands
 
       public static final String LAUNCH_REST_SERVICE = "Launch REST Service...";
 
-      public static final String RUN_GROOVY_SERVICE = "Run Groovy Service...";
+      public static final String RUN_GROOVY_SERVICE = "Run in Sandbox";
 
       public static final String SHOW_PREVIEW = "Show Preview";
 
