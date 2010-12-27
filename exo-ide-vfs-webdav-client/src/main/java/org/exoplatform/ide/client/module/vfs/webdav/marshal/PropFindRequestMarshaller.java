@@ -28,7 +28,11 @@ import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 
 /**
  * 
- * Created by The eXo Platform SAS .
+ * Marshal XML String for getting properties.
+ * <p/>
+ * Request include 'allprop' element 
+ * and the 'include' element to include additional live properties,
+ * that can be passed in <code>properties</code> parameter.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
@@ -48,15 +52,15 @@ public class PropFindRequestMarshaller implements Marshallable
    {
       String xml = "<?xml version='1.0' encoding='UTF-8' ?>";
       xml += "<D:propfind xmlns:D=\"DAV:\">";
+      xml += "<D:allprop />";
       
       if(properties == null || properties.size() == 0)
       {
-         xml += "<D:allprop />";
          xml += "</D:propfind>";
          return xml;
       }
       
-      xml += "<D:prop>";
+      xml += "<D:include>";
       for (QName property : properties)
       {
          if (ItemProperty.Namespace.DAV.equals(property.getNamespaceURI()))
@@ -72,7 +76,7 @@ public class PropFindRequestMarshaller implements Marshallable
             xml += "<exo:" + property.getLocalName() + " xmlns:exo=\"http://www.exoplatform.com/jcr/exo/1.0\"/>";
          }
       }
-      xml += "</D:prop>";
+      xml += "</D:include>";
       xml += "</D:propfind>";
       return xml;
    }

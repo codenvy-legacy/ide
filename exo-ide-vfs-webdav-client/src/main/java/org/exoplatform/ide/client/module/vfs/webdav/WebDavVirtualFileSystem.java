@@ -290,19 +290,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public void getProperties(Item item)
    {
       List<QName> propeties = new ArrayList<QName>();
-      propeties.add(ItemProperty.DISPLAYNAME);
-      propeties.add(ItemProperty.JCR_CONTENT);
-      propeties.add(ItemProperty.CREATIONDATE);
-      propeties.add(ItemProperty.GETLASTMODIFIED);
-      propeties.add(ItemProperty.RESOURCETYPE);
-      propeties.add(ItemProperty.GETCONTENTTYPE);
-      propeties.add(ItemProperty.GETCONTENTLENGTH);
-      propeties.add(ItemProperty.JCR_NODETYPE);
-      propeties.add(ItemProperty.JCR_PRIMARYTYPE);
       
       propeties.add(ItemProperty.LOCKDISCOVERY);
       propeties.add(ItemProperty.ISVERSIONED);
-      propeties.add(ItemProperty.EXO_AUTOLOAD);
       
       getProperties(item, propeties);
    }
