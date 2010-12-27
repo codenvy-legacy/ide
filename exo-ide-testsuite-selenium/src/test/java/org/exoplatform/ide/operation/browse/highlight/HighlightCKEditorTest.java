@@ -95,7 +95,7 @@ public class HighlightCKEditorTest extends BaseTest
       clickOnEditor();
 
       assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_1'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
+         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
       assertFalse(selenium
          .isElementPresent("//div[@eventproxy='isc_PreviewForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
