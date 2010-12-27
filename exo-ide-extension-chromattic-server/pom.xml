@@ -192,6 +192,12 @@
       <dependency>
          <groupId>org.chromattic</groupId>
          <artifactId>chromattic.dataobject</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId> org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.testframework</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
    </dependencies>
    <build>
