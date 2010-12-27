@@ -464,7 +464,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       //      context.setActiveTextEditor(display.getEditor(event.getFile().getHref()));
 
       //String href = context.getActiveFile().getHref();
-      eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, textEditor));
+//      eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, textEditor));
       //CookieManager.getInstance().storeOpenedFiles(context);
    }
 
@@ -540,7 +540,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       {
          return true;
       }
-      
+
       if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
       {
          return !(lockTokens.containsKey(file.getHref()));

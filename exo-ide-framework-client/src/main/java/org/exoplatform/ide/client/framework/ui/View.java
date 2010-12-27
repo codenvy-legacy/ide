@@ -98,6 +98,7 @@ public class View extends Layout implements ActivateViewHandler
 
       setBorder(CLEAR_HIGLIGTH_STYLE);
       setPadding(0);
+      setCanFocus(true);
 
       mouseDownHandler = addMouseDownHandler(new MouseDownHandler()
       {
@@ -114,6 +115,7 @@ public class View extends Layout implements ActivateViewHandler
     */
    protected void activateView()
    {
+      focus();
       ViewHighlightManager.getInstance().selectView(this);
    }
 

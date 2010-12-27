@@ -23,12 +23,14 @@ import java.util.List;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.SelectionStyle;
 
 /**
@@ -48,6 +50,8 @@ public class OutlineForm extends View implements OutlinePresenter.Display
    private static final String OUTLINE_TREE_GRID_ID = "ideOutlineTreeGrid";
 
    public static final String ID = "ideOutlineForm";
+   
+   private Image OUTLINE_TAB_ICON = new Image(IDEImageBundle.INSTANCE.outline());
 
    private HandlerManager eventBus;
 
@@ -60,6 +64,8 @@ public class OutlineForm extends View implements OutlinePresenter.Display
       super(ID, bus);
       setTitle("Outline");
       setType(ViewType.OUTLINE);
+      setImage(OUTLINE_TAB_ICON);
+      
       
       eventBus = bus;
 

@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.client.module.development;
 
-import com.google.gwt.user.client.ui.Image;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
-import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -32,7 +29,6 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
@@ -44,6 +40,7 @@ import org.exoplatform.ide.client.outline.OutlineForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -53,8 +50,6 @@ import com.google.gwt.event.shared.HandlerManager;
 public class DevelopmentModuleEventHandler implements ShowOutlineHandler, ApplicationSettingsReceivedHandler,
    EditorActiveFileChangedHandler, ViewClosedHandler
 {
-
-   private Image OUTLINE_TAB_ICON = new Image(IDEImageBundle.INSTANCE.outline());
 
    private Handlers handlers;
 
@@ -74,8 +69,8 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       handlers = new Handlers(eventBus);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       handlers.addHandler(ShowOutlineEvent.TYPE, this);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(ViewClosedEvent.TYPE, this);
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -93,7 +88,6 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       if (event.isShow())
       {
          View view = new OutlineForm(eventBus, activeTextEditor, activeFile);
-         view.setImage(OUTLINE_TAB_ICON);
          eventBus.fireEvent(new OpenViewEvent(view));
       }
       else
@@ -101,6 +95,20 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
          eventBus.fireEvent(new CloseViewEvent(OutlineForm.ID));
       }
    }
+
+   Timer t = new Timer()
+   {
+
+      @Override
+      public void run()
+      {
+//         view.highlightView();
+         view.blur();
+         view.focus();
+      }
+   };
+
+   private View view;
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
@@ -119,11 +127,10 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       //if outline was closed, but must be opened, open it
       if (openOutline && !wasOutlineOpened)
       {
-         View view = new OutlineForm(eventBus, activeTextEditor, activeFile);
-         view.setImage(OUTLINE_TAB_ICON);
-         view.setTitle("Outline");
-         view.setType(ViewType.OUTLINE);
+         view = new OutlineForm(eventBus, activeTextEditor, activeFile);
          eventBus.fireEvent(new OpenViewEvent(view));
+         t.schedule(750);
+
          return;
       }
 
