@@ -30,7 +30,8 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({HighlightBottomTabSetTest.class, HighlightNavigatorTabTest.class, HighlightEditorsTabTest.class, HighlightCKEditorTest.class, ChangeHighlightTest.class})
+@SuiteClasses({HighlightBottomTabSetTest.class, HighlightNavigatorTabTest.class, HighlightEditorsTabTest.class,
+   HighlightCKEditorTest.class, ChangeHighlightTest.class, HighlightOutlineTest.class})
 public class HighlightTestSuite
 {
 
