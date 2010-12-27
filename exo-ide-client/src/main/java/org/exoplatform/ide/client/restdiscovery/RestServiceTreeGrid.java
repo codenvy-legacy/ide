@@ -56,10 +56,12 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
    private static final String NAME = "name";
 
    private static final String TITLE = "Path";
+   
+   private static final String ID ="ideRestServiceTreeGrid";
 
    public RestServiceTreeGrid()
    {
-      setID(id);
+      setID(ID);
       setShowRoot(false);
 
       tree = new Tree();
