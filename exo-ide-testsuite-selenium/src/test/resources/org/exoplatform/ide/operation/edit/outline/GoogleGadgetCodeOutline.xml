@@ -2,7 +2,7 @@
 <Module>
 <ModulePrefs title="Hello World!" />
 <Content type="html">
-<![CDATA[
+<![CDATA[ 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
