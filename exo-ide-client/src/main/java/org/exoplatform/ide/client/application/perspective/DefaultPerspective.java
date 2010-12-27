@@ -298,7 +298,6 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       statusBar = new GWTStatusBarWrapper(eventBus);
       //statusBar = new StatusBarForm(eventBus, context);
       addMember(statusBar);
-      eventBus.fireEvent(new ActivateViewEvent(BrowserPanel.ID));
    }
 
    @Override
