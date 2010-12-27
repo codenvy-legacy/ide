@@ -41,13 +41,13 @@ import com.google.gwt.event.shared.HandlerManager;
 public class DeployGroovySandboxCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   private static final String ID = "Run/Deploy Sandbox";
+   private static final String ID = "Run/Deploy to Sandbox";
 
    public DeployGroovySandboxCommand(HandlerManager eventBus)
    {
       super(ID);
-      setTitle("Deploy Sandbox");
-      setPrompt("Deploy REST Service Sandbox");
+      setTitle("Deploy to Sandbox");
+      setPrompt("Deploy REST Service to Sandbox");
       setIcon(Images.Controls.DEPLOY_SANDBOX);
       //setImages(GroovyPluginImageBundle.INSTANCE.deployGroovy(), GroovyPluginImageBundle.INSTANCE.deployGroovyDisabled());
       setEvent(new DeployGroovyScriptSandboxEvent());

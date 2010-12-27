@@ -41,13 +41,13 @@ import com.google.gwt.event.shared.HandlerManager;
 public class UndeployGroovySandboxCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "Run/Undeploy Sandbox";
+   public static final String ID = "Run/Undeploy from Sandbox";
 
    public UndeployGroovySandboxCommand(HandlerManager eventBus)
    {
       super(ID);
-      setTitle("Undeploy Sandbox");
-      setPrompt("Undeploy REST Service Sandbox");
+      setTitle("Undeploy from Sandbox");
+      setPrompt("Undeploy REST Service from Sandbox");
       setIcon(Images.Controls.UNDEPLOY_SANDBOX);
       //setImages(GroovyPluginImageBundle.INSTANCE.undeployGroovy(), GroovyPluginImageBundle.INSTANCE.undeployGroovyDisabled());
       setEvent(new UndeployGroovyScriptSandboxEvent());

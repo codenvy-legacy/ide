@@ -40,13 +40,13 @@ import com.google.gwt.event.shared.HandlerManager;
 public class RunGroovyServiceCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   private static final String ID = "Run/Run Groovy Service...";
+   private static final String ID = "Run/Run in Sandbox";
 
    public RunGroovyServiceCommand()
    {
       super(ID);
-      setTitle("Run Groovy Service...");
-      setPrompt("Run Groovy Service...");
+      setTitle("Run in Sandbox");
+      setPrompt("Run in Sandbox");
       setIcon(Images.Controls.RUN_GROOVY_SERVICE);
       setEvent(new RunGroovyServiceEvent());
    }
