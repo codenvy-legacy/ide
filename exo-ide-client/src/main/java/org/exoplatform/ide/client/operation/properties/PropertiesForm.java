@@ -62,8 +62,10 @@ public class PropertiesForm extends View implements PropertiesPresenter.Display
    public PropertiesForm(HandlerManager eventBus)
    {
       super(ID, eventBus);
+      setCanFocus(Boolean.TRUE);
       image = new Image(IDEImageBundle.INSTANCE.properties());
-
+      setWidth100();
+      setHeight100();
       presenter = new PropertiesPresenter(eventBus);
       presenter.bindDisplay(this);
 
@@ -81,7 +83,6 @@ public class PropertiesForm extends View implements PropertiesPresenter.Display
          //         content.removeFromParent();
          content.destroy();
       }
-      setCanFocus(Boolean.TRUE);
 
       if (file.getProperties().size() == 0)
       {
@@ -107,7 +108,9 @@ public class PropertiesForm extends View implements PropertiesPresenter.Display
    public DynamicForm getPropertiesForm(Collection<Property> properties)
    {
       DynamicForm propertiesForm = new DynamicForm();
-
+      propertiesForm.setWidth100();
+      propertiesForm.setHeight100();
+      propertiesForm.setCanFocus(true);
       if (properties == null)
       {
          return propertiesForm;

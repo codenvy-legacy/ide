@@ -71,10 +71,9 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
    {
       super(eventBus, ID);
       setHeight(INITIAL_HEIGHT);
-      setCanFocus(Boolean.TRUE);
 
       createButtons();
-      setCanFocus(true);
+      setCanFocus(Boolean.TRUE);
       getViewTypes().add(ViewType.PREVIEW);
       getViewTypes().add(ViewType.PROPERTIES);
       getViewTypes().add(ViewType.OUTPUT);

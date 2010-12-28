@@ -23,6 +23,9 @@ import com.google.gwt.user.client.ui.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+import mx4j.log.Log;
+import mx4j.log.Logger;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ActivateViewHandler;
@@ -62,17 +65,17 @@ public class View extends Layout implements ActivateViewHandler
     * Id of view.
     */
    private final String id;
-   
+
    /**
     * View's image.
     */
    private Image image;
-   
+
    /**
     * View's title.
     */
    private String title;
-   
+
    /**
     * View's type.
     */
@@ -84,7 +87,7 @@ public class View extends Layout implements ActivateViewHandler
     * Handlers.
     */
    private Handlers handlers;
-   
+
    /**
     * @param id view's id
     * @param eventBus handler manager
@@ -108,14 +111,40 @@ public class View extends Layout implements ActivateViewHandler
          }
       });
    }
-   
+
    /**
     * Activate this view.
     * Use only in sub classes of {@link View} 
     */
    protected void activateView()
    {
-      focus();
+
+      if (getMembers().length > 0 && getMember(0) != null)
+      {
+         Canvas member = getMember(0);
+         try
+         {
+            if (member.getCanFocus() != null && member.getCanFocus())
+            {
+               member.focus();
+               if (getCanFocus())
+                  setCanFocus(false);
+            }
+            else
+            {
+               focus();
+            }
+         }
+         catch (NullPointerException e)
+         {
+            e.printStackTrace();
+            focus();
+         }
+      }
+      else
+      {
+         focus();
+      }
       ViewHighlightManager.getInstance().selectView(this);
    }
 
@@ -130,7 +159,6 @@ public class View extends Layout implements ActivateViewHandler
       super.onDestroy();
    }
 
-  
    /**
     * Set view highlight view.
     * Uses only in {@link ViewHighlightManager}
@@ -140,7 +168,6 @@ public class View extends Layout implements ActivateViewHandler
       setBorder(HIGLIDTH_STYLE);
    }
 
-   
    /**
     * Remove highlight frim view
     * Uses only in {@link ViewHighlightManager}
@@ -199,7 +226,6 @@ public class View extends Layout implements ActivateViewHandler
          activateView();
    }
 
-
    /**
     * @return the type
     */
@@ -207,7 +233,6 @@ public class View extends Layout implements ActivateViewHandler
    {
       return type;
    }
-
 
    /**
     * @param type the type to set

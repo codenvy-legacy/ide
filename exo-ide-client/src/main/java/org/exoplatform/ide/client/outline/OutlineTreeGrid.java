@@ -98,6 +98,7 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       setShowRoot(false);
       setFixedFieldWidths(false);
       setIconSize(16);
+      setCanFocus(true);
       
       tree = new Tree();
       tree.setModelType(TreeModelType.CHILDREN);

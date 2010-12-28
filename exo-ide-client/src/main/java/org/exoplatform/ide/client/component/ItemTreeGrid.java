@@ -68,11 +68,11 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
 
       setFixedFieldWidths(false);
       setSelectionType(SelectionStyle.SINGLE);
-
+ 
       setSeparateFolders(true);
 
       // setCanFocus(false);  // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."  
-
+      setCanFocus(true);
       setShowConnectors(false);
       setCanSort(false);
       
@@ -91,6 +91,7 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
    {
       this(id);
       this.allowSameNames = allowSameNames;
+      setCanFocus(true);
    }
 
    @Override

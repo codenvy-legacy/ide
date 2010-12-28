@@ -55,7 +55,7 @@ public class SearchResultsForm extends View implements SearchResultPanel, Search
 
       searchItemTreeGrid.setHeight100();
       searchItemTreeGrid.setWidth100();
-      addChild(searchItemTreeGrid);
+      addMember(searchItemTreeGrid);
 
       presenter = new SearchResultsPresenter(eventBus, context, searchResult);
       presenter.bindDsplay(this);
