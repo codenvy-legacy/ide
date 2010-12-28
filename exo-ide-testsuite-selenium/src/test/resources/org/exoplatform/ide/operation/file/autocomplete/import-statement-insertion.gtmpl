@@ -1,0 +1,21 @@
+<html>
+   <head>
+     <%
+       import javax.ws.rs.Path
+       import javax.ws.rs.GET
+       import javax.ws.rs.PathParam
+       import java.util.prefs.Base64;
+     %>
+   </head>
+   <body>
+     <%
+        @GET
+        @Path("helloworld/{name}")
+        public String hello(@PathParam("name") String name) {
+
+          return "Hello " + name
+        }
+      }
+     %>
+   </body>
+</html>

@@ -24,6 +24,7 @@ import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyClassNameC
 import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyKeywordsAutocompletionTest;
 import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyLocalVariableTest;
 import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyObjectCompletionTest;
+import org.exoplatform.ide.operation.file.autocompletion.groovy.ImportStatementInsertionTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -37,7 +38,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({AutoCompletionCSSTest.class, AutoCompletionHTMLTest.class,
    AutoCompletionJavaScriptDuplicationTest.class, AutoCompletionJavaScriptTest.class, AutoCompletionXMLTest.class,
    GroovyObjectCompletionTest.class, GroovyClassMethodsCompletionTest.class, GroovyClassNameCompletionTest.class,
-   GroovyLocalVariableTest.class, GroovyAnnotationAutocompleteTest.class, GroovyKeywordsAutocompletionTest.class})
+   GroovyLocalVariableTest.class, GroovyAnnotationAutocompleteTest.class, GroovyKeywordsAutocompletionTest.class, ImportStatementInsertionTest.class})
 public class AutoCompletionTestSuite
 {
 
