@@ -55,7 +55,7 @@ public class GroovyServiceImpl extends GroovyService
    
    public static final String UNDEPLOY_SANDBOX = "/undeploy-sandbox";
 
-   public static final String VALIDATE = "/validate";
+   public static final String VALIDATE = "/validate-script";
 
    private HandlerManager eventBus;
    
@@ -132,8 +132,7 @@ public class GroovyServiceImpl extends GroovyService
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, "script/groovy").header(
-         HTTPHeader.LOCATION, fileName).data(fileContent).send(callback);
-
+         HTTPHeader.LOCATION, fileHref).data(fileContent).send(callback);
    }
    
 
