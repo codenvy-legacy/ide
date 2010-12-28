@@ -21,18 +21,18 @@ package org.exoplatform.ide.operation.edit.outline;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -44,9 +44,11 @@ public class CodeOutLineRESTServiceTest extends BaseTest
 {
 
    private final static String FILE_NAME = "RESTCodeOutline.groovy";
+   
+   private final static String FOLDER_NAME = CodeOutLineRESTServiceTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FILE_NAME;
+      + "/";
 
    private OulineTreeHelper outlineTreeHelper;
 
@@ -62,7 +64,26 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME;
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL);
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FOLDER_NAME + "/" + FILE_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+   @AfterClass
+   public static void tearDown() throws Exception
+   {
+      IDE.editor().closeTab(0);
+      try
+      {
+         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
       catch (IOException e)
       {
@@ -81,9 +102,9 @@ public class CodeOutLineRESTServiceTest extends BaseTest
    {
       // Open groovy file with content
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //      Thread.sleep(TestConstants.SLEEP);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
@@ -92,8 +113,8 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // check for presence of tab outline
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]"));
-      assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[index=0]/title"));
+      assertTrue(selenium.isElementPresent(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR));
+      assertEquals("Outline", selenium.getText(Locators.CodeHelperPanel.SC_OUTLINE_TAB_LOCATOR + "/title"));
 
       // create initial outline tree map
       outlineTreeHelper.addOutlineItem(0, "@  TestService", 6, false);
@@ -101,7 +122,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
 
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();
-
+      
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();
 
@@ -124,13 +145,6 @@ public class CodeOutLineRESTServiceTest extends BaseTest
 
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();
-   }
-
-   @AfterClass
-   public static void tearDown() throws Exception
-   {
-      IDE.editor().closeTab(0);
-      cleanDefaultWorkspace();
    }
 
 }

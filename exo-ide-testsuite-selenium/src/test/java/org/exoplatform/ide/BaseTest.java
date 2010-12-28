@@ -290,6 +290,19 @@ public abstract class BaseTest
       selenium.selectFrame(getContentPanelLocator(tabIndex) + "//iframe");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
+   
+   /**
+    * Mouse click on editor.
+    * 
+    * @param tabIndex - tab index.
+    * @throws Exception
+    */
+   protected void clickOnEditor(int tabIndex) throws Exception
+   {
+      selectIFrameWithEditor(tabIndex);
+      selenium.clickAt("//body[@class='editbox']", "5,5");
+      selectMainFrame();
+   }
 
    /**
     * Type text to file, opened in tab.
