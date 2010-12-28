@@ -353,13 +353,13 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
          descriptionPanel.removeFromParent();
          descriptionPanel = null;
       }
-      if ( selectedWidget!= null && selectedWidget.getTokenDecription() != null)
+      if (selectedWidget != null && selectedWidget.getTokenDecription() != null)
       {
          timer.schedule(1000);
       }
 
    }
-   
+
    private Timer timer = new Timer()
    {
 
@@ -370,20 +370,23 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
          {
             descriptionPanel.removeFromParent();
          }
-         int width = 300;
-         descriptionPanel = new Frame(selectedWidget.getTokenDecription());
-         descriptionPanel.setWidth(width + "px");
-         descriptionPanel.setHeight("" + (panel.getOffsetHeight() - 2));
-         
-//         descriptionPanel.getElement().setInnerText(selectedWidget.getTokenDecription());
-         descriptionPanel.setStyleName(Style.AUTO_DESCRIPTION_PANEL);
-         int clientWidth = Window.getClientWidth();
+         if (selectedWidget != null)
+         {
+            int width = 300;
+            descriptionPanel = new Frame(selectedWidget.getTokenDecription());
+            descriptionPanel.setWidth(width + "px");
+            descriptionPanel.setHeight("" + (panel.getOffsetHeight() - 2));
 
-         if (clientWidth < panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3 + width)
-            lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() - width - 4, panel.getAbsoluteTop());
-         else
-            lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3,
-               panel.getAbsoluteTop());
+            //         descriptionPanel.getElement().setInnerText(selectedWidget.getTokenDecription());
+            descriptionPanel.setStyleName(Style.AUTO_DESCRIPTION_PANEL);
+            int clientWidth = Window.getClientWidth();
+
+            if (clientWidth < panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3 + width)
+               lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() - width - 4, panel.getAbsoluteTop());
+            else
+               lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3,
+                  panel.getAbsoluteTop());
+         }
       }
    };
 

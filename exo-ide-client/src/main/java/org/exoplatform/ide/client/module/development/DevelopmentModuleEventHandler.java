@@ -63,6 +63,10 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
 
    private boolean isClosedByUser = true;
 
+   private View view;
+
+   private static boolean isNeedRunTimer = true;
+
    public DevelopmentModuleEventHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -102,13 +106,10 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       @Override
       public void run()
       {
-//         view.highlightView();
          view.blur();
          view.focus();
       }
    };
-
-   private View view;
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
@@ -129,8 +130,12 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       {
          view = new OutlineForm(eventBus, activeTextEditor, activeFile);
          eventBus.fireEvent(new OpenViewEvent(view));
-         t.schedule(750);
-
+         if (isNeedRunTimer)
+         {
+            //run timer on load IDE
+            isNeedRunTimer = false;
+            t.schedule(750);
+         }
          return;
       }
 

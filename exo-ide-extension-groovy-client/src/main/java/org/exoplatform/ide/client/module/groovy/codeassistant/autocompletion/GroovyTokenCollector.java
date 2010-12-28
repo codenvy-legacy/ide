@@ -53,7 +53,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 26, 2010 4:56:13 PM evgen $
  *
- */
+ */ 
 public class GroovyTokenCollector implements TokenCollectorExt, ClassDescriptionReceivedHandler, Comparator<TokenExt>,
    ExceptionThrownHandler, ClassesNamesReceivedHandler
 {
@@ -193,9 +193,11 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       TokensCollectedCallback<TokenExt> tokensCollectedCallback)
    {
 
+      
       this.callback = tokensCollectedCallback;
-      if (line == null || line.isEmpty())
+      if (line == null)
       {
+         
          callback.onTokensCollected(new ArrayList<TokenExt>(), "", "", "");
          return;
       }
@@ -204,16 +206,16 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
 
       String subToken = line.substring(0, cursorPos - 1);
       afterToken = line.substring(cursorPos - 1);
-      
+
       String token = "";
-      if(!subToken.endsWith(" "))
+      if (!subToken.endsWith(" "))
       {
          String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-;]+");
-         
+
          if (split.length != 0)
          {
             token = split[split.length - 1];
-         }         
+         }
       }
 
       if (token.contains("."))
@@ -255,7 +257,7 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
 
          beforeToken = subToken.substring(0, subToken.lastIndexOf(token));
          tokenToComplete = token;
-         this.tokenFromParser = filterTokenFromParser(tokenFromParser);
+         this.tokenFromParser = filterTokenFromParser(tokenFromParser, currentToken);
          action = Action.CLASS_NAME_AND_LOCAL_VAR;
          //if token to complete is only whitespace string
          if (tokenToComplete.matches("^[ ]+&") || "".equals(tokenToComplete))
@@ -518,41 +520,25 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       return tokens;
    }
 
-   List<TokenExt> filterTokenFromParser(List<Token> tokenFromParser)
+   List<TokenExt> filterTokenFromParser(List<Token> tokenFromParser, Token currentToken)
    {
       List<Token> tokens = new ArrayList<Token>();
-
-      Token currentClass = getCurrentClassToken(tokenFromParser);
-      if (currentClass != null)
+      if (currentToken != null)
       {
-         tokens.add(currentClass);
-         tokens.addAll(getOtherClasses(currentClass, tokenFromParser));
-         Token currentToken = getCurrentTokenInClass(currentClass);
-         if (currentToken != null)
+         switch (currentToken.getType())
          {
-            switch (currentToken.getType())
-            {
-               case METHOD :
-                  tokens.addAll(getTokensForCurrentMethod(currentToken));
-                  tokens.addAll(currentClass.getSubTokenList());
-                  break;
-               case CLASS :
-               case PROPERTY :
-                  tokens.addAll(getAllMethodsFromClass(currentClass));
-                  break;
-               default :
-                  break;
-            }
-         }
-         else
-         {
-            if (currentClass.getSubTokenList() != null)
-            {
-               tokens.addAll(getAllMethodsFromClass(currentClass));
-            }
+            case METHOD :
+               tokens.addAll(getTokensForCurrentMethod(currentToken));
+               tokens.add(currentToken.getParentToken());
+               tokens.addAll(currentToken.getParentToken().getSubTokenList());
+               break;
+            case CLASS :
+            case PROPERTY :
+               tokens.addAll(getAllMethodsFromClass(currentToken));
+               tokens.add(currentToken);
+               break;
          }
       }
-
       return convertTokens(tokens);
    }
 
@@ -603,84 +589,20 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
 
    /**
     * @param currentClass
-    * @return
-    */
-   private Token getCurrentTokenInClass(Token currentClass)
-   {
-      Token currentToken = null;
-      if (currentClass.getSubTokenList() != null)
-      {
-         for (Token t : currentClass.getSubTokenList())
-         {
-
-            if (t.getLineNumber() < currentLineNumber)
-            {
-               if (currentToken == null)
-               {
-                  currentToken = t;
-                  continue;
-               }
-               if (t.getLineNumber() > currentToken.getLineNumber())
-               {
-                  currentToken = t;
-               }
-            }
-
-         }
-      }
-      return currentToken;
-   }
-
-   /**
-    * @param currentClass
     * @param tokenFromParser2
     * @return
     */
-   private List<Token> getOtherClasses(Token currentClass, List<Token> tokens)
+   private List<Token> getClasses(List<Token> tokens)
    {
       List<Token> classes = new ArrayList<Token>();
       for (Token t : tokens)
       {
          if (t.getType() == TokenType.CLASS)
          {
-            if (!t.equals(currentClass))
-            {
-               classes.add(t);
-            }
+            classes.add(t);
          }
       }
       return classes;
-   }
-
-   /**
-    * @param t
-    * @param tokenFromParser2
-    * @return
-    */
-   private Token getCurrentClassToken(List<Token> tokens)
-   {
-      Token current = null;
-
-      for (Token tt : tokens)
-      {
-         if (tt.getType() == TokenType.CLASS)
-         {
-            if (tt.getLineNumber() < currentLineNumber)
-            {
-               if (current == null)
-               {
-                  current = tt;
-                  continue;
-               }
-               if (tt.getLineNumber() > current.getLineNumber())
-               {
-                  current = tt;
-               }
-            }
-         }
-      }
-
-      return current;
    }
 
    /**
@@ -697,28 +619,28 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       return i;
    }
 
-   //   /**
-   //    * Print recursively all tokens
-   //    * 
-   //    * @param token {@link List} of {@link Token} to print
-   //    */
-   //   private void printTokens(List<Token> token)
-   //   {
-   //
-   //      for (Token t : token)
-   //      {
-   //         System.out.println(t.getName() + " " + t.getType());
-   //         System.out.println("FQN - " + t.getFqn());
-   //         System.out.println("JAVATYPE - " + t.getJavaType());
-   //         //         if (t.getSubTokenList() != null)
-   //         //         {
-   //         //            printTokens(t.getSubTokenList());
-   //         //         }
-   //         //         if (t.getParameters() != null)
-   //         //         {
-   //         //            printTokens(t.getParameters());
-   //         //         }
-   //      }
-   //      System.out.println("+++++++++++++++++++++++++");
-   //   }
+//      /**
+//       * Print recursively all tokens
+//       * 
+//       * @param token {@link List} of {@link Token} to print
+//       */
+//      private void printTokens(List<Token> token)
+//      {
+//   
+//         for (Token t : token)
+//         {
+//            System.out.println(t.getName() + " " + t.getType());
+//            System.out.println("FQN - " + t.getFqn());
+//            System.out.println("JAVATYPE - " + t.getJavaType());
+//            //         if (t.getSubTokenList() != null)
+//            //         {
+//            //            printTokens(t.getSubTokenList());
+//            //         }
+//            //         if (t.getParameters() != null)
+//            //         {
+//            //            printTokens(t.getParameters());
+//            //         }
+//         }
+//         System.out.println("+++++++++++++++++++++++++");
+//      }
 }
