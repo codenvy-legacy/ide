@@ -92,6 +92,8 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
 
       show();
 
+      deleteButton.focus();
+      
       addCloseClickHandler(new CloseClickHandler()
       {
          public void onCloseClick(CloseClientEvent event)

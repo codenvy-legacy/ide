@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -123,7 +124,16 @@ public class DeletingFilesTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       openFile(CUR_TIME + GOOGLE_GADGET_FILE_NAME);
-      deleteSelectedItems();
+
+      // delete selected items by using "Enter" key to verify issue IDE-488 "Keyboard keys are handled incorrect in the "Delete Item(s)" dialog form."
+      IDE.toolbar().runCommand(ToolbarCommands.File.DELETE);
+      // click "Esc" to close dialog
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.toolbar().runCommand(ToolbarCommands.File.DELETE);     
+      // click "Enter" to remove selected items
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(404, VirtualFileSystemUtils.get(GOOGLE_GADGET_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + GOOGLE_GADGET_FILE_NAME));
