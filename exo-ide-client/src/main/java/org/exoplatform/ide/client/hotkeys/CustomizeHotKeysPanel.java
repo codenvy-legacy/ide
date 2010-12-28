@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.hotkeys;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
+import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ide.client.Images;

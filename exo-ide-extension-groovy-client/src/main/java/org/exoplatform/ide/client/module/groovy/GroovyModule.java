@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocom
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDEModule;
@@ -112,14 +113,14 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Template", "Template",
          "Create Template", Images.FileType.GROOVY_TEMPLATE, MimeType.GROOVY_TEMPLATE)));
 
-      eventBus.fireEvent(new RegisterControlEvent(new SetAutoloadCommand(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovyCommand(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new RunGroovyServiceCommand(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovySandboxCommand(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovySandboxCommand(eventBus), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new SetAutoloadCommand(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovyCommand(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new RunGroovyServiceCommand(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(), DockTarget.TOOLBAR, true));
 
       handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(SetAutoloadEvent.TYPE, this);

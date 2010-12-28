@@ -19,9 +19,10 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.upload;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -37,8 +38,7 @@ import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Opens upload zip folder dialog window.

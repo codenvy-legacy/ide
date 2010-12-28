@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
+import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.component.AboutForm;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;

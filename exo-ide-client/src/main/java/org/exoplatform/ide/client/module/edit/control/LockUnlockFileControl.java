@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.client.module.edit.control;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -38,8 +39,7 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.module.edit.event.LockFileEvent;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Control for manual lock or unlock file.

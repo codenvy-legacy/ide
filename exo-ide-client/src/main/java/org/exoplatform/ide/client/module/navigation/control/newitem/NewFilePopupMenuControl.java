@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.newitem;
 
-import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
+import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;

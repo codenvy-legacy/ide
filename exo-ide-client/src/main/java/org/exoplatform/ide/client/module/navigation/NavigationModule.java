@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.configuration.event.ConfigurationRec
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -178,7 +179,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 
       NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
 
-      eventBus.fireEvent(new RegisterControlEvent(newFilePopupMenuControl, true));
+      eventBus.fireEvent(new RegisterControlEvent(newFilePopupMenuControl, DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new NewFileCommandMenuGroup()));
       eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl()));
@@ -195,12 +196,12 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS File", "CSS File",
          "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS)));
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionHistoryControl(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionListControl(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new RestoreToVersionControl(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionHistoryControl(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionListControl(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new RestoreToVersionControl(), DockTarget.TOOLBAR, true));
 
       eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new UploadFolderControl()));
@@ -208,20 +209,20 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileByPathCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new DownloadZippedFolderCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new SaveFileCommand(), true));
-      eventBus.fireEvent(new RegisterControlEvent(new SaveFileAsCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new SaveFileCommand(), DockTarget.TOOLBAR));
+      eventBus.fireEvent(new RegisterControlEvent(new SaveFileAsCommand(), DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new SaveAllFilesCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new SaveFileAsTemplateCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new CutItemsCommand(), true));
-      eventBus.fireEvent(new RegisterControlEvent(new CopyItemsCommand(), true));
-      eventBus.fireEvent(new RegisterControlEvent(new PasteItemsCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new CutItemsCommand(), DockTarget.TOOLBAR));
+      eventBus.fireEvent(new RegisterControlEvent(new CopyItemsCommand(), DockTarget.TOOLBAR));
+      eventBus.fireEvent(new RegisterControlEvent(new PasteItemsCommand(), DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new RenameItemCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(), true));
-      eventBus.fireEvent(new RegisterControlEvent(new SearchFilesCommand(), true));
-      eventBus.fireEvent(new RegisterControlEvent(new RefreshBrowserControl(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(), DockTarget.TOOLBAR));
+      eventBus.fireEvent(new RegisterControlEvent(new SearchFilesCommand(), DockTarget.TOOLBAR));
+      eventBus.fireEvent(new RegisterControlEvent(new RefreshBrowserControl(), DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new GoToFolderControl()));
       eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl()));
-      eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl()));
+      eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(), DockTarget.STATUSBAR));
       eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
 
       handlers.addHandler(InitializeServicesEvent.TYPE, this);

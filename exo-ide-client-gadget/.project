@@ -1,0 +1,22 @@
+<projectDescription>
+  <name>exo-ide-client-gadget</name>
+  <comment>Provides default project configuration for eXo projects. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects>
+    <project>exo-ide-client</project>
+    <project>exo-ide-extension-chromattic-client</project>
+    <project>exo-ide-extension-gadget-client</project>
+    <project>exo-ide-extension-groovy-client</project>
+    <project>exo-ide-extension-netvibes-client</project>
+    <project>exo-ide-framework-client</project>
+    <project>exo-ide-testframework</project>
+    <project>exo-ide-vfs-webdav-client</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

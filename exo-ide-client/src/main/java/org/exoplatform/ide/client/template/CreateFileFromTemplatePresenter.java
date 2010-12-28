@@ -16,23 +16,23 @@
  */
 package org.exoplatform.ide.client.template;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -199,9 +199,9 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       msg = msg.substring(0, msg.length() - 2);
       msg += "</b> project template(s). Are your sure you want to delete this template?";
       
-      Dialogs.getInstance().ask("IDE", msg, new BooleanValueReceivedCallback()
+      Dialogs.getInstance().ask("IDE", msg, new BooleanValueReceivedHandler()
       {
-         public void execute(Boolean value)
+         public void booleanValueReceived(Boolean value)
          {
             if (value == null)
             {

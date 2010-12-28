@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ide.client;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.loader.SmartGWTLoader;
+import org.exoplatform.gwtframework.ui.client.smartgwt.SmartGWTLoader;
 
 /**
  * Created by The eXo Platform SAS .

@@ -18,16 +18,16 @@
  */
 package org.exoplatform.ide.client.module.chromattic.controls;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.chromattic.Images;
 import org.exoplatform.ide.client.module.chromattic.event.DeployNodeTypeEvent;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Control for deploying(creating) new JCR node type.

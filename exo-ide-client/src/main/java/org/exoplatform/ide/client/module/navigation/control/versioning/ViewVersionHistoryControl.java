@@ -18,10 +18,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.versioning;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.webdav.Property;
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -29,14 +27,16 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
+import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>

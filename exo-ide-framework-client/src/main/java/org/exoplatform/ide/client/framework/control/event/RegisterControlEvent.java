@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.client.framework.control.event;
 
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
+import org.exoplatform.gwtframework.ui.client.command.Control;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -29,11 +29,17 @@ import com.google.gwt.event.shared.GwtEvent;
 public class RegisterControlEvent extends GwtEvent<RegisterControlHandler>
 {
 
+   public enum DockTarget {
+
+      TOOLBAR, STATUSBAR, NONE
+
+   }
+
    public static final GwtEvent.Type<RegisterControlHandler> TYPE = new GwtEvent.Type<RegisterControlHandler>();
 
    private Control control;
 
-   private boolean dockOnToolbar = false;
+   private DockTarget dockTarget = DockTarget.NONE;
 
    private boolean rightDocking = false;
 
@@ -42,16 +48,16 @@ public class RegisterControlEvent extends GwtEvent<RegisterControlHandler>
       this.control = control;
    }
 
-   public RegisterControlEvent(Control control, boolean dockOnToolbar)
+   public RegisterControlEvent(Control control, DockTarget dockTarget)
    {
       this.control = control;
-      this.dockOnToolbar = dockOnToolbar;
+      this.dockTarget = dockTarget;
    }
 
-   public RegisterControlEvent(Control control, boolean dockOnToolbar, boolean rightDocking)
+   public RegisterControlEvent(Control control, DockTarget dockTarget, boolean rightDocking)
    {
       this.control = control;
-      this.dockOnToolbar = dockOnToolbar;
+      this.dockTarget = dockTarget;
       this.rightDocking = rightDocking;
    }
 
@@ -60,9 +66,9 @@ public class RegisterControlEvent extends GwtEvent<RegisterControlHandler>
       return control;
    }
 
-   public boolean isDockOnToolbar()
+   public DockTarget getDockTarget()
    {
-      return dockOnToolbar;
+      return dockTarget;
    }
 
    public boolean isRightDocking()

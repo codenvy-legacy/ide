@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
@@ -209,10 +209,9 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
    private void showDialog(final Item item, String msg)
    {
-      Dialogs.getInstance().ask("Delete file", msg, new BooleanValueReceivedCallback()
+      Dialogs.getInstance().ask("Delete file", msg, new BooleanValueReceivedHandler()
       {
-
-         public void execute(Boolean value)
+         public void booleanValueReceived(Boolean value)
          {
             if (value)
             {

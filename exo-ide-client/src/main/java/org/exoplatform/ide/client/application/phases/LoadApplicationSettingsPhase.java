@@ -24,12 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.client.component.menu.event.UpdateMainMenuEvent;
-import org.exoplatform.gwtframework.ui.client.component.statusbar.event.UpdateStatusBarEvent;
-import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
+import org.exoplatform.gwtframework.ui.client.event.UpdateMainMenuEvent;
+import org.exoplatform.gwtframework.ui.client.event.UpdateStatusBarEvent;
+import org.exoplatform.gwtframework.ui.client.event.UpdateToolbarEvent;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.application.ControlsRegistration;
-import org.exoplatform.ide.client.application.IDEMenu;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -38,6 +37,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
+import org.exoplatform.ide.client.menu.IDEMenu;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -81,8 +81,7 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
    @Override
    protected void execute()
    {
-      new SettingsService(eventBus, applicationConfiguration.getRegistryURL(), userInfo.getName(),
-         IDELoader.getInstance());
+      new SettingsService(eventBus, applicationConfiguration.getRegistryURL(), userInfo.getName(), IDELoader.getInstance());
 
       eventBus.fireEvent(new GetApplicationSettingsEvent());
    }
@@ -129,8 +128,8 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
             
             IDEMenu.getInstance().refreshMenu(controls.getRegisteredControls());
             
-            eventBus.fireEvent(new UpdateStatusBarEvent(controls.getStatusBarControls(), controls
-               .getRegisteredControls()));
+//            eventBus.fireEvent(new UpdateStatusBarEvent(controls.getStatusBarControls(), controls
+//               .getRegisteredControls()));
 
             List<String> toolbarItems = applicationSettings.getValueAsList("toolbar-items");
             if (toolbarItems == null)

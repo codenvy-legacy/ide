@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.module.edit;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDEModule;
@@ -70,18 +71,18 @@ public class TextEditModule implements IDEModule, FindTextHandler, GoToLineHandl
    {
       this.eventBus = eventBus;
 
-      eventBus.fireEvent(new RegisterControlEvent(new UndoTypingCommand(), true));
-      eventBus.fireEvent(new RegisterControlEvent(new RedoTypingCommand(), true));
-      eventBus.fireEvent(new RegisterControlEvent(new FormatSourceCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new UndoTypingCommand(), DockTarget.TOOLBAR));
+      eventBus.fireEvent(new RegisterControlEvent(new RedoTypingCommand(), DockTarget.TOOLBAR));
+      eventBus.fireEvent(new RegisterControlEvent(new FormatSourceCommand(), DockTarget.TOOLBAR));
 
-      eventBus.fireEvent(new RegisterControlEvent(new FindTextCommand(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new FindTextCommand(), DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new ShowLineNumbersCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new DeleteCurrentLineControl()));
       eventBus.fireEvent(new RegisterControlEvent(new GoToLineControl()));
 
-      eventBus.fireEvent(new RegisterControlEvent(new EditorCursorPositionControl()));
+      eventBus.fireEvent(new RegisterControlEvent(new EditorCursorPositionControl(), DockTarget.STATUSBAR, true));
       
-      eventBus.fireEvent(new RegisterControlEvent(new LockUnlockFileControl(), true));
+      eventBus.fireEvent(new RegisterControlEvent(new LockUnlockFileControl(), DockTarget.TOOLBAR));
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);

@@ -1,0 +1,24 @@
+<classpath>
+  <classpathentry kind="src" path="target/share" including="**/*.java"/>
+  <classpathentry kind="src" path="src/main/resources" excluding="**/*|**/*.java"/>
+  <classpathentry kind="output" path="target/war/WEB-INF/classes"/>
+  <classpathentry kind="var" path="M2_REPO/org/exoplatform/gwt/exo-gwtframework-commons/1.1.0-SNAPSHOT/exo-gwtframework-commons-1.1.0-SNAPSHOT.jar" sourcepath="M2_REPO/org/exoplatform/gwt/exo-gwtframework-commons/1.1.0-SNAPSHOT/exo-gwtframework-commons-1.1.0-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/exoplatform/gwt/exo-gwtframework-editor/1.1.0-SNAPSHOT/exo-gwtframework-editor-1.1.0-SNAPSHOT.jar" sourcepath="M2_REPO/org/exoplatform/gwt/exo-gwtframework-editor/1.1.0-SNAPSHOT/exo-gwtframework-editor-1.1.0-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/exoplatform/gwt/exo-gwtframework-ui/1.1.0-SNAPSHOT/exo-gwtframework-ui-1.1.0-SNAPSHOT.jar" sourcepath="M2_REPO/org/exoplatform/gwt/exo-gwtframework-ui/1.1.0-SNAPSHOT/exo-gwtframework-ui-1.1.0-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="src" path="/exo-ide-client"/>
+  <classpathentry kind="src" path="/exo-ide-extension-chromattic-client"/>
+  <classpathentry kind="src" path="/exo-ide-extension-gadget-client"/>
+  <classpathentry kind="src" path="/exo-ide-extension-groovy-client"/>
+  <classpathentry kind="src" path="/exo-ide-extension-netvibes-client"/>
+  <classpathentry kind="src" path="/exo-ide-framework-client"/>
+  <classpathentry kind="src" path="/exo-ide-testframework"/>
+  <classpathentry kind="src" path="/exo-ide-vfs-webdav-client"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/gwt/gwt-dev/2.0.4/gwt-dev-2.0.4.jar" sourcepath="M2_REPO/com/google/gwt/gwt-dev/2.0.4/gwt-dev-2.0.4-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/gwt/google-apis/gwt-gadgets/1.2.0/gwt-gadgets-1.2.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/code/gwt-log/gwt-log/3.0.4/gwt-log-3.0.4.jar" sourcepath="M2_REPO/com/google/code/gwt-log/gwt-log/3.0.4/gwt-log-3.0.4-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/gwt/gwt-servlet/2.0.4/gwt-servlet-2.0.4.jar" sourcepath="M2_REPO/com/google/gwt/gwt-servlet/2.0.4/gwt-servlet-2.0.4-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/gwt/gwt-user/2.0.4/gwt-user-2.0.4.jar" sourcepath="M2_REPO/com/google/gwt/gwt-user/2.0.4/gwt-user-2.0.4-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/4.1/junit-4.1.jar" sourcepath="M2_REPO/junit/junit/4.1/junit-4.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/smartgwt/smartgwt/2.3-nb01/smartgwt-2.3-nb01.jar"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+</classpath>

@@ -22,6 +22,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.module.netvibes.controls.DeployUwaWidgetControl;
 import org.exoplatform.ide.client.module.netvibes.service.deploy.DeployWidgetServiceImpl;
@@ -53,7 +54,7 @@ public class NetvibesModule implements IDEModule, InitializeServicesHandler
 
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget",
          "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET)));
-      eventBus.fireEvent(new RegisterControlEvent(new DeployUwaWidgetControl(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeployUwaWidgetControl(), DockTarget.TOOLBAR, true));
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       

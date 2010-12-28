@@ -20,11 +20,7 @@
 
 package org.exoplatform.ide.client.module.navigation.control.newitem;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.resources.client.ImageResource;
-
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -34,6 +30,10 @@ import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.resources.client.ImageResource;
 
 /* 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>

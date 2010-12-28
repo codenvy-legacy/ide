@@ -24,11 +24,11 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
-import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
-import org.exoplatform.gwtframework.ui.client.component.command.TextInputControl;
-import org.exoplatform.gwtframework.ui.client.component.toolbar.event.UpdateToolbarEvent;
+import org.exoplatform.gwtframework.ui.client.command.Control;
+import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.TextInputControl;
+import org.exoplatform.gwtframework.ui.client.event.UpdateToolbarEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;

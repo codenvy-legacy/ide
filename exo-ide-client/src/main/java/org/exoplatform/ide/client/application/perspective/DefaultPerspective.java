@@ -23,10 +23,9 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.event.LockIFrameElementsEvent;
 import org.exoplatform.gwtframework.ui.client.event.UnlockIFrameElementsEvent;
-import org.exoplatform.gwtframework.ui.client.smartgwt.GWTStatusBarWrapper;
-import org.exoplatform.gwtframework.ui.client.smartgwt.GWTToolbarWrapper;
 import org.exoplatform.gwtframework.ui.client.smartgwt.SmartGWTMenuBar;
-import org.exoplatform.ide.client.application.IDEMenu;
+import org.exoplatform.gwtframework.ui.client.smartgwt.SmartGWTToolbar;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.editor.EditorForm;
 import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredEvent;
@@ -53,13 +52,17 @@ import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedHandler;
+import org.exoplatform.ide.client.menu.IDEMenu;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.navigation.NavigationForm;
 import org.exoplatform.ide.client.operation.OperationForm;
 import org.exoplatform.ide.client.outline.CodeHelperForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
+import org.exoplatform.ide.client.toolbar.IDEToolbar;
+import org.exoplatform.ide.client.toolbar.StatusBar;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 import com.smartgwt.client.widgets.events.MouseUpEvent;
@@ -78,7 +81,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHandler, RestoreEditorPanelHandler,
    MaximizeOperationPanelHandler, RestoreOperationPanelHandler, EditorActiveFileChangedHandler,
-   RestorePerspectiveHandler, MaximizeCodeHelperPanelHandler, RestoreCodeHelperPanelHandler, SearchResultReceivedHandler
+   RestorePerspectiveHandler, MaximizeCodeHelperPanelHandler, RestoreCodeHelperPanelHandler,
+   SearchResultReceivedHandler
 {
 
    private static final int MARGIN = 3;
@@ -90,11 +94,11 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    private static final int MIN_CODE_HELPER_WIDTH = 100;
 
    private static final int MIN_OPERATION_HEIGHT = 50;
-   
+
    private static final String HORIZONTAL_SPLIT_LAYOUT_ID = "ideHorizontalSplitLayout";
-   
+
    private static final String HORIZONTAL_SPLIT_LAYOUT_ID_2 = "ideHorizontalSplitLayout2";
-   
+
    private static final String VERTICAL_SPLIT_LAYOUT_ID = "ideVerticalSplitLayout";
 
    /**
@@ -114,7 +118,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
    //private GWTMenuWrapper menuWrapper;
 
-   private GWTToolbarWrapper toolbarWrapper;
+//   private GWTToolbarWrapper toolbarWrapper;
 
    protected HLayout horizontalSplitLayout;
 
@@ -131,8 +135,10 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    private CodeHelperForm codeHelperForm;
 
    //protected StatusBarForm statusBar;
-
-   protected GWTStatusBarWrapper statusBar;
+   
+   //protected GWTStatusBarWrapper statusBar;
+   
+   protected SmartGWTToolbar statusBar;
 
    /*
     * PERSPECTIVE STATE
@@ -176,15 +182,17 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
    private void buildPerspective()
    {
-//      menuWrapper = new GWTMenuWrapper(eventBus);
-//      addMember(menuWrapper);
-      
+      //      menuWrapper = new GWTMenuWrapper(eventBus);
+      //      addMember(menuWrapper);
+
       SmartGWTMenuBar menuBar = new SmartGWTMenuBar();
       addMember(menuBar);
-      new IDEMenu(eventBus).setMenu(menuBar);
+      new IDEMenu(eventBus).setMenu(menuBar.getMenuBar());
 
-      toolbarWrapper = new GWTToolbarWrapper(eventBus);
-      addMember(toolbarWrapper);
+      SmartGWTToolbar toolbar = new SmartGWTToolbar();
+      addMember(toolbar);
+      DOM.setElementAttribute(toolbar.getToolbar().getElement(), "id", "exoIDEToolbar");
+      new IDEToolbar(eventBus, toolbar.getToolbar());
 
       horizontalSplitLayout = new HLayout();
       horizontalSplitLayout.setID(HORIZONTAL_SPLIT_LAYOUT_ID);
@@ -295,9 +303,15 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       });
 
-      statusBar = new GWTStatusBarWrapper(eventBus);
-      //statusBar = new StatusBarForm(eventBus, context);
+      statusBar = new SmartGWTToolbar();
+      DOM.setElementAttribute(statusBar.getToolbar().getElement(), "id", "exoIDEStatusbar");      
+      statusBar.getToolbar().setHeight("30px");
+      String background =
+         UIHelper.getGadgetImagesURL() + "../eXoStyle/skin/default/images/component/toolbar/statusbar_Background.png";
+      statusBar.getToolbar().setBackgroundImage(background);
+      statusBar.getToolbar().setItemsTopPadding(3);
       addMember(statusBar);
+      new StatusBar(eventBus, statusBar.getToolbar());      
    }
 
    @Override

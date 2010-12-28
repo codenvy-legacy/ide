@@ -22,8 +22,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -101,9 +101,9 @@ public class RestoreToVersionCommandHandler implements ShowVersionContentHandler
 
       Dialogs.getInstance().ask("Restore version",
          "Do you want to restore file to version " + activeVersion.getDisplayName() + "?",
-         new BooleanValueReceivedCallback()
+         new BooleanValueReceivedHandler()
          {
-            public void execute(Boolean value)
+            public void booleanValueReceived(Boolean value)
             {
                if (value != null && value)
                {

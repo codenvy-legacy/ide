@@ -20,7 +20,7 @@
 package org.exoplatform.ide.client.statusbar;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
+import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -145,4 +145,5 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    {
       entryPoint = event.getEntryPoint();
    }
+
 }

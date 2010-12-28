@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedEvent;
@@ -393,9 +393,10 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       {
          closeFileAfterSaving = true;
          String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
-         Dialogs.getInstance().ask("Close file", message, new BooleanValueReceivedCallback()
+         Dialogs.getInstance().ask("Close file", message,
+         new BooleanValueReceivedHandler()
          {
-            public void execute(Boolean value)
+            public void booleanValueReceived(Boolean value)
             {
                if (value == null)
                {

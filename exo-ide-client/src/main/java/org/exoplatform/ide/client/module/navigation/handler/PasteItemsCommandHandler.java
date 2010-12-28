@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.event.edit.PasteItemsCompleteEvent;
@@ -213,10 +213,9 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
             if (openedFile.isContentChanged())
             {
                Dialogs.getInstance().ask("Cut", "Save <b>" + openedFile.getName() + "</b> file?",
-                  new BooleanValueReceivedCallback()
+                  new BooleanValueReceivedHandler()
                   {
-
-                     public void execute(Boolean value)
+                     public void booleanValueReceived(Boolean value)
                      {
                         if (value != null && value == true)
                         {

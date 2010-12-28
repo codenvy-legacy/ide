@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.client.module.development.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -33,6 +31,8 @@ import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.outline.OutlineForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

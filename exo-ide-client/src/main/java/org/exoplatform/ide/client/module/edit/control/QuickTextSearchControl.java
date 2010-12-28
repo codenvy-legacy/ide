@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.client.module.edit.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.ui.client.component.command.TextInputControl;
+import org.exoplatform.gwtframework.ui.client.command.TextInputControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .

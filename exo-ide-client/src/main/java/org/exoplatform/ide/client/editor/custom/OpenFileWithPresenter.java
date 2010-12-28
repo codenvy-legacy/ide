@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorFactory;
@@ -233,11 +233,10 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    private void showAskReopenDialog()
    {
-      Dialogs.getInstance().ask("Info",
-         "Do you want to reopen <b>" + selectedFile.getName() + "</b> in selected editor?",
-         new BooleanValueReceivedCallback()
+      Dialogs.getInstance().ask("Info", "Do you want to reopen <b>" + selectedFile.getName() + "</b> in selected editor?",
+         new BooleanValueReceivedHandler()
          {
-            public void execute(Boolean value)
+            public void booleanValueReceived(Boolean value)
             {
                if (value == null)
                {

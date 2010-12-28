@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -83,33 +84,35 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=test 1]/col[0]/open");
       selenium.controlKeyDown();
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=test 2]/col[1]");
       selenium.controlKeyUp();
       assertTrue(selenium.isTextPresent("exact:Selected: 2 items"));
-      assertTrue(selenium.isElementPresent("//div[@title='Delete Item(s)...']/div[@elementenabled='false']"));
-      selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
-      selenium.mouseUpAt("//div[@title='Delete Item(s)...']//img", "");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
+
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.DELETE, false);
+
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=test 1]/col[1]");
       selenium.controlKeyDown();
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=test 3]/col[1]");
       selenium.controlKeyUp();
       assertTrue(selenium.isTextPresent("exact:Selected: 2 items"));
-      assertTrue(selenium.isElementPresent("//div[@title='Delete Item(s)...']/div[@elementenabled='true']"));
-      selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
-      selenium.mouseUpAt("//div[@title='Delete Item(s)...']//img", "");
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.DELETE, true);
+      
+      IDE.toolbar().runCommand(ToolbarCommands.File.DELETE);
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
       assertTrue(selenium.isTextPresent("exact:Do you want to delete 2 items?"));
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
       Thread.sleep(TestConstants.SLEEP);
+      
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
 
       assertElementNotPresentInWorkspaceTree(FOLDER_NAME_1);
@@ -119,7 +122,6 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
 
       assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_1, "UTF-8")).getStatusCode());
       assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_3, "UTF-8")).getStatusCode());
-
    }
 
    @AfterClass

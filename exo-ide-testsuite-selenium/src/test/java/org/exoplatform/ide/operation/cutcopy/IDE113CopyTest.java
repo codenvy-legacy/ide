@@ -182,10 +182,14 @@ public class IDE113CopyTest extends BaseTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
+      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      
       // Call the "Edit->Copy Items" topmenu command.
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
-      assertTrue(selenium.isElementPresent("//div[@title='Paste Selected Item(s)']/div[@elementenabled='true']"));
-
+      
+      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[4]/col[0]");
@@ -225,7 +229,7 @@ public class IDE113CopyTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);      
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);      
       
       checkCodeEditorOpened(0);
 

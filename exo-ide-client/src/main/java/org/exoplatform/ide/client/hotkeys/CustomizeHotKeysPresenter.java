@@ -26,8 +26,8 @@ import java.util.Map.Entry;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.Control;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;

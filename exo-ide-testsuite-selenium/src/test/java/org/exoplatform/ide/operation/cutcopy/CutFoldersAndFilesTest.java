@@ -53,7 +53,6 @@ public class CutFoldersAndFilesTest extends BaseTest
    private static final String FILE3 = "gadget1xml";
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-
   
    /**
     *  Test from TestLink IDE-117
@@ -246,7 +245,7 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       selenium.goBack();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      Thread.sleep(10000);
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[2]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -272,7 +271,7 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       selenium.goBack();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      Thread.sleep(10000);
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[1]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);

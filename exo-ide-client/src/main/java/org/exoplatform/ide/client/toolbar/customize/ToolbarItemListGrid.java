@@ -19,7 +19,7 @@
  */
 package org.exoplatform.ide.client.toolbar.customize;
 
-import org.exoplatform.gwtframework.ui.client.component.command.PopupMenuControl;
+import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
 import org.exoplatform.ide.client.ImageUtil;
 

@@ -19,7 +19,7 @@ package org.exoplatform.ide.client.toolbar.customize;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
+import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;

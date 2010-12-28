@@ -23,6 +23,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.module.gadget.controls.DeployGadgetCommand;
 import org.exoplatform.ide.client.module.gadget.controls.UndeployGadgetCommand;
@@ -47,8 +48,8 @@ public class GadgetModule implements IDEModule, InitializeServicesHandler
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google 4Gadget",
          Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET)));
       
-      eventBus.fireEvent(new RegisterControlEvent(new DeployGadgetCommand(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new UndeployGadgetCommand(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeployGadgetCommand(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new UndeployGadgetCommand(), DockTarget.TOOLBAR, true));
 
 //      addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google 4Gadget",
 //         Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET));

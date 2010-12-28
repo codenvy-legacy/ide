@@ -32,7 +32,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
  */
 public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator
 {
-   public static final String className = org.exoplatform.gwtframework.ui.client.component.command.Control.class
+   public static final String className = org.exoplatform.gwtframework.ui.client.command.Control.class
       .getName();
 
    /**

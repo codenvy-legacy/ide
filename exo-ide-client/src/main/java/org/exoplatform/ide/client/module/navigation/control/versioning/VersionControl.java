@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.client.module.navigation.control.versioning;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
@@ -31,6 +29,8 @@ import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>

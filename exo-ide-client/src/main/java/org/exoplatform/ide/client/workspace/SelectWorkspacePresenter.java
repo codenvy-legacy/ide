@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
@@ -196,10 +196,9 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
       if (openedFiles.size() != 0)
       {
          Dialogs.getInstance().ask("IDEall", "All opened files will be closed.<br>Do you want to continue?",
-            new BooleanValueReceivedCallback()
+            new BooleanValueReceivedHandler()
             {
-
-               public void execute(Boolean value)
+               public void booleanValueReceived(Boolean value)
                {
                   if (value == null)
                   {
@@ -238,9 +237,9 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
       if (file.isContentChanged())
       {
          String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
-         Dialogs.getInstance().ask("IDEall", message, new BooleanValueReceivedCallback()
+         Dialogs.getInstance().ask("IDEall", message, new BooleanValueReceivedHandler()
          {
-            public void execute(Boolean value)
+            public void booleanValueReceived(Boolean value)
             {
                if (value == null)
                {

@@ -19,20 +19,19 @@
  */
 package org.exoplatform.ide.client.browser;
 
-import com.google.gwt.event.dom.client.KeyPressHandler;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.component.tree.GWTTree;
-import org.exoplatform.gwtframework.ui.client.component.tree.TreeRecord;
-import org.exoplatform.gwtframework.ui.client.component.tree.bean.TreeNode;
+import org.exoplatform.gwtframework.ui.client.tree.Tree;
+import org.exoplatform.gwtframework.ui.client.tree.TreeNode;
+import org.exoplatform.gwtframework.ui.client.tree.TreeRecord;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -56,7 +55,7 @@ import com.smartgwt.client.widgets.layout.Layout;
 public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
 {
 
-   private Tree tree = new Tree();
+   private ItemsTree tree = new ItemsTree();
 
    public GWTItemTreeGrid()
    {
@@ -288,7 +287,7 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
 
    }
 
-   private class Tree extends GWTTree
+   private class ItemsTree extends Tree
    {
       @Override
       public void onClick(TreeRecord treerecord)

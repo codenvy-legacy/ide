@@ -22,7 +22,7 @@ package org.exoplatform.ide.client.module.navigation.control.upload;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;

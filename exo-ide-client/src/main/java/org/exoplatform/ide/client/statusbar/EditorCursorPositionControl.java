@@ -21,8 +21,8 @@ package org.exoplatform.ide.client.statusbar;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler;
-import org.exoplatform.gwtframework.ui.client.component.command.StatusTextAlign;
-import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
+import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
+import org.exoplatform.gwtframework.ui.client.text.TextButton.TextAlignment;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -51,7 +51,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
       setSize(70);
       setFireEventOnSingleClick(true);
       //setText("&nbsp;");
-      setTextAlignment(StatusTextAlign.MIDDLE);
+      setTextAlignment(TextAlignment.CENTER);
       //setEvent(new GoToLineEvent());
    }
    
@@ -95,9 +95,10 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
       {
          setText("&nbsp;");
          setEvent(null);
+         setVisible(false);
          return;
       }
-
+      
       TextEditor editor = event.getEditor();
       if (editor.getCursorRow() > 0 && editor.getCursorCol() > 0)
       {
@@ -109,5 +110,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
          setEvent(null);
          setText("&nbsp;");
       }
+      
+      setVisible(true);      
    }
 }

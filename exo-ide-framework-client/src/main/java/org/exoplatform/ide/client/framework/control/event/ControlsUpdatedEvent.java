@@ -18,7 +18,7 @@ package org.exoplatform.ide.client.framework.control.event;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
+import org.exoplatform.gwtframework.ui.client.command.Control;
 
 import com.google.gwt.event.shared.GwtEvent;
 

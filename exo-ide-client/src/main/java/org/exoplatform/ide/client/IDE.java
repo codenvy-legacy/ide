@@ -1,6 +1,6 @@
 package org.exoplatform.ide.client;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.dialogs.SmartGWTDialogs;
+import org.exoplatform.gwtframework.ui.client.smartgwt.SmartGWTDialogs;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.IDEForm;
@@ -31,6 +31,7 @@ public class IDE extends VerticalPanel
    {
       new SmartGWTDialogs();
 
+      //HandlerManager eventBus = new SafeHandlerManager();
       HandlerManager eventBus = new HandlerManager(null);
       ApplicationContext context = new ApplicationContext();
 

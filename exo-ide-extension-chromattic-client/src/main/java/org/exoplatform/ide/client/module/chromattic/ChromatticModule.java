@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteEvent;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.module.chromattic.controls.CompileGroovyControl;
 import org.exoplatform.ide.client.module.chromattic.controls.DeployNodeTypeControl;
@@ -63,9 +64,9 @@ public class ChromatticModule implements IDEModule, InitializeServicesHandler
          "Data Object", "Create Data Object", Images.FileType.CHROMATTIC,
          MimeType.CHROMATTIC_DATA_OBJECT)));
 
-      eventBus.fireEvent(new RegisterControlEvent(new CompileGroovyControl(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new GenerateNodeTypeControl(), true, true));
-      eventBus.fireEvent(new RegisterControlEvent(new DeployNodeTypeControl(), true, true));
+      eventBus.fireEvent(new RegisterControlEvent(new CompileGroovyControl(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new GenerateNodeTypeControl(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new DeployNodeTypeControl(), DockTarget.TOOLBAR, true));
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       new GenerateNodeTypePresenter(eventBus);

@@ -20,20 +20,18 @@
 
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.core.client.GWT;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
-import org.exoplatform.gwtframework.ui.client.component.command.StatusTextControl;
+import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.framework.annotation.ClassAnnotationMap;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlHandler;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -63,6 +61,7 @@ public class ControlsRegistration implements RegisterControlHandler
       handlers = new Handlers(eventBus);
 
       toolbarDefaultControls.add("");
+      statusBarControls.add("");
       handlers.addHandler(RegisterControlEvent.TYPE, this);
    }
 
@@ -89,31 +88,28 @@ public class ControlsRegistration implements RegisterControlHandler
          return;
       }
 
-      addControl(event.getControl(), event.isDockOnToolbar(), event.isRightDocking());
+      registeredControls.add(event.getControl());
 
-      if (event.getControl() instanceof StatusTextControl)
+      if (event.getDockTarget() == RegisterControlEvent.DockTarget.TOOLBAR)
       {
-         statusBarControls.add(event.getControl().getId());
+         addControl(event.getControl(), toolbarDefaultControls, event.isRightDocking());
+      }
+      else if (event.getDockTarget() == RegisterControlEvent.DockTarget.STATUSBAR)
+      {
+         addControl(event.getControl(), statusBarControls, event.isRightDocking());
       }
    }
 
-   protected void addControl(Control control, boolean dockOnToolbar, boolean rightDocking)
+   protected void addControl(Control control, List<String> controls, boolean rightDocking)
    {
-      registeredControls.add(control);
-
-      if (!dockOnToolbar)
-      {
-         return;
-      }
-
       if (rightDocking)
       {
-         toolbarDefaultControls.add(control.getId());
+         controls.add(control.getId());
       }
       else
       {
          int position = 0;
-         for (String curId : toolbarDefaultControls)
+         for (String curId : controls)
          {
             if ("".equals(curId))
             {
@@ -124,11 +120,11 @@ public class ControlsRegistration implements RegisterControlHandler
 
          if (control.hasDelimiterBefore())
          {
-            toolbarDefaultControls.add(position, "---");
+            controls.add(position, "---");
             position++;
          }
 
-         toolbarDefaultControls.add(position, control.getId());
+         controls.add(position, control.getId());
       }
    }
 
@@ -188,7 +184,7 @@ public class ControlsRegistration implements RegisterControlHandler
       }
       allowedIds.add("---");
       allowedIds.add("");
-      
+
       toolbarDefaultControls.retainAll(allowedIds);
       statusBarControls.retainAll(allowedIds);
    }

@@ -21,8 +21,8 @@
 package org.exoplatform.ide.client.application.phases;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.dialogs.callback.BooleanValueReceivedCallback;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -113,9 +113,9 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
       Dialogs.getInstance().showError("Workspace was not set!",
          //"Workspace was not set. Please, click on 'Ok' button and select another workspace manually from the next dialog!",
          "Workspace was not set. Please, select another workspace manually from the next dialog!",
-         new BooleanValueReceivedCallback()
+         new BooleanValueReceivedHandler()
          {
-            public void execute(Boolean value)
+            public void booleanValueReceived(Boolean value)
             {
                if (value)
                {

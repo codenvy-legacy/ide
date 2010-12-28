@@ -20,6 +20,8 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.module.navigation.event.edit.CopyItemsEvent;
 
@@ -31,7 +33,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 @RolesAllowed({"administrators", "developers"})
-public class CopyItemsCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
+public class CopyItemsCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler,
+   ViewActivatedHandler
 {
 
    public static final String ID = "Edit/Copy Item(s)";
@@ -77,7 +80,7 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
 
    @Override
    protected void updateEnabling()
-   {
+   {      
       if (!browserSelected)
       {
          setEnabled(false);
@@ -98,7 +101,20 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
       {
          setEnabled(false);
       }
+   }
 
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      System.out.println(" " + event.getViewId());
+
+      if ("ideNavigatorItemTreeGrid".equals(event.getViewId()))
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
    }
 
 }

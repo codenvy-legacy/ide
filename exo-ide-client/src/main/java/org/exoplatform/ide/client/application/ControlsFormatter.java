@@ -20,8 +20,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.exoplatform.gwtframework.ui.client.component.command.Control;
-import org.exoplatform.gwtframework.ui.client.component.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.Control;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFolderControl;
