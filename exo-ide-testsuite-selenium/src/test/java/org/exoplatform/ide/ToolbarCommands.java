@@ -90,7 +90,7 @@ public interface ToolbarCommands
       
       public static final String UNDEPLOY_GADGET = "UnDeploy Gadget from GateIn";
       
-      public static final String RUN_GROOVY_SERVICE = "Run Groovy Service...";
+      public static final String RUN_GROOVY_SERVICE = "Run in Sandbox";
       
       public static final String VALIDATE_GROOVY_SERVICE = "Validate REST Service";
       
@@ -98,11 +98,11 @@ public interface ToolbarCommands
       
       public static final String UNDEPLOY_GROOVY_SERVICE = "Undeploy REST Service";
       
-      public static final String DEPLOY_SANDBOX = "Deploy REST Service Sandbox";
+      public static final String DEPLOY_SANDBOX = "Deploy to Sandbox";
       
       public static final String DEPLOY_UWA_WIDGET = "Deploy UWA widget to Ecosystem";
       
-      public static final String UNDEPLOY_SANDBOX = "Undeploy REST Service Sandbox";
+      public static final String UNDEPLOY_SANDBOX = "Undeploy from Sandbox";
       
       public static final String SET_AUTOLOAD = "Set REST Service Autoload";
       
