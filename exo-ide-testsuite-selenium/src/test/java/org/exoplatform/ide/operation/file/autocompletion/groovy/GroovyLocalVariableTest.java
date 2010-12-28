@@ -40,6 +40,7 @@ import org.junit.Test;
  * @version $Id: Dec 15, 2010 11:11:29 AM evgen $
  *
  */
+// http://jira.exoplatform.org/browse/IDE-478
 public class GroovyLocalVariableTest extends BaseTest
 {
 
@@ -127,6 +128,31 @@ public class GroovyLocalVariableTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[text()='ii:Integer']"));
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
+      moveCursorDown(2);
+      openAutoCompleteForm();
+      
+      assertTrue(selenium.isElementPresent("//div[text()='hello(String):String']"));
+      assertTrue(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
+      assertFalse(selenium.isElementPresent("//div[text()='s:String']"));
+      assertFalse(selenium.isElementPresent("//div[text()='name:String']"));
+      assertFalse(selenium.isElementPresent("//div[text()='e:Exception']"));
+      assertFalse(selenium.isElementPresent("//div[text()='stream:PrintStream']"));
+      assertFalse(selenium.isElementPresent("//div[text()='d:Double']"));
+      assertFalse(selenium.isElementPresent("//div[text()='ii:Integer']"));
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+
+      openAutoCompleteForm();
+      assertFalse(selenium.isElementPresent("//div[text()='hello(String):String']"));
+      assertFalse(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
+      assertFalse(selenium.isElementPresent("//div[text()='s:String']"));
+      assertFalse(selenium.isElementPresent("//div[text()='name:String']"));
+      assertFalse(selenium.isElementPresent("//div[text()='e:Exception']"));
+      assertFalse(selenium.isElementPresent("//div[text()='stream:PrintStream']"));
+      assertFalse(selenium.isElementPresent("//div[text()='d:Double']"));
+      assertFalse(selenium.isElementPresent("//div[text()='ii:Integer']"));
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       IDE.editor().closeTab(0);
    }
 
