@@ -33,7 +33,7 @@ import org.junit.Test;
 public class AutoCompletionHTMLTest extends BaseTest
 {
 
-      @Test
+   @Test
    public void testHTML() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
@@ -82,6 +82,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       Thread.sleep(TestConstants.SLEEP);
+      deleteFileContent();
 
       selenium.typeKeys("//body[@class='editbox']", "<div class=\"ItemDetail\" st");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
@@ -118,9 +119,6 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
-
-      openAutoCompleteForm();
-      assertTrue(!selenium.isElementPresent("//table[@class='exo-autocomplete-panel']"));
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
