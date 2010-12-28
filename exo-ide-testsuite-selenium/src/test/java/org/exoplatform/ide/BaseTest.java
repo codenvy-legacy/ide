@@ -1181,8 +1181,11 @@ public abstract class BaseTest
    {
       if (isSelected)
       {
+         //used //td[contains(@class, 'tabTitleSelected')] locator, instead of equals,
+         //because after refreshing tab is overed by mouse and there is no 'tabTitleSelected'
+         //class, but there is 'tabTitleSelectedOver'.
          assertTrue(selenium.isElementPresent(Locators.EDITOR_PANEL_LOCATOR
-            + "//div[@class='tabBar']//td[@class='tabTitleSelected']/span[contains(text(), '" + tabTitle + "')]"));
+            + "//div[@class='tabBar']//td[contains(@class, 'tabTitleSelected')]/span[contains(text(), '" + tabTitle + "')]"));
       }
       else
       {

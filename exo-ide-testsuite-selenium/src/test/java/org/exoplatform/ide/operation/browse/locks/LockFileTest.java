@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -241,6 +242,7 @@ public class LockFileTest extends LockFileAbstract
       Thread.sleep(TestConstants.SLEEP);
       
       checkIsEditorTabSelected(FILE_NAME_1, true);
+
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
       IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
       
