@@ -27,12 +27,16 @@ import java.net.URLEncoder;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * IDE-47: Creating and "Saving As" new XML file with non-latin name. 
@@ -44,16 +48,19 @@ import org.junit.Test;
  */
 public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 {
+   
+   private static final ResourceBundle rb = ResourceBundle.getBundle("FileMsg", Locale.getDefault());
 
    /**
     * 
     */
-   private static final String XML_FILE = "Ð¢ÐµÑ�Ñ‚Ð¾Ð²Ñ‹Ð¹ Ð¤Ð°Ð¹Ð».xml";
+//   private static final String XML_FILE = "Ð¢ÐµÑ�Ñ‚Ð¾Ð²Ñ‹Ð¹ Ð¤Ð°Ð¹Ð».xml";
+   private static final String XML_FILE = rb.getString("xml.file.name");
 
    /**
     * 
     */
-   private static final String NEW_XML_FILE = "Ð�Ð¾Ð²Ð¸Ð¹ Ñ‚ÐµÑ�Ñ‚Ð¾Ð²Ð¸Ð¹ Ñ„Ð°Ð¹Ð».xml";
+   private static final String NEW_XML_FILE = rb.getString("new.xml.file.name");
 
    /**
     * 
@@ -202,8 +209,8 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
    {
       selenium.mouseDownAt("//div[@title='Show Properties']//img", "");
       selenium.mouseUpAt("//div[@title='Show Properties']//img", "");
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationFormTabSet\"]/tab[ID=Properties]/"));
-      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]"));
+      assertTrue(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_TAB_LOCATOR));
+      assertTrue(selenium.isElementPresent(Locators.PropertiesPanel.SC_DYNAMIC_FORM_LOCATOR));
       assertEquals(
          "Content Length :",
          selenium
@@ -260,8 +267,8 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + URLEncoder.encode(XML_FILE,"UTF-8"));
-         VirtualFileSystemUtils.delete(URL + URLEncoder.encode(NEW_XML_FILE,"UTF-8"));
+         VirtualFileSystemUtils.delete(URL + URLEncoder.encode(XML_FILE, "UTF-8"));
+         VirtualFileSystemUtils.delete(URL + URLEncoder.encode(NEW_XML_FILE, "UTF-8"));
       }
       catch (IOException e)
       {
