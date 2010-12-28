@@ -29,6 +29,7 @@ import com.google.gwt.xml.client.XMLParser;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateList;
@@ -131,7 +132,9 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       
       Node nameNode = getChildNode(node, NAME);
       String name = javaScriptDecodeURIComponent(nameNode.getChildNodes().item(0).getNodeValue());
-
+      
+      Node classpathNode = getChildNode(node, CLASSPATH);
+      
       Node descriptionNode = getChildNode(node, DESCRIPTION);
       String description = "";
       if (descriptionNode.getChildNodes().getLength() != 0)
@@ -140,12 +143,19 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       }
       
       ProjectTemplate template = new ProjectTemplate(name, description, nodeName, null);
+      
+      if (classpathNode != null) 
+      {
+         String classpath = javaScriptDecodeURIComponent(classpathNode.getChildNodes().item(0).getNodeValue());
+         template.setClassPathLocation(classpath);
+      }
+      
       appendProjectChildren(template, getChildNode(node, ITEMS));
 
       templateList.getTemplates().add(template);
    }
    
-   private void appendProjectChildren(ProjectTemplate projectTemplate, Node itemsNode)
+   private void appendProjectChildren(FolderTemplate container, Node itemsNode)
    {
       if (itemsNode == null)
       {
@@ -173,7 +183,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
 
             String folderName = javaScriptDecodeURIComponent(folderNameNode.getFirstChild().getNodeValue());
 
-            ProjectTemplate folder = new ProjectTemplate(folderName);
+            FolderTemplate folder = new FolderTemplate(folderName);
             children.add(folder);
 
             appendProjectChildren(folder, getChildNode(itemNode, ITEMS));
@@ -182,7 +192,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       
       if (children.size() > 0)
       {
-         projectTemplate.setChildren(children);
+         container.setChildren(children);
       }
    }
    

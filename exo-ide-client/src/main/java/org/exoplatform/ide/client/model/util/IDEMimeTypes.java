@@ -59,6 +59,7 @@ public class IDEMimeTypes
       add("htm", MimeType.TEXT_HTML);
       add("css", MimeType.TEXT_CSS);
       add("txt", MimeType.TEXT_PLAIN);
+      add("js", MimeType.TEXT_JAVASCRIPT);
       add("js", MimeType.APPLICATION_JAVASCRIPT);
       add("js", MimeType.APPLICATION_X_JAVASCRIPT);
       add("xml", MimeType.TEXT_XML);

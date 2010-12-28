@@ -62,5 +62,7 @@ public interface Const
    public static final String TEMPLATE_FILE_NAME = "template-file-name";
    
    public static final String FILE_NAME = "file-name";
+   
+   public static final String CLASSPATH = "classpath";
 
 }

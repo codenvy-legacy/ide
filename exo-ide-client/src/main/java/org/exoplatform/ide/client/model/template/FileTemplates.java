@@ -43,6 +43,7 @@ public class FileTemplates
       addGadgetContent();
       addGtmplTemplate();
       addUWAWidgetContent();
+      addClassPathTemplate();
    }
 
    public static String getTemplateFor(String mimeType)
@@ -75,6 +76,25 @@ public class FileTemplates
       String content = "<?xml version='1.0' encoding='UTF-8'?>\n";
 
       templates.put(MimeType.TEXT_XML, content);
+   }
+   
+   private static void addClassPathTemplate()
+   {
+      String content =
+      "{"
+  +"\"entries\": ["
+    +"{"
+       +"\"kind\": \"file\","
+       +"\"path\": \"jcr://repository/dev-monit#/Test.groovy\""
+          +"},"
+          +"{"
+       +"\"kind\": \"dir\","
+       +"\"path\": \"jcr://repository/dev-monit#/test/org/test/\""
+          +"}"
+          +"]"
+          +"}";
+
+      templates.put(MimeType.TEXT_JAVASCRIPT, content);
    }
 
    private static void addEmptyHTML()

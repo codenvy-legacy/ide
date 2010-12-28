@@ -20,33 +20,48 @@ package org.exoplatform.ide.client.model.template;
 
 import org.exoplatform.ide.client.Images;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Template for projects.
- * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Dec 21, 2010 $
+ * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id:
  *
  */
-public class ProjectTemplate extends FolderTemplate
+public class FolderTemplate extends Template
 {
-   /**
-    * The location of class path file.
-    */
-   private String classPathLocation;
-
-   /**
-    * 
-    */
-   public ProjectTemplate(String name)
+   private List<Template> children;
+   
+   public FolderTemplate()
+   {
+   }
+   
+   public FolderTemplate(String name)
    {
       super(name);
    }
    
-   public ProjectTemplate(String name, String description, String nodeName, List<Template> templates)
+   public FolderTemplate(String name, String description, String nodeName, List<Template> children)
    {
-      super(name, description, nodeName, templates);
+      super(name, description, nodeName);
+      this.children = children;
+   }
+   
+   /**
+    * @return children on template
+    */
+   public List<Template> getChildren()
+   {
+      if (children == null)
+      {
+         children = new ArrayList<Template>();
+      }
+      return children;
+   }
+   
+   public void setChildren(List<Template>children)
+   {
+      this.children = children;
    }
    
    /**
@@ -56,21 +71,5 @@ public class ProjectTemplate extends FolderTemplate
    public String getIcon()
    {
       return Images.FileTypes.FOLDER;
-   }
-
-   /**
-    * @return the classPathLocation
-    */
-   public String getClassPathLocation()
-   {
-      return classPathLocation;
-   }
-
-   /**
-    * @param classPathLocation the classPathLocation to set
-    */
-   public void setClassPathLocation(String classPathLocation)
-   {
-      this.classPathLocation = classPathLocation;
    }
 }

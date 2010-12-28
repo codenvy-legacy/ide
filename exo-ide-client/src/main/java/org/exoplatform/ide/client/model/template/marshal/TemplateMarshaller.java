@@ -25,6 +25,7 @@ import com.google.gwt.xml.client.XMLParser;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 
@@ -75,8 +76,13 @@ public class TemplateMarshaller implements Marshallable, Const
          Element typeElement = doc.createElement(TEMPLATE_TYPE);
          typeElement.appendChild(doc.createTextNode(TemplateType.PROJECT));
          templateElement.appendChild(typeElement);
-         
          ProjectTemplate projectTemplate = (ProjectTemplate)template;
+         if (projectTemplate.getClassPathLocation() != null && projectTemplate.getClassPathLocation().length() > 0)
+         {
+            Element classPathLocationElement = doc.createElement(CLASSPATH);
+            classPathLocationElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(projectTemplate.getClassPathLocation())));
+            templateElement.appendChild(classPathLocationElement);
+         }
          buildProjectElement(doc, templateElement, projectTemplate.getChildren());
       }
       
@@ -109,7 +115,7 @@ public class TemplateMarshaller implements Marshallable, Const
             
             itemsListElement.appendChild(fileElement);
          }
-         else if (child instanceof ProjectTemplate)
+         else if (child instanceof FolderTemplate)
          {
             Element folderElement = doc.createElement(FOLDER);
             
@@ -119,7 +125,7 @@ public class TemplateMarshaller implements Marshallable, Const
             
             itemsListElement.appendChild(folderElement);
             
-            buildProjectElement(doc, folderElement, ((ProjectTemplate)child).getChildren());
+            buildProjectElement(doc, folderElement, ((FolderTemplate)child).getChildren());
          }
       }
       

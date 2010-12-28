@@ -34,8 +34,10 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
@@ -54,27 +56,27 @@ import java.util.List;
  */
 public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
 {
-   
+
    public interface Display
    {
       TreeGridItem<Template> getTemplateTreeGrid();
 
       HasValue<String> getNameField();
-      
+
       HasKeyPressHandlers getNameFieldKeyPressed();
-      
+
       HasValue<String> getDescriptionField();
 
       HasClickHandlers getCreateButton();
 
       HasClickHandlers getCancelButton();
-      
+
       HasClickHandlers getAddFolderButton();
 
       HasClickHandlers getAddFileButton();
-      
+
       HasClickHandlers getDeleteButton();
-      
+
       List<Template> getTreeGridSelection();
 
       void closeForm();
@@ -82,73 +84,100 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
       void enableCreateButton();
 
       void disableCreateButton();
-      
+
       void enableAddFolderButton();
 
-      void disableAddFolderButton();      
-      
+      void disableAddFolderButton();
+
       void enableAddFileButton();
 
       void disableAddFileButton();
-      
+
       void enableDeleteButton();
 
       void disableDeleteButton();
-      
+
       void selectTemplate(Template template);
-      
+
       void updateTree();
-      
+
       void setRootNodeName(String name);
 
+      String getTemplateLocationInProject(Template template);
    }
    
+   private final String CLASSPATH_FILENAME = ".groovyclasspath";
+   
    private HandlerManager eventBus;
-   
+
    private Handlers handlers;
-   
+
    private Display display;
-   
+
    private List<Template> templateList = new ArrayList<Template>();
-   
+
    private Template templateToCreate;
-   
+
    private Template selectedTemplate;
-   
+
    public CreateProjectTemplatePresenter(HandlerManager eventBus, List<Template> templateList)
    {
       this.eventBus = eventBus;
       this.templateList = templateList;
-      
+
       handlers = new Handlers(eventBus);
    }
-   
+
    public void bindDisplay(Display d)
    {
       display = d;
-      
+
       handlers.addHandler(TemplateCreatedEvent.TYPE, this);
-      
+
       display.getNameField().addValueChangeHandler(valueChangeHandler);
-      
+
       display.getCancelButton().addClickHandler(closeFormHandler);
 
       display.getCreateButton().addClickHandler(createTemplateHandler);
-      
+
       display.getAddFolderButton().addClickHandler(addFolderHandler);
-      
+
       display.getAddFileButton().addClickHandler(addFileHandler);
-      
+
       display.getDeleteButton().addClickHandler(deleteTemplateHandler);
-      
+
       display.getTemplateTreeGrid().addSelectionHandler(templateSelectedHandler);
 
       ProjectTemplate projectTemplate = new ProjectTemplate("/");
-      display.getTemplateTreeGrid().setValue(projectTemplate);
       
+      //Add groovy classpath file to project's template.    
+      FileTemplate classpathFileTemplate = getClasspathTemplate();
+      if (classpathFileTemplate != null)
+      {
+         projectTemplate.getChildren().add(getClasspathTemplate());
+         projectTemplate.setClassPathLocation(classpathFileTemplate.getFileName());
+      }
+      
+      display.getTemplateTreeGrid().setValue(projectTemplate);
       display.disableCreateButton();
    }
    
+   private FileTemplate getClasspathTemplate()
+   {
+      FileTemplate classpathTemplate = null;
+      for (Template template : templateList)
+      {
+         //TODO check proper mime type when is ready:
+         if (template instanceof FileTemplate
+            && MimeType.TEXT_JAVASCRIPT.equals(((FileTemplate)template).getMimeType()))
+         {
+            classpathTemplate = (FileTemplate)template;
+         }
+      }
+      classpathTemplate.setFileName(CLASSPATH_FILENAME);
+      return  classpathTemplate;
+   }
+
    private ValueChangeHandler<String> valueChangeHandler = new ValueChangeHandler<String>()
    {
       public void onValueChange(ValueChangeEvent<String> event)
@@ -164,15 +193,15 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
          }
       }
    };
-   
-   private ClickHandler closeFormHandler  = new ClickHandler()
+
+   private ClickHandler closeFormHandler = new ClickHandler()
    {
       public void onClick(ClickEvent event)
       {
          display.closeForm();
       }
    };
-   
+
    private ClickHandler createTemplateHandler = new ClickHandler()
    {
       public void onClick(ClickEvent event)
@@ -180,7 +209,7 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
          createTemplate();
       }
    };
-   
+
    private ClickHandler addFolderHandler = new ClickHandler()
    {
       public void onClick(ClickEvent event)
@@ -188,7 +217,7 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
          callAddFolderForm();
       }
    };
-   
+
    private ClickHandler addFileHandler = new ClickHandler()
    {
       public void onClick(ClickEvent event)
@@ -196,18 +225,18 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
          addFileToTemplate();
       }
    };
-   
+
    private ClickHandler deleteTemplateHandler = new ClickHandler()
    {
       public void onClick(ClickEvent event)
       {
          Template value = display.getTemplateTreeGrid().getValue();
-         deleteTemplate(((ProjectTemplate)value).getChildren());
+         deleteTemplate(((FolderTemplate)value).getChildren());
          display.getTemplateTreeGrid().setValue(value);
          display.selectTemplate(value);
       }
    };
-   
+
    private SelectionHandler<Template> templateSelectedHandler = new SelectionHandler<Template>()
    {
       public void onSelection(SelectionEvent<Template> event)
@@ -228,11 +257,17 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
             //can't delete root folder
             display.disableDeleteButton();
          }
-         else
+         else if (selectedTemplate instanceof FileTemplate
+            && MimeType.APPLICATION_JAVASCRIPT.equals(((FileTemplate)selectedTemplate).getMimeType()))
+         {
+            //can not delete classpath file
+            display.disableDeleteButton();
+         }
+            else
          {
             display.enableDeleteButton();
          }
-         if (selectedTemplate instanceof ProjectTemplate)
+         if (selectedTemplate instanceof FolderTemplate)
          {
             display.enableAddFolderButton();
             display.enableAddFileButton();
@@ -242,68 +277,68 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
             display.disableAddFolderButton();
             display.disableAddFileButton();
          }
-         
+
       }
    };
-   
+
    private void addFileToTemplate()
    {
-      AbstractCreateFromTemplatePresenter<FileTemplate> addFilePresenter = new CreateFileFromTemplatePresenter(eventBus, null, templateList)
-      {
-         @Override
-         void submitTemplate()
+      AbstractCreateFromTemplatePresenter<FileTemplate> addFilePresenter =
+         new CreateFileFromTemplatePresenter(eventBus, null, templateList)
          {
-            final String fileName = display.getNameField().getValue().trim();
-            if ("".equals(fileName))
+            @Override
+            void submitTemplate()
             {
-               Dialogs.getInstance().showError("You must enter file name the first!");
-               return;
+               final String fileName = display.getNameField().getValue().trim();
+               if ("".equals(fileName))
+               {
+                  Dialogs.getInstance().showError("You must enter file name the first!");
+                  return;
+               }
+
+               FileTemplate fileTemplate =
+                  new FileTemplate(selectedTemplates.get(0).getName(), fileName, selectedTemplates.get(0).getMimeType());
+               addFileToProjectTemplate(fileTemplate);
+               display.closeForm();
             }
+         };
 
-            FileTemplate fileTemplate = new FileTemplate(selectedTemplates.get(0).getName(), fileName, 
-               selectedTemplates.get(0).getMimeType());
-            addFileToProjectTemplate(fileTemplate);
-            display.closeForm();
-
-         }
-      };
-      
       CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
          new CreateFileFromTemplateForm(eventBus, templateList, addFilePresenter)
-      {
-         @Override
-         String getCreateButtonTitle()
          {
-            return "Add";
-         }
-         
-         @Override
-         String getFormTitle()
-         {
-            return "Add file";
-         }
-      };
+            @Override
+            String getCreateButtonTitle()
+            {
+               return "Add";
+            }
+
+            @Override
+            String getFormTitle()
+            {
+               return "Add file";
+            }
+         };
       addFilePresenter.bindDisplay(createFileDisplay);
    }
-   
+
    private void callAddFolderForm()
    {
       final CreateFolderDisplay createFolderDisplay = new AbstractCreateFolderForm(eventBus, "Add folder", "Add")
       {
       };
-      
+
       createFolderDisplay.getCreateButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
          {
             createFolderDisplay.closeForm();
-            
+
             final String folderName = createFolderDisplay.getFolderNameField().getValue();
             validateAndAddFolder(folderName);
-           
+
          }
       });
-      
+
       createFolderDisplay.getFolderNameFiledKeyPressed().addKeyPressHandler(new KeyPressHandler()
       {
          public void onKeyPress(KeyPressEvent event)
@@ -311,13 +346,13 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
             if (event.getCharCode() == KeyCodes.KEY_ENTER)
             {
                createFolderDisplay.closeForm();
-               
+
                final String folderName = createFolderDisplay.getFolderNameField().getValue();
                validateAndAddFolder(folderName);
             }
          }
       });
-      
+
       createFolderDisplay.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -326,31 +361,31 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
          }
       });
    }
-   
+
    private void validateAndAddFolder(String folderName)
    {
-      ProjectTemplate selectedFolder = (ProjectTemplate)selectedTemplate;
-      
+      FolderTemplate selectedFolder = (FolderTemplate)selectedTemplate;
+
       //validate
       if (folderName == null || folderName.length() == 0)
       {
          Dialogs.getInstance().showError("Value can't be empty");
          return;
       }
-      
+
       if (selectedFolder.getChildren() != null)
       {
          for (Template template : selectedFolder.getChildren())
          {
-            if (template instanceof ProjectTemplate && folderName.equals(template.getName()))
+            if (template instanceof FolderTemplate && folderName.equals(template.getName()))
             {
                Dialogs.getInstance().showError("Folder with such name already exists");
                return;
             }
          }
       }
-      
-      Template newFolder = new ProjectTemplate(folderName);
+
+      Template newFolder = new FolderTemplate(folderName);
       if (selectedFolder.getChildren() == null)
       {
          selectedFolder.setChildren(new ArrayList<Template>());
@@ -359,14 +394,14 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
       display.updateTree();
       display.selectTemplate(newFolder);
    }
-   
+
    private void deleteTemplate(List<Template> templates)
    {
       if (templates == null)
       {
          return;
       }
-      
+
       for (Template template : templates)
       {
          if (selectedTemplate == template)
@@ -374,14 +409,14 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
             templates.remove(template);
             return;
          }
-         if (template instanceof ProjectTemplate)
+         if (template instanceof FolderTemplate)
          {
-            deleteTemplate(((ProjectTemplate)template).getChildren());
+            deleteTemplate(((FolderTemplate)template).getChildren());
          }
       }
-      
+
    }
-   
+
    private void createTemplate()
    {
       String templateName = display.getNameField().getValue().trim();
@@ -391,14 +426,14 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
       {
          description = display.getDescriptionField().getValue();
       }
-      
+
       templateToCreate = display.getTemplateTreeGrid().getValue();
       templateToCreate.setName(templateName);
       templateToCreate.setDescription(description);
-      
+
       for (Template template : templateList)
       {
-         if (template instanceof ProjectTemplate && templateToCreate.getName().equals(template.getName()))
+         if (template instanceof FolderTemplate && templateToCreate.getName().equals(template.getName()))
          {
             Dialogs.getInstance().showError("Project template with such name already exists!");
             return;
@@ -406,7 +441,7 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
       }
       TemplateServiceImpl.getInstance().createTemplate(templateToCreate);
    }
-   
+
    public void destroy()
    {
       handlers.removeHandlers();
@@ -420,30 +455,25 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
       display.closeForm();
       Dialogs.getInstance().showInfo("Template created successfully!");
    }
-   
+
    private void addFileToProjectTemplate(FileTemplate fileTemplate)
    {
-      ProjectTemplate selectedFolder = (ProjectTemplate)selectedTemplate;
-      
+      FolderTemplate selectedFolder = (FolderTemplate)selectedTemplate;
+
       if (selectedFolder.getChildren() != null)
       {
          for (Template template : selectedFolder.getChildren())
          {
-            if (template instanceof FileTemplate && fileTemplate.getFileName().equals(((FileTemplate)template).getFileName()))
+            if (template instanceof FileTemplate
+               && fileTemplate.getFileName().equals(((FileTemplate)template).getFileName()))
             {
                Dialogs.getInstance().showError("File with such name already exists");
                return;
             }
          }
       }
-      
-      if (selectedFolder.getChildren() == null)
-      {
-         selectedFolder.setChildren(new ArrayList<Template>());
-      }
       selectedFolder.getChildren().add(fileTemplate);
       display.updateTree();
       display.selectTemplate(fileTemplate);
    }
-
 }

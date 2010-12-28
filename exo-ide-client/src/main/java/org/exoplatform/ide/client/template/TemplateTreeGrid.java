@@ -27,6 +27,7 @@ import com.smartgwt.client.widgets.tree.TreeNode;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 
@@ -115,12 +116,12 @@ public class TemplateTreeGrid<T extends Template> extends TreeGrid<T>
          selectRecord(rootNode);
       }
       
-      if (getValue() instanceof ProjectTemplate)
+      if (getValue() instanceof FolderTemplate)
       {
-         ProjectTemplate projectTemplate = (ProjectTemplate)getValue();
-         if (projectTemplate.getChildren() != null)
+         FolderTemplate folder = (FolderTemplate)getValue();
+         if (folder.getChildren() != null)
          {
-            setItems(rootNode, projectTemplate.getChildren());
+            setItems(rootNode, folder.getChildren());
          }
       }
       else if (getValue() instanceof FileTemplate)
@@ -167,11 +168,11 @@ public class TemplateTreeGrid<T extends Template> extends TreeGrid<T>
             tree.openFolder(parentNode);
          }
          
-         if (template instanceof ProjectTemplate)
+         if (template instanceof FolderTemplate)
          {
-            if (((ProjectTemplate)template).getChildren() != null)
+            if (((FolderTemplate)template).getChildren() != null)
             {
-               setItems(newNode, ((ProjectTemplate)template).getChildren());
+               setItems(newNode, ((FolderTemplate)template).getChildren());
             }
          }
       }
@@ -215,6 +216,18 @@ public class TemplateTreeGrid<T extends Template> extends TreeGrid<T>
    public void updateTree()
    {
       doUpdateValue();
+   }
+   
+   public String getTemplateLocation(Template template)
+   {
+      for (TreeNode node : tree.getAllNodes())
+      {
+         if (((Template)node.getAttributeAsObject(getValuePropertyName())).equals(template))
+         {
+            return tree.getPath(node);
+         }
+      }
+      return null;
    }
    
 }

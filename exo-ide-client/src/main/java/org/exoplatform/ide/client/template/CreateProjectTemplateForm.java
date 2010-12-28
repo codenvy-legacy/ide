@@ -452,4 +452,12 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       templateTreeGrid.setRootNodeName(name);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getTemplateLocationInProject(org.exoplatform.ide.client.model.template.Template)
+    */
+   public String getTemplateLocationInProject(Template template)
+   {
+      return templateTreeGrid.getTemplateLocation(template);
+   }
+   
 }

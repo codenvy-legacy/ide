@@ -59,6 +59,8 @@ public class TemplateServiceImpl extends TemplateService
       public static final String GROOVY_REST_SERVICE = "Groovy REST Service";
 
       public static final String GROOVY_TEMPLATE = "Template";
+      
+      public static final String GROOVY_CLASS_PATH = "Groovy Build Class Path";
    }
 
    private static final String CONTEXT = "/templates";
@@ -141,6 +143,11 @@ public class TemplateServiceImpl extends TemplateService
       templateList.getTemplates().add(
          new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget", "Netvibes Widget Skeleton", FileTemplates
             .getTemplateFor(MimeType.UWA_WIDGET), null));
+      
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.TEXT_JAVASCRIPT, DefaultFileTemplates.GROOVY_CLASS_PATH, "Groovy build class path file. Is used to configure dependency locations.", FileTemplates
+            .getTemplateFor(MimeType.TEXT_JAVASCRIPT), null));
+      
 
       templateList.getTemplates().add(createFileTemplateForSampleProject());
 
@@ -157,22 +164,26 @@ public class TemplateServiceImpl extends TemplateService
    {
       ProjectTemplate sampleProject = new ProjectTemplate("Sample project");
       sampleProject.setDescription("Sample project with REST script and Google Gadget");
+      String classPathFileName = ".groovyclasspath";
+      FileTemplate classPathTemplate = 
+         new FileTemplate(DefaultFileTemplates.GROOVY_CLASS_PATH, classPathFileName);
+      sampleProject.setClassPathLocation(classPathFileName);
+      sampleProject.getChildren().add(classPathTemplate);
 
-      ProjectTemplate businessLogicFolder = new ProjectTemplate("business logic");
+      FolderTemplate businessLogicFolder = new FolderTemplate("business logic");
       businessLogicFolder.setChildren(new ArrayList<Template>());
       FileTemplate restScriptTemplate =
          new FileTemplate(DefaultFileTemplates.GROOVY_REST_SERVICE, "Greeting REST Service.groovy");
       businessLogicFolder.getChildren().add(restScriptTemplate);
 
-      ProjectTemplate uiFolder = new ProjectTemplate("UI");
+      FolderTemplate uiFolder = new FolderTemplate("UI");
       uiFolder.setChildren(new ArrayList<Template>());
       FileTemplate gadgetFileTemplate =
          new FileTemplate(DefaultFileTemplates.GREETING_GOOGLE_GADGET, "Greeting Google Gadget.xml");
       uiFolder.getChildren().add(gadgetFileTemplate);
       
-      ProjectTemplate dataFolder = new ProjectTemplate("data");
+      FolderTemplate dataFolder = new FolderTemplate("data");
 
-      sampleProject.setChildren(new ArrayList<Template>());
       sampleProject.getChildren().add(dataFolder);
       sampleProject.getChildren().add(businessLogicFolder);
       sampleProject.getChildren().add(uiFolder);

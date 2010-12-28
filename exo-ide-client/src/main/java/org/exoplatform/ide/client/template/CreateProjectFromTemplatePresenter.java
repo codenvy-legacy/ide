@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.project.Project;
+import org.exoplatform.ide.client.framework.project.ProjectService;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -30,6 +32,7 @@ import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.util.ImageUtil;
@@ -57,6 +60,8 @@ implements FolderCreatedHandler, FileContentSavedHandler
    private String baseHref;
    
    private Folder projectFolder;
+   
+   private String classpathLocation;
    
    public CreateProjectFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
    {
@@ -157,12 +162,13 @@ implements FolderCreatedHandler, FileContentSavedHandler
       String projectName = display.getNameField().getValue();
 
       ProjectTemplate selectedTemplate = selectedTemplates.get(0);
+      classpathLocation = selectedTemplate.getClassPathLocation();
       
       build(selectedTemplate.getChildren(), baseHref + projectName + "/");
       projectFolder = new Folder(baseHref + projectName + "/");
       
       handlers.addHandler(FolderCreatedEvent.TYPE, this);
-      
+
       VirtualFileSystem.getInstance().createFolder(projectFolder);
    }
    
@@ -175,9 +181,9 @@ implements FolderCreatedHandler, FileContentSavedHandler
       
       for (Template template : templates)
       {
-         if (template instanceof ProjectTemplate)
+         if (template instanceof FolderTemplate)
          {
-            ProjectTemplate projectTemplate = (ProjectTemplate)template;
+            FolderTemplate projectTemplate = (FolderTemplate)template;
             
             folderList.add(new Folder(href + projectTemplate.getName() + "/"));
             build(projectTemplate.getChildren(), href + projectTemplate.getName() + "/");
@@ -208,8 +214,7 @@ implements FolderCreatedHandler, FileContentSavedHandler
       handlers.removeHandler(FolderCreatedEvent.TYPE);
       if (fileList.size() == 0)
       {
-         eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
-         display.closeForm();
+        finishProjectCreation();
          return;
       }
       
@@ -230,9 +235,18 @@ implements FolderCreatedHandler, FileContentSavedHandler
          return;
       }
       handlers.removeHandler(FileContentSavedEvent.TYPE);
+      finishProjectCreation();
+   }
+
+   /**
+    * Do actions when project is created.
+    */
+   private void finishProjectCreation()
+   {
+      Project project = new Project(projectFolder.getHref(), projectFolder.getHref() + classpathLocation);
+      ProjectService.getInstance().saveProject(project);
+      
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
       display.closeForm();
    }
-
-
 }
