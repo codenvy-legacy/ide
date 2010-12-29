@@ -18,20 +18,22 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * IDE-11: Deleting files. 
@@ -95,12 +97,10 @@ public class DeletingFilesTest extends BaseTest
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       catch (ModuleException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }
@@ -111,71 +111,58 @@ public class DeletingFilesTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      openOrCloseFolder(FOLDER_NAME);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      openFile(CUR_TIME + GROOVY_FILE_NAME);
+      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + GROOVY_FILE_NAME, false);
       deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
+      
       assertEquals(404, VirtualFileSystemUtils.get(GROOVY_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(GROOVY_FILE_NAME));
-      Thread.sleep(TestConstants.SLEEP);
 
-      openFile(CUR_TIME + GOOGLE_GADGET_FILE_NAME);
+      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + GOOGLE_GADGET_FILE_NAME, false);
 
       // delete selected items by using "Enter" key to verify issue IDE-488 "Keyboard keys are handled incorrect in the "Delete Item(s)" dialog form."
       IDE.toolbar().runCommand(ToolbarCommands.File.DELETE);
       // click "Esc" to close dialog
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.toolbar().runCommand(ToolbarCommands.File.DELETE);     
+      
+      IDE.toolbar().runCommand(ToolbarCommands.File.DELETE);
+      assertTrue(selenium.isElementPresent(Locators.DeleteForm.SC_DELETE_FORM));
+      
       // click "Enter" to remove selected items
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      assertFalse(selenium.isElementPresent(Locators.DeleteForm.SC_DELETE_FORM));
       
-      Thread.sleep(TestConstants.SLEEP);
       assertEquals(404, VirtualFileSystemUtils.get(GOOGLE_GADGET_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + GOOGLE_GADGET_FILE_NAME));
-      Thread.sleep(TestConstants.SLEEP);
 
-      openFile(CUR_TIME + JAVA_SCRIPT_FILE_NAME);
+      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + JAVA_SCRIPT_FILE_NAME, false);
       deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
+      
       assertEquals(404, VirtualFileSystemUtils.get(JAVA_SCRIPT_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + JAVA_SCRIPT_FILE_NAME));
-      Thread.sleep(TestConstants.SLEEP);
 
-      openFile(CUR_TIME + XML_FILE_NAME);
+      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + XML_FILE_NAME, false);
       deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
       assertEquals(404, VirtualFileSystemUtils.get(XML_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + XML_FILE_NAME));
-      Thread.sleep(TestConstants.SLEEP);
       
-      openFile(CUR_TIME + TEXT_FILE_NAME);
+      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + TEXT_FILE_NAME, false);
       deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
       assertEquals(404, VirtualFileSystemUtils.get(TEXT_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + TEXT_FILE_NAME));
 
-      Thread.sleep(TestConstants.SLEEP);
-      
-      openFile(CUR_TIME + HTML_FILE_NAME);
+      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + HTML_FILE_NAME, false);
       deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
       assertEquals(404, VirtualFileSystemUtils.get(HTML_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + HTML_FILE_NAME));
    }
 
-   private void openFile(String fileName) throws InterruptedException, Exception
-   {
-      Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(fileName, false);
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
- 
    @AfterClass
    public static void tearDown()
    {
@@ -185,12 +172,10 @@ public class DeletingFilesTest extends BaseTest
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       catch (ModuleException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }

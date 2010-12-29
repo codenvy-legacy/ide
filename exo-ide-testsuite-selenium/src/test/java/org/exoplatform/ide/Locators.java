@@ -218,4 +218,9 @@ public class Locators
          + "/item[name=idePropertiesTextDisplayName]/textbox";
       
    }
+   
+   public interface DeleteForm
+   {
+      public static final String SC_DELETE_FORM = "scLocator=//Window[ID=\"ideDeleteItemForm\"]/";
+   }
 }
