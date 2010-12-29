@@ -18,18 +18,21 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * IDE-48: Opening and Saving new XML file with non-latin name.
@@ -39,16 +42,19 @@ import org.junit.Test;
  * @version $Id:
  *
  */
-//IDE-48: Opening and Saving new XML file with non-latin name
 public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
 {
+   /**
+    * Resource bundle for non-lating names.
+    */
+   private static final ResourceBundle rb = ResourceBundle.getBundle("FileMsg", Locale.getDefault());
+
+   private static final String FILE_NAME = rb.getString("xml.file.name");
    
-   private static final String FILE_NAME = System.currentTimeMillis() + "Ã�Â¢Ã�ÂµÃ‘ï¿½Ã‘â€šÃ�Â¾Ã�Â²Ã‘â€¹Ã�Â¹Ã�Â¤Ã�Â°Ã�Â¹Ã�Â».xml";
-   
-   private static final String FOLDER_NAME = System.currentTimeMillis() + OpenAndSaveXmlFileWithNonLatinNameTest.class.getSimpleName();
+   private static final String FOLDER_NAME = OpenAndSaveXmlFileWithNonLatinNameTest.class.getSimpleName();
    
     
-    private static String XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>\n" +
+   private static String XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>\n" +
                                          "<test>\n" +  
                                         "<settings>value</settings>\n" +
                                         "</test>";
@@ -62,73 +68,77 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
     "</bean>\n" +
      "</test>";
       
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
    
-    
-    @AfterClass
-    public static void tearDown()
-    {
-       try
-       {
-          VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME);
-       }
-       catch (IOException e)
-       {
-          e.printStackTrace();
-       }
-       catch (ModuleException e)
-       {
-          e.printStackTrace();
-       }
-    }
-    
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+ 
    @Test
    public void testOpenAndSaveXmlFileWithNonLatinName() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFolder(FOLDER_NAME);
-//      selectItemInWorkspaceTree(WS_NAME);
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isTextPresent("Untitled file.xml"));
-      assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='false']"));
-      assertTrue(selenium.isElementPresent("//div[@title='Save As...']/div[@elementenabled='true']"));
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
+      assertEquals("Untitled file.xml *", IDE.editor().getTabTitle(0));
+      
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
+      
       deleteFileContent();
       typeTextIntoEditor(0, XML_CONTENT);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       saveAsUsingToolbarButton(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
       IDE.editor().closeTab(0);
-      Thread.sleep(TestConstants.SLEEP);
+      
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
       deleteFileContent();
       typeTextIntoEditor(0, XML_CONTENT_2);
-      Thread.sleep(TestConstants.SLEEP);
      
       //Save command enabled
-      assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='true']"));
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
       //File name ends with *
-      assertTrue(selenium.isTextPresent(FILE_NAME + " *"));
+      assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
       
       saveCurrentFile();
-      Thread.sleep(TestConstants.SLEEP);
       
       //File name doesn't end with *
-      assertFalse(selenium.isTextPresent(FILE_NAME + " \\*"));
-      assertTrue(selenium.isTextPresent(FILE_NAME));
+      assertEquals(FILE_NAME, IDE.editor().getTabTitle(0));
       
       //Save command disabled
-      assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='false']"));
-      
-      selectItemInWorkspaceTree(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-      
-      //is file deleted
-      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" 
-         + FILE_NAME + "]/col[1]"));
+      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, false);
    }
    
 
