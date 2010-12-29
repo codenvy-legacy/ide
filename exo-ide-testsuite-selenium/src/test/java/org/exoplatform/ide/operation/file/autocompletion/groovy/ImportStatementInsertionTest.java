@@ -95,7 +95,7 @@ public class ImportStatementInsertionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       assertTrue(getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" 
          + "import javax.ws.rs.Path\n"
@@ -108,7 +108,7 @@ public class ImportStatementInsertionTest extends BaseTest
       
       // Empty line 14, type "B" symbol and then click on Ctrl+Space. Then select "BitSet" class item from default package and press "Enter" key.
       goToLine(14);
-      deleteLinesInEditor(1);
+      IDE.editor().deleteLinesInEditor(1);
       typeTextIntoEditor(0, "B"); 
       openAutoCompleteForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
@@ -116,7 +116,7 @@ public class ImportStatementInsertionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       assertTrue(getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" 
          + "import javax.ws.rs.Path\n"
@@ -129,7 +129,7 @@ public class ImportStatementInsertionTest extends BaseTest
       
       // Empty line 14 and then click on Ctrl+Space. Then select "HelloWorld" class item with current class name and press "Enter" key.
       goToLine(14);
-      deleteLinesInEditor(1);
+      IDE.editor().deleteLinesInEditor(1);
       typeTextIntoEditor(0, " "); 
       openAutoCompleteForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("HelloWorld"), "");
@@ -137,7 +137,7 @@ public class ImportStatementInsertionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       assertTrue(getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" 
          + "import javax.ws.rs.Path\n"
@@ -170,7 +170,7 @@ public class ImportStatementInsertionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       assertTrue(getTextFromCodeEditor(1).startsWith(
          "<html>"
          + "   <head>"
@@ -185,7 +185,7 @@ public class ImportStatementInsertionTest extends BaseTest
       
       // Empty line 15, type "B" symbol and then click on Ctrl+Space. Then select "BitSet" class item from default package and press "Enter" key.
       goToLine(15);
-      deleteLinesInEditor(1);
+      IDE.editor().deleteLinesInEditor(1);
       typeTextIntoEditor(1, "B"); 
       openAutoCompleteForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
@@ -193,7 +193,7 @@ public class ImportStatementInsertionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       assertTrue(getTextFromCodeEditor(1).startsWith(
          "<html>"
          + "   <head>"

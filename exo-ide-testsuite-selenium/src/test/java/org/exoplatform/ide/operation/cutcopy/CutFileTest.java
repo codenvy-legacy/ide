@@ -192,7 +192,7 @@ public class CutFileTest extends BaseTest
     */
    private void checkPaste(boolean enabled) throws Exception
    {
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, enabled);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, enabled);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, enabled);
    }
 
@@ -203,8 +203,8 @@ public class CutFileTest extends BaseTest
    {
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, enabled);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, enabled);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, enabled);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, enabled);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, enabled);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, enabled);
    }
 
    

@@ -92,8 +92,8 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       selenium.controlKeyUp();
       assertTrue(selenium.isTextPresent("exact:Selected: 2 items"));
 
-      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.DELETE, false);
+      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, false);
 
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=test 1]/col[1]");
       selenium.controlKeyDown();
@@ -101,8 +101,8 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       selenium.controlKeyUp();
       assertTrue(selenium.isTextPresent("exact:Selected: 2 items"));
       
-      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.DELETE, true);
+      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, true);
       
       IDE.toolbar().runCommand(ToolbarCommands.File.DELETE);
       

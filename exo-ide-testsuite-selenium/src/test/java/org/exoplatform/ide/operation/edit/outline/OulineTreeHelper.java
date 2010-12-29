@@ -161,7 +161,7 @@ public class OulineTreeHelper extends BaseTest
    {
       goToLine(fileLineNumber);
       Thread.sleep(TestConstants.SLEEP);
-      checkOutlineTreeNodeSelected(itemRowNumber, itemName, true);
+      IDE.outline().checkOutlineTreeNodeSelected(itemRowNumber, itemName, true);
    }
    
    /**

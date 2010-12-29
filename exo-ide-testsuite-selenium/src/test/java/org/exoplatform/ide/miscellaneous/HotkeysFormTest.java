@@ -211,7 +211,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //Nothing or default browser event works out
-      checkIsTabPresentInEditorTabset("Untitled file.css", false);
+      IDE.editor().checkIsTabPresentInEditorTabset("Untitled file.css", false);
       Thread.sleep(TestConstants.SLEEP);
    }
    

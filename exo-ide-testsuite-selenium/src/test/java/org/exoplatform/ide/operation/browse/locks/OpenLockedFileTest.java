@@ -96,7 +96,7 @@ public class OpenLockedFileTest extends LockFileAbstract
       //----- 2 ----------
       //lock file
       IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
       checkFileLocking(FILE_NAME, false);
 
       //----- 3 ----------
@@ -106,7 +106,7 @@ public class OpenLockedFileTest extends LockFileAbstract
       
       //----- 4 ----------
       //check that file is locked
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
       checkCantSaveLockedFile(FILE_NAME);
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);

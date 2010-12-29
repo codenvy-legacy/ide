@@ -372,7 +372,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_UWA_WIDGET, isVisible);
       if (isVisible)
       {
-         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.DEPLOY_UWA_WIDGET, isEnabled);
+         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_UWA_WIDGET, isEnabled);
          IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_UWA_WIDGET, isEnabled);
       }
    }

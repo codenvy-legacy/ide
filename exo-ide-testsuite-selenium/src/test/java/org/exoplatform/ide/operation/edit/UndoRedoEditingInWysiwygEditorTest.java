@@ -75,8 +75,8 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       openFileFromNavigationTreeWithCkEditor(htmlFile, true);
       checkCkEditorOpened(0);
 
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.UNDO, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.REDO, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.UNDO, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
 
@@ -316,8 +316,8 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       checkCkEditorOpened(1);
 
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.UNDO, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.REDO, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.UNDO, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
 
@@ -341,8 +341,8 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       saveCurrentFile();
       IDE.editor().closeTabWithNonSaving(0);
 
-      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.Editor.UNDO, false);
-      IDE.toolbar().checkButtonExistAtLeft(ToolbarCommands.Editor.REDO, false);
+      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.Editor.UNDO, false);
+      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.Editor.REDO, false);
       IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
       IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
 

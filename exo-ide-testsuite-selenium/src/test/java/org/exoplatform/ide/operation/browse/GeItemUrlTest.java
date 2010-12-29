@@ -57,7 +57,9 @@ public class GeItemUrlTest extends BaseTest
       //Create first file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      deleteLinesInEditor(7);
+      
+      IDE.editor().deleteLinesInEditor(7);
+      
       assertEquals("", getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content1);
       saveAsUsingToolbarButton(file1Name);

@@ -136,7 +136,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       assertEquals("div", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
       assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
       //check selection in outline tree
-      checkOutlineTreeNodeSelected(1, "div", true);
+      IDE.outline().checkOutlineTreeNodeSelected(1, "div", true);
       
       //---- 6 -----------------
       //move in editor
@@ -155,7 +155,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
       assertEquals("groovy code", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
       //check selection in outline tree
-      checkOutlineTreeNodeSelected(2, "a", true);
+      IDE.outline().checkOutlineTreeNodeSelected(2, "a", true);
       assertEquals("27 : 1", getCursorPositionUsingStatusBar());
    }
    

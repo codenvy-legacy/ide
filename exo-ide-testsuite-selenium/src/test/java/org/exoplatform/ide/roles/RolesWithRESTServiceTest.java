@@ -184,8 +184,8 @@ public class RolesWithRESTServiceTest extends BaseTest
 
       if (allowed)
       {
-         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE, allowed);
-         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE, allowed);
+         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE, allowed);
+         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE, allowed);
 
          //Deploy service:
          IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
@@ -219,7 +219,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, allowed);
       if (allowed)
       {
-         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, allowed);
+         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, allowed);
          IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, allowed);
       }
    }
@@ -237,7 +237,7 @@ public class RolesWithRESTServiceTest extends BaseTest
 	   IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, allowed);
 	   if (allowed)
 	   {
-	      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE, allowed);
+	      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE, allowed);
 	      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, allowed);
 	   }
    }
@@ -254,7 +254,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
 	   if (allowed)
 	   {
-	      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.SET_AUTOLOAD, allowed);
+	      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.SET_AUTOLOAD, allowed);
 	      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
 	   }
    }
@@ -272,8 +272,8 @@ public class RolesWithRESTServiceTest extends BaseTest
       IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX, allowed);
       if (allowed)
       {
-         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.DEPLOY_SANDBOX, allowed);
-         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.UNDEPLOY_SANDBOX, allowed);
+         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_SANDBOX, allowed);
+         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_SANDBOX, allowed);
          IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX, allowed);
          IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX, allowed);
       }
@@ -292,7 +292,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
       if (allowed)
       {
-         IDE.toolbar().checkButtonEnabled(MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
+         IDE.toolbar().assertButtonEnabled(MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
          IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
       }
    }

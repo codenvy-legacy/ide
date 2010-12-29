@@ -82,7 +82,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
 
       selenium.typeKeys("//body[@class='editbox']", "<div class=\"ItemDetail\" st");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);

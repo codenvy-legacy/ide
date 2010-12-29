@@ -167,8 +167,8 @@ public class RolesWithGadgetTest extends BaseTest
 
       if (allowed)
       {
-         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, allowed);
-         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, allowed);
+         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, allowed);
+         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, allowed);
          //Check deploy/undeploy gadget functionality only when in portal:
          if (IdeAddress.PORTAL.getApplicationUrl().equals(APPLICATION_URL))
          {

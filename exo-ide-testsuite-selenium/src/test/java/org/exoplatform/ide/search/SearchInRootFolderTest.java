@@ -68,7 +68,7 @@ public class SearchInRootFolderTest extends BaseTest
       //Create and save 
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      deleteLinesInEditor(14);
+      IDE.editor().deleteLinesInEditor(14);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, restFileContent);
       saveAsByTopMenu(restFileName);
       Thread.sleep(TestConstants.SLEEP);

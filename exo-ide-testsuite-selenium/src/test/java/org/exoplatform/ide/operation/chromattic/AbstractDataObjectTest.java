@@ -69,7 +69,7 @@ public class AbstractDataObjectTest extends BaseTest
       IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.PREVIEW_NODE_TYPE, isPresent);
       if (isEnabled)
       {
-         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, isEnabled);
+         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, isEnabled);
          IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.PREVIEW_NODE_TYPE, isEnabled);
       }
    }
@@ -87,7 +87,7 @@ public class AbstractDataObjectTest extends BaseTest
       IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE, isPresent);
       if (isEnabled)
       {
-         IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, isEnabled);
+         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, isEnabled);
          IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE, isEnabled);
       }
    }

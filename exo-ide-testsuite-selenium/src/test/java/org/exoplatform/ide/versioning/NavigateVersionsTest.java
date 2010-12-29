@@ -90,7 +90,7 @@ public class NavigateVersionsTest extends VersioningTest
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       checkViewVersionHistoryButtonPresent(false);
       
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       saveAsUsingToolbarButton(FILE_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
@@ -366,7 +366,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
       //Edit file and save
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
@@ -394,7 +394,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text + version6Text);
 
       //Edit file and save
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
@@ -504,7 +504,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkVersionPanelState(false);
 
       //Edit file and save
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);

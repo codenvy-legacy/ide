@@ -148,15 +148,15 @@ public class IDE116CopyTest extends BaseTest
        * Check Copy must be enabled
        */
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
-      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
 
       /* 
        * Check Paste must be disabled
        */
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
       /* 
       * Call "Edit/Copy" in menu
@@ -167,7 +167,7 @@ public class IDE116CopyTest extends BaseTest
       * Check Paste must be enabled
       */
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /* 
       * Select root in workspace tree and call "Edit/Paste"

@@ -107,7 +107,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.DELETE, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, false);
       
             
       selectItemInWorkspaceTree(GROOVY_FILE_NAME);
@@ -119,7 +119,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.DELETE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, true);
       
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
 //      Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -155,7 +155,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
             
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.DELETE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, true);
       
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
           

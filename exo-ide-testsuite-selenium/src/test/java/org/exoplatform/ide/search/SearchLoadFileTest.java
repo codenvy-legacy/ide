@@ -98,11 +98,11 @@ public class SearchLoadFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(restFileName, IDE.editor().getTabTitle(0));
      
-      IDE.toolbar().checkButtonEnabled("Delete Item(s)...", false);
-      IDE.toolbar().checkButtonEnabled("Cut Selected Item(s)", false);
-      IDE.toolbar().checkButtonEnabled("Copy Selected Item(s)", false);
-      IDE.toolbar().checkButtonEnabled("Paste Selected Item(s)", false);
-      IDE.toolbar().checkButtonEnabled("Refresh Selected Folder", false);
+      IDE.toolbar().assertButtonEnabled("Delete Item(s)...", false);
+      IDE.toolbar().assertButtonEnabled("Cut Selected Item(s)", false);
+      IDE.toolbar().assertButtonEnabled("Copy Selected Item(s)", false);
+      IDE.toolbar().assertButtonEnabled("Paste Selected Item(s)", false);
+      IDE.toolbar().assertButtonEnabled("Refresh Selected Folder", false);
 
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, false);
@@ -122,11 +122,11 @@ public class SearchLoadFileTest extends BaseTest
       assertElementPresentInWorkspaceTree(restFileName);
       //TODO check selected
 
-      IDE.toolbar().checkButtonEnabled("Delete Item(s)...", true);
-      IDE.toolbar().checkButtonEnabled("Cut Selected Item(s)", true);
-      IDE.toolbar().checkButtonEnabled("Copy Selected Item(s)", true);
-      IDE.toolbar().checkButtonEnabled("Paste Selected Item(s)", false);
-      IDE.toolbar().checkButtonEnabled("Refresh Selected Folder", true);
+      IDE.toolbar().assertButtonEnabled("Delete Item(s)...", true);
+      IDE.toolbar().assertButtonEnabled("Cut Selected Item(s)", true);
+      IDE.toolbar().assertButtonEnabled("Copy Selected Item(s)", true);
+      IDE.toolbar().assertButtonEnabled("Paste Selected Item(s)", false);
+      IDE.toolbar().assertButtonEnabled("Refresh Selected Folder", true);
 
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
@@ -146,7 +146,9 @@ public class SearchLoadFileTest extends BaseTest
 
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      deleteLinesInEditor(7);
+      
+      IDE.editor().deleteLinesInEditor(7);
+      
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, gadgetFileContent);
       saveAsByTopMenu(gadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
@@ -162,11 +164,11 @@ public class SearchLoadFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(gadgetFileName, IDE.editor().getTabTitle(0));
 
-      IDE.toolbar().checkButtonEnabled("Delete Item(s)...", false);
-      IDE.toolbar().checkButtonEnabled("Cut Selected Item(s)", false);
-      IDE.toolbar().checkButtonEnabled("Copy Selected Item(s)", false);
-      IDE.toolbar().checkButtonEnabled("Paste Selected Item(s)", false);
-      IDE.toolbar().checkButtonEnabled("Refresh Selected Folder", false);
+      IDE.toolbar().assertButtonEnabled("Delete Item(s)...", false);
+      IDE.toolbar().assertButtonEnabled("Cut Selected Item(s)", false);
+      IDE.toolbar().assertButtonEnabled("Copy Selected Item(s)", false);
+      IDE.toolbar().assertButtonEnabled("Paste Selected Item(s)", false);
+      IDE.toolbar().assertButtonEnabled("Refresh Selected Folder", false);
 
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, false);
@@ -186,11 +188,11 @@ public class SearchLoadFileTest extends BaseTest
       assertElementPresentInWorkspaceTree(restFileName);
       //TODO check selected
 
-      IDE.toolbar().checkButtonEnabled("Delete Item(s)...", true);
-      IDE.toolbar().checkButtonEnabled("Cut Selected Item(s)", true);
-      IDE.toolbar().checkButtonEnabled("Copy Selected Item(s)", true);
-      IDE.toolbar().checkButtonEnabled("Paste Selected Item(s)", false);
-      IDE.toolbar().checkButtonEnabled("Refresh Selected Folder", true);
+      IDE.toolbar().assertButtonEnabled("Delete Item(s)...", true);
+      IDE.toolbar().assertButtonEnabled("Cut Selected Item(s)", true);
+      IDE.toolbar().assertButtonEnabled("Copy Selected Item(s)", true);
+      IDE.toolbar().assertButtonEnabled("Paste Selected Item(s)", false);
+      IDE.toolbar().assertButtonEnabled("Refresh Selected Folder", true);
 
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);

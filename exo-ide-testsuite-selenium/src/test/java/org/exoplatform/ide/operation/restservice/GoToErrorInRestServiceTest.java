@@ -145,7 +145,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //check, tab with rest service must be opened
-      checkIsEditorTabSelected(FILE_WITH_ERROR, true);
+      IDE.editor().checkEditorTabSelected(FILE_WITH_ERROR, true);
 
       assertEquals("3 : 9", getCursorPositionUsingStatusBar());
 

@@ -122,11 +122,11 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("33 : 1", getCursorPositionUsingStatusBar());
-      checkOutlineTreeNodeSelected(8, "br", false);
-      checkOutlineTreeNodeSelected(9, "br", true);
+      IDE.outline().checkOutlineTreeNodeSelected(8, "br", false);
+      IDE.outline().checkOutlineTreeNodeSelected(9, "br", true);
       
       //go to script tag by pressing key DOWN
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //Go to script tag in editor
       for (int i = 0; i < 39; i++)
@@ -137,7 +137,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP*2);
       //check tree
-      checkOutlineTreeNodeSelected(11, "script", true);
+      IDE.outline().checkOutlineTreeNodeSelected(11, "script", true);
 
       //delete script node
       runHotkeyWithinEditor(0, true, false, 68);
@@ -147,7 +147,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       runHotkeyWithinEditor(0, true, false, 68);
       Thread.sleep(TestConstants.SLEEP);
 
-      checkOutlineTreeNodeSelected(6, "body", true);
+      IDE.outline().checkOutlineTreeNodeSelected(6, "body", true);
 
       //check, that there are no nodes script or b in Outline tree
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]"));

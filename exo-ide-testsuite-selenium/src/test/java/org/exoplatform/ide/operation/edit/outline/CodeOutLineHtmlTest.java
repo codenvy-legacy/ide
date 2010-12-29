@@ -120,7 +120,7 @@ public class CodeOutLineHtmlTest extends BaseTest
       //open tr tag
       IDE.outline().clickOpenImg(13, 1);
       assertEquals("21 : 1", getCursorPositionUsingStatusBar());
-      checkOutlineTreeNodeSelected(15, "td", true);
+      IDE.outline().checkOutlineTreeNodeSelected(15, "td", true);
       
       //click on another td tab from the second table
 //      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[28]/col[1]/open");
@@ -154,11 +154,11 @@ public class CodeOutLineHtmlTest extends BaseTest
       assertEquals("table", IDE.outline().getTitle(7, 0));
       
       //check, that first br tag is selected
-      checkOutlineTreeNodeSelected(3, "br", true);
+      IDE.outline().checkOutlineTreeNodeSelected(3, "br", true);
       assertEquals("14 : 1", getCursorPositionUsingStatusBar());
       
       //click on editor
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       selenium.clickAt("//body[@class='editbox']", "5,5");
       //press key DOWN to navigate in editor
       for (int i = 0; i < 18; i++){

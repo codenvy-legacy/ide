@@ -79,7 +79,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD);
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.toolbar().checkButtonEnabled("Unset REST Service Autoload", true);
+      IDE.toolbar().assertButtonEnabled("Unset REST Service Autoload", true);
       
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       

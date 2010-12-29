@@ -122,19 +122,19 @@ public class IDE115CopyTest extends BaseTest
        */
 
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
-      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
 
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
-      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.CUT_TOOLBAR, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
+      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.CUT_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
 
       /*
        * Check Paste command must be disabled
        */
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
       /*
        * Click Copy command on toolbar
@@ -145,7 +145,7 @@ public class IDE115CopyTest extends BaseTest
        * Check Paste must be enabled 
        */
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /*
        * Select Root in workspace panel
@@ -161,7 +161,7 @@ public class IDE115CopyTest extends BaseTest
        * Check Paste command must be disabled
        */
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
       /*
        * Open "Test 1" folder

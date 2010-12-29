@@ -290,7 +290,7 @@ public class CutFoldersAndFilesTest extends BaseTest
     */
    private void checkPasteButton(boolean enabled) throws Exception
    {
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, enabled);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, enabled);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, enabled);
 
    }
@@ -302,9 +302,9 @@ public class CutFoldersAndFilesTest extends BaseTest
     */
    private void checkButtonsDisabled() throws Exception
    {
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, false);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, false);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, false);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, false);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, false);

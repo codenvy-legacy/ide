@@ -246,21 +246,6 @@ public abstract class BaseTest
     }*/
 
    /**
-    * Delete pointed number of lines in editor.s
-    * 
-    * @param count number of lines to delete
-    */
-   protected void deleteLinesInEditor(int count)
-   {
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      for (int i = 0; i < count; i++)
-      {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_D);
-      }
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-   }
-
-   /**
     * Select main frame of IDE.
     * 
     * This method is used, after typing text in editor.
@@ -280,17 +265,6 @@ public abstract class BaseTest
       }
    }
 
-   /**
-    * Select iframe, which contains editor from tab with index tabIndex
-    * 
-    * @param tabIndex begins from 0
-    */
-   protected void selectIFrameWithEditor(int tabIndex) throws Exception
-   {
-      selenium.selectFrame(getContentPanelLocator(tabIndex) + "//iframe");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }
-   
    /**
     * Mouse click on editor.
     * 
@@ -389,17 +363,6 @@ public abstract class BaseTest
    }
 
    /**
-    * Select the item in the outline tree. 
-    * 
-    * @param name item's name
-    * @throws Exception
-    */
-   protected void selectItemInOutlineTree(String name) throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name + "]/col[1]");
-   }
-
-   /**
     * Select the root workspace item in workspace tree.
     * 
     * @param name
@@ -457,30 +420,6 @@ public abstract class BaseTest
    {
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name="
          + name + "]/col[0]"));
-   }
-
-   /**
-    * Check item is shown in outline tree.
-    * 
-    * @param name
-    * @throws Exception
-    */
-   protected void assertElementPresentOutlineTree(String name) throws Exception
-   {
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name
-         + "]/col[0]"));
-   }
-
-   /**
-    * Check item is not shown in outline tree.
-    * 
-    * @param name
-    * @throws Exception
-    */
-   protected void assertElementNotPresentOutlineTree(String name) throws Exception
-   {
-      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name
-         + "]/col[0]"));
    }
 
    /**
@@ -932,22 +871,6 @@ public abstract class BaseTest
    }
 
    /**
-    *  Delete all file content via Ctrl+a, Delete
-    */
-   protected void deleteFileContent() throws Exception
-   {
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
-      
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-
-   /**
     * Run hot key within editor. 
     * 
     * This method used for running hotkeys for editor, such as ctrl+z, ctrl+a, ctrl+s and so on.
@@ -1050,27 +973,6 @@ public abstract class BaseTest
       return selenium.getText("//div[@class='exo-statusText-panel']/table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']/nobr");
    }
 
-   /**
-    * Check is node in Outline tree is selected
-    * 
-    * @param rowNumber number of item in treegrid starting from 0
-    * @param name name of item
-    * @param isSelected is node selected
-    */
-   protected void checkOutlineTreeNodeSelected(int rowNumber, String name, boolean isSelected)
-   {
-      String divIndex = String.valueOf(rowNumber + 1);
-      if (isSelected)
-      {
-         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" 
-            + divIndex + "]/td[@class='treeCellSelected']//nobr[text()='" + name + "']"));
-      }
-      else
-      {
-         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" 
-            + divIndex + "]/td[@class='treeCell']//nobr[text()='" + name + "']"));
-      }
-   }
 
    /**
     * Open Upload or Open Local File form. And Upload file.
@@ -1165,38 +1067,6 @@ public abstract class BaseTest
       //click Create Button
       selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
       Thread.sleep(TestConstants.SLEEP);
-   }
-
-   protected void checkIsTabPresentInEditorTabset(String tabTitle, boolean isOpened)
-   {
-      if (isOpened)
-      {
-         assertTrue(selenium.isElementPresent("//div[@id='isc_H']//div[@class='tabBar']//span[contains(text(), '"
-            + tabTitle + "')]"));
-      }
-      else
-      {
-         assertFalse(selenium.isElementPresent("//div[@id='isc_H']//div[@class='tabBar']//span[contains(text(), '"
-            + tabTitle + "')]"));
-      }
-   }
-
-   protected void checkIsEditorTabSelected(String tabTitle, boolean isSelected)
-   {
-      if (isSelected)
-      {
-         //used //td[contains(@class, 'tabTitleSelected')] locator, instead of equals,
-         //because after refreshing tab is overed by mouse and there is no 'tabTitleSelected'
-         //class, but there is 'tabTitleSelectedOver'.
-         assertTrue(selenium.isElementPresent(Locators.EDITOR_PANEL_LOCATOR
-            + "//div[@class='tabBar']//td[contains(@class, 'tabTitleSelected')]/span[contains(text(), '" + tabTitle + "')]"));
-      }
-      else
-      {
-         assertTrue(selenium.isElementPresent(Locators.EDITOR_PANEL_LOCATOR
-            + "//div[@class='tabBar']//td[@class='tabTitle']/span[contains(text(), '" + tabTitle + "')]"));
-      }
-
    }
 
    /*
@@ -1367,34 +1237,6 @@ public abstract class BaseTest
    }
 
    /**
-    * Check is Outline Panel visible.
-    * Note: you can't use this method, to check is Outline Panel visible,
-    * when it appears in first time.
-    * It is because to check, is Outline visible this method used
-    * visibility attribute in style attribute.
-    * But this attribute appears after that, when you hide outline.
-    * 
-    * @param isVisible
-    */
-   protected void checkOutlineVisibility(boolean isVisible)
-   {
-      if (isVisible)
-      {
-         assertTrue(selenium
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
-         assertFalse(selenium
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));         
-      }
-      else
-      {
-         assertFalse(selenium
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
-         assertTrue(selenium
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));         
-      }
-   }
-
-   /**
     * 
     * @param tabIndex begins from 0
     * @return content panel locator 
@@ -1411,6 +1253,17 @@ public abstract class BaseTest
          return "//div[@class='tabSetContainer']/div/div[" + divIndex + "]";
       }
    }
+   
+   /**
+    * Select iframe, which contains editor from tab with index tabIndex
+    * 
+    * @param tabIndex begins from 0
+    */
+   public void selectIFrameWithEditor(int tabIndex) throws Exception
+   {
+      selenium.selectFrame(getContentPanelLocator(tabIndex) + "//iframe");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+   }       
 
    /**
     * remove all cookies which can be stored by IDE
@@ -1589,61 +1442,6 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.SLEEP);
    }
    
-   /**
-    * Clicks on editor panel with the help of {@link Robot}.
-    * It makes a system click, so the coordinates, where to click are computered, 
-    * taking into consideration the browser outer and inner height.
-    * 
-    * @param index editor tab's index
-    * @throws Exception
-    */
-   protected void clickOnEditor() throws Exception
-   {
-      // Make system mouse click on editor space
-      Robot robot = new Robot();
-      robot.mouseMove(getEditorLeftScreenPosition() + 20, getEditorTopScreenPosition() + 40);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      robot.mousePress(InputEvent.BUTTON1_MASK);
-      robot.mouseRelease(InputEvent.BUTTON1_MASK);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      //Second click is needed in some tests with outline , because editor looses focus:
-      robot.mousePress(InputEvent.BUTTON1_MASK);
-      robot.mouseRelease(InputEvent.BUTTON1_MASK);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      // Put cursor at the beginning of the document
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-   
-   /**
-    * Returns the editor's left position on the screen
-    * 
-    * @return int x
-    */
-   protected int getEditorLeftScreenPosition()
-   {
-      // Get the delta between of toolbar browser area
-      int deltaX = Integer.parseInt(selenium.getEval("window.outerWidth-window.innerWidth"));
-      // Get the position on screen of the editor
-      int x = selenium.getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
-      return x;
-   }
-
-   /**
-    * Returns the editor's top position on the screen
-    * 
-    * @return int y
-    */
-   protected int getEditorTopScreenPosition()
-   {
-      // Get the delta between of toolbar browser area
-      int deltaY = Integer.parseInt(selenium.getEval("window.outerHeight-window.innerHeight"));
-      // Get the position on screen of the editor
-      int y = selenium.getElementPositionTop("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaY;
-      return y;
-   }
    
    @AfterFailure
    public void captureScreenShotOnFailure(Throwable failure) {

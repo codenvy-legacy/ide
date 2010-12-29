@@ -151,7 +151,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       //Go back to gadget window, do some changes in "Content" panel, click "Save" button.
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       selectIFrameWithEditor(0);
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       selectMainFrame();
       typeTextIntoEditor(0, XML_TEXT);
       saveCurrentFile();
@@ -182,7 +182,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       typeTextIntoEditor(0, typeText);
       //The "Save" button and "File->Save" command must become enabled.
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
    }
    
@@ -213,7 +213,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
       
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
    }
    
    /**
@@ -247,7 +247,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       
       assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
    }
 
 }

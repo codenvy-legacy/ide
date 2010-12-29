@@ -100,7 +100,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       //----- 2 ----------
       //lock file
       IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
       checkFileLocking(FILE_NAME, false);
 
       //----- 3 ----------
@@ -118,7 +118,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
       
       checkFileLocking(FILE_NAME, true);
       
@@ -130,7 +130,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       //open file in CK editor and check is file locked
       openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
       checkFileLocking(FILE_NAME, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
 
       typeTextIntoEditor(0, "Test editor");
       

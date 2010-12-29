@@ -189,7 +189,7 @@ public class HighlightCurrentLineTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       // goto end of first line 
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
       Thread.sleep(TestConstants.SLEEP_SHORT);      

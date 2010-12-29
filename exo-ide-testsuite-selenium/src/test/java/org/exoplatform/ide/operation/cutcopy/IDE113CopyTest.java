@@ -182,13 +182,13 @@ public class IDE113CopyTest extends BaseTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
       
       // Call the "Edit->Copy Items" topmenu command.
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
       
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
       
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
@@ -238,8 +238,8 @@ public class IDE113CopyTest extends BaseTest
       IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
       
-      IDE.toolbar().checkButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
       
       selenium.controlKeyDown();
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");

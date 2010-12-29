@@ -114,12 +114,15 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    @Test
    public void testOpeningSavingAndClosingTabsWithFile() throws Exception
    {
-
       // Refresh Workspace:
       Thread.sleep(TestConstants.SLEEP);
+      
       selectItemInWorkspaceTree(WS_NAME);
+      
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      
       selectItemInWorkspaceTree(FOLDER_NAME);
+      
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       // ----------5--------------
@@ -408,35 +411,28 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       Thread.sleep(500);
    }
 
-   public void clickTabAndCheckSaveButton() throws InterruptedException
+   protected void clickTabAndCheckSaveButton() throws Exception
    {
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='false']"));
-      // click_tab_and_check_SaveButton _2
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=1]/");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='false']"));
-      // click_tab_and_check_SaveButton _3
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=2]/");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='false']"));
-      // click_tab_and_check_SaveButton _4
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=3]/");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='false']"));
-      // click_tab_and_check_SaveButton _5
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=4]/");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='false']"));
-      // click_tab_and_check_SaveButton _6
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=5]/");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='false']"));
-      // click_tab_and_check_SaveButton _7
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=6]/");
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//div[@title='Save']/div[@elementenabled='false']"));
+      IDE.editor().selectTab(0);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+
+      IDE.editor().selectTab(1);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      
+      IDE.editor().selectTab(2);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      
+      IDE.editor().selectTab(3);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);      
+      
+      IDE.editor().selectTab(4);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      
+      IDE.editor().selectTab(5);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      
+      IDE.editor().selectTab(6);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
    }
 
    public void openXML() throws InterruptedException, Exception

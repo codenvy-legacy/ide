@@ -101,7 +101,7 @@ public class PreviewHtmlFileTest extends BaseTest
       //---- 2 -----------------
       //check is Show Preview button disabled
       IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.SHOW_PREVIEW, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, false);
       
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, false);
       
@@ -123,7 +123,7 @@ public class PreviewHtmlFileTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, true);
       
       //check is Show Preview button enabled
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, true);
       
       //---- 4 -----------------
       //click on button Show Preview on Toolbar
@@ -149,7 +149,7 @@ public class PreviewHtmlFileTest extends BaseTest
       //new html file is opened.
       //Show Preview button is disabled
       IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.SHOW_PREVIEW, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, false);
       
       //---- 7 -----------------

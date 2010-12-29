@@ -201,7 +201,7 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.editor().selectTab(0);
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
@@ -211,18 +211,18 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // check outline tree
-      assertElementPresentOutlineTree("Module");
-      assertElementPresentOutlineTree("ModulePrefs");
-      assertElementPresentOutlineTree("Content");
-      assertElementNotPresentOutlineTree("CDATA");
+      IDE.outline().assertElementPresentOutlineTree("Module");
+      IDE.outline().assertElementPresentOutlineTree("ModulePrefs");
+      IDE.outline().assertElementPresentOutlineTree("Content");
+      IDE.outline().assertElementNotPresentOutlineTree("CDATA");
 
       // verify keyboard key pressing within the outline
-      selectItemInOutlineTree("Module");
+      IDE.outline().selectItemInOutlineTree("Module");
       assertEquals("2 : 1", getCursorPositionUsingStatusBar());
 
       // open "Content" node in the Outline Panel and got to "CDATA" node
 
-      selectItemInOutlineTree("Content");
+      IDE.outline().selectItemInOutlineTree("Content");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
@@ -235,7 +235,7 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       // check outline tree     
-      assertElementPresentOutlineTree("CDATA");
+      IDE.outline().assertElementPresentOutlineTree("CDATA");
       assertEquals("6 : 1", getCursorPositionUsingStatusBar());
 
       IDE.editor().closeTab(0);

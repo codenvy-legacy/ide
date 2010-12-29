@@ -123,9 +123,9 @@ public class CutFolderTest extends BaseTest
       openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
 
       // check in toolbar
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
 
       //check in menu
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
@@ -135,7 +135,7 @@ public class CutFolderTest extends BaseTest
       //step 3 - Select folder "test 1/test 2". Click on "Cut" toolbar button.
       selectItemInWorkspaceTree(FOLDER_2);
       IDE.toolbar().runCommand(MenuCommands.Edit.CUT_TOOLBAR);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       //step 4 - Select file "test 1/test 2/test.groovy" in the Workspace Panel.
@@ -143,7 +143,7 @@ public class CutFolderTest extends BaseTest
       selectItemInWorkspaceTree(FILE_1);
       
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       //step5 - Select folder "test 1/test 2/" and click on "Paste" toolbar button.
       selectItemInWorkspaceTree(FOLDER_2);
@@ -154,7 +154,7 @@ public class CutFolderTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
       
       openOrCloseFolder(FOLDER_2);
 
@@ -170,7 +170,7 @@ public class CutFolderTest extends BaseTest
       assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
       
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       // step 7 - Select folders "test 1" and "test 2".
       selectItemInWorkspaceTree(FOLDER_1);
@@ -180,7 +180,7 @@ public class CutFolderTest extends BaseTest
       selenium.keyUpNative(""+KeyEvent.VK_CONTROL);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       // step 8 - Select file "test 1/test 2/test.groovy".
@@ -190,7 +190,7 @@ public class CutFolderTest extends BaseTest
       openOrCloseFolder(FOLDER_2);
       selectItemInWorkspaceTree(FILE_1);
       
-      IDE.toolbar().checkButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       //step 9 - Select "test 2" item and then select "Edit->Paste Items" topmenu command.

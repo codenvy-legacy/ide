@@ -84,7 +84,7 @@ public class ViewVersionListTest extends VersioningTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkViewVersionHistoryButtonPresent(false);
 
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       saveAsUsingToolbarButton(FILE_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
@@ -121,7 +121,7 @@ public class ViewVersionListTest extends VersioningTest
       checkVersionPanelState(true);
 
       //Edit file and save
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
@@ -152,7 +152,7 @@ public class ViewVersionListTest extends VersioningTest
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
 
       //Edit file and save
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
@@ -200,7 +200,7 @@ public class ViewVersionListTest extends VersioningTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkViewVersionHistoryButtonPresent(false);
       
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       saveAsUsingToolbarButton(FILE_2);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);

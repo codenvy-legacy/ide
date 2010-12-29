@@ -128,7 +128,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       assertTrue(getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" 
          + "import javax.ws.rs.Path\n"
@@ -144,7 +144,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(13)));
       
       // edit text
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       Thread.sleep(TestConstants.SLEEP);
       
       // test removing error marks if file is empty
@@ -170,7 +170,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP * 2);
       
       // test import statement and code error marks
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       assertTrue(getTextFromCodeEditor(0).startsWith(
          "import java.util.prefs.Base64;\n"
          + "Integer1 d \n"
@@ -198,7 +198,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
           
       // refresh browser and test error marks
       refresh();
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.SLEEP);
       secondVerificationOfErrorMarks();            
    }
@@ -250,7 +250,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       assertTrue(getTextFromCodeEditor(1).startsWith(
          "<%\n" 
          + "  import java.util.prefs.Base64;\n"

@@ -119,7 +119,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //---- 2 -----------------
       //check Run Groovy Service button and menu
       IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
       //---- 3 -----------------
@@ -183,7 +183,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //---- 2 -----------------
       //check Run Groovy Service button and menu
       IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
       //---- 3 -----------------
@@ -244,7 +244,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //---- 3 -----------------
       //check Run Groovy Service button and menu
       IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
       //---- 4 -----------------
@@ -292,7 +292,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //---- 2 -----------------
       //check Run Groovy Service button and menu
       IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
       selectItemInWorkspaceTree(FOLDER_NAME);

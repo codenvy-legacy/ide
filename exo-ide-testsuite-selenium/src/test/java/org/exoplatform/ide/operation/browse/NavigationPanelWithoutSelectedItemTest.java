@@ -84,13 +84,13 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);      
 
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, true);      
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, true);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, true);
 //      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.NEW, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.REFRESH, true);      
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SEARCH, true);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.REFRESH, true);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SEARCH, true);      
       
       // un-select folder item "test" in the navigation panel
       selenium.controlKeyDown();
@@ -131,13 +131,13 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, false);      
 
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, false);      
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, false);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, false);
 //      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.NEW, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.REFRESH, false);      
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SEARCH, false);        
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.REFRESH, false);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SEARCH, false);        
       
       // create file when there is no selected item in the navigation panel
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
@@ -174,13 +174,13 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, false);      
 
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, false);      
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, false);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, false);
 //      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.NEW, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.REFRESH, false);      
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SEARCH, false);  
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.REFRESH, false);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SEARCH, false);  
 
       // trying to save file new file by using "Ctrl+S" hotkey
       runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
@@ -229,13 +229,13 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);      
 
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, true);      
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, true);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, true);
 //      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.NEW, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.REFRESH, true);      
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SEARCH, true);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.REFRESH, true);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SEARCH, true);      
       
       // un-select item "test.groovy" in the navigation panel
       selenium.controlKeyDown();
@@ -276,13 +276,13 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, false);      
 
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, false);      
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, false);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, false);
 //      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.NEW, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.REFRESH, false);      
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SEARCH, false);  
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.REFRESH, false);      
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SEARCH, false);  
    }
 
    @After

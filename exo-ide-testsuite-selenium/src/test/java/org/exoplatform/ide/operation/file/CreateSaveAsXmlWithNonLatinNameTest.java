@@ -121,10 +121,10 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       assertEquals("Untitled file.xml *", IDE.editor().getTabTitle(0));
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
       
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       
       typeTextIntoEditor(0, XML_CONTENT);
       Thread.sleep(TestConstants.SLEEP);
@@ -148,7 +148,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       checkCodeEditorOpened(0);
 
       //change file content
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       
       typeTextIntoEditor(0, XML_CONTENT_2);
 

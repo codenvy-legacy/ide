@@ -126,7 +126,7 @@ public class CodeOutlineXmlTest extends BaseTest
    private void checkCodeNavigation() throws Exception
    {
       //click on editor
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
      //press key DOWN to navigate in editor
       for (int i = 0; i < 4; i++){
@@ -136,7 +136,7 @@ public class CodeOutlineXmlTest extends BaseTest
      
       Thread.sleep(TestConstants.SLEEP);
      
-      checkOutlineTreeNodeSelected(1, "display-name", true);
+      IDE.outline().checkOutlineTreeNodeSelected(1, "display-name", true);
       assertEquals("5 : 1", getCursorPositionUsingStatusBar());
       
       Thread.sleep(TestConstants.SLEEP);
@@ -150,8 +150,8 @@ public class CodeOutlineXmlTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP);
       
-      checkOutlineTreeNodeSelected(1, "display-name", false);
-      checkOutlineTreeNodeSelected(3, "param-name", true);
+      IDE.outline().checkOutlineTreeNodeSelected(1, "display-name", false);
+      IDE.outline().checkOutlineTreeNodeSelected(3, "param-name", true);
       assertEquals("9 : 1", getCursorPositionUsingStatusBar());
       Thread.sleep(TestConstants.SLEEP);
       
@@ -162,8 +162,8 @@ public class CodeOutlineXmlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check selection in tree
-      checkOutlineTreeNodeSelected(3, "param-name", false);
-      checkOutlineTreeNodeSelected(0, "web-app", true);
+      IDE.outline().checkOutlineTreeNodeSelected(3, "param-name", false);
+      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", true);
       //check cursor position
       assertEquals("32 : 11", getCursorPositionUsingStatusBar());
       
@@ -174,23 +174,23 @@ public class CodeOutlineXmlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check selection in tree
-      checkOutlineTreeNodeSelected(0, "web-app", true);
+      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", true);
       //check cursor position
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
       
       //check, that selection in tree will redraw after
       //2 seconds, when cursor activity stop
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      checkOutlineTreeNodeSelected(0, "web-app", true);
+      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", true);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      checkOutlineTreeNodeSelected(0, "web-app", true);
+      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", true);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      checkOutlineTreeNodeSelected(0, "web-app", true);
+      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", true);
       Thread.sleep(TestConstants.SLEEP);
       
       //check selection in tree
-      checkOutlineTreeNodeSelected(0, "web-app", false);
-      checkOutlineTreeNodeSelected(1, "display-name", true);
+      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", false);
+      IDE.outline().checkOutlineTreeNodeSelected(1, "display-name", true);
       //check cursor position
       assertEquals("4 : 1", getCursorPositionUsingStatusBar());
       Thread.sleep(TestConstants.SLEEP);
@@ -255,7 +255,7 @@ public class CodeOutlineXmlTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[1]");
       
       //click on editor
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //go up and check, that node settings opened
       //and node value selected
@@ -278,7 +278,7 @@ public class CodeOutlineXmlTest extends BaseTest
       assertEquals("CDATA", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
       assertEquals("filter", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
       
-      checkOutlineTreeNodeSelected(3, "value", true);
+      IDE.outline().checkOutlineTreeNodeSelected(3, "value", true);
       
       //check cursor position
       assertEquals("8 : 1", getCursorPositionUsingStatusBar());
@@ -305,15 +305,15 @@ public class CodeOutlineXmlTest extends BaseTest
       assertEquals("filter", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
       
       //check, that settings node is selected
-      checkOutlineTreeNodeSelected(2, "settings", true);
-      checkOutlineTreeNodeSelected(3, "value", false);
+      IDE.outline().checkOutlineTreeNodeSelected(2, "settings", true);
+      IDE.outline().checkOutlineTreeNodeSelected(3, "value", false);
       assertEquals("9 : 1", getCursorPositionUsingStatusBar());
       
       //now click on node "settings" in tree
       //and cursor must go to <settings> tab in editor: line 7, column 1
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[1]");
       Thread.sleep(TestConstants.SLEEP);
-      checkOutlineTreeNodeSelected(2, "settings", true);
+      IDE.outline().checkOutlineTreeNodeSelected(2, "settings", true);
       assertEquals("7 : 1", getCursorPositionUsingStatusBar());
    }
    

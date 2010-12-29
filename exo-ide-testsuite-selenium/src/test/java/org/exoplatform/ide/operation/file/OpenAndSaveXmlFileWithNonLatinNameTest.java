@@ -114,21 +114,21 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       
       assertEquals("Untitled file.xml *", IDE.editor().getTabTitle(0));
       
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
       
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       typeTextIntoEditor(0, XML_CONTENT);
       
       saveAsUsingToolbarButton(FILE_NAME);
       IDE.editor().closeTab(0);
       
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       typeTextIntoEditor(0, XML_CONTENT_2);
      
       //Save command enabled
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
       //File name ends with *
       assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
       
@@ -138,8 +138,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       assertEquals(FILE_NAME, IDE.editor().getTabTitle(0));
       
       //Save command disabled
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
    }
-   
 
 }

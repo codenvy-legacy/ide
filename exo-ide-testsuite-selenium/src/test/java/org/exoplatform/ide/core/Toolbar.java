@@ -102,7 +102,7 @@ public class Toolbar
     * @param name button name
     * @param enabled boolean value
     */
-   public void checkButtonEnabled(String name, boolean enabled)
+   public void assertButtonEnabled(String name, boolean enabled)
    {
       if (enabled)
       {
@@ -126,11 +126,11 @@ public class Toolbar
     * @param name button name (title in DOM)
     * @param isPresent is present
     */
-   public void checkButtonExistAtLeft(String name, boolean exist)
+   public void assertButtonExistAtLeft(String name, boolean exist)
    {
       String locator =
          "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]/div[@class=\"exoToolbarElementLeft\"]/div[@class=\"exoIconButtonPanel\" and @title=\""
-            + name + "\"]";
+         + name + "\"]";
       if (exist)
       {
          assertTrue(selenium.isVisible(locator));
@@ -164,6 +164,21 @@ public class Toolbar
 //         assertFalse(selenium.isElementPresent(locator));
          assertFalse(selenium.isVisible(locator));
       }
+   }
+   
+   public void assertButtonPresent(String name, boolean present) {
+//      String locator =
+//         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@class=\"exoIconButtonPanel\" and @title=\"" + name + "\"]";
+//
+//      if (present)
+//      {
+//         assertTrue(selenium.isElementPresent(locator));
+//      }
+//      else
+//      {
+//         assertFalse(selenium.isElementPresent(locator));
+//      }
+      
    }
 
 }

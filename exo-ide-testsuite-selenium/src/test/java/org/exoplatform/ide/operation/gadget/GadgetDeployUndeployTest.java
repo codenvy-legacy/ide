@@ -74,8 +74,8 @@ public class GadgetDeployUndeployTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // gadget deploy/undeploy command should be disabled
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, false);
 
@@ -86,8 +86,8 @@ public class GadgetDeployUndeployTest extends BaseTest
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);
 
       // gadget deploy/undeploy command should become enabled
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, true);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true);
 

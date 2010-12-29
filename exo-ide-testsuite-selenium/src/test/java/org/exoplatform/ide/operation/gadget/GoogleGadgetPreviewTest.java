@@ -94,8 +94,9 @@ public class GoogleGadgetPreviewTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[@class='Number']"));
 
       selenium.click("//body[@class='editbox']/");
-      clickOnEditor();
-      deleteFileContent();
+
+      IDE.editor().clickOnEditor();
+      IDE.editor().deleteFileContent();
 
       String hello =
          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "  <ModulePrefs title=\"Hello World!\" />\n"

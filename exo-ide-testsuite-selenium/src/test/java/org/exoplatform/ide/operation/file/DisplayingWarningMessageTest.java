@@ -105,9 +105,9 @@ public class DisplayingWarningMessageTest extends BaseTest
       //After the step 3: new file tab will be closed, Content Panel will become empty, 
       //"Save" and "Save As" buttons, and "File->Save", "File->Save As" top menu commands 
       //will be disabled.
-      checkIsTabPresentInEditorTabset("Untitled file.xml", false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, false);
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
+      IDE.editor().checkIsTabPresentInEditorTabset("Untitled file.xml", false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);
       
@@ -129,7 +129,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       assertElementPresentInWorkspaceTree(XML_FILE_NAME);
       
       //check is file closed
-      checkIsTabPresentInEditorTabset(XML_FILE_NAME, false);
+      IDE.editor().checkIsTabPresentInEditorTabset(XML_FILE_NAME, false);
       
       //--------- 7 -------------------
       //Open created earlier xml file and change file content. 
@@ -153,8 +153,11 @@ public class DisplayingWarningMessageTest extends BaseTest
       
       //After the step 8: file tab with created earlier xml file should be opened, 
       //content in this tab should be changed, title will be marked by "*" and buttom "Save" and "File->Save" top menu command will be enabled.
+      
       assertEquals(XML_FILE_NAME + " *", IDE.editor().getTabTitle(0));
-      checkIsEditorTabSelected(XML_FILE_NAME, true);
+      
+      IDE.editor().checkEditorTabSelected(XML_FILE_NAME, true);
+      IDE.editor().checkIsTabPresentInEditorTabset(XML_FILE_NAME, true);
       checkCodeEditorOpened(0);
       
       //check file content
@@ -169,7 +172,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       assertEquals(previousContent, getTextFromCodeEditor(0));
       
       //check Save button enabled
-      IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
       //check menu Save in File enabled
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
       

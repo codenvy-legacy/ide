@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.core;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.ide.TestConstants;
 
 import com.thoughtworks.selenium.Selenium;
@@ -81,5 +84,90 @@ public class Outline
          + String.valueOf(row) + "]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
+   
+   /**
+    * Check is Outline Panel visible.
+    * Note: you can't use this method, to check is Outline Panel visible,
+    * when it appears in first time.
+    * It is because to check, is Outline visible this method used
+    * visibility attribute in style attribute.
+    * But this attribute appears after that, when you hide outline.
+    * 
+    * @param isVisible
+    */
+   public void checkOutlineVisibility(boolean isVisible)
+   {
+      if (isVisible)
+      {
+         assertTrue(selenium
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
+         assertFalse(selenium
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));         
+      }
+      else
+      {
+         assertFalse(selenium
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
+         assertTrue(selenium
+            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));         
+      }
+   }
+   
+   /**
+    * Check is node in Outline tree is selected
+    * 
+    * @param rowNumber number of item in treegrid starting from 0
+    * @param name name of item
+    * @param isSelected is node selected
+    */
+   public void checkOutlineTreeNodeSelected(int rowNumber, String name, boolean isSelected)
+   {
+      String divIndex = String.valueOf(rowNumber + 1);
+      if (isSelected)
+      {
+         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" 
+            + divIndex + "]/td[@class='treeCellSelected']//nobr[text()='" + name + "']"));
+      }
+      else
+      {
+         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" 
+            + divIndex + "]/td[@class='treeCell']//nobr[text()='" + name + "']"));
+      }
+   }   
+   
+   /**
+    * Check item is shown in outline tree.
+    * 
+    * @param name
+    * @throws Exception
+    */
+   public void assertElementPresentOutlineTree(String name) throws Exception
+   {
+      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name
+         + "]/col[0]"));
+   }
+   
+   /**
+    * Check item is not shown in outline tree.
+    * 
+    * @param name
+    * @throws Exception
+    */
+   public void assertElementNotPresentOutlineTree(String name) throws Exception
+   {
+      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name
+         + "]/col[0]"));
+   }
+   
+   /**
+    * Select the item in the outline tree. 
+    * 
+    * @param name item's name
+    * @throws Exception
+    */
+   public void selectItemInOutlineTree(String name) throws Exception
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name + "]/col[1]");
+   }   
 
 }

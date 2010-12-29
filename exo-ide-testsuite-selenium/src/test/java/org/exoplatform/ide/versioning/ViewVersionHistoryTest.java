@@ -244,7 +244,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
       //Go to end of document
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
@@ -284,7 +284,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkVersionPanelState(false);
 
       //Edit file and save
-      clickOnEditor();
+      IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       selenium.keyPressNative(""+KeyEvent.VK_END);

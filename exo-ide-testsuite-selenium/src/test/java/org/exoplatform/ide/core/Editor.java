@@ -20,8 +20,12 @@
 
 package org.exoplatform.ide.core;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.awt.Robot;
+import java.awt.event.InputEvent;
 
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.SaveFileUtils;
@@ -69,7 +73,7 @@ public class Editor
     public void selectTab(int tabIndex) throws Exception
     {
        selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + String.valueOf(tabIndex) + "]/");
-       Thread.sleep(TestConstants.REDRAW_PERIOD);
+       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
     }
 
     /**
@@ -220,6 +224,128 @@ public class Editor
        }
        Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
-    }    
+    }
+    
+    public void checkEditorTabSelected(String tabTitle, boolean isSelected)
+    {
+       if (isSelected)
+       {
+          //used //td[contains(@class, 'tabTitleSelected')] locator, instead of equals,
+          //because after refreshing tab is overed by mouse and there is no 'tabTitleSelected'
+          //class, but there is 'tabTitleSelectedOver'.
+          assertTrue(selenium.isElementPresent(Locators.EDITOR_PANEL_LOCATOR
+             + "//div[@class='tabBar']//td[contains(@class, 'tabTitleSelected')]/span[contains(text(), '" + tabTitle + "')]"));
+       }
+       else
+       {
+          assertTrue(selenium.isElementPresent(Locators.EDITOR_PANEL_LOCATOR
+             + "//div[@class='tabBar']//td[@class='tabTitle']/span[contains(text(), '" + tabTitle + "')]"));
+       }
+    }
+    
+    public void checkIsTabPresentInEditorTabset(String tabTitle, boolean isOpened)
+    {
+       if (isOpened)
+       {
+          assertTrue(selenium.isElementPresent("//div[@id='isc_H']//div[@class='tabBar']//span[contains(text(), '"
+             + tabTitle + "')]"));
+       }
+       else
+       {
+          assertFalse(selenium.isElementPresent("//div[@id='isc_H']//div[@class='tabBar']//span[contains(text(), '"
+             + tabTitle + "')]"));
+       }
+    }
+    
+    /**
+     * Delete pointed number of lines in editor.s
+     * 
+     * @param count number of lines to delete
+     */
+    public void deleteLinesInEditor(int count)
+    {
+       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+       for (int i = 0; i < count; i++)
+       {
+          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_D);
+       }
+       selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+    }
+    
+    /**
+     *  Delete all file content via Ctrl+a, Delete
+     */
+    public void deleteFileContent() throws Exception
+    {
+       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+
+       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
+
+       selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+
+       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
+       
+       Thread.sleep(TestConstants.REDRAW_PERIOD);
+    }
+    
+    /**
+     * Clicks on editor panel with the help of {@link Robot}.
+     * It makes a system click, so the coordinates, where to click are computered, 
+     * taking into consideration the browser outer and inner height.
+     * 
+     * @param index editor tab's index
+     * @throws Exception
+     */
+    public void clickOnEditor() throws Exception
+    {
+       // Make system mouse click on editor space
+       Robot robot = new Robot();
+       robot.mouseMove(getEditorLeftScreenPosition() + 50, getEditorTopScreenPosition() + 50);
+       Thread.sleep(TestConstants.REDRAW_PERIOD);
+       
+       robot.mousePress(InputEvent.BUTTON1_MASK);
+       robot.mouseRelease(InputEvent.BUTTON1_MASK);
+       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+       
+       //Second click is needed in some tests with outline , because editor looses focus:
+       robot.mousePress(InputEvent.BUTTON1_MASK);
+       robot.mouseRelease(InputEvent.BUTTON1_MASK);
+       Thread.sleep(TestConstants.REDRAW_PERIOD);
+       
+       // Put cursor at the beginning of the document
+       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
+       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+       
+       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
+       Thread.sleep(TestConstants.REDRAW_PERIOD);
+    }
+    
+    /**
+     * Returns the editor's left position on the screen
+     * 
+     * @return int x
+     */
+    protected int getEditorLeftScreenPosition()
+    {
+       // Get the delta between of toolbar browser area
+       int deltaX = Integer.parseInt(selenium.getEval("window.outerWidth-window.innerWidth"));
+       // Get the position on screen of the editor
+       int x = selenium.getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
+       return x;
+    }
+
+    /**
+     * Returns the editor's top position on the screen
+     * 
+     * @return int y
+     */
+    protected int getEditorTopScreenPosition()
+    {
+       // Get the delta between of toolbar browser area
+       int deltaY = Integer.parseInt(selenium.getEval("window.outerHeight-window.innerHeight"));
+       // Get the position on screen of the editor
+       int y = selenium.getElementPositionTop("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaY;
+       return y;
+    }
 
 }

@@ -88,7 +88,7 @@ public class RestoreVersionTest extends VersioningTest
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
 
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       saveAsUsingToolbarButton(FILE_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
@@ -243,7 +243,7 @@ public class RestoreVersionTest extends VersioningTest
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
 
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       saveAsUsingToolbarButton(FILE_2);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);

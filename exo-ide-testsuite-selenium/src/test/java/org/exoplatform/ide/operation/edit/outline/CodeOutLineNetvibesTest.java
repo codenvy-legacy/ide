@@ -121,11 +121,11 @@ public class CodeOutLineNetvibesTest extends BaseTest
       //open "p" tag
       IDE.outline().clickOpenImg(3, 1);
       assertEquals("51 : 1", getCursorPositionUsingStatusBar());
-      checkOutlineTreeNodeSelected(3, "p", true);
+      IDE.outline().checkOutlineTreeNodeSelected(3, "p", true);
       
       goToLine(7);
       Thread.sleep(TestConstants.SLEEP);
-      checkOutlineTreeNodeSelected(2, "meta", true);
+      IDE.outline().checkOutlineTreeNodeSelected(2, "meta", true);
       
       //press Ctrl+D to delete lines
       //click on editor
@@ -137,7 +137,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       }
       Thread.sleep(TestConstants.SLEEP);
       
-      checkOutlineTreeNodeSelected(2, "link", true);
+      IDE.outline().checkOutlineTreeNodeSelected(2, "link", true);
       
       assertEquals("html", IDE.outline().getTitle(0, 0));
       assertEquals("head", IDE.outline().getTitle(1, 0));

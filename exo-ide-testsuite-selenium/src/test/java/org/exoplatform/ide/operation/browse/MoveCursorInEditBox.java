@@ -46,7 +46,7 @@ public class MoveCursorInEditBox extends BaseTest
          "scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element";
       selenium.focus(locator);
       
-      deleteFileContent();
+      IDE.editor().deleteFileContent();
       selenium.typeKeys(locator, "FooBr");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       selenium.typeKeys(locator, "a");
