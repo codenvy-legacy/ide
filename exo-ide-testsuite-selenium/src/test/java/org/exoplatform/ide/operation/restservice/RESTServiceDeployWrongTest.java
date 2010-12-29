@@ -88,8 +88,7 @@ public class RESTServiceDeployWrongTest extends BaseTest
       String mess = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
       
       assertTrue(mess.startsWith("[ERROR]"));
-      
-      assertTrue(mess.contains(FILE_NAME + " deploy failed. Error (500: Internal Server Error)"));
+      assertTrue(mess.contains(FILE_NAME + " deploy failed. Error (400: Bad Request)"));
    
    }
    
