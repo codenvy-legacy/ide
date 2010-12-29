@@ -107,7 +107,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
    @Test
    public void testOpenAndSaveXmlFileWithNonLatinName() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP*2);
       selectItemInWorkspaceTree(FOLDER_NAME);
       
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
