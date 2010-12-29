@@ -64,9 +64,20 @@ public class TemplateUtils
    
    static void selectItemInTemplateList(Selenium selenium, String templateName) throws Exception
    {
-//      assertTrue(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']"));
-      selenium.mouseDownAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']", "2,2");
-      selenium.mouseUpAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']", "2,2");
+      //Get rows count:
+      int rows = (Integer)selenium.getXpathCount("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']/div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']/div/table/tbody[2]/tr");
+      
+      for (int i = 0; i < rows; i++)
+      {
+         String rowLocator =
+            "scLocator=//ListGrid[ID=\"ideCreateFileFromTemplateFormTemplateListGrid\"]/body/row[" + i + "]/col[1]";
+         String text = selenium.getText(rowLocator);
+         if (templateName.equals(text))
+         {
+            selenium.click(rowLocator);
+            break;
+         }
+      }
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    

@@ -198,8 +198,8 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       TemplateUtils.selectItemInTemplateList(selenium, FILE_TEMPLATE_NAME_3);
       selenium.controlKeyDown();
       TemplateUtils.selectItemInTemplateList(selenium, FILE_TEMPLATE_NAME_4);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.controlKeyUp();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //click Delete button
       selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormDeleteButton\"]/");

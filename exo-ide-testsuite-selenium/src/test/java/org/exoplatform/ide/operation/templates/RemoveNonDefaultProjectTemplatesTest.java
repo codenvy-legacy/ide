@@ -98,7 +98,7 @@ public class RemoveNonDefaultProjectTemplatesTest extends BaseTest
       assertEquals("Do you want to delete template " + PROJECT_TEMPLATE_NAME_1 + "?", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/blurb/"));
       //click OK button
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
       //----- 4 ----------------
       //check template deleted
