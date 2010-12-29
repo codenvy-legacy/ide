@@ -20,6 +20,7 @@
 
 package org.exoplatform.ide;
 
+import org.exoplatform.ide.core.Dialogs;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Outline;
@@ -47,6 +48,8 @@ public class IDE
    private Editor editor;
    
    private Outline outline;
+   
+   private Dialogs dialogs;
 
    public IDE(Selenium selenium)
    {
@@ -56,6 +59,7 @@ public class IDE
       toolbar = new Toolbar(selenium);
       editor = new Editor(selenium);
       outline = new Outline(selenium);
+      dialogs = new Dialogs(selenium);
    }
 
    public Menu menu()
@@ -81,6 +85,11 @@ public class IDE
    public Outline outline()
    {
       return outline;
+   }
+   
+   public Dialogs dialogs()
+   {
+      return dialogs;
    }
 
 }

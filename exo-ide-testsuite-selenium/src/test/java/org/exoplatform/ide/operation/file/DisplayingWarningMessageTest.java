@@ -19,9 +19,6 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
@@ -32,6 +29,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * IDE-36:Displaying warning message test.
@@ -136,34 +135,26 @@ public class DisplayingWarningMessageTest extends BaseTest
       //Open created earlier xml file and change file content. 
       //Open new file by clicking on "New->Java Script File" button.
       openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
       
       changeFileContent();
       
       //open javascript file
       IDE.toolbar().runCommandFromNewPopupMenu("JavaScript File");
-      Thread.sleep(TestConstants.SLEEP);
       
       //--------- 8 -------------------
-      //Trying to reopen created earlier   xml file. 
+      //Trying to reopen created earlier xml file. 
       openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-      
       
       //check warning dialog
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
-      assertEquals("Info", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      IDE.dialogs().checkDialog("Info");
       
       //click Ok button
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.dialogs().clickYesButton();
       
       //After the step 8: file tab with created earlier xml file should be opened, 
       //content in this tab should be changed, title will be marked by "*" and buttom "Save" and "File->Save" top menu command will be enabled.
-      
-      checkIsTabPresentInEditorTabset(XML_FILE_NAME, true);
+      assertEquals(XML_FILE_NAME + " *", IDE.editor().getTabTitle(0));
+      checkIsEditorTabSelected(XML_FILE_NAME, true);
       checkCodeEditorOpened(0);
       
       //check file content
@@ -185,7 +176,6 @@ public class DisplayingWarningMessageTest extends BaseTest
       //---------- 9 -----------------
       //Save, close file tab and open created earlier xml file again.
       IDE.toolbar().runCommand(ToolbarCommands.File.SAVE);
-      Thread.sleep(TestConstants.SLEEP);
       IDE.editor().closeTab(0);
       openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       
@@ -193,12 +183,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       
       //check file opened and title doesn't mark with *
       assertEquals(XML_FILE_NAME, IDE.editor().getTabTitle(1));
-
       assertEquals(previousContent, getTextFromCodeEditor(1));
-      IDE.editor().closeTab(1);
-      
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
-      Thread.sleep(TestConstants.SLEEP);
    }
    
    private void changeFileContent() throws Exception
