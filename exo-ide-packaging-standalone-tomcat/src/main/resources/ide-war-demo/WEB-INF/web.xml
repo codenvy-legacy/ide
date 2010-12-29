@@ -21,8 +21,7 @@
     <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
   </listener>
 
- 
-   <filter>
+    <filter>
     <filter-name>SetCurrentIdentityFilter</filter-name>
     <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
   </filter>

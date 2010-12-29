@@ -93,14 +93,14 @@
                         <configuration>
                            <tasks>
                               <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/ide-war">
+                                 <fileset dir="${basedir}/src/main/resources/ide-war-demo">
                                     <exclude name="**/conf/*.xml" />
-                                    <exclude name="**/IDEApplication.html" />
                                  </fileset>
                               </copy>
                               <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat" />
                               </copy>
+                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x"   includes="**/*.sh"/>
                               <move todir="${project.build.directory}/tomcat-ide/lib">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
                               </move>
@@ -171,13 +171,12 @@
                         <configuration>
                            <tasks>
                               <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/ide-war" >
-                                   <exclude name="**/IDEApplication.html" />
-                                 </fileset>
+                                 <fileset dir="${basedir}/src/main/resources/ide-war-demo" />
                               </copy>
                               <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat" />
                               </copy>
+                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x"   includes="**/*.sh"/>
                               <move todir="${project.build.directory}/tomcat-ide/lib">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
                               </move>

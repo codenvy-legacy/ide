@@ -251,7 +251,8 @@
                   **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
                   **/preloadIDE.js,**/init_smartgwt_for_gadget.js,**/smartgwt-*.jar,
                   **/exo-gwtframework-commons*.jar,**/exo-gwtframework-editor*.jar,
-                  **/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/exo.portal*.jar,**/chromattic*tests.jar,exo-ide-client*.jar,
+                  **/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/exo.portal*.jar,
+                  **/chromattic*tests.jar,exo-ide-client*.jar,servlet-api*.jar
                   </packagingExcludes>
                <warName>IDE</warName>
                <webResources>

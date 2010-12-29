@@ -1,5 +1,4 @@
 <html>
-<%response.setHeader("Session-Timeout","true");%>
 <head>
 <title>eXo IDE Login Page</title>
 <body bgcolor="white">
@@ -14,17 +13,18 @@
 		<table border="0" cellspacing="5">
 			<tr>
 				<th align="right">Username:</th>
-				<td align="left"><input type="text" name="j_username"
-					value="john"></td>
+				<td align="left"><input type="text" name="j_username"></td>
 			</tr>
 			<tr>
 				<th align="right">Password:</th>
-				<td align="left"><input type="password" name="j_password"
-					value="gtn"></td>
+				<td align="left"><input type="password" name="j_password"></td>
 			</tr>
 			<tr>
 				<td align="right"><input type="submit" value="Log In"></td>
-				<td align="left"><input type="reset" value="reset"></td>
+				<td align="left"><input type="reset"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><font color="red">Invalid username and/or password, please try</font></td>
 			</tr>
 			<tr>
 				<td colspan="2">
