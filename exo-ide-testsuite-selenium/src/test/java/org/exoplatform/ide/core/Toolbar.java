@@ -59,8 +59,9 @@ public class Toolbar
 
       String hoverLocator =
          "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
-      selenium.mouseDownAt(hoverLocator, "");
-      selenium.mouseUpAt(hoverLocator, "");
+//      selenium.mouseDownAt(hoverLocator, "");
+//      selenium.mouseUpAt(hoverLocator, "");
+      selenium.clickAt(hoverLocator, "");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       try
@@ -160,7 +161,8 @@ public class Toolbar
       }
       else
       {
-         assertFalse(selenium.isElementPresent(locator));
+//         assertFalse(selenium.isElementPresent(locator));
+         assertFalse(selenium.isVisible(locator));
       }
    }
 

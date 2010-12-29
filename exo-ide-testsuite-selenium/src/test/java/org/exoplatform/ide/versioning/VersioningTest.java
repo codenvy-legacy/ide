@@ -43,9 +43,10 @@ public abstract class VersioningTest extends BaseTest
    {
       if (isOpened)
       {
-         assertTrue(selenium.isElementPresent("//div[@class='exo-toolbar16ButtonPanel_Right' and @title='"
-            + ToolbarCommands.View.HIDE_VERSION_HISTORY
-            + "']/div[@class='exo-toolbar16Button-selected' and @elementenabled='true']"));
+//         assertTrue(selenium.isElementPresent("//div[@class='exo-toolbar16ButtonPanel_Right' and @title='"
+//            + ToolbarCommands.View.HIDE_VERSION_HISTORY
+//            + "']/div[@class='exo-toolbar16Button-selected' and @elementenabled='true']"));
+         IDE.toolbar().checkButtonEnabled(ToolbarCommands.View.HIDE_VERSION_HISTORY, true);
          assertTrue(selenium
             .isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=ideVersionContentPanel]"));
          assertTrue(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
