@@ -148,7 +148,7 @@ public class GoToLineTest extends BaseTest
 //      Thread.sleep(TestConstants.SLEEP);
 
       //            Go to status bar - right down corner , where row and column numbers are displayed, hover on them with the mouse and click on it.
-      selenium.clickAt("//div[@class='exo-statusBar-panel']//nobr[text()='1 : 1']", "");
+      selenium.clickAt("//div[@class='exo-statusText-panel']//nobr[text()='1 : 1']", "");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       assertTrue(selenium.isTextPresent("Go"));

@@ -128,16 +128,17 @@ public class Toolbar
    public void checkButtonExistAtLeft(String name, boolean exist)
    {
       String locator =
-         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@class=\"exoToolbarElementLeft\"]//div[@class=\"exoIconButtonPanel\" and @title=\""
+         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]/div[@class=\"exoToolbarElementLeft\"]/div[@class=\"exoIconButtonPanel\" and @title=\""
             + name + "\"]";
-
       if (exist)
       {
-         assertTrue(selenium.isElementPresent(locator));
+         assertTrue(selenium.isVisible(locator));
       }
       else
       {
-         assertFalse(selenium.isElementPresent(locator));
+         
+         assertFalse(selenium.isVisible(locator));
+
       }
    }
 

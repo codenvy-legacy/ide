@@ -1044,8 +1044,10 @@ public abstract class BaseTest
     */
    protected String getCursorPositionUsingStatusBar()
    {
-      return selenium
-         .getText("//table[@class='exo-statusBar-table']/tbody/tr/td[4]/div/table[@class='exo-statusText-table']//nobr");
+//      return selenium
+//         .getText("//table[@class='exo-statusBar-table']/tbody/tr/td[4]/div/table[@class='exo-statusText-table']//nobr");
+      
+      return selenium.getText("//div[@class='exo-statusText-panel']/table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']/nobr");
    }
 
    /**

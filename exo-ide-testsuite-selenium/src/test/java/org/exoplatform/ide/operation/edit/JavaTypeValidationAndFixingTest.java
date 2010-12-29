@@ -32,6 +32,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -61,7 +62,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
          VirtualFileSystemUtils.put(serviceFilePath, MimeType.GROOVY_SERVICE, URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME);
-         VirtualFileSystemUtils.put(templateFilePath, MimeType.GROOVY_SERVICE, URL + TEST_FOLDER + "/" + TEMPLATE_FILE_NAME);         
+         VirtualFileSystemUtils.put(templateFilePath, MimeType.GROOVY_TEMPLATE, URL + TEST_FOLDER + "/" + TEMPLATE_FILE_NAME);         
       }
       catch (IOException e)
       {
@@ -122,7 +123,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       
       // fix error
       selenium.clickAt(getCodeErrorMarkLocator(11, "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; "), "");
-      selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
+      selenium.click(getErrorCorrectionListItemLocator("Base64"));
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
       
@@ -223,13 +224,13 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP * 2);      
       
       // test error marks
-      assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(6, "'Path' cannot be resolved to a type; ")));
+      assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(6, "'Path' cannot be resolved to a type; ")));
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(7)));
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(8)));
       
       assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(9, "'POST' cannot be resolved to a type; ")));
       
-      assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(10)));      
+      assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(10)));      
       
       assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(11, "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));      
       assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(12, "'Base64' cannot be resolved to a type; ")));
@@ -244,20 +245,21 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       // fix error
       selenium.clickAt(getCodeErrorMarkLocator(11, "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; "), "");
       selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
+      Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
       clickOnEditor();
-      assertTrue(getTextFromCodeEditor(0).startsWith(
+      assertTrue(getTextFromCodeEditor(1).startsWith(
          "<%\n" 
          + "  import java.util.prefs.Base64;\n"
          + "%>\n"
       ));
       
       // test code error marks
-      assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(12, "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));      
-      assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(13)));
+      assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(14, "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));      
+      assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(15)));
    }  
    
    @AfterClass
