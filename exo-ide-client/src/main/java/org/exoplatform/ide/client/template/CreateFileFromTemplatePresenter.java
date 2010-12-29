@@ -23,9 +23,11 @@ import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
@@ -222,7 +224,7 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       });
    }
    
-   private boolean isPresentInProjectTemplate(ProjectTemplate projectTemplate, FileTemplate fileTemplate)
+   private boolean isPresentInProjectTemplate(FolderTemplate projectTemplate, FileTemplate fileTemplate)
    {
       if (projectTemplate.getChildren() == null)
       {
@@ -234,9 +236,9 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
          {
             return true;
          }
-         else if (template instanceof ProjectTemplate)
+         else if (template instanceof FolderTemplate)
          {
-            return isPresentInProjectTemplate((ProjectTemplate)template, fileTemplate);
+            return isPresentInProjectTemplate((FolderTemplate)template, fileTemplate);
          }
       }
       return false;
