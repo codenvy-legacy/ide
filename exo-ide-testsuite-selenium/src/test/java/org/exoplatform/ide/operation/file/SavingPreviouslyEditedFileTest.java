@@ -19,11 +19,8 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.util.UUID;
-
+import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -34,26 +31,29 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
- * Created by The eXo Platform SAS.
+ * IDE-13:Saving previously edited file.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  *
  */
 
-//IDE-13:Saving previously edited file.
 public class SavingPreviouslyEditedFileTest extends BaseTest
 {
    
-   private static String FOLDER_NAME;// = UUID.randomUUID().toString();
+   private static final String FOLDER_NAME = SavingPreviouslyEditedFileTest.class.getSimpleName();
    
-   private static final String FILE_NAME = UUID.randomUUID().toString();
+   private static final String FILE_NAME = "TestXmlFile";
    
    private static final String DEFAULT_XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>";
    
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
-   private final static String XML_TEXT = "<test>\n"
+   private final static String XML_TEXT = "<?xml version='1.0' encoding='UTF-8'?>\n" 
+      + "<test>\n"
       + "<settings>param</settings>\n"
       + "<bean>\n"
       + "<name>MineBean</name>\n"
@@ -74,7 +74,6 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       try
       {
-         FOLDER_NAME = SavingPreviouslyEditedFileTest.class.getSimpleName();
          VirtualFileSystemUtils.mkcol(URL +  FOLDER_NAME + "/");
       }
       catch (IOException e)
@@ -110,68 +109,64 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    {
       //----- 1 ------------
       //Create and select "Test" in "Workspace" panel.
-//      createFolder(FOLDER_NAME);
       
       Thread.sleep(TestConstants.SLEEP);
       selectItemInWorkspaceTree(WS_NAME);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      assertElementPresentInWorkspaceTree(FOLDER_NAME);
       selectItemInWorkspaceTree(FOLDER_NAME);
       
       //----- 2 ------------
       //Click "New -> XML File" button.
       IDE.toolbar().runCommandFromNewPopupMenu("XML File");
-      Thread.sleep(TestConstants.SLEEP);
       
       //You will see default XML content  in the new file tab of "Content" panel.
       //is file opened
       assertEquals("Untitled file.xml *", IDE.editor().getTabTitle(0));
-      Thread.sleep(TestConstants.SLEEP_SHORT);
       assertEquals(DEFAULT_XML_CONTENT, getTextFromCodeEditor(0));
       
       //----- 3-4 ------------
       //Click "Save As" button.
       //Enter "RepoFile.xml" as name of the file and click "Ok" button.
       saveAsUsingToolbarButton(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
       
       //is file saved
       assertElementPresentInWorkspaceTree(FILE_NAME);
       openOrCloseFolder(FOLDER_NAME);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
       assertElementNotPresentInWorkspaceTree(FILE_NAME);
+      
       openOrCloseFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertEquals(FILE_NAME, IDE.editor().getTabTitle(0));
+      IDE.editor().closeTab(0);
       
       //----- 5 ------------
       //Go to server window and check that the files created on the server
-      checkFileOnWebDav();
-//      assertEquals(200, VirtualFileSystemUtils.get(URL+ FILE_NAME).getStatusCode());
-      Thread.sleep(TestConstants.SLEEP*5);
+      assertEquals(200, VirtualFileSystemUtils.get(URL + FOLDER_NAME).getStatusCode());
+      HTTPResponse response = VirtualFileSystemUtils.get(URL + FOLDER_NAME + "/" + FILE_NAME);
+      assertEquals(200, response.getStatusCode());
+      assertEquals(DEFAULT_XML_CONTENT + "\n", response.getText());
       
       //----- 6 ------------
       //Go back to gadget window, do some changes in "Content" panel, click "Save" button.
-      changeFileContent();
-      Thread.sleep(TestConstants.SLEEP);
-      
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      selectIFrameWithEditor(0);
+      deleteFileContent();
+      selectMainFrame();
+      typeTextIntoEditor(0, XML_TEXT);
       saveCurrentFile();
-      Thread.sleep(TestConstants.SLEEP);
+      
       IDE.editor().closeTab(0);
       
       //----- 7 ------------
       //Refresh page, go to "Test" in "Workspace" panel.
       //You'll see "RepoFile.xml" in file list
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.SLEEP*5);
+      refresh();
       
       //Test folder is closed, no file in navigation tree
       assertElementNotPresentInWorkspaceTree(FILE_NAME);
       //open Test folder
       openOrCloseFolder(FOLDER_NAME);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
       //see xml file in navigation tree
       assertElementPresentInWorkspaceTree(FILE_NAME);
       
@@ -183,7 +178,8 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       
       //----- 9 ------------
       //Make some changes in file content and then click on "File->Save" top menu command.
-      changeOpenedFileContent();
+      final String typeText = "<root>" + "admin" + "</root>";
+      typeTextIntoEditor(0, typeText);
       //The "Save" button and "File->Save" command must become enabled.
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
       IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
@@ -200,10 +196,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    @Test
    public void testEditAndSaveJustCreatedFile() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
       
       selectItemInWorkspaceTree(WS_NAME);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
@@ -212,13 +205,13 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       selectItemInWorkspaceTree(FOLDER_NAME);
       
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      Thread.sleep(TestConstants.SLEEP);
       
       saveAsUsingToolbarButton(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
       typeTextIntoEditor(0, "X");
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
+      
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
       IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
    }
@@ -232,10 +225,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    @Test
    public void testOpenEditAndSaveJustCreatedFile() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
       
       selectItemInWorkspaceTree(WS_NAME);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
@@ -244,83 +234,20 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       selectItemInWorkspaceTree(FOLDER_NAME);
       
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      Thread.sleep(TestConstants.SLEEP);
       
       saveAsUsingToolbarButton(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       IDE.editor().closeTab(0);
+      
       selectItemInWorkspaceTree(FILE_NAME);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       typeTextIntoEditor(0, "X");
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
       IDE.toolbar().checkButtonEnabled(ToolbarCommands.File.SAVE, true);
    }
-   
-   
-   private void changeOpenedFileContent() throws Exception
-   {
-      //change file content
-      //at the end of line
-      selenium.keyDown("//body[@class='editbox']/", "\\35");
-      //enter
-      selenium.keyDown("//body[@class='editbox']/", "\\13");
-      selenium.keyUp("//body[@class='editbox']/", "\\13");
-      
-      //before tag test
-      selenium.keyPress("//body[@class='editbox']/", "\\46");
-      
-      //at the end of line
-      selenium.keyDown("//body[@class='editbox']/", "\\35");
-      
-      //enter
-      selenium.keyDown("//body[@class='editbox']/", "\\13");
-      selenium.keyUp("//body[@class='editbox']/", "\\13");
-      
-      Thread.sleep(100);
-      final String typeText = "<root>" + "admin" + "</root>";
-      typeTextIntoEditor(0, typeText);
-   }
-   
-   private void changeFileContent() throws Exception
-   {
-      selenium.mouseDownAt("//body[@class='editbox']//span[2]", "");
-      selenium.mouseUpAt("//body[@class='editbox']//span[2]", "");
-      Thread.sleep(100);
-      selenium.keyDown("//body[@class='editbox']/", "\\35");
-      Thread.sleep(100);
-      selenium.keyDown("//body[@class='editbox']/", "\\13");
-      selenium.keyUp("//body[@class='editbox']/", "\\13");
-      Thread.sleep(100);
-      
-      typeTextIntoEditor(0, XML_TEXT);
-   }
-   
-   private void checkFileOnWebDav() throws Exception
-   {
-      selenium.open(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
-      selenium.waitForPageToLoad("10000");
-      
-      assertTrue(selenium.isElementPresent("//div[@id='main']/a[@href='" 
-         + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" 
-         + FOLDER_NAME + "' and text()=' " + FOLDER_NAME + "']"));
-      
-      selenium.click("link=" + FOLDER_NAME);
-      selenium.waitForPageToLoad("10000");
-      
-      assertTrue(selenium.isElementPresent("//div[@id='main']/a[@href='" 
-         + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" 
-         + FOLDER_NAME + "/" + FILE_NAME + "' and text()=' " + FILE_NAME + "']"));
-      
-      selenium.goBack();
-      selenium.waitForPageToLoad("10000");
-      selenium.goBack();
-      selenium.waitForPageToLoad("30000");
-      //--------fix---------
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      refresh();
-   }
-     
 
 }
