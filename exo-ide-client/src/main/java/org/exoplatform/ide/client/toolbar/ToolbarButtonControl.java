@@ -23,6 +23,7 @@ package org.exoplatform.ide.client.toolbar;
 import org.exoplatform.gwtframework.ui.client.button.IconButton;
 import org.exoplatform.gwtframework.ui.client.command.ControlStateListener;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControlStateListener;
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 
@@ -38,7 +39,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class ToolbarButtonController implements ControlStateListener
+public class ToolbarButtonControl implements SimpleControlStateListener
 {
 
    private HandlerManager eventBus;
@@ -53,7 +54,7 @@ public class ToolbarButtonController implements ControlStateListener
 
    private Toolbar toolbar;
 
-   public ToolbarButtonController(HandlerManager eventBus, SimpleControl control, Toolbar toolbar)
+   public ToolbarButtonControl(HandlerManager eventBus, SimpleControl control, Toolbar toolbar)
    {
       this.eventBus = eventBus;
       this.control = control;
@@ -146,5 +147,18 @@ public class ToolbarButtonController implements ControlStateListener
          }
       }
    };
+
+   public void updateControlTitle(String title)
+   {
+   }
+
+   public void updateControlSelectionState(boolean selected)
+   {
+      iconButton.setSelected(selected);
+   }
+
+   public void updateControlHotKey(String hotKey)
+   {
+   }
 
 }

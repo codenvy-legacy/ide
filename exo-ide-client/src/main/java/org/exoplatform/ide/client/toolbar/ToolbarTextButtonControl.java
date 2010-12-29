@@ -36,7 +36,7 @@ import com.google.gwt.user.client.Command;
  * @version $
  */
 
-public class ToolbarTextButton extends TextButton implements StatusTextControlStateListener
+public class ToolbarTextButtonControl extends TextButton implements StatusTextControlStateListener
 {
 
    private HandlerManager eventBus;
@@ -45,7 +45,7 @@ public class ToolbarTextButton extends TextButton implements StatusTextControlSt
 
    private Toolbar toolbar;
 
-   public ToolbarTextButton(HandlerManager eventBus, StatusTextControl statusTextControl, Toolbar toolbar)
+   public ToolbarTextButtonControl(HandlerManager eventBus, StatusTextControl statusTextControl, Toolbar toolbar)
    {
       super(statusTextControl.getText());
 

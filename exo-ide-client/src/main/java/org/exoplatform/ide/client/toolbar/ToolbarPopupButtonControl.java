@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class ToolbarPopupButtonController implements ControlStateListener
+public class ToolbarPopupButtonControl implements ControlStateListener
 {
 
    private HandlerManager eventBus;
@@ -56,7 +56,7 @@ public class ToolbarPopupButtonController implements ControlStateListener
 
    private Widget wrapperWidget;
 
-   public ToolbarPopupButtonController(HandlerManager eventBus, PopupMenuControl popupMenuControl, Toolbar toolbar)
+   public ToolbarPopupButtonControl(HandlerManager eventBus, PopupMenuControl popupMenuControl, Toolbar toolbar)
    {
       this.eventBus = eventBus;
       this.popupMenuControl = popupMenuControl;
@@ -111,31 +111,7 @@ public class ToolbarPopupButtonController implements ControlStateListener
    {
       for (SimpleControl command : popupMenuControl.getCommands())
       {
-         String icon;
-
-         if (command.isEnabled())
-         {
-            if (command.getNormalImage() != null)
-            {
-               icon = ImageHelper.getImageHTML(command.getNormalImage());
-            }
-            else
-            {
-               icon = ImageHelper.getImageHTML(command.getIcon());
-            }
-         }
-         else
-         {
-            if (command.getDisabledImage() != null)
-            {
-               icon = ImageHelper.getImageHTML(command.getDisabledImage());
-            }
-            else
-            {
-               icon = ImageHelper.getImageHTML(command.getIcon());
-            }
-
-         }
+         String icon = getIcon(command);
 
          if (command.hasDelimiterBefore())
          {
@@ -146,6 +122,36 @@ public class ToolbarPopupButtonController implements ControlStateListener
          Command c = new MenuItemCommand(eventBus, menuItem, command);
       }
 
+   }
+   
+   private String getIcon(SimpleControl command) {
+      String icon;
+
+      if (command.isEnabled())
+      {
+         if (command.getNormalImage() != null)
+         {
+            icon = ImageHelper.getImageHTML(command.getNormalImage());
+         }
+         else
+         {
+            icon = ImageHelper.getImageHTML(command.getIcon());
+         }
+      }
+      else
+      {
+         if (command.getDisabledImage() != null)
+         {
+            icon = ImageHelper.getImageHTML(command.getDisabledImage());
+         }
+         else
+         {
+            icon = ImageHelper.getImageHTML(command.getIcon());
+         }
+
+      }
+
+      return icon;
    }
 
    public PopupMenuButton getButton()
@@ -178,6 +184,7 @@ public class ToolbarPopupButtonController implements ControlStateListener
    public void updateControlIcon(String icon)
    {
       System.out.println("ToolbarPopupButtonController.updateControlIcon()");
+      
    }
 
 }

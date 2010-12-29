@@ -26,6 +26,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.event.UpdateToolbarEvent;
 import org.exoplatform.gwtframework.ui.client.event.UpdateToolbarHandler;
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
@@ -164,14 +165,18 @@ public class IDEToolbar implements UpdateToolbarHandler
 
    private void addIconButton(SimpleControl simpleControl, boolean rightDocking)
    {
-      ToolbarButtonController controller = new ToolbarButtonController(eventBus, simpleControl, toolbar);
-      Widget wrapper = toolbar.addItem(controller.getButton(), rightDocking);
-      controller.setWrapper(wrapper);
+      ToolbarButtonControl toolbarControl = new ToolbarButtonControl(eventBus, simpleControl, toolbar);
+      Widget wrapper = toolbar.addItem(toolbarControl.getButton(), rightDocking);
+      toolbarControl.setWrapper(wrapper);
+      
+//      StatusTextControl statusTextControl = (StatusTextControl)command;
+//      ToolbarTextButtonControl statusText = new ToolbarTextButtonControl(eventBus, statusTextControl, statusbar);
+//      statusbar.addItem(statusText, rightDocking);
    }
 
    private void addPopupMenuButton(PopupMenuControl popupMenuControl, boolean rightDocking)
    {
-      ToolbarPopupButtonController controller = new ToolbarPopupButtonController(eventBus, popupMenuControl, toolbar);
+      ToolbarPopupButtonControl controller = new ToolbarPopupButtonControl(eventBus, popupMenuControl, toolbar);
       Widget wrapper = toolbar.addItem(controller.getButton(), rightDocking);
       controller.setWrapper(wrapper);
    }

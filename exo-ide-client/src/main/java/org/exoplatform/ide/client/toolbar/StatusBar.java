@@ -80,7 +80,7 @@ public class StatusBar implements UpdateStatusBarHandler
          if (command instanceof StatusTextControl)
          {
             StatusTextControl statusTextControl = (StatusTextControl)command;
-            ToolbarTextButton statusText = new ToolbarTextButton(eventBus, statusTextControl, statusbar);
+            ToolbarTextButtonControl statusText = new ToolbarTextButtonControl(eventBus, statusTextControl, statusbar);
             statusbar.addItem(statusText, rightDocking);
          }
       }
