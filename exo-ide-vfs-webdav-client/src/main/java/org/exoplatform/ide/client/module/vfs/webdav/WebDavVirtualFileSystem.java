@@ -180,17 +180,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       ChildrenReceivedEvent event = new ChildrenReceivedEvent(folder);
       List<QName> propeties = new ArrayList<QName>();
-      propeties.add(ItemProperty.GETCONTENTLENGTH);
-      propeties.add(ItemProperty.RESOURCETYPE);
-      propeties.add(ItemProperty.GETCONTENTTYPE);
-      propeties.add(ItemProperty.DISPLAYNAME);
-      propeties.add(ItemProperty.CREATIONDATE);
-      propeties.add(ItemProperty.GETLASTMODIFIED);
       propeties.add(ItemProperty.LOCKDISCOVERY);
-      propeties.add(ItemProperty.JCR_CONTENT);
-      propeties.add(ItemProperty.JCR_PRIMARYTYPE);
-      propeties.add(ItemProperty.JCR_NODETYPE);
-      
+      propeties.add(ItemProperty.ISVERSIONED);
       
       PropFindRequestMarshaller marshaller = new PropFindRequestMarshaller(propeties);
       FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(folder, images);
