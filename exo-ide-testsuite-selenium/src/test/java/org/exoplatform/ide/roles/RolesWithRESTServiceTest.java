@@ -29,6 +29,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -110,7 +111,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       // Check validate service is allowed for developer
       checkValidateService(true);
       // Check launch service is allowed for developer
-      checkLaunchService(true);
+      checkLaunchService(false);
       
       IDE.toolbar().runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
