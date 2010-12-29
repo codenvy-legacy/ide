@@ -160,7 +160,7 @@ public class RenameClosedFileTest extends BaseTest
       
       IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       
-      assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
+      assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
    }
    
    @Test
@@ -195,7 +195,7 @@ public class RenameClosedFileTest extends BaseTest
       
       IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       
-      assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
+      assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
    }
    
 }

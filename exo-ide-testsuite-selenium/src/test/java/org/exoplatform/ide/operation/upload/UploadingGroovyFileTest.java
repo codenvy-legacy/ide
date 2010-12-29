@@ -93,8 +93,8 @@ public class UploadingGroovyFileTest extends BaseTest
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
 
-      assertEquals("exo:groovyResourceContainer", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXT_LOCATOR));
-      assertEquals(MimeType.GROOVY_SERVICE, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
+      assertEquals("exo:groovyResourceContainer", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
+      assertEquals(MimeType.GROOVY_SERVICE, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
 
    }
    

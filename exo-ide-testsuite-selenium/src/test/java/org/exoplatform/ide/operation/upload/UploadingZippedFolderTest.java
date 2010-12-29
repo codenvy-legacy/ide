@@ -126,8 +126,8 @@ public class UploadingZippedFolderTest extends BaseTest
       assertTrue(text.length() > 0);
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      assertEquals("nt:resource", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXT_LOCATOR));
-      assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
+      assertEquals("nt:resource", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
+      assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
       
    }
    

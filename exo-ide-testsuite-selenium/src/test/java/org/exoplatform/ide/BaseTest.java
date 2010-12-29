@@ -934,7 +934,7 @@ public abstract class BaseTest
    /**
     *  Delete all file content via Ctrl+a, Delete
     */
-   protected void deleteFileContent()
+   protected void deleteFileContent() throws Exception
    {
       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
 
@@ -943,6 +943,8 @@ public abstract class BaseTest
       selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
+      
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    /**

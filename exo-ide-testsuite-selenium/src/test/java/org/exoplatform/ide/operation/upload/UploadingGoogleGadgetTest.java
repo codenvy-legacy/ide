@@ -85,8 +85,8 @@ public class UploadingGoogleGadgetTest extends BaseTest
       
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       
-      assertEquals("exo:googleGadget", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXT_LOCATOR));
-      assertEquals(MimeType.GOOGLE_GADGET, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXT_LOCATOR));
+      assertEquals("exo:googleGadget", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
+      assertEquals(MimeType.GOOGLE_GADGET, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
       
     }
    
