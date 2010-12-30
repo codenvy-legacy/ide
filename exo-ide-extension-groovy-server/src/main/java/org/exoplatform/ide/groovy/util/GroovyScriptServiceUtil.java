@@ -94,7 +94,7 @@ public class GroovyScriptServiceUtil
     * @return {@link GroovyClassPath}
     * @throws JsonException
     */
-   private static GroovyClassPath json2ClassPath(InputStream stream) throws JsonException
+   public static GroovyClassPath json2ClassPath(InputStream stream) throws JsonException
    {
       JsonParser jsonParser = new JsonParserImpl();
       JsonHandler jsonHandler = new JsonDefaultHandler();

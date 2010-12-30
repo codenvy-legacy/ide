@@ -51,9 +51,7 @@ import java.util.Map;
 import javax.annotation.security.RolesAllowed;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -123,23 +121,15 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    @Path("/validate-script")
    public Response validate(@Context UriInfo uriInfo, @HeaderParam("location") String location, InputStream inputStream)
    {
+      //Get name from script location:
       String name =
          (location != null && location.length() > 0) ? location.substring(location.lastIndexOf("/") + 1) : "";
-
-      //Getting location of class path file, if groovy script is part of project:
-      Map<String, String> projects = ProjectsUtil.getProjects(registryService, sessionProviderService);
-      String classPathLocation = ProjectsUtil.getClasspathLocation(projects, location);
-      if (classPathLocation != null)
+      //Get dependent resources from classpath file if exist:
+      DependentResources dependentResources = getDependentResource(location, uriInfo.getBaseUri().toASCIIString());
+      if (dependentResources != null)
       {
-         GroovyClassPath classPath =
-            GroovyScriptServiceUtil.getClassPath(repositoryService, sessionProviderService, uriInfo.getBaseUri()
-               .toASCIIString(), classPathLocation);
-         if (classPath != null)
-         {
-            DependentResources dependentResources = new DependentResources(classPath);
-            return super.validateScript(name, inputStream, dependentResources.getFolderSources(),
-               dependentResources.getFileSources());
-         }
+         return super.validateScript(name, inputStream, dependentResources.getFolderSources(),
+            dependentResources.getFileSources());
       }
       return super.validateScript(name, inputStream);
    }
@@ -158,6 +148,29 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       @Context SecurityContext security, MultivaluedMap<String, String> properties)
    {
       return sandboxLoader(uriInfo, location, true, security, properties);
+   }
+
+   /**
+    * Get dependent resources of the script from classpath file.
+    * 
+    * @param scriptLocation location of script, which uses classpath file
+    * @param baseUri base URI
+    * @return {@link DependentResources} dependent resources
+    */
+   private DependentResources getDependentResource(String scriptLocation, String baseUri)
+   {
+      Map<String, String> projects = ProjectsUtil.getProjects(registryService, sessionProviderService);
+      String classPathLocation = ProjectsUtil.getClasspathLocation(projects, scriptLocation);
+      if (classPathLocation != null)
+      {
+         GroovyClassPath classPath =
+            GroovyScriptServiceUtil.getClassPath(repositoryService, sessionProviderService, baseUri, classPathLocation);
+         if (classPath != null)
+         {
+            return new DependentResources(classPath);
+         }
+      }
+      return null;
    }
 
    /**
@@ -191,27 +204,18 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    public Response deploy(@Context UriInfo uriInfo, @HeaderParam("location") String location,
       MultivaluedMap<String, String> properties)
    {
-      //Getting location of class path file, if groovy script is part of project:
-      Map<String, String> projects = ProjectsUtil.getProjects(registryService, sessionProviderService);
-      String classPathLocation = ProjectsUtil.getClasspathLocation(projects, location);
-
       String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
       if (jcrLocation == null)
       {
          return Response.status(HTTPStatus.NOT_FOUND).entity(location + " not found. ").type(MediaType.TEXT_PLAIN)
             .build();
       }
-      if (classPathLocation != null)
+      //Get dependent resources from classpath file if exist:
+      DependentResources dependentResources = getDependentResource(location, uriInfo.getBaseUri().toASCIIString());
+      if (dependentResources != null)
       {
-         GroovyClassPath classPath =
-            GroovyScriptServiceUtil.getClassPath(repositoryService, sessionProviderService, uriInfo.getBaseUri()
-               .toASCIIString(), classPathLocation);
-         if (classPath != null)
-         {
-            DependentResources dependentResources = new DependentResources(classPath);
-            return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true,
-               dependentResources.getFolderSources(), dependentResources.getFileSources(), properties);
-         }
+         return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, dependentResources.getFolderSources(),
+            dependentResources.getFileSources(), properties);
       }
       return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, properties);
    }
@@ -302,11 +306,17 @@ public class GroovyScriptService extends GroovyScript2RestLoader
             {
                properties = new MultivaluedMapImpl();
             }
-
             properties.putSingle(DEVELOPER_ID, userId);
             properties.putSingle(ResourceBinder.RESOURCE_EXPIRED,
-               Long.toString(System.currentTimeMillis() + resourceLiveTime));
-            groovyPublisher.publishPerRequest(script.getProperty("jcr:data").getStream(), key, properties);
+            Long.toString(System.currentTimeMillis() + resourceLiveTime));
+            
+          //Get dependent resources from classpath file if exist:
+            DependentResources dependentResources =
+               getDependentResource(location, uriInfo.getBaseUri().toASCIIString());
+
+            load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, dependentResources.getFolderSources(),
+               dependentResources.getFileSources(), properties);
+            //groovyPublisher.publishPerRequest(script.getProperty("jcr:data").getStream(), key, properties, createSourceFolders(dependentResources.getFolderSources()), createSourceFiles(dependentResources.getFileSources()));
          }
 
          return Response.status(Response.Status.NO_CONTENT).build();
