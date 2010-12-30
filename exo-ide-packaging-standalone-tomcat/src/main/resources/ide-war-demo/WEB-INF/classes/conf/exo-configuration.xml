@@ -378,6 +378,17 @@
             </value-param>
          </init-params>
       </component-plugin>
+       <component-plugin>
+         <name>ws.rs.method.filter</name>
+         <set-method>addPlugin</set-method>
+         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
+         <init-params>
+            <value-param>
+               <name>method.developer.access.filter</name>
+               <value>org.exoplatform.ide.groovy.DevelopmentResourceMethodFilter</value>
+            </value-param>
+         </init-params>
+      </component-plugin>
    </external-component-plugins>
    
    <external-component-plugins>

@@ -72,7 +72,6 @@ public class GroovyScriptServiceApplication extends Application
          objects.add(new CodeAssistant(config.getWsName(), repositoryService, sessionProvider));
 
       }
-//      objects.add(new DevelopmentResourceMethodFilter());
       classes.add(GroovyTemplateService.class);
 
    }
