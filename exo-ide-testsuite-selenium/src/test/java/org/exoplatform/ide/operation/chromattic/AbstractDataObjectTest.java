@@ -30,7 +30,7 @@ import org.exoplatform.ide.ToolbarCommands;
  * @version $Id: Dec 20, 2010 $
  *
  */
-public class AbstractDataObjectTest extends BaseTest
+public abstract class AbstractDataObjectTest extends BaseTest
 {
    /**
     * Check form for generating node type definition is present.
