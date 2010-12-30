@@ -161,7 +161,8 @@ public class Toolbar
       }
       else
       {
-         assertFalse(selenium.isElementPresent(locator));
+         if(selenium.isElementPresent(locator))
+          assertFalse(selenium.isVisible(locator));
       }
    }
    

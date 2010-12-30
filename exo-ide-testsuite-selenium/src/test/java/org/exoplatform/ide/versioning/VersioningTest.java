@@ -43,7 +43,7 @@ public abstract class VersioningTest extends BaseTest
    {
       if (isOpened)
       {
-         IDE.toolbar().assertButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
+         IDE.toolbar().assertButtonEnabled(ToolbarCommands.View.HIDE_VERSION_HISTORY, true);
          
 //         assertTrue(selenium.isElementPresent("//div[@class='exo-toolbar16ButtonPanel_Right' and @title='"
 //            + ToolbarCommands.View.HIDE_VERSION_HISTORY
