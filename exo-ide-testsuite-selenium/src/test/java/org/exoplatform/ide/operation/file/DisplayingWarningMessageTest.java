@@ -157,7 +157,6 @@ public class DisplayingWarningMessageTest extends BaseTest
       assertEquals(XML_FILE_NAME + " *", IDE.editor().getTabTitle(0));
       
       IDE.editor().checkEditorTabSelected(XML_FILE_NAME, true);
-      IDE.editor().checkIsTabPresentInEditorTabset(XML_FILE_NAME, true);
       checkCodeEditorOpened(0);
       
       //check file content
