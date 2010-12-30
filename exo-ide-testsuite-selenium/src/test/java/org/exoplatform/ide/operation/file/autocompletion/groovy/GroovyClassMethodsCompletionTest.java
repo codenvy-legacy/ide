@@ -40,6 +40,7 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
    public void testGroovyClassMethodCompletion() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
