@@ -313,9 +313,13 @@ public class GroovyScriptService extends GroovyScript2RestLoader
           //Get dependent resources from classpath file if exist:
             DependentResources dependentResources =
                getDependentResource(location, uriInfo.getBaseUri().toASCIIString());
-
-            load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, dependentResources.getFolderSources(),
-               dependentResources.getFileSources(), properties);
+            if (dependentResources != null)
+            {
+               load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, dependentResources.getFolderSources(),
+                  dependentResources.getFileSources(), properties);
+            }
+            
+            load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, properties);
             //groovyPublisher.publishPerRequest(script.getProperty("jcr:data").getStream(), key, properties, createSourceFolders(dependentResources.getFolderSources()), createSourceFiles(dependentResources.getFileSources()));
          }
 
