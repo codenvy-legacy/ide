@@ -185,7 +185,7 @@ public class HtmlTokenCollector implements TokenCollector<Token>
    {
       for(Token t : getHtmlTagTokens())
       {
-         if(t.getName().equals(name))
+         if(name.equals(t.getName()))
             return t;
       }
       return null;
