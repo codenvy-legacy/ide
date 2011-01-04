@@ -129,7 +129,8 @@ public class Toolbar
    public void assertButtonExistAtLeft(String name, boolean exist)
    {
       String locator =
-         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]/div[@class=\"exoToolbarElementLeft\"]/div[@class=\"exoIconButtonPanel\" and @title=\""
+         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]/div[@class=\"exoToolbarElementLeft\"]" 
+         + "/div[contains(@class, \"exoIconButtonPanel\") and @title=\""
          + name + "\"]";
       if (exist)
       {
@@ -138,7 +139,7 @@ public class Toolbar
       else
       {
          
-         assertFalse(selenium.isVisible(locator));
+         assertTrue(!selenium.isElementPresent(locator) || !selenium.isVisible(locator) );
 
       }
    }

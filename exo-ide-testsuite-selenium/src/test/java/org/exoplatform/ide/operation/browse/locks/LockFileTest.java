@@ -93,7 +93,7 @@ public class LockFileTest extends LockFileAbstract
    @Test
    public void testLockFileManually() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP*2);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(FOLDER_NAME);
       IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
