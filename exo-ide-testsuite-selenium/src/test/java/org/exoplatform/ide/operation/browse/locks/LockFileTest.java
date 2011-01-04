@@ -20,11 +20,8 @@ package org.exoplatform.ide.operation.browse.locks;
 
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -32,6 +29,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Check the work of Lock/Unlock feature.

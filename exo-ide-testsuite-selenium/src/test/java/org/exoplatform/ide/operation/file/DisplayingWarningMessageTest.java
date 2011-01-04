@@ -105,7 +105,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       //After the step 3: new file tab will be closed, Content Panel will become empty, 
       //"Save" and "Save As" buttons, and "File->Save", "File->Save As" top menu commands 
       //will be disabled.
-      IDE.editor().checkIsTabPresentInEditorTabset("Untitled file.xml", false);
+      IDE.editor().checkIsTabPresentInEditorTabset("Untitled file.xml *", false);
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE_AS, false);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
@@ -155,6 +155,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       //content in this tab should be changed, title will be marked by "*" and buttom "Save" and "File->Save" top menu command will be enabled.
       
       assertEquals(XML_FILE_NAME + " *", IDE.editor().getTabTitle(0));
+      IDE.editor().checkIsTabPresentInEditorTabset(XML_FILE_NAME + " *", true);
       
       IDE.editor().checkEditorTabSelected(XML_FILE_NAME, true);
       checkCodeEditorOpened(0);
