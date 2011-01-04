@@ -115,6 +115,8 @@ public interface Images
       public static final String FOLDER = IMAGE_URL + "filetype/folder_closed.png";
 
       public static final String UWA_WIDGET = IMAGE_URL + "filetype/uwa-widget.png";
+ 
+      public static final String JSON = IMAGE_URL + "filetype/json.png";      
       
       // TODO add appropriate icon 
       public static final String GROOVY_TEMPLATE = IMAGE_URL + "filetype/gtmpl.png";      
@@ -206,6 +208,14 @@ public interface Images
       public static final String PROTECTED_FIELD = IMAGE_URL + "outline/protected-field.png";
 
       public static final String DEFAULT_FIELD = IMAGE_URL + "outline/default-field.png";
+
+      public static final String OBJECT_ITEM = IMAGE_URL + "outline/object.png";
+
+      public static final String ARRAY_ITEM = IMAGE_URL + "outline/array.png";
+
+      public static final String DATA_ITEM = IMAGE_URL + "outline/data.png";
+
+      public static final String ERROR_ITEM = IMAGE_URL + "outline/error.png";
    }
    
    public interface Versioning

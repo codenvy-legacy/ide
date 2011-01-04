@@ -79,6 +79,14 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    
    private static final String CLASS_ICON = Images.Outline.CLASS_ITEM;
    
+   private static final String OBJECT_ICON = Images.Outline.OBJECT_ITEM;
+   
+   private static final String ARRAY_ICON = Images.Outline.ARRAY_ITEM;
+   
+   private static final String DATA_ICON = Images.Outline.DATA_ITEM;
+   
+   private static final String ERROR_ICON = Images.Outline.ERROR_ITEM;
+   
    private static final String NAME = "name";
 
    private Tree tree;
@@ -269,20 +277,43 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       {
          case FUNCTION :
             return FUNCTION_ICON;
+
          case VARIABLE :
             return VAR_ICON;
+
          case METHOD :
             return METHOD_ICON;
+
          case PROPERTY :
             return PROPERTY_ICON;
+
          case TAG :
             return TAG_ICON;
+
          case CDATA :
             return CDATA_ICON;
+
          case GROOVY_TAG :
             return GROOVY_TAG_ICON;
+
          case CLASS :
             return CLASS_ICON;
+
+         case OBJECT :
+            return OBJECT_ICON;
+
+         case ARRAY :
+            return ARRAY_ICON;            
+
+         case NUMBER :
+         case BOOLEAN :
+         case STRING :
+         case NULL :            
+            return DATA_ICON;            
+
+         case ERROR :            
+            return ERROR_ICON;
+            
          default :
             return "";
       }
@@ -476,7 +507,8 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          || file.getContentType().equals(MimeType.APPLICATION_GROOVY)
          || file.getContentType().equals(MimeType.GROOVY_TEMPLATE)
          || file.getContentType().equals(MimeType.UWA_WIDGET)
-         || file.getContentType().equals(MimeType.CHROMATTIC_DATA_OBJECT);
+         || file.getContentType().equals(MimeType.CHROMATTIC_DATA_OBJECT)
+         || file.getContentType().equals(MimeType.APPLICATION_JSON);
    }
    
    public List<Token> getSelectedTokens()

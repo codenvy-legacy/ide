@@ -69,6 +69,7 @@ public class IDEMimeTypes
       add("html", MimeType.UWA_WIDGET);
       add("gtmpl", MimeType.GROOVY_TEMPLATE);      
       add("groovy", MimeType.CHROMATTIC_DATA_OBJECT);
+      add("json", MimeType.APPLICATION_JSON);      
    }
 
    public static boolean isMimeTypeSupported(String mimeType)

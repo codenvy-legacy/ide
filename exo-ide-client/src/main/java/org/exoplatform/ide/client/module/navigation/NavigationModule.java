@@ -195,6 +195,8 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
             Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS File", "CSS File",
          "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
+         "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON)));
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewVersionHistoryControl(), DockTarget.TOOLBAR, true));
