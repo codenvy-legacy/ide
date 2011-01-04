@@ -84,6 +84,8 @@ public abstract class BaseTest
       + "/";
 
    protected static final String WS_NAME = "dev-monit";
+   
+   protected static final String WS_NAME_2 = "production";
 
    //   protected static final String USER_NAME = "__anonim";
    // For portal 
@@ -346,7 +348,7 @@ public abstract class BaseTest
    protected void selectItemInWorkspaceTree(String name) throws Exception
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    /**
