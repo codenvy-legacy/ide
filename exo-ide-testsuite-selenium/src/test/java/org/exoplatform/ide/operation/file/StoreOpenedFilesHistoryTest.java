@@ -194,6 +194,8 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    }
    
    /**
+    * Check, that two files: gadget and html file are opened
+    * and check menu commands for enabling and disabling.
     * 
     * @throws Exception
     */
