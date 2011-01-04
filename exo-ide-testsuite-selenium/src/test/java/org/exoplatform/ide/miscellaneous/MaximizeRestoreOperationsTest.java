@@ -28,11 +28,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -40,6 +39,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * IDE-97:One-click maximize/restore for editor and actions view.
@@ -121,6 +122,8 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
       Thread.sleep(TestConstants.SLEEP);
       
+      assertFalse(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_TAB_LOCATOR));
+      
       //---- 1 -----------------
       //Create, save and open new file in the content panel. 
       //Click on "Show Properties" button to open "Properties" Tab.
@@ -141,7 +144,9 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       //There is Properties Tab opened in the bottom part of Content Panel. 
       checkCodeEditorOpened(0);
       //check, properties tab appeared
-      assertTrue(selenium.isElementPresent("//div[@class='tabBar']//td[@class='tabTitleSelected']/span[contains(text(), 'Properties')]"));
+      
+      assertTrue(selenium.isVisible(Locators.OperationForm.PROPERTIES_TAB_LOCATOR));
+//      assertTrue(selenium.isElementPresent("//div[@class='tabBar']//td[@class='tabTitleSelected']/span[contains(text(), 'Properties')]"));
       
       //---- 2 -----------------
       //Click on "Maximize" button at the header of Properties Tab.
@@ -334,7 +339,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    private void checkSearchTabSelected()
    {
       assertTrue(selenium.isElementPresent(NAVIGATION_PANEL_LOCATOR
-         + "//td[@class='tabTitleSelected']/span[contains(text(), 'Search')]"));
+         + "//td[contains(@class, 'tabTitleSelected')]/span[contains(text(), 'Search')]"));
       assertTrue(selenium.isElementPresent(NAVIGATION_PANEL_LOCATOR
          + "//td[@class='tabTitle']/span[contains(text(), 'Workspace')]"));
    }
