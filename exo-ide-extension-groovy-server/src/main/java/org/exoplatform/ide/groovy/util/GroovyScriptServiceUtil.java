@@ -33,7 +33,6 @@ import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
 import java.io.InputStream;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -45,47 +44,6 @@ import javax.jcr.Session;
 public class GroovyScriptServiceUtil
 {
    public static final String WEBDAV_CONTEXT = "/jcr/";
-
-   /**
-    * Get data about dependent sources by the given location
-    * of the classpath file.
-    * 
-    * @param repositoryService repository service
-    * @param sessionProviderService session provider service
-    * @param baseUri base URI
-    * @param classPathLocation location of the classpath file
-    * @return {@link GroovyClassPath} groovy classpath data
-    */
-   public static GroovyClassPath getClassPath(RepositoryService repositoryService,
-      SessionProviderService sessionProviderService, String baseUri, String classPathLocation)
-   {
-      String[] jcrLocation = parseJcrLocation(baseUri, classPathLocation);
-      if (jcrLocation != null)
-      {
-         try
-         {
-            Session session =
-               getSession(repositoryService, sessionProviderService, jcrLocation[0], jcrLocation[1] + "/"
-                  + jcrLocation[2]);
-            InputStream content = getFileContent(session, jcrLocation[2]);
-            GroovyClassPath groovyClassPath = json2ClassPath(content);
-            return groovyClassPath;
-         }
-         catch (RepositoryException e)
-         {
-            e.printStackTrace();
-         }
-         catch (RepositoryConfigurationException e)
-         {
-            e.printStackTrace();
-         }
-         catch (JsonException e)
-         {
-            e.printStackTrace();
-         }
-      }
-      return null;
-   }
 
    /**
     * Unmarshal classpath object in JSON format to Java bean {@link GroovyClassPath}.
@@ -102,22 +60,6 @@ public class GroovyScriptServiceUtil
       JsonValue jsonValue = jsonHandler.getJsonObject();
       GroovyClassPath classPath = ObjectBuilder.createObject(GroovyClassPath.class, jsonValue);
       return classPath;
-   }
-
-   /**
-    * Get content of file by its location in the repository.
-    * 
-    * @param session JCR session
-    * @param repoPath path to file in repository
-    * @return {@link InputStream} file's content
-    * @throws RepositoryException
-    */
-   public static InputStream getFileContent(Session session, String repoPath) throws RepositoryException
-   {
-      Node rootNode = session.getRootNode();
-      Node base = rootNode.getNode(repoPath);
-      InputStream inputStream = base.getNode("jcr:content").getProperty("jcr:data").getStream();
-      return inputStream;
    }
 
    /**
