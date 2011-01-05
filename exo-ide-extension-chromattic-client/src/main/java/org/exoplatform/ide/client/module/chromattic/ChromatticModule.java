@@ -26,7 +26,6 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.IDEModule;
-import org.exoplatform.ide.client.module.chromattic.controls.CompileGroovyControl;
 import org.exoplatform.ide.client.module.chromattic.controls.DeployNodeTypeControl;
 import org.exoplatform.ide.client.module.chromattic.controls.GenerateNodeTypeControl;
 import org.exoplatform.ide.client.module.chromattic.handler.CompileGroovyCommandHandler;
@@ -64,7 +63,6 @@ public class ChromatticModule implements IDEModule, InitializeServicesHandler
          "Data Object", "Create Data Object", Images.FileType.CHROMATTIC,
          MimeType.CHROMATTIC_DATA_OBJECT)));
 
-      eventBus.fireEvent(new RegisterControlEvent(new CompileGroovyControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new GenerateNodeTypeControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new DeployNodeTypeControl(), DockTarget.TOOLBAR, true));
 
