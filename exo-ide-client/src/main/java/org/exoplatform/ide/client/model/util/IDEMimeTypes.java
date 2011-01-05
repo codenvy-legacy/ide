@@ -63,7 +63,7 @@ public class IDEMimeTypes
       add("js", MimeType.APPLICATION_JAVASCRIPT);
       add("js", MimeType.APPLICATION_X_JAVASCRIPT);
       add("xml", MimeType.TEXT_XML);
-      add("groovy", MimeType.GROOVY_SERVICE);
+      add("grs", MimeType.GROOVY_SERVICE);
       add("groovy", MimeType.APPLICATION_GROOVY);
       add("xml", MimeType.GOOGLE_GADGET);
       add("html", MimeType.UWA_WIDGET);
