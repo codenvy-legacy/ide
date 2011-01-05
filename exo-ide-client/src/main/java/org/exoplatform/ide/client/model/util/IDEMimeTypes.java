@@ -65,6 +65,7 @@ public class IDEMimeTypes
       add("xml", MimeType.TEXT_XML);
       add("grs", MimeType.GROOVY_SERVICE);
       add("groovy", MimeType.APPLICATION_GROOVY);
+      add("groovyclasspath", MimeType.APPLICATION_GROOVY_CLASSPATH);
       add("xml", MimeType.GOOGLE_GADGET);
       add("html", MimeType.UWA_WIDGET);
       add("gtmpl", MimeType.GROOVY_TEMPLATE);      

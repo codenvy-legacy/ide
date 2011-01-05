@@ -81,20 +81,20 @@ public class FileTemplates
    private static void addClassPathTemplate()
    {
       String content =
-      "{"
-  +"\"entries\": ["
-    +"{"
-       +"\"kind\": \"file\","
-       +"\"path\": \"jcr://repository/dev-monit#/Test.groovy\""
-          +"},"
+      "{\n"
+  +"\"entries\": [\n"
+    +"{\n"
+       +"\"kind\": \"file\",\n"
+       +"\"path\": \"jcr://repository/dev-monit#/Test.groovy\"\n"
+          +"},\n"
           +"{"
-       +"\"kind\": \"dir\","
-       +"\"path\": \"jcr://repository/dev-monit#/test/org/test/\""
-          +"}"
-          +"]"
+       +"\"kind\": \"dir\",\n"
+       +"\"path\": \"jcr://repository/dev-monit#/test/\"\n"
+          +"}\n"
+          +"]\n"
           +"}";
 
-      templates.put(MimeType.TEXT_JAVASCRIPT, content);
+      templates.put(MimeType.APPLICATION_GROOVY_CLASSPATH, content);
    }
 
    private static void addEmptyHTML()

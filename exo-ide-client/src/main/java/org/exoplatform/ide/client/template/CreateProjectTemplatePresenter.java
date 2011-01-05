@@ -169,7 +169,7 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
       {
          //TODO check proper mime type when is ready:
          if (template instanceof FileTemplate
-            && MimeType.TEXT_JAVASCRIPT.equals(((FileTemplate)template).getMimeType()))
+            && MimeType.APPLICATION_GROOVY_CLASSPATH.equals(((FileTemplate)template).getMimeType()))
          {
             classpathTemplate = (FileTemplate)template;
          }

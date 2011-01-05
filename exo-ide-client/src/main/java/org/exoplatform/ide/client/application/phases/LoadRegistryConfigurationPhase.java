@@ -29,7 +29,6 @@ import org.exoplatform.ide.client.framework.configuration.event.ConfigurationRec
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.conversation.ConversationServiceImpl;
-import org.exoplatform.ide.client.model.project.ProjectServiceImpl;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.module.gadget.service.GadgetServiceImpl;
 
@@ -85,9 +84,6 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
          new TemplateServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL() + "/"
             + RegistryConstants.EXO_APPLICATIONS + "/" + IDEConfigurationLoader.APPLICATION_NAME);
          
-         new ProjectServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL() + "/"
-            + RegistryConstants.EXO_APPLICATIONS + "/" + IDEConfigurationLoader.APPLICATION_NAME);
-
          new GadgetServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext(),
             applicationConfiguration.getGadgetServer(), applicationConfiguration.getPublicContext());
 

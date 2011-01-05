@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.project.Project;
-import org.exoplatform.ide.client.framework.project.ProjectService;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -60,8 +58,6 @@ implements FolderCreatedHandler, FileContentSavedHandler
    private String baseHref;
    
    private Folder projectFolder;
-   
-   private String classpathLocation;
    
    public CreateProjectFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
    {
@@ -162,7 +158,6 @@ implements FolderCreatedHandler, FileContentSavedHandler
       String projectName = display.getNameField().getValue();
 
       ProjectTemplate selectedTemplate = selectedTemplates.get(0);
-      classpathLocation = selectedTemplate.getClassPathLocation();
       
       build(selectedTemplate.getChildren(), baseHref + projectName + "/");
       projectFolder = new Folder(baseHref + projectName + "/");
@@ -243,9 +238,6 @@ implements FolderCreatedHandler, FileContentSavedHandler
     */
    private void finishProjectCreation()
    {
-      Project project = new Project(projectFolder.getHref(), projectFolder.getHref() + classpathLocation);
-      ProjectService.getInstance().saveProject(project);
-      
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
       display.closeForm();
    }

@@ -145,8 +145,8 @@ public class TemplateServiceImpl extends TemplateService
             .getTemplateFor(MimeType.UWA_WIDGET), null));
       
       templateList.getTemplates().add(
-         new FileTemplate(MimeType.TEXT_JAVASCRIPT, DefaultFileTemplates.GROOVY_CLASS_PATH, "Groovy build class path file. Is used to configure dependency locations.", FileTemplates
-            .getTemplateFor(MimeType.TEXT_JAVASCRIPT), null));
+         new FileTemplate(MimeType.APPLICATION_GROOVY_CLASSPATH, DefaultFileTemplates.GROOVY_CLASS_PATH, "Groovy build class path file. Is used to configure dependency locations.", FileTemplates
+            .getTemplateFor(MimeType.APPLICATION_GROOVY_CLASSPATH), null));
       
 
       templateList.getTemplates().add(createFileTemplateForSampleProject());

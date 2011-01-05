@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ide.client.module.navigation.action;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +28,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
-import org.exoplatform.ide.client.framework.project.Project;
-import org.exoplatform.ide.client.framework.project.ProjectService;
-import org.exoplatform.ide.client.framework.project.event.ProjectListReceivedEvent;
-import org.exoplatform.ide.client.framework.project.event.ProjectListReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -54,8 +49,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownHandler, ItemUnlockedHandler,
-   ProjectListReceivedHandler
+public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownHandler, ItemUnlockedHandler
 {
 
    public interface Display
@@ -85,8 +79,6 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
    private Map<String, String> lockTokens;
 
-   private List<Project> projects = new ArrayList<Project>();
-
    public DeleteItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles,
       Map<String, String> lockTokens)
    {
@@ -115,7 +107,6 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
          public void onClick(ClickEvent event)
          {
             display.hideForm();
-            getProjects();
             deleteNextItem();
          }
       });
@@ -124,14 +115,6 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
    }
 
-   /**
-    * Get the list of projects.
-    */
-   private void getProjects()
-   {
-      handlers.addHandler(ProjectListReceivedEvent.TYPE, this);
-      ProjectService.getInstance().getCreatedProjects();
-   }
 
    public void destroy()
    {
@@ -232,8 +215,6 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
       Item item = event.getItem();
       
       selectedItems.remove(item);
-      checkItemInProject(item);
-
       //items.remove(0);
 
       if (item instanceof File)
@@ -314,26 +295,5 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
    {
       handlers.removeHandler(ItemUnlockedEvent.TYPE);
       VirtualFileSystem.getInstance().deleteItem(event.getItem());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.event.ProjectListReceivedHandler#onProjectListReceived(org.exoplatform.ide.client.framework.project.event.ProjectListReceivedEvent)
-    */
-   public void onProjectListReceived(ProjectListReceivedEvent event)
-   {
-      handlers.removeHandler(ProjectListReceivedEvent.TYPE);
-      projects = event.getProjectList().getProjects();
-   }
-
-   private void checkItemInProject(Item item)
-   {
-      for (Project project : projects)
-      {
-         if (project.getHref().startsWith(item.getHref()) || project.getClassPathLocation().startsWith(item.getHref()))
-         {
-            ProjectService.getInstance().removeProject(project);
-            return;
-         } 
-      }
    }
 }
