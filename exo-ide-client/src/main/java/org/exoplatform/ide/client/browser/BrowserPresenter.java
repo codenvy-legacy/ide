@@ -301,9 +301,10 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       handlers.removeHandler(ChildrenReceivedEvent.TYPE);
       handlers.removeHandler(ExceptionThrownEvent.TYPE);
       foldersToRefresh.remove(event.getFolder());
-
+      //TODO if will be some value - display system items or not, then add check here:
+      removeSystemItemsFromView(event.getFolder().getChildren());
       Collections.sort(event.getFolder().getChildren(), comparator);
-
+      
       display.getBrowserTree().setValue(event.getFolder());
 
       //      if (switchingWorkspace)
@@ -326,6 +327,24 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
          refreshNextFolder();
       }
 
+   }
+   
+   /**
+    * Removes items for not to be displayed, if they are system ones
+    * (for example, ".groovyclasspath" file).
+    * To known system item or not call {@link Item} method: boolean isSystem().
+    * 
+    * @param items
+    */
+   private void removeSystemItemsFromView(List<Item> items)
+   {
+      List<Item> itemsToRemove = new ArrayList<Item>();
+      for (Item item : items)
+      {
+         if (item.isSystem())
+           itemsToRemove.add(item);
+      }
+      items.removeAll(itemsToRemove);
    }
 
    /**
