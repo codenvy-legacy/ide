@@ -35,6 +35,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -43,11 +45,17 @@ import java.io.IOException;
  */
 public class RESTServiceCreateTest extends BaseTest
 {
+   
+   /**
+    * Resource bundle for non-latin names.
+    */
+   private static final ResourceBundle rb = ResourceBundle.getBundle("FileMsg", Locale.getDefault());
+   
    private static final String FOLDER_NAME=RESTServiceCreateTest.class.getSimpleName();
    
-   private static final String FIRST_NAME = System.currentTimeMillis() + "test.groovy";
+   private static final String FIRST_NAME = "test.grs";
    
-   private static final String SECOND_NAME = System.currentTimeMillis() + "новий.groovy";
+   private static final String SECOND_NAME = rb.getString("new.file.name") + ".grs";
    
    private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
@@ -94,6 +102,7 @@ public class RESTServiceCreateTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      assertEquals("Untitled file.grs *", IDE.editor().getTabTitle(0));
       saveAsUsingToolbarButton(FIRST_NAME);
 
       Thread.sleep(TestConstants.SLEEP_SHORT);

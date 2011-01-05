@@ -45,8 +45,6 @@ import java.io.IOException;
 /**
  * IDE-97:One-click maximize/restore for editor and actions view.
  * 
- * Created by The eXo Platform SAS.
- * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  *
@@ -143,10 +141,9 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       //there is new file opened in the file tab of Content Panel. 
       //There is Properties Tab opened in the bottom part of Content Panel. 
       checkCodeEditorOpened(0);
-      //check, properties tab appeared
       
+      //check, properties tab appeared
       assertTrue(selenium.isVisible(Locators.OperationForm.PROPERTIES_TAB_LOCATOR));
-//      assertTrue(selenium.isElementPresent("//div[@class='tabBar']//td[@class='tabTitleSelected']/span[contains(text(), 'Properties')]"));
       
       //---- 2 -----------------
       //Click on "Maximize" button at the header of Properties Tab.
@@ -219,7 +216,6 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       //Click on "File->Search" topmenu item and then click on 
       //"Search" button within the "Search" dialog window.
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SEARCH);
-//      Thread.sleep(TestConstants.SLEEP);
       
       selenium.click("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]/");
       Thread.sleep(TestConstants.SLEEP);

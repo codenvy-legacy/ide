@@ -45,11 +45,11 @@ import org.junit.Test;
  */
 public class RunRestServiceCommandTest extends BaseTest
 {
-   private final static String SIMPLE_FILE_NAME = "RestServiceExample.groovy";
+   private final static String SIMPLE_FILE_NAME = "RestServiceExample.grs";
 
-   private final static String NON_VALID_FILE_NAME = "RestServiceValidationWrongExample.groovy";
+   private final static String NON_VALID_FILE_NAME = "RestServiceValidationWrongExample.grs";
 
-   private final static String FILE_FOR_CHANGE_CONTENT_NAME = "RestServiceChangeContent.groovy";
+   private final static String FILE_FOR_CHANGE_CONTENT_NAME = "RestServiceChangeContent.grs";
 
    private final static String NEW_FILE_NAME = "NewRestService";
    
@@ -61,14 +61,14 @@ public class RunRestServiceCommandTest extends BaseTest
    public static void setUp()
    {
 
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/";
+      final String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/";
 
       try
       {
          VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath + SIMPLE_FILE_NAME, MimeType.GROOVY_SERVICE, URL + SIMPLE_FILE_NAME);
-         VirtualFileSystemUtils.put(filePath + NON_VALID_FILE_NAME, MimeType.GROOVY_SERVICE, URL + NON_VALID_FILE_NAME);
-         VirtualFileSystemUtils.put(filePath + FILE_FOR_CHANGE_CONTENT_NAME, MimeType.GROOVY_SERVICE, URL
+         VirtualFileSystemUtils.put(filePath + "RestServiceExample.groovy", MimeType.GROOVY_SERVICE, URL + SIMPLE_FILE_NAME);
+         VirtualFileSystemUtils.put(filePath + "RestServiceValidationWrongExample.groovy", MimeType.GROOVY_SERVICE, URL + NON_VALID_FILE_NAME);
+         VirtualFileSystemUtils.put(filePath + "RestServiceChangeContent.groovy", MimeType.GROOVY_SERVICE, URL
             + FILE_FOR_CHANGE_CONTENT_NAME);
       }
       catch (IOException e)

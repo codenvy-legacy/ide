@@ -40,7 +40,7 @@ import org.junit.Test;
 public class RESTServiceSandboxTest extends BaseTest
 {
 
-   private static String FILE_NAME = RESTServiceSandboxTest.class.getSimpleName()+".groovy";
+   private static String FILE_NAME = RESTServiceSandboxTest.class.getSimpleName()+".grs";
    
    private static String TEST_FOLDER = RESTServiceSandboxTest.class.getSimpleName();
    

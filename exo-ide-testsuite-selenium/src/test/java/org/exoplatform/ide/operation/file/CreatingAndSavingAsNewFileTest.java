@@ -100,7 +100,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       
       selectItemInWorkspaceTree(FOLDER_NAME);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      testFileSaveAs(MenuCommands.New.REST_SERVICE_FILE, "groovy", REST_SERVICE_FILE_NAME);
+      testFileSaveAs(MenuCommands.New.REST_SERVICE_FILE, "grs", REST_SERVICE_FILE_NAME);
       testFileSaveAs(MenuCommands.New.TEXT_FILE, "txt", TXT_FILE_NAME);
       testFileSaveAs(MenuCommands.New.XML_FILE, "xml", XML_FILE_NAME);
       testFileSaveAs(MenuCommands.New.HTML_FILE, "html", HTML_FILE_NAME);

@@ -41,9 +41,7 @@ public class GoToLineTest extends BaseTest
    {
       //      Open new Groovy file in editor.
 
-      //TODO***********fix
       Thread.sleep(TestConstants.SLEEP);
-      //************************
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       

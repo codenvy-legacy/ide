@@ -42,11 +42,11 @@ import java.io.IOException;
  */
 public class GoToErrorInRestServiceTest extends BaseTest
 {
-   private final static String FILE_WITH_ERROR = "RestServiceWithError.groovy";
+   private final static String FILE_WITH_ERROR = "RestServiceWithError.grs";
 
    private final static String TEST_FOLDER = GoToErrorInRestServiceTest.class.getSimpleName();
 
-   private final static String FILE_WITH_ERROR_FOR_CHANGING = "RestServiceWithErrorForChanging.groovy";
+   private final static String FILE_WITH_ERROR_FOR_CHANGING = "RestServiceWithErrorForChanging.grs";
 
    private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
       + "/";
@@ -59,11 +59,9 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       try
       {
-         //******TODO change add folder for locked file
          VirtualFileSystemUtils.mkcol(URL);
-         //**********************************************
-         VirtualFileSystemUtils.put(filePath + FILE_WITH_ERROR, MimeType.GROOVY_SERVICE, URL + FILE_WITH_ERROR);
-         VirtualFileSystemUtils.put(filePath + FILE_WITH_ERROR_FOR_CHANGING, MimeType.GROOVY_SERVICE, URL
+         VirtualFileSystemUtils.put(filePath + "RestServiceWithError.groovy", MimeType.GROOVY_SERVICE, URL + FILE_WITH_ERROR);
+         VirtualFileSystemUtils.put(filePath + "RestServiceWithErrorForChanging.groovy", MimeType.GROOVY_SERVICE, URL
             + FILE_WITH_ERROR_FOR_CHANGING);
       }
       catch (IOException e)
@@ -79,9 +77,6 @@ public class GoToErrorInRestServiceTest extends BaseTest
    @Test
    public void testGoToErrorInOpenedFile() throws Exception
    {
-      //refresh, to clear console and close it
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
 
       openAndValidateRestService();

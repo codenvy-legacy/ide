@@ -40,7 +40,7 @@ import org.junit.Test;
 public class SearchLoadFileTest extends BaseTest
 {
 
-   private final String restFileName = "Example.groovy";
+   private final String restFileName = "Example.grs";
 
    private final String gadgetFileName = "gadget.xml";
 

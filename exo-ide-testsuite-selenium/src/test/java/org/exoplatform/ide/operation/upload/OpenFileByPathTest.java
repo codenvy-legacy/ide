@@ -51,7 +51,7 @@ public class OpenFileByPathTest extends BaseTest
    
    private static final String OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"" + OPEN_FILE_BY_PATH_FORM_ID + "\"]/item[name=" + OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_NAME + "]/element";   
    
-   private static final String FILE_NAME = OpenFileByPathTest.class + "__приклад.groovy";
+   private static final String FILE_NAME = OpenFileByPathTest.class.getSimpleName() + "__приклад.grs";
    
    private static final String NOT_FOUND_ERROR_MESSAGE = "404 Not Found\n\n\nPossible reasons:\nService is not deployed.\nResource not found.";
    

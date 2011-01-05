@@ -43,17 +43,14 @@ import java.util.UUID;
  */
 public class DownloadFileToLocalDriveTest extends BaseTest
 {
-   
+
    private static final String RANDOM_STRING = UUID.randomUUID().toString();
-   
+
    private static final String FILE_NAME = String.valueOf(System.currentTimeMillis());
-   
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
 
-
-   
-   
    @BeforeClass
    public static void setUp()
    {
@@ -70,35 +67,33 @@ public class DownloadFileToLocalDriveTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void downloadFileToLocalDriveTest() throws Exception
    {
-      {
-         Thread.sleep(TestConstants.SLEEP);
-         selectItemInWorkspaceTree(WS_NAME);
-         IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-         Thread.sleep(TestConstants.SLEEP);
-         
-         selectItemInWorkspaceTree(FILE_NAME);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-         IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
-         IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
-         Thread.sleep(TestConstants.SLEEP);
-         
-         selenium.keyPressNative("10");
-         Thread.sleep(TestConstants.SLEEP*3); //wait for download file
-         String donwloadPath = System.getProperty("java.io.tmpdir");
-         FileInputStream fstream = new FileInputStream(donwloadPath + "/" + FILE_NAME);
-         DataInputStream in = new DataInputStream(fstream);
-         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-         String controlStrLine;
-         controlStrLine = br.readLine();
-         assertEquals(RANDOM_STRING, controlStrLine);
-      }
+      Thread.sleep(TestConstants.SLEEP);
+      selectItemInWorkspaceTree(WS_NAME);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+
+      selectItemInWorkspaceTree(FILE_NAME);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
+      Thread.sleep(TestConstants.SLEEP);
+
+      selenium.keyPressNative("10");
+      Thread.sleep(TestConstants.SLEEP * 3); //wait for download file
+      String donwloadPath = System.getProperty("java.io.tmpdir");
+      FileInputStream fstream = new FileInputStream(donwloadPath + "/" + FILE_NAME);
+      DataInputStream in = new DataInputStream(fstream);
+      BufferedReader br = new BufferedReader(new InputStreamReader(in));
+      String controlStrLine;
+      controlStrLine = br.readLine();
+      assertEquals(RANDOM_STRING, controlStrLine);
 
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -108,12 +103,10 @@ public class DownloadFileToLocalDriveTest extends BaseTest
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       catch (ModuleException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }
