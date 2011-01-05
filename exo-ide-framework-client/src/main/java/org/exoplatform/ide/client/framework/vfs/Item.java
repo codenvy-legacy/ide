@@ -28,7 +28,6 @@ import org.exoplatform.gwtframework.commons.xml.QName;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
-
 public abstract class Item
 {
 
@@ -39,6 +38,12 @@ public abstract class Item
    private boolean propertiesChanged = false;
 
    private String icon;
+   
+   /**
+    * Item is system or not.
+    * "System" means is used and edited by application, not user.
+    */
+   private boolean isSystem;
 
    protected Item(String href)
    {
@@ -119,4 +124,19 @@ public abstract class Item
       this.icon = icon;
    }
 
+   /**
+    * @return the isSystem
+    */
+   public boolean isSystem()
+   {
+      return isSystem;
+   }
+
+   /**
+    * @param isSystem the isSystem to set
+    */
+   public void setSystem(boolean isSystem)
+   {
+      this.isSystem = isSystem;
+   }
 }

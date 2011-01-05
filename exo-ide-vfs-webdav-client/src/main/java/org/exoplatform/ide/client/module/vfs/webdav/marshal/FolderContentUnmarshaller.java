@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
@@ -117,7 +118,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
             String icon = getIcon(contentType);
             item.setIcon(icon);
          }
-
+         checkIsSystemItem(item);
          folder.getChildren().add(item);
       }
       
@@ -144,6 +145,23 @@ public class FolderContentUnmarshaller implements Unmarshallable
       }
 
       return null;
+   }
+   
+   /**
+    * Checks and sets whether item is system or not.
+    * "System" means is used and edited by application, not user.
+    *  For example, ".groovyclasspath" file is system.
+    *  
+    * @param item item to check
+    */
+   private void checkIsSystemItem(Item item)
+   {
+      boolean isSystem = false;
+      if (item instanceof File) 
+      {
+         isSystem = MimeType.APPLICATION_GROOVY_CLASSPATH.equals(((File)item).getContentType());
+      }
+      item.setSystem(isSystem);
    }
 
 }
