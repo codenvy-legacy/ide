@@ -61,7 +61,9 @@ public class Images
 
       static final String VALIDATE = IMAGE_URL + "module/groovy/bundled/validate.png";
       
-      static final String RUN_GROOVY_SERVICE = IMAGE_URL + "module/groovy/bundled/run_groovy_service.png";      
+      static final String RUN_GROOVY_SERVICE = IMAGE_URL + "module/groovy/bundled/run_groovy_service.png"; 
+      
+      static final String CONFIGURE_BUILD_PATH = IMAGE_URL + "module/groovy/bundled/configure-build-path.png";   
 
    }
 

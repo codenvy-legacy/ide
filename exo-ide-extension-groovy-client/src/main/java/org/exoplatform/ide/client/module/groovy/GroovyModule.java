@@ -44,6 +44,7 @@ import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.module.groovy.codeassistant.AssistImportDeclarationManager;
 import org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion.GroovyTokenCollector;
 import org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion.GroovyTokenWidgetFactory;
+import org.exoplatform.ide.client.module.groovy.controls.ConfigureBuildPathCommand;
 import org.exoplatform.ide.client.module.groovy.controls.DeployGroovyCommand;
 import org.exoplatform.ide.client.module.groovy.controls.DeployGroovySandboxCommand;
 import org.exoplatform.ide.client.module.groovy.controls.PreviewWadlOutputCommand;
@@ -56,6 +57,7 @@ import org.exoplatform.ide.client.module.groovy.event.PreviewWadlOutputEvent;
 import org.exoplatform.ide.client.module.groovy.event.PreviewWadlOutputHandler;
 import org.exoplatform.ide.client.module.groovy.event.SetAutoloadEvent;
 import org.exoplatform.ide.client.module.groovy.event.SetAutoloadHandler;
+import org.exoplatform.ide.client.module.groovy.handlers.ConfigureBuildPathCommandHandler;
 import org.exoplatform.ide.client.module.groovy.handlers.DeployGroovyCommandHandler;
 import org.exoplatform.ide.client.module.groovy.handlers.RunGroovyServiceCommandHandler;
 import org.exoplatform.ide.client.module.groovy.handlers.UndeployGroovyCommandHandler;
@@ -114,6 +116,7 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
          "Create Template", Images.FileType.GROOVY_TEMPLATE, MimeType.GROOVY_TEMPLATE)));
 
       eventBus.fireEvent(new RegisterControlEvent(new SetAutoloadCommand(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ConfigureBuildPathCommand(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new DeployGroovyCommand(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(), DockTarget.TOOLBAR, true));
@@ -134,7 +137,7 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       new DeployGroovyCommandHandler(eventBus);
       new UndeployGroovyCommandHandler(eventBus);
       new AssistImportDeclarationManager(eventBus);
-      
+      new ConfigureBuildPathCommandHandler(eventBus);
       
       
       GroovyPluginImageBundle.INSTANCE.css().ensureInjected();
