@@ -83,14 +83,6 @@ public class FileTemplates
       String content =
       "{\n"
   +"\"entries\": [\n"
-    +"{\n"
-       +"\"kind\": \"file\",\n"
-       +"\"path\": \"jcr://repository/dev-monit#/Test.groovy\"\n"
-          +"},\n"
-          +"{"
-       +"\"kind\": \"dir\",\n"
-       +"\"path\": \"jcr://repository/dev-monit#/test/\"\n"
-          +"}\n"
           +"]\n"
           +"}";
 
