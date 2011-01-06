@@ -18,12 +18,17 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.wadl.IllegalWADLException;
+import org.exoplatform.gwtframework.commons.wadl.Method;
+import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.gwtframework.commons.wadl.WadlProcessor;
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.model.discovery.DiscoveryService;
@@ -41,7 +46,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -58,9 +66,17 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    {
       HasClickHandlers getOkButton();
 
-      //ListGridItem<RestService> getListGrid();
-
       UntypedTreeGrid getTreeGrid();
+
+      HasValue<String> getRequestField();
+
+      HasValue<String> getResponseField();
+
+      ListGridItem<Param> getParametersListGrid();
+      
+      void setRequestType(String value);
+
+      void setResponseType(String value);
 
       void closeView();
    }
@@ -71,12 +87,11 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
    private Display dispaly;
 
-   private String wadlXml =
-      "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><application xmlns=\"http://research.sun.com/wadl/2006/10\"><resources base=\"http://127.0.0.1:8888/rest/private\"><resource path=\"/jcr\"><method name=\"OPTIONS\"><response><representation mediaType=\"application/vnd.sun.wadl+xml\"/></response></method><resource path=\"/{repoName}/{path:.*}/\"><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"template\" name=\"path\"/><method name=\"OPTIONS\" id=\"options\"><response><representation mediaType=\"*/*\"/></response></method></resource><resource path=\"/{repoName}/{repoPath:.*}/\"><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"template\" name=\"repoName\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"template\" name=\"repoPath\"/><method name=\"MKCOL\" id=\"mkcol\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"Content-NodeType\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"Content-MixinTypes\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"REPORT\" id=\"report\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"depth\"/><representation mediaType=\"*/*\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"MOVE\" id=\"move\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"Destination\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"depth\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"Overwrite\"/><representation mediaType=\"*/*\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"COPY\" id=\"copy\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"Destination\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"depth\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"Overwrite\"/><representation mediaType=\"*/*\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"CHECKOUT\" id=\"checkout\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"GET\" id=\"get\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"Range\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If-Modified-Since\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"query\" name=\"version\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"SEARCH\" id=\"search\"><request><representation mediaType=\"*/*\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"ORDERPATCH\" id=\"order\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/><representation mediaType=\"*/*\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"DELETE\" id=\"delete\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"CHECKIN\" id=\"checkin\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"VERSION-CONTROL\" id=\"versionControl\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"UNCHECKOUT\" id=\"uncheckout\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"PROPFIND\" id=\"propfind\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"depth\"/><representation mediaType=\"*/*\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"LOCK\" id=\"lock\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"depth\"/><representation mediaType=\"*/*\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"PROPPATCH\" id=\"proppatch\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/><representation mediaType=\"*/*\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"PUT\" id=\"put\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"File-NodeType\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"Content-NodeType\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"Content-MixinTypes\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"Content-Type\"/><representation mediaType=\"*/*\"/></request><response><representation mediaType=\"*/*\"/></response></method><method name=\"UNLOCK\" id=\"unlock\"><request><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"lock-token\"/><param xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" type=\"xs:string\" style=\"header\" name=\"If\"/></request><response><representation mediaType=\"*/*\"/></response></method></resource></resource></resources></application>";
-
    private RestService currentRestService;
 
    private String restContext;
+
+   private Map<String, RestService> services = new TreeMap<String, RestService>();
 
    public RestServicesDiscoveryPresenter(HandlerManager eventBus)
    {
@@ -131,10 +146,58 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          {
             if (event.getTarget() instanceof RestService)
             {
-               updateResourceWadl((RestService)event.getTarget());
+               RestService service = (RestService)event.getTarget();
+               System.out.println("Full path = " + service.getFullPath());
+               if (services.containsKey(service.getFullPath()))
+                  updateResourceWadl(service);
             }
          }
       });
+
+      dispaly.getTreeGrid().addSelectionHandler(new SelectionHandler<Object>()
+      {
+
+         public void onSelection(SelectionEvent<Object> event)
+         {
+            if (event.getSelectedItem() instanceof Method)
+            {
+               updateMethodInfo((Method)event.getSelectedItem());
+            }
+            else
+            {
+               clearMethodInfo();
+            }
+         }
+      });
+   }
+
+   /**
+    * 
+    */
+   private void clearMethodInfo()
+   {
+      dispaly.setRequestType("");
+      dispaly.setResponseType("");
+   }
+
+   /**
+    * @param selectedItem
+    */
+   private void updateMethodInfo(Method method)
+   {
+      if (method.getRequest() != null) 
+      {
+         if(!method.getRequest().getRepresentation().isEmpty())
+          dispaly.setRequestType(method.getRequest().getRepresentation().get(0).getMediaType());
+         dispaly.getParametersListGrid().setValue(method.getRequest().getParam());
+      }
+      else
+         dispaly.setRequestType("");
+
+      if (method.getResponse() != null && !method.getResponse().getRepresentationOrFault().isEmpty())
+         dispaly.setResponseType(method.getResponse().getRepresentationOrFault().get(0).getMediaType());
+      else
+         dispaly.setResponseType("");
    }
 
    /**
@@ -147,11 +210,11 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
       if (target.getPath().startsWith("/"))
       {
-         url += target.getPath();
+         url += target.getFullPath();
       }
       else
       {
-         url += "/" + target.getPath();
+         url += "/" + target.getFullPath();
       }
       handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
 
@@ -165,7 +228,85 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    {
       handlers.removeHandlers();
 
-      dispaly.getTreeGrid().setRootValues(event.getRestServices());
+      services.clear();
+      for (RestService rs : event.getRestServices())
+      {
+         services.put(rs.getPath(), rs);
+      }
+
+      Map<String, RestService> list2Tree = list2Tree(services.values());
+      try
+      {
+         dispaly.getTreeGrid().setRootValue(list2Tree.values().iterator().next());
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+
+   private Map<String, RestService> list2Tree(Collection<RestService> services)
+   {
+      TreeMap<String, RestService> ser = new TreeMap<String, RestService>();
+      for (RestService rs : services)
+      {
+         String paths[] = rs.getPath().split("/");
+         if (paths.length > 1)
+         {
+            if (rs.getPath().endsWith("/"))
+            {
+               paths[paths.length - 1] += "/";
+            }
+            String pa = paths[0];
+            if (pa.isEmpty())
+            {
+               pa = "/";
+            }
+
+            RestService ts = null;
+            for (int i = 0; i < paths.length; i++)
+            {
+               String s = paths[i];
+               if (s.isEmpty())
+               {
+                  s = "/";
+               }
+               if (ts == null)
+               {
+                  if (ser.containsKey(s))
+                  {
+                     ts = ser.get(s);
+                  }
+                  else
+                  {
+                     RestService restService = new RestService("/" + s);
+                     ser.put(s, restService);
+                     ts = restService;
+                  }
+               }
+               else
+               {
+                  if (ts.getChildServices().containsKey(s))
+                  {
+                     ts = ts.getChildServices().get(s);
+                  }
+                  else
+                  {
+                     RestService restService = new RestService("/" + s);
+                     ts.getChildServices().put(s, restService);
+                     ts = restService;
+                  }
+               }
+            }
+
+         }
+         else
+         {
+            if (!ser.containsKey("/"))
+               ser.put("/", new RestService("REST"));
+         }
+      }
+      return ser;
    }
 
    /**
@@ -185,6 +326,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       if (event.getException() == null)
       {
          WadlApplication a = event.getApplication();
+         System.out.println(a.getResources().getResource().get(0).getPath());
          dispaly.getTreeGrid()
             .setPaths(currentRestService, a.getResources().getResource().get(0).getMethodOrResource());
       }

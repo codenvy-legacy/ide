@@ -20,10 +20,11 @@ package org.exoplatform.ide.client.restdiscovery;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.ide.client.model.discovery.marshal.RestService;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.HasOpenHandlers;
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,9 +33,9 @@ import com.google.gwt.event.logical.shared.HasOpenHandlers;
  * @version $Id: Dec 23, 2010 3:48:02 PM evgen $
  *
  */
-public interface UntypedTreeGrid extends HasOpenHandlers<Object>
+public interface UntypedTreeGrid extends HasOpenHandlers<Object>, HasSelectionHandlers<Object>, HasClickHandlers
 {
-   void setRootValues(List<RestService> items);
-   
+   void setRootValue(RestService item);
+
    void setPaths(RestService service, List<?> list);
 }

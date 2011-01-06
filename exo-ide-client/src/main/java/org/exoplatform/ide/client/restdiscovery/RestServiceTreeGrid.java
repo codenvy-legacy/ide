@@ -18,19 +18,21 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.data.FolderOpenedHandlerImpl;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.data.SelectionHandlerImpl;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.event.ClickHandlerImpl;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.model.discovery.marshal.RestService;
 
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGrid;
@@ -56,8 +58,8 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
    private static final String NAME = "name";
 
    private static final String TITLE = "Path";
-   
-   private static final String ID ="ideRestServiceTreeGrid";
+
+   private static final String ID = "ideRestServiceTreeGrid";
 
    public RestServiceTreeGrid()
    {
@@ -70,51 +72,65 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
       tree.setRoot(rootNode);
       setData(tree);
 
-      setFixedFieldWidths(false);
-      setSelectionType(SelectionStyle.SINGLE);
-      setSeparateFolders(false);
-      
-
-      // setCanFocus(false);  // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."  
-
       setShowConnectors(false);
       setCanSort(true);
-
-      TreeGridField nameField = new TreeGridField(TITLE);
+      setCanEdit(false);
+      setShowRoot(false);
+      setFixedFieldWidths(false);
+      setIconSize(16);
+      setCanFocus(true);
+      setShowHeader(false);
+      TreeGridField nameField = new TreeGridField(TITLE, 150);
+      nameField.setWidth("100%");
 
       //TODO
       //This field need for selenium.
       //We can't select tree node, if click on first column.
       //If you click on second column - tree item is selected.
-      TreeGridField mockField = new TreeGridField("mock");
-      mockField.setWidth(3);
-      setFields(nameField, mockField);
+      //      TreeGridField mockField = new TreeGridField("mock");
+      //      mockField.setWidth(3);
+      //      mockField.setHidden(true);
+      setFields(nameField);
+      setFixedFieldWidths(false);
+
    }
 
    /**
     * @see org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid#doUpdateValue()
     */
 
-   public void setRootValues(List<RestService> items)
+   public void setRootValue(RestService item)
    {
-      for (RestService r : items)
+      for (RestService rs : item.getChildServices().values())
       {
-         TreeNode newNode = getRestServiceNode(r);
-         newNode.setIsFolder(true);
-         tree.add(newNode, rootNode);
+         addRestService(rootNode, rs);
       }
+      sort();
    }
 
-   /**
-    * @param r
-    * @return
-    */
-   private TreeNode getRestServiceNode(RestService r)
+   private void addRestService(TreeNode parentNode, RestService children)
    {
-      TreeNode node = new TreeNode(r.getPath());
-      node.setAttribute(TITLE, r.getPath());
-      node.setAttribute(getValuePropertyName(), r);
-      return node;
+
+      RestService r = (RestService)parentNode.getAttributeAsObject(getValuePropertyName());
+
+      if (r != null)
+         children.setFullPath(r.getFullPath() + children.getPath());
+      if (children.getPath().endsWith("/"))
+      {
+         children.setPath(children.getPath().substring(0, children.getPath().lastIndexOf('/')));
+      }
+
+      TreeNode node = new TreeNode(children.getFullPath());
+      node.setAttribute(TITLE, children.getPath());
+      node.setAttribute(getValuePropertyName(), children);
+      node.setIsFolder(true);
+
+      tree.add(node, parentNode);
+
+      for (RestService rs : children.getChildServices().values())
+      {
+         addRestService(node, rs);
+      }
    }
 
    /**
@@ -127,9 +143,20 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
          if (o instanceof Resource)
          {
             Resource r = (Resource)o;
-            TreeNode newNode = getResourceNode(r);
-            newNode.setCanExpand(false);
-            newNode.setIcon(Images.RestService.REST_SERVICE);
+            TreeNode newNode = new TreeNode(r.getPath());
+            String title = r.getPath();
+            RestService rs = (RestService)parentNode.getAttributeAsObject(getValuePropertyName());
+            if (rs != null)
+            {
+               if (rs.getFullPath().endsWith("/"))
+                  title = title.substring(rs.getFullPath().length() - 1);
+               else
+                  title = title.substring(rs.getFullPath().length());
+            }
+            newNode.setAttribute(TITLE, title);
+            newNode.setAttribute(getValuePropertyName(), r);
+            //            newNode.setIcon(Images.RestService.REST_SERVICE);
+
             tree.add(newNode, parentNode);
 
             if (r.getMethodOrResource() != null && !r.getMethodOrResource().isEmpty())
@@ -143,89 +170,13 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
             TreeNode newNode = new TreeNode(m.getName());
             newNode.setIcon(Images.RestService.METHOD);
             String title = m.getName();
-            if (m.getRequest() != null)
-            {
-               if (!m.getRequest().getRepresentation().isEmpty())
-               {
-                  title += "&nbsp;<img align=\"absmiddle\" width=\"16\" height=\"16\" border=\"0\" src=\""+Images.RestService.IN+"\"> "+ m.getRequest().getRepresentation().get(0).getMediaType();
-                 
-               }
-            }
-            if(m.getResponse()!= null)
-            {
-               if (!m.getResponse().getRepresentationOrFault().isEmpty())
-               {
-                  title += "&nbsp;<img align=\"absmiddle\" width=\"16\" height=\"16\" border=\"0\" src=\""+Images.RestService.OUT+"\"> "+ m.getResponse().getRepresentationOrFault().get(0).getMediaType();
-               }
-            }
-
             newNode.setAttribute(TITLE, title);
             newNode.setAttribute(getValuePropertyName(), m);
             tree.add(newNode, parentNode);
-
-            if (m.getRequest() != null && !m.getRequest().getParam().isEmpty())
-            {
-               List<Param> query = new ArrayList<Param>();
-               List<Param> headers = new ArrayList<Param>();
-               for (Param p : m.getRequest().getParam())
-               {
-                  switch (p.getStyle())
-                  {
-                     case HEADER :
-                        headers.add(p);
-                        break;
-                     case QUERY :
-                        query.add(p);
-                        break;
-                  }
-               }
-               if (!headers.isEmpty())
-               {
-                  TreeNode headerNode = new TreeNode("Header");
-                  headerNode.setAttribute(TITLE, "Header Param");
-                  headerNode.setIcon(Images.RestService.PARAMETER);
-                  tree.add(headerNode, newNode);
-                  
-                  addParametes(headerNode, headers);
-               }
-               if (!query.isEmpty())
-               {
-                  TreeNode queryNode = new TreeNode("Query");
-                  queryNode.setAttribute(TITLE, "Query Param");
-                  queryNode.setIcon(Images.RestService.PARAMETER);
-                  tree.add(queryNode, newNode);
-                  addParametes(queryNode, query);
-               }
-
-            }
          }
 
       }
-   }
 
-   /**
-    * @param node
-    * @param parameters
-    */
-   private void addParametes(TreeNode node, List<Param> parameters)
-   {
-      for (Param p : parameters)
-      {
-         TreeNode pNode = new TreeNode(p.getName());
-         pNode.setAttribute(TITLE, p.getName() + ":" + p.getType().getLocalName());
-         pNode.setAttribute(getValuePropertyName(), p);
-         pNode.setIcon(Images.RestService.VAR);
-         tree.add(pNode, node);
-      }
-   }
-
-   private TreeNode getResourceNode(Resource item)
-   {
-      TreeNode node = new TreeNode(item.getPath());
-      node.setAttribute(TITLE, item.getPath());
-      node.setAttribute(getValuePropertyName(), item);
-
-      return node;
    }
 
    protected String getValuePropertyName()
@@ -248,23 +199,47 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
     */
    public void setPaths(RestService service, List<?> resources)
    {
-      TreeNode node = getNode(rootNode, service.getPath());
+      TreeNode node = getNode(rootNode, service.getFullPath());
+      //      getNodeByPath(service.getFullPath());
       for (TreeNode childNode : tree.getChildren(node))
       {
          tree.remove(childNode);
       }
       fillServiceTree(node, resources);
+      sort();
    }
 
    private TreeNode getNode(TreeNode parent, String name)
    {
-      TreeNode[] rootResources = tree.getChildren(rootNode);
+      TreeNode[] rootResources = tree.getChildren(parent);
       for (TreeNode node : rootResources)
       {
          if (node.getName().equals(name))
             return node;
+         else
+         {
+            TreeNode nod = getNode(node, name);
+            if (nod != null)
+               return nod;
+         }
       }
       return null;
+   }
+
+   /**
+    * @see com.google.gwt.event.logical.shared.HasSelectionHandlers#addSelectionHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    */
+   public HandlerRegistration addSelectionHandler(SelectionHandler<Object> handler)
+   {
+      return super.addSelectionChangedHandler(new SelectionHandlerImpl<Object>(handler, getValuePropertyName()));
+   }
+
+   /**
+    * @see com.google.gwt.event.dom.client.HasClickHandlers#addClickHandler(com.google.gwt.event.dom.client.ClickHandler)
+    */
+   public HandlerRegistration addClickHandler(ClickHandler handler)
+   {
+      return super.addClickHandler(new ClickHandlerImpl(handler));
    }
 
 }

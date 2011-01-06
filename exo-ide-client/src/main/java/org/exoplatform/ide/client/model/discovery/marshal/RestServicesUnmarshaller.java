@@ -83,6 +83,10 @@ public class RestServicesUnmarshaller implements Unmarshallable
             JSONObject service = jsa.get(i).isObject();
             String fqn = service.get("fqn").isString().stringValue();
             String path = service.get("path").isString().stringValue();
+            if(!path.startsWith("/"))
+            {
+               path = "/" + path;
+            }
             String regexp = service.get("regex").isString().stringValue();
             restServices.add(new RestService(fqn, path, regexp));
          }

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.model.discovery.marshal;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * This class represent REST Service
  * <br>
@@ -34,6 +37,15 @@ public class RestService
 
    private String regex;
 
+   private String fullPath;
+
+   private Map<String, RestService> childServices = new HashMap<String, RestService>();
+
+   public RestService(String path)
+   {
+      this("", path, "");
+   }
+
    /**
     * @param fqn
     * @param path
@@ -44,6 +56,7 @@ public class RestService
       this.fqn = fqn;
       this.path = path;
       this.regex = regex;
+      this.fullPath = path;
    }
 
    /**
@@ -92,6 +105,38 @@ public class RestService
    public void setRegex(String regex)
    {
       this.regex = regex;
+   }
+
+   /**
+    * @return the childServices
+    */
+   public Map<String, RestService> getChildServices()
+   {
+      return childServices;
+   }
+
+   /**
+    * @param childServices the childServices to set
+    */
+   public void setChildServices(Map<String, RestService> childServices)
+   {
+      this.childServices = childServices;
+   }
+
+   /**
+    * @return the fullPath
+    */
+   public String getFullPath()
+   {
+      return fullPath;
+   }
+
+   /**
+    * @param fullPath the fullPath to set
+    */
+   public void setFullPath(String fullPath)
+   {
+      this.fullPath = fullPath;
    }
 
 }
