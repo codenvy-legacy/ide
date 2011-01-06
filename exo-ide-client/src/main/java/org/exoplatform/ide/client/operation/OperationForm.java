@@ -217,6 +217,7 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
          {
             selectTab(previewForm.getViewId());
             eventBus.fireEvent(new ViewOpenedEvent(previewForm.getViewId()));
+            previewForm.onOpenTab();
             previewForm.showPreview(path);
          }
       });
