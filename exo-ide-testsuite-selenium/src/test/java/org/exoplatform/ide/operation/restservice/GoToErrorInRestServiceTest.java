@@ -203,11 +203,12 @@ public class GoToErrorInRestServiceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 1 -----------------
-      //open file
-      selectItemInWorkspaceTree(WS_NAME);
+      //open file    
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(TEST_FOLDER);
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR_FOR_CHANGING, false);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -323,15 +324,11 @@ public class GoToErrorInRestServiceTest extends BaseTest
    {
       //---- 1 -----------------
       //open file
-      selectItemInWorkspaceTree(WS_NAME);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      //TODO****************change*********
       Thread.sleep(TestConstants.SLEEP);
-      //TODO****************change*********
-      openOrCloseFolder(TEST_FOLDER);
-      //TODO****************change*********  
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
-      //TODO****************change*********
       openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR, false);
       Thread.sleep(TestConstants.SLEEP);
 
