@@ -27,12 +27,12 @@ import org.junit.AfterClass;
 import org.junit.Test;
 
 /**
- * Created by The eXo Platform SAS .
+ * IDE-115:Copy file.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class IDE115CopyTest extends BaseTest
+public class CopyFileTest extends BaseTest
 {
 
    @AfterClass

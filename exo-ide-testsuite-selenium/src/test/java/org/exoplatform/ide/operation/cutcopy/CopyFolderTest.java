@@ -31,13 +31,14 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 /**
- * Created by The eXo Platform SAS .
+ * IDE-116:Copy folder.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class IDE116CopyTest extends BaseTest
+public class CopyFolderTest extends BaseTest
 {
    
    private final String FILE1_NAME = "test"; 
@@ -159,19 +160,19 @@ public class IDE116CopyTest extends BaseTest
       IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
       /* 
-      * Call "Edit/Copy" in menu
-      */
+       * Call "Edit/Copy" in menu
+       * /
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
 
       /* 
-      * Check Paste must be enabled
-      */
+       * Check Paste must be enabled
+       */
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
       IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /* 
-      * Select root in workspace tree and call "Edit/Paste"
-      */
+       * Select root in workspace tree and call "Edit/Paste"
+       */
       selectRootOfWorkspaceTree();
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
@@ -183,14 +184,14 @@ public class IDE116CopyTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       /* 
-      * Close opened file
-      */
+       * Close opened file
+       */
       IDE.editor().closeTab(0);
-      
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
       /* 
-      * Open "/Test 1.1/test.groovy"
-      */
+       * Open "/Test 1.1/test.groovy"
+       */
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
