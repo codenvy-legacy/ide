@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.core;
 
+import org.exoplatform.ide.TestConstants;
+
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -50,6 +52,18 @@ public class Navigator
    public String getScLocator(String title)
    {
       return Locators.SC_NAVIGATION_TREE + "/body/row[name=" + title + "]/col[1]";
+   }
+   
+   /**
+    * Select row in navigation tree.
+    * 0 - number of root node (workspace).
+    * @param rowNumber - number of row.
+    * @throws Exception
+    */
+   public void selectRow(int rowNumber) throws Exception
+   {
+      selenium.click(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[1]");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
 }

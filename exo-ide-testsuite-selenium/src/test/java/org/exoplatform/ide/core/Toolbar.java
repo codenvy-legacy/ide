@@ -94,6 +94,8 @@ public class Toolbar
       selenium.mouseDownAt(hoverLocator, "");
       //time to wait while gadget open new file
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
    /**

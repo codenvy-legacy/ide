@@ -19,18 +19,24 @@
 package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Dialogs;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.UUID;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -39,20 +45,59 @@ import org.junit.Test;
 public class CutFoldersAndFilesTest extends BaseTest
 {
 
-   private static final String FOLDER_1 = "test 1";
+   private static final String FOLDER_1 = CutFoldersAndFilesTest.class.getSimpleName() + "-1";
    
-   private static final String FOLDER_2 = "test 2";
+   private static final String FOLDER_2 = CutFoldersAndFilesTest.class.getSimpleName() + "-2";
    
-   private static final String FOLDER_3 = "test 1-1";
-
+   private static final String FOLDER_3 = CutFoldersAndFilesTest.class.getSimpleName() + "-1-1";
    
-   private static final String FILE1 = "gadgetxml";
+   private static final String FILE_1 = "gadget.xml";
    
-   private static final String FILE2 = "testgroovy";
+   private static final String FILE_2 = "test.groovy";
    
-   private static final String FILE3 = "gadget1xml";
+   private static final String FILE_3 = "gadget1.xml";
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   
+   private static final String RANDOM_CONTENT_1 = UUID.randomUUID().toString();
+   
+   private static final String RANDOM_CONTENT_2 = UUID.randomUUID().toString();
+   
+   private static final String RANDOM_CONTENT_3 = UUID.randomUUID().toString();
+   
+   /**
+    * BeforeClass create such structure:
+    * FOLDER_1
+    *    FOLDER_3
+    *    FILE_1 - file with sample content
+    *    FILE_2 - file with sample content
+    * FOLDER_2
+    *    FOLDER_3
+    *    FILE_3 - file with sample content
+    */
+   @BeforeClass
+   public static void setUp()
+   {
+      
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_2);
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_1 + "/" + FOLDER_3);
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_2 + "/" + FOLDER_3);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT_1.getBytes(), MimeType.GOOGLE_GADGET, URL + FOLDER_1 + "/" + FILE_1);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT_2.getBytes(), MimeType.APPLICATION_GROOVY, URL + FOLDER_1 + "/" + FILE_2);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT_3.getBytes(), MimeType.GOOGLE_GADGET, URL + FOLDER_2 + "/" + FILE_3);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
   
    /**
     *  Test from TestLink IDE-117
@@ -61,75 +106,28 @@ public class CutFoldersAndFilesTest extends BaseTest
    @Test
    public void testCutOperation() throws Exception
    {
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      //      1.Open Gadget window and create next folders' structure in the workspace root:
-      //      "test 1/gadget.xml" file with sample content
-      //      "test 1/test.groovy" file with sample content
-      //      "test 1/test 1.1" folder
-      //      "test 2/gadget.xml" file with sample content
-      //      "test 2/test 1.1" folder
-      createFolder(FOLDER_1);
-
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[1]/col[0]");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      saveAsUsingToolbarButton(FILE1);
-
-      String oldText = getTextFromCodeEditor(0);
-      IDE.editor().closeTab(0);
-      
-
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      saveAsUsingToolbarButton(FILE2);
-
-      String omg = selenium.getText("//body[@class='editbox']");
-
-      IDE.editor().closeTab(0);
-
-      createFolder(FOLDER_3);
-
+      waitForRootElement();
       selectRootOfWorkspaceTree();
-
-      createFolder(FOLDER_2);
-
-      openOrCloseFolder(FOLDER_1);
-
-      selectItemInWorkspaceTree(FOLDER_2);
-
-      createFolder(FOLDER_3);
-
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      selectItemInWorkspaceTree(FOLDER_2);
-
-      saveAsUsingToolbarButton(FILE3);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.editor().closeTab(0);
+      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FOLDER_2);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      
+      //Open Gadget window, open all created files.
+      openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
 
-      //    Open Gadget window, open all created files.
-      openFileFromNavigationTreeWithCodeEditor(FILE1, false);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      //Open Gadget window, open all created files.
+      openFileFromNavigationTreeWithCodeEditor(FILE_2, false);
 
-      //    Open Gadget window, open all created files.
-      openFileFromNavigationTreeWithCodeEditor(FILE2, false);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      openFileFromNavigationTreeWithCodeEditor(FILE_3, false);
 
-      openFileFromNavigationTreeWithCodeEditor(FILE3, false);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      //      Select file "test 1/gadgetxml", and folder "test 2".
+      //Select file "%FOLDER%-1/gadgetxml", and folder "%FOLDER%-2".
       selenium.controlKeyDown();
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[7]/col[1]");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[1]");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[5]/col[1]");
+      IDE.navigator().selectRow(7);
+      IDE.navigator().selectRow(3);
+      IDE.navigator().selectRow(5);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
@@ -137,24 +135,21 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       selectRootOfWorkspaceTree();
 
-      //      Select files "test 1/gadgetxml", and "test 2/gadgetxml".
+      //Select files "test 1/gadgetxml", and "test 2/gadgetxml".
       selenium.controlKeyDown();
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[1]");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[7]/col[1]");
+      IDE.navigator().selectRow(0);
+      IDE.navigator().selectRow(3);
+      IDE.navigator().selectRow(7);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       checkButtonsDisabled();
 
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
-      //      Select folders "test 1/test 1.1", and root folder.
+      IDE.navigator().selectRow(0);
+      //Select folders "test 1/test 1.1", and root folder.
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[2]/col[1]");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      IDE.navigator().selectRow(2);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
@@ -162,18 +157,14 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
+      selectRootOfWorkspaceTree();
 
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      //      Select "test 1/gadgetxml", "test 1/test 1.1" items in the Workspace Panel and press the "Cut" toolbar button.
+      //Select "test 1/gadgetxml", "test 1/test 1.1" items in the Workspace Panel and press the "Cut" toolbar button.
       selenium.controlKeyDown();
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[2]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      IDE.navigator().selectRow(0);
+      IDE.navigator().selectRow(3);
+      IDE.navigator().selectRow(2);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
@@ -181,106 +172,68 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       checkPasteButton(true);
 
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[5]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.navigator().selectRow(5);
 
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       assertTrue(selenium.isTextPresent("412 Precondition Failed"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/headerLabel/"));
+      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
       assertTrue(selenium.isTextPresent("Precondition Failed"));
-      assertTrue(selenium.isTextPresent("OK"));
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
+      IDE.dialogs().clickOkButton();
 
       checkPasteButton(true);
 
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selectRootOfWorkspaceTree();
 
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[2]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[4]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      //deselect root of navigation tree
+      IDE.navigator().selectRow(0);
+      IDE.navigator().selectRow(2);
+      IDE.navigator().selectRow(3);
+      IDE.navigator().selectRow(4);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
 
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selectRootOfWorkspaceTree();
 
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       IDE.editor().selectTab(0);
 
-      assertEquals(oldText, getTextFromCodeEditor(0));
+      assertEquals(RANDOM_CONTENT_1, getTextFromCodeEditor(0));
 
       IDE.editor().selectTab(1);
 
-      assertEquals(omg, getTextFromCodeEditor(1));
+      assertEquals(RANDOM_CONTENT_2, getTextFromCodeEditor(1));
+      
+      checkFilesAndFoldersOnServer();
 
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
-
-      String url =
-         selenium
-            .getValue("scLocator=//Window[ID=\"ideGetItemURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element");
-      selenium.click("scLocator=//IButton[ID=\"ideGetItemURLFormOkButton\"]/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      System.out.println(url);
-
-      selenium.open(url);
-      selenium.waitForPageToLoad("" + TestConstants.PAGE_LOAD_PERIOD);
-
-      assertTrue(selenium.isElementPresent("link="+FILE2));
-      assertTrue(selenium.isElementPresent("link="+FILE1));
-      assertTrue(selenium.isElementPresent("link="+FOLDER_3));
-
-      selenium.goBack();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(10000);
-
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[2]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[2]/col[0]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
-
-      String url1 =
-         selenium
-            .getValue("scLocator=//Window[ID=\"ideGetItemURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element");
-      System.out.println(url1);
-
-      selenium.click("scLocator=//IButton[ID=\"ideGetItemURLFormOkButton\"]/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      selenium.open(url1);
-      selenium.waitForPageToLoad("" + TestConstants.PAGE_LOAD_PERIOD);
-
-      assertFalse(selenium.isElementPresent("link="+FILE2));
-      assertFalse(selenium.isElementPresent("link="+FILE1));
-      assertFalse(selenium.isElementPresent("link="+FOLDER_3));
-
-      selenium.goBack();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(10000);
-
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[1]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.navigator().selectRow(1);
 
       checkPasteButton(false);
-
-     //Close Tabs
-      IDE.editor().closeTab(0);
-      IDE.editor().closeTab(0);
+   }
+   
+   private void checkFilesAndFoldersOnServer() throws Exception
+   {
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FOLDER_1).getStatusCode());
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FOLDER_3).getStatusCode());
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FOLDER_2).getStatusCode());
+      final HTTPResponse fileResponse1 = VirtualFileSystemUtils.get(URL + FILE_1);
+      assertEquals(HTTPStatus.OK, fileResponse1.getStatusCode());
+      assertEquals(RANDOM_CONTENT_1, new String(fileResponse1.getData()));
+      final HTTPResponse fileResponse2 = VirtualFileSystemUtils.get(URL + FILE_2);
+      assertEquals(HTTPStatus.OK, fileResponse2.getStatusCode());
+      assertEquals(RANDOM_CONTENT_2, new String(fileResponse2.getData()));
+      
+      //children of FOLDER_2
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FOLDER_2 + "/" + FOLDER_3).getStatusCode());
+      final HTTPResponse fileResponse3 = VirtualFileSystemUtils.get(URL + FOLDER_2 + "/" + FILE_3);
+      assertEquals(HTTPStatus.OK, fileResponse3.getStatusCode());
+      assertEquals(RANDOM_CONTENT_3, new String(fileResponse3.getData()));
    }
 
    /**
@@ -318,15 +271,13 @@ public class CutFoldersAndFilesTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      IDE.editor().closeTab(0);
-      IDE.editor().closeTab(0);
       try
       {
-         VirtualFileSystemUtils.delete(URL +FOLDER_1);
-         VirtualFileSystemUtils.delete(URL +FOLDER_2);
-         VirtualFileSystemUtils.delete(URL +FOLDER_3);
-         VirtualFileSystemUtils.delete(URL +FILE1);
-         VirtualFileSystemUtils.delete(URL +FILE2);
+         VirtualFileSystemUtils.delete(URL + FOLDER_1);
+         VirtualFileSystemUtils.delete(URL + FOLDER_2);
+         VirtualFileSystemUtils.delete(URL + FOLDER_3);
+         VirtualFileSystemUtils.delete(URL + FILE_1);
+         VirtualFileSystemUtils.delete(URL + FILE_2);
       }
       catch (IOException e)
       {

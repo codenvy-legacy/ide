@@ -1477,6 +1477,7 @@ public abstract class BaseTest
     */
    public void waitForRootElement() throws Exception
    {
+      Thread.sleep(TestConstants.SLEEP);
       waitForElementPresent(Navigator.Locators.SC_ROOT_OF_NAVIGATION_TREE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
