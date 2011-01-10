@@ -41,49 +41,55 @@ public class SafeHandlerManager extends HandlerManager
    {
       super(null);
    }
-   
+
    private int depthIndex = 0;
-   
+
    private String tab;
 
    @Override
    public void fireEvent(GwtEvent<?> event)
    {
       String name = event.getClass().getName();
-      if (name.indexOf(".") >= 0) {
+      if (name.indexOf(".") >= 0)
+      {
          name = name.substring(name.lastIndexOf(".") + 1, name.length());
       }
-      
+
       refreshTab();
-      
+
       System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - event");
       logEventParams(event);
       depthIndex++;
       refreshTab();
 
-      try {
+      try
+      {
          super.fireEvent(event);
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          e.printStackTrace();
       }
-      
+
       System.out.println();
-      
+
       depthIndex--;
       refreshTab();
       //System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - done");
-      
+
       printSpacesTimer.cancel();
       printSpacesTimer.schedule(3000);
    }
-   
-   private void refreshTab() {
+
+   private void refreshTab()
+   {
       tab = "    ";
-      for (int i = 0; i < depthIndex; i++) {
+      for (int i = 0; i < depthIndex; i++)
+      {
          tab += "        ";
-      }      
+      }
    }
-   
+
    private Timer printSpacesTimer = new Timer()
    {
       @Override
@@ -92,17 +98,15 @@ public class SafeHandlerManager extends HandlerManager
          System.out.println("\r\n\r\n\r\n\r\n");
       }
    };
-   
+
    @SuppressWarnings("unused")
-   private void logEventParams(GwtEvent<?> event) {
-      if (event instanceof SaveApplicationSettingsEvent) {
+   private void logEventParams(GwtEvent<?> event)
+   {
+      if (event instanceof SaveApplicationSettingsEvent)
+      {
          SaveApplicationSettingsEvent e = (SaveApplicationSettingsEvent)event;
          System.out.println("        " + tab + "    - save type: " + e.getSaveType());
-      } else {
-         
       }
-      
-      
    }
 
 }

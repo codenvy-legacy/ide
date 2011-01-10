@@ -26,13 +26,13 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
+import org.exoplatform.gwtframework.ui.client.command.control.IconButtonControl;
+import org.exoplatform.gwtframework.ui.client.command.control.PopupMenuButtonControl;
 import org.exoplatform.gwtframework.ui.client.event.UpdateToolbarEvent;
 import org.exoplatform.gwtframework.ui.client.event.UpdateToolbarHandler;
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
@@ -59,10 +59,6 @@ public class IDEToolbar implements UpdateToolbarHandler
 
    public void onUpdateToolbar(UpdateToolbarEvent event)
    {
-      System.out.println("IDEToolbar.onUpdateToolbar()");
-
-      System.out.println("toolbar items --------------------------------------");
-
       toolbar.clear();
 
       List<String> leftItems = new ArrayList<String>();
@@ -109,20 +105,8 @@ public class IDEToolbar implements UpdateToolbarHandler
          }
       }
 
-      System.out.println("- LEFT -----------------------------------------------");
-      for (String i : leftItems)
-      {
-         System.out.println("> " + i);
-      }
-      System.out.println("- RIGHT ----------------------------------------------");
-      for (String i : rightItems)
-      {
-         System.out.println("> " + i);
-      }
-
       addItems(leftItems, event.getCommands(), false);
       addItems(rightItems, event.getCommands(), true);
-
       toolbar.hideDuplicatedDelimiters();
    }
 
@@ -130,8 +114,6 @@ public class IDEToolbar implements UpdateToolbarHandler
    {
       for (String item : items)
       {
-         //         System.out.println(">> " + item);
-
          if ("---".equals(item))
          {
             if (right)
@@ -165,20 +147,14 @@ public class IDEToolbar implements UpdateToolbarHandler
 
    private void addIconButton(SimpleControl simpleControl, boolean rightDocking)
    {
-      ToolbarButtonControl toolbarControl = new ToolbarButtonControl(eventBus, simpleControl, toolbar);
-      Widget wrapper = toolbar.addItem(toolbarControl.getButton(), rightDocking);
-      toolbarControl.setWrapper(wrapper);
-      
-//      StatusTextControl statusTextControl = (StatusTextControl)command;
-//      ToolbarTextButtonControl statusText = new ToolbarTextButtonControl(eventBus, statusTextControl, statusbar);
-//      statusbar.addItem(statusText, rightDocking);
+      IconButtonControl iconButtonControl = new IconButtonControl(eventBus, simpleControl, toolbar);
+      toolbar.addItem(iconButtonControl, rightDocking);
    }
 
    private void addPopupMenuButton(PopupMenuControl popupMenuControl, boolean rightDocking)
    {
-      ToolbarPopupButtonControl controller = new ToolbarPopupButtonControl(eventBus, popupMenuControl, toolbar);
-      Widget wrapper = toolbar.addItem(controller.getButton(), rightDocking);
-      controller.setWrapper(wrapper);
+      PopupMenuButtonControl popupMenuButtonControl = new PopupMenuButtonControl(eventBus, popupMenuControl, toolbar);
+      toolbar.addItem(popupMenuButtonControl, rightDocking);
    }
 
    private Control getControl(List<Control> controls, String controlId)

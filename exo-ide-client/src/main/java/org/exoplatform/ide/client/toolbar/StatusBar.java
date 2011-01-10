@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
+import org.exoplatform.gwtframework.ui.client.command.control.TextButtonControl;
 import org.exoplatform.gwtframework.ui.client.event.UpdateStatusBarEvent;
 import org.exoplatform.gwtframework.ui.client.event.UpdateStatusBarHandler;
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
@@ -55,8 +56,6 @@ public class StatusBar implements UpdateStatusBarHandler
 
    public void onRefreshStatusBar(UpdateStatusBarEvent event)
    {
-      System.out.println("StatusBar.onRefreshStatusBar()");
-
       boolean rightDocking = false;
 
       for (String id : event.getStatusBarItems())
@@ -80,7 +79,7 @@ public class StatusBar implements UpdateStatusBarHandler
          if (command instanceof StatusTextControl)
          {
             StatusTextControl statusTextControl = (StatusTextControl)command;
-            ToolbarTextButtonControl statusText = new ToolbarTextButtonControl(eventBus, statusTextControl, statusbar);
+            TextButtonControl statusText = new TextButtonControl(eventBus, statusTextControl, statusbar);
             statusbar.addItem(statusText, rightDocking);
          }
       }

@@ -65,7 +65,6 @@ public class BrowserForm extends View implements BrowserPanel, BrowserPresenter.
       {
          public void onMouseDown(MouseDownEvent event)
          {
-//            System.out.println("BrowserForm onMouse Down");
 //            ViewHighlightManager.getInstance().selectView(BrowserForm.this);
 //            event.cancel();
          }

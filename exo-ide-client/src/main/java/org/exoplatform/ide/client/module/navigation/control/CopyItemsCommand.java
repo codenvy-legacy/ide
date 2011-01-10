@@ -105,8 +105,6 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
 
    public void onViewActivated(ViewActivatedEvent event)
    {
-      System.out.println(" " + event.getViewId());
-
       if ("ideNavigatorItemTreeGrid".equals(event.getViewId()))
       {
          setEnabled(true);

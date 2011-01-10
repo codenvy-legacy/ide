@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.gwtframework.ui.client.command.control.MenuItemControl;
 import org.exoplatform.gwtframework.ui.client.menu.MenuBar;
 import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
 
@@ -104,9 +105,8 @@ public class IDEMenu
          }
 
          MenuItem item = parent.addItem(command.getTitle());
-         new MenuItemCommand(eventBus, item, command);
+         new MenuItemControl(eventBus, item, command);
       }
-
    }
 
    private MenuItem getItemByTitle(MenuItem menuItem, String title)
