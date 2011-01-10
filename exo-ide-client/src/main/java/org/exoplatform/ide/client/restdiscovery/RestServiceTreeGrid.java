@@ -93,8 +93,8 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
       TreeGridField mockField = new TreeGridField("mock");
       mockField.setWidth(3);
       mockField.setHidden(true);
-      setDefaultFields(new ListGridField[]{nameField, mockField});
-//      setFields(nameField, mockField);
+//      setDefaultFields(new ListGridField[]{nameField, mockField});
+      setFields(nameField, mockField);
       setFixedFieldWidths(false);
 
    }
