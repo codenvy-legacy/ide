@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.restservice.RESTServiceDefaultHTTPParametersTest;
@@ -89,7 +90,13 @@ public class RestServicesDiscoveryTest extends BaseTest
       selectItemInWorkspaceTree(WS_NAME);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(TEST_FOLDER);
+      
+      // open folder
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      Thread.sleep(TestConstants.SLEEP);      
+      
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
