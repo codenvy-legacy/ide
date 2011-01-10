@@ -274,6 +274,8 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       services.clear();
       for (RestService rs : event.getRestServices())
       {
+         if (!rs.getPath().endsWith("/"))
+            rs.setPath(rs.getPath() + "/");
          services.put(rs.getPath(), rs);
       }
 
