@@ -187,12 +187,12 @@ public class UsingKeyboardTest extends BaseTest
          e.printStackTrace();
       }
 
-      //Refresh page:
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      // refresh page and open test file
+      Thread.sleep(TestConstants.SLEEP);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
 
-      openOrCloseFolder(TEST_FOLDER);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(TEST_FILE, false);
 
