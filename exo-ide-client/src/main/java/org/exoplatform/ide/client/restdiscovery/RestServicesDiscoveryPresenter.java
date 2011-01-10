@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -49,7 +50,6 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -68,17 +68,25 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
       UntypedTreeGrid getTreeGrid();
 
-      HasValue<String> getRequestField();
-
-      HasValue<String> getResponseField();
-
       ListGridItem<Param> getParametersListGrid();
-      
+
       void setRequestType(String value);
 
       void setResponseType(String value);
 
       void closeView();
+
+      void setResponseFieldVisible(boolean b);
+
+      void setResponseFieldEnabled(boolean enabled);
+
+      void setRequestFieldVisible(boolean b);
+
+      void setRequestFieldEnabled(boolean enabled);
+
+      void setParametersListGridVisible(boolean b);
+
+      void setParametersListGridEnabled(boolean enabled);
    }
 
    private HandlerManager eventBus;
@@ -107,9 +115,14 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
     */
    public void onShowRestServicesDiscovery(ShowRestServicesDiscoveryEvent event)
    {
+      if (dispaly != null)
+      {
+         dispaly.closeView();
+      }
+
       Display d = new RestServicesDiscoveryForm(eventBus);
 
-      bundDisplay(d);
+      bindDisplay(d);
 
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       handlers.addHandler(RestServicesReceivedEvent.TYPE, this);
@@ -120,12 +133,8 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    /**
     * @param d
     */
-   private void bundDisplay(Display d)
+   private void bindDisplay(Display d)
    {
-      if (dispaly != null)
-      {
-         dispaly.closeView();
-      }
 
       dispaly = d;
 
@@ -147,7 +156,9 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
             if (event.getTarget() instanceof RestService)
             {
                RestService service = (RestService)event.getTarget();
-               System.out.println("Full path = " + service.getFullPath());
+               if (currentRestService == service)
+                  return;
+
                if (services.containsKey(service.getFullPath()))
                   updateResourceWadl(service);
             }
@@ -178,6 +189,10 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    {
       dispaly.setRequestType("");
       dispaly.setResponseType("");
+      dispaly.getParametersListGrid().setValue(new ArrayList<Param>());
+      dispaly.setParametersListGridVisible(false);
+      dispaly.setRequestFieldVisible(false);
+      dispaly.setResponseFieldVisible(false);
    }
 
    /**
@@ -185,19 +200,47 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
     */
    private void updateMethodInfo(Method method)
    {
-      if (method.getRequest() != null) 
+      if (method.getRequest() != null)
       {
-         if(!method.getRequest().getRepresentation().isEmpty())
-          dispaly.setRequestType(method.getRequest().getRepresentation().get(0).getMediaType());
+         if (!method.getRequest().getRepresentation().isEmpty())
+         {
+            dispaly.setRequestFieldVisible(true);
+            dispaly.setRequestFieldEnabled(true);
+            dispaly.setRequestType(method.getRequest().getRepresentation().get(0).getMediaType());
+         }
+         else
+         {
+            dispaly.setRequestType("n/a");
+            dispaly.setRequestFieldVisible(true);
+            dispaly.setRequestFieldEnabled(false);
+         }
+         dispaly.setParametersListGridVisible(true);
+         dispaly.setParametersListGridEnabled(!method.getRequest().getParam().isEmpty());
          dispaly.getParametersListGrid().setValue(method.getRequest().getParam());
+
       }
       else
-         dispaly.setRequestType("");
+      {
+         dispaly.setRequestType("n/a");
+         dispaly.getParametersListGrid().setValue(new ArrayList<Param>());
+         dispaly.setParametersListGridVisible(true);
+         dispaly.setParametersListGridEnabled(false);
+         dispaly.setRequestFieldVisible(true);
+         dispaly.setRequestFieldEnabled(false);
+      }
 
       if (method.getResponse() != null && !method.getResponse().getRepresentationOrFault().isEmpty())
+      {
+         dispaly.setResponseFieldVisible(true);
+         dispaly.setResponseFieldEnabled(true);
          dispaly.setResponseType(method.getResponse().getRepresentationOrFault().get(0).getMediaType());
+      }
       else
-         dispaly.setResponseType("");
+      {
+         dispaly.setResponseType("n/a");
+         dispaly.setResponseFieldVisible(true);
+         dispaly.setResponseFieldEnabled(false);
+      }
    }
 
    /**
@@ -237,7 +280,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       Map<String, RestService> list2Tree = list2Tree(services.values());
       try
       {
-         dispaly.getTreeGrid().setRootValue(list2Tree.values().iterator().next());
+         dispaly.getTreeGrid().setRootValue(list2Tree.values().iterator().next(), services.keySet());
       }
       catch (Exception e)
       {
@@ -326,7 +369,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       if (event.getException() == null)
       {
          WadlApplication a = event.getApplication();
-         System.out.println(a.getResources().getResource().get(0).getPath());
          dispaly.getTreeGrid()
             .setPaths(currentRestService, a.getResources().getResource().get(0).getMethodOrResource());
       }

@@ -57,6 +57,8 @@ public class RestServiceParameterListGrid extends ListGrid<Param>
       fieldGroup.setHidden(true);
       setGroupStartOpen(GroupStartOpen.ALL);
       setGroupByField(GROUP);
+      
+      setEmptyMessage("Method has no parameters.");
 
       setFields(fieldName, fieldType, fieldDefault, fieldGroup);
       setData(new ListGridRecord[0]);
@@ -83,7 +85,7 @@ public class RestServiceParameterListGrid extends ListGrid<Param>
              paramType = "Plain ";
             break;
          case TEMPLATE :
-             paramType = "Template ";
+             paramType = "Path ";
             break;
          case MATRIX :
              paramType = "Matrix";

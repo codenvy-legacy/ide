@@ -21,18 +21,19 @@ package org.exoplatform.ide.client.restdiscovery;
 import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
@@ -55,8 +56,6 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
 
    private static String ID_OK = "ideRestServiceDiscoveryOkButton";
 
-   //   private RestServiceListGrid listGrid;
-
    private RestServiceTreeGrid treeGrid;
 
    private IButton okButton;
@@ -65,9 +64,9 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
 
    private HLayout hLayout;
 
-   private StaticTextItem requestType;
+   private TextField requestType;
 
-   private StaticTextItem responseType;
+   private TextField responseType;
 
    private RestServiceParameterListGrid parameters;
 
@@ -97,8 +96,9 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       createButtons(vLayout);
       createInfoForm(hLayout);
       show();
-      //      redraw();
 
+      UIHelper.setAsReadOnly(requestType.getName());
+      UIHelper.setAsReadOnly(responseType.getName());
       addCloseClickHandler(new CloseClickHandler()
       {
 
@@ -118,6 +118,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       vL.setMembersMargin(3);
       vL.setShowEdges(true);
       vL.setEdgeSize(1);
+      vL.setOverflow(Overflow.AUTO);
       DynamicForm form = new DynamicForm();
       form.setID("ideRestServiceDiscoveryForm");
       form.setAlign(Alignment.LEFT);
@@ -126,11 +127,17 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       form.setPadding(5);
       form.setTitleWidth(20);
 
-      requestType = new StaticTextItem();
+      requestType = new TextField();
       requestType.setTitle("<nobr>Request media type</nobr>");
+      requestType.setName("ideRequestType");
+      requestType.setWidth(200);
 
-      responseType = new StaticTextItem();
+      requestType.setVisible(false);
+
+      responseType = new TextField("ideResponseType");
       responseType.setTitle("<nobr>Response media type<nobr>");
+      responseType.setVisible(false);
+      responseType.setWidth(200);
 
       parameters = new RestServiceParameterListGrid();
       parameters.setID("ideRestServiceDiscoveryParameters");
@@ -138,6 +145,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       parameters.setHeight100();
       parameters.setShowEdges(false);
       parameters.setMargin(3);
+      parameters.setVisible(false);
 
       form.setFields(requestType, responseType);
       vL.addMember(form);
@@ -152,8 +160,8 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
    @Override
    protected void onDestroy()
    {
-      eventBus.fireEvent(new ViewClosedEvent(ID));
       super.onDestroy();
+      eventBus.fireEvent(new ViewClosedEvent(ID));
    }
 
    /**
@@ -164,9 +172,8 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       treeGrid = new RestServiceTreeGrid();
       treeGrid.setShowResizeBar(true);
       //      treeGrid.setWidth(250);
-      treeGrid.setWidth("40%");
+      treeGrid.setWidth("30%");
       treeGrid.setHeight100();
-
       layout.addMember(treeGrid);
 
    }
@@ -222,24 +229,6 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
    }
 
    /**
-    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#getRequestField()
-    */
-   public HasValue<String> getRequestField()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#getResponseField()
-    */
-   public HasValue<String> getResponseField()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   /**
     * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#setRequestType(java.lang.String)
     */
    public void setRequestType(String value)
@@ -263,4 +252,62 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       return parameters;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#setResponseFieldVisible(boolean)
+    */
+   public void setResponseFieldVisible(boolean b)
+   {
+      responseType.setShowTitle(b);
+      responseType.setVisible(b);
+      UIHelper.setAsReadOnly(responseType.getName());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#setRequestFieldVisible(boolean)
+    */
+   public void setRequestFieldVisible(boolean b)
+   {
+      requestType.setShowTitle(b);
+      requestType.setVisible(b);
+      UIHelper.setAsReadOnly(requestType.getName());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#setParametersListGridVisible(boolean)
+    */
+   public void setParametersListGridVisible(boolean b)
+   {
+      parameters.setVisible(b);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#setParametersListGridEnabled(boolean)
+    */
+   public void setParametersListGridEnabled(boolean enabled)
+   {
+      if (enabled)
+         parameters.enable();
+      else
+         parameters.disable();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#setResponseFieldEnabled(boolean)
+    */
+   public void setResponseFieldEnabled(boolean enabled)
+   {
+      UIHelper.setAsReadOnly(responseType.getName());
+      responseType.setDisabled(!enabled);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#setRequestFieldEnabled(boolean)
+    */
+   public void setRequestFieldEnabled(boolean enabled)
+   {
+      //      requestType.setShowDisabled(enabled);
+      requestType.setDisabled(!enabled);
+      UIHelper.setAsReadOnly(requestType.getName());
+
+   }
 }

@@ -19,9 +19,10 @@
 package org.exoplatform.ide.client.restdiscovery;
 
 import java.util.List;
+import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.wadl.Method;
-import org.exoplatform.gwtframework.commons.wadl.Param;
+import org.exoplatform.gwtframework.commons.wadl.Request;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.data.FolderOpenedHandlerImpl;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.data.SelectionHandlerImpl;
@@ -34,6 +35,7 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.smartgwt.client.types.TreeModelType;
+import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeGridField;
@@ -61,6 +63,8 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
 
    private static final String ID = "ideRestServiceTreeGrid";
 
+   private Set<String> restClassPaths;
+
    public RestServiceTreeGrid()
    {
       setID(ID);
@@ -82,15 +86,15 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
       setShowHeader(false);
       TreeGridField nameField = new TreeGridField(TITLE, 150);
       nameField.setWidth("100%");
-
       //TODO
       //This field need for selenium.
       //We can't select tree node, if click on first column.
       //If you click on second column - tree item is selected.
-      //      TreeGridField mockField = new TreeGridField("mock");
-      //      mockField.setWidth(3);
-      //      mockField.setHidden(true);
-      setFields(nameField);
+      TreeGridField mockField = new TreeGridField("mock");
+      mockField.setWidth(3);
+      mockField.setHidden(true);
+      setDefaultFields(new ListGridField[]{nameField, mockField});
+//      setFields(nameField, mockField);
       setFixedFieldWidths(false);
 
    }
@@ -99,8 +103,9 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
     * @see org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid#doUpdateValue()
     */
 
-   public void setRootValue(RestService item)
+   public void setRootValue(RestService item, Set<String> restClassPaths)
    {
+      this.restClassPaths = restClassPaths;
       for (RestService rs : item.getChildServices().values())
       {
          addRestService(rootNode, rs);
@@ -124,7 +129,11 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
       node.setAttribute(TITLE, children.getPath());
       node.setAttribute(getValuePropertyName(), children);
       node.setIsFolder(true);
-
+      node.setIcon(Images.MainMenu.GET_URL);
+      if (restClassPaths.contains(children.getFullPath()))
+      {
+         node.setIcon(Images.RestService.CLASS);
+      }
       tree.add(node, parentNode);
 
       for (RestService rs : children.getChildServices().values())
@@ -155,7 +164,7 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
             }
             newNode.setAttribute(TITLE, title);
             newNode.setAttribute(getValuePropertyName(), r);
-            //            newNode.setIcon(Images.RestService.REST_SERVICE);
+            newNode.setIcon(Images.RestService.RESOURCE);
 
             tree.add(newNode, parentNode);
 
@@ -167,6 +176,16 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
          if (o instanceof Method)
          {
             Method m = (Method)o;
+            if (m.getRequest() == null)
+               m.setRequest(new Request());
+            Object re = parentNode.getAttributeAsObject(getValuePropertyName());
+            if (re instanceof Resource)
+            {
+               Resource res = (Resource)re;
+
+               if (res != null)
+                  m.getRequest().getParam().addAll(res.getParam());
+            }
             TreeNode newNode = new TreeNode(m.getName());
             newNode.setIcon(Images.RestService.METHOD);
             String title = m.getName();

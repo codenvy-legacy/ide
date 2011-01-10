@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.restdiscovery;
 
 import java.util.List;
+import java.util.Set;
 
 import org.exoplatform.ide.client.model.discovery.marshal.RestService;
 
@@ -35,7 +36,7 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
  */
 public interface UntypedTreeGrid extends HasOpenHandlers<Object>, HasSelectionHandlers<Object>, HasClickHandlers
 {
-   void setRootValue(RestService item);
+   void setRootValue(RestService item, Set<String> restClassPath);
 
    void setPaths(RestService service, List<?> list);
 }

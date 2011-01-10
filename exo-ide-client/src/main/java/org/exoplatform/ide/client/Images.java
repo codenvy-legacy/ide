@@ -46,13 +46,13 @@ public interface Images
       /*
        * FILE
        */
-      
+
       public interface File
       {
 
          public static final String OPEN_LOCAL_FILE = IMAGE_URL + "bundled/file/open_local_file.png";
-         
-         public static final String OPEN_FILE_BY_PATH = IMAGE_URL + "bundled/file/open_file_by_path.png";         
+
+         public static final String OPEN_FILE_BY_PATH = IMAGE_URL + "bundled/file/open_file_by_path.png";
 
          public static final String UPLOAD = IMAGE_URL + "bundled/file/upload.png";
 
@@ -103,7 +103,7 @@ public interface Images
       public static final String XML = IMAGE_URL + "filetype/xml.png";
 
       public static final String GROOVY = IMAGE_URL + "filetype/groovy.png";
-      
+
       public static final String REST_SERVICE = IMAGE_URL + "filetype/rest.png";
 
       public static final String JAVASCRIPT = IMAGE_URL + "filetype/javascript.gif";
@@ -115,12 +115,12 @@ public interface Images
       public static final String FOLDER = IMAGE_URL + "filetype/folder_closed.png";
 
       public static final String UWA_WIDGET = IMAGE_URL + "filetype/uwa-widget.png";
- 
-      public static final String JSON = IMAGE_URL + "filetype/json.png";      
-      
+
+      public static final String JSON = IMAGE_URL + "filetype/json.png";
+
       // TODO add appropriate icon 
-      public static final String GROOVY_TEMPLATE = IMAGE_URL + "filetype/gtmpl.png";      
-      
+      public static final String GROOVY_TEMPLATE = IMAGE_URL + "filetype/gtmpl.png";
+
       public static final String CHROMATTIC = IMAGE_URL + "filetype/chromattic.png";
 
    }
@@ -157,16 +157,16 @@ public interface Images
 
    }
 
-//   public interface RepositoryService
-//   {
-//
-//      public static final String SERVICE = imageUrl + "repository/service.png";
-//
-//      public static final String REPOSITORY = imageUrl + "repository/repository.png";
-//
-//      public static final String WORKSPACE = imageUrl + "repository/workspace.png";
-//
-//   }
+   //   public interface RepositoryService
+   //   {
+   //
+   //      public static final String SERVICE = imageUrl + "repository/service.png";
+   //
+   //      public static final String REPOSITORY = imageUrl + "repository/repository.png";
+   //
+   //      public static final String WORKSPACE = imageUrl + "repository/workspace.png";
+   //
+   //   }
 
    public interface Dialogs
    {
@@ -174,25 +174,25 @@ public interface Images
       public static final String ASK = IMAGE_URL + "dialog/ask.png";
 
    }
-   
+
    public interface Outline
    {
       public static final String FUNCTION_ITEM = IMAGE_URL + "outline/function-item.png";
-      
+
       public static final String VAR_ITEM = IMAGE_URL + "outline/var-item.png";
-      
+
       public static final String METHOD_ITEM = IMAGE_URL + "outline/method-item.png";
-      
+
       public static final String PROPERTY_ITEM = IMAGE_URL + "outline/property-item.png";
-      
+
       public static final String TAG_ITEM = IMAGE_URL + "outline/tag.png";
-      
+
       public static final String CDATA_ITEM = IMAGE_URL + "outline/cdata-item.png";
-      
+
       public static final String GROOVY_TAG_ITEM = IMAGE_URL + "outline/groovy-tag.png";
-      
+
       public static final String CLASS_ITEM = IMAGE_URL + "outline/class-item.png";
-      
+
       public static final String PRIVATE_METHOD = IMAGE_URL + "outline/private-method.png";
 
       public static final String PUBLIC_METHOD = IMAGE_URL + "outline/public-method.png";
@@ -200,7 +200,7 @@ public interface Images
       public static final String PROTECTED_METHOD = IMAGE_URL + "outline/protected-method.png";
 
       public static final String DEFAULT_METHOD = IMAGE_URL + "outline/default-method.png";
-   
+
       public static final String PRIVATE_FIELD = IMAGE_URL + "outline/private-field.png";
 
       public static final String PUBLIC_FIELD = IMAGE_URL + "outline/public-field.png";
@@ -217,31 +217,25 @@ public interface Images
 
       public static final String ERROR_ITEM = IMAGE_URL + "outline/error.png";
    }
-   
+
    public interface Versioning
    {
 
       public static final String RESTORE_VERSION = IMAGE_URL + "versioning/restore_version.png";
-      
+
       public static final String OPEN_VERSION = IMAGE_URL + "versioning/open_version.png";
 
    }
-   
+
    public interface RestService
    {
-      public static final String REST_SERVICE = IMAGE_URL + "restservice/rest-service.png";
+      public static final String CLASS = IMAGE_URL + "restservice/resource.png";
       
-      public static final String IN = IMAGE_URL + "restservice/in.png";
-      
-      public static final String OUT   = IMAGE_URL + "restservice/out.png";
-      
-      public static final String METHOD   = IMAGE_URL + "restservice/method.png";
-      
-      public static final String PARAMETER   = IMAGE_URL + "restservice/parameter.png";
-      
-      public static final String VAR   = IMAGE_URL + "restservice/var.png";
+      public static final String RESOURCE = IMAGE_URL + "restservice/parameter.png";
+
+      public static final String METHOD = IMAGE_URL + "restservice/var.png";
    }
-   
+
    public interface Editor
    {
 
