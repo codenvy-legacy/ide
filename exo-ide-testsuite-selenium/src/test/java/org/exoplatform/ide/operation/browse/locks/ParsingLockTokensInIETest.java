@@ -20,8 +20,6 @@ package org.exoplatform.ide.operation.browse.locks;
 
 import static org.junit.Assert.assertFalse;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -29,18 +27,18 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
- * Created by The eXo Platform SAS .
+ * Run this test in IE to test bug http://jira.exoplatform.org/browse/IDE-425.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 11, 2010 $
  *
  */
-//Run this test in IE to test bug http://jira.exoplatform.org/browse/IDE-425
-public class ParsingLockTokensInIETest extends BaseTest
+public abstract class ParsingLockTokensInIETest extends BaseTest
 {
  
  private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
@@ -49,7 +47,6 @@ public class ParsingLockTokensInIETest extends BaseTest
 
    private static String FILE_NAME = "lhntklshbadsygfbolthg";
    
-   @Ignore
    @Test
    public void testParsingLockTokensInIE() throws Exception
    {

@@ -21,8 +21,6 @@ package org.exoplatform.ide.operation.file;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -32,20 +30,21 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
- * Created by The eXo Platform SAS.
+ * TODO: doesn't work on windows, because double click is used.
+ * 
+ * IDE-109 Open file with non-default editor.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  *
  */
-public class OpenFileWithNonDefaultEditorTest extends BaseTest
+public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
 {
-   //TODO: doesn't work on windows, because double click is used
-   //IDE-109 Open file with non-default editor.
-   
    private static String FOLDER_NAME =OpenFileWithNonDefaultEditorTest.class.getSimpleName() ;
    
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
@@ -78,7 +77,6 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       }
    }
    
-   @Ignore
    @Test
    public void testOpenFileWithNonDefaultEditor() throws Exception
    {      
@@ -199,7 +197,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       
       //step 12
       closeFileTab(0);
-      doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);  // TODO doesn't work under the Linux
+      doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);  // TODO doesn't work under the Windows
       Thread.sleep(TestConstants.SLEEP);
       checkCodeEditorOpened(0);
       

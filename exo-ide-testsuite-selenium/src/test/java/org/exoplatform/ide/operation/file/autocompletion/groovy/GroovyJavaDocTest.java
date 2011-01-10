@@ -18,30 +18,26 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion.groovy;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Created by The eXo Platform SAS.
+ * TODO: ignore this test until we consider how receive javadoc for methods with generic parameters.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 8, 2010 4:03:58 PM evgen $
  *
  */
 
-@Ignore
-public class GroovyJavaDocTest extends BaseTest
+public abstract class GroovyJavaDocTest extends BaseTest
 {
    
    @Test
-   //ignore this test until we consider how receive javadoc for methods with generic parameters  
-   @Ignore
    public void testGroovyJavaDoc() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
