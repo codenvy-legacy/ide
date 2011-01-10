@@ -19,11 +19,21 @@
 package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
+import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.Utils;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.operation.restservice.RESTServiceDefaultHTTPParametersTest;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -36,9 +46,56 @@ import org.junit.Test;
 public class RestServicesDiscoveryTest extends BaseTest
 {
 
+   private final static String FILE_NAME = "Rest.grs";
+
+   private final static String TEST_FOLDER = RESTServiceDefaultHTTPParametersTest.class.getSimpleName();
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + TEST_FOLDER + "/";
+
+   @BeforeClass
+   public static void setUp()
+   {
+
+      String filePath = "src/test/resources/org/exoplatform/ide/miscellaneous/rest_service_discovery.groovy";
+      try
+      {
+         //**************TODO***********change add folder for locked file
+         VirtualFileSystemUtils.mkcol(URL);
+         //***********************************************************
+
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
+         Thread.sleep(TestConstants.SLEEP_SHORT);
+         Utils.deployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+      catch (InterruptedException e)
+      {
+         e.printStackTrace();
+      }
+   }
+
    @Test
    public void testRestServicesDiscovery() throws Exception
    {
+      Thread.sleep(TestConstants.SLEEP);
+      selectItemInWorkspaceTree(WS_NAME);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      openOrCloseFolder(TEST_FOLDER);
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      Thread.sleep(TestConstants.SLEEP);
+
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().runCommand(MenuCommands.Help.HELP, MenuCommands.Help.REST_SERVICES);
       Thread.sleep(TestConstants.SLEEP);
@@ -46,19 +103,83 @@ public class RestServicesDiscoveryTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideRestServiceDiscovery\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideRestServiceDiscoveryOkButton\"]/"));
 
-      openNode(3, 0);
+      assertEquals("/aa", getTitle(0, 0));
 
-      assertEquals("/ide/class-info-storage/jar", getTitle(5, 0));
+      openNode(0, 0);
 
-      openNode(5, 0);
-      openNode(6, 0);
-      openNode(7, 0);
-      assertEquals("Query Param", getTitle(7, 0));
-      assertEquals("POST", getTitle(6, 0));
-      assertEquals("jar-path:string", getTitle(8, 0));
-      assertEquals("package:string", getTitle(9, 0));
+      openNode(1, 0);
+
+      assertEquals("/testService11", getTitle(1, 0));
+
+      //      assertEquals("/Inner/{pathParam}", selenium.getText("scLocator=//TreeGrid[ID=\"ideRestServiceTreeGrid\"]/body/row[2]/col[0]"));
+      assertEquals("/Inner/{pathParam}", getTitle(2, 0));
+
+      openNode(2, 0);
+
+      assertEquals("GET", getTitle(3, 0));
+
+      assertEquals("POST", getTitle(4, 0));
+
+      assertEquals("OPTIONS", getTitle(5, 0));
+
+      //      clickNode(1);
+
+      assertFalse(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/"));
+      assertFalse(selenium
+         .isElementPresent("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideResponseType]/element"));
+      assertFalse(selenium
+         .isElementPresent("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideRequestType]/element"));
+
+      clickNode(3);
+
+      assertEquals("application/xml",
+         selenium
+            .getValue("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideRequestType]/element"));
+
+      assertEquals("*/*",
+         selenium
+            .getValue("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideResponseType]/element"));
+
+      assertTrue(selenium
+         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=Test-Header]/col[0]"));
+      assertTrue(selenium
+         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=TestQueryParam%201]/col[0]"));
+      assertTrue(selenium
+         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=pathParam||default=pathParam%20Default]/col[0]"));
+
+      clickNode(5);
+      
+      assertEquals("n/a",
+         selenium
+            .getValue("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideRequestType]/element"));
+
+      assertEquals("application/vnd.sun.wadl+xml",
+         selenium
+            .getValue("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideResponseType]/element"));
+
+      assertFalse(selenium
+         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=Test-Header]/col[0]"));
+      assertFalse(selenium
+         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=TestQueryParam%201]/col[0]"));
+      assertFalse(selenium
+         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=pathParam||default=pathParam%20Default]/col[0]"));
+      assertTrue(selenium.isElementPresent("//input[@name='ideRequestType' and @class='textItemDisabled']"));
+      selenium.click("scLocator=//IButton[ID=\"ideRestServiceDiscoveryOkButton\"]/");
 
    }
+
+   /**
+    * click the outline item node
+    * @param rowNumber startign from 0
+    * @throws Exception
+    */
+   protected static void clickNode(int rowNumber) throws Exception
+   {
+      selenium.click("scLocator=//TreeGrid[ID=\"ideRestServiceTreeGrid\"]/body/row[" + String.valueOf(rowNumber)
+         + "]/col[0]");
+      Thread.sleep(TestConstants.SLEEP);
+   }
+
    /**
     * @throws InterruptedException
     */
@@ -73,6 +194,24 @@ public class RestServicesDiscoveryTest extends BaseTest
    {
       return selenium.getText("scLocator=//TreeGrid[ID=\"ideRestServiceTreeGrid\"]/body/row[" + String.valueOf(row)
          + "]/col[" + String.valueOf(col) + "]");
+   }
+
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
+         VirtualFileSystemUtils.delete(URL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
 
 }
