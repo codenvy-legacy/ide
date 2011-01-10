@@ -26,6 +26,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Dialogs;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -135,13 +136,13 @@ public class RenameOpenedFileTest extends BaseTest
 
       typeTextIntoEditor(0, "change content");
       saveCurrentFile();
-      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
+      assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
 
       refresh();
       
       typeTextIntoEditor(0, "cookies cookies cookies cookies !!!111");
       saveCurrentFile();
-      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
+      assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
    }
 
 }

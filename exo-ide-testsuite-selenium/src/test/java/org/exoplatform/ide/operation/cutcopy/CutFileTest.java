@@ -32,6 +32,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Dialogs;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,20 +45,11 @@ import org.junit.Test;
  */
 public class CutFileTest extends BaseTest
 {
-   /**
-    * 
-    */
    private static final String FILE_NAME_1 = "CutFileTest.txt";
 
-   /**
-    * 
-    */
-   private static final String FOLDER_NAME_2 = "CutFileTest2";
-
-   /**
-    * 
-    */
-   private static final String FOLDER_NAME_1 = "CutFileTest1";
+   private static final String FOLDER_NAME_1 = CutFileTest.class.getSimpleName() + "-1";
+   
+   private static final String FOLDER_NAME_2 = CutFileTest.class.getSimpleName() + "-2";
 
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
@@ -85,129 +77,6 @@ public class CutFileTest extends BaseTest
       }
    }
    
-   
-   //IDE-114
-   @Test
-   public void testCutFile() throws Exception
-   {
-      Thread.sleep(TestConstants.IDE_INITIALIZATION_PERIOD);
-
-      //      Open Server window and create next folders' structure in the workspace root: 
-      //      "test 1/gadget.xml" file with sample content
-      //      "test 2/gadget.xml" file with sample content
-      String oldText = RANDOM_CONTENT; 
-      
-      selectItemInWorkspaceTree(WS_NAME);
-      
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-
-      openOrCloseFolder(FOLDER_NAME_1);
-
-      selectItemInWorkspaceTree(FOLDER_NAME_2);
-
-      //      Open Gadget window, open files "test 1/gadget.xml".
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
-
-      checkPaste(false);
-      
-      checkMenuCutCopy(true);
-
-      selectItemInWorkspaceTree(FILE_NAME_1);
-
-      checkPaste(false);
-
-      checkMenuCutCopy(true);
-
-      selectItemInWorkspaceTree(FILE_NAME_1);
-
-      //    Call the "Edit->Cut Items" topmenu command.
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
-
-      checkPaste(true);
-
-      selectItemInWorkspaceTree(FOLDER_NAME_1);
-
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/headerLabel/"));
-      assertTrue(selenium.isTextPresent("Can't move items in the same directory!"));
-      assertTrue(selenium.isTextPresent("OK"));
-
-      selenium.mouseDownAt("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/", "");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      selenium.mouseUpAt("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/", "");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      checkPaste(true);
-
-      openOrCloseFolder(FOLDER_NAME_1);
-
-      selectItemInWorkspaceTree(FOLDER_NAME_2);
-
-      //      Select "test 2" folder item in the Workspace Panel and then select "Edit->Paste Items" topmenu command.
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
-
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/headerLabel/"));
-      assertTrue(selenium.isTextPresent("412 Precondition Failed"));
-      assertTrue(selenium.isTextPresent("Precondition Failed"));
-      assertTrue(selenium.isTextPresent("OK"));
-
-      selenium.mouseDownAt("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/", "");
-      selenium.mouseUpAt("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/", "");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      checkPaste(true);
-
-      //      Select root item and then click on "Paste" toolbar button.
-      selectRootOfWorkspaceTree();
-
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
-      
-      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(URL + FOLDER_NAME_1 + "/" + FILE_NAME_1).getStatusCode());
-      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FILE_NAME_1).getStatusCode());
-      selectItemInWorkspaceTree(FILE_NAME_1);
-
-      String openedFileContent = getTextFromCodeEditor(0);
-      assertEquals(oldText, openedFileContent);
-
-      checkPaste(false);
-
-      //      Change content of opened file "gadget.xml" in Content Panel, click on "Ctrl+S" hot key, close file tab and open file "gadget.xml".
-      typeTextIntoEditor(0, "IT`s CHANGE!!!");
-      
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      String oldText1 = getTextFromCodeEditor(0);
-
-      IDE.toolbar().runCommand(ToolbarCommands.File.SAVE);
-      
-      IDE.editor().closeTab(0);
-      
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
-
-      assertEquals(oldText1, getTextFromCodeEditor(0));
-   }
-
-   /**
-    * @throws Exception
-    */
-   private void checkPaste(boolean enabled) throws Exception
-   {
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, enabled);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, enabled);
-   }
-
-   /**
-    * @throws Exception
-    */
-   private void checkMenuCutCopy(boolean enabled) throws Exception
-   {
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, enabled);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, enabled);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, enabled);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, enabled);
-   }
-
-   
    @AfterClass
    public static void tearDown()
    {
@@ -215,8 +84,6 @@ public class CutFileTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME_1);
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME_2);
-        
-         IDE.editor().closeTab(0);
          VirtualFileSystemUtils.delete(URL + FILE_NAME_1);
       }
       catch (IOException e)
@@ -231,6 +98,111 @@ public class CutFileTest extends BaseTest
       {
          e.printStackTrace();
       } 
+   }
+   
+   
+   //IDE-114
+   @Test
+   public void testCutFile() throws Exception
+   {
+      waitForRootElement();
+      selectRootOfWorkspaceTree();
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+
+      selectItemInWorkspaceTree(FOLDER_NAME_1);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+
+      selectItemInWorkspaceTree(FOLDER_NAME_2);
+
+      //Open files "test 1/gadget.xml".
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+
+      checkPasteCommands(false);
+      checkCutCopyCommands(true);
+
+      selectItemInWorkspaceTree(FILE_NAME_1);
+
+      checkPasteCommands(false);
+      checkCutCopyCommands(true);
+
+      selectItemInWorkspaceTree(FILE_NAME_1);
+
+      //Call the "Edit->Cut Items" topmenu command.
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
+      checkPasteCommands(true);
+
+      selectItemInWorkspaceTree(FOLDER_NAME_1);
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      
+      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
+      assertTrue(selenium.isTextPresent("Can't move items in the same directory!"));
+      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
+
+      IDE.dialogs().clickOkButton();
+
+      checkPasteCommands(true);
+
+      openOrCloseFolder(FOLDER_NAME_1);
+
+      selectItemInWorkspaceTree(FOLDER_NAME_2);
+
+      //Select "test 2" folder item in the Workspace Panel and then select "Edit->Paste Items" topmenu command.
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+
+      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
+      assertTrue(selenium.isTextPresent("412 Precondition Failed"));
+      assertTrue(selenium.isTextPresent("Precondition Failed"));
+      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
+
+      IDE.dialogs().clickOkButton();
+
+      checkPasteCommands(true);
+
+      //Select root item and then click on "Paste" toolbar button.
+      selectRootOfWorkspaceTree();
+
+      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      
+      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(URL + FOLDER_NAME_1 + "/" + FILE_NAME_1).getStatusCode());
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FILE_NAME_1).getStatusCode());
+      selectItemInWorkspaceTree(FILE_NAME_1);
+
+      assertEquals(RANDOM_CONTENT, getTextFromCodeEditor(0));
+
+      checkPasteCommands(false);
+
+      //Change content of opened file "gadget.xml" in Content Panel, click on "Ctrl+S" hot key, 
+      //close file tab and open file "gadget.xml".
+      typeTextIntoEditor(0, "IT`s CHANGE!!!");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      final String oldText = getTextFromCodeEditor(0);
+
+      IDE.toolbar().runCommand(ToolbarCommands.File.SAVE);
+      IDE.editor().closeTab(0);
+      
+      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+      assertEquals(oldText, getTextFromCodeEditor(0));
+   }
+
+   /**
+    * @throws Exception
+    */
+   private void checkPasteCommands(boolean enabled) throws Exception
+   {
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, enabled);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, enabled);
+   }
+
+   /**
+    * @throws Exception
+    */
+   private void checkCutCopyCommands(boolean enabled) throws Exception
+   {
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, enabled);
+      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, enabled);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, enabled);
+      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, enabled);
    }
 
 }

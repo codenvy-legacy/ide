@@ -23,6 +23,7 @@ package org.exoplatform.ide;
 import org.exoplatform.ide.core.Dialogs;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.Menu;
+import org.exoplatform.ide.core.Navigator;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Toolbar;
 
@@ -50,6 +51,8 @@ public class IDE
    private Outline outline;
    
    private Dialogs dialogs;
+   
+   private Navigator navigator;
 
    public IDE(Selenium selenium)
    {
@@ -57,9 +60,10 @@ public class IDE
 
       menu = new Menu(selenium);
       toolbar = new Toolbar(selenium);
-      editor = new Editor(selenium);
+      editor = new Editor(selenium, this);
       outline = new Outline(selenium);
       dialogs = new Dialogs(selenium);
+      navigator = new Navigator(selenium);
    }
 
    public Menu menu()
@@ -90,6 +94,16 @@ public class IDE
    public Dialogs dialogs()
    {
       return dialogs;
+   }
+   
+   /**
+    * Get the navigator element.
+    * 
+    * @return {@link Navigator}
+    */
+   public Navigator navigator()
+   {
+      return navigator;
    }
 
 }

@@ -43,6 +43,11 @@ public interface TestConstants
    public static final int SLEEP = 3000;
 
    public static final int SLEEP_SHORT = 500;
+   
+   /**
+    * Period to wait for element present.
+    */
+   public static final int WAIT_PERIOD = 60;
          
    /**
     *Realm for GateIn gatein-domain

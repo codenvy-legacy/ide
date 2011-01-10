@@ -30,6 +30,7 @@ import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.common.http.client.ProtocolNotSuppException;
+import org.exoplatform.ide.core.Navigator;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.exoplatform.ide.utils.InternetExplorerUtil;
 import org.exoplatform.ide.utils.TextUtil;
@@ -1439,23 +1440,63 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.SLEEP);
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
+      //Wait while "dev-monit" appears in navigation tree.
+      //
+      //Sometimes, test fails, becouse after refresh not all 
+      //elements are appears in SLEEP tile.
+      //Thats why, wait for WAIT_PERIOD for root element
+      //of navigation tree.
+      waitForElementPresent(Navigator.Locators.SC_ROOT_OF_NAVIGATION_TREE);
       Thread.sleep(TestConstants.SLEEP);
+   }
+   
+   /**
+    * Wait while element present in IDE.
+    * 
+    * @param locator - element locator
+    * @throws Exception
+    */
+   public void waitForElementPresent(String locator) throws Exception
+   {
+      for (int second = 0;; second++)
+      {
+         if (second >= TestConstants.WAIT_PERIOD)
+            fail("timeout for element " + locator);
+
+         if (selenium.isElementPresent(locator))
+            break;
+
+         Thread.sleep(TestConstants.REDRAW_PERIOD * 2);
+      }
+   }
+   
+   /**
+    * Wait while root element of navigation tree appears.
+    */
+   public void waitForRootElement() throws Exception
+   {
+      waitForElementPresent(Navigator.Locators.SC_ROOT_OF_NAVIGATION_TREE);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
    
    @AfterFailure
-   public void captureScreenShotOnFailure(Throwable failure) {
-       // Get test method name
-       String testMethodName = null;
-       for (StackTraceElement stackTrace : failure.getStackTrace()) {
-           if (stackTrace.getClassName().equals(this.getClass().getName())) {
-               testMethodName = stackTrace.getMethodName();
-               break;
-           }
-       }
-       
-       selenium.captureScreenshot("screenshots/" + this.getClass().getName() + "."
-                                  + testMethodName + ".png");
+   public void captureScreenShotOnFailure(Throwable failure)
+   {
+      // Get test method name
+      String testMethodName = null;
+      for (StackTraceElement stackTrace : failure.getStackTrace())
+      {
+         if (stackTrace.getClassName().equals(this.getClass().getName()))
+         {
+            testMethodName = stackTrace.getMethodName();
+            break;
+         }
+      }
+
+      selenium.captureScreenshot("screenshots/" + this.getClass().getName() + "." + testMethodName + ".png");
    }
    
    /**

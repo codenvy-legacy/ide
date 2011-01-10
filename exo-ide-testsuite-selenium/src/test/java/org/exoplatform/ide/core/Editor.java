@@ -25,6 +25,7 @@ import static org.junit.Assert.fail;
 
 import com.thoughtworks.selenium.Selenium;
 
+import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.SaveFileUtils;
 import org.exoplatform.ide.TestConstants;
@@ -44,10 +45,13 @@ public class Editor
 {
 
    private Selenium selenium;
+   
+   private IDE ide;
 
-   public Editor(Selenium selenium)
+   public Editor(Selenium selenium, IDE ide)
    {
       this.selenium = selenium;
+      this.ide = ide;
    }
 
    /**
@@ -126,10 +130,10 @@ public class Editor
       closeTab(tabIndex);
 
       //check is warning dialog appears
-      if (selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"))
+      if (selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG + "/header[contains(text(), 'Close file')]"))
       {
          //click No button
-         selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+         ide.dialogs().clickNoButton();
          Thread.sleep(TestConstants.SLEEP);
       }
    }

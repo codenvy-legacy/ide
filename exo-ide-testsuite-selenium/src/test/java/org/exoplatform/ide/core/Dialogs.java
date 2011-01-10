@@ -43,6 +43,8 @@ public class Dialogs
       public static final String SC_WARN_DIALOG_YES_BTN = SC_WARN_DIALOG + "/yesButton";
       
       public static final String SC_WARN_DIALOG_NO_BTN = SC_WARN_DIALOG + "/noButton";
+      
+      public static final String SC_WARN_DIALOG_OK_BTN = SC_WARN_DIALOG + "/okButton";
    }
    
    public Dialogs(Selenium selenium)
@@ -72,6 +74,28 @@ public class Dialogs
    public void clickYesButton() throws Exception
    {
       selenium.click(Dialogs.Locators.SC_WARN_DIALOG_YES_BTN);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   /**
+    * Click on No button.
+    * 
+    * @throws Exception
+    */
+   public void clickNoButton() throws Exception
+   {
+      selenium.click(Dialogs.Locators.SC_WARN_DIALOG_NO_BTN);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   /**
+    * Click on Ok button.
+    * 
+    * @throws Exception
+    */
+   public void clickOkButton() throws Exception
+   {
+      selenium.click(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 

@@ -68,18 +68,18 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       catch (IOException e)
       {
          e.printStackTrace();
+         fail("Can't create folders");
       }
       catch (ModuleException e)
       {
          e.printStackTrace();
+         fail("Can't create folders");
       }
    }
    
    @AfterClass
    public static void tearDown()
    {
-      deleteCookies();
-      cleanRegistry();
       try
       {
          VirtualFileSystemUtils.delete(SECOND_WORKSPACE_URL + TEST_FOLDER);
@@ -105,6 +105,9 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       {
          e.printStackTrace();
       }
+      
+      deleteCookies();
+      cleanRegistry();
    }
    
    //IDE-66
@@ -112,7 +115,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    @Test
    public void storeOpenedFilesHistory() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
     
       secondWorkspaceName = getNonActiveWorkspaceName();
       SECOND_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + secondWorkspaceName + "/";
@@ -204,8 +207,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       //check that files are opened and in right order.
       //check that tab with html file is selected
       assertEquals(GADGET_FILE, IDE.editor().getTabTitle(0));
-      assertTrue(IDE.editor().getTabTitle(1).equals(HTML_FILE) 
-         || IDE.editor().getTabTitle(1).equals(HTML_FILE + " *"));
+      assertTrue(IDE.editor().getTabTitle(1).equals(HTML_FILE) || IDE.editor().getTabTitle(1).equals(HTML_FILE + " *"));
       
       //select Gadget file
       IDE.editor().selectTab(0);
