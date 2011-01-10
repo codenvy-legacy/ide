@@ -30,7 +30,6 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -89,12 +88,18 @@ public class ViewVersionHistoryTest extends VersioningTest
    @Test
    public void testViewVersionHistoryButton() throws Exception
    {
+      selenium.refresh();
+      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
-      openOrCloseFolder(TEST_FOLDER);
+      // open folder
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      Thread.sleep(TestConstants.SLEEP);
       
       //Open new file:
+      selectItemInWorkspaceTree(TEST_FOLDER);      
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
       //Check there is no "View Version History" button
       checkViewVersionHistoryButtonPresent(false);
@@ -175,6 +180,10 @@ public class ViewVersionHistoryTest extends VersioningTest
       selenium.refresh();
       selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      
       //Open new file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -238,7 +247,13 @@ public class ViewVersionHistoryTest extends VersioningTest
       selenium.refresh();
       selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      openOrCloseFolder(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      
+      // open folder
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      Thread.sleep(TestConstants.SLEEP);
+      
       //Open file
       openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
       checkViewVersionHistoryButtonPresent(true);
@@ -318,7 +333,13 @@ public class ViewVersionHistoryTest extends VersioningTest
       selenium.refresh();
       selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      openOrCloseFolder(TEST_FOLDER);
+
+      // open folder
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      Thread.sleep(TestConstants.SLEEP);
+      
       //Open file
       openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
       checkViewVersionHistoryButtonPresent(true);
