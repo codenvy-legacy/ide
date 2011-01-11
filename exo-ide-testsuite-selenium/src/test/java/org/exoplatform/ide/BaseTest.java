@@ -69,8 +69,6 @@ import javax.xml.parsers.ParserConfigurationException;
 @RunWith(RCRunner.class)
 public abstract class BaseTest
 {
-   protected static Selenium selenium;
-
    protected static final String BASE_URL = IdeAddress.STANDALONE.getBaseUrl();
 
    protected static final String APPLICATION_URL = IdeAddress.STANDALONE.getApplicationUrl();
@@ -99,21 +97,16 @@ public abstract class BaseTest
 
    protected static final EnumBrowserCommand BROWSER_COMMAND = EnumBrowserCommand.CHROME;
 
-   /**
-    * Name of window with application.
-    * 
-    * Used, when selenium works with several windows
-    */
-   protected static final String PAGE_NAME = "IDE";
+   protected static final Selenium selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
    
-   protected static IDE IDE;
+   protected static final IDE IDE = new IDE(selenium);
 
    @BeforeClass
    public static void startSelenium() throws Exception
    {
       cleanDefaultWorkspace();
-      selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
-      SaveFileUtils.setSelenium(selenium);
+//      selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
+//      SaveFileUtils.setSelenium(selenium);
 
       switch (BROWSER_COMMAND)
       {
@@ -161,9 +154,9 @@ public abstract class BaseTest
          standaloneLogin(USER_NAME);
       }
       
-      IDE = new IDE(selenium);
+//      IDE = new IDE(selenium);
    }
-
+   
    protected void logout() throws Exception
    {
       if (isRunIdeUnderPortal())
@@ -597,6 +590,7 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
       openSelectedFileWithCodeEditor(checkDefault);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
    }
    
@@ -682,6 +676,7 @@ public abstract class BaseTest
    protected void saveCurrentFile() throws Exception
    {
       IDE.toolbar().runCommand(ToolbarCommands.File.SAVE);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    /**

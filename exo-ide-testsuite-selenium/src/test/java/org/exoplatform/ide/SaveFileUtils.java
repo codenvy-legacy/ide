@@ -35,9 +35,9 @@ public class SaveFileUtils
 {
    private static Selenium selenium;
    
-   static void setSelenium(Selenium s)
+   static
    {
-      selenium = s;
+      selenium = BaseTest.selenium;
    }
 
    /**

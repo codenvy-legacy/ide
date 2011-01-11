@@ -26,6 +26,9 @@ import org.exoplatform.ide.TestConstants;
 import com.thoughtworks.selenium.Selenium;
 
 /**
+ * Standard dialogs, such as warning dialogs (error, info, warn) 
+ * and operations with them.
+ * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Dec 29, 2010 $
  *
