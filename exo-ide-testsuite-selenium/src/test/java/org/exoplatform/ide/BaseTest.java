@@ -586,7 +586,7 @@ public abstract class BaseTest
     * Open file from navigation tree with code mirror.
     * 
     * @param fileName name of file in navigation tree
-    * @param checkDefault is click on checkbox "Use by default"
+    * @param checkDefault - is click on checkbox "Use by default"
     * @throws Exception
     */
    protected void openFileFromNavigationTreeWithCodeEditor(String fileName, boolean checkDefault) throws Exception
@@ -595,16 +595,24 @@ public abstract class BaseTest
       //select file in navigation tree
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      
+      openSelectedFileWithCodeEditor(checkDefault);
 
+   }
+   
+   /**
+    * Open selected file with code mirror.
+    * 
+    * Method doesn't check is selected item in navigation tree is file.
+    * It will fail, while calling "Open with" command.
+    * 
+    * @param checkDefault - is click on checkbox "Use by default"
+    * @throws Exception
+    */
+   protected void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
+   {
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       
-//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and contains(text(), 'File')]", "");
-//      //selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-//      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-//
-//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Open With')]", "");
-//      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
       selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[0]/col[0]");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 

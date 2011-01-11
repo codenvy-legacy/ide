@@ -20,11 +20,17 @@ package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * IDE-115:Copy file.
@@ -34,11 +40,56 @@ import org.junit.Test;
  */
 public class CopyFileTest extends BaseTest
 {
+   
+   private static final String FOLDER_1 = CopyFileTest.class.getSimpleName() + "-1";
+   
+   private static final String FILE_GROOVY = "test.groovy";
+   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   
+   private static final String FILE_CONTENT_1 = "world";
+   
+   private static final String FILE_CONTENT_2 = "hello ";
+   
+   /**
+    * BeforeClass create such structure:
+    * FOLDER_1
+    *    FILE_GROOVY - file with sample content
+    */
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
+         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, URL + FOLDER_1 + "/" + FILE_GROOVY);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
 
    @AfterClass
    public static void tearDown()
    {
-      cleanDefaultWorkspace();
+      try
+      {
+         VirtualFileSystemUtils.delete(URL + FOLDER_1);
+         VirtualFileSystemUtils.delete(URL + FILE_GROOVY);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /*
@@ -80,47 +131,15 @@ public class CopyFileTest extends BaseTest
    @Test
    public void copyOperationTestIde115() throws Exception
    {
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      waitForRootElement();
       
-      /*
-      * Create folder "Test 1" in root. After this folder "Test 1" must be selected.
-       */
-      createFolder("Test 1");
-
-      /*
-       * Create Groovy Script file
-       */
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      /*
-       * Type "hello"
-       */
-      selectIFrameWithEditor(0);
-      selenium.typeKeys("//body[@class='editbox']", "hello");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selectMainFrame();
-
-      /*
-       * Save as "test.groovy"
-       */
-      saveAsUsingToolbarButton("test.groovy");
-
-      /*
-       * Close editor
-       */
-      IDE.editor().closeTab(0);
-
-      /*
-       * Select "/Test1/test.groovy" file
-       */
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[2]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(FILE_GROOVY);
 
       /*
        * Check Cut and Copy commands must be enabled
        */
-
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
       IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
       IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
@@ -166,73 +185,62 @@ public class CopyFileTest extends BaseTest
       /*
        * Open "Test 1" folder
        */
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[1]/col[0]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selectItemInWorkspaceTree(FOLDER_1);
 
       /*
        * Open file "/Test 1/test.groovy"
        */
-      openFileFromNavigationTreeWithCodeEditor("test.groovy", false);
+      openFileFromNavigationTreeWithCodeEditor(FILE_GROOVY, false);
 
       /*
        * Type "file content"
        */
-      selectIFrameWithEditor(0);
-
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_END);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      selenium.typeKeys("//body[@class='editbox']", " world");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      selectMainFrame();
+      typeTextIntoEditor(0, FILE_CONTENT_2);
 
       /*
        * Save file
        */
       saveCurrentFile();
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       /*
-      * Close file
-      */
+       * Close file
+       */
       IDE.editor().closeTab(0);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      /*
-      * Open file "/Test 1/test.groovy"
-      */
-      openFileFromNavigationTreeWithCodeEditor("test.groovy", false);
 
       /*
        * Open "/test.groovy"
        */
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand(MenuCommands.File.REFRESH_TOOLBAR);
-      openFileFromNavigationTreeWithCodeEditor("test.groovy", false);
+      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.toolbar().runCommand(MenuCommands.File.REFRESH_TOOLBAR);
+      
+      /*
+       * Select FILE_GROOVY file in FOLDER_1
+       */
+      IDE.navigator().selectRow(2);
+      
+      /*
+       * Open FILE_GROOVY file from FOLDER_1
+       */
+      openSelectedFileWithCodeEditor(false);
+      
+      /*
+       * Select FILE_GROOVY file in root folder
+       */
+      IDE.navigator().selectRow(3);
+      
+      /*
+       * Open FILE_GROOVY file from root folder
+       */
+      openSelectedFileWithCodeEditor(false);
 
       /*
-       * Check content of the file must be "hello"
+       * Check files content
        */
+      assertEquals(FILE_CONTENT_1, getTextFromCodeEditor(0));
+      assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1, getTextFromCodeEditor(1));
 
-      String file1Content = getTextFromCodeEditor(0);
-      String file2Content = getTextFromCodeEditor(1);
-
-      assertEquals("hello world", file1Content);
-      assertEquals("hello", file2Content);
-
-      // Close both files
-      IDE.editor().closeTab(0);
-      IDE.editor().closeTab(0);
-
-      /*
-       * Delete files
-       */
-      selectItemInWorkspaceTree("Test 1");
-      deleteSelectedItems();
-
-      selectItemInWorkspaceTree("test.groovy");
-      deleteSelectedItems();
    }
 
 }
