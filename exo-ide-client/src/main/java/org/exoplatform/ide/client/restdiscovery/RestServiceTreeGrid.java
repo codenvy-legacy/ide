@@ -185,6 +185,11 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
 
                if (res != null)
                   m.getRequest().getParam().addAll(res.getParam());
+               m.setHref(((Resource)re).getPath());
+            }
+            else if (re instanceof RestService)
+            {
+               m.setHref(((RestService) re).getFullPath());
             }
             TreeNode newNode = new TreeNode(m.getName());
             newNode.setIcon(Images.RestService.METHOD);

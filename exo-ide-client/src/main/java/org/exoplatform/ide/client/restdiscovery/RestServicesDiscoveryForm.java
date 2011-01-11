@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
@@ -67,6 +68,8 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
    private TextField requestType;
 
    private TextField responseType;
+   
+   private TextField pathField;
 
    private RestServiceParameterListGrid parameters;
 
@@ -99,6 +102,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
 
       UIHelper.setAsReadOnly(requestType.getName());
       UIHelper.setAsReadOnly(responseType.getName());
+      UIHelper.setAsReadOnly(pathField.getName());
       addCloseClickHandler(new CloseClickHandler()
       {
 
@@ -114,6 +118,8 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
     */
    private void createInfoForm(Layout layout)
    {
+      int width = 278;
+      
       VLayout vL = new VLayout();
       vL.setMembersMargin(3);
       vL.setShowEdges(true);
@@ -126,28 +132,32 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       form.setHeight(20);
       form.setPadding(5);
       form.setTitleWidth(20);
+      
+      pathField = new TextField("ideMethodPathField");
+      pathField.setTitle("<nobr>Path</nobr>");
+      pathField.setWidth(width);
+      pathField.setVisible(false);
 
       requestType = new TextField();
       requestType.setTitle("<nobr>Request media type</nobr>");
       requestType.setName("ideRequestType");
-      requestType.setWidth(200);
-
+      requestType.setWidth(width);
       requestType.setVisible(false);
 
       responseType = new TextField("ideResponseType");
       responseType.setTitle("<nobr>Response media type<nobr>");
       responseType.setVisible(false);
-      responseType.setWidth(200);
-
+      responseType.setWidth(width);
+      
       parameters = new RestServiceParameterListGrid();
       parameters.setID("ideRestServiceDiscoveryParameters");
-      parameters.setWidth100();
+      parameters.setWidth(398);
       parameters.setHeight100();
       parameters.setShowEdges(false);
       parameters.setMargin(3);
       parameters.setVisible(false);
 
-      form.setFields(requestType, responseType);
+      form.setFields(pathField,requestType, responseType);
       vL.addMember(form);
       vL.addMember(parameters);
       layout.addMember(vL);
@@ -172,7 +182,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       treeGrid = new RestServiceTreeGrid();
       treeGrid.setShowResizeBar(true);
       //      treeGrid.setWidth(250);
-      treeGrid.setWidth("30%");
+      treeGrid.setWidth("35%");
       treeGrid.setHeight100();
       layout.addMember(treeGrid);
 
@@ -309,5 +319,22 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       requestType.setDisabled(!enabled);
       UIHelper.setAsReadOnly(requestType.getName());
 
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#getPathField()
+    */
+   public HasValue<String> getPathField()
+   {
+      return pathField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#setPathFieldVisible(boolean)
+    */
+   public void setPathFieldVisible(boolean visible)
+   {
+      pathField.setVisible(visible);
+      UIHelper.setAsReadOnly(pathField.getName());
    }
 }

@@ -50,6 +50,7 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -69,6 +70,8 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       UntypedTreeGrid getTreeGrid();
 
       ListGridItem<Param> getParametersListGrid();
+      
+      HasValue<String> getPathField();
 
       void setRequestType(String value);
 
@@ -87,6 +90,8 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       void setParametersListGridVisible(boolean b);
 
       void setParametersListGridEnabled(boolean enabled);
+      
+      void setPathFieldVisible(boolean visible);
    }
 
    private HandlerManager eventBus;
@@ -169,7 +174,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       {
 
          public void onSelection(SelectionEvent<Object> event)
-         {
+         {           
             if (event.getSelectedItem() instanceof Method)
             {
                updateMethodInfo((Method)event.getSelectedItem());
@@ -193,6 +198,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       dispaly.setParametersListGridVisible(false);
       dispaly.setRequestFieldVisible(false);
       dispaly.setResponseFieldVisible(false);
+      dispaly.setPathFieldVisible(false);
    }
 
    /**
@@ -200,6 +206,11 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
     */
    private void updateMethodInfo(Method method)
    {
+      dispaly.setPathFieldVisible(true);
+      dispaly.getPathField().setValue(method.getHref());
+      
+      System.out.println("RestServicesDiscoveryPresenter.updateMethodInfo()");
+      System.out.println(method.getHref());
       if (method.getRequest() != null)
       {
          if (!method.getRequest().getRepresentation().isEmpty())
