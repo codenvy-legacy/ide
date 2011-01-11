@@ -80,6 +80,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       Thread.sleep(TestConstants.SLEEP);
       IDE.editor().deleteFileContent();

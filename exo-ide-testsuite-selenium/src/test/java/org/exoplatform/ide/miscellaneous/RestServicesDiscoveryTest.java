@@ -113,9 +113,10 @@ public class RestServicesDiscoveryTest extends BaseTest
       assertEquals("/aa", getTitle(0, 0));
 
       openNode(0, 0);
-
+      Thread.sleep(TestConstants.SLEEP);
       openNode(1, 0);
-
+      Thread.sleep(TestConstants.SLEEP);
+      
       assertEquals("/testService11", getTitle(1, 0));
 
       //      assertEquals("/Inner/{pathParam}", selenium.getText("scLocator=//TreeGrid[ID=\"ideRestServiceTreeGrid\"]/body/row[2]/col[0]"));

@@ -69,7 +69,8 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       assertFalse(selenium.isElementPresent("//table[@class='exo-autocomplete-panel']"));
       assertTrue(getTextFromCodeEditor(0).contains("Collections.sort(List, Comparator)"));
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
