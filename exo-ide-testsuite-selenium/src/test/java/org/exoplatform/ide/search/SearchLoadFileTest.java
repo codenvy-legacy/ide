@@ -79,7 +79,7 @@ public class SearchLoadFileTest extends BaseTest
    @Test
    public void testLoadFoundFile() throws Exception
    {
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
       
       selectItemInWorkspaceTree(TEST_FOLDER);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);

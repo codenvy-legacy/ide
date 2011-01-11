@@ -134,6 +134,7 @@ public class GoToFolderTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
       //Close root workspace folder
       selectItemInWorkspaceTree(WS_NAME);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
