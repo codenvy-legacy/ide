@@ -209,8 +209,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       dispaly.setPathFieldVisible(true);
       dispaly.getPathField().setValue(method.getHref());
       
-      System.out.println("RestServicesDiscoveryPresenter.updateMethodInfo()");
-      System.out.println(method.getHref());
       if (method.getRequest() != null)
       {
          if (!method.getRequest().getRepresentation().isEmpty())
