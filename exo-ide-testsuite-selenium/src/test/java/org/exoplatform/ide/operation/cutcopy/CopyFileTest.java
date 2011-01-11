@@ -129,7 +129,7 @@ public class CopyFileTest extends BaseTest
     */
 
    @Test
-   public void copyOperationTestIde115() throws Exception
+   public void testCopyFile() throws Exception
    {
       waitForRootElement();
       

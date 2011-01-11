@@ -20,17 +20,17 @@ package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * IDE-116:Copy folder.
@@ -41,22 +41,31 @@ import org.junit.Test;
 public class CopyFolderTest extends BaseTest
 {
    
-   private final String FILE1_NAME = "test"; 
+   private static final String FILE_1 = "test"; 
    
   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    private final static String FOLDER_1 = "Test 1";
 
    private final static String FOLDER_1_1 = "Test 1.1";
-    
    
-   @AfterClass
-   public static void tearDown()
+   private static final String FILE_CONTENT_1 = "file content";
+   
+   /**
+    * BeforeClass create such structure:
+    * FOLDER_1
+    *    FOLDER_1_1
+    *       FILE_GROOVY - file with sample content
+    */
+   @BeforeClass
+   public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL +FOLDER_1);
-         VirtualFileSystemUtils.delete(URL +FOLDER_1_1);
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_1 + "/" +FOLDER_1_1);
+         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, URL + FOLDER_1 + "/" 
+            + FOLDER_1_1 + "/" + FILE_1);
       }
       catch (IOException e)
       {
@@ -67,14 +76,14 @@ public class CopyFolderTest extends BaseTest
          e.printStackTrace();
       }
    }
-
-   @BeforeClass
-   public static void setUp()
+   
+   @AfterClass
+   public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1 + "/" +FOLDER_1_1);
+         VirtualFileSystemUtils.delete(URL +FOLDER_1);
+         VirtualFileSystemUtils.delete(URL +FOLDER_1_1);
       }
       catch (IOException e)
       {
@@ -117,33 +126,20 @@ public class CopyFolderTest extends BaseTest
    @Test
    public void copyOperationTestIde116() throws Exception
    {
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      waitForRootElement();
      
-      openOrCloseFolder(FOLDER_1);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selectItemInWorkspaceTree(FOLDER_1_1);
-
-      /*
-       * Create new groovy script
-       */
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      /*
-       *  Type "groovy file content"
-       */
-      typeTextIntoEditor(0,  "file content");
+      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      /*  
-       * Save file as "/Test 1/Test 1.1/test.groovy"
-       */
-      saveAsUsingToolbarButton(FILE1_NAME);
+      selectItemInWorkspaceTree(FOLDER_1_1);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      
+      openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
 
       /* 
       * Select folder "/Test 1/Test 1.1"
       */
       selectItemInWorkspaceTree(FOLDER_1_1);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       /*
        * Check Copy must be enabled
@@ -161,7 +157,7 @@ public class CopyFolderTest extends BaseTest
 
       /* 
        * Call "Edit/Copy" in menu
-       * /
+       */
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
 
       /* 
@@ -175,19 +171,26 @@ public class CopyFolderTest extends BaseTest
        */
       selectRootOfWorkspaceTree();
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      
+      /*
+       * Check new folder appeared in root folder
+       */
+      selectRootOfWorkspaceTree();
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      assertElementPresentInWorkspaceTree(FOLDER_1);
+      assertElementPresentInWorkspaceTree(FOLDER_1_1);
 
+      /*
+       * Change text in file.
+       */
       typeTextIntoEditor(0, "updated");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       saveCurrentFile();
-      
-      Thread.sleep(TestConstants.SLEEP);
 
       /* 
        * Close opened file
        */
       IDE.editor().closeTab(0);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       /* 
        * Open "/Test 1.1/test.groovy"
@@ -195,17 +198,15 @@ public class CopyFolderTest extends BaseTest
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      openOrCloseFolder(FOLDER_1_1);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selectItemInWorkspaceTree(FOLDER_1_1);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      openFileFromNavigationTreeWithCodeEditor(FILE1_NAME, false);
+      openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
 
-      // Check it content
-      String fileContent = getTextFromCodeEditor(0);
-      assertEquals("file content", fileContent);
-
-      //Close file
-      IDE.editor().closeTab(0);
+      /*
+       * Check file content
+       */
+      assertEquals(FILE_CONTENT_1, getTextFromCodeEditor(0));
    }
 
 }

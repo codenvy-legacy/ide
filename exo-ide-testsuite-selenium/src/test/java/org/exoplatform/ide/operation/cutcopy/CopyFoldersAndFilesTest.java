@@ -157,7 +157,7 @@ public class CopyFoldersAndFilesTest extends BaseTest
     * @throws Exception
     */
    @Test
-   public void copyOperationTestIde113() throws Exception
+   public void testCopyFoldersAndFiles() throws Exception
    {
       waitForRootElement();
       selectItemInWorkspaceTree(FOLDER_1);
