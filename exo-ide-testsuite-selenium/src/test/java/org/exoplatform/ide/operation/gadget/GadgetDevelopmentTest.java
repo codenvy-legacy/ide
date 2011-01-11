@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.gadget;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -46,27 +47,22 @@ public class GadgetDevelopmentTest extends BaseTest
    
    
    //IDE-78
-   //TODO doesn't work on Windows
    @Test
    public void createGadgetFromTemplate() throws Exception
    {
 
       //      Click on "New->From Template" button.
-     
-      //TODO*******change*****change add folder for locked file//
       VirtualFileSystemUtils.mkcol(URL);
-      //*******************
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);      
       
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selectItemInWorkspaceTree(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-      Thread.sleep(TestConstants.SLEEP);
-
+      
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/headerLabel/"));
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormDeleteButton\"]/"));
@@ -75,6 +71,7 @@ public class GadgetDevelopmentTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/"));
       Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       //    Select "Google Gadget" in the central column, change "File Name" field text on "Test Gadget File" name, click on "Create" button.
       selenium.click("scLocator=//ListGrid[ID=\"ideCreateFileFromTemplateFormTemplateListGrid\"]/body/row[3]/col[1]");
 
@@ -89,38 +86,23 @@ public class GadgetDevelopmentTest extends BaseTest
       assertTrue(selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=1]/title").matches(
          "^Test Gadget File [\\s\\S]*$"));
       Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       //      Click on "Save As" button and save file "Test Gadget File" with default name.
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
-      String url3 =
-         selenium
-            .getValue("scLocator=//Window[ID=\"ideGetItemURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      System.out.println(url3);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.click("scLocator=//IButton[ID=\"ideGetItemURLFormOkButton\"]/");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.open(url3);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("link=Test Gadget File.xml"));
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.goBack();
-      selenium.waitForPageToLoad("20000");
-      Thread.sleep(TestConstants.SLEEP);
-      assertEquals(FILE_NAME, selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/title"));
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
+      
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FILE_NAME).getStatusCode());    
+      
       IDE.editor().closeTab(0);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      //TODO*****change**********
-      openOrCloseFolder(FOLDER_NAME);
-      //************************
+
+      selectItemInWorkspaceTree(FOLDER_NAME);
+
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(FILE_NAME, selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/title"));
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      //     Remove created files.
+      
+      //     Remove created folder with file.
       deleteSelectedItems();
    }
 
