@@ -121,6 +121,18 @@ public class Menu
       }
       selenium.mouseDown("//div[@class='exo-lockLayer']/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }   
+   }
+   
+   /**
+    * Get the XPATH locator for top menu command.
+    * 
+    * @param title - the title of top menu command.
+    * 
+    * @return {@link String}
+    */
+   public static String getMenuLocator(String title)
+   {
+      return "//td[@class='exo-menuBarItem' and text()='" + title + "']";
+   }
 
 }

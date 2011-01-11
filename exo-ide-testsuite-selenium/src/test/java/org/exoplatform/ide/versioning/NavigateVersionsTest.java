@@ -26,7 +26,9 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Menu;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 /**
@@ -79,28 +81,74 @@ public class NavigateVersionsTest extends VersioningTest
          e.printStackTrace();
       }
    }
+   
+   @After
+   public void cleanResults() throws Exception
+   {
+      IDE.editor().closeTab(0);
+   }
+   
+   @AfterClass
+   public static void tearDown() throws Exception
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
 
    @Test
    public void testNavigateOlderVersion() throws Exception
    {
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      waitForRootElement();
+      waitForElementPresent(Menu.getMenuLocator(MenuCommands.View.VIEW));
+      
       IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       selectItemInWorkspaceTree(TEST_FOLDER);
-      //Open new file
+      /*
+       * 1. Open new file
+       */
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      /*
+       * Version History button is not present
+       */
       checkViewVersionHistoryButtonPresent(false);
       
+      /*
+       * 2. Clear text in text editor and save file.
+       */
       IDE.editor().deleteFileContent();
       saveAsUsingToolbarButton(FILE_1);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      /*
+       * Version History button is present, but disabled
+       */
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
 
+      /*
+       * 3. Type text in editor and save file.
+       */
       typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      /*
+       * Version History button is enabled
+       */
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
+      
+      /*
+       * 4. Create 2, 3, 4 versions.
+       */
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version2Text);
@@ -110,126 +158,197 @@ public class NavigateVersionsTest extends VersioningTest
       typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
 
+      /*
+       * 5. Click Version History button
+       */
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
+      /*
+       * Version Panel appeared.
+       */
       checkVersionPanelState(true);
-      //View older version button is enabled: 
+      /*
+       * View older version button is enabled. 
+       */
       checkOlderVersionButtonState(true);
-      //View newer version button is disabled because current version is opened:
+      /*
+       * View newer version button is disabled because current version is opened:
+       */
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
-      //View older version:
+      /*
+       * 6. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
-      //View older version:
+      /*
+       * 7. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
-      //View newer version:
+      /*
+       * 8. View newer version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
-      //View older version:
+      /*
+       * 9. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
-      //View older version:
+      /*
+       * 10. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text);
 
-      //View older version:
+      /*
+       * 11. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(false);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel("");
 
-      //View newer version:
+      /*
+       * 12. View newer version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text);
 
-      //View older version:
+      /*
+       * 13. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(false);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel("");
 
+      /*
+       * 14. Close file.
+       */
       IDE.editor().closeTab(0);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      //Open file:
+      
+      /*
+       * Version history button dissapeared.
+       */
       IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+
+      /*
+       * 15. Open file.
+       */
       openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
+      /*
+       * Version History button is enabled
+       */
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
-      //View versions
+      /*
+       * 16. View versions
+       */
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
-      //View older version button is enabled: 
+      
+      /*
+       * View older version button is enabled. 
+       */
       checkOlderVersionButtonState(true);
-      //View newer version button is disabled because current version is opened:
+      /*
+       * View newer version button is disabled because current version is opened.
+       */
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
-      //View older version:
+      /*
+       * 17. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
-      //View older version:
+      /*
+       * 18. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
+      /*
+       * 19. Close tab.
+       */
       IDE.editor().closeTab(0);
    }
 
    @Test
    public void testNavigateNewerVersion() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      refresh();
+      waitForRootElement();
+      
+      /*
+       * Version Histroy button is not present.
+       */
       checkViewVersionHistoryButtonPresent(false);
+      
+      /*
+       * 1. Create new file in TEST_FOLDER
+       */
       selectItemInWorkspaceTree(TEST_FOLDER);
-      //Create new file, add text and save file:
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       typeTextIntoEditor(0, version1Text);
       saveAsUsingToolbarButton(FILE_2);
+      
+      /*
+       * Version History button is disabled.
+       */
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
       
+      /*
+       * 2. Create new version.
+       */
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+      /*
+       * Version History button is enabled.
+       */
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
+      
+      /*
+       * 3. Create versions.
+       */
       typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
       typeTextIntoEditor(0, version4Text);
@@ -237,79 +356,111 @@ public class NavigateVersionsTest extends VersioningTest
       typeTextIntoEditor(0, version5Text);
       saveCurrentFile();
 
-      //View versions
+      /*
+       * 4. Click Version History button.
+       */
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
+      /*
+       * Version Panel appeared.
+       */
       checkVersionPanelState(true);
-      //View older version button is enabled: 
+      /*
+       * View Older Version button is enabled. 
+       */
       checkOlderVersionButtonState(true);
-      //View newer version button is disabled because current version is opened:
+      /*
+       * View Newer Version button is disabled because current version is opened.
+       */
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(getTextFromCodeEditor(0));
-      //View older version:
+      /*
+       * 5. Click View Older Version button.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
+      /*
+       * Check buttons state and text in version panel.
+       */
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
-      //View newer version:
+      /*
+       * 6. View newer version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(false);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text);
 
-      //View older version:
+      /*
+       * 7. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
-      //View older version:
+      /*
+       * 8. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
-      //View older version:
+      /*
+       * 9. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
-      //View older version:
+      /*
+       * 10. View older version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(false);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text);
 
-      //View newer version:
+      /*
+       * 11. View newer version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
-      //View newer version:
+      /*
+       * 12. View newer version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
-      //View newer version:
+      /*
+       * 13. View newer version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
-      //View newer version:
+      /*
+       * 14. View newer version.
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
       checkOlderVersionButtonState(true);
@@ -322,9 +473,8 @@ public class NavigateVersionsTest extends VersioningTest
    @Test
    public void testNavigateNewerVersionWithSave() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      refresh();
+      waitForElementPresent(Menu.getMenuLocator(MenuCommands.View.VIEW));
 
       checkViewVersionHistoryButtonPresent(false);
       selectItemInWorkspaceTree(TEST_FOLDER);
@@ -434,9 +584,7 @@ public class NavigateVersionsTest extends VersioningTest
    @Test
    public void testNavigateVersionWithClosePanel() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      refresh();
 
       checkViewVersionHistoryButtonPresent(false);
       selectItemInWorkspaceTree(TEST_FOLDER);
@@ -523,11 +671,5 @@ public class NavigateVersionsTest extends VersioningTest
 
       IDE.editor().closeTab(0);
    }
-   
-   @After
-   public void cleanResults() throws Exception
-   {
-      IDE.editor().closeTab(0);
-   }
-   
+
 }
