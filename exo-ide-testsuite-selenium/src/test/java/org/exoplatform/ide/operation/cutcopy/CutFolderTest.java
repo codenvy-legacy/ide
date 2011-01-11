@@ -55,8 +55,6 @@ public class CutFolderTest extends BaseTest
 
    private final static String FOLDER_2 = "test 2";
     
-   private final static String FOLDER_3 = "test 2";
-
    private final static String FILE_1 = "test.groovy";
    
    private static final String FILE_CONTENT = "file content";
@@ -79,7 +77,7 @@ public class CutFolderTest extends BaseTest
          VirtualFileSystemUtils.mkcol(URL + FOLDER_1 + "/" + FOLDER_2);
          VirtualFileSystemUtils.put(FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY, URL + FOLDER_1 + "/" 
             + FOLDER_2 + "/" + FILE_1);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_3);
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_2);
       }
       catch (IOException e)
       {
@@ -97,7 +95,7 @@ public class CutFolderTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_1);
-         VirtualFileSystemUtils.delete(URL + FOLDER_3);
+         VirtualFileSystemUtils.delete(URL + FOLDER_2);
       }
       catch (IOException e)
       {
@@ -125,7 +123,7 @@ public class CutFolderTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       assertElementPresentInWorkspaceTree(FILE_1);
       
-      assertElementPresentInWorkspaceTree(FOLDER_3);
+      assertElementPresentInWorkspaceTree(FOLDER_2);
 
       /*
        * 2.Open file "test 1/test 2/test.groovy".
@@ -149,7 +147,6 @@ public class CutFolderTest extends BaseTest
        * Select row number 2, because there are two "test 2" folders.
        */
       IDE.navigator().selectRow(2);
-//      selectItemInWorkspaceTree(FOLDER_2);
       IDE.toolbar().runCommand(MenuCommands.Edit.CUT_TOOLBAR);
       /*
        * Paste commands are enabled.
@@ -173,7 +170,6 @@ public class CutFolderTest extends BaseTest
        * Select row number 2, because there are two "test 2" folders.
        */
       IDE.navigator().selectRow(2);
-//      selectItemInWorkspaceTree(FOLDER_2);
       IDE.toolbar().runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
 
       /*
@@ -276,10 +272,10 @@ public class CutFolderTest extends BaseTest
       /*
        * Check folders
        */
-      assertEquals("test 1", IDE.navigator().getRowTitle(1));
-      assertEquals("test 2", IDE.navigator().getRowTitle(2));
-      assertEquals("test 2", IDE.navigator().getRowTitle(3));
-      assertEquals("test.groovy", IDE.navigator().getRowTitle(4));
+      assertEquals(FOLDER_1, IDE.navigator().getRowTitle(1));
+      assertEquals(FOLDER_2, IDE.navigator().getRowTitle(2));
+      assertEquals(FOLDER_2, IDE.navigator().getRowTitle(3));
+      assertEquals(FILE_1, IDE.navigator().getRowTitle(4));
       
       /*
        * check there is no another element in the tree
