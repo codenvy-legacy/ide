@@ -95,9 +95,15 @@ public class RolesWithGadgetTest extends BaseTest
    @Test
    public void testDeveloperRoleWithGadget() throws Exception
    {
+      selenium.refresh();
+      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
+      // open folder
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);   
+      
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       saveAsUsingToolbarButton(FILE1);
 
@@ -114,7 +120,12 @@ public class RolesWithGadgetTest extends BaseTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
-      openOrCloseFolder(TEST_FOLDER);
+      // open folder
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      Thread.sleep(TestConstants.SLEEP);
+
       openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //Check deploy/undeploy is not available for developer
@@ -140,9 +151,13 @@ public class RolesWithGadgetTest extends BaseTest
       logout();
 
       standaloneLogin(TestConstants.Users.ADMIN);
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      openOrCloseFolder(TEST_FOLDER);
+      
+      // open folder
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);   
 
       openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
