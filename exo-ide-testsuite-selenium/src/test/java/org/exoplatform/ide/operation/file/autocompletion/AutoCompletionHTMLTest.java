@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.junit.Test;
 
 /**
@@ -31,13 +32,20 @@ import org.junit.Test;
  *
  */
 public class AutoCompletionHTMLTest extends BaseTest
-{
-
+{  
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("HTML File");
+      selenium.refresh();
+      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      
+      // select root folder
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(WS_NAME);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -58,11 +66,16 @@ public class AutoCompletionHTMLTest extends BaseTest
    public void testGoogleGadget() throws InterruptedException, Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("Google Gadget");
-      Thread.sleep(TestConstants.SLEEP);
-
+      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      
+      // select root folder
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(WS_NAME);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH); 
+      
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -78,9 +91,14 @@ public class AutoCompletionHTMLTest extends BaseTest
    public void testGroovyTemplate() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad("30000");
+      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      
+      // select root folder
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      selectItemInWorkspaceTree(WS_NAME);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+       
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       Thread.sleep(TestConstants.SLEEP);
       IDE.editor().deleteFileContent();
