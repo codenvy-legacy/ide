@@ -49,9 +49,20 @@ public class Navigator
     * @param title - the element title
     * @return {@link String}
     */
-   public String getScLocator(String title)
+   public String getScLocator(String title, int col)
    {
-      return Locators.SC_NAVIGATION_TREE + "/body/row[name=" + title + "]/col[1]";
+      return Locators.SC_NAVIGATION_TREE + "/body/row[name=" + title + "]/col[" + col + "]";
+   }
+   
+   /**
+    * Get the SmartGWT locator for element in navigation tree by its row number and col number.
+    * 
+    * @param title - the element title
+    * @return {@link String}
+    */
+   public String getScLocator(int row, int col)
+   {
+      return Locators.SC_NAVIGATION_TREE + "/body/row[" + row + "]/col[" + col + "]";
    }
    
    /**
@@ -64,6 +75,11 @@ public class Navigator
    {
       selenium.click(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   public String getRowTitle(int rowNumber)
+   {
+      return selenium.getText(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[0]");
    }
 
 }
