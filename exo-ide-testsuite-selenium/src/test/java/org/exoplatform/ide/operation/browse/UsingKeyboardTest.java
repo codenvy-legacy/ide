@@ -193,7 +193,6 @@ public class UsingKeyboardTest extends BaseTest
       selectItemInWorkspaceTree(TEST_FOLDER);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
 
-      Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(TEST_FILE, false);
 
       // open Outline Panel
