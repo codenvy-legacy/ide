@@ -27,6 +27,7 @@ import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -82,9 +83,16 @@ public class OpenFileByPathTest extends BaseTest
    
    @Test
    public void testOpenFileByPath() throws Exception
-   {
-      Thread.sleep(TestConstants.SLEEP);
+   { 
+      selenium.refresh();
+      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      
+      // open folder
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);   
+
       // create file 
       createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME, 0);     
       
