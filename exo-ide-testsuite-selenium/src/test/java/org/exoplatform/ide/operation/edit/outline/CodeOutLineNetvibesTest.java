@@ -102,6 +102,24 @@ public class CodeOutLineNetvibesTest extends BaseTest
       //------ 4 ------------
       //show Outline
       IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      
+      Thread.sleep(TestConstants.SLEEP);
+
+      //press key DOWN and key UP 
+      //TODO: check why code outline works incorrectly without this
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+     
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      Thread.sleep(TestConstants.SLEEP);
 
       //------ 5 ------------
       //check Outline tree
