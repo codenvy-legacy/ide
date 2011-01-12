@@ -43,4 +43,4 @@ If node type has been deployed successfully, you will see the message *Node type
 
 {note}
 At present, CND format is not supported for the deploy operation.
-{note}
+

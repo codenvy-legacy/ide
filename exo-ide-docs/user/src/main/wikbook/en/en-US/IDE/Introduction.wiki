@@ -1,10 +1,12 @@
-This document represents the eXo IDE - a powerful Web application which provides rich environment for developing different kinds of content, scripts and services. The eXo IDE has modular architecture and can be built and delivered as either standalone web application or Google gadget plugged into a portal environment. By this way, it can be simply deployed to eXo Platform. The following information is related to the eXo IDE gadget deployed in the portal.
+eXo IDE is a powerful Web application which provides a rich environment for developing different content, scripts, and services. eXo IDE has the modular architecture and can be built and delivered as either the standalone web application or the Google Gadget plugged into the portal environment.
 
+The eXo IDE User Guide aims at providing explanations and step-by-step instructions of functions in eXo IDE. Information in this guide is organized and based on the eXo IDE gadget deployed in eXo Platform.
 
-h1. How to access and enable the eXo IDE
+h1. Access eXo IDE
 
-Before working with the eXo IDE gadget, make sure that you are logged in the portal.
-Then, select *Group > Developers Page > IDE* on the top menu (see next illustration "Access the eXo IDE gadget in eXo Platform 3.0") to open the eXo IDE gadget.
+Before working with the eXo IDE gadget, make sure that you are logged in the portal as the role of an administrator or developer. If logged in as the administrator, you can do all functions; while as the developer, you still have the same abilities as the administrator, but can only deploy/undeploy REST services rather than the Google Gadget in the portal.  
+
+Next, hover your cursor on *My Spaces* on the administration bar and then select *Developers > IDE* to open the eXo IDE gadget.
 
 !eXo_IDE_gadget_in_platform.png!
 
@@ -15,11 +17,6 @@ h1. Requirements
 Supported Web browsers:
 
 * Mozilla Firefox 3.0\+
-* Internet Explorer7.0\+
+* Internet Explorer 7.0\+
 * Safari 3.2\+
 * Google Chrome 5.0\+
-
-h2. User Roles
-At present, only users with next two user roles have access to eXo IDE:
-*administrator*: can use all functions;
-*developer*: has the same abilities as *administrator*, but can only deploy/undeploy rest service in sandbox and can not deploy/undeploy google gadget in portal.

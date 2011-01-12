@@ -4,7 +4,7 @@ To view information about the current version of eXo IDE, go to *Help > About* o
 
 h1. Customize Toolbar
 
-If you want to customize the _Toolbar_, such as adding or removing some buttons, changing their positions or delimiters, select *Window > Customize Toolbar...* on the top menu. This dialog will show typical interfaces and commands set for such operations:
+If you want to customize the toolbar, such as adding or removing some buttons, changing their positions or delimiters, select *Window > Customize Toolbar...* on the top menu. This dialog will show typical interfaces and commands set for such operations:
 
 !ide-customize_toolbar.png!
 
@@ -12,53 +12,59 @@ If you want to customize the _Toolbar_, such as adding or removing some buttons,
 
 h1. Customize Hotkeys
 
-The hotkey manager enable users to customize hotkeys. If you use your hotkeys that match to browser hotkeys, only eXo IDE hotkeys work out.
+The hotkey manager enables you to customize hotkeys applied for eXo IDE. If your customized hotkeys are matching with browser hotkeys, only eXo IDE hotkeys work out.
 
-If you do not override browser hotkeys, they will work as usual.
+If hotkeys of the browser and of eXo IDE are not overidden, they will work as usual.
 
-You can customize hotkeys in the *Customize hotkeys* dialog window selecting *Window > Customize Hotkeys...* on the top menu.
+To customize your own hotkeys, do as follows:
+
+* *Step 1:* Go to *Window > Customize Hotkeys...* on the top menu to open the *Customize hotkeys* dialog.
 
 !customize-hotkeys.png!
 
 *Illustration. Customize hotkeys*
 
+The *Customize hotkeys* dialog consists of the list grid with all commands divided to groups and their hotkeys. 
 
-The *Customize hotkeys* dialog window consists of list grid with all commands divided to groups and their hotkeys, binding to them.
-If you want to assign your own hotkeys, do as follows:
-* *Step 1:* Select the specific action in the *Customize hotkeys* dialog window. After selecting, the focus will be set on the *Hotkey* field.
-* *Step 2:* Press the hotkeys combination. It should be the combination of "Ctrl" or "Alt" key with other allowed keys.
-* *Step 3:* If the hotkeys combination is valid, the *Bind* button will be active. Otherwise, the error message will be shown under the *Hotkey* field.
-* *Step 4:* Click the *Bind* button.
-* *Step 5:* Click *Save* to save your settings on the server, or *Cancel* to discard without any changes.
-
-If you entered the invalid hotkeys combination, an error message will be shown as below:
+* *Step 2:* Click your desired action in the *Customize hotkeys* dialog.
+* *Step 3:* Enter the hotkeys combination in the *Hotkey* field. The first key should be "Ctrl" or "Alt".
+If the hotkeys combination is valid, the *Bind* button will be active. Otherwise, the error message is shown under the *Hotkey* field. For example:
 
 !customize-hotkeys-error.png!
 
 *Illustration. Error message*
 
+* *Step 4:* Click the *Bind* button.
+* *Step 5:* Click *Save* to accept your new settings on the server.
 
-If you want to unbind hotkeys for some commands, do as follows:
 
-* *Step 1:* Open the *Customize hotkeys* dialog window.
-* *Step 2:* Find the needed command in the list grid.
+To unbind hotkeys for one command, do as follows:
+
+* *Step 1:* Open the *Customize hotkeys* window.
+* *Step 2:* Select your needed command in the list grid.
 * *Step 3:* Click *Unbind*.
-* *Step 4:* Click *Save* to save your settings on the server, or *Cancel* to discard without any changes.
+* *Step 4:* Click *Save* to accept your new settings on the server.
 
-At the end of hotkeys list, you can see the "Editor hotkeys" group. You can not change these hotkeys, because they are reserved and used in editors. Also, you can not use these hotkeys for other commands. The following is the list of predefined hotkeys:
+{note}
+* You can not make any changes for hotkeys of the "Editor hotkeys" group, because they are reserved and used in editors. These hotkeys also can not be reapplied for other commands. To see these hotkeys, scroll down the end of the "Customize hotkeys" window and click the plus icon next to "Editor hotkeys".
 
-h2. Default global hotkeys
+* If you still want to bind the hotkeys which are the same as the predefined hotkeys, except those of the "Editor hotkeys" group, first select and unbind the predefined hotkeys.
+{note}
 
-|| Hotkey || Function ||
+The following is the list of predefined hotkeys:
+
+* Default global hotkeys
+
+|| Hotkeys || Functions ||
 | *Ctrl+F* | Find/Replace |
 | *Ctrl+D* | Delete line |
 | *Ctrl+L* | Go to line |
 | *Ctrl+N* | Create file from template |
 | *Ctrl+S* | Save file |
 
-h2. Non-changable hotkeys working within editors
+* Non-changeable hotkeys within editors
 
-|| Hotkey || Function ||
+|| Hotkeys || Functions ||
 | *Ctrl+Space* | Autocomplete |
 | *Ctrl+B* | Make text bold |
 | *Ctrl+I* | Make text italic |
@@ -71,3 +77,4 @@ h2. Non-changable hotkeys working within editors
 | *Ctrl+A* | Select all |
 | *Ctrl+Home* | Go to the start of document |
 | *Ctrl+End* | Go to the end of document |
+

@@ -1,10 +1,10 @@
 h1. Create File
 
-To create a file, for example,  do as follows:
-* *Step 1:* Click the *New* button on the left of the toolbar; or go to *File > New* from the top menu to create one available type, for example REST Service, from the drop-down menu.
-* *Step 2:* Save the new file in some folders of the repository by selecting the target folder in the _Workspace Panel_, then click *Save As* icon on the _Toolbar_; or go to *File > Save As...* from the top menu; or press *Ctrl + S* keys.
+To create a file, do as follows:
+* *Step 1:* Click the *New* button on the left corner of the toolbar; or go to *File > New* from the top menu to select one available type, for example REST Service, from the drop-down menu.
+* *Step 2:* Save the new file in some folders of the repository by selecting the target folder in the _Workspace Panel_, then click the *Save As* icon on the toolbar; or go to *File > Save As...* from the top menu; or press *Ctrl + S* keys.
 * *Step 3:* Type the name of new file in the *Save file as...* window.
-* *Step 4:* Click *OK* to accept creating, or *Cancel* to discard without creating the file.
+* *Step 4:* Click *OK* to accept creating the new file.
 
 !createFile.png!
 
@@ -12,60 +12,62 @@ To create a file, for example,  do as follows:
 
 h1. Save/Save As... File
 
-Once you have changed content of opened file, its tab title will be marked by * and the *Save* button will be enabled. So, you can save changed content by clicking *Save* or press *Ctrl + S*, or going to *File > Save* from the top menu.
-To save the file into another folder or with another name, select the target folder in the _Workspace Panel_. Next, click the *Save As...* button on the _Toolbar_; or select *File > Save As...* from the top menu.
+Once you have changed content of the opened file, its tab title will be marked by * and the *Save* button will be enabled. So, you can save changed content by clicking *Save* or press *Ctrl + S*, or going to *File > Save* from the top menu.
+To save the file into another folder or with another name, select the target folder in the _Workspace Panel_. Next, click the *Save As...* button on the toolbar; or select *File > Save As...* from the top menu.
 
 {note}
-If there is a file with the same name in the target folder, it will be rewritten by the "Save As..." command.
+If there is any file with the same name in the target folder, it will be rewritten by the "Save As..." command.
 {note}
 
 h1. Save All Files
 
-If there is one or more files created, opened and changed in the _Content Panel_ before, you can save all of them simply by selecting *File > Save All* from the top menu. Take into consideration that the *Save All* command willnot have any effect on new files.
+If there is one or more files created, opened and changed in the _Content Panel_ before, you can save all of them simply by selecting *File > Save All* from the top menu. The *Save All* command does not have any effect on new files.
 
 h1. Delete File
 
 To delete a file, do as follows:
 * *Step 1:* Select the target file in the _Workspace Panel_.
-* *Step 2:* Click the *"Delete Item(s)..."* button on the _Toolbar_; or go to *File > Delete...* from the top menu.
+* *Step 2:* Click the *Delete Item(s)...* button on the toolbar; or go to *File > Delete...* from the top menu.
 * *Step 3:* Confirm the deletion in the *Delete* dialog.
 
-Files opened in the _Content Panel_ will be closed after removing. You can view the full path to the opened file in the tip of file tab in the _Content Panel_.
+Files opened in the _Content Panel_ are closed after being removed. You can view the full path to the opened file in the tip of file tab in the _Content Panel_.
+
 {note}
-The eXo IDE cannot delete items from different folders simultaneously. So, in this case, the "Delete..." command will be disabled.
+In eXo IDE, you cannot delete items from different folders simultaneously. The "Delete..." function is disabled in such cases.
 {note}
 
 h1. Rename File
 To rename a file, do as follows:
 * *Step 1:* Select your desired file in the _Workspace Panel_.
 * *Step 2:* Go to *File > Rename...* from the top menu.
-* *Step 3:* Type the new name in the rename field.
-* *Step 4:* Click *Rename* to take effect, or *Cancel* to discard without renaming.
-
-After renaming opened and unsaved file in the _Content Panel_, you can save this file later.
+* *Step 3:* Enter the new name into the *Rename item to* field.
+* *Step 4:* Click *Rename* to take effect.
 
 {note}
-If there is a file with the same name in the target folder, you will receive an error message.
+If your new file name has been existing in the target folder, you will receive an error message.
 {note}
 {warning}
 Do not forget to undeploy the REST Services if they were deployed before renaming.
 {warning}
 
-h1. Change Mime Type of File
+h1. Change MIME Type of File
 
-You can change mime type of closed file as followed:
-* *Step 1:* Select target file in the _Workspace Panel_.
+You can change the MIME type of the closed file as follows:
+* *Step 1:* Click the target file in the _Workspace Panel_.
 * *Step 2:* Go to *File > Rename...* from the top menu.
-* *Step 3:* Select new mime type from *Select mime-type* combobox, or type another non-registered mime-type in this field.
-* *Step 4:* Click *Rename* to change mime-type, or *Cancel* to discard operation.
+* *Step 3:* Select the new MIME type from *Select mime-type* combo-box, or type another non-registered MIME type in this field.
+* *Step 4:* Click *Rename* to change the MIME type.
 
 {note}
-You can not open file with non-registered mime-type in eXo IDE.
+You cannot open the file with the non-registered MIME type in eXo IDE.
 {note}
 
 h1. Lock File
-Use file locking to protect opened file from changing or removing by users with another _username_. You can lock and then unlock file by clicking the *Lock/Unlock File* trigger button on the toolbar, or going to *Edit > Lock/Unlock File* trigger item on the top menu.
-The locked file has additional *lock* icon at the right bottom part of file icon in the _Workspace Panel_ and at the title of file tab in the _Content Panel_:
+
+This feature is used to protect your files from being changed or removed by another users. You can lock or unlock the file by clicking the *Lock* or *Unlock* icon on the toolbar, or going to *Edit > Lock/Unlock File* on the top menu. 
+
+The "Lock" icon is located next to the title of the locked file in the _Workspace Panel_ and at the title of such file tab in the _Content Panel_:
+
 
 !file_loked.png!
 
@@ -77,23 +79,21 @@ The locked file has additional *lock* icon at the right bottom part of file icon
 *Illustration. Locked file in Content Panel*
 
 
-Such file can be opened by user with another *username* only in read-only mode, so the *Save*, *Rename* and *Remove* commands will be disabled.
-In that mode you can't edit or save file content.  Also you can't delete, move and rename locked file.
+Another users can open the locked files to read only, but can not edit, save, delete, move or rename.
+
 {warning}
-WYSIWYG Editor can does not support read-only mode. So you can edit file content, but function "Save" will be disabled after the opening locked file in that editor.
+If you open the locked file with the WYSIWYG Editor, you can edit its content, but the "Save" function is disabled.
 {warning}
 
 h1. Open Files with the Non-default Editor
 
-HTML and Goolge gadget files can be opened in the _Code Editor_ or in the _WYSIWYG Editor_. The _Code Editor_ is used by default.
-To open such files in the _WYSIWYG Editor_ with the help of *Open File With* dialog, do as follows:
-* *Step 1:* Create the target HTML file.
-* *Step 2:* Select the created file in the _Workspace Panel_.
-* *Step 3:* Go to *File > Open With...* on the top menu.
-* *Step 4:* Select the *WYSIWYG Editor* item.
-* *Step 5:* Press the *Open* button to show the created file in the _WYSIWYG Editor_.
+HTML and Google gadget files can be opened in either the default _Code Editor_ or _WYSIWYG Editor_. To open a file in the _WYSIWYG Editor_, do as follows:
 
-If the target file has been opened in the _Content Panel_ before, the *Reopen confirmation* dialog will be shown:
+* *Step 1:* Click the needed HTML or Google Gadget file in the _Workspace Panel_.
+* *Step 2:* Go to *File > Open With...* on the top menu.
+* *Step 3:* Select *WYSIWYG Editor* and then click *Open* to show the selected file in the _WYSIWYG Editor_.
+
+If the target file has been opened in the _Content Panel_ before, the confirmation dialog is shown for you to affirm reopening it:
 
 !reopen1.png!
 
@@ -103,37 +103,34 @@ If the target file has been opened in the _Content Panel_ before, the *Reopen co
 
 *Illustration. Opened the HTML file in the WYSIWYG editor*
 
-To change the default editor, do as follows:
-* *Step 1:* Select the *Use as default editor* checkbox in the *Open File With* dialog.
-* *Step 2:* Press the *Open* button.
-The new settings will be stored in the _User Settings File_ at the server that will be the default editor in next sessions.
-The default editor is marked by *"\[Default\]"* in the *Open File With* dialog.
+If you want to change the default editor, simply click your desired editor and mark the *Use as default editor* checkbox in the *Open File With* dialog.
+
+The new settings are stored in the _User Settings File_ at the server that will be the default editor in next sessions.
+The default editor is marked by the [Default] text in the *Open File With* window.
 
 h1. Go to Folder
 
-You can quickly find the opened file in the _Workspace Panel_ using the *Go to Folder* command as follows:
+You can quickly find the opened file in the _Workspace Panel_ using the *Go to Folder* function as follows:
 * *Step 1:* Select the appropriate file tab in the _Content Panel_.
 * *Step 2:* Go to *View > Go to Folder* on the top menu.
 
-The eXo IDE will show the folder with this file selected.
-Similarly, you can localize the found file from the _Search Tab_.
+Your selected file will be highlighted in the _Workspace Panel_. Similarly, you can localize the found file from the _Search Tab_.
 
 h1. Download File from Server
 If you want to get some files from the _JCR Repository_, do as follows:
 * *Step 1:* Select the target file in the _Workspace Panel._
 * *Step 2:* Go to *File > Download...* on the top menu.
 
-The file will be sent to the client. So, the browser will suggest you save the file on the local computer.
+The file will be sent to the client and the suggestion window will be shown for you to save the file into your local device.
 
 h1. Open Local File
 
-With the eXo IDE, you can edit some local files with the registered type within the _Code Editor_ or _WYSIWYG Editor_. During opening, you can directly define the correct file type. To edit the local file content with the eXo IDE, do as follows:
+In eXo IDE, you can edit some local files with the registered type within the _Code Editor_ or _WYSIWYG Editor_. During opening, you can directly define the correct file type. To edit the local file content in eXo IDE, do as follows:
 * *Step 1:* Go to *File > Open Local File...* on the top menu.
 * *Step 2:* Click the *Browse...* button in the *Open file* dialog to select the required local file.
 * *Step 3:* Check the file's MIME type, based on the file extension. If needed, select another MIME type from the list.
 * *Step 4:* Press the *Open* button to open the selected file content in the default editor of the _Content Panel_ with the local file name.
 
-Now, you can continue working with the content with the new file:
 
 !openLocalFile.png!
 
@@ -142,7 +139,7 @@ Now, you can continue working with the content with the new file:
 The following table is the list of MIME types registered in the eXo IDE.
 
 *Table. Registered MIME Types*
-|| FileType || MIME Type || Default File Extension || Default Editor ||
+|| File Type || MIME Type || Default File Extension || Default Editor ||
 | *Text* | text/plain | .txt | Code Editor |
 | *XML* | text/xml; application/xml | .xml | Code Editor |
 | *REST Service* | application/x-jaxrs+groovy | .groovy | Code Editor |
@@ -157,7 +154,7 @@ The following table is the list of MIME types registered in the eXo IDE.
 | *<unrecognized>* | binary/octet-stream | | |
 
 {note}
-To load the Google Gadget file, you should set the MIME Type as "application/x-google-gadget" in the "Open file" dialog as it is figured out at the next illustration:
+To load the Google Gadget file, you should set the MIME Type as "application/x-google-gadget" in the "Open file" dialog as figured out in the below illustration:
 {note}
 
 !mimetypes.png!
@@ -166,50 +163,50 @@ To load the Google Gadget file, you should set the MIME Type as "application/x-g
 
 h1. Upload File
 
-To upload the file directly into the _JCR_ on the server, go to *File > Upload File...* on the top menu. For example, to upload the *gadget.xml* file into the *Gadget* folder, do as follows:
-* *Step 1:* Select the *Gadget* folder item in the _Workspace Panel._ (You must create this folder before.)
+To upload a file directly to the _JCR_ on the server, go to *File > Upload File...* on the top menu. For example, to upload the *gadget.xml* file to the *Gadget* folder, do as follows:
+* *Step 1:* Select the *Gadget* folder in the _Workspace Panel._
 * *Step 2:* Go to *File > Upload File...* on the top menu.
-* *Step 3:* Click the *Browse...* button in the *File to upload* dialog.
-* *Step 4:* Select the *gadget.xml* file from the local computer.
-* *Step 5:* Select the appropriate MIME type as _application/x-google-gadget_.
-* *Step 6:* Press the *Upload* button.
-The *gadget.xml* gadget will be uploaded on the sever and appear in the *Gadget* folder on the_Workspace Panel_.
+* *Step 3:* Click the *Browse...* button to select the *gadget.xml* file from the local device in the *File upload* dialog.
+* *Step 4:* Select the appropriate MIME type as _application/x-google-gadget_.
+* *Step 5:* Press the *Upload* button.
+The *gadget.xml* gadget is uploaded to the sever and placed in the *Gadget* folder on the _Workspace Panel_.
 
 h1. Upload Zipped Folder
 
-To upload the directly into the _JCR_ on the server, it must be packaged as zip archive.
-To upload zipped folder, do as follows:
-* *Step 1:* Select the parent folder item in the _Workspace Panel._ (You must create this folder before.)
+To upload a zipped folder to the _JCR_ on the server, the folder must be packaged as the .zip archive.
+
+* *Step 1:* Select the parent folder item in the _Workspace Panel._
 * *Step 2:* Go to *File > Upload Zipped Folder...* on the top menu.
-* *Step 3:* Click the *Browse...* button in the *Upload folder* dialog.
-* *Step 4:* Select the zip file from the local computer.
-* *Step 5:* Press the *Upload* button.
-Zipped folder will be uploaded on the sever and unzipped to the folder, you selected in step 1.
+* *Step 3:* Click the *Browse...* button to select the zipped folder from the local device in the *Upload folder* dialog.
+* *Step 4:* Press the *Upload* button.
+
+The zipped folder is uploaded to the sever and unzipped in the folder selected in step 1.
 
 h1. Open File by Path
 
-To open some file by its path, go to *File > Open File By Path...* on the top menu. For example, to open some file with path "[http://127.0.0.1:8080/rest/private/ide-vfs-webdav/repository/production/Example.groovy|http://127.0.0.1:8080/rest/private/ide-vfs-webdav/repository/production/Example.groovy]" file in IDE, do as follows:
-* *Step 1:* Go to *File > Open File By Path...* on the top menu.
-* *Step 2:* Type or paste target file path "[http://127.0.0.1:8080/rest/private/ide-vfs-webdav/repository/production/Example.groovy|http://127.0.0.1:8080/rest/private/ide-vfs-webdav/repository/production/Example.groovy]" in the *File URL* text field of *Open file by path* dialog.
-* *Step 3:* Press the *Open* button.
-The *Example.groovy* will be opened in the new file tab of _Content Panel_.
+To open a file by its path, for example *Example.groovy*, do as follows:
 
-You can use *View > Get URL...* top menu command to obtain the file's path.
+* *Step 1:* Go to *File > Open File By Path...* on the top menu.
+* *Step 2:* Enter the path of the target file "http://127.0.0.1:8080/rest/private/ide-vfs-webdav/repository/production/Example.groovy" into the *File URL* field of the *Open file by path* dialog.
+* *Step 3:* Click the *Open* button to show the *Example.groovy* file in the new file tab of the _Content Panel_.
+
+You can select *View > Get URL...* on the top menu to obtain the file path.
+
 {note}
-Be sure, that target file is placed at the same domain as IDE.
+The target file should be placed at the same domain as IDE.
 {note}
 
 h1. Use File Template
 
-_File Template_ is stored in the IDE registry file, and then can be used to create another file with the same MIME type.
+_File Template_ is stored in the IDE registry file, and then can be used to create another files with the same MIME type.
 
 h2. Save File as Template
 
-To save file's content as the template for new file with the same MIME type, do as follows:
+To save the selected file as a template with the same MIME type, do as follows:
 * *Step 1:* Go to *File > Save As Template...* on the top menu.
-* *Step 2:* Set the template name.
-* *Step 3:* Define the description of the template.
-* *Step 4:* Click *Save* to accept creating, or *Cancel* to discard.
+* *Step 2:* Enter the template name.
+* *Step 3:* Define the brief description of the template.
+* *Step 4:* Click *Save* to accept.
 You can also save the uploaded file as template.
 
 !saveAsTemplate.png!
@@ -218,11 +215,11 @@ You can also save the uploaded file as template.
 
 h2. Create File from Template
 
-If you want to use some of predefined file template, you can use the *Create file* function. For example, to create simple gadget XML file, do as follows:
+The *File From Template...* function enables you to create a file from the predefined template. For example, to create a simple gadget XML file, do as follows:
 
-* *Step 1:* Click the *New* button on the _Toolbar_ and select *File From Template...* from the pop-up window to open the dialog (or press *Ctrl + N* hotkeys).
-* *Step 2:* Select the needed file type and template.
-* *Step 3:* Verify the file name and click *Create* to accept.
+* *Step 1:* Click the *New* button on the toolbar and select *File From Template...* from the pop-up to open the dialog, or press *Ctrl + N* hotkeys.
+* *Step 2:* Select your desired type and template for the file.
+* *Step 3:* Enter the name into the *File Name* field, and click *Create* to complete adding your new file. The newly created file is opened automatically in the _Content Panel_.
 
 !createFromTemplate.png!
 
@@ -230,84 +227,98 @@ If you want to use some of predefined file template, you can use the *Create fil
 
 h2. Remove Non-default File Template
 
-To remove the non-default file template, do as follows:
-* *Step 1:* Click the *New* button on the _Toolbar_.
-* *Step 2:* Select *File From template...*; or press *Ctrl + N* hotkeys.
-* *Step 3:* Select the needed template and click *Delete*.
-The dialog will appear to ask you to confirm the action.
+To remove a non-default file template, do as follows:
 
-{warning:title=Delete file template, that is used in project template}
-If file template is used in project template, confirmation deleting dialog will be shown. After deleting file template, project management will create project without this file.
+* *Step 1:* Click the *New* button on the toolbar.
+* *Step 2:* Select *File From Template...*; or press *Ctrl+N* hotkeys.
+* *Step 3:* Select the needed non-default template in black and click *Delete*.
+The confirmation dialog will appear for you to verify your deletion.
+
+{warning}
+After deleting the file template which has been used in the project template, a new project will be created from such project template without this file.
 {warning}
 
 h1. Use Project Template
-_Project Template_ helps user to create folders and files with predefined structure and content by one clicking. So, you can create, update or remove your project template and create new folders and files from your template.
+_Project Template_ helps you create folders and files with the predefined structure and content. You can create, update or remove your project template and add new folders and files from your template.
 
 h2. Create Project Template
 
-To create project template, do as followed:
-* *Step 1:* Go to *File > New > Project template...* on top menu; or click *New* button on the _Toolbar_ and select *Project Template...* command:
+To create a project template, do as follows:
+* *Step 1:* Go to *File > New > Project Template...* on the top menu; or click the *New* button on the toolbar and select the *Project Template...* command:
 !ide_create_project_template.png!
 
 *Illustration. "Create project template" dialog window.*
 
-After this *Create project template* dialog window is shown.
 
-* *Step 2:* Set project template name and description, edit project template structure (using buttons to the right of the tree). 
-* *Step 3:* Click *Create* button.
+* *Step 2:* Enter the name and brief description in the *Create project template* form, or edit its structure by clicking buttons *Add Folder*, *Add File*, "Delete" at the right part of the *Create project template* dialog.
+* *Step 3:* Click *Create* button to complete your project template.
 
-h3. Modification of Project Template Structure
-To add folder into project template, do as followed:
-* *Step 1:* Open *Create project template* dialog window (see illustration above).
-* *Step 2:* Select parent folder in project template tree.
-* *Step 3:* Click the *Add Folder* button.
-* *Step 4:* Type name of new folder in the *Add folder* dialog window and click *Add*.
-New folder will be added to the project template.
+h3. Modify the Project Template Structure
 
-To add new file to project template, do as follows within the *Create project template* dialog window (see illustration above):
-* *Step 1:* Open *Create project template* dialog window (see illustration above).
-* *Step 2:* Select target folder in tree
-* *Step 3:* Click the *"Add file"* button. *Add file template* dialog window appears. This window is looks like *Create file from template* window without *Create* button.
-* *Step 4:* Select file template.
-* *Step 5:* Type file name in the text field and click the *Add* button.
+You can make changes for your project template structure by adding new folders/files or deleting some elements. To make modifications for your project template structure, do as follows:
 
-To delete some element from project template tree, do as follows :
-* *Step 1:* Open *Create project template* dialog window (see illustration above).
-* *Step 2:* Select item (folder or file) in the template project tree.
-* *Step 3:* Click the *Delete* button.
+*Step 1:* Open the *Create project template* window as described in Section "Create Project Template" above.
 
-h2. Create Project from Project Template
+*Step 2:* Select the target folder in the project template tree. 
+
+*Step 3:* Add a new folder:
+    
+1. Click the *Add Folder* button to open the *Add folder* window.
+
+2. Enter your desired folder name into the *Name of new folder* field and then click *Add*.
+
+New folder is then added to the project template.
+
+*Step 4:* Add a new file:
+
+1. Click the *Add File* button to open the *Add file* window.
+
+2. Select your desired file template in the templates list.
+
+3. Enter the file name into the *File Name* field, and then click the *Add* button.
+
+*Step 5:* Delete some elements:
+
+1. Select your desired item (folder/file) in the template project tree.
+
+2. Click the *Delete* button.
+
+h2. Create Project From Template
+
+To create a project from template, do as follows:
+* *Step 1:* Select the parent folder in the _Workspace Panel_.
+* *Step 2:* Click the *New* button on the toolbar and then select *Project From Template...* from the drop-down menu; or go to *File > New > Project From Template...* from the top menu.
+* *Step 3:* Select your desired project template from the templates list.
+* *Step 4:* Enter the project name into the *Project name* field.
+* *Step 5:* Click the *Create* button.
 
 !create_project_from_template.png!
 
 *Illustration. Create project from template*
 
-To create Project from Template, do as follows:
-* *Step 1:* Select parent folder in _Workspace Panel_.
-* *Step 2:* Click the "New" button at the left part of the toolbar; or go to "File > New > Project From Template" from top menu.
-* *Step 3:* Select project template from list.
-* *Step 4:* Set name to project in *Project name* field.
-* *Step 5:* Click *Create* button
+h3. Create Project from Sample Project Template
 
-h3. Create project from Sample Project Template
-_Sample Project Template_ is default project template, which marked by red color in project template list. It has next structure:
+The _Sample project_ template is set by default, and marked with the red color in the project templates list. It has the following structure:
+
 * *UI* folder
--  *Greeting Google Gadget.xml* file
+- *Greeting Google Gadget.xml* file
 * *business logic* folder
 - *Greeting REST Service.groovy* file 
 * *data* folder
 
-You can create project from default template, as written above.
+You can create a project from the default template by following steps described above.
 
 !ide-create-sample-project.png!
 
 *Illustration. Create project from Sample Project Template*
 
-To run created from _Simple Project Template_ project, do as follows:
-* *Step 1:* Open and deploy *Greeting REST Service.groovy*.
-* *Step 2:* Open *Greeting Google Gadget.xml* and click *Show Preview* button. Preview of gadget with input field and *Ok* button will be in Preview tab.
-* *Step 3:* Type name to input field and click *Ok* button.
-*Greeting Google Gadget* sends request to *Greeting REST Service* and displays response under the input field.
+h4. Run Simple Project Template Project
+
+* *Step 1:* Open and deploy the *Greeting REST Service.groovy*.
+* *Step 2:* Open the *Greeting Google Gadget.xml* file and click the *Show Preview* button to see the gadget with inputted fields.
+* *Step 3:* Enter the name, then click *Ok*.
+
+The *Greeting Google Gadget* sends request to *Greeting REST Service* and displays the response under the input field.
 
 !ide-run-sample-project.png!
 
@@ -315,186 +326,243 @@ To run created from _Simple Project Template_ project, do as follows:
 
 h2. Remove Project Template
 
-To remove Project Template, do as followed:
-* *Step 1:* Click the *New > Project From Template* button on the toolbar; or go to *File > New > Project From Template* from top menu.
-* *Step 2:* Select target project template from list.
-* *Step 3:* Click *Delete* button.
+To remove a project template, do as follows:
+* *Step 1:* Click *New > Project From Template...* on the toolbar; or go to *File > New > Project From Template...* from the top menu.
+* *Step 2:* Select your desired target project template from the list.
+* *Step 3:* Click the *Delete* button.
 
 h1. Open/Select/Close/Browse tabs
 
-To switch to the necessary file, click the tab title with the appropriate name.
-To close the file, just click the *X* button on the tab title.
-Also, you can use the tab browsing buttons "<", ">" and down arrow at the top right corner of the _Content Panel_ as below:
+To switch to the necessary file, click the tab title with the appropriate name. To close the file, just click the *X* button on the tab title.
+Also, you can use the tab browsing buttons *<*, *>* and down arrow at the top right corner of the _Content Panel_ as below:
 
 !ide-code-editor-browsing-buttons.png!
 
 *Illustration. File tab browsing buttons.*
 
 {note}
-You can view the full path to the opened file in tip of tab title.
+You can view the full path to the opened file in the tip of the tab title.
 {note}
 
-There are several useful commands represented with special buttons at the center of _Toolbar_ and in the *Edit* on the top menu: *Undo/Redo Typing*, *Format*, *Show/Hide Line Numbers*:
+You can see some useful commands represented with special buttons on the toolbar and in the *Edit* on the top menu: *Undo/Redo Typing*, *Format*, *Show/Hide Line Numbers*:
 
 !edit.png!
 
-*Illustration. Undo/Redo, Format and Show/Hide Line Numbers on the _Toolbar_ and on the top menu*.
+*Illustration. Undo/Redo, Format and Show/Hide Line Numbers on the toolbar and on the top menu*.
 
 h1. Undo/Redo Editing
 
-Actions to edit text are added into the history as distinct batch according to the editing pauses. After each pause of editing, the new operations batch is created. So, you can redo or undo current file content changes using *Undo Typing* or *Redo Typing* on the _Toolbar_ (see the illustration above). Also, you can press *Ctrl + Z* or *Ctrl+Y* hotkeys respectively.
-In the _Code Editor_, the *Undo/Redo* functions are disabled if no changes in the *Undo/Redo* history.
-Each file opened in the editor has its own history.
+eXo IDE enables you to recover what you have performed while you are working on your files by using the *Undo* or *Redo* function. Your actions performed on the text are added to the history as a distinct batch after each pause, keeping you from being afraid of doing something wrong. 
+
+h2. Undo
+
+The *Undo* command in eXo IDE helps you obtain your desired changes, such as formatted text, moved blocks, deleted text by following either of two handy ways:
+
+* Press *Ctrl+Z*.
+
+* Click the *Undo Typing* button on the toolbar. 
+
+{note}
+The *Undo* function is disabled in case of no new changes in your text. 
+To undo the Undone action, use the *Redo* function.
+{note}
+
+h2. Redo
+
+After you have undone your performed action on the text but unfortunately what recovered is not satisfactory, simply click the *Redo* function to set back. The *Redo* function is used in the following cases:
+
+* Get exactly whatever the *Undo* command does. For example, if you type some text, *Undo* deletes the text, and *Redo* recovers the deleted text. 
+
+* If you use *Undo* to recover your deleted text, *Redo* will delete the text again. 
+
+The *Redo* function can be performed via one the two following ways:
+
+* Press *Ctrl+Y*
+
+* Click the *Redo Typing* button on the toolbar.
+
+{note}
+* *Redo* is only enabled once *Undo* has been performed.
+* In the _Code Editor_, the *Undo/Redo* functions are disabled in case of no changes in the *Undo/Redo* history.
+* Each file opened in the editor has its own history.
+{note}
 
 h1. Edit Files in the Code Editor
 
-When a file is created or opened, its content will be displayed in the separate tab on the _Content Panel_ in the default _Code Editor_. This is eXo GWT implementation of Codemirror application from [http://codemirror.net/|http://codemirror.net/]. This JavaScript library is used to create an editor interface for all registered in the IDE files. Content of these files will be tokenized and colored, and the editor will help you to indent, format and find code, locate open/close braces and brackets, see line numbers and more...
+Once a file has been created/opened, its content is displayed in the separate tab on the _Content Panel_ in the default _Code Editor_. This is the eXo GWT implementation of the Codemirror application at [http://codemirror.net/|http://codemirror.net/]. This JavaScript library is used to create an editor interface for all registered IDE files. Content of these files will be tokenized and colored, and you can indent code, search text, locate open/close braces and brackets, see line numbers and more...
 
 h2. Format File
 
-In the _Code Editor_, *Format* is to adjust row indentations of the HTML, Groovy, JavaScript, XML content with two spaces by default. To do this, select *Format* from the _Toolbar_; or go to *Edit > Format* on the top menu.
+In the _Code Editor_, *Format* is to adjust row indentations of the HTML, Groovy, JavaScript, XML content with two spaces by default. To do this, select *Format* from the toolbar, or go to *Edit > Format* on the top menu.
 
-h2. Show/hide line numbers
+h2. Show/Hide Line Numbers
 
-In the left gray field, the _Code Editor_ displays line numbers (see the illustration above).
-To hide this field in all opened file tabs, go to *Edit > Hide Line Numbers* on the top menu. Also, this action turns off the line numbers field in the opening file tabs later, and the settings will be saved in the browser cookies.
-To view line numbers again in all opened Code Editors, go to *Edit > Show Line Numbers* on the top menu.
+To show line numbers in the _Code Editor_, go to *Edit > Show Line Numbers* from the top menu. The *Show Line Numbers* is turned into *Hide Line Numbers*. You will see the left vertical grey area in all opened files. 
 
-h2. Go to lines
+Select "Hide Line Numbers" to hide line numbers. The last selected settings are saved in the browser cookies for next sessions.
 
-You can quickly move cursor to the specific line in the editor using the *Go to line* dialog window.
+h2. Go to Line
+
+To go to the exact line quickly, do as follows: 
+
+* *Step 1:* Open the *Go to Line* dialog by following one of below ways:
+
+(1) select *Edit > Go to Line...* from the top menu,
+
+or (2) double-click the area showing the current cursor position in the _Status Bar_,
+
+or (3) press *Ctrl+L*.
 
 !goToLine.png!
 
-*Illustration. Go to lines*
+*Illustration. Go to line*
 
-To go to a line, simply click *View > Go to Line...* from the top menu, or double-click the label that shows the current cursor position in the _Status Bar_.
 
-When the *Go to line* dialog window appears, you can enter the line number into the input field and click *Go* button. The label above the text field shows the range of lines in the active file. Only numeric values are accepted, so if you print the number out of range, an error will be shown.
-{tip}
-You can also call the "Go to line" dialog window by pressing "Ctrl + L" hotkeys (use the hot key manager to customize your hotkeys).
-{tip}
+* *Step 2:* Enter the line number which must be the numeric value into the *Go to Line* dialog and click *Go*. 
+
+The numbers inside () next to the *Edit line number* shows the range of lines you can input. If you enter the number out of range, there will be an error message.
+
+{note}
+If "Ctrl+L" does not work, use the hot key manager to customize your hotkeys.
+{note}
 
 h2. Watch the cursor position in the _Status Bar_
 
-When the editor is opened, the current cursor position is shown in the _Status Bar_. The first number is the line number and the second is the column position. If you make one click on this label, the *Go to line* dialog window will be shown.
+When the editor is opened, the current cursor position is shown in the _Status Bar_. The first number is the line number and the second is the column position.
 
 h2. Delete line
 
 You can quickly delete the current line in the editor as follows:
-* *Step 1:* Hover the cursor onto the line you want to delete.
-* *Step 2:* Go to *Edit > Delete Current Line* on the top menu; or use *Ctrl + D* hotkeys (use the hot key manager to customize your hotkeys).
+* *Step 1:* Put the cursor at the nneded line.
+* *Step 2:* Use *Edit > Delete Current Line* command from the top menu, or press *Ctrl+D* to remove the highlighted line from the file.
 
 h2. Find/Replace
 
-This function is commonly used in text files as follows:
-* *Step 1:* Find and select phrase in the text from cursor position using the *Find* button.
-* *Step 2:* Replace the found phrase with the new phrase using the *Replace* button.
-* *Step 3:* Replace the found text with replacement and then try to find and select next occurrence (button *Replace/Find*).
-* *Step 4:* Replace all phrases in the text with replacement from the cursor position (button *Replace All*).
+This function is commonly used in text files to quickly search for a specific word/phrase and to replace the text as follows:
+
+* *Step 1:* Open your desired file.
+* *Step 2:* Open the *Find/Replace* window by following one of the ways below:
+
+(1) select the *Find/Replace...* icon on the toolbar,
+
+or (2) go to *Edit > Find/Replace...* from the top menu,
+
+or (3) press *Ctrl+F*.
+
+* *Step 3:* Enter the word/phrase for which you want to search into the *Find* field. 
+* *Step 4:* Click the *Find* button to do the search.
+
+Once the text has been found, and if you want to replace the found phrase, continue doing the next steps:
+
+* *Step 5:* Enter the replacement text into the *Replace with* field.
+* *Step 6:* Click the *Replace* or *Replace/Find* button to replace the found word/phrase, or select *Replace All* to replace all.
+
 
 !findText.png!
 
 *Illustration. Find and replace operations with file's content*
 
-To open the dialog window for finding and replacing the text, do as follows:
-* *Step 1:* Open at least one file.
-* *Step 2:* Find *Find/Replace...* button on the _Toolbar_; or go to *Edit \| Find/Replace...* on the top menu.
-* *Step 3:* Type the phrase you want to find in the selected file into the *Find* field. The text for replacing may be entered in the *Replace with* field.
-* *Step 4:* Click *Find*.
-
-If the text is found, "Replace" and "Replace/Find" buttons will become active. Now, you can replace found phrases with the phrases entered in the *Replace with* field clicking the *Replace* or *Replace/Find* buttons.
-
-If you want to replace one text with another from the cursor to the end of file, simply click the *Replace All* button.
-
-To do the case sensitive search in your selected file, check the *Case sensitive* field .
-
-If you do *find/replace* actions with one file and then switch to another, the dialog window will save the status of performed actions of each editor's opened file.
+{note}
+* All functions in the "Find/Replace" window are only performed as from the current position of the cursor to the end of the file. 
+* "Replace" and "Replace/Find" are only active if the text is found. 
+* Check the "Case sensitive" field to do the search based on differing the use of uppercase and lowercase letters.
+* If you do the "Find/Replace" action with one file and then switch to another, this window will save the status of performed actions of the opened file in each editor.
+{note}
 
 h2. Code Autocomplete
 
-This feature enables you to autocomplete word including keywords, statements, declared variables, properties and methods, functions, objects, classes, tags, attributes, annotations in context of JavaScript, HTML, XML, Google Gadget, REST Service, Template, POGO, Netvibes Widget, Data Object files simply by clicking *Ctrl + Space* hotkeys (or *Alt + Space* in _MacOS_). Then eXo IDE displays the *Autocomplete* form at the start of current word:
+This feature enables you to autocomplete the word, including keywords, statements, declared variables, properties and methods, functions, objects, classes, tags, attributes, annotations in context of JavaScript, HTML, XML, Google Gadget, REST Service, Template, POGO, Netvibes Widget, Data Object files simply by clicking *Ctrl+Space* hotkeys. The *Autocomplete* form is shown as below.
 
 !code-autocomplete.png!
 
 *Illustration. Autocomplete form*
 
-In the Google Gadget, the HTML and Template files autocomplete the list of content, depending on the cursor position within the file. If the cursor is put between <script> tags, or between <style> tags, there will be the autocomplete list for JavaScript content, or for CSS content respectively. In the other places, there will be the autocomplete list for HTML content.
+In the files of Google Gadget, HTML and Template types, the autocomplete list displays various content for each case, depending on the cursor position within the file. If the cursor is put between <script> tags, or between <style> tags, there will be the autocomplete list for JavaScript content, or for CSS content respectively. In the other places, the autocomplete list for the HTML content is displayed.
 
 To use the *Autocomplete* function, do as follows:
-* *Step 1:* Open the target file with supported file types (JavaScript, CSS, HTML, Google Gadget, ECM Template and others...) with _Code Editor_.
-* *Step 2:* Set the cursor at the needed position in the document.
-* *Step 3:* Press *Ctrl + Space* to get the *Autocomplete* form. (Use *Alt + Space* hotkeys in _MacOS_ instead)
-* *Step 4:* Select the token in the list of this form; or type first letters of token to reduce the token list, then select the appropriate token.
-* *Step 5:* Press the *Enter* key to paste the selected token into the document, or the *Esc* key to discard the *Autocomplete* form.
+* *Step 1:* Open the target file with supported file types (JavaScript, CSS, HTML, Google Gadget, ECM Template and others) with the _Code Editor_.
+* *Step 2:* Put the cursor at the needed position in the document.
+* *Step 3:* Press *Ctrl+Space* to get the *Autocomplete* form.
+* *Step 4:* Select the token in the list of this form; or type first letters of the token to reduce the token list and then select the appropriate token.
+* *Step 5:* Press the *Enter* key or double-click the selected token to complete the word next to the cursor.
 
-{info}Press "Alt + Space" hotkes to get "Autocomplete" form in the Mac OS.{info}
+{info}
+* Use "Alt+Space" hotkeys instead of "Ctrl+Space" in the Mac OS.
 
-Also, you may double-click the needed token in the list to paste this token into the document.
-To close the *Autocomplete* form, you may also click the outside of form.
+* Click the outside area of the form to quit the "Autocomplete" form. 
+
+* Press the "Esc" key to discard the "Autocomplete" form.
+{info}
+
 
 !autocomplete2.png!
 
 *Illustration. Autocomplete form with description*
 
-h3. JavaScript Specific Autocomplete Items
+h3. JavaScript Specific Autocomplete List
 
-There are some special template tokens in the autocomplete list to insert the code template. For example, the *if-condition* template is:
+There are some special template tokens in the autocomplete list to insert the code template. For example, the *if-condition* template is shown as below:
 
 {code:lang=javascript}if (condition)
 {
 
 }{code}
 
-Tokens of different types are marked by different colors:
-* Green token is a function which will be inserted name of function.
-* Red token is variable which will be inserted name of variable.
-* Grey token is keyword of JavaScript.
-* Templates have special icon (see *Illustration. "Autocomplete form"* above)
+Template tokens have the special icon as shown in *Illustration. Autocomplete form* and tokens of different types are marked with different colors, including:
 
-h3. CSS Specific Autocomplete Items
+|| Token || Marked color ||
+| Function name | Green |
+| Variable name | Red |
+| Javascript key | Grey |
+
+
+h3. CSS Specific Autocomplete List
 
 !ide-autocomplete-css.png!
 
 *Illustration. CSS autocomplete*
 
-In the CSS file, the autocomplete list contains all the properties of Cascading Style Sheets. They are marked with yellow token picture.
+In the CSS file, the autocomplete list contains all the properties of Cascading Style Sheets. They are marked with the yellow token icons.
 
-h3. HTML Specific Autocomplete Items
+h3. HTML Specific Autocomplete List
 
-There are two HTML autocomplete lists: one of all HTML tags, the other of all properties of the pointed tag.
+There are two HTML autocomplete lists: one of all HTML tags, and the other of all properties of the pointed tag.
+
 
 !ide-autocomplete-html.png! !ide-autocomplete-html-tag.png!
 
 *Illustration. HTML autocomplete form*
 
-Also, you can call CSS properties and JavaScript autocomplete list if your current cursor position is inside <style> or <script> tags respectively.
+Also, you can call the CSS properties and JavaScript autocomplete list if your current cursor position is inside <style> or <script> tags respectively.
 
-h3. XML Specific Autocompletion Items
+h3. XML Specific Autocomplete List
 
-For XML autocompletion, only the previously typed tag is used. There is no schema or name space analysis.
+For the XML files, there is only one autocomplete list for the previously typed tag. There is no schema or namespace analysis.
 
-h3. ECM Template Autocomplete
+h3. ECM Template Autocomplete List
 
-At present, the autocompletion of ECM Template file is the same as for HTML file, and there is no content of Groovy tags (<%%>) is ignored.
-h3. Netvibes Widget Autocompletion
+The autocomplete list of the ECM Template files is currently the same as that of the HTML files, and content between the of Groovy tags <% %> is ignored.
 
-At present, the autocompletion of Netvibes Widget file is the same as for HTML file.
+h3. Netvibes Widget Autocomplete List
 
-h3. Groovy Code Specific autocompletion items
+The autocomplete list of the Netvibes Widget files is the same as that of the HTML files.
 
-At present, eXo IDE supports special features for groovy code autocomletion, including *REST Service*("application/x-jaxrs+groovy"), *POJO*("application/x-groovy") and *Data Object*("application/x-chromattic+groovy"). Content of autocompletion form can depend on java types and is shown in the next cases:
-* <local variable name>._
+h3. Groovy Code Specific Autocomplete List
+
+eXo IDE currently supports special features for the Groovy code autocomlete list, including *REST Service* ("application/x-jaxrs+groovy"), *POJO* ("application/x-groovy") and *Data Object* ("application/x-chromattic+groovy"). The autocomplete list varies, depending on Java types and is shown in the following cases:
+
+* <local variable name>.
 * <object's field name>._
 * <static field name>._
 * <method's parameter name>._
 * <class name>._
 * @<annotation name>_
-* in the line after the space
+* in the line after the space.
 
-h4. Class Name Autocomplation
-You can view class's JavaDoc and autocomplete class name from the autocomplete form. IDE adds appropriate import statement into the header of file automatically, if it is needed.
-There is the list of packages which are defaults for groovy code and so are imported explicitly:
+h4. Class Name
+
+You can view class's JavaDoc and class name from the autocomplete form. eXo IDE provides appropriate import statement into the file header automatically, if needed.
+There is a list of default packages for the Groovy code and so are imported explicitly:
 * *java.lang.*\*
 * *java.io.\**
 * *java.lang.\**
@@ -511,10 +579,10 @@ There is the list of packages which are defaults for groovy code and so are impo
 
 h4. Object's Fields and Methods Autocomplation
 
-You can also view JavaDoc  and autocomplete the object's fields and methods as followed: 
-* *Step 1:* Print instance name with dot "." at the end
-* *Step 2:* Press "Ctrl + Space" view all object's public methods and fields. JavaDoc for selected field or method is shown.
-* *Step 3:* Select appropriate item in the autocomplete form and click Enter key, of double-click this item.
+You can also view JavaDoc and autocomplete the object's fields and methods as follows: 
+* *Step 1:* Print the instance name with the dot (.) at the end.
+* *Step 2:* Press *Ctrl+Space* to view all public methods and fields of the object. The JavaDoc for the selected field or method is shown.
+* *Step 3:* Select the appropriate item in the autocomplete form and click the *Enter* key; or double-click this item.
 
 !methods_autocomplete.png|border=1!
 
@@ -522,15 +590,15 @@ You can also view JavaDoc  and autocomplete the object's fields and methods as f
 
 h4. Static Fields and Methods Autocompletion
 
-IDE supports autocompletion of static fields and methods as well as object's.
+eXo IDE supports the autocompletion of static fields, methods and object's fields and methods.
 
 {note}
-The autocompletion for methods and fields of the class or instance works only, if it is called after the symbol ".".
+The autocompletion for methods and fields of the class or instance can only work, if it is called after the symbol ".".
 {note}
 
 h4. Annotations Autocompletion
 
-It is possible to autocomplete the annotations, followed by symbol "@". Autocomplete form for annotation contains the list of available annotations like this:
+It is possible to autocomplete the annotations, followed by symbol "@". The Autocomplete form for annotation contains the list of available annotations like this:
 
 !annotations_autocomplete.png|border=1!
 
@@ -538,33 +606,34 @@ It is possible to autocomplete the annotations, followed by symbol "@". Autocomp
 
 h4. Local Variables and Parameters Autocomplation
 
-Local variables and method's parameters which are returned by autocomplete are marked special icon - !local.png!. IDE supports autocompletion of Local variables and method's parameters as well as object's.
+Local variables and method's parameters are marked with the special icon in the autocomplete form - !local.png!. eXo IDE supports the autocompletion for local variables and method's parameters.
 
-Besides, there is autocompletion for keywords of groovy code, which are not marked with icons.
+Besides, the keywords of Groovy code are not marked with icons in the autocomplete list.
 
 h3. Validate Java Types and Fix Import Statements
 
-If you had forgotten to insert the import statement, the line with error is marked as follows:
+If you forget to insert the import statement, the line with error will be marked as follows:
 
 !error_autocomplete.png|border=1!
 
 *Illustration. Groovy Code Error Mark*
 
-To view and fix java type error, do as follows:
-* *Step 1:* Hover the cursor on error marks to see error message in tool tips.
-* *Step 2:* Click at error icon in the _Line numbers_ field.
-* *Step 3:* Select  appropriate import statement and press "Enter" key or double-click to insert it into header of file.
+To view and fix the Java type error, do as follows:
+* *Step 1:* Hover the cursor on error marks to see the error message in tool tips.
+* *Step 2:* Click the error icon in the _Line numbers_ field.
+* *Step 3:* Select the appropriate import statement and press the *Enter* key; or double-click to insert it into the header of the file.
 
 h2. Code Outline
 
-The code outline can be used to create codes productively. The outline is available for all types of file, expect for _Text_ or _CSS_ files.
+The code outline is used to create codes productively. The outline is available for all types of files, expect for _Text_ or _CSS_ files.
 
 !outline.png!
 
 *Illustration. JavaScript Code Outline*
 
-_Outline Panel_ is opened after creation/opening file. You can close the _Outline Panel_ by clicking the *Close* button on the tab header. Also, you can show/hide the _Outline Panel_ by pressing *Show/Hide Outline* button on the _Toolbar_ or going to *View > Show Outline* on the top menu.
-In the _Outline Panel_, you can see the tree of variables, functions, classes, object's, methods, fields, parameters, annotations,  HTML and XML tags with icon "< >", and special code delimiters like *"<% ... %>"* in _ECM Template_ file (see illustration "ECM Template Code Outline" bellow) or *"[CDATA [ … ]]"* in _Google Gadget_ file (see illustration "Google Gadget Code Outline" bellow).
+The _Outline Panel_ is opened automatically once a file has been created or opened. You can close the _Outline Panel_ by clicking the *Close* button on the tab header. Also, you can show/hide the _Outline Panel_ by pressing the *Show/Hide Outline* button on the toolbar or select *View* on the top menu and then select/deselect *Outline* from the drop-down menu.
+
+In the _Outline Panel_, you can see the tree of variables, functions, classes, objects, methods, fields, parameters, annotations,  HTML and XML tags with icon "< >", and special code delimiters like *"<% ... %>"* in the _ECM Template_ file, or *"[CDATA [ … ]]"* in the _Google Gadget_ file as the illustrations below.
 
 !ecm-template-outline.png!
 
@@ -574,24 +643,31 @@ In the _Outline Panel_, you can see the tree of variables, functions, classes, o
 
 *Illustration. Google Gadget Code Outline*
 
-The outline tree is refreshed automatically every two seconds after stopping typing code. You can click the item in the outline tree, then the cursor will set on the line, where this item is defined. When you move the cursor into the file content, the appropriate node is selected in the outline tree.
+The outline tree is refreshed automatically every two seconds after you stop typing the code. You can click the item in the outline tree. The cursor then sets on the line where this item is defined. When you move the cursor into the file content, the appropriate node is selected in the outline tree.
 
 h3. Code Outline for Groovy Code
 
-In _Outline Panel_ for groovy code of REST Service, ECM Template,  POGO and Data Object files you can see not only names and types of your classes, variables, methods, fields, or parameters, but also their modifiers and annotations in view of icons and tooltips.
-There is the list of icons connected to different access modifies:
-* _private_: red square icon
-* _public_: green circle icon
-* _protected _: yellow rhombus icon
-* without access modifier: blue triangle icon
-There is the list of letters, placed over the node icons of outline node and connected to special modifiers:
-* letter *a* - _abstract_ modifier
-* letter *s* - _static_ modifier
-* letter *f* - _final_ modifier
-* letter *t* - _transient_ modifier
-* letter *v* - _volatile_ modifier
-* *"clock"* icon - _synchronized_ modifier.
-Class or method with annotation(s) is displayed with "@" symbol near the title in outline tree. To see full list of annotations you could hover the cursor on "@".
+In the _Outline Panel_ for the Groovy code of REST Service, ECM Template, POGO and Data Object files, you can see not only names and types of your classes, variables, methods, fields, or parameters, but also their modifiers and annotations in the view of icons and tooltips.
+
+The following is the list of icons connected to different access modifiers.
+
+|| Access modification || Icon ||
+| _private_ | Red square |
+| _public_ | Green circle |
+| _protected_ | Yellow rhombus |
+| without access modifier | Blue triangle |
+
+The following is the list of letters placed over the node icons of outline node and one icon connected to special modifiers.
+
+|| Letter/Icon || Modifier ||
+| *a* | Abstract |
+| *s* | Static |
+| *f* | Final |
+| *t* | Transient |
+| *v* | Volatile |
+| Clock | Synchronized |
+
+Class or method with annotation(s) is displayed with the *@* symbol near the title in the outline tree. To see the full list of annotations, hover the cursor on *@*.
 
 !rest-service-outline.png!
 
@@ -599,24 +675,26 @@ Class or method with annotation(s) is displayed with "@" symbol near the title i
 
 h1. Edit File in the WYSIWYG Editor
 
-Besides the _Code Editor_, you can open and edit HTML files and _Google Gadgets_ with the _WYSIWYG Editor_ based on the CKEditor. You can set the _WYSIWYG Editor_ for those files as default.
-_WYSIWYG Editor_ is the eXo GWT implementation of CKEditor application from [http://ckeditor.com/|http://ckeditor.com/] \- the widely used WYSIWYG-editor of HTML-content. Also, it is used to edit Google Gadget or Groove Template files.
+Besides the _Code Editor_, you can open and edit HTML files and _Google Gadgets_ with the _WYSIWYG Editor_ based on the CKEditor. You can set the _WYSIWYG Editor_ for those files by default.
 
-_WYSIWYG Editor_ does not support the line numbering, auto-indentation and format, code coloring, autocomplete, code outline or type error validation. However, the text edited with the _WYSIWYG Editor_ looks as similar as possible to the results published. This editor has many common editing features found on desktop editing applications like Microsoft Word and OpenOffice.
-To open a file with the _WYSIWYG Editor_, see *Open file with the non-default editor* above.
+The _WYSIWYG Editor_ is the eXo GWT implementation of CKEditor application at [http://ckeditor.com/|http://ckeditor.com/]. This editor is widely used to edit the HTML content. Also, it is used to edit Google Gadget or Groove Template files.
 
-[This User Guide|http://docs.cksource.com/FCKeditor_2.x/Users_Guide] is a good start point to get advanced information about this editor.
+The _WYSIWYG Editor_ does not support the line numbering, auto-indentation and format, code coloring, autocomplete, code outline or type error validation. However, the text edited with the _WYSIWYG Editor_ looks as similar as published results. This editor has many common editing features as working in Microsoft Word, or OpenOffice.
+
+To open a file with the _WYSIWYG Editor_, see *Open File with the Non-default Editor* above. To learn about advanced functions of this editor, please refer [here|http://docs.cksource.com/FCKeditor_2.x/Users_Guide].
 
 h1. Preview File Properties
 
 Connected with the JCR repository node, file properties are displayed in the _Properties Tab_ in the bottom of _Content Panel_. To view file properties, do as follows:
+
 * *Step 1:* Open the file in the _Content Panel_.
-* *Step 2:* Click the *Show Properties* button at the right part of the _Toolbar_; or go to *View > Properties* on the top menu.
+* *Step 2:* Click the *Show Properties* button at the right corner of the toolbar; or go to *View > Properties* on the top menu.
 
 !ide_change_file_property.png!
 
 *Illustration. View file's properties*
 
 {note}
-It is impossible to view the properties of just created and non-saved files.
+It is impossible to view the properties of files created but not saved yet.
 {note}
+

@@ -1,6 +1,5 @@
 h1. Introduction
 
-This document represents the eXo IDE - a powerful Web application which provides rich environment for developing different kinds of content, scripts and services. The eXo IDE has modular architecture and can be built and delivered as either standalone web application or Google gadget plugged into a portal environment. By this way, it can be simply deployed to eXo Platform. The following information is related to the eXo IDE gadget deployed in the portal.
 {include:document="IDE/Introduction.wiki" /} 
 
 h1. Basic Operations
@@ -21,10 +20,10 @@ h1. Search Files
 h1. REST Service Operations
 {include:document="IDE/REST Service Operations.wiki" /}
 
-h1. POGO File Operations
+h1. Operations With POGO File
 {include:document="IDE/POGO File Operations.wiki" /}
 
-h1. Google Gadget Operations
+h1. Operations With Google Gadget
 {include:document="IDE/Google Gadget Operations.wiki" /}
 
 h1. Operations With ECM Groovy Templates 
@@ -48,3 +47,4 @@ h1. Links
 * [What are gadgets powered by Google|http://www.google.com/webmasters/gadgets]
 * [RESTful Web Services|http://www.oracle.com/technetwork/articles/javase/index-137171.html]
 * [Netvibes Documentation|http://dev.netvibes.com/doc/]
+
