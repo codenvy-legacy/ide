@@ -20,7 +20,15 @@
 <!-- be added before this line.                -->
 <!--                                           -->
 <script type="text/javascript" language="javascript">
-var isomorphicDir = "sc/";</script>
+var isomorphicDir = "sc/";
+var registryURL = "/rest/private/registry/repository";
+var proxyServiceContext = "/rest/private/proxy";
+var appConfig = {
+		  "context" : "/rest/private",
+		  "publicContext" : "/rest",
+		  "gadgetServer" : "/gadgets/" /*under GWT Shell*/
+		}
+</script>
 
 <script type="text/javascript" language="javascript"
 	src="org.exoplatform.ide.IDEShell.nocache.js"></script>
