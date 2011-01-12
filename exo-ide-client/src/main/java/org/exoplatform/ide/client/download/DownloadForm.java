@@ -47,7 +47,7 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
    ConfigurationReceivedSuccessfullyHandler
 {
 
-   private final String CONTEXT_DOWNLOAD = "/services/downloadcontent";
+   private final String CONTEXT_DOWNLOAD = "/ide/downloadcontent";
 
    private Handlers handlers;
 
