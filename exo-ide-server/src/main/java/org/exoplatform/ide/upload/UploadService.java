@@ -26,13 +26,13 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.apache.tika.sax.SecureContentHandler;
+import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.zip.ZipUtils;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.webdav.WebDavService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.xml.sax.ContentHandler;
@@ -48,6 +48,7 @@ import java.util.Iterator;
 import javax.jcr.AccessDeniedException;
 import javax.jcr.InvalidItemStateException;
 import javax.jcr.ItemExistsException;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.lock.LockException;
@@ -98,18 +99,15 @@ public class UploadService
 
    private static Log log = ExoLogger.getLogger(UploadService.class);
 
-   private WebDavService webDavService;
-
    private final RepositoryService repositoryService;
 
    private final SessionProviderService sessionProviderService;
 
-   public UploadService(WebDavService webDavService, RepositoryService repositoryService,
+   public UploadService(RepositoryService repositoryService,
       SessionProviderService sessionProviderService)
    {
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;
-      this.webDavService = webDavService;
    }
 
    @POST
@@ -152,24 +150,13 @@ public class UploadService
 
          location = location.substring(prefix.length());
 
-         String repositoryName = location.substring(0, location.indexOf("/"));
-         String repoPath = location.substring(location.indexOf("/") + 1, location.lastIndexOf("/"));
+         final String repositoryName = location.substring(0, location.indexOf("/"));
+         final String repoPath = location.substring(location.indexOf("/") + 1);
 
-         String wsName = repoPath;
-         if (repoPath.contains("/"))
-         {
-            wsName = repoPath.split("/")[0];
-         }
          Session session = null;
-         session = getSession(repositoryName, wsName);
+         session = getSession(repositoryName, repoPath);
 
-         String folderPath = null;
-         if (repoPath.contains("/"))
-         {
-            folderPath = repoPath.substring(repoPath.indexOf("/") + 1, repoPath.length());
-         }
-
-         ZipUtils.unzip(session, fileItem.getInputStream(), folderPath);
+         ZipUtils.unzip(session, fileItem.getInputStream(), getResourcePath(repoPath));
       }
       catch (IOException e)
       {
@@ -291,9 +278,9 @@ public class UploadService
 
          location = location.substring(prefix.length());
 
-         String repositoryName = location.substring(0, location.indexOf("/"));
-         String repoPath = location.substring(location.indexOf("/") + 1);
-         String mimeType = requestItems.get(FormFields.MIME_TYPE).getString();
+         final String repositoryName = location.substring(0, location.indexOf("/"));
+         final String repoPath = location.substring(location.indexOf("/") + 1);
+         final String mimeType = requestItems.get(FormFields.MIME_TYPE).getString();
 
          String nodeType = null;
          if (requestItems.get(FormFields.NODE_TYPE) != null)
@@ -315,13 +302,29 @@ public class UploadService
             }
          }
 
-         MediaType mediaType = new MediaType(mimeType.split("/")[0], mimeType.split("/")[1]);
+         Session session = null;
+         session = getSession(repositoryName, repoPath);
+         ZipUtils.putFile(session, getResourcePath(repoPath), getFileName(repoPath), inputStream, mimeType, nodeType,
+            jcrContentNodeType);
+         session.save();
 
-         Response response =
-            webDavService.put(repositoryName, repoPath, null, null, nodeType, jcrContentNodeType, null, mediaType,
-               inputStream);
-         return Response.fromResponse(response).type(MediaType.TEXT_HTML).build();
+         return Response.status(HTTPStatus.CREATED).type(MediaType.TEXT_HTML).build();
 
+      }
+      catch (PathNotFoundException e)
+      {
+         log.error(e.getMessage(), e);
+         return Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_HTML).build();
+      }
+      catch (RepositoryException e)
+      {
+         log.error(e.getMessage(), e);
+         return Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_HTML).build();
+      }
+      catch (RepositoryConfigurationException e)
+      {
+         log.error(e.getMessage(), e);
+         return Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_HTML).build();
       }
       catch (UnsupportedEncodingException e)
       {
@@ -336,6 +339,14 @@ public class UploadService
 
    }
 
+   /**
+    * Parse input stream and check for zip bomb.
+    * 
+    * @param inputStream - file input stream
+    * @throws IOException
+    * @throws SAXException
+    * @throws TikaException
+    */
    private void checkForZipBomb(InputStream inputStream) throws IOException, SAXException, TikaException
    {
       InputStream is = inputStream;
@@ -356,6 +367,15 @@ public class UploadService
       }
    }
 
+   /**
+    * Get session.
+    * 
+    * @param repoName - the repository name.
+    * @param repoPath - the repository path
+    * @return {@link Session}
+    * @throws RepositoryException
+    * @throws RepositoryConfigurationException
+    */
    private Session getSession(String repoName, String repoPath) throws RepositoryException,
       RepositoryConfigurationException
    {
@@ -366,9 +386,57 @@ public class UploadService
             + "SessionProviderService.setSessionProvider(..) somewhere before ("
             + "for instance in Servlet Filter for WEB application)");
 
-      String workspace = repoPath.split("/")[0];
+      if (repoPath.length() > 0 && repoPath.startsWith("/"))
+      {
+         repoPath = repoPath.substring(1);
+      }
+
+      String workspace = repoPath;
+      if (repoPath.contains("/"))
+      {
+         workspace = repoPath.split("/")[0];
+      }
 
       return sp.getSession(workspace, repo);
+   }
+   
+   /**
+    * Get resource path from repository path.
+    * 
+    * Resource path - path to the parent folder of uploaded file
+    * without workspace name.
+    * 
+    * Returns resource path without "/" at the begin.
+    * 
+    * @param repoPath - repository path 
+    * @return the resource path. 
+    * If file will be uploaded to root folder, return <code>null<code>
+    */
+   private String getResourcePath(String repoPath)
+   {
+      if (repoPath.startsWith("/"))
+         repoPath = repoPath.substring(1);
+      
+      //crop workspace name
+      String resourcePath = repoPath.substring(repoPath.indexOf("/") + 1);
+      //crop file name
+      if (resourcePath.contains("/"))
+         resourcePath = resourcePath.substring(0, resourcePath.lastIndexOf("/"));
+      else
+         resourcePath = null;
+      
+      return resourcePath;
+   }
+   
+   /**
+    * Get file name from file repository path.
+    * 
+    * @param repoPath - repository path for file.
+    * @return the name of uploaded file
+    */
+   private String getFileName(String repoPath)
+   {
+      return repoPath.substring(repoPath.lastIndexOf("/") + 1);
    }
 
 }

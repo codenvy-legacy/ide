@@ -23,6 +23,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.ide.download.NodeTypeUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +54,10 @@ import javax.jcr.version.VersionException;
  */
 public class ZipUtils
 {
+   private static final String DEFAULT_FILE_NODE_TYPE = "nt:file";
+   
+   public static final String DEFAULT_JCR_CONTENT_NODE_TYPE = "nt:resource";
+   
    /**
     * Unzip folder and creates structure of folders and files.
     * 
@@ -103,11 +108,11 @@ public class ZipUtils
                outS.write(buf, 0, bytesRead);
             }
 
-            String data = outS.toString();
+            ByteArrayInputStream data = new ByteArrayInputStream(outS.toByteArray());
             outS.close();
 
             MimeTypeResolver resolver = new MimeTypeResolver();
-            putFile(session, parentFolderPath, entryName, data, resolver.getMimeType(entryName));
+            putFile(session, parentFolderPath, entryName, data, resolver.getMimeType(entryName), null, null);
 
          }
          zin.closeEntry();
@@ -251,29 +256,42 @@ public class ZipUtils
     * Creates new file node.
     * 
     * @param session - the session
-    * @param parentFolderPath - path to parent node.
+    * @param resourcePath - path to parent node.
     * @param filePath - path to new file (from parent node)
     * @param data - file's data
     * @param mimeType - mime type of file
+    * @param fileNodeType - file node type
+    * @param jcrContentNodeType - jcr:content node type
     * 
     * @throws PathNotFoundException
     * @throws RepositoryException
     */
-   private static void putFile(Session session, String parentFolderPath, String filePath, String data, String mimeType)
+   public static void putFile(Session session, String resourcePath, String filePath, InputStream data, String mimeType,
+      String fileNodeType, String jcrContentNodeType)
       throws PathNotFoundException, RepositoryException
    {
       Node base;
-      if (parentFolderPath != null)
+      if (resourcePath != null)
       {
-         base = session.getRootNode().getNode(parentFolderPath);
+         base = session.getRootNode().getNode(resourcePath);
       }
       else
       {
          base = session.getRootNode();
       }
       
-      base = base.addNode(filePath, "nt:file");
-      base = base.addNode("jcr:content", "nt:resource");
+      if (fileNodeType == null)
+      {
+         fileNodeType = DEFAULT_FILE_NODE_TYPE;
+      }
+      
+      if (jcrContentNodeType == null)
+      {
+         jcrContentNodeType = DEFAULT_JCR_CONTENT_NODE_TYPE;
+      }
+      
+      base = base.addNode(filePath, fileNodeType);
+      base = base.addNode("jcr:content", jcrContentNodeType);
       base.setProperty("jcr:data", data);
       base.setProperty("jcr:lastModified", Calendar.getInstance());
       base.setProperty("jcr:mimeType", mimeType);

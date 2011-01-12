@@ -26,7 +26,6 @@ import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.SessionImpl;
-import org.exoplatform.services.jcr.webdav.WebDavServiceImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -89,9 +88,6 @@ public class TestUploadService extends BaseTest
       
       sessionProviderService
          .setSessionProvider(null, new SessionProvider(new ConversationState(new Identity("admin"))));
-      WebDavServiceImpl webDavServiceImpl =
-         (WebDavServiceImpl)container.getComponentInstanceOfType(WebDavServiceImpl.class);
-      assertNotNull(webDavServiceImpl);
       
       headers = new MultivaluedMapImpl();
       headers.putSingle("content-type", "multipart/form-data; boundary=-----abcdef");
