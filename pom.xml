@@ -32,13 +32,14 @@
       <smartgwt.version>2.3-nb01</smartgwt.version>
       <shindig.version>1.0-r790473-Patch02</shindig.version>
       <gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
-      <maven.compiler.source>1.5</maven.compiler.source>
-      <maven.compiler.target>1.5</maven.compiler.target>
+      <maven.compiler.source>1.6</maven.compiler.source>
+      <maven.compiler.target>1.6</maven.compiler.target>
       <org.slf4j.version>1.5.6</org.slf4j.version>
       <version.chromattic>1.1.0-SNAPSHOT</version.chromattic>
       <apache.commons-compress.version>1.0</apache.commons-compress.version>
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
       <groovy.version>1.6.5</groovy.version>
+      <javax.ws.version>1.0</javax.ws.version>
    </properties>
 
 
@@ -59,21 +60,21 @@
             <artifactId>exo.core.component.security.core</artifactId>
             <version>${org.exoplatform.core.version}</version>
          </dependency>
-          <dependency>                                                                                                                                                                                          
-            <groupId>org.exoplatform.core</groupId>                                                                                                                                                            
-            <artifactId>exo.core.component.script.groovy</artifactId>                                                                                                                                          
-            <version>${org.exoplatform.core.version}</version>                                                                                                                                                 
+         <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.script.groovy</artifactId>
+            <version>${org.exoplatform.core.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.core</groupId>
             <artifactId>exo.core.component.document</artifactId>
             <version>${org.exoplatform.core.version}</version>
          </dependency>
-          <dependency>
-             <groupId>org.exoplatform.core</groupId>
-             <artifactId>exo.core.component.organization.api</artifactId>
-             <version>${org.exoplatform.core.version}</version>
-          </dependency>
+         <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.organization.api</artifactId>
+            <version>${org.exoplatform.core.version}</version>
+         </dependency>
          <dependency>
             <groupId>org.exoplatform.ws</groupId>
             <artifactId>exo.ws.frameworks.servlet</artifactId>
@@ -120,9 +121,9 @@
             <version>${org.exoplatform.jcr.version}</version>
          </dependency>
          <dependency>
-           <groupId>org.exoplatform</groupId>
-           <artifactId>exo-jcr-services</artifactId>
-           <version>${org.exoplatform.jcr.version}</version> 
+            <groupId>org.exoplatform</groupId>
+            <artifactId>exo-jcr-services</artifactId>
+            <version>${org.exoplatform.jcr.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.gwt</groupId>
@@ -154,7 +155,7 @@
             <artifactId>exo-ide-server</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-groovy-server</artifactId>
@@ -201,7 +202,7 @@
             <artifactId>exo-ide-extension-netvibes-client</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-netvibes-server</artifactId>
@@ -299,6 +300,16 @@
             <version>2.1</version>
          </dependency>
          <dependency>
+            <groupId>javax.jcr</groupId>
+            <artifactId>jcr</artifactId>
+            <version>1.0</version>
+         </dependency>
+         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+         </dependency>
+         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
             <version>2.1.7</version>
@@ -307,6 +318,16 @@
             <groupId>javax.annotation</groupId>
             <artifactId>jsr250-api</artifactId>
             <version>1.0</version>
+         </dependency>
+         <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>1.0</version>
+         </dependency>
+         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
          </dependency>
          <dependency>
             <groupId>junit</groupId>
@@ -331,6 +352,11 @@
          <dependency>
             <groupId>org.exoplatform.ws</groupId>
             <artifactId>ws.packaging.module</artifactId>
+            <version>${org.exoplatform.ws.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ws</groupId>
+            <artifactId>exo.ws.frameworks.json</artifactId>
             <version>${org.exoplatform.ws.version}</version>
          </dependency>
          <dependency>
@@ -401,21 +427,26 @@
             <version>${apache.commons-compress.version}</version>
          </dependency>
          <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.4</version>
+         </dependency>
+         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>${commons-fileupload.version}</version>
          </dependency>
          <dependency>
-           <groupId>org.codehaus.groovy</groupId>
-           <artifactId>groovy-all</artifactId>
-           <version>${groovy.version}</version>
-        </dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
+         </dependency>
       </dependencies>
    </dependencyManagement>
    <build>
       <pluginManagement>
          <plugins>
-	    <plugin>
+            <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-surefire-plugin</artifactId>
                <configuration>
@@ -435,11 +466,11 @@
    <modules>
 
       <module>exo-ide-server</module>
-      
+
       <module>exo-ide-testframework</module>
-      
+
       <module>exo-ide-vfs-webdav-client</module>
-      
+
       <module>exo-ide-framework-client</module>
 
       <module>exo-ide-extension-gadget-server</module>
@@ -447,13 +478,13 @@
 
       <module>exo-ide-extension-groovy-server</module>
       <module>exo-ide-extension-groovy-client</module>
-      
+
       <module>exo-ide-extension-netvibes-server</module>
       <module>exo-ide-extension-netvibes-client</module>
-      
+
       <module>exo-ide-extension-chromattic-client</module>
       <module>exo-ide-extension-chromattic-server</module>
-  
+
       <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>

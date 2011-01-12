@@ -24,23 +24,13 @@
       </dependency>
       <dependency>
          <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-servlet</artifactId>
-         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
          <scope>provided</scope>
       </dependency>
       <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-dev</artifactId>
-         <scope>provided</scope>
+         <groupId>com.google.gwt.google-apis</groupId>
+         <artifactId>gwt-gadgets</artifactId>
       </dependency>
-       <dependency>                                                                                                                                                                                       
-               <groupId>com.google.gwt.google-apis</groupId>                                                                                                                                                   
-               <artifactId>gwt-gadgets</artifactId>                                                                                                                                                            
-            </dependency>
       <dependency>
          <groupId>com.google.code.gwt-log</groupId>
          <artifactId>gwt-log</artifactId>
@@ -49,11 +39,6 @@
       <dependency>
          <groupId>com.smartgwt</groupId>
          <artifactId>smartgwt</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -84,16 +69,21 @@
          <artifactId>exo-ide-testframework</artifactId>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
    </dependencies>
    <build>
-   <resources>                                                                                                                                                                                              
-         <resource>                                                                                                                                                                                            
-            <directory>src/main/java</directory>                                                                                                                                                               
-         </resource>                                                                                                                                                                                           
-         <resource>                                                                                                                                                                                            
-            <directory>src/main/resources</directory>                                                                                                                                                          
-         </resource>                                                                                                                                                                                           
-      </resources> 
+      <resources>
+         <resource>
+            <directory>src/main/java</directory>
+         </resource>
+         <resource>
+            <directory>src/main/resources</directory>
+         </resource>
+      </resources>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -152,26 +142,32 @@
             <dependency>
                <groupId>org.exoplatform.kernel</groupId>
                <artifactId>exo.kernel.commons</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.kernel</groupId>
                <artifactId>exo.kernel.container</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.commons</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.rest.core</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.frameworks.servlet</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.rest.ext</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
@@ -182,30 +178,48 @@
                      <artifactId>pull-parser</artifactId>
                   </exclusion>
                </exclusions>
+               <scope>runtime</scope>
+            </dependency>
+            <dependency>
+               <groupId>com.google.gwt</groupId>
+               <artifactId>gwt-dev</artifactId>
+               <version>${gwt.version}</version>
+               <scope>compile</scope>
+            </dependency>
+            <dependency>
+               <groupId>com.google.gwt</groupId>
+               <artifactId>gwt-servlet</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.component.webdav</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.framework.web</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform</groupId>
                <artifactId>exo-jcr-services</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-server</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-groovy-server</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-chromattic-server</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
@@ -216,59 +230,73 @@
                      <artifactId>pull-parser</artifactId>
                   </exclusion>
                </exclusions>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-netvibes-server</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>hsqldb</groupId>
                <artifactId>hsqldb</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-common</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-features</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-gadgets</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-social-api</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.slf4j</groupId>
                <artifactId>slf4j-api</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.slf4j</groupId>
                <artifactId>slf4j-log4j12</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>com.google.code.guice</groupId>
                <artifactId>guice</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>com.google.code.guice</groupId>
                <artifactId>guice-jmx</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>javax.xml.bind</groupId>
                <artifactId>jaxb-api</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>com.sun.xml.bind</groupId>
                <artifactId>jaxb-impl</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>caja</groupId>
                <artifactId>caja</artifactId>
                <version>r3375</version>
+               <scope>runtime</scope>
             </dependency>
             <!-- Chromattic -->
             <dependency>
@@ -279,18 +307,22 @@
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.api</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.spi</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.core</artifactId>
+               <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.ext</artifactId>
+               <scope>runtime</scope>
             </dependency>
          </dependencies>
          <build>
@@ -322,7 +354,6 @@
                   <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
-                     <module>org.exoplatform.ide.IDEShell</module>
                      <runTarget>org.exoplatform.ide.IDEShell/IDEShell.html</runTarget>
                      <logLevel>INFO</logLevel>
                      <!-- <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel> -->

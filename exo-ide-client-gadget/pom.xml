@@ -23,11 +23,11 @@
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
-      <dependency>
+<!--      <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-servlet</artifactId>
          <scope>runtime</scope>
-      </dependency>
+       </dependency> -->
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
@@ -36,9 +36,8 @@
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
-         <scope>provided</scope>
+         <version>${gwt.version}</version>
       </dependency>
-
       <dependency>
          <groupId>com.google.code.gwt-log</groupId>
          <artifactId>gwt-log</artifactId>
@@ -48,11 +47,11 @@
          <groupId>com.smartgwt</groupId>
          <artifactId>smartgwt</artifactId>
       </dependency>
-      <dependency>
+    <!--  <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
-      </dependency>
+       </dependency> -->
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs-webdav-client</artifactId>
@@ -77,11 +76,11 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-chromattic-client</artifactId>
       </dependency>
-      <dependency>
+   <!--   <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-testframework</artifactId>
          <scope>test</scope>
-      </dependency>
+       </dependency> -->
         <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-client</artifactId>

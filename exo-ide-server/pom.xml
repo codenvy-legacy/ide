@@ -16,8 +16,8 @@
          <artifactId>exo.kernel.container</artifactId>
          <exclusions>
             <exclusion>
-              <groupId>bcel</groupId>
-              <artifactId>bcel</artifactId>
+               <groupId>bcel</groupId>
+               <artifactId>bcel</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.tool</groupId>
@@ -32,10 +32,22 @@
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.ext</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.webdav</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
@@ -67,10 +79,22 @@
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.rest.core</artifactId>
          <scope>compile</scope>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.core</groupId>
          <artifactId>exo.core.component.security.core</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>javax.annotation</groupId>
@@ -91,11 +115,23 @@
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.testframework</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
          <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.frameworks.servlet</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.slf4j</groupId>
@@ -122,12 +158,14 @@
       <dependency>
          <groupId>javax.jcr</groupId>
          <artifactId>jcr</artifactId>
-         <version>1.0</version>
       </dependency>
       <dependency>
          <groupId>javax.ws.rs</groupId>
          <artifactId>jsr311-api</artifactId>
-         <version>1.0</version>
+      </dependency>
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
       </dependency>
       <dependency>
          <groupId>commons-io</groupId>
@@ -145,10 +183,10 @@
          <artifactId>tika-parsers</artifactId>
          <version>0.7</version>
          <exclusions>
-           <exclusion>
-              <groupId>org.apache.geronimo.specs</groupId>
-              <artifactId>geronimo-stax-api_1.0_spec</artifactId>
-           </exclusion>
+            <exclusion>
+               <groupId>org.apache.geronimo.specs</groupId>
+               <artifactId>geronimo-stax-api_1.0_spec</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>

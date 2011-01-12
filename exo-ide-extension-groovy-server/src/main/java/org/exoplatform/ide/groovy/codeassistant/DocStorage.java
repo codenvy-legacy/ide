@@ -119,7 +119,7 @@ public class DocStorage
          Session session = sp.getSession(wsName, getRepository());
          for (JarEntry entry : jars)
          {
-            LOG.info(">>>>>>>>>>>>>>>> Load JavaDoc from jar - " + entry.getJarPath());
+            LOG.info("Load JavaDoc from jar - " + entry.getJarPath());
             if (entry.getIncludePkgs() == null || entry.getIncludePkgs().isEmpty())
             {
                Map<String, GroovyRootDoc> roots = DocExtractor.extract(entry.getJarPath());
@@ -138,7 +138,7 @@ public class DocStorage
             {
                for (String pkgs : entry.getIncludePkgs())
                {
-                  LOG.info("<<<<<<<<<<<<<<< Load JavaDoc from - " + pkgs);
+                  LOG.info("Load JavaDoc from - " + pkgs);
                   Map<String, GroovyRootDoc> roots = DocExtractor.extract(entry.getJarPath(), pkgs);
                   Set<String> keys = roots.keySet();
                   for (String key : keys)

@@ -34,7 +34,8 @@
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
-          <version>${gwt.version}</version>   
+          <version>${gwt.version}</version>
+          <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>junit</groupId>

@@ -23,9 +23,6 @@ import com.google.gwt.user.client.ui.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-import mx4j.log.Log;
-import mx4j.log.Logger;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ActivateViewHandler;

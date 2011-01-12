@@ -16,12 +16,20 @@
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-ui</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-commons</artifactId>
+      </dependency>
+      <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-ui</artifactId>
+         <groupId>com.smartgwt</groupId>
+         <artifactId>smartgwt</artifactId>
       </dependency>
    </dependencies>
    <build>
@@ -96,9 +104,7 @@
                      <manualMode>${manualMode}</manualMode>
                      <productionMode>${productionMode}</productionMode>
                   </configuration>
-                  <!--
-                     extraJvmArgs>-Xms1G -Xmx1G -Xss1024k -Dcatalina.base=${project.build.directory}/tomcat -Dgwt.args="-logLevel INFO
-                     -Xtries0"</extraJvmArgs -->
+                  <!-- extraJvmArgs>-Xms1G -Xmx1G -Xss1024k -Dcatalina.base=${project.build.directory}/tomcat -Dgwt.args="-logLevel INFO -Xtries0"</extraJvmArgs -->
                   <executions>
                      <execution>
                         <goals>

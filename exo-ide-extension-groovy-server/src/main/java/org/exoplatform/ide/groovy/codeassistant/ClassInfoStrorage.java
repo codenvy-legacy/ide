@@ -303,7 +303,7 @@ public class ClassInfoStrorage
          for (JarEntry entry : jars)
          {
             String path = entry.getJarPath();
-            LOG.info(">>>>>>>>>>>>>>>> Load ClassInfo from jar -" + entry.getJarPath());
+            LOG.info("Load ClassInfo from jar -" + entry.getJarPath());
             List<String> fqns = new ArrayList<String>();
             if (entry.getIncludePkgs() == null || entry.getIncludePkgs().isEmpty())
             {
@@ -313,7 +313,7 @@ public class ClassInfoStrorage
             {
                for (String pkg : entry.getIncludePkgs())
                {
-                  LOG.info("<<<<<<<<<<<<<< Load ClassInfo from - " + pkg);
+                  LOG.info("Load ClassInfo from - " + pkg);
                   fqns.addAll(ClassNamesExtractor.getClassesNamesFromJar(path, pkg));
                }
                for (String fqn : fqns)

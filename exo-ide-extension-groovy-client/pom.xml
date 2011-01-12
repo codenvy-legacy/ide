@@ -20,6 +20,10 @@
          <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-editor</artifactId>
+      </dependency>
+      <dependency>
          <groupId>com.smartgwt</groupId>
          <artifactId>smartgwt</artifactId>
       </dependency>
@@ -113,7 +117,7 @@
                      <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
                      <manualMode>${manualMode}</manualMode>
                      <productionMode>${productionMode}</productionMode>
-                      <includes>**/*Unmarshall*.java</includes>
+                     <includes>**/*Unmarshall*.java</includes>
                   </configuration>
                   <executions>
                      <execution>
