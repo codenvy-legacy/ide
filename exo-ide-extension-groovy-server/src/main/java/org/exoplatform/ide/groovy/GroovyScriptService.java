@@ -22,6 +22,7 @@ package org.exoplatform.ide.groovy;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.groovy.util.ClassPathFileNotFoundException;
 import org.exoplatform.ide.groovy.util.DependentResources;
 import org.exoplatform.ide.groovy.util.GroovyClassPath;
 import org.exoplatform.ide.groovy.util.GroovyScriptServiceUtil;
@@ -56,9 +57,12 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -81,7 +85,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    private static final Log LOG = ExoLogger.getLogger(GroovyScriptService.class);
 
    public static final String DEVELOPER_ID = "ide.developer.id";
-   
+
    public static final String GROOVY_CLASSPATH = ".groovyclasspath";
 
    /**
@@ -141,6 +145,59 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    }
 
    /**
+    * Get the groovy classpath location file, 
+    * which is proper for pointed item's location.
+    * The groovy classpath location is in response body,
+    * if not found, then status 404.
+    * 
+    * @param uriInfo request URI information
+    * @param location item's location
+    * @return {@link Response}
+    */
+   @GET
+   @Path("/classpath-location")
+   @Produces("text/plain")
+   public String getClassPathLocation(@Context UriInfo uriInfo, @HeaderParam("location") String location)
+   {
+      String baseUri = uriInfo.getBaseUri().toASCIIString();
+      String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(baseUri, location);
+      try
+      {
+         Session session =
+            GroovyScriptServiceUtil.getSession(repositoryService, sessionProviderService, jcrLocation[0],
+               jcrLocation[1] + "/" + jcrLocation[2]);
+         Node rootNode = session.getRootNode();
+         Node node = rootNode.getNode(jcrLocation[2]);
+         Node classpathNode = findClassPathNode(node);
+         if (classpathNode != null)
+         {
+            //Form the available href of the classpath file:
+            String classpathLocation =
+               baseUri + GroovyScriptServiceUtil.WEBDAV_CONTEXT + jcrLocation[0] + "/" + jcrLocation[1];
+            classpathLocation +=
+               (classpathNode.getPath().startsWith("/")) ? classpathNode.getPath() : "/" + classpathNode.getPath();
+            return classpathLocation;
+         }
+         else
+         {
+            throw new ClassPathFileNotFoundException("Groovy classpath file not found.");
+         }
+      }
+      catch (RepositoryException e)
+      {
+         throw new WebApplicationException(e, createErrorResponse(e, 500));
+      }
+      catch (RepositoryConfigurationException e)
+      {
+         throw new WebApplicationException(e, createErrorResponse(e, 500));
+      }
+      catch (ClassPathFileNotFoundException e)
+      {
+         throw new WebApplicationException(e, createErrorResponse(e, 404));
+      }
+   }
+
+   /**
     * Get content of existed groovy class path file.
     * 
     * @param location script location
@@ -165,12 +222,10 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       }
       catch (RepositoryException e)
       {
-         e.printStackTrace();
          return null;
       }
       catch (RepositoryConfigurationException e)
       {
-         e.printStackTrace();
          return null;
       }
       return null;
@@ -204,12 +259,10 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       }
       catch (ItemNotFoundException e)
       {
-         e.printStackTrace();
          return null;
       }
       catch (AccessDeniedException e)
       {
-         e.printStackTrace();
          return null;
       }
    }
@@ -254,7 +307,6 @@ public class GroovyScriptService extends GroovyScript2RestLoader
          }
          catch (JsonException e)
          {
-            e.printStackTrace();
             return null;
          }
       }
@@ -436,6 +488,17 @@ public class GroovyScriptService extends GroovyScript2RestLoader
             ses.logout();
          }
       }
-
+   }
+   
+   /**
+    * Create response to send with error message.
+    * 
+    * @param t thrown exception
+    * @param status http status
+    * @return {@link Response} response with error
+    */
+   protected Response createErrorResponse(Throwable t, int status)
+   {
+      return Response.status(status).entity(t.getMessage()).type("text/plain").build();
    }
 }
