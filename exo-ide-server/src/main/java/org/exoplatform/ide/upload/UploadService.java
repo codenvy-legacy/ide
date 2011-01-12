@@ -115,13 +115,7 @@ public class UploadService
    @Path("/folder")
    public Response uploadFolder(Iterator<FileItem> iterator, @Context UriInfo uriInfo)
    {
-      HashMap<String, FileItem> requestItems = new HashMap<String, FileItem>();
-      while (iterator.hasNext())
-      {
-         FileItem item = iterator.next();
-         String fieldName = item.getFieldName();
-         requestItems.put(fieldName, item);
-      }
+      HashMap<String, FileItem> requestItems = getRequestItems(iterator);
 
       if (requestItems.get(FormFields.FILE) == null)
       {
@@ -136,20 +130,15 @@ public class UploadService
          InputStream inStream = fileItem.getInputStream();
 
          checkForZipBomb(inStream);
-         String location = requestItems.get(FormFields.LOCATION).getString();
+         
+         final String location = getLocation(requestItems, uriInfo);
 
-         location = URLDecoder.decode(location, "UTF-8");
-
-         String prefix = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, "/").build().toString();
-
-         if (!location.startsWith(prefix))
+         if (location == null)
          {
             return Response.serverError().entity(ERROR_OPEN + "Invalid path, where to upload file" + ERROR_CLOSE)
                .type(MediaType.TEXT_HTML).build();
          }
-
-         location = location.substring(prefix.length());
-
+         
          final String repositoryName = location.substring(0, location.indexOf("/"));
          final String repoPath = location.substring(location.indexOf("/") + 1);
 
@@ -243,15 +232,9 @@ public class UploadService
 
    @POST
    @Consumes("multipart/*")
-   public Response post(Iterator<FileItem> iterator, @Context UriInfo uriInfo)
+   public Response uploadFile(Iterator<FileItem> iterator, @Context UriInfo uriInfo)
    {
-      HashMap<String, FileItem> requestItems = new HashMap<String, FileItem>();
-      while (iterator.hasNext())
-      {
-         FileItem item = iterator.next();
-         String fieldName = item.getFieldName();
-         requestItems.put(fieldName, item);
-      }
+      HashMap<String, FileItem> requestItems = getRequestItems(iterator);
 
       if (requestItems.get(FormFields.FILE) == null)
       {
@@ -263,20 +246,14 @@ public class UploadService
       {
          FileItem fileItem = requestItems.get(FormFields.FILE);
          InputStream inputStream = fileItem.getInputStream();
-
-         String location = requestItems.get(FormFields.LOCATION).getString();
-
-         location = URLDecoder.decode(location, "UTF-8");
-
-         String prefix = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, "/").build().toString();
-
-         if (!location.startsWith(prefix))
+         
+         final String location = getLocation(requestItems, uriInfo);
+         
+         if (location == null)
          {
             return Response.serverError().entity(ERROR_OPEN + "Invalid path, where to upload file" + ERROR_CLOSE)
                .type(MediaType.TEXT_HTML).build();
          }
-
-         location = location.substring(prefix.length());
 
          final String repositoryName = location.substring(0, location.indexOf("/"));
          final String repoPath = location.substring(location.indexOf("/") + 1);
@@ -436,6 +413,50 @@ public class UploadService
    private String getFileName(String repoPath)
    {
       return repoPath.substring(repoPath.lastIndexOf("/") + 1);
+   }
+   
+   /**
+    * Get the map of form fields request items.
+    * 
+    * @param iterator - file item iterator
+    * @return {@link HashMap}
+    */
+   private HashMap<String, FileItem> getRequestItems(Iterator<FileItem> iterator)
+   {
+      HashMap<String, FileItem> requestItems = new HashMap<String, FileItem>();
+      while (iterator.hasNext())
+      {
+         FileItem item = iterator.next();
+         String fieldName = item.getFieldName();
+         requestItems.put(fieldName, item);
+      }
+      return requestItems;
+   }
+   
+   /**
+    * Get location of uploaded file from location form field
+    * 
+    * @param requestItems - form fields request items
+    * @param uriInfo - uri info
+    * @return {@link String}
+    * @throws UnsupportedEncodingException
+    */
+   private String getLocation(HashMap<String, FileItem> requestItems, UriInfo uriInfo) throws UnsupportedEncodingException
+   {
+      String location = requestItems.get(FormFields.LOCATION).getString();
+
+      location = URLDecoder.decode(location, "UTF-8");
+
+      String prefix = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, "/").build().toString();
+
+      if (!location.startsWith(prefix))
+      {
+         return null;
+      }
+
+      location = location.substring(prefix.length());
+      
+      return location;
    }
 
 }
