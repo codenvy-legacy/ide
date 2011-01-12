@@ -47,9 +47,9 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
 
    private final static String PUBLIC_CONTEXT = "publicContext";
 
-   public static final String LOOPBACK_SERVICE_CONTEXT = "/services/loopbackcontent";
+   public static final String LOOPBACK_SERVICE_CONTEXT = "/ide/loopbackcontent";
 
-   public static final String UPLOAD_SERVICE_CONTEXT = "/services/upload";
+   public static final String UPLOAD_SERVICE_CONTEXT = "/ide/upload";
 
    private boolean loaded = false;
 

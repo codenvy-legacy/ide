@@ -5,16 +5,31 @@
  * modify it under the terms of the GNU Affero General Public License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
-
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.ide.groovy.codeassistant;
+
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.groovy.JcrUtils;
+import org.exoplatform.ide.groovy.codeassistant.bean.JarEntry;
+import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
+import org.exoplatform.ide.groovy.codeassistant.extractors.ClassNamesExtractor;
+import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.ws.frameworks.json.impl.JsonException;
+import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +41,6 @@ import javax.jcr.InvalidItemStateException;
 import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
-import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.ValueFormatException;
@@ -37,20 +51,6 @@ import javax.jcr.version.VersionException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.groovy.codeassistant.bean.JarEntry;
-import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
-import org.exoplatform.ide.groovy.codeassistant.extractors.ClassNamesExtractor;
-import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 
 /**
  * Created by The eXo Platform SAS.
@@ -80,7 +80,7 @@ import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 public class ClassInfoStrorage
 {
 
-   private SessionProviderService sessionProvider;
+   private ThreadLocalSessionProviderService sessionProviderService;
 
    private RepositoryService repositoryService;
 
@@ -89,10 +89,10 @@ public class ClassInfoStrorage
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(ClassInfoStrorage.class);
 
-   public ClassInfoStrorage(SessionProviderService sessionProvider, RepositoryService repositoryService, String wsName,
-      final List<JarEntry> jars, boolean runInThread)
+   public ClassInfoStrorage(ThreadLocalSessionProviderService sessionProvider, RepositoryService repositoryService,
+      String wsName, final List<JarEntry> jars, boolean runInThread)
    {
-      this.sessionProvider = sessionProvider;
+      this.sessionProviderService = sessionProvider;
       this.repositoryService = repositoryService;
       this.wsName = wsName;
       Runnable run = new Runnable()
@@ -103,7 +103,7 @@ public class ClassInfoStrorage
          {
             try
             {
-               addClassesFromJavaUtilSource(jars);
+               addClassesOnStartUp(jars);
             }
             catch (SaveClassInfoException e)
             {
@@ -146,13 +146,10 @@ public class ClassInfoStrorage
       {
          Thread thread = Thread.currentThread();
          ClassLoader classLoader = thread.getContextClassLoader();
-         Repository repository;
-         repository = getRepository();
-         Session session = repository.login(wsName);
          List<String> fqns = ClassNamesExtractor.getClassesNamesInJar(jarPath, packageName);
          for (String fqn : fqns)
          {
-            putClass(classLoader, session, fqn);
+            putClass(classLoader, JcrUtils.getSession(repositoryService, sessionProviderService, wsName), fqn);
          }
       }
       catch (Exception e)
@@ -180,10 +177,7 @@ public class ClassInfoStrorage
       {
          Thread thread = Thread.currentThread();
          ClassLoader classLoader = thread.getContextClassLoader();
-         Repository repository;
-         repository = getRepository();
-         Session session = repository.login(wsName);
-         putClass(classLoader, session, fqn);
+         putClass(classLoader, JcrUtils.getSession(repositoryService, sessionProviderService, wsName), fqn);
       }
       catch (Exception e)
       {
@@ -191,19 +185,6 @@ public class ClassInfoStrorage
          //TODO: need think about status
          throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
-   }
-
-   /**
-    * Get current repository
-    * @return current repository or default repository if current repository is null
-    * @throws RepositoryException
-    * @throws RepositoryConfigurationException
-    */
-   private Repository getRepository() throws RepositoryException, RepositoryConfigurationException
-   {
-
-      return repositoryService.getCurrentRepository() != null ? repositoryService.getCurrentRepository()
-         : repositoryService.getDefaultRepository();
    }
 
    /**
@@ -225,13 +206,10 @@ public class ClassInfoStrorage
       {
          Thread thread = Thread.currentThread();
          ClassLoader classLoader = thread.getContextClassLoader();
-         Repository repository;
-         repository = getRepository();
-         Session session = repository.login(wsName);
          List<String> fqns = ClassNamesExtractor.getClassesNamesFromJar(javaSrcPath, packageName);
          for (String fqn : fqns)
          {
-            putClass(classLoader, session, fqn);
+            putClass(classLoader, JcrUtils.getSession(repositoryService, sessionProviderService, wsName), fqn);
          }
       }
       catch (RepositoryException e)
@@ -283,23 +261,14 @@ public class ClassInfoStrorage
     */
 
    //TODO:for prototype client side
-   public void addClassesFromJavaUtilSource(List<JarEntry> jars) throws SaveClassInfoException
+   public void addClassesOnStartUp(List<JarEntry> jars) throws SaveClassInfoException
    {
       try
       {
          Thread thread = Thread.currentThread();
          ClassLoader classLoader = thread.getContextClassLoader();
-         ManageableRepository repository;
-         if (repositoryService.getCurrentRepository() != null)
-         {
-            repository = repositoryService.getCurrentRepository();
-         }
-         else
-         {
-            repository = repositoryService.getDefaultRepository();
-         }
-
-         Session session = sessionProvider.getSystemSessionProvider(null).getSession(wsName, repository);
+         ManageableRepository repository = JcrUtils.getRepository(repositoryService);
+         Session session = sessionProviderService.getSystemSessionProvider(null).getSession(wsName, repository);
          for (JarEntry entry : jars)
          {
             String path = entry.getJarPath();

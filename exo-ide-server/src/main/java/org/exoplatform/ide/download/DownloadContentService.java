@@ -59,7 +59,7 @@ import javax.ws.rs.core.UriInfo;
  * @version $
  */
 
-@Path("/services/downloadcontent")
+@Path("/ide/downloadcontent")
 public class DownloadContentService implements ResourceContainer
 {
 
@@ -176,13 +176,13 @@ public class DownloadContentService implements ResourceContainer
    private Session getSession(String repoName, String repoPath) throws RepositoryException,
       RepositoryConfigurationException
    {
+      //TODO: bad practice get repository by name in multi-tenantcy  
       ManageableRepository repo = this.repositoryService.getRepository(repoName);
       SessionProvider sp = sessionProviderService.getSessionProvider(null);
       if (sp == null)
          throw new RepositoryException("SessionProvider is not properly set. Make the application calls"
             + "SessionProviderService.setSessionProvider(..) somewhere before ("
             + "for instance in Servlet Filter for WEB application)");
-
       return sp.getSession(workspaceName(repoPath), repo);
    }
 
@@ -200,34 +200,24 @@ public class DownloadContentService implements ResourceContainer
       @QueryParam("repoPath") String repoPath)
    {
       String href = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, "/").build().toString();
-
       if (!repoPath.startsWith(href))
       {
          return Response.status(HTTPStatus.NOT_FOUND).entity(repoPath).build();
       }
-
       repoPath = repoPath.substring(href.length());
-
       if (repoPath.startsWith("/"))
       {
          repoPath = repoPath.substring(1);
       }
       repoPath = normalizePath(repoPath);
-
       String repoName = repoPath.substring(0, repoPath.indexOf("/"));
-
       repoPath = repoPath.substring(1);
       repoPath = repoPath.substring(repoPath.indexOf("/") + 1);
-
       try
       {
          Session session = getSession(repoName, repoPath);
-         
          String nodePath = path(repoPath);
-         System.out.println(">>>>>>>>node path: " + nodePath);
-
          Node node = (Node)session.getItem(nodePath);
-
          if (NodeTypeUtil.isFile(node))
          {
             return getFile(node);
@@ -270,9 +260,9 @@ public class DownloadContentService implements ResourceContainer
 
       String contentDisposition = "attachment";
 
-      return Response.ok().header(HttpHeaders.CONTENT_LENGTH, Long.toString(contentLength)).header(
-         HttpHeaders.LAST_MODIFIED, modifiedValue).header(HEADER_CONTENT_DISPOSITION, contentDisposition).entity(
-         inputStream).type(contentType).build();
+      return Response.ok().header(HttpHeaders.CONTENT_LENGTH, Long.toString(contentLength))
+         .header(HttpHeaders.LAST_MODIFIED, modifiedValue).header(HEADER_CONTENT_DISPOSITION, contentDisposition)
+         .entity(inputStream).type(contentType).build();
    }
 
    /**
@@ -286,11 +276,9 @@ public class DownloadContentService implements ResourceContainer
    private Response getFolder(Node node) throws RepositoryException, FileNotFoundException
    {
       String contentDisposition = "attachment";
-
       DirectoryContentEntity entity = new DirectoryContentEntity(node);
-
-      return Response.ok().header(HEADER_CONTENT_DISPOSITION, contentDisposition).entity(entity).type(
-         APPLICATION_OCTETSTREAM).build();
+      return Response.ok().header(HEADER_CONTENT_DISPOSITION, contentDisposition).entity(entity)
+         .type(APPLICATION_OCTETSTREAM).build();
    }
 
 }

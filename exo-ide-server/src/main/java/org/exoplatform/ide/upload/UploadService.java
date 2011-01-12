@@ -72,7 +72,7 @@ import javax.ws.rs.core.UriInfo;
  * @version $
  */
 
-@Path("/services/upload")
+@Path("/ide/upload")
 public class UploadService
 {
 
@@ -390,7 +390,6 @@ public class UploadService
       {
          repoPath = repoPath.substring(1);
       }
-
       String workspace = repoPath;
       if (repoPath.contains("/"))
       {

@@ -13,6 +13,13 @@
 
    <component>
       <type>org.exoplatform.ide.discovery.RepositoryDiscoveryService</type>
+      <init-params>
+         <value-param>
+            <name>entry-point</name>
+            <description>default workspace for developing</description>
+            <value>dev-monit</value>
+         </value-param>
+      </init-params>
    </component>
 
    <component>

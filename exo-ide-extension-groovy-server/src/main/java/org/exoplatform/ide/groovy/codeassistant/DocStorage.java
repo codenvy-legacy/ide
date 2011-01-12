@@ -5,12 +5,12 @@
  * modify it under the terms of the GNU Affero General Public License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
-
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
@@ -45,12 +45,12 @@ import org.codehaus.groovy.groovydoc.GroovyMethodDoc;
 import org.codehaus.groovy.groovydoc.GroovyParameter;
 import org.codehaus.groovy.groovydoc.GroovyRootDoc;
 import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.groovy.JcrUtils;
 import org.exoplatform.ide.groovy.codeassistant.bean.JarEntry;
 import org.exoplatform.ide.groovy.codeassistant.extractors.DocExtractor;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -67,14 +67,14 @@ public class DocStorage
 {
    private final RepositoryService repositoryService;
 
-   private final SessionProviderService sessionProviderService;
+   private final ThreadLocalSessionProviderService sessionProviderService;
 
    private final String wsName;
 
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(DocStorage.class);
 
-   public DocStorage(String wsName, RepositoryService repositoryService, SessionProviderService sessionProviderService,
+   public DocStorage(String wsName, RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService,
       final List<JarEntry> jars, boolean runInThread)
    {
       this.repositoryService = repositoryService;
@@ -88,7 +88,7 @@ public class DocStorage
          {
             try
             {
-               addDocsFromJavaSrc(jars);
+               addDocsOnStartUp(jars);
             }
             catch (Exception e)
             {
@@ -111,12 +111,13 @@ public class DocStorage
       }
    }
 
-   private void addDocsFromJavaSrc(List<JarEntry> jars) throws SaveDocException
+   private void addDocsOnStartUp(List<JarEntry> jars) throws SaveDocException
    {
       try
       {
+         
          SessionProvider sp = sessionProviderService.getSystemSessionProvider(null);
-         Session session = sp.getSession(wsName, getRepository());
+         Session session = sp.getSession(wsName, JcrUtils.getRepository(repositoryService));
          for (JarEntry entry : jars)
          {
             LOG.info("Load JavaDoc from jar - " + entry.getJarPath());
@@ -203,8 +204,7 @@ public class DocStorage
 
       try
       {
-         SessionProvider sp = sessionProviderService.getSessionProvider(null);
-         Session session = sp.getSession(wsName, getRepository());
+         Session session = JcrUtils.getSession(repositoryService, sessionProviderService, wsName);
 
          Map<String, GroovyRootDoc> roots = DocExtractor.extract(jar, packageName);
          Set<String> keys = roots.keySet();
@@ -248,18 +248,6 @@ public class DocStorage
          if (LOG.isDebugEnabled())
             e.printStackTrace();
       }
-   }
-
-   /**
-    * Get current repository
-    * @return current repository or default repository if current repository is null
-    * @throws RepositoryException
-    * @throws RepositoryConfigurationException
-    */
-   private ManageableRepository getRepository() throws RepositoryException, RepositoryConfigurationException
-   {
-      return repositoryService.getCurrentRepository() != null ? repositoryService.getCurrentRepository()
-         : repositoryService.getDefaultRepository();
    }
 
    /**

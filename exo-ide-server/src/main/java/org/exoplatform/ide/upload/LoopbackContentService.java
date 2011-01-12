@@ -43,7 +43,7 @@ import javax.ws.rs.core.Response;
  * @author <a href="work.visor.ck@gmail.com">Dmytro Katayev</a> ${date}
  */
 
-@Path("/services/loopbackcontent")
+@Path("/ide/loopbackcontent")
 public class LoopbackContentService implements ResourceContainer
 {
    

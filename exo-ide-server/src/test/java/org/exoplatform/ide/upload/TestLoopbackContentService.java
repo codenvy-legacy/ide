@@ -126,7 +126,7 @@ public class TestLoopbackContentService extends BaseTest
          new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
       ctx.put(HttpServletRequest.class, httpRequest);
 
-      ContainerResponse response = launcher.service("POST", "/services/loopbackcontent", "http://localhost", headers,
+      ContainerResponse response = launcher.service("POST", "/ide/loopbackcontent", "http://localhost", headers,
             data, null, ctx);
       
       assertEquals(HTTPStatus.OK, response.getStatus());

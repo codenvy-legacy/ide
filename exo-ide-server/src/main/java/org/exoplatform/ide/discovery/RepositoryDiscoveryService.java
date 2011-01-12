@@ -19,20 +19,6 @@
  */
 package org.exoplatform.ide.discovery;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.jcr.Repository;
-import javax.jcr.RepositoryException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
-
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -41,6 +27,18 @@ import org.exoplatform.services.jcr.config.RepositoryEntry;
 import org.exoplatform.services.jcr.config.WorkspaceEntry;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.rest.resource.ResourceContainer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jcr.RepositoryException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * Created by The eXo Platform SAS .
@@ -57,7 +55,9 @@ public class RepositoryDiscoveryService implements ResourceContainer
    
    public static final String WEBDAV_SCHEME = "jcr-webdav";
    
-   private String defaultEntryPoint;
+   public static final String DEF_WS = "dev-monit";
+   
+   private String entryPoint;
 
    /**
     * To disable cache control.
@@ -76,17 +76,15 @@ public class RepositoryDiscoveryService implements ResourceContainer
    public RepositoryDiscoveryService(RepositoryService repositoryService, InitParams initParams)
    {
       this.repositoryService = repositoryService;
-      
       if (initParams != null) 
       {
-         ValueParam param = initParams.getValueParam("defaultEntryPoint");
+         ValueParam param = initParams.getValueParam("entry-point");
          if (param != null)
-            defaultEntryPoint = param.getValue();
+            entryPoint = param.getValue();
          else
-            defaultEntryPoint = "";
+            entryPoint = DEF_WS;
       }
-      else 
-         defaultEntryPoint = "";
+      else entryPoint = DEF_WS;
    }
    
    
@@ -131,7 +129,7 @@ public class RepositoryDiscoveryService implements ResourceContainer
       if (repository == null)
          repository =  repositoryService.getDefaultRepository();
       
-      String href = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, repository.getConfiguration().getName(), defaultEntryPoint, "/").build().toString();
+      String href = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, repository.getConfiguration().getName(), entryPoint, "/").build().toString();
       return href;
    }
 

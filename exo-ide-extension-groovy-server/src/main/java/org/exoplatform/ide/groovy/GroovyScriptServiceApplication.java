@@ -20,14 +20,12 @@
 package org.exoplatform.ide.groovy;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.groovy.codeassistant.ClassInfoStrorage;
 import org.exoplatform.ide.groovy.codeassistant.CodeAssistant;
 import org.exoplatform.ide.groovy.codeassistant.DocStorage;
 import org.exoplatform.ide.groovy.codeassistant.bean.GroovyAutocompletionConfig;
-import org.exoplatform.ide.groovy.codeassistant.bean.JarEntry;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +46,7 @@ public class GroovyScriptServiceApplication extends Application
 
    private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
-   public GroovyScriptServiceApplication(SessionProviderService sessionProvider, RepositoryService repositoryService,
+   public GroovyScriptServiceApplication(ThreadLocalSessionProviderService sessionProvider, RepositoryService repositoryService,
       InitParams initParams)
    {
       if (initParams != null)

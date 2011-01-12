@@ -40,6 +40,7 @@ import java.util.Set;
 import javax.jcr.Node;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
 
@@ -90,6 +91,7 @@ public class TestGroovyTemplateRender extends Base
    public void testRender() throws Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+      headers.add(HttpHeaders.CONTENT_TYPE, "application/x-groovy+html");
       EnvironmentContext ctx = new EnvironmentContext();
       HttpServletRequest httpRequest =
          new MockHttpServletRequest("/", new ByteArrayInputStream(GTMPL.getBytes()), GTMPL.length(), "POST", headers);

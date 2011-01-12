@@ -5,12 +5,12 @@
  * modify it under the terms of the GNU Affero General Public License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
-
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
@@ -32,12 +32,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.groovy.JcrUtils;
 import org.exoplatform.ide.groovy.codeassistant.bean.ShortTypeInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -64,7 +65,7 @@ public class CodeAssistant
 
    private final RepositoryService repositoryService;
 
-   private final SessionProviderService sessionProviderService;
+   private final ThreadLocalSessionProviderService sessionProviderService;
 
    private final String wsName;
 
@@ -72,7 +73,7 @@ public class CodeAssistant
    private static final Log LOG = ExoLogger.getLogger(CodeAssistant.class);
 
    public CodeAssistant(String wsName, RepositoryService repositoryService,
-      SessionProviderService sessionProviderService)
+      ThreadLocalSessionProviderService sessionProviderService)
    {
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;
@@ -91,13 +92,10 @@ public class CodeAssistant
    @Produces(MediaType.APPLICATION_JSON)
    public InputStream getClassByFQN(@QueryParam("fqn") String fqn) throws CodeAssistantException
    {
-      SessionProvider sp = sessionProviderService.getSessionProvider(null);
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:fqn='" + fqn + "'";
       try
       {
-         Session session =
-            sp.getSession(wsName,
-               getRepository());
+         Session session = JcrUtils.getSession(repositoryService, sessionProviderService, wsName);
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
@@ -131,18 +129,6 @@ public class CodeAssistant
    }
 
    /**
-    * Get current repository
-    * @return current repository or default repository if current repository is null
-    * @throws RepositoryException
-    * @throws RepositoryConfigurationException
-    */
-   private ManageableRepository getRepository() throws RepositoryException, RepositoryConfigurationException
-   {
-      return repositoryService.getCurrentRepository() != null ? repositoryService.getCurrentRepository()
-         : repositoryService.getDefaultRepository();
-   }
-
-   /**
     * Returns the Class object associated with the class or interface with the given string name.
     * 
     * @param fqn the Full Qualified Name
@@ -173,11 +159,9 @@ public class CodeAssistant
    public ShortTypeInfo[] findFQNsByClassName(@QueryParam("class") String className) throws CodeAssistantException
    {
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:className='" + className + "'";
-      SessionProvider sp = sessionProviderService.getSessionProvider(null);
-
       try
       {
-         Session session = sp.getSession(wsName, getRepository());
+         Session session = JcrUtils.getSession(repositoryService, sessionProviderService, wsName);
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
@@ -247,12 +231,10 @@ public class CodeAssistant
       {
          throw new CodeAssistantException(HTTPStatus.BAD_REQUEST, "\"where\" parameter must be className or fqn");
       }
-
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:" + where + " LIKE '" + prefix + "%'";
-      SessionProvider sp = sessionProviderService.getSessionProvider(null);
       try
       {
-         Session session = sp.getSession(wsName, getRepository());
+         Session session = JcrUtils.getSession(repositoryService, sessionProviderService, wsName);
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
@@ -306,10 +288,9 @@ public class CodeAssistant
          sql += " AND exoide:className LIKE '" + prefix + "%'";
       }
 
-      SessionProvider sp = sessionProviderService.getSessionProvider(null);
       try
       {
-         Session session = sp.getSession(wsName, getRepository());
+         Session session = JcrUtils.getSession(repositoryService, sessionProviderService, wsName);
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
@@ -343,16 +324,14 @@ public class CodeAssistant
    }
 
    @GET
-   //use POST for fixing cache problem
    @Path("/class-doc")
    @Produces("text/html")
    public String getClassDoc(@QueryParam("fqn") String fqn) throws CodeAssistantException
    {
       String sql = "SELECT * FROM exoide:javaDoc WHERE exoide:fqn='" + fqn + "'";
-      SessionProvider sp = sessionProviderService.getSessionProvider(null);
       try
       {
-         Session session = sp.getSession(wsName, getRepository());
+         Session session = JcrUtils.getSession(repositoryService, sessionProviderService, wsName);
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();

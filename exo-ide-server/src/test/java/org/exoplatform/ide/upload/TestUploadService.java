@@ -5,12 +5,12 @@
  * modify it under the terms of the GNU Affero General Public License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
-
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
@@ -116,7 +116,7 @@ public class TestUploadService extends BaseTest
          new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
       ctx.put(HttpServletRequest.class, httpRequest);
 
-      ContainerResponse response = launcher.service("POST", "/services/upload", "http://localhost", headers,
+      ContainerResponse response = launcher.service("POST", "/ide/upload", "http://localhost", headers,
             data, null, ctx);
       
       assertEquals(HTTPStatus.CREATED, response.getStatus());
@@ -145,7 +145,7 @@ public class TestUploadService extends BaseTest
          new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
       ctx.put(HttpServletRequest.class, httpRequest);
 
-      ContainerResponse response = launcher.service("POST", "/services/upload", "http://localhost", headers,
+      ContainerResponse response = launcher.service("POST", "/ide/upload", "http://localhost", headers,
             data, null, ctx);
       
       assertEquals(HTTPStatus.INTERNAL_ERROR, response.getStatus());
@@ -179,7 +179,7 @@ public class TestUploadService extends BaseTest
          new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
       ctx.put(HttpServletRequest.class, httpRequest);
 
-      ContainerResponse response = launcher.service("POST", "/services/upload", "http://localhost", headers,
+      ContainerResponse response = launcher.service("POST", "/ide/upload", "http://localhost", headers,
             data, null, ctx);
       
       assertEquals(HTTPStatus.INTERNAL_ERROR, response.getStatus());
@@ -219,7 +219,7 @@ public class TestUploadService extends BaseTest
          new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
       ctx.put(HttpServletRequest.class, httpRequest);
 
-      ContainerResponse response = launcher.service("POST", "/services/upload", "http://localhost", headers,
+      ContainerResponse response = launcher.service("POST", "/ide/upload", "http://localhost", headers,
             data, null, ctx);
       
       assertEquals(HTTPStatus.INTERNAL_ERROR, response.getStatus());
