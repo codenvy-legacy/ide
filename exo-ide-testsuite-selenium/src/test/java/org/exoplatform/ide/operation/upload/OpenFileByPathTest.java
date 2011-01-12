@@ -84,9 +84,7 @@ public class OpenFileByPathTest extends BaseTest
    @Test
    public void testOpenFileByPath() throws Exception
    { 
-      selenium.refresh();
-      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      waitForRootElement();
       
       // open folder
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
