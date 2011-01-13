@@ -23,7 +23,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.ide.client.AbstractGwtTest;
-import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPointListUnmarshaller;
 
 import java.util.ArrayList;

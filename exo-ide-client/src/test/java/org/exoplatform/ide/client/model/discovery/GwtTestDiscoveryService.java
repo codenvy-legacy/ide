@@ -23,9 +23,10 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.ide.client.AbstractGwtTest;
 import org.exoplatform.ide.client.Const;
-import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
-import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedHandler;
-import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
+import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
+import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedHandler;
 
 import java.util.List;
 
