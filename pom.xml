@@ -40,6 +40,7 @@
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
       <groovy.version>1.6.5</groovy.version>
       <javax.ws.version>1.0</javax.ws.version>
+      <version.failsafe.plugin>2.6</version.failsafe.plugin>
    </properties>
 
 
@@ -460,8 +461,88 @@
                <artifactId>gwt-maven-plugin</artifactId>
                <version>${gwt.maven.plugin.version}</version>
             </plugin>
+            <plugin>
+               <artifactId>maven-eclipse-plugin</artifactId>
+               <configuration>
+                  <downloadSources>true</downloadSources>
+                  <downloadJavadocs>false</downloadJavadocs>
+                  <addVersionToProjectName>true</addVersionToProjectName>
+               </configuration>
+            </plugin>
+            <plugin>
+               <artifactId>maven-idea-plugin</artifactId>
+               <configuration>
+                  <downloadSources>true</downloadSources>
+                  <downloadJavadocs>false</downloadJavadocs>
+               </configuration>
+            </plugin>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-failsafe-plugin</artifactId>
+               <version>${version.failsafe.plugin}</version>
+            </plugin>
          </plugins>
       </pluginManagement>
+      <plugins>
+         <plugin>
+            <inherited>false</inherited>
+            <groupId>com.mycila.maven-license-plugin</groupId>
+            <artifactId>maven-license-plugin</artifactId>
+            <version>1.9.0</version>
+            <configuration>
+               <header>dev-resources/header2010.txt</header>
+               <validHeaders>
+                  <validHeader>dev-resources/header2010.txt</validHeader>
+                  <validHeader>dev-resources/header2010_now.txt</validHeader>
+               </validHeaders>
+               <failIfMissing>false</failIfMissing>
+               <aggregate>true</aggregate>
+               <strictCheck>true</strictCheck>
+               <properties>
+                  <year>2011</year>
+               </properties>
+               <excludes>
+                  <exclude>**/firefoxProfile/**</exclude>
+                  <exclude>**/*.log</exclude>
+                  <exclude>**/*.txt</exclude>
+                  <exclude>**/*.conf</exclude>
+                  <exclude>**/*.sql</exclude>
+                  <exclude>**/*.html</exclude>
+                  <exclude>**/*.html</exclude>
+                  <exclude>**/*.css</exclude>
+                  <exclude>**/*.js</exclude>
+                  <exclude>**/*.jsp</exclude>
+                  <exclude>**/*.properties</exclude>
+                  <exclude>**/*.sh</exclude>
+                  <exclude>**/catalina.policy</exclude>
+                  <exclude>**/server.xml</exclude>
+                  <exclude>**/login.config</exclude>
+                  <exclude>**/*.svg</exclude>
+                  <exclude>**/*RELEASE*</exclude>
+                  <exclude>**/jquery/**</exclude>
+                  <exclude>**/*jquery*</exclude>
+                  <exclude>**/*.htc</exclude>
+                  <exclude>**/*.wiki</exclude>
+                  <exclude>**/*.gtmpl</exclude>
+                  <exclude>**/*.gadget</exclude>
+                  <exclude>**/*.json</exclude>
+                  <exclude>**/*.ext</exclude>
+               </excludes>
+               <mapping>
+                  <java>SLASHSTAR_STYLE</java>
+               </mapping>
+            </configuration>
+            <executions>
+               <execution>
+                  <id>check-headers</id>
+                  <phase>verify</phase>
+                  <goals>
+                     <goal>check</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
    </build>
    <modules>
 

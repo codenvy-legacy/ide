@@ -64,7 +64,7 @@ public class GroovyTemplateService implements ResourceContainer
    private RepositoryService repositoryService;
 
    private ThreadLocalSessionProviderService sessionProviderService;
-   
+
    private String WEBDAV_CONTEXT = "jcr";
 
    /**
