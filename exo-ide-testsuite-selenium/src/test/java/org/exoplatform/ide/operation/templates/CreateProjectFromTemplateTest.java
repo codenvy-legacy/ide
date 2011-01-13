@@ -141,7 +141,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       //----- 2 ----------------
       //select project template from list, type project name, click Create button
       selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
-      typeProjectName(PROJECT_NAME);
+      typeProjectName(selenium, PROJECT_NAME);
       
       selenium.click(CREATE_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
@@ -179,7 +179,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       //----- 2 ----------------
       //select project template from list, type project name, click Create button
       selectProjectTemplate(selenium, DEFAULT_PROJECT_TEMPLATE_NAME);
-      typeProjectName(PROJECT_FROM_DEFAULT_TEMPLATE);
+      typeProjectName(selenium, PROJECT_FROM_DEFAULT_TEMPLATE);
       
       selenium.click(CREATE_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
@@ -295,14 +295,6 @@ public class CreateProjectFromTemplateTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
          + "]/col[0]/open");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-   
-   private void typeProjectName(String projectName) throws Exception
-   {
-      selenium.type("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[" 
-         + "name=ideCreateFileFromTemplateFormFileNameField]/element", projectName);
-      
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
 }

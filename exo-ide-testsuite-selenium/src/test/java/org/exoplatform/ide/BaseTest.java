@@ -97,9 +97,14 @@ public abstract class BaseTest
 
    protected static final EnumBrowserCommand BROWSER_COMMAND = EnumBrowserCommand.CHROME;
 
-   protected static final Selenium selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
+   public static final Selenium selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
    
    protected static final IDE IDE = new IDE(selenium);
+   
+   /**
+    * Workspaces for IDE.
+    */
+   protected static final String[] WORKSPACES = {"dev-monit", "production"};
 
    @BeforeClass
    public static void startSelenium() throws Exception

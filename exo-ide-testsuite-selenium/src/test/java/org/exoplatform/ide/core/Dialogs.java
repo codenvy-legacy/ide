@@ -56,17 +56,30 @@ public class Dialogs
    }
    
    /**
-    * Check, that warning dialog appeared and 
+    * Check, that warning dialog with two buttons (YES, NO) appeared and 
     * all elements are present.
     * 
     * @param header - the header of dialog (Info, Error etc)
     */
-   public void checkDialog(String header)
+   public void checkTwoBtnDialog(String header)
    {
       assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
       assertEquals(header, selenium.getText(Dialogs.Locators.SC_WARN_DIALOG_HEADER));
       assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_YES_BTN));
       assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_NO_BTN));
+   }
+   
+   /**
+    * Check, that warning dialog with one button (OK) appeared and 
+    * all elements are present.
+    * 
+    * @param header - the header of dialog (Info, Error etc)
+    */
+   public void checkOneBtnDialog(String header)
+   {
+      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
+      assertEquals(header, selenium.getText(Dialogs.Locators.SC_WARN_DIALOG_HEADER));
+      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
    }
    
    /**
@@ -100,6 +113,12 @@ public class Dialogs
    {
       selenium.click(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   public void checkTextInDialog(String text)
+   {
+      final String textInDialog = selenium.getText(Locators.SC_WARN_DIALOG + "/blurb/");
+      assertEquals(text, textInDialog);
    }
 
 }

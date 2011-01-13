@@ -146,7 +146,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       
       //check warning dialog
-      IDE.dialogs().checkDialog("Info");
+      IDE.dialogs().checkTwoBtnDialog("Info");
       
       //click Ok button
       IDE.dialogs().clickYesButton();

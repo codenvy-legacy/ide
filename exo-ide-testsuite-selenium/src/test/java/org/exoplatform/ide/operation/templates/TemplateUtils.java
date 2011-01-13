@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.templates;
 
+import static org.exoplatform.ide.operation.templates.TemplateUtils.CREATE_BUTTON_LOCATOR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -42,6 +43,8 @@ public class TemplateUtils
    
    static final String NAME_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[name=ideCreateFileFromTemplateFormFileNameField]/element";
    
+   public static final String DEFAULT_PROJECT_TEMPLATE_NAME = "Sample project";
+   
    static void checkCreateProjectFromTemplateForm(Selenium selenium)
    {
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/"));
@@ -52,7 +55,7 @@ public class TemplateUtils
       assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[name=ideCreateFileFromTemplateFormFileNameField]/element"));
    }
    
-   static void selectProjectTemplate(Selenium selenium, String projectTemplateName) throws Exception
+   public static void selectProjectTemplate(Selenium selenium, String projectTemplateName) throws Exception
    {
       selenium.mouseDownAt("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[@title='" 
          + projectTemplateName + "']", "");
@@ -169,5 +172,19 @@ public class TemplateUtils
    {
       selenium.click("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/closeButton/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   public static void typeProjectName(Selenium selenium, String projectName) throws Exception
+   {
+      selenium.type("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[" 
+         + "name=ideCreateFileFromTemplateFormFileNameField]/element", projectName);
+      
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+   }
+   
+   public static void clickCreateProjectButton(Selenium selenium) throws Exception
+   {
+      selenium.click(CREATE_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.SLEEP);
    }
 }
