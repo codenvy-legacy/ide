@@ -14,19 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.model.discovery.event;
-
-import com.google.gwt.event.shared.EventHandler;
-
-
+package org.exoplatform.ide.client.framework.discovery;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public interface DefaultEntryPointReceivedHandler extends EventHandler 
+public abstract class DiscoveryService
 {
-   void onDefaultEntryPointReceived(DefaultEntryPointReceivedEvent event);
-}
+   private static DiscoveryService instance;
 
+   public static DiscoveryService getInstance()
+   {
+      return instance;
+   }
+
+   protected DiscoveryService()
+   {
+      instance = this;
+   }
+
+   public abstract void getEntryPoints();
+
+   protected abstract void getEntryPoints(String url);
+   
+   public abstract void getDefaultEntryPoint();
+   
+   /**
+    * Get list of all deployed REST Services 
+    */
+   public abstract void getRestServices();
+
+}

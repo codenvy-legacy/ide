@@ -32,10 +32,10 @@ import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.model.discovery.DiscoveryService;
-import org.exoplatform.ide.client.model.discovery.event.RestServicesReceivedEvent;
-import org.exoplatform.ide.client.model.discovery.event.RestServicesReceivedHandler;
-import org.exoplatform.ide.client.model.discovery.marshal.RestService;
+import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
+import org.exoplatform.ide.client.framework.discovery.RestService;
+import org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedHandler;
 import org.exoplatform.ide.client.module.groovy.service.wadl.WadlService;
 import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceiveHandler;
 import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceivedEvent;
@@ -274,7 +274,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    }
 
    /**
-    * @see org.exoplatform.ide.client.model.discovery.event.RestServicesReceivedHandler#onRestServicesReceived(org.exoplatform.ide.client.model.discovery.event.RestServicesReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedHandler#onRestServicesReceived(org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedEvent)
     */
    public void onRestServicesReceived(RestServicesReceivedEvent event)
    {

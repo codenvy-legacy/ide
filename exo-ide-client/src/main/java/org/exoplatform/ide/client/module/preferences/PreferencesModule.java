@@ -31,6 +31,9 @@ import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
+import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -43,10 +46,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPanel;
 import org.exoplatform.ide.client.hotkeys.HotKeyManagerImpl;
-import org.exoplatform.ide.client.model.discovery.DiscoveryService;
 import org.exoplatform.ide.client.model.discovery.DiscoveryServiceImpl;
-import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
-import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ide.client.module.preferences.control.CustomizeHotKeysCommand;
 import org.exoplatform.ide.client.module.preferences.control.CustomizeToolbarCommand;
 import org.exoplatform.ide.client.module.preferences.control.SelectWorkspaceCommand;
@@ -108,7 +108,6 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
       handlers.addHandler(ShowAboutDialogEvent.TYPE, this);
       handlers.addHandler(ControlsUpdatedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handlers.addHandler(EntryPointsReceivedEvent.TYPE, this);
       handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
       handlers.addHandler(EditorFileClosedEvent.TYPE, this);
       handlers.addHandler(SelectWorkspaceEvent.TYPE, this);
@@ -153,11 +152,13 @@ public class PreferencesModule implements IDEModule, InitializeServicesHandler, 
 
    public void onSelectWorkspace(SelectWorkspaceEvent event)
    {
+      handlers.addHandler(EntryPointsReceivedEvent.TYPE, this);
       DiscoveryService.getInstance().getEntryPoints();
    }
 
    public void onEntryPointsReceived(EntryPointsReceivedEvent event)
    {
+      handlers.removeHandler(EntryPointsReceivedEvent.TYPE);
       new SelectWorkspaceForm(eventBus, applicationSettings, event.getEntryPointList(), openedFiles, lockTokens);
    }
 

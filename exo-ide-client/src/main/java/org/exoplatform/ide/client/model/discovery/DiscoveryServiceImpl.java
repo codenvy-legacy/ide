@@ -25,12 +25,13 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.model.discovery.event.DefaultEntryPointReceivedEvent;
-import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
-import org.exoplatform.ide.client.model.discovery.event.RestServicesReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
+import org.exoplatform.ide.client.framework.discovery.RestService;
+import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedEvent;
 import org.exoplatform.ide.client.model.discovery.marshal.DefaultEntryPointUnmarshaller;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPointListUnmarshaller;
-import org.exoplatform.ide.client.model.discovery.marshal.RestService;
 import org.exoplatform.ide.client.model.discovery.marshal.RestServicesUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -80,7 +81,7 @@ public class DiscoveryServiceImpl extends DiscoveryService
    }
 
    /**
-    * @see org.exoplatform.ide.client.model.discovery.DiscoveryService#getDefaultEntryPoint()
+    * @see org.exoplatform.ide.client.framework.discovery.DiscoveryService#getDefaultEntryPoint()
     */
    @Override
    public void getDefaultEntryPoint()
@@ -98,7 +99,7 @@ public class DiscoveryServiceImpl extends DiscoveryService
    }
 
    /**
-    * @see org.exoplatform.ide.client.model.discovery.DiscoveryService#getRestServices()
+    * @see org.exoplatform.ide.client.framework.discovery.DiscoveryService#getRestServices()
     */
    @Override
    public void getRestServices()

@@ -258,7 +258,7 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
             display.disableDeleteButton();
          }
          else if (selectedTemplate instanceof FileTemplate
-            && MimeType.APPLICATION_JAVASCRIPT.equals(((FileTemplate)selectedTemplate).getMimeType()))
+            && MimeType.APPLICATION_GROOVY_CLASSPATH.equals(((FileTemplate)selectedTemplate).getMimeType()))
          {
             //can not delete classpath file
             display.disableDeleteButton();

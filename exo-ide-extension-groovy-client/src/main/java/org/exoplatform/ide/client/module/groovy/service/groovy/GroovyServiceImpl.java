@@ -27,10 +27,13 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.ide.client.module.groovy.service.RestServiceOutput;
 import org.exoplatform.ide.client.module.groovy.service.SimpleParameterEntry;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.ClassPathLocationReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyDeployResultReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyUndeployResultReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.GroovyValidateResultReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.groovy.event.RestServiceOutputReceivedEvent;
+import org.exoplatform.ide.client.module.groovy.service.groovy.marshal.ClassPath;
+import org.exoplatform.ide.client.module.groovy.service.groovy.marshal.ClassPathUnmarshaller;
 import org.exoplatform.ide.client.module.groovy.service.groovy.marshal.RestServiceOutputUnmarshaller;
 
 import java.util.List;
@@ -50,12 +53,14 @@ public class GroovyServiceImpl extends GroovyService
    public static final String DEPLOY = "/deploy";
    
    public static final String DEPLOY_SANDBOX = "/deploy-sandbox";
-   
- public static final String UNDEPLOY = "/undeploy";
-   
+
+   public static final String UNDEPLOY = "/undeploy";
+
    public static final String UNDEPLOY_SANDBOX = "/undeploy-sandbox";
 
    public static final String VALIDATE = "/validate-script";
+   
+   public static final String CLASSPATH_LOCATION = "/classpath-location";
 
    private HandlerManager eventBus;
    
@@ -198,9 +203,19 @@ public class GroovyServiceImpl extends GroovyService
    }
 
 
-  
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService#getClassPathLocation(java.lang.String)
+    */
+   @Override
+   public void getClassPathLocation(String href)
+   {
+      String url = restServiceContext + SERVICE_PATH + CLASSPATH_LOCATION;
+      ClassPath classPath = new ClassPath();
+      ClassPathLocationReceivedEvent event = new ClassPathLocationReceivedEvent(classPath);
+      ClassPathUnmarshaller unmarshaller = new ClassPathUnmarshaller(classPath);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
 
-
-
-
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(
+         HTTPHeader.LOCATION, href).send(callback);
+   }
 }

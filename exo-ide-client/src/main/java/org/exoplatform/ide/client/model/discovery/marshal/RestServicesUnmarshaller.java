@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.client.framework.discovery.RestService;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;

@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.model.discovery.event;
+package org.exoplatform.ide.client.framework.discovery.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 
 import java.util.List;
 

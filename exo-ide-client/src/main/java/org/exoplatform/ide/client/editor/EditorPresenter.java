@@ -537,15 +537,14 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
     */
    private boolean isReadOnly(File file)
    {
-      if (file instanceof Version)
+      if (file instanceof Version || file.isSystem())
       {
          return true;
       }
-
-      if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
+      else if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
       {
          return !(lockTokens.containsKey(file.getHref()));
-      }
+      } 
       else
          return false;
    }

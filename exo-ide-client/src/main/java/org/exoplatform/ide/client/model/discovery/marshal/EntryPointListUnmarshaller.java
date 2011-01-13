@@ -26,7 +26,8 @@ import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
+import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedEvent;
 
 import java.util.ArrayList;
 import java.util.List;

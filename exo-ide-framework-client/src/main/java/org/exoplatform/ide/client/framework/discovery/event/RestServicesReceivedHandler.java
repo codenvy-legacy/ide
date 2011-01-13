@@ -16,27 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.restdiscovery;
+package org.exoplatform.ide.client.framework.discovery.event;
 
-import java.util.List;
-import java.util.Set;
-
-import org.exoplatform.ide.client.framework.discovery.RestService;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.HasOpenHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link RestServicesReceivedEvent} event.
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 23, 2010 3:48:02 PM evgen $
+ * @version $Id: Dec 21, 2010 4:55:12 PM evgen $
  *
  */
-public interface UntypedTreeGrid extends HasOpenHandlers<Object>, HasSelectionHandlers<Object>, HasClickHandlers
+public interface RestServicesReceivedHandler extends EventHandler
 {
-   void setRootValue(RestService item, Set<String> restClassPath);
-
-   void setPaths(RestService service, List<?> list);
+   
+   void onRestServicesReceived(RestServicesReceivedEvent event);
+   
 }

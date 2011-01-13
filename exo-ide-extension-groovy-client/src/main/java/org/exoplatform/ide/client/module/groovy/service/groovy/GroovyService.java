@@ -19,6 +19,7 @@ package org.exoplatform.ide.client.module.groovy.service.groovy;
 import java.util.List;
 
 import org.exoplatform.ide.client.module.groovy.service.SimpleParameterEntry;
+import org.exoplatform.ide.client.module.groovy.service.groovy.event.ClassPathLocationReceivedEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -77,6 +78,20 @@ public abstract class GroovyService
     * @param path
     */
    public abstract void undeploy(String href);
+   
+
+   /**
+    * Get location of the groovy classpath file if exists.
+    * Return status:
+    * 200 - groovy classpath location in the response body
+    * 404 - groovy classpath location is not found.
+    * 500 - internal server error, message of the error is in the response body.
+    * Listen to {@link ClassPathLocationReceivedEvent} event.
+    * 
+    * @param href location of the item, 
+    * with respect to which the classpath location must be found (file or folder).
+    */
+   public abstract void getClassPathLocation(String href);
    
    /**
     * Get Groovy script output

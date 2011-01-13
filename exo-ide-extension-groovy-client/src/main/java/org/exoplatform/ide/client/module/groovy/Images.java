@@ -35,6 +35,10 @@ public class Images
       public static String OK = IMAGE_URL + "module/groovy/buttons/ok.png";
 
       public static String NO = IMAGE_URL + "module/groovy/buttons/no.png";
+      
+      public static String ADD = IMAGE_URL + "module/groovy/buttons/add.png";
+
+      public static String REMOVE = IMAGE_URL + "module/groovy/buttons/remove.png";
 
       public static String YES = IMAGE_URL + "module/groovy/buttons/yes.png";
 
@@ -78,4 +82,12 @@ public class Images
 
    }
 
+   public interface ClassPath
+   {
+      static final String SOURCE_FILE = IMAGE_URL + "module/groovy/classpath/source-file.png";
+      
+      static final String SOURCE_FOLDER = IMAGE_URL + "module/groovy/classpath/source-folder.png";
+      
+      static final String WORKSPACE = IMAGE_URL + "module/groovy/classpath/workspace.png";
+   }
 }

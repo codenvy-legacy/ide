@@ -21,10 +21,10 @@
 package org.exoplatform.ide.client.application.phases;
 
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
+import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.model.discovery.DiscoveryService;
-import org.exoplatform.ide.client.model.discovery.event.DefaultEntryPointReceivedEvent;
-import org.exoplatform.ide.client.model.discovery.event.DefaultEntryPointReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -65,7 +65,7 @@ public class LoadDefaultEntryPointPhase extends Phase implements DefaultEntryPoi
    }
 
    /**
-    * @see org.exoplatform.ide.client.model.discovery.event.DefaultEntryPointReceivedHandler#onDefaultEntryPointReceived(org.exoplatform.ide.client.model.discovery.event.DefaultEntryPointReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedHandler#onDefaultEntryPointReceived(org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent)
     */
    public void onDefaultEntryPointReceived(DefaultEntryPointReceivedEvent event)
    {

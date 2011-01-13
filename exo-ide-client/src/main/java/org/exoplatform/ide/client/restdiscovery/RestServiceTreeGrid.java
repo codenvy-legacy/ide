@@ -28,7 +28,7 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.component.data.FolderOpen
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.data.SelectionHandlerImpl;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.event.ClickHandlerImpl;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.model.discovery.marshal.RestService;
+import org.exoplatform.ide.client.framework.discovery.RestService;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.OpenHandler;
@@ -219,7 +219,7 @@ public class RestServiceTreeGrid extends TreeGrid implements UntypedTreeGrid
    }
 
    /**
-    * @see org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid#setPaths(org.exoplatform.ide.client.model.discovery.marshal.RestService, java.util.List)
+    * @see org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid#setPaths(org.exoplatform.ide.client.framework.discovery.RestService, java.util.List)
     */
    public void setPaths(RestService service, List<?> resources)
    {

@@ -23,7 +23,7 @@ import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.model.discovery.event.DefaultEntryPointReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent;
 
 /**
  * Created by The eXo Platform SAS .

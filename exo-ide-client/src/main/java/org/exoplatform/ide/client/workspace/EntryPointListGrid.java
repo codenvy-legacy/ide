@@ -17,7 +17,7 @@
 package org.exoplatform.ide.client.workspace;
 
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
-import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionStyle;

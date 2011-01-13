@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,21 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.model.discovery.event;
+package org.exoplatform.ide.client.module.groovy.service.groovy.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link RestServicesReceivedEvent} event.
- * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 21, 2010 4:55:12 PM evgen $
+ * Handler for {@link ClassPathLocationReceivedEvent} event.
+ * 
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id: Jan 6, 2011 $
  *
  */
-public interface RestServicesReceivedHandler extends EventHandler
+public interface ClassPathLocationReceivedHandler extends EventHandler
 {
-   
-   void onRestServicesReceived(RestServicesReceivedEvent event);
-   
+   /**
+    * Perform actions, when on groovy classpath file location is received from server.
+    * 
+    * @param event 
+    */
+   void onClassPathLocationReceived(ClassPathLocationReceivedEvent event);
 }

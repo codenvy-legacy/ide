@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.Utils;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -38,7 +39,6 @@ import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.model.discovery.Scheme;
-import org.exoplatform.ide.client.model.discovery.marshal.EntryPoint;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;

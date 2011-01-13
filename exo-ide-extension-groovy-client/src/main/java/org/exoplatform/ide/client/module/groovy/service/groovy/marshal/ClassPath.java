@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,27 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.restdiscovery;
-
-import java.util.List;
-import java.util.Set;
-
-import org.exoplatform.ide.client.framework.discovery.RestService;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.HasOpenHandlers;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+package org.exoplatform.ide.client.module.groovy.service.groovy.marshal;
 
 /**
- * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 23, 2010 3:48:02 PM evgen $
+ * Bean with claspath info.
+ * 
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id: Jan 6, 2011 $
  *
  */
-public interface UntypedTreeGrid extends HasOpenHandlers<Object>, HasSelectionHandlers<Object>, HasClickHandlers
+public class ClassPath
 {
-   void setRootValue(RestService item, Set<String> restClassPath);
+   /**
+    * Location of the classpath file.
+    */
+   private String location;
 
-   void setPaths(RestService service, List<?> list);
+   /**
+    * @return the location
+    */
+   public String getLocation()
+   {
+      return location;
+   }
+
+   /**
+    * @param location the location to set
+    */
+   public void setLocation(String location)
+   {
+      this.location = location;
+   }
 }
