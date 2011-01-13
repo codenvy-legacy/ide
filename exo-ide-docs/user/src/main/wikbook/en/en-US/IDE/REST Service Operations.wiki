@@ -174,6 +174,62 @@ If REST Service is previously deployed by other user, you will not be able to de
 
 To run REST Service faster, you can use the special command *Run > Run in Sandbox* which is a sequence of next operations: *Save*, *Deploy to Sandbox*, *Undeploy from Sandbox*, *Launch REST Service*. Simply click the *Run in Sandbox* button at the right corner of the toolbar, or go to *Run > Run in Sandbox* on the top menu.
 
+
+h1. REST Service Discovery
+
+In the eXo IDE, you can explore all REST Services which is available from the server. To open _REST Service Discovery_ form, select *Help > REST Service Discovery...* from the top menu.
+
+!RestServiceDiscovery.png|border=1!
+
+*Illustration. REST Service Discovery form*
+
+h1. Configure Classpath
+
+The configuring of classpath means setting the list of paths (source files or folders with sources), that will be available during the compilation of project's sources,
+to which this classpath belongs to. Classpath file is located in the root of the project's directory, but it's not visible in browser tree,
+because can not be directly edited by user. So, to view the sources paths of the project, do as follows:
+* *Step 1.* Select the created project item in _Workspace Panel_.
+* *Step 2.* Go to *File > Configure Classpath...* on the top menu to open the *Configure Classpath* window as below:
+
+!configure-classpath.png|border=1!
+
+*Illustration. Configure classpath form*
+
+* *Step 3.* Add or remove source in the tree.
+* *Step 4.* Click the *Save* button to save changes in classpath configuration, or the *Cancel* button to discard changes in tree.
+
+{note}
+If selected in "Workspace Panel" item is not a project or part of it, then you will get an error message.
+{note}
+
+
+h2. Add Source to Classpath
+
+To add source to classpath, do as follows:
+* *Step 1.* Click the *Add...* button in *Configure Classpath* dialog to open "Choose source path" dialog.
+* *Step 2.* Select one or more sources in the tree.
+* *Step 3.* Click *Ok* button.
+
+!add-source.png|border=1!
+
+*Illustration. Add source to classpath*
+
+{tip}
+Use "CTRL" key to select more than one item in the tree.
+{tip}
+
+{note}
+The "Ok" button is disabled if workspace root folder is selected in the "Choose source path" dialog.
+{note}
+
+h2. Remove Source from Classpath
+
+To remove source(s) from project's classpath, select source in the tree of *Configure Classpath* dialog and click the *Remove* button.
+
+{note}
+The "Remove" button is disabled if there is no source selected in the tree.
+{note}
+
 h1. Example: REST service with complex media types output preview
 
 * *Step 1:* Create, save and deploy the REST Service with next content:
