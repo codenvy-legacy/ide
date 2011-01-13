@@ -42,6 +42,8 @@ import java.util.List;
  */
 public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
 {
+   private final String ID = "ideClassPathEntryListGrid";
+   
    private final String PATH = "path";
    
    private final String EMPTY_MESSAGE = "No sources. Click \"Add...\" button to add source directory or file.";
@@ -50,6 +52,7 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
 
    public ClassPathEntryListGrid()
    {
+      setID(ID);
       setCanSort(false);
       setSelectionType(SelectionStyle.MULTIPLE);
       setCanFreezeFields(false);

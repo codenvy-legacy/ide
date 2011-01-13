@@ -35,11 +35,11 @@ import org.exoplatform.ide.client.module.groovy.event.ConfigureBuildPathEvent;
 public class ConfigureBuildPathCommand extends SimpleControl implements IDEControl
 {
 
-   private static final String ID = "File/Configure Class Path...";
+   private static final String ID = "File/Configure Classpath...";
 
-   private final String TITLE = "Configure Class Path...";
+   private final String TITLE = "Configure Classpath...";
 
-   private final String PROMPT = "Configure Groovy Build Path...";
+   private final String PROMPT = "Configure Groovy Classpath...";
 
    public ConfigureBuildPathCommand()
    {

@@ -70,7 +70,7 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
 
    private final String ID_REMOVE_BUTTON = "ideConfigureBuildPathFormRemoveButton";
 
-   private final String TITLE = "Configure Build Path";
+   private final String TITLE = "Configure Classpath";
 
    /**
     * Cancel button.
