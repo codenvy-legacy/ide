@@ -25,10 +25,10 @@ import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TreeGrid;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
-import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 
 import java.util.ArrayList;
@@ -161,7 +161,15 @@ public class TemplateTreeGrid<T extends Template> extends TreeGrid<T>
             String nodeName = template.getName();
             if (template instanceof FileTemplate)
             {
-               nodeName = ((FileTemplate)template).getFileName() + "(from " + template.getName() + ")";
+               if (MimeType.APPLICATION_GROOVY_CLASSPATH.equals(((FileTemplate)template).getMimeType()))
+               {
+                  nodeName = ((FileTemplate)template).getFileName();
+                  newNode.setEnabled(false);
+               }
+               else
+               {
+                  nodeName = ((FileTemplate)template).getFileName() + "(from " + template.getName() + ")";
+               }
             }
             newNode.setAttribute(NAME, nodeName);
             tree.add(newNode, parentNode);
