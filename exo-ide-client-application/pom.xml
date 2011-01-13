@@ -121,8 +121,6 @@
       </dependency>
    </dependencies>
    <build>
-
-      <finalName>IDE</finalName>
       <resources>
          <resource>
             <directory>src/main/resources</directory>
@@ -247,9 +245,8 @@
                   **/preloadIDE.js,**/init_smartgwt_for_gadget.js,**/smartgwt-*.jar,
                   **/exo-gwtframework-commons*.jar,**/exo-gwtframework-editor*.jar,
                   **/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/exo.portal*.jar,
-                  **/chromattic*tests.jar,**/servlet-api*.jar
+                  **/chromattic*tests.jar,**/servlet-api*.jar,**/exo-ide-client*.jar
                   </packagingExcludes>
-               <warName>IDE</warName>
                <webResources>
                   <resource>
                      <directory>src/main/resources/META-INF</directory>
