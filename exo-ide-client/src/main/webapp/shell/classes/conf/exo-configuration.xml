@@ -104,8 +104,8 @@
    </component>
 
    <component>
-      <key>org.exoplatform.ide.netvibes.service.NetvibesWidgetService</key>
-      <type>org.exoplatform.ide.netvibes.service.NetvibesWidgetService</type>
+      <key>org.exoplatform.ide.netvibes.NetvibesServiceApplication</key>
+      <type>org.exoplatform.ide.netvibes.NetvibesServiceApplication</type>
    </component>
 
    <component>

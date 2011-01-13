@@ -18,21 +18,6 @@
  */
 package org.exoplatform.ide.netvibes.service;
 
-import org.apache.commons.lang.StringUtils;
-import org.exoplatform.common.http.client.CookieModule;
-import org.exoplatform.common.http.client.HTTPConnection;
-import org.exoplatform.common.http.client.HTTPResponse;
-import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.common.http.client.NVPair;
-import org.exoplatform.common.http.client.ParseException;
-import org.exoplatform.ide.netvibes.util.NetvibesUtil;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.rest.resource.ResourceContainer;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -51,9 +36,25 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.commons.lang.StringUtils;
+import org.exoplatform.common.http.client.CookieModule;
+import org.exoplatform.common.http.client.HTTPConnection;
+import org.exoplatform.common.http.client.HTTPResponse;
+import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.common.http.client.NVPair;
+import org.exoplatform.common.http.client.ParseException;
+import org.exoplatform.ide.netvibes.util.NetvibesUtil;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
  * Service for deploying and extracting content of netvibes widgets.
@@ -63,7 +64,7 @@ import javax.ws.rs.core.Response;
  *
  */
 @Path("/ide/netvibes")
-public class NetvibesWidgetService implements ResourceContainer
+public class NetvibesWidgetService
 {
 
    private static String NETVIBES_URL = "http://api.eco.netvibes.com";
@@ -72,9 +73,9 @@ public class NetvibesWidgetService implements ResourceContainer
    
    private final RepositoryService repositoryService;
    
-   private final SessionProviderService sessionProviderService;
+   private final ThreadLocalSessionProviderService sessionProviderService;
 
-   public NetvibesWidgetService(RepositoryService repositoryService, SessionProviderService sessionProviderService)
+   public NetvibesWidgetService(RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService)
    {
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;
@@ -89,6 +90,7 @@ public class NetvibesWidgetService implements ResourceContainer
     */
    @GET
    @Path("/{repoName}/{repoPath:.*}/")
+   @Produces(MediaType.TEXT_HTML)
    public InputStream showContent(@PathParam("repoName") String repoName, @PathParam("repoPath") String repoPath)
    {
       String wsName = repoPath.split("/")[0];
@@ -124,6 +126,7 @@ public class NetvibesWidgetService implements ResourceContainer
     */
    @POST
    @Path("/deploy")
+   @Produces(MediaType.TEXT_XML)
    public String deployNetvibesWidget(String inputStream, @QueryParam("login") String login,
       @QueryParam("password") String password, @QueryParam("secretkey") String secretkey,
       @QueryParam("apikey") String apikey)
