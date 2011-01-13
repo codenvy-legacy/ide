@@ -48,6 +48,8 @@ import org.exoplatform.ws.frameworks.json.impl.JsonException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.annotation.security.RolesAllowed;
 import javax.jcr.AccessDeniedException;
@@ -141,7 +143,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
          return super.validateScript(name, inputStream, dependentResources.getFolderSources(),
             dependentResources.getFileSources());
       }
-      return super.validateScript(name, inputStream);
+      return super
+         .validateScript(name, inputStream, Collections.<String> emptyList(), Collections.<String> emptyList());
    }
 
    /**
@@ -357,7 +360,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
          return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, dependentResources.getFolderSources(),
             dependentResources.getFileSources(), properties);
       }
-      return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, properties);
+      return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, Collections.<String> emptyList(),
+         Collections.<String> emptyList(), properties);
    }
 
    /**
@@ -380,7 +384,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
             .build();
       }
 
-      return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], false, properties);
+      return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], false, Collections.<String> emptyList(),
+         Collections.<String> emptyList(), properties);
    }
 
    /**
@@ -459,7 +464,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
                   dependentResources.getFileSources(), properties);
             }
 
-            load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, properties);
+            load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, Collections.<String> emptyList(),
+               Collections.<String> emptyList(), properties);
             //groovyPublisher.publishPerRequest(script.getProperty("jcr:data").getStream(), key, properties, createSourceFolders(dependentResources.getFolderSources()), createSourceFiles(dependentResources.getFileSources()));
          }
 
@@ -489,7 +495,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
          }
       }
    }
-   
+
    /**
     * Create response to send with error message.
     * 
