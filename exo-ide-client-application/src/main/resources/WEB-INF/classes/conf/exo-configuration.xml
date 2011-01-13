@@ -73,7 +73,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.discovery.RepositoryDiscoveryService</type>
+      <type>org.exoplatform.ide.IDEServiceApplication</type>
       <init-params>
          <value-param>
             <name>defaultEntryPoint</name>
@@ -267,7 +267,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.chromattic.RestDataObjectService</type>
+      <type>org.exoplatform.ide.chromattic.ChromatticServiceApplication</type>
    </component>
 
    <component>
