@@ -367,6 +367,7 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
          List<GroovyClassPathEntry> groovyClassPathEntries =
             GroovyClassPathUtil.getClassPathEntries(classPathFile.getContent());
          display.getClassPathEntryListGrid().setValue(groovyClassPathEntries);
+         checkRemoveButtonState();
       }
    }
 
