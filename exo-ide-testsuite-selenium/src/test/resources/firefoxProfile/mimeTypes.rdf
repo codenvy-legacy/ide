@@ -432,7 +432,7 @@
     <NC:handlerProp RDF:resource="urn:scheme:handler:ircs"/>
   </RDF:Description>
   <RDF:Description RDF:about="urn:mimetype:handler:text/plain"
-                   NC:alwaysAsk="true"
+                   NC:alwaysAsk="false"
                    NC:saveToDisk="true">
     <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:text/plain"/>
   </RDF:Description>

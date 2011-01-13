@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -38,8 +39,9 @@ import java.io.InputStreamReader;
 import java.util.UUID;
 
 /**
+ * Test for downloading file to local drive.
+ * 
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
- *
  */
 public class DownloadFileToLocalDriveTest extends BaseTest
 {
@@ -56,7 +58,12 @@ public class DownloadFileToLocalDriveTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.put(RANDOM_STRING.getBytes(), MimeType.APPLICATION_OCTET_STREAM, URL + FILE_NAME);
+         //file mime-type is important in this test-case, 
+         //because in mimeTypes.rdf (if firefox profile)
+         //was recognized actions with text/plain files.
+         //They will be downloaded to download dir
+         //without asking.
+         VirtualFileSystemUtils.put(RANDOM_STRING.getBytes(), MimeType.TEXT_PLAIN, URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -69,20 +76,19 @@ public class DownloadFileToLocalDriveTest extends BaseTest
    }
 
    @Test
-   public void downloadFileToLocalDriveTest() throws Exception
+   public void testDownloadFileToLocalDrive() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       selectItemInWorkspaceTree(WS_NAME);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       selectItemInWorkspaceTree(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
-      Thread.sleep(TestConstants.SLEEP);
+      /*
+       * File will be downloaded automaticaly.
+       */
 
-      selenium.keyPressNative("10");
       Thread.sleep(TestConstants.SLEEP * 3); //wait for download file
       String donwloadPath = System.getProperty("java.io.tmpdir");
       FileInputStream fstream = new FileInputStream(donwloadPath + "/" + FILE_NAME);
