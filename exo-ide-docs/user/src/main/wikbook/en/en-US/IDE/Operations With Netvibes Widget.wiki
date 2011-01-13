@@ -1,86 +1,79 @@
-The _Netvibes widget_ provides the _Universal Widget API_ (_UWA_) –  a powerful framework for Web widgets development - not only for Netvibes widgets, but also for many other environments.
-The UWA widget consists of combination of XHTML/XML, JavaScript/Ajax, CSS code and has MIME-type *application/x-uwa-widget*.
-With eXo IDE you can create Netvibes widget, preview it and deploy to _[Netvibes Ecosystem|http://eco.netvibes.com]_.
+The _Netvibes widget_ provides the Universal Widget API (UWA) - a powerful framework for the Web widgets development - for both Netvibes widgets and many various environments.
+
+The UWA widget consists of combinations of XHTML/XML, JavaScript/Ajax, CSS code with the MIME type *application/x-uwa-widget*.
+In eXo IDE, you can create the Netvibes widget, preview it and deploy to [Netvibes Ecosystem|http://eco.netvibes.com].
 
 {info}
-If you want to get acquainted with writing your own widgets, then [look at this documentation|http://dev.netvibes.com/doc/].
+If you want to get acquainted with writing your own widgets, refer [here|http://dev.netvibes.com/doc/].
 {info}
 
 h1. Create Netvibes Widget
 
-To create Netvibes widget click the *New > Netvibes Widget* button on the _Toolbar_ popup or go to *File > New > Netvibes Widget* on top menu (see next illustration below for details).
-The new file will be opened in editor, so you will be able to edit and save it.
+To create a Netvibes widget, click the *New* icon on the toolbar and then select *Netvibes Widget* from the drop-down menu, or go to *File > New > Netvibes Widget* on the top menu. The new Netvibes Widget file is opened in the editor, enabling you to edit and save it.
 
 !createNetvibesWidget.png|border=1!
 
 *Illustration. Create new Netvibes widget*
 
-h1. Preview  Netvibes Widget
+h1. Preview Netvibes Widget
 
-To preview Netvibes widget you should do as follows:
-* *Step 1:* Open saved earlier widget file.
-* *Step 2:* Click the *Show Preview* button on the _Toolbar_; or go to *Run > Show Preview* on top menu.
-Widget will be opened in the _Preview Tab_.
+To preview the Netvibes widget, do as follows:
+* *Step 1:* Open your desired widget file in the _Content Panel_.
+* *Step 2:* Click the *Show Preview* button on the toolbar; or go to *Run > Show Preview* on the top menu.
+
+The selected widget is opened in the _Preview Tab_.
 
 h1. Deploy Netvibes Widget To Netvibes Ecosystem
 
-Netvibes widgets are placed at the distant system called [Netvibes Ecosystem|http://eco.netvibes.com]. This is a place from where such widget can be found and compiled for other platforms.
-With eXo IDE you can deploy your widget to Netvibes Ecosystem easily as followed: 
-* *Step 1:* Click the *Deploy UWA widget to Ecosystem* button on the _Toolbar_; or go to *Run > Deploy UWA widget* on the top menu. Then the *Deploy UWA widget to Ecosystem* dialog window will be shown:
+Netvibes widgets are placed in the remote system called [Netvibes Ecosystem|http://eco.netvibes.com]. This is the location where such widgets can be found and compiled for other platforms.
+In eXo IDE, you can deploy your widget to Netvibes Ecosystem easily as follows: 
+
+* *Step 1:* Open your desired Netvibes widget in the _Content Panel_.
+
+* *Step 2:* Click the *Deploy UWA widget to Ecosystem* button on the toolbar; or go to *Run > Deploy UWA widget* on the top menu to open the *Deploy UWA widget to Ecosystem* window as below:
 
 !deployNetvibesWidget.png|border=1!
 
 *Illustration. Deploy UWA widget to Netvibes Ecosystem*
 
-* *Step 2:* Set deploy parameters along the next tree sub-steps:
-* *Step 3:* Click *Deploy* button at the last step.
+* *Step 3:* Enter the public widget URL in the *Step 1* form, and then click *Next*.
 
-h2. Step 1. Widget Content
-
-At this step you would type widget's _public location URL_ into the first text field *Public widget URL* and click *Next*.
-
-!step1.png|border=1!
-
-*Illustration. Step 1: Widget Content*
-
-h2. Step 2. Detailed Information
-
-At this step you will fill form with detailed information about your widget.
-
-{note}
-Fields "Title", "Description", "Main language", "Most appropriate region and "Most appropriate category" are required. Also separate descriptive keywords with space symbol.
-{note}
-
-{tip}
-Click "Back" button to return to previous step and edit widget's public location URL.
-{tip}
+* *Step 4:* Enter detailed information about the widget in the fields in the *Step 2* form. The fields marked with the asterisk (*), including "Title", "Description", "Main language", "Most appropriate region" and "Most appropriate category" are required. Click *Next* after completing your details.
 
 !step2.png|border=1!
 
-*Illustration. Step 2. Detailed Information*
+*Illustration. Dialog "Step 2. Detailed Information"*
 
-h2. Step 3. Private Information
-
-At this step you should set user's private data in the next required fields:
-* *Login* \- your login at Netvibes Ecosystem;
-* *Password* \- your password at Netvibes Ecosystem;
-* *Api Key* \- generated by Netvibes, is used for identifying you;
-* *Secret Key* \- generated by Netvibes,is used for submitting your actions.
-
-After that you should click *Deploy* button to start deploying the widget to _Netvibes Ecosystem_.
+* *Step 4:* Set private data in all fields of the *Step 3* form. All these fields are mandatory.
 
 !step3.png|border=1!
 
-*Illustration. Step 3. Private Information*
+*Illustration. Dialog "Step 3. Private Information"*
 
-The result of the deploy will be displayed in _Output Panel_. If the operation is successful, one message should be displayed like bellow:
+Details: 
+
+|| Field || Description ||
+| Login | Your login at Netvibes Ecosystem. |
+| Password | Your password at Netvibes Ecosystem. |
+| Api Key | The string generated by Netvibes and used for identifying you. |
+| Secret Key | The string generated by Netvibes and used for submitting your actions. |
+
+{tip}
+Click the "Back" button to return to the previous step to edit your entered information.
+{tip}
+
+* *Step 5:* Click the *Deploy* button to start deploying the widget to _Netvibes Ecosystem_.
+
+The result is displayed in the _Output Panel_. If the deployment is successful, you will receive the message as below:
+
 {screen}
 \[INFO\]*[http://78.137.4.16:53081/rest/ide-vfs-webdav/repository/dev-monit/TestWidget.html] deployed successfully.
 {screen}
 
-Otherwise, an error message will be shown, for example :
+If failed, you will receive the error message which varies, depending on each case.
+
 {screen}\[ERROR\] Error: The link already exists.{screen}
 
 {info}
-Deployed widget can be found at the Ecosystem page (http://eco.netvibes.com/mine/widgets) on "My creations" tab.
+The deployed widget can be found at the Ecosystem page (http://eco.netvibes.com/mine/widgets) on the "My creations" tab.
 {info}

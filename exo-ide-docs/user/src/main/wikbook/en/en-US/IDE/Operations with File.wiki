@@ -2,7 +2,7 @@ h1. Create File
 
 To create a file, do as follows:
 * *Step 1:* Click the *New* button on the left corner of the toolbar; or go to *File > New* from the top menu to select one available type, for example REST Service, from the drop-down menu.
-* *Step 2:* Save the new file in some folders of the repository by selecting the target folder in the _Workspace Panel_, then click the *Save As* icon on the toolbar; or go to *File > Save As...* from the top menu; or press *Ctrl + S* keys.
+* *Step 2:* Save the new file in some folders of the repository by selecting the target folder in the _Workspace Panel_, then click the *Save As* icon on the toolbar; or go to *File > Save As...* from the top menu; or press *Ctrl+S* keys.
 * *Step 3:* Type the name of new file in the *Save file as...* window.
 * *Step 4:* Click *OK* to accept creating the new file.
 
@@ -12,7 +12,7 @@ To create a file, do as follows:
 
 h1. Save/Save As... File
 
-Once you have changed content of the opened file, its tab title will be marked by * and the *Save* button will be enabled. So, you can save changed content by clicking *Save* or press *Ctrl + S*, or going to *File > Save* from the top menu.
+Once you have changed content of the opened file, its tab title will be marked by * and the *Save* button will be enabled. So, you can save changed content by clicking *Save* or press *Ctrl+S*, or going to *File > Save* from the top menu.
 To save the file into another folder or with another name, select the target folder in the _Workspace Panel_. Next, click the *Save As...* button on the toolbar; or select *File > Save As...* from the top menu.
 
 {note}
@@ -106,7 +106,7 @@ If the target file has been opened in the _Content Panel_ before, the confirmati
 If you want to change the default editor, simply click your desired editor and mark the *Use as default editor* checkbox in the *Open File With* dialog.
 
 The new settings are stored in the _User Settings File_ at the server that will be the default editor in next sessions.
-The default editor is marked by the [Default] text in the *Open File With* window.
+The default editor is marked by the \[Default\] text in the *Open File With* window.
 
 h1. Go to Folder
 
@@ -142,7 +142,7 @@ The following table is the list of MIME types registered in the eXo IDE.
 || File Type || MIME Type || Default File Extension || Default Editor ||
 | *Text* | text/plain | .txt | Code Editor |
 | *XML* | text/xml; application/xml | .xml | Code Editor |
-| *REST Service* | application/x-jaxrs+groovy | .groovy | Code Editor |
+| *REST Service* | application/x-jaxrs+groovy | .grs | Code Editor |
 | *POGO* | application/x-groovy | .groovy | Code Editor |
 | *Template* | application/x-groovy+html | .gtmpl | Code Editor |
 | *HTML* | text/html | .html | Code Editor |
@@ -217,7 +217,7 @@ h2. Create File from Template
 
 The *File From Template...* function enables you to create a file from the predefined template. For example, to create a simple gadget XML file, do as follows:
 
-* *Step 1:* Click the *New* button on the toolbar and select *File From Template...* from the pop-up to open the dialog, or press *Ctrl + N* hotkeys.
+* *Step 1:* Click the *New* button on the toolbar and select *File From Template...* from the pop-up to open the dialog, or press *Ctrl+N* hotkeys.
 * *Step 2:* Select your desired type and template for the file.
 * *Step 3:* Enter the name into the *File Name* field, and click *Create* to complete adding your new file. The newly created file is opened automatically in the _Content Panel_.
 
@@ -250,7 +250,7 @@ To create a project template, do as follows:
 *Illustration. "Create project template" dialog window.*
 
 
-* *Step 2:* Enter the name and brief description in the *Create project template* form, or edit its structure by clicking buttons *Add Folder*, *Add File*, "Delete" at the right part of the *Create project template* dialog.
+* *Step 2:* Enter the name and brief description in the *Create project template* form, or edit its structure by clicking buttons *Add Folder*, *Add File*, *Delete* at the right part of the *Create project template* dialog.
 * *Step 3:* Click *Create* button to complete your project template.
 
 h3. Modify the Project Template Structure
@@ -363,8 +363,8 @@ The *Undo* command in eXo IDE helps you obtain your desired changes, such as for
 * Click the *Undo Typing* button on the toolbar. 
 
 {note}
-The *Undo* function is disabled in case of no new changes in your text. 
-To undo the Undone action, use the *Redo* function.
+The "Undo" function is disabled in case of no new changes in your text. 
+To undo the Undone action, use the "Redo" function.
 {note}
 
 h2. Redo
@@ -382,8 +382,8 @@ The *Redo* function can be performed via one the two following ways:
 * Click the *Redo Typing* button on the toolbar.
 
 {note}
-* *Redo* is only enabled once *Undo* has been performed.
-* In the _Code Editor_, the *Undo/Redo* functions are disabled in case of no changes in the *Undo/Redo* history.
+* "Redo" is only enabled once "Undo" has been performed.
+* In the "Code Editor", the "Undo/Redo" functions are disabled in case of no changes in the "Undo/Redo" history.
 * Each file opened in the editor has its own history.
 {note}
 
@@ -633,7 +633,7 @@ The code outline is used to create codes productively. The outline is available 
 
 The _Outline Panel_ is opened automatically once a file has been created or opened. You can close the _Outline Panel_ by clicking the *Close* button on the tab header. Also, you can show/hide the _Outline Panel_ by pressing the *Show/Hide Outline* button on the toolbar or select *View* on the top menu and then select/deselect *Outline* from the drop-down menu.
 
-In the _Outline Panel_, you can see the tree of variables, functions, classes, objects, methods, fields, parameters, annotations,  HTML and XML tags with icon "< >", and special code delimiters like *"<% ... %>"* in the _ECM Template_ file, or *"[CDATA [ … ]]"* in the _Google Gadget_ file as the illustrations below.
+In the _Outline Panel_, you can see the tree of variables, functions, classes, objects, methods, fields, parameters, annotations,  HTML and XML tags with icon "< >", and special code delimiters like *"<% ... %>"* in the _ECM Template_ file, or *"\[CDATA \[ … \]\]"* in the _Google Gadget_ file as the illustrations below.
 
 !ecm-template-outline.png!
 

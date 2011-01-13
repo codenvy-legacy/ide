@@ -1,9 +1,9 @@
 The Google Gadget file is in the .xml format with the special MIME type "application/x-google-gadget". In eXo IDE, you can do the following actions on the Google Gadget files: 
 
-* Create .xml files.
-* Edit .xml files in the Code or WYSIWYG Editor.
+* Create *.xml* files.
+* Edit *.xml* files in the _Code_ or _WYSIWYG Editor_.
 * Preview them in the _Preview Tab_.
-* Deploy/Undeploy them on the server through the shindig-library.
+* *Deploy/Undeploy* them on the server through the shindig-library.
 * Add the deployed gadgets to some pages in the portal if you logged in as the administrator.
 
 h1. Create Google Gadget

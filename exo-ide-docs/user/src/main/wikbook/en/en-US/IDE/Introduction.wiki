@@ -4,7 +4,7 @@ The eXo IDE User Guide aims at providing explanations and step-by-step instructi
 
 h1. Access eXo IDE
 
-Before working with the eXo IDE gadget, make sure that you are logged in the portal as the role of an administrator or developer. If logged in as the administrator, you can do all functions; while as the developer, you still have the same abilities as the administrator, but can only deploy/undeploy REST services rather than the Google Gadget in the portal.  
+Before working with the eXo IDE gadget, make sure that you are logged in the portal as the role of an administrator or developer. If logged in as the administrator, you can do all functions; while as the developer, you still have the same abilities as the administrator, but can only deploy and run REST services in sandbox and cannot deploy the Google gadgets in the portal.  
 
 Next, hover your cursor on *My Spaces* on the administration bar and then select *Developers > IDE* to open the eXo IDE gadget.
 

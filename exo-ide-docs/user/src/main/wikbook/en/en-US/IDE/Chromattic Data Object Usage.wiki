@@ -28,9 +28,11 @@ To create new node type, do as follows:
 * *Step 2.* Select required format of node type in the appeared dialog window.
 * *Step 3.* Choose the action in case of such node type is already existed:
 
-*ignore if exists* \- if the pointed node type is existed, then ignore the creation operation.
-*fail if exists* \- if the pointed node type is existed, then fail.
-*replace if exists* \- if the pointed node type is existed, then replace it with new one.
+ - *ignore if exists* \- if the pointed node type is existed, then ignore the creation operation.
+ 
+ - *fail if exists* \- if the pointed node type is existed, then fail.
+ 
+ - *replace if exists* \- if the pointed node type is existed, then replace it with new one.
 
 * *Step 4.* Click *Deploy* button.
 
@@ -43,4 +45,4 @@ If node type has been deployed successfully, you will see the message *Node type
 
 {note}
 At present, CND format is not supported for the deploy operation.
-
+{note}
