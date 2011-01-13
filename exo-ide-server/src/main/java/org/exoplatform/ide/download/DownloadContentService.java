@@ -19,16 +19,6 @@
  */
 package org.exoplatform.ide.download;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.resource.ResourceContainer;
-
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -46,11 +36,21 @@ import javax.jcr.Session;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
  * Service for downloading folders and files to local drive.
@@ -60,7 +60,7 @@ import javax.ws.rs.core.UriInfo;
  */
 
 @Path("/ide/downloadcontent")
-public class DownloadContentService implements ResourceContainer
+public class DownloadContentService
 {
 
    private static final String MODIFICATION_PATTERN = "EEE, dd MMM yyyy HH:mm:ss z";
@@ -196,6 +196,7 @@ public class DownloadContentService implements ResourceContainer
     */
    @GET
    @Path("/{fileName:.*}/")
+   @Produces("*/*")
    public Response download(@Context UriInfo uriInfo, @PathParam("fileName") String fileName,
       @QueryParam("repoPath") String repoPath)
    {

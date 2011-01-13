@@ -53,7 +53,6 @@ public class GroovyScriptServiceApplication extends Application
       {
          GroovyAutocompletionConfig config =
             (GroovyAutocompletionConfig)initParams.getObjectParam("autocompletion.configuration").getObject();
-         System.out.println(config.getJarEntries().get(0).getJarPath());
 
          if (config.getJarEntries() != null)
          {

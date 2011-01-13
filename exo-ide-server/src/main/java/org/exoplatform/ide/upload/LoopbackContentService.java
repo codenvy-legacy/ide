@@ -17,11 +17,6 @@
 
 package org.exoplatform.ide.upload;
 
-import org.apache.commons.fileupload.FileItem;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.resource.ResourceContainer;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,8 +27,12 @@ import java.util.Iterator;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+
+import org.apache.commons.fileupload.FileItem;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
  * Uses for receiving the content of local file through server.
@@ -44,7 +43,7 @@ import javax.ws.rs.core.Response;
  */
 
 @Path("/ide/loopbackcontent")
-public class LoopbackContentService implements ResourceContainer
+public class LoopbackContentService
 {
    
    private static Log log = ExoLogger.getLogger(LoopbackContentService.class);
@@ -55,10 +54,12 @@ public class LoopbackContentService implements ResourceContainer
     * 
     * @param items file items form the request body.
     * @return the request body content wrapped with JavaScript.
+    * @throws UploadServiceException 
     */
    @POST
    @Consumes({"multipart/*"})
-   public Response post(Iterator<FileItem> items)
+   @Produces(MediaType.TEXT_HTML)
+   public String post(Iterator<FileItem> items) throws UploadServiceException
    {
       InputStream stream = null;
       while (items.hasNext())
@@ -73,8 +74,7 @@ public class LoopbackContentService implements ResourceContainer
             catch (IOException ioe)
             {
                log.error(ioe.getMessage(), ioe);
-               return Response.serverError().entity(ioe.getMessage()).type(
-                  MediaType.TEXT_HTML).build();
+               throw new UploadServiceException(ioe.getMessage());
             }
          }
       }
@@ -95,14 +95,12 @@ public class LoopbackContentService implements ResourceContainer
       catch (IOException ioe)
       {
          log.error(ioe.getMessage(), ioe);
-         return Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_HTML).build();
+         throw new UploadServiceException(ioe.getMessage());
       }
 
       String bodyString = sb.toString();
 
-      String responceString = "<filecontent>" + bodyString + "</filecontent>";
-
-      return Response.ok(responceString, MediaType.TEXT_HTML).build();
+      return "<filecontent>" + bodyString + "</filecontent>";
    }
 
 }

@@ -19,6 +19,25 @@
  */
 package org.exoplatform.ide.upload;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.io.CountingInputStream;
@@ -31,37 +50,12 @@ import org.exoplatform.ide.zip.ZipUtils;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import javax.jcr.AccessDeniedException;
-import javax.jcr.InvalidItemStateException;
-import javax.jcr.ItemExistsException;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
-import javax.jcr.version.VersionException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * Uses for storing files from local system to repository.
@@ -101,10 +95,9 @@ public class UploadService
 
    private final RepositoryService repositoryService;
 
-   private final SessionProviderService sessionProviderService;
+   private final ThreadLocalSessionProviderService sessionProviderService;
 
-   public UploadService(RepositoryService repositoryService,
-      SessionProviderService sessionProviderService)
+   public UploadService(RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService)
    {
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;
@@ -113,14 +106,14 @@ public class UploadService
    @POST
    @Consumes("multipart/*")
    @Path("/folder")
-   public Response uploadFolder(Iterator<FileItem> iterator, @Context UriInfo uriInfo)
+   @Produces(MediaType.TEXT_HTML)
+   public Response uploadFolder(Iterator<FileItem> iterator, @Context UriInfo uriInfo) throws UploadServiceException
    {
       HashMap<String, FileItem> requestItems = getRequestItems(iterator);
 
       if (requestItems.get(FormFields.FILE) == null)
       {
-         return Response.serverError().entity(ERROR_OPEN + "Can't find input file" + ERROR_CLOSE)
-            .type(MediaType.TEXT_HTML).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, ERROR_OPEN + "Can't find input file" + ERROR_CLOSE);
       }
 
       FileItem fileItem = requestItems.get(FormFields.FILE);
@@ -135,8 +128,8 @@ public class UploadService
 
          if (location == null)
          {
-            return Response.serverError().entity(ERROR_OPEN + "Invalid path, where to upload file" + ERROR_CLOSE)
-               .type(MediaType.TEXT_HTML).build();
+            throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, ERROR_OPEN
+               + "Invalid path, where to upload file" + ERROR_CLOSE);
          }
          
          final String repositoryName = location.substring(0, location.indexOf("/"));
@@ -151,79 +144,37 @@ public class UploadService
       {
          if (log.isDebugEnabled())
             e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
       catch (IllegalArgumentException e)
       {
          if (log.isDebugEnabled())
             e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
       catch (SAXException e)
       {
          if (log.isDebugEnabled())
             e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
       catch (TikaException e)
       {
          if (log.isDebugEnabled())
             e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
-      }
-      catch (AccessDeniedException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
-      }
-      catch (ItemExistsException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
-      }
-      catch (ConstraintViolationException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
-      }
-      catch (InvalidItemStateException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
-      }
-      catch (VersionException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
-      }
-      catch (LockException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
-      }
-      catch (NoSuchNodeTypeException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
       catch (RepositoryException e)
       {
          if (log.isDebugEnabled())
             e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (log.isDebugEnabled())
             e.printStackTrace();
-         return Response.serverError().type(MediaType.TEXT_HTML).entity(e.getMessage()).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
 
       return Response.ok().type(MediaType.TEXT_HTML).build();
@@ -232,14 +183,14 @@ public class UploadService
 
    @POST
    @Consumes("multipart/*")
-   public Response uploadFile(Iterator<FileItem> iterator, @Context UriInfo uriInfo)
+   @Produces(MediaType.TEXT_HTML)
+   public Response uploadFile(Iterator<FileItem> iterator, @Context UriInfo uriInfo) throws UploadServiceException
    {
       HashMap<String, FileItem> requestItems = getRequestItems(iterator);
 
       if (requestItems.get(FormFields.FILE) == null)
       {
-         return Response.serverError().entity(ERROR_OPEN + "Can't find input file" + ERROR_CLOSE)
-            .type(MediaType.TEXT_HTML).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, ERROR_OPEN + "Can't find input file" + ERROR_CLOSE);
       }
 
       try
@@ -251,8 +202,7 @@ public class UploadService
          
          if (location == null)
          {
-            return Response.serverError().entity(ERROR_OPEN + "Invalid path, where to upload file" + ERROR_CLOSE)
-               .type(MediaType.TEXT_HTML).build();
+            throw new UploadServiceException(ERROR_OPEN + "Invalid path, where to upload file" + ERROR_CLOSE);
          }
 
          final String repositoryName = location.substring(0, location.indexOf("/"));
@@ -291,27 +241,27 @@ public class UploadService
       catch (PathNotFoundException e)
       {
          log.error(e.getMessage(), e);
-         return Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_HTML).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
       catch (RepositoryException e)
       {
          log.error(e.getMessage(), e);
-         return Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_HTML).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          log.error(e.getMessage(), e);
-         return Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_HTML).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
       catch (UnsupportedEncodingException e)
       {
          log.error(e.getMessage(), e);
-         return Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_HTML).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
       catch (IOException e)
       {
          log.error(e.getMessage(), e);
-         return Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_HTML).build();
+         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
 
    }
@@ -375,7 +325,7 @@ public class UploadService
 
       return sp.getSession(workspace, repo);
    }
-   
+
    /**
     * Get resource path from repository path.
     * 
@@ -392,7 +342,7 @@ public class UploadService
    {
       if (repoPath.startsWith("/"))
          repoPath = repoPath.substring(1);
-      
+
       //crop workspace name
       String resourcePath = repoPath.substring(repoPath.indexOf("/") + 1);
       //crop file name
@@ -400,10 +350,10 @@ public class UploadService
          resourcePath = resourcePath.substring(0, resourcePath.lastIndexOf("/"));
       else
          resourcePath = null;
-      
+
       return resourcePath;
    }
-   
+
    /**
     * Get file name from file repository path.
     * 

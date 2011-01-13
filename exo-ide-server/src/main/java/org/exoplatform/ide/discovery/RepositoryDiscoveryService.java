@@ -19,15 +19,6 @@
  */
 package org.exoplatform.ide.discovery;
 
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.config.RepositoryEntry;
-import org.exoplatform.services.jcr.config.WorkspaceEntry;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.rest.resource.ResourceContainer;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +31,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.config.RepositoryEntry;
+import org.exoplatform.services.jcr.config.WorkspaceEntry;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -48,15 +45,15 @@ import javax.ws.rs.core.UriInfo;
  */
 
 @Path("/ide/discovery")
-public class RepositoryDiscoveryService implements ResourceContainer
+public class RepositoryDiscoveryService
 {
 
    private final static String WEBDAV_CONTEXT = "jcr";
-   
+
    public static final String WEBDAV_SCHEME = "jcr-webdav";
-   
+
    public static final String DEF_WS = "dev-monit";
-   
+
    private String entryPoint;
 
    /**
@@ -73,26 +70,21 @@ public class RepositoryDiscoveryService implements ResourceContainer
 
    private RepositoryService repositoryService;
 
-   public RepositoryDiscoveryService(RepositoryService repositoryService, InitParams initParams)
+   public RepositoryDiscoveryService(RepositoryService repositoryService, String entryPoint)
    {
       this.repositoryService = repositoryService;
-      if (initParams != null) 
-      {
-         ValueParam param = initParams.getValueParam("entry-point");
-         if (param != null)
-            entryPoint = param.getValue();
-         else
-            entryPoint = DEF_WS;
-      }
-      else entryPoint = DEF_WS;
+
+      if (entryPoint != null)
+         this.entryPoint = entryPoint;
+      else
+         this.entryPoint = DEF_WS;
    }
-   
-   
+
    public final static String getWebDavConetxt()
    {
       return WEBDAV_CONTEXT;
    }
-   
+
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/entrypoints/")
@@ -107,7 +99,9 @@ public class RepositoryDiscoveryService implements ResourceContainer
          {
             String workspaceName = workspaceEntry.getName();
 
-            String href = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, repositoryName, workspaceName, "/").build().toString();
+            String href =
+               uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, repositoryName, workspaceName, "/").build()
+                  .toString();
             entryPoints.add(href);
          }
       }
@@ -120,16 +114,19 @@ public class RepositoryDiscoveryService implements ResourceContainer
 
       return entryPointList;
    }
-   
+
    @GET
    @Path("/defaultEntrypoint/")
-   public String getDefaultEntryPoint(@Context UriInfo uriInfo) throws RepositoryException, RepositoryConfigurationException
+   public String getDefaultEntryPoint(@Context UriInfo uriInfo) throws RepositoryException,
+      RepositoryConfigurationException
    {
       ManageableRepository repository = repositoryService.getCurrentRepository();
       if (repository == null)
-         repository =  repositoryService.getDefaultRepository();
-      
-      String href = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, repository.getConfiguration().getName(), entryPoint, "/").build().toString();
+         repository = repositoryService.getDefaultRepository();
+
+      String href =
+         uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, repository.getConfiguration().getName(), entryPoint, "/")
+            .build().toString();
       return href;
    }
 

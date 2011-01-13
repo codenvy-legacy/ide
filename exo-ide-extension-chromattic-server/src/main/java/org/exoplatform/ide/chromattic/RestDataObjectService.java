@@ -20,15 +20,6 @@
 
 package org.exoplatform.ide.chromattic;
 
-import org.chromattic.dataobject.CompilationSource;
-import org.chromattic.dataobject.DataObjectService;
-import org.chromattic.dataobject.NodeTypeFormat;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
-import org.exoplatform.services.jcr.impl.core.nodetype.NodeTypeManagerImpl;
-import org.exoplatform.services.rest.resource.ResourceContainer;
-
 import java.io.InputStream;
 
 import javax.jcr.PathNotFoundException;
@@ -40,8 +31,17 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
+import org.chromattic.dataobject.CompilationSource;
+import org.chromattic.dataobject.DataObjectService;
+import org.chromattic.dataobject.NodeTypeFormat;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
+import org.exoplatform.services.jcr.impl.core.nodetype.NodeTypeManagerImpl;
+
 @Path("/ide/chromattic/")
-public class RestDataObjectService implements ResourceContainer
+public class RestDataObjectService
 {
 
    /**
@@ -117,13 +117,11 @@ public class RestDataObjectService implements ResourceContainer
       throws RepositoryException, RepositoryConfigurationException
 
    {
-      NodeTypeManagerImpl nodeTypeManager =
-         (NodeTypeManagerImpl)repositoryService.getDefaultRepository().getNodeTypeManager();
+      NodeTypeManagerImpl nodeTypeManager = (NodeTypeManagerImpl)getRepository().getNodeTypeManager();
       switch (format)
       {
          case EXO :
-            nodeTypeManager.registerNodeTypes(nodeTypeDefinition, alreadyExistsBehaviour,
-               NodeTypeDataManager.TEXT_XML);
+            nodeTypeManager.registerNodeTypes(nodeTypeDefinition, alreadyExistsBehaviour, NodeTypeDataManager.TEXT_XML);
             break;
          case CND :
             nodeTypeManager.registerNodeTypes(nodeTypeDefinition, alreadyExistsBehaviour,
@@ -156,6 +154,12 @@ public class RestDataObjectService implements ResourceContainer
       elements[1] = location.substring(0, location.indexOf('/'));
       elements[2] = location.substring(location.indexOf('/') + 1);
       return elements;
+   }
+
+   private ManageableRepository getRepository() throws RepositoryException, RepositoryConfigurationException
+   {
+      return repositoryService.getCurrentRepository() == null ? repositoryService.getDefaultRepository()
+         : repositoryService.getCurrentRepository();
    }
 
 }

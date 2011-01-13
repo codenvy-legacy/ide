@@ -131,7 +131,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.chromattic.RestDataObjectService</type>
+      <type>org.exoplatform.ide.chromattic.ChromatticServiceApplication</type>
    </component>
    
    <component>
