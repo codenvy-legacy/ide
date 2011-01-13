@@ -68,7 +68,7 @@ public class DiscoveryServiceImpl extends DiscoveryService
    }
 
    @Override
-   protected void getEntryPoints(String url)
+   public void getEntryPoints(String url)
    {
       EntryPointsReceivedEvent event = new EntryPointsReceivedEvent();
       EntryPointListUnmarshaller unmarshaller = new EntryPointListUnmarshaller(event);
