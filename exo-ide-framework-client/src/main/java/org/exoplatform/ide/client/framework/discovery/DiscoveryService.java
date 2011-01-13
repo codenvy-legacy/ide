@@ -37,7 +37,7 @@ public abstract class DiscoveryService
 
    public abstract void getEntryPoints();
 
-   protected abstract void getEntryPoints(String url);
+   public abstract void getEntryPoints(String url);
    
    public abstract void getDefaultEntryPoint();
    
