@@ -35,6 +35,21 @@ public class ConfigureBuildPathEvent extends GwtEvent<ConfigureBuildPathHandler>
     */
    public static final GwtEvent.Type<ConfigureBuildPathHandler> TYPE = new GwtEvent.Type<ConfigureBuildPathHandler>();
 
+   private String projectLocation;
+   
+   /**
+    * 
+    */
+   public ConfigureBuildPathEvent()
+   {
+      this.projectLocation = null;
+   }
+   
+   public ConfigureBuildPathEvent(String projectLocation)
+   {
+      this.projectLocation = projectLocation;
+   }
+   
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
@@ -51,5 +66,13 @@ public class ConfigureBuildPathEvent extends GwtEvent<ConfigureBuildPathHandler>
    protected void dispatch(ConfigureBuildPathHandler handler)
    {
       handler.onConfigureBuildPath(this);
+   }
+
+   /**
+    * @return the projectLocation
+    */
+   public String getProjectLocation()
+   {
+      return projectLocation;
    }
 }

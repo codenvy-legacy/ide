@@ -242,14 +242,21 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
     */
    public void onConfigureBuildPath(ConfigureBuildPathEvent event)
    {
-      getClassPathLocation();
+      getClassPathLocation(event.getProjectLocation());
    }
 
    /**
     * Get the location of classpath file.
     */
-   private void getClassPathLocation()
+   private void getClassPathLocation(String projectLocation)
    {
+      if (projectLocation != null) 
+      {
+         handlers.addHandler(ClassPathLocationReceivedEvent.TYPE, this);
+         GroovyService.getInstance().getClassPathLocation(projectLocation);
+         return;
+      }
+      
       if (selectedItem == null)
          return;
       handlers.addHandler(ClassPathLocationReceivedEvent.TYPE, this);

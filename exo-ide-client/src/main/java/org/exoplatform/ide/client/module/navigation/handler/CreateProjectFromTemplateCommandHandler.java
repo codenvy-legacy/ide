@@ -24,6 +24,8 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -48,7 +50,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class CreateProjectFromTemplateCommandHandler implements CreateProjectFromTemplateHandler, TemplateListReceivedHandler, ExceptionThrownHandler, ItemsSelectedHandler
+public class CreateProjectFromTemplateCommandHandler implements CreateProjectFromTemplateHandler, TemplateListReceivedHandler, ExceptionThrownHandler, ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
 {
    
    private HandlerManager eventBus;
@@ -57,12 +59,15 @@ public class CreateProjectFromTemplateCommandHandler implements CreateProjectFro
    
    private List<Item> selectedItems = new ArrayList<Item>();   
    
+   private String restContext;
+   
    public CreateProjectFromTemplateCommandHandler(HandlerManager eventBus) {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
+      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
    
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -88,7 +93,7 @@ public class CreateProjectFromTemplateCommandHandler implements CreateProjectFro
       TemplateList templateList = event.getTemplateList();
 
       CreateProjectFromTemplatePresenter createProjectPresenter =
-         new CreateProjectFromTemplatePresenter(eventBus, selectedItems, templateList.getTemplates());
+         new CreateProjectFromTemplatePresenter(eventBus, selectedItems, templateList.getTemplates(), restContext);
       CreateFromTemplateDisplay<ProjectTemplate> createProjectDisplay =
          new CreateProjectFromTemplateForm(eventBus, templateList.getTemplates(), createProjectPresenter);
       createProjectPresenter.bindDisplay(createProjectDisplay);
@@ -98,6 +103,14 @@ public class CreateProjectFromTemplateCommandHandler implements CreateProjectFro
    public void onError(ExceptionThrownEvent event)
    {
       handlers.removeHandlers();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)
+    */
+   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
+   {
+      restContext = event.getConfiguration().getContext();
    }
 
 }

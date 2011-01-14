@@ -265,6 +265,7 @@ public class TemplateServiceImpl extends TemplateService
    private FileTemplate createChromatticForSampleProject()
    {
       String content =
+         "package data;\n"+
          "@org.chromattic.api.annotations.PrimaryType(name=\"nt:unstructured\")\n"
          +"class DataObject {\n"
            +"@org.chromattic.api.annotations.Property(name = \"a\") def String a\n"

@@ -37,6 +37,10 @@ import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.util.ImageUtil;
+import org.exoplatform.ide.client.module.groovy.classpath.EnumSourceType;
+import org.exoplatform.ide.client.module.groovy.classpath.GroovyClassPathEntry;
+import org.exoplatform.ide.client.module.groovy.classpath.GroovyClassPathUtil;
+import org.exoplatform.ide.client.module.groovy.event.ConfigureBuildPathEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -62,10 +66,12 @@ implements FolderCreatedHandler, FileContentSavedHandler
    
    private Folder projectFolder;
    
-   public CreateProjectFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
+   private String restContext;
+   
+   public CreateProjectFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList, String restContext)
    {
       super(eventBus, selectedItems);
-      
+      this.restContext = restContext;
       this.templateList = new ArrayList<ProjectTemplate>();
       
       if (selectedItems != null && selectedItems.size() != 0)
@@ -167,6 +173,7 @@ implements FolderCreatedHandler, FileContentSavedHandler
       
       build(selectedTemplate.getChildren(), baseHref + projectName + "/");
       projectFolder = new Folder(baseHref + projectName + "/");
+      fileList.add(getClasspathFile(baseHref + projectName + "/"));
       
       handlers.addHandler(FolderCreatedEvent.TYPE, this);
 
@@ -199,7 +206,6 @@ implements FolderCreatedHandler, FileContentSavedHandler
             }
          }
       }
-      fileList.add(getClasspathFile(href));
    }
    
    /**
@@ -217,7 +223,14 @@ implements FolderCreatedHandler, FileContentSavedHandler
       newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
       newFile.setIcon(ImageUtil.getIcon(contentType));
       newFile.setNewFile(true);
-      newFile.setContent("{\"entries\" :[]}");
+     
+      String path = GroovyClassPathUtil.formPathFromHref(href, restContext);
+      GroovyClassPathEntry projectClassPathEntry = GroovyClassPathEntry.build(EnumSourceType.DIR.getValue(), path);
+      List<GroovyClassPathEntry> groovyClassPathEntries = new ArrayList<GroovyClassPathEntry>();
+      groovyClassPathEntries.add(projectClassPathEntry);
+      
+      String content = GroovyClassPathUtil.getClassPathJSON(groovyClassPathEntries);
+      newFile.setContent(content);
       return newFile;
    }
    
@@ -267,5 +280,6 @@ implements FolderCreatedHandler, FileContentSavedHandler
    {
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
       display.closeForm();
+      eventBus.fireEvent(new ConfigureBuildPathEvent(projectFolder.getHref()));
    }
 }

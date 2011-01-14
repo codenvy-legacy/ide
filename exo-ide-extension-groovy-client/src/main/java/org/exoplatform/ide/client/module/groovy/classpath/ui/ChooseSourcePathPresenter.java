@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.module.groovy.classpath.ui;
 
-import com.google.gwt.http.client.URL;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -44,6 +42,7 @@ import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedHandler;
 import org.exoplatform.ide.client.module.groovy.Images;
 import org.exoplatform.ide.client.module.groovy.classpath.EnumSourceType;
 import org.exoplatform.ide.client.module.groovy.classpath.GroovyClassPathEntry;
+import org.exoplatform.ide.client.module.groovy.classpath.GroovyClassPathUtil;
 import org.exoplatform.ide.client.module.groovy.classpath.Workspace;
 import org.exoplatform.ide.client.module.groovy.classpath.ui.event.AddSourceToBuildPathEvent;
 
@@ -121,10 +120,6 @@ public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, Ch
     * The REST context.
     */
    private String restContext;
-
-   private final String WEBDAV_CONTEXT = "/jcr/";
-
-   private final String JCR_PROTOCOL = "jcr://";
 
    /**
     * @param eventBus handler manager
@@ -242,7 +237,7 @@ public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, Ch
       List<GroovyClassPathEntry> classPathEntries = new ArrayList<GroovyClassPathEntry>();
       for (Item item : display.getSelectedItems())
       {
-         String path = formPathFromHref(item.getHref());
+         String path = GroovyClassPathUtil.formPathFromHref(item.getHref(), restContext);
          String kind = (item instanceof File) ? EnumSourceType.FILE.getValue() : EnumSourceType.DIR.getValue();
          GroovyClassPathEntry groovyClassPathEntry = GroovyClassPathEntry.build(kind, path);
          classPathEntries.add(groovyClassPathEntry);
@@ -250,27 +245,6 @@ public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, Ch
 
       eventBus.fireEvent(new AddSourceToBuildPathEvent(classPathEntries));
       display.closeView();
-   }
-
-   /**
-    * Get jcr location of the source from WEBDAV href.
-    * 
-    * @param href WEBDAV href of the source
-    * @return String jcr location
-    */
-   private String formPathFromHref(String href)
-   {
-      String context = restContext + WEBDAV_CONTEXT;
-      String path = href.substring(href.indexOf(context) + context.length());
-      String[] parts = path.split("/");
-
-      //Add sybol "#" after workspace name (the second part of the path):
-      if (parts.length > 2)
-      {
-         path = path.replaceFirst(parts[0] + "/" + parts[1], parts[0] + "/" + parts[1] + "#");
-      }
-      path = JCR_PROTOCOL + path;
-      return URL.encode(path);
    }
 
    /**
