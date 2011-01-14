@@ -164,7 +164,7 @@ public class TemplateServiceImpl extends TemplateService
 
    private ProjectTemplate getSampleProject()
    {
-      ProjectTemplate sampleProject = new ProjectTemplate("Sample project");
+      ProjectTemplate sampleProject = new ProjectTemplate("ide-project");
       sampleProject.setDescription("Sample project with REST script and Google Gadget");
       String classPathFileName = ".groovyclasspath";
       FileTemplate classPathTemplate = 
@@ -172,16 +172,16 @@ public class TemplateServiceImpl extends TemplateService
       sampleProject.setClassPathLocation(classPathFileName);
       sampleProject.getChildren().add(classPathTemplate);
 
-      FolderTemplate businessLogicFolder = new FolderTemplate("business logic");
+      FolderTemplate businessLogicFolder = new FolderTemplate("business.logic");
       businessLogicFolder.setChildren(new ArrayList<Template>());
       FileTemplate restScriptTemplate =
-         new FileTemplate(DefaultFileTemplates.GROOVY_REST_SERVICE, "Greeting REST Service.groovy");
+         new FileTemplate(DefaultFileTemplates.GROOVY_REST_SERVICE, "GreetingRESTService.groovy");
       businessLogicFolder.getChildren().add(restScriptTemplate);
 
       FolderTemplate uiFolder = new FolderTemplate("UI");
       uiFolder.setChildren(new ArrayList<Template>());
       FileTemplate gadgetFileTemplate =
-         new FileTemplate(DefaultFileTemplates.GREETING_GOOGLE_GADGET, "Greeting Google Gadget.xml");
+         new FileTemplate(DefaultFileTemplates.GREETING_GOOGLE_GADGET, "GreetingGoogleGadget.xml");
       uiFolder.getChildren().add(gadgetFileTemplate);
       
       FolderTemplate dataFolder = new FolderTemplate("data");

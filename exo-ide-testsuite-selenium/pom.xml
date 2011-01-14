@@ -49,82 +49,103 @@
    <build>
       <plugins>
          <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-               <execution>
-                  <id>copy-patch-firefox-profile</id>
-                  <phase>process-resources</phase>
-                  <configuration>
-                     <tasks>
-                        <copy todir="${project.build.directory}/firefoxProfile">
-                           <fileset dir="${basedir}/src/test/resources/firefoxProfile" />
-                        </copy>
-                        <replace file="${project.build.directory}/firefoxProfile/prefs.js" token="@@@@@@" value="${java.io.tmpdir}" />
-                        <replace file="${project.build.directory}/firefoxProfile/prefs.js" token="\" value="\\" />
-                     </tasks>
-                  </configuration>
-                  <goals>
-                     <goal>run</goal>
-                  </goals>
-               </execution>
-            </executions>
-         </plugin>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-               <source>1.5</source>
-               <target>1.5</target>
-            </configuration>
-         </plugin>
-         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
                <skip>true</skip>
             </configuration>
-            <executions>
-               <execution>
-                  <phase>integration-test</phase>
-                  <goals>
-                     <goal>test</goal>
-                  </goals>
-                  <configuration>
-                     <skip>false</skip>
-                     <excludes>
-                        <exclude>**/*TestSuite.java</exclude>
-                     </excludes>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-         <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>selenium-maven-plugin</artifactId>
-            <version>1.0.1</version>
-            <executions>
-               <execution>
-                  <phase>pre-integration-test</phase>
-                  <goals>
-                     <goal>start-server</goal>
-                  </goals>
-                  <configuration>
-                     <background>true</background>
-                     <userExtensions>${user.extension.dir}</userExtensions>
-                     <firefoxProfileTemplate>${firefox.profile.dir}</firefoxProfileTemplate>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
+          </plugin>
+          
       </plugins>
    </build>
-   <reporting>
-      <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-report-plugin</artifactId>
-            <version>2.5</version>
-         </plugin>
-      </plugins>
-   </reporting>
+   <profiles>
+      <profile>
+         <id>selenium-test</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <artifactId>maven-antrun-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>copy-patch-firefox-profile</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                           <tasks>
+                              <copy todir="${project.build.directory}/firefoxProfile">
+                                 <fileset dir="${basedir}/src/test/resources/firefoxProfile" />
+                              </copy>
+                              <replace file="${project.build.directory}/firefoxProfile/prefs.js" token="@@@@@@" value="${java.io.tmpdir}" />
+                              <replace file="${project.build.directory}/firefoxProfile/prefs.js" token="\" value="\\" />
+                           </tasks>
+                        </configuration>
+                        <goals>
+                           <goal>run</goal>
+                        </goals>
+                     </execution>
+                  </executions>
+               </plugin>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-compiler-plugin</artifactId>
+                  <configuration>
+                     <source>1.5</source>
+                     <target>1.5</target>
+                  </configuration>
+               </plugin>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-surefire-plugin</artifactId>
+                  <configuration>
+                     <skip>true</skip>
+                  </configuration>
+                  <executions>
+                     <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                           <goal>test</goal>
+                        </goals>
+                        <configuration>
+                           <skip>false</skip>
+                           <excludes>
+                              <exclude>**/*TestSuite.java</exclude>
+                           </excludes>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>selenium-maven-plugin</artifactId>
+                  <version>1.0.1</version>
+                  <executions>
+                     <execution>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                           <goal>start-server</goal>
+                        </goals>
+                        <configuration>
+                           <background>true</background>
+                           <userExtensions>${user.extension.dir}</userExtensions>
+                           <firefoxProfileTemplate>${firefox.profile.dir}</firefoxProfileTemplate>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
+         <reporting>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-surefire-report-plugin</artifactId>
+                  <version>2.5</version>
+               </plugin>
+            </plugins>
+         </reporting>
+      </profile>
+   </profiles>
+
 </project>
