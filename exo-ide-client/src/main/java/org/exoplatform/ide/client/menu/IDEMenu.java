@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.gwtframework.ui.client.command.control.MenuItemControl;
+import org.exoplatform.gwtframework.ui.client.command.ui.MenuItemControl;
 import org.exoplatform.gwtframework.ui.client.menu.MenuBar;
 import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
 

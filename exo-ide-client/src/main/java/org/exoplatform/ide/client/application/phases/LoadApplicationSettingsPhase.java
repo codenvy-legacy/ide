@@ -22,9 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.event.UpdateMainMenuEvent;
-import org.exoplatform.gwtframework.ui.client.event.UpdateStatusBarEvent;
-import org.exoplatform.gwtframework.ui.client.event.UpdateToolbarEvent;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -136,9 +135,8 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
                toolbarItems.addAll(controls.getToolbarDefaultControls());
             }
 
-            eventBus.fireEvent(new UpdateToolbarEvent(toolbarItems, controls.getRegisteredControls()));
-            eventBus.fireEvent(new UpdateStatusBarEvent(controls.getStatusBarControls(), controls
-               .getRegisteredControls()));
+            eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", toolbarItems, controls.getRegisteredControls()));
+            eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls.getRegisteredControls()));
 
 //            new CheckEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
             new LoadDefaultEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);

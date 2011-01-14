@@ -30,7 +30,7 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.command.TextInputControl;
-import org.exoplatform.gwtframework.ui.client.event.UpdateToolbarEvent;
+import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
@@ -558,7 +558,7 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
 
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
-      eventBus.fireEvent(new UpdateToolbarEvent(itemsToUpdate, controls));
+      eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", itemsToUpdate, controls));
       display.closeForm();
    }
 

@@ -90,7 +90,6 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
 
       addCloseClickHandler(new CloseClickHandler()
       {
-
          public void onCloseClick(CloseClientEvent event)
          {
             destroy();

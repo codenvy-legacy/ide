@@ -326,6 +326,7 @@
             </values-param>
          </init-params>
       </component-plugin>
+      
       <component-plugin>
          <name>add.namespaces</name>
          <set-method>addPlugin</set-method>
@@ -379,12 +380,13 @@
    </external-component-plugins>
 
    <external-component-plugins>
-      <target-component>org.exoplatform.services.rest.impl.RequestHandlerImpl	</target-component>
+      <target-component>org.exoplatform.services.rest.impl.RequestHandlerImpl</target-component>
       <component-plugin>
          <name>ws.rs.method.filter</name>
          <set-method>addPlugin</set-method>
          <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
       </component-plugin>
+      
       <component-plugin>
          <name>ws.rs.entity.provider</name>
          <set-method>addPlugin</set-method>
@@ -396,6 +398,7 @@
             </value-param>
          </init-params>
       </component-plugin>
+      
       <component-plugin>
          <name>ws.rs.request.filter</name>
          <set-method>addPlugin</set-method>

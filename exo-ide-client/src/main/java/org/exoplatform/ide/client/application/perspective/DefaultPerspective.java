@@ -20,12 +20,12 @@ package org.exoplatform.ide.client.application.perspective;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
+import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarBuilder;
 import org.exoplatform.gwtframework.ui.client.event.LockIFrameElementsEvent;
 import org.exoplatform.gwtframework.ui.client.event.UnlockIFrameElementsEvent;
 import org.exoplatform.gwtframework.ui.client.smartgwt.SmartGWTMenuBar;
 import org.exoplatform.gwtframework.ui.client.smartgwt.SmartGWTToolbar;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.editor.EditorForm;
 import org.exoplatform.ide.client.event.perspective.CodeHelperPanelRestoredEvent;
 import org.exoplatform.ide.client.event.perspective.EditorPanelRestoredEvent;
@@ -46,7 +46,6 @@ import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
@@ -57,11 +56,8 @@ import org.exoplatform.ide.client.navigation.NavigationForm;
 import org.exoplatform.ide.client.operation.OperationForm;
 import org.exoplatform.ide.client.outline.CodeHelperForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
-import org.exoplatform.ide.client.toolbar.IDEToolbar;
-import org.exoplatform.ide.client.toolbar.StatusBar;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.DOM;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
 import com.smartgwt.client.widgets.events.MouseUpEvent;
@@ -117,7 +113,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
    //private GWTMenuWrapper menuWrapper;
 
-//   private GWTToolbarWrapper toolbarWrapper;
+   //   private GWTToolbarWrapper toolbarWrapper;
 
    protected HLayout horizontalSplitLayout;
 
@@ -134,9 +130,9 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
    private CodeHelperForm codeHelperForm;
 
    //protected StatusBarForm statusBar;
-   
+
    //protected GWTStatusBarWrapper statusBar;
-   
+
    protected SmartGWTToolbar statusBar;
 
    /*
@@ -188,10 +184,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       addMember(menuBar);
       new IDEMenu(eventBus).setMenu(menuBar.getMenuBar());
 
-      SmartGWTToolbar toolbar = new SmartGWTToolbar();
+      SmartGWTToolbar toolbar = new SmartGWTToolbar("exoIDEToolbar");
       addMember(toolbar);
-      DOM.setElementAttribute(toolbar.getToolbar().getElement(), "id", "exoIDEToolbar");
-      new IDEToolbar(eventBus, toolbar.getToolbar());
 
       horizontalSplitLayout = new HLayout();
       horizontalSplitLayout.setID(HORIZONTAL_SPLIT_LAYOUT_ID);
@@ -302,15 +296,15 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       });
 
-      statusBar = new SmartGWTToolbar();
-      DOM.setElementAttribute(statusBar.getToolbar().getElement(), "id", "exoIDEStatusbar");      
+      statusBar = new SmartGWTToolbar("exoIDEStatusbar");
       statusBar.getToolbar().setHeight("30px");
       String background =
          UIHelper.getGadgetImagesURL() + "../eXoStyle/skin/default/images/component/toolbar/statusbar_Background.png";
       statusBar.getToolbar().setBackgroundImage(background);
       statusBar.getToolbar().setItemsTopPadding(3);
       addMember(statusBar);
-      new StatusBar(eventBus, statusBar.getToolbar());      
+
+      new ToolbarBuilder(eventBus, toolbar.getToolbar(), statusBar.getToolbar());
    }
 
    @Override
