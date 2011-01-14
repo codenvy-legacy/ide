@@ -48,7 +48,6 @@ import org.exoplatform.ws.frameworks.json.impl.JsonException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
-import java.util.Collection;
 import java.util.Collections;
 
 import javax.annotation.security.RolesAllowed;
@@ -460,13 +459,13 @@ public class GroovyScriptService extends GroovyScript2RestLoader
                getDependentResource(location, uriInfo.getBaseUri().toASCIIString());
             if (dependentResources != null)
             {
-               load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, dependentResources.getFolderSources(),
+               return load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, dependentResources.getFolderSources(),
                   dependentResources.getFileSources(), properties);
             }
 
-            load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, Collections.<String> emptyList(),
+            return load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, Collections.<String> emptyList(),
                Collections.<String> emptyList(), properties);
-            //groovyPublisher.publishPerRequest(script.getProperty("jcr:data").getStream(), key, properties, createSourceFolders(dependentResources.getFolderSources()), createSourceFiles(dependentResources.getFileSources()));
+          //  groovyPublisher.publishPerRequest(script.getProperty("jcr:data").getStream(), key, properties, createSourceFolders(dependentResources.getFolderSources()), createSourceFiles(dependentResources.getFileSources()));
          }
 
          return Response.status(Response.Status.NO_CONTENT).build();
