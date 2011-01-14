@@ -251,7 +251,8 @@ public class TemplateServiceImpl extends TemplateService
          "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
             + "import javax.ws.rs.PathParam\n" + "import data.Pojo\n" + "import data.DataObject\n\n" + "@Path(\"/my-service\")\n" + "public class HelloWorld {\n"
             + "  @GET\n" + "  @Path(\"helloworld/{name}\")\n"
-            + "  public String hello(@PathParam(\"name\") String name) {\n" + "    return \"Hello \" + name\n"
+            + "  public String hello(@PathParam(\"name\") String name) {\n" 
+            + "    return Pojo.say(name)\n"
             + "  }\n" + "}\n";
 
       FileTemplate restServiceTemplate =
@@ -282,7 +283,12 @@ public class TemplateServiceImpl extends TemplateService
    private FileTemplate createPojoForSampleProject()
    {
       String content =
-         "package data;\n\npublic class Pojo\n{\n}";
+         "package data;\n\npublic class Pojo\n{\n"
+         +"public static String say(String name)\n"
+         +"{\n"
+         +"  return \"Hello \" + name;\n"
+         +"}\n"
+         +"}";
 
       FileTemplate template =
          new FileTemplate(MimeType.APPLICATION_GROOVY, DefaultFileTemplates.POJO,
