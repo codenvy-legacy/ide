@@ -57,12 +57,17 @@ public class TemplateServiceImpl extends TemplateService
       public static final String GOOGLE_GADGET = "Google Gadget";
 
       public static final String GREETING_GOOGLE_GADGET = "Greeting Google Gadget";
+      
+      public static final String GREETING_GROOVY_REST_SERVICE = "Greeting Groovy REST Service";
+      
+      public static final String POJO = "POJO";
+      
+      public static final String DO_CHTOMATTIC = "DO Chromattic";
 
       public static final String GROOVY_REST_SERVICE = "Groovy REST Service";
 
       public static final String GROOVY_TEMPLATE = "Template";
       
-      public static final String GROOVY_CLASS_PATH = "Groovy Build Class Path";
    }
 
    private static final String CONTEXT = "/templates";
@@ -147,7 +152,10 @@ public class TemplateServiceImpl extends TemplateService
             .getTemplateFor(MimeType.UWA_WIDGET), null));
       
       templateList.getTemplates().add(createFileTemplateForSampleProject());
-
+      templateList.getTemplates().add(createRestServiceForSampleProject());
+      templateList.getTemplates().add(createPojoForSampleProject());
+      templateList.getTemplates().add(createChromatticForSampleProject());
+      
       templateList.getTemplates().add(getSampleProject());
 
       TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
@@ -162,10 +170,10 @@ public class TemplateServiceImpl extends TemplateService
       ProjectTemplate sampleProject = new ProjectTemplate("ide-project");
       sampleProject.setDescription("Sample project with REST script and Google Gadget");
 
-      FolderTemplate businessLogicFolder = new FolderTemplate("business.logic");
+      FolderTemplate businessLogicFolder = new FolderTemplate("logic");
       businessLogicFolder.setChildren(new ArrayList<Template>());
       FileTemplate restScriptTemplate =
-         new FileTemplate(DefaultFileTemplates.GROOVY_REST_SERVICE, "GreetingRESTService.groovy");
+         new FileTemplate(DefaultFileTemplates.GREETING_GROOVY_REST_SERVICE, "GreetingRESTService.grs");
       businessLogicFolder.getChildren().add(restScriptTemplate);
 
       FolderTemplate uiFolder = new FolderTemplate("UI");
@@ -175,7 +183,14 @@ public class TemplateServiceImpl extends TemplateService
       uiFolder.getChildren().add(gadgetFileTemplate);
       
       FolderTemplate dataFolder = new FolderTemplate("data");
-
+      dataFolder.setChildren(new ArrayList<Template>());
+      FileTemplate pojoTemplate =
+         new FileTemplate(DefaultFileTemplates.POJO, "Pojo.groovy");
+      FileTemplate doTemplate =
+         new FileTemplate(DefaultFileTemplates.DO_CHTOMATTIC, "DataObject.groovy");
+      dataFolder.getChildren().add(pojoTemplate);
+      dataFolder.getChildren().add(doTemplate);
+      
       sampleProject.getChildren().add(dataFolder);
       sampleProject.getChildren().add(businessLogicFolder);
       sampleProject.getChildren().add(uiFolder);
@@ -228,5 +243,51 @@ public class TemplateServiceImpl extends TemplateService
       gadgetFileTemplate.setFileName("Greeting Google Gadget.xml");
 
       return gadgetFileTemplate;
+   }
+   
+   private FileTemplate createRestServiceForSampleProject()
+   {
+      String content =
+         "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
+            + "import javax.ws.rs.PathParam\n" + "import data.Pojo\n" + "import data.DataObject\n\n" + "@Path(\"/my-service\")\n" + "public class HelloWorld {\n"
+            + "  @GET\n" + "  @Path(\"helloworld/{name}\")\n"
+            + "  public String hello(@PathParam(\"name\") String name) {\n" + "    return \"Hello \" + name\n"
+            + "  }\n" + "}\n";
+
+      FileTemplate restServiceTemplate =
+         new FileTemplate(MimeType.GROOVY_SERVICE, DefaultFileTemplates.GREETING_GROOVY_REST_SERVICE,
+            "Template for greeting REST service", content, null);
+      restServiceTemplate.setFileName("GreetingRESTService.grs");
+
+      return restServiceTemplate;
+   }
+   
+   private FileTemplate createChromatticForSampleProject()
+   {
+      String content =
+         "@org.chromattic.api.annotations.PrimaryType(name=\"nt:unstructured\")\n"
+         +"class DataObject {\n"
+           +"@org.chromattic.api.annotations.Property(name = \"a\") def String a\n"
+         +"}";
+         
+      FileTemplate template =
+         new FileTemplate(MimeType.CHROMATTIC_DATA_OBJECT, DefaultFileTemplates.DO_CHTOMATTIC,
+            "Chromattic Data Object", content, null);
+      template.setFileName("DataObject.groovy");
+
+      return template;
+   }
+   
+   private FileTemplate createPojoForSampleProject()
+   {
+      String content =
+         "package data;\n\npublic class Pojo\n{\n}";
+
+      FileTemplate template =
+         new FileTemplate(MimeType.APPLICATION_GROOVY, DefaultFileTemplates.POJO,
+            "Template for POJO", content, null);
+      template.setFileName("Pojo.groovy");
+
+      return template;
    }
 }
