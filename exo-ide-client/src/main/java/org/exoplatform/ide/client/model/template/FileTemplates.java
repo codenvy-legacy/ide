@@ -45,7 +45,7 @@ public class FileTemplates
       addGadgetContent();
       addGtmplTemplate();
       addUWAWidgetContent();
-      addClassPathTemplate();
+     // addClassPathTemplate();
    }
 
    public static String getTemplateFor(String mimeType)
@@ -88,7 +88,7 @@ public class FileTemplates
           +"]\n"
           +"}";
 
-      templates.put(MimeType.APPLICATION_GROOVY_CLASSPATH, content);
+      templates.put(MimeType.APPLICATION_JSON, content);
    }
 
    private static void addEmptyHTML()

@@ -94,6 +94,21 @@ public class ItemPropertiesUnmarshaller implements Unmarshallable
             item.setIcon(icon);
          }
       }
+      checkIsSystemItem(item);
+   }
+   
+   /**
+    * Checks and sets whether item is system or not.
+    * "System" means is used and edited by application, not user.
+    *  Now checks if name starts wih dot ".".
+    *  For example, ".groovyclasspath" file is system.
+    *  
+    * @param item item to check
+    */
+   private void checkIsSystemItem(Item item)
+   {
+      boolean isSystem = item.getName() != null && item.getName().startsWith(".");
+      item.setSystem(isSystem);
    }
 
    private String getIcon(String mimeType)

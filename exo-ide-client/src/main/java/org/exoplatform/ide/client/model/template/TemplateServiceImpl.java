@@ -146,11 +146,6 @@ public class TemplateServiceImpl extends TemplateService
          new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget", "Netvibes Widget Skeleton", FileTemplates
             .getTemplateFor(MimeType.UWA_WIDGET), null));
       
-      templateList.getTemplates().add(
-         new FileTemplate(MimeType.APPLICATION_GROOVY_CLASSPATH, DefaultFileTemplates.GROOVY_CLASS_PATH, "Groovy build class path file. Is used to configure dependency locations.", FileTemplates
-            .getTemplateFor(MimeType.APPLICATION_GROOVY_CLASSPATH), null));
-      
-
       templateList.getTemplates().add(createFileTemplateForSampleProject());
 
       templateList.getTemplates().add(getSampleProject());
@@ -166,11 +161,6 @@ public class TemplateServiceImpl extends TemplateService
    {
       ProjectTemplate sampleProject = new ProjectTemplate("ide-project");
       sampleProject.setDescription("Sample project with REST script and Google Gadget");
-      String classPathFileName = ".groovyclasspath";
-      FileTemplate classPathTemplate = 
-         new FileTemplate(DefaultFileTemplates.GROOVY_CLASS_PATH, classPathFileName);
-      sampleProject.setClassPathLocation(classPathFileName);
-      sampleProject.getChildren().add(classPathTemplate);
 
       FolderTemplate businessLogicFolder = new FolderTemplate("business.logic");
       businessLogicFolder.setChildren(new ArrayList<Template>());

@@ -161,15 +161,7 @@ public class TemplateTreeGrid<T extends Template> extends TreeGrid<T>
             String nodeName = template.getName();
             if (template instanceof FileTemplate)
             {
-               if (MimeType.APPLICATION_GROOVY_CLASSPATH.equals(((FileTemplate)template).getMimeType()))
-               {
-                  nodeName = ((FileTemplate)template).getFileName();
-                  newNode.setEnabled(false);
-               }
-               else
-               {
-                  nodeName = ((FileTemplate)template).getFileName() + "(from " + template.getName() + ")";
-               }
+               nodeName = ((FileTemplate)template).getFileName() + "(from " + template.getName() + ")";
             }
             newNode.setAttribute(NAME, nodeName);
             tree.add(newNode, parentNode);

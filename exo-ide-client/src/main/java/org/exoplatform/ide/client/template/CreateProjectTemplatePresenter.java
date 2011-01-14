@@ -150,33 +150,25 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
 
       ProjectTemplate projectTemplate = new ProjectTemplate("/");
       
-      //Add groovy classpath file to project's template.    
-      FileTemplate classpathFileTemplate = getClasspathTemplate();
-      if (classpathFileTemplate != null)
-      {
-         projectTemplate.getChildren().add(getClasspathTemplate());
-         projectTemplate.setClassPathLocation(classpathFileTemplate.getFileName());
-      }
-      
       display.getTemplateTreeGrid().setValue(projectTemplate);
       display.disableCreateButton();
    }
    
-   private FileTemplate getClasspathTemplate()
+  /* private FileTemplate getClasspathTemplate()
    {
       FileTemplate classpathTemplate = null;
       for (Template template : templateList)
       {
          //TODO check proper mime type when is ready:
          if (template instanceof FileTemplate
-            && MimeType.APPLICATION_GROOVY_CLASSPATH.equals(((FileTemplate)template).getMimeType()))
+            && MimeType.APPLICATION_JSON.equals(((FileTemplate)template).getMimeType()))
          {
             classpathTemplate = (FileTemplate)template;
          }
       }
       classpathTemplate.setFileName(CLASSPATH_FILENAME);
       return  classpathTemplate;
-   }
+   }*/
 
    private ValueChangeHandler<String> valueChangeHandler = new ValueChangeHandler<String>()
    {
@@ -258,7 +250,7 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
             display.disableDeleteButton();
          }
          else if (selectedTemplate instanceof FileTemplate
-            && MimeType.APPLICATION_GROOVY_CLASSPATH.equals(((FileTemplate)selectedTemplate).getMimeType()))
+            && MimeType.APPLICATION_JSON.equals(((FileTemplate)selectedTemplate).getMimeType()))
          {
             //can not delete classpath file
             display.disableDeleteButton();

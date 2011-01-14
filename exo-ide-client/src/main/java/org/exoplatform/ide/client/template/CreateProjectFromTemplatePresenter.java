@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.template;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
@@ -161,6 +162,9 @@ implements FolderCreatedHandler, FileContentSavedHandler
 
       ProjectTemplate selectedTemplate = selectedTemplates.get(0);
       
+      FileTemplate classPathTemplate = new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
+      selectedTemplate.getChildren().add(classPathTemplate);
+      
       build(selectedTemplate.getChildren(), baseHref + projectName + "/");
       projectFolder = new Folder(baseHref + projectName + "/");
       
@@ -195,7 +199,28 @@ implements FolderCreatedHandler, FileContentSavedHandler
             }
          }
       }
+      fileList.add(getClasspathFile(href));
    }
+   
+   /**
+    * Get classpath file.
+    * 
+    * @param href href
+    * @return {@link File} classpath file
+    */
+   private File getClasspathFile(String href)
+   {
+      href = (href.endsWith("/")) ? href : href + "/";
+      String contentType = MimeType.APPLICATION_JSON;
+      File newFile = new File(href + ".groovyclasspath");
+      newFile.setContentType(contentType);
+      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
+      newFile.setIcon(ImageUtil.getIcon(contentType));
+      newFile.setNewFile(true);
+      newFile.setContent("{\"entries\" :[]}");
+      return newFile;
+   }
+   
    
    /**
     * @see org.exoplatform.ide.client.framework.vfs.event.FolderCreatedHandler#onFolderCreated(org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent)

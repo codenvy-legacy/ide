@@ -152,17 +152,14 @@ public class FolderContentUnmarshaller implements Unmarshallable
    /**
     * Checks and sets whether item is system or not.
     * "System" means is used and edited by application, not user.
+    *  Now checks if name starts wih dot ".".
     *  For example, ".groovyclasspath" file is system.
     *  
     * @param item item to check
     */
    private void checkIsSystemItem(Item item)
    {
-      boolean isSystem = false;
-      if (item instanceof File) 
-      {
-         isSystem = MimeType.APPLICATION_GROOVY_CLASSPATH.equals(((File)item).getContentType());
-      }
+      boolean isSystem = item.getName() != null && item.getName().startsWith(".");
       item.setSystem(isSystem);
    }
 
