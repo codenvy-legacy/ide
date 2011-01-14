@@ -87,22 +87,22 @@ public class ClasspathUtils
       selenium = BaseTest.selenium;
    }
    
+   /*
+    * ============== Configure Classpath Dialog actions ==============
+    */
+   
+   /**
+    * Check, that Configure Classpath Dialog window appeared 
+    * and has list grid and 4 buttons: add, remove, save, cancel.
+    */
    static void checkConfigureClasspathDialog()
    {
       assertTrue(selenium.isElementPresent(Locators.SC_CONFIGURE_CLASSPATH_DIALOG));
+      assertTrue(selenium.isElementPresent(Locators.SC_CLASSPATH_LISTGRID));
       assertTrue(selenium.isElementPresent(Locators.SC_ADD_BTN));
       assertTrue(selenium.isElementPresent(Locators.SC_REMOVE_BTN));
       assertTrue(selenium.isElementPresent(Locators.SC_SAVE_BTN));
       assertTrue(selenium.isElementPresent(Locators.SC_CANCEL_BTN));
-   }
-   
-   static void checkChooseSourceWindow()
-   {
-      assertTrue(selenium.isElementPresent(Locators.SC_CHOOSE_SOURCE_WINDOW));
-      assertEquals(TITLES.CHOOSE_SOURCE_WINDOW_TITLE, selenium.getText(Locators.SC_CHOOSE_SOURCE_WINDOW_HEADER));
-      assertTrue(selenium.isElementPresent(Locators.SC_CHOOSE_SOURCE_TREEGRID));
-      assertTrue(selenium.isElementPresent(Locators.SC_CHOOSE_SOURCE_OK_BTN));
-      assertTrue(selenium.isElementPresent(Locators.SC_CHOOSE_SOURCE_CANCEL_BTN));
    }
    
    /**
@@ -139,6 +139,28 @@ public class ClasspathUtils
       }
    }
    
+   static String getScListGridEntryLocator(int row, int col)
+   {
+      return Locators.SC_CLASSPATH_LISTGRID + "/body/row[" + row + "]/col[" + col + "]";
+   }
+   
+   /*
+    * ============== Choose Source Window actions ==============
+    */
+   
+   /**
+    * Check, that ChooseSource Dialog window appeared 
+    * and has tree grid and 2 buttons: add anc cancel.
+    */
+   static void checkChooseSourceWindow()
+   {
+      assertTrue(selenium.isElementPresent(Locators.SC_CHOOSE_SOURCE_WINDOW));
+      assertEquals(TITLES.CHOOSE_SOURCE_WINDOW_TITLE, selenium.getText(Locators.SC_CHOOSE_SOURCE_WINDOW_HEADER));
+      assertTrue(selenium.isElementPresent(Locators.SC_CHOOSE_SOURCE_TREEGRID));
+      assertTrue(selenium.isElementPresent(Locators.SC_CHOOSE_SOURCE_OK_BTN));
+      assertTrue(selenium.isElementPresent(Locators.SC_CHOOSE_SOURCE_CANCEL_BTN));
+   }
+   
    /**
     * Check is button in "Configure Build Classpath" dialog enabled or disabled.
     * 
@@ -173,11 +195,11 @@ public class ClasspathUtils
       }
    }
    
-   static String getScListGridEntryLocator(int row, int col)
-   {
-      return Locators.SC_CLASSPATH_LISTGRID + "/body/row[" + row + "]/col[" + col + "]";
-   }
-   
+   /**
+    * Check, that all workspaces are present in Choose Source tree grid.
+    * 
+    * @param titles - workspaces titles
+    */
    static void checkElementsInChooseSourceTreeGrid(String... titles)
    {
       for (String title : titles)
@@ -186,6 +208,13 @@ public class ClasspathUtils
       }
    }
    
+   /**
+    * Get locator for element in Choose Source tree grid.
+    * 
+    * @param rowTitle - title of element
+    * @param col - column number (0 - the title, 1 - for selection).
+    * @return {@link String}
+    */
    static String getScChooseSourceTreegridLocator(String rowTitle, int col)
    {
       return Locators.SC_CHOOSE_SOURCE_TREEGRID + "/body/row[name=" + rowTitle + "]/col[" + col + "]";
@@ -213,6 +242,60 @@ public class ClasspathUtils
    static void openFolderInChooseSourceTreegrid(String title) throws Exception
    {
       selenium.click(getScChooseSourceTreegridLocator(title, 0) + "/open");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   /*
+    * ============== Buttons actions ==============
+    */
+   
+   /**
+    * Click save button.
+    * @throws Exception
+    */
+   static void clickSave() throws Exception
+   {
+      selenium.click(Locators.SC_SAVE_BTN);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   /**
+    * Click cancel button.
+    * @throws Exception
+    */
+   static void clickCancel() throws Exception
+   {
+      selenium.click(Locators.SC_CANCEL_BTN);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   /**
+    * Click add button.
+    * @throws Exception
+    */
+   static void clickAdd() throws Exception
+   {
+      selenium.click(Locators.SC_ADD_BTN);
+      Thread.sleep(TestConstants.SLEEP);
+   }
+   
+   /**
+    * Click remove button.
+    * @throws Exception
+    */
+   static void clickRemove() throws Exception
+   {
+      selenium.click(Locators.SC_REMOVE_BTN);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   /**
+    * Click ok button.
+    * @throws Exception
+    */
+   static void clickOk() throws Exception
+   {
+      selenium.click(ClasspathUtils.Locators.SC_CHOOSE_SOURCE_OK_BTN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 

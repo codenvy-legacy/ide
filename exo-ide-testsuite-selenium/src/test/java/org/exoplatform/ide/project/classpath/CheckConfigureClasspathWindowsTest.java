@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -39,12 +40,12 @@ import java.io.IOException;
  * @version $Id: Jan 13, 2011 $
  *
  */
-public class CheckCondifureClasspathWindowsTest extends BaseTest
+public class CheckConfigureClasspathWindowsTest extends BaseTest
 {
    
-   private static final String FOLDER_NAME = CheckCondifureClasspathWindowsTest.class.getSimpleName() + "-folder";
+   private static final String FOLDER_NAME = CheckConfigureClasspathWindowsTest.class.getSimpleName() + "-folder";
    
-   private static final String PROJECT_NAME = CheckCondifureClasspathWindowsTest.class.getSimpleName() + "-project";
+   private static final String PROJECT_NAME = CheckConfigureClasspathWindowsTest.class.getSimpleName() + "-project";
    
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
@@ -151,9 +152,7 @@ public class CheckCondifureClasspathWindowsTest extends BaseTest
       /*
        * 4. Click "Add..." button and check "Choose source path" dialog
        */
-      selenium.click(ClasspathUtils.Locators.SC_ADD_BTN);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
+      ClasspathUtils.clickAdd();
       ClasspathUtils.checkChooseSourceWindow();
       /*
        * Check, that all workspaces are present in list grid
@@ -162,33 +161,110 @@ public class CheckCondifureClasspathWindowsTest extends BaseTest
       ClasspathUtils.checkChooseSourceButtonEnabled(ClasspathUtils.TITLES.OK, false);
       ClasspathUtils.checkChooseSourceButtonEnabled(ClasspathUtils.TITLES.CANCEL, true);
       
-//      /*
-//       * 5. Select default workspace. "Ok" button is disabled.
-//       */
-//      ClasspathUtils.selectItemInChooseSourceTreegrid(WS_NAME);
-//      ClasspathUtils.checkChooseSourceButtonEnabled(ClasspathUtils.TITLES.OK, false);
-//      
-//      /*
-//       * 6. Open default workspace. Select folder. "Ok" button is enabled.
-//       */
-//      ClasspathUtils.openFolderInChooseSourceTreegrid(WS_NAME);
-//      
-//      ClasspathUtils.selectItemInChooseSourceTreegrid(FOLDER_NAME);
-//      ClasspathUtils.checkChooseSourceButtonEnabled(ClasspathUtils.TITLES.OK, true);
-//      
-//      selenium.click(ClasspathUtils.Locators.SC_CHOOSE_SOURCE_OK_BTN);
-//      Thread.sleep(TestConstants.REDRAW_PERIOD);
-//      
-//      /*
-//       * "Choose source" window dissapeared.
-//       * New item in Configure Classpath list grid appeared.
-//       */
-//      assertFalse(selenium.isElementPresent(ClasspathUtils.Locators.SC_CHOOSE_SOURCE_WINDOW));
-//      assertTrue(selenium.isElementPresent(ClasspathUtils.getScListGridEntryLocator(0, 0)));
-//      
-//      final String folderPathForClasspath = WEBDAV_CONTEXT + "://" + REPO_NAME + "/" + WS_NAME + "#/" + FOLDER_NAME + "/";
-//      
-//      assertEquals(folderPathForClasspath, selenium.getText(ClasspathUtils.getScListGridEntryLocator(0, 0)));
+      /*
+       * 5. Select default workspace. "Ok" button is disabled.
+       */
+      ClasspathUtils.selectItemInChooseSourceTreegrid(WS_NAME);
+      ClasspathUtils.checkChooseSourceButtonEnabled(ClasspathUtils.TITLES.OK, false);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      /*
+       * 6. Open default workspace. Select folder. "Ok" button is enabled.
+       */
+      ClasspathUtils.openFolderInChooseSourceTreegrid(WS_NAME);
+      
+      ClasspathUtils.selectItemInChooseSourceTreegrid(FOLDER_NAME);
+      ClasspathUtils.checkChooseSourceButtonEnabled(ClasspathUtils.TITLES.OK, true);
+      
+      ClasspathUtils.clickOk();
+      
+      /*
+       * "Choose source" window dissapeared.
+       * New item in Configure Classpath list grid appeared.
+       */
+      assertFalse(selenium.isElementPresent(ClasspathUtils.Locators.SC_CHOOSE_SOURCE_WINDOW));
+      assertTrue(selenium.isElementPresent(ClasspathUtils.getScListGridEntryLocator(0, 0)));
+      
+      final String folderPathForClasspath = WEBDAV_CONTEXT + "://" + REPO_NAME + "/" + WS_NAME + "#/" + FOLDER_NAME + "/";
+      
+      assertEquals(folderPathForClasspath, selenium.getText(ClasspathUtils.getScListGridEntryLocator(0, 0)));
+      
+      /*
+       * 7. Select folder path and check, that remove button is enabled
+       */
+      selenium.click(ClasspathUtils.getScListGridEntryLocator(0, 0));
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      ClasspathUtils.checkConfigureClasspathButtonEnabled(ClasspathUtils.TITLES.REMOVE, true);
+      ClasspathUtils.checkConfigureClasspathButtonEnabled(ClasspathUtils.TITLES.SAVE, true);
+      
+      /*
+       * 8. Click remove button and check, that element was removed
+       */
+      ClasspathUtils.clickRemove();
+      
+      assertFalse(selenium.isElementPresent(ClasspathUtils.getScListGridEntryLocator(0, 0)));
+      
+      /*
+       * 9. Add element to list grid. Than click cancel button 
+       * to check, that all changes will be canceled.
+       */
+      ClasspathUtils.clickAdd();
+      ClasspathUtils.checkChooseSourceWindow();
+      
+      ClasspathUtils.openFolderInChooseSourceTreegrid(WS_NAME);
+      
+      ClasspathUtils.selectItemInChooseSourceTreegrid(FOLDER_NAME);
+      ClasspathUtils.checkChooseSourceButtonEnabled(ClasspathUtils.TITLES.OK, true);
+      
+      ClasspathUtils.clickOk();
+      assertTrue(selenium.isElementPresent(ClasspathUtils.getScListGridEntryLocator(0, 0)));
+      
+      ClasspathUtils.clickCancel();
+      
+      /*
+       * 10. Open form and check, that it is empty
+       */
+      
+      selectItemInWorkspaceTree(PROJECT_NAME);
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      /*
+       * "Configure classpath" dialog appeared
+       */
+      ClasspathUtils.checkConfigureClasspathDialog();
+      
+      /*
+       * Classpath list grid must be empty
+       */
+      assertFalse(selenium.isElementPresent(ClasspathUtils.getScListGridEntryLocator(0, 0)));
+      
+      /*
+       * 11. Add element to list grid. And click save button
+       */
+      ClasspathUtils.clickAdd();
+      ClasspathUtils.checkChooseSourceWindow();
+      
+      ClasspathUtils.openFolderInChooseSourceTreegrid(WS_NAME);
+      
+      ClasspathUtils.selectItemInChooseSourceTreegrid(FOLDER_NAME);
+      ClasspathUtils.checkChooseSourceButtonEnabled(ClasspathUtils.TITLES.OK, true);
+      
+      ClasspathUtils.clickOk();
+      assertTrue(selenium.isElementPresent(ClasspathUtils.getScListGridEntryLocator(0, 0)));
+      
+      ClasspathUtils.clickSave();
+      
+      /*
+       * Check file .groovyclasspath, that entry was added.
+       */
+      final String expectedContent = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" 
+         + WEBDAV_CONTEXT + "://" + REPO_NAME + "/" + WS_NAME + "#/" + FOLDER_NAME + "/\"}]}";
+      HTTPResponse response = VirtualFileSystemUtils.get(URL + PROJECT_NAME + "/" + ".groovyclasspath");
+      final String content = new String(response.getData());
+      
+      assertEquals(expectedContent, content);
    }
 
 }

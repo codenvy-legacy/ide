@@ -102,7 +102,8 @@ public abstract class BaseTest
    protected static final IDE IDE = new IDE(selenium);
    
    /**
-    * Workspaces for IDE.
+    * Workspaces for IDE. 
+    * Element with 0 index - default workspace.
     */
    protected static final String[] WORKSPACES = {"dev-monit", "production"};
 
