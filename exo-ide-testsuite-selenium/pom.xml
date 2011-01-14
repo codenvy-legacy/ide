@@ -32,7 +32,7 @@
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-log4j12</artifactId>
-	 <scope>test</scope
+         <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>junit</groupId>
@@ -55,8 +55,8 @@
             <configuration>
                <skip>true</skip>
             </configuration>
-          </plugin>
-          
+         </plugin>
+
       </plugins>
    </build>
    <profiles>
