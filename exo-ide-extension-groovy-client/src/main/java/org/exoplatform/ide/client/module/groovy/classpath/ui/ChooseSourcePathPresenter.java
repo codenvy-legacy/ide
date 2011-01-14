@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.module.groovy.classpath.ui;
 
+import com.google.gwt.http.client.URL;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -115,14 +116,14 @@ public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, Ch
     * Handler.
     */
    private Handlers handlers;
-   
+
    /**
     * The REST context.
     */
    private String restContext;
-   
+
    private final String WEBDAV_CONTEXT = "/jcr/";
-   
+
    private final String JCR_PROTOCOL = "jcr://";
 
    /**
@@ -250,7 +251,7 @@ public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, Ch
       eventBus.fireEvent(new AddSourceToBuildPathEvent(classPathEntries));
       display.closeView();
    }
-   
+
    /**
     * Get jcr location of the source from WEBDAV href.
     * 
@@ -259,16 +260,17 @@ public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, Ch
     */
    private String formPathFromHref(String href)
    {
-     String context = restContext+WEBDAV_CONTEXT;
-     String path = href.substring(href.indexOf(context) + context.length());
-     String[] parts = path.split("/");
-     
-     //Add sybol "#" after workspace name (the second part of the path):
-     if (parts.length > 2) {
-        path = path.replaceFirst(parts[0]+"/"+parts[1], parts[0]+"/"+parts[1] + "#");
-     }
-     path = JCR_PROTOCOL + path;
-      return path;
+      String context = restContext + WEBDAV_CONTEXT;
+      String path = href.substring(href.indexOf(context) + context.length());
+      String[] parts = path.split("/");
+
+      //Add sybol "#" after workspace name (the second part of the path):
+      if (parts.length > 2)
+      {
+         path = path.replaceFirst(parts[0] + "/" + parts[1], parts[0] + "/" + parts[1] + "#");
+      }
+      path = JCR_PROTOCOL + path;
+      return URL.encode(path);
    }
 
    /**
