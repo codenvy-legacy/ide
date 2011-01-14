@@ -106,7 +106,7 @@ If the target file has been opened in the _Content Panel_ before, the confirmati
 If you want to change the default editor, simply click your desired editor and mark the *Use as default editor* checkbox in the *Open File With* dialog.
 
 The new settings are stored in the _User Settings File_ at the server that will be the default editor in next sessions.
-The default editor is marked by the "\[Default\]" text in the *Open File With* window.
+The default editor is marked by the "Default" text in the *Open File With* window.
 
 h1. Go to Folder
 
@@ -633,7 +633,7 @@ The code outline is used to create codes productively. The outline is available 
 
 The _Outline Panel_ is opened automatically once a file has been created or opened. You can close the _Outline Panel_ by clicking the *Close* button on the tab header. Also, you can show/hide the _Outline Panel_ by pressing the *Show/Hide Outline* button on the toolbar or select *View* on the top menu and then select/deselect *Outline* from the drop-down menu.
 
-In the _Outline Panel_, you can see the tree of variables, functions, classes, objects, methods, fields, parameters, annotations,  HTML and XML tags with icon "< >", and special code delimiters like *"<% ... %>"* in the _ECM Template_ file, or *"\[CDATA \[ … \]\]"* in the _Google Gadget_ file as the illustrations below.
+In the _Outline Panel_, you can see the tree of variables, functions, classes, objects, methods, fields, parameters, annotations,  HTML and XML tags with icon "< >", and special code delimiters like *"<% ... %>"* in the _ECM Template_ file, or *"CDATA"* in the _Google Gadget_ file as the illustrations below.
 
 !ecm-template-outline.png!
 
