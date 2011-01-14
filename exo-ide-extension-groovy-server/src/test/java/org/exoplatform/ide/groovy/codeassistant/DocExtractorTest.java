@@ -46,9 +46,7 @@ public class DocExtractorTest extends TestCase
    public void setUp() throws Exception
    {
       super.setUp();
-      javaHome = System.getProperty("java.home");
-      String fileSeparator = System.getProperty("file.separator");
-      javaHome = javaHome.substring(0, javaHome.lastIndexOf(fileSeparator) + 1) + "src.zip";
+      javaHome = System.getProperty("java.src");
    }
 
    public void testExtractDocFromJavaSource() throws RecognitionException, TokenStreamException, IOException

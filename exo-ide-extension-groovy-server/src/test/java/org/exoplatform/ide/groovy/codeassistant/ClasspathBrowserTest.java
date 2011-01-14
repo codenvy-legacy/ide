@@ -36,9 +36,7 @@ public class ClasspathBrowserTest extends TestCase
    @Override
    protected void setUp() throws Exception
    {
-      javaHome = System.getProperty("java.home");
-      String fileSeparator = System.getProperty("file.separator");
-      javaHome = javaHome.substring(0,javaHome.lastIndexOf(fileSeparator)+1) + "src.zip";
+      javaHome = System.getProperty("java.src");
    }
    
    public void testgetClassesNamesFromJavaSrc() throws IOException

@@ -17,19 +17,15 @@
 package org.exoplatform.ide.groovy.codeassistant;
 
 import java.io.File;
-import java.net.URL;
 import java.net.URLEncoder;
+
+import javax.ws.rs.core.SecurityContext;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.groovy.Base;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.junit.Test;
-
-import java.io.File;
-import java.net.URLEncoder;
-
-import javax.ws.rs.core.SecurityContext;
 
 /**
  * Created by The eXo Platform SAS.
@@ -43,8 +39,6 @@ public class DocStrorageTest extends Base
    
    public void setUp() throws Exception
    {
-//     super.setUp();
-//     jar = "src/test/resources/jsr311-api-1.0-sources.jar";
       super.setUp();
       jar = "src/test/resources/jsr311-api-1.0-sources.jar";
       File file = new File(jar);

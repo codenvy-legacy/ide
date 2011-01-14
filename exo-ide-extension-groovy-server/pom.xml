@@ -97,6 +97,19 @@
       </dependency>
    </dependencies>
    <build>
+      <pluginManagement>
+         <plugins>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-surefire-plugin</artifactId>
+               <configuration>
+                  <systemPropertyVariables>
+                     <java.src>${env.JAVA_HOME}${file.separator}src.zip</java.src>
+                  </systemPropertyVariables>
+               </configuration>
+            </plugin>
+         </plugins>
+      </pluginManagement>
       <resources>
          <resource>
             <directory>src/main/java</directory>
@@ -108,4 +121,33 @@
       <sourceDirectory>src/main/java</sourceDirectory>
       <outputDirectory>target/classes</outputDirectory>
    </build>
+   <profiles>
+      <profile>
+         <id>mac</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+            <os>
+               <family>mac</family>
+            </os>
+         </activation>
+         <build>
+            <pluginManagement>
+               <plugins>
+                  <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+                     <artifactId>maven-surefire-plugin</artifactId>
+                     <configuration>
+                        <excludes>
+                           <exclude>**/ClasspathBrowserTest.java</exclude>
+                           <exclude>**/ClassInfoStorageTest.java</exclude>
+                           <exclude>**/CodeAssitantTest.java</exclude>
+                           <exclude>**/DocExtractorTest.java</exclude>
+                        </excludes>
+                     </configuration>
+                  </plugin>
+               </plugins>
+            </pluginManagement>
+         </build>
+      </profile>
+   </profiles>
 </project>

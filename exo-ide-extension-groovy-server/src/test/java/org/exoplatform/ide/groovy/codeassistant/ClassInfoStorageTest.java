@@ -19,17 +19,14 @@ package org.exoplatform.ide.groovy.codeassistant;
 import java.io.File;
 import java.net.URLEncoder;
 
+import javax.jcr.Node;
+import javax.ws.rs.core.SecurityContext;
+
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.groovy.Base;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.junit.Test;
-
-import java.io.File;
-import java.net.URLEncoder;
-
-import javax.jcr.Node;
-import javax.ws.rs.core.SecurityContext;
 
 /**
  * Created by The eXo Platform SAS.
@@ -53,9 +50,7 @@ public class ClassInfoStorageTest extends Base
       File jarFile = new File(jar);
       assertTrue(jarFile.exists());
       jar = URLEncoder.encode(jarFile.getAbsolutePath(),"UTF-8");
-      javaHome = System.getProperty("java.home");
-      String fileSeparator = System.getProperty("file.separator");
-      javaHome = javaHome.substring(0,javaHome.lastIndexOf(fileSeparator)+1) + "src.zip";
+      javaHome = System.getProperty("java.src");
       File javaHomeFile = new File(javaHome);
       assertTrue(javaHomeFile.exists());
       javaHome = URLEncoder.encode(javaHomeFile.getAbsolutePath(),"UTF-8");
