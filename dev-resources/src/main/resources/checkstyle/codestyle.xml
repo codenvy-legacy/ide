@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+<module name="Checker">
+	<!-- THIS FILE CHECKS ONLY CODE STYLE ERRORS -->
+	<!--
+		Note : checkstyle maven plugin doesn't yet support checkstyle 5.0
+	-->
+	<module name="TreeWalker">
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Annotations        -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- THESE MODULES REQUIRES CHECKSTYLE 5.0 -->
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Block Checks       -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<module name="LeftCurly">
+			<property name="option" value="nl" />
+			<property name="severity" value="warning"/>
+		</module>
+		<module name="RightCurly">
+			<property name="option" value="alone" />
+			<property name="severity" value="warning"/>
+		</module>
+		<!-- THESE TEST IS ABOUT A BAD CODING ISSUE -->
+		<!-- Don't allow empty blocks -->
+		<!--<module name="EmptyBlock">-->
+		<!--<property name="option" value="text" />-->
+		<!--</module>-->
+		<!-- BORDER LINE RULE ?? -->
+		<!--<module name="NeedBraces" />-->
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Class Design       -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!--
+			ALL THOSE TESTS AREN'T ABOUT CODE STYLE BUT ABOUT BAD CODING ISSUES
+		-->
+
+		<!-- Visibility modifiers -->
+		<!--<module name="VisibilityModifier">-->
+		<!--<property name="packageAllowed" value="true" />-->
+		<!--<property name="protectedAllowed" value="true" />-->
+		<!--</module>-->
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Coding             -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!--
+			ALL THOSE TESTS AREN'T ABOUT CODE STYLE BUT ABOUT BAD CODING ISSUES
+		-->
+
+		<!-- Override hashCode whenever you override equals() -->
+		<!-- <module name="EqualsHashCode" /> -->
+		<!-- Illegal instantiations -->
+
+		<!--<module name="IllegalInstantiation">-->
+		<!--<property name="classes" value="java.lang.Boolean" />-->
+		<!--</module>-->
+
+		<!-- Avoid inner assignments -->
+		<!--<module name="InnerAssignment" />-->
+		<!--<module name="SimplifyBooleanExpression" />-->
+		<!--<module name="SimplifyBooleanReturn" />-->
+
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Duplicate Code     -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!--
+			ALL THOSE TESTS AREN'T ABOUT CODE STYLE BUT ABOUT BAD CODING ISSUES
+		-->
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Headers            -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Enforce License Header -->
+		<module name="RegexpHeader">
+			<property name="headerFile" value="${checkstyle.header.file}" />
+			<property name="severity" value="error"/>
+		</module>
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Imports            -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+
+		<!-- THESE TEST IS ABOUT A BAD CODING ISSUE -->
+		<!-- Don't allow imports from the sun.* package hierarchy -->
+		<!-- <module name="IllegalImport" /> -->
+		<!-- Simplify your code -->
+		<!-- THESE TEST IS ABOUT A BAD CODING ISSUE -->
+		<!--<module name="AvoidStarImport" />-->
+		<!-- THESE TEST IS ABOUT A BAD CODING ISSUE -->
+		<!--<module name="RedundantImport" />-->
+		<!-- THESE TEST IS ABOUT A BAD CODING ISSUE -->
+		<!--<module name="UnusedImports" />-->
+		<module name="ImportOrder">
+			<property name="groups" value="org,java,javax" />
+			<property name="ordered" value="true" />
+			<property name="separated" value="true" />
+			<property name="severity" value="warning"/>
+		</module>
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Javadoc Comments   -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!--
+			ALL THOSE TESTS AREN'T ABOUT CODE STYLE BUT ABOUT BAD CODING ISSUE
+		-->
+		<!--<module name="JavadocMethod">-->
+		<!--<property name="allowUndeclaredRTE" value="true" />-->
+		<!--<property name="allowThrowsTagsForSubclasses" value="true" />-->
+		<!--<property name="scope" value="package" />-->
+		<!--</module>-->
+		<!--<module name="JavadocVariable">-->
+		<!--<property name="scope" value="package" />-->
+		<!--</module>-->
+		<!--<module name="JavadocType">-->
+		<!--<property name="scope" value="package" />-->
+		<!--</module>-->
+		<!-- Enforce package documentation -->
+		<!-- THIS MODULE REQUIRES CHECKSTYLE 5.0 -->
+		<!--<module name="JavadocPackage">-->
+		<!--<property name="allowLegacy" value="true" />-->
+		<!--</module>-->
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Metrics            -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!--
+			ALL THOSE TESTS AREN'T ABOUT CODE STYLE BUT ABOUT BAD CODING ISSUE
+		-->
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Miscellaneous      -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<module name="UpperEll">
+		    <property name="severity" value="warning"/>
+		</module> 
+		<!-- THESE TEST IS ABOUT A BAD CODING ISSUE -->
+		<!-- Flag reminder comments -->
+		<!--<module name="TodoComment" />-->
+		<!-- Indentation -->
+		<module name="Indentation">
+			<property name="basicOffset" value="3" />
+			<property name="caseIndent" value="3" />
+			<property name="braceAdjustment" value="0" />
+			<property name="severity" value="warning"/>
+		</module>
+		<!-- THESE TEST IS ABOUT A BAD CODING ISSUE -->
+		<!-- StringLiteralEquality -->
+		<!--<module name="StringLiteralEquality" />-->
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Modifiers          -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- BORDER LINE RULE ?? -->
+		<!-- 
+		<module name="ModifierOrder" />
+        -->
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Naming Conventions -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- BORDER LINE RULE ?? -->
+		<!--
+			<module name="ConstantName"> <property name="format"
+			value="^[A-Z](_?[A-Z0-9]+)*$" />
+		-->
+		<!-- Checkstyle 5.0 only -->
+		<!--<property name="applyToPublic" value="true" />-->
+		<!-- Checkstyle 5.0 only -->
+		<!--<property name="applyToProtected" value="true" />-->
+		<!-- Checkstyle 5.0 only -->
+		<!--<property name="applyToPackage" value="true" />-->
+		<!-- Checkstyle 5.0 only -->
+		<!--<property name="applyToPrivate" value="false" />-->
+		<!-- 
+		</module>
+		 -->
+		<!-- BORDER LINE RULE ?? -->
+		<!--<module name="MethodName">-->
+		<!--<property name="format" value="^[a-z]([a-zA-Z0-9]+)*$" />-->
+		<!--</module>-->
+		<!-- BORDER LINE RULE ?? -->
+		<!--<module name="LocalFinalVariableName">-->
+		<!--<property name="format" value="^[a-z]([a-zA-Z0-9]+)*$" />-->
+		<!--</module>-->
+		<!-- BORDER LINE RULE ?? -->
+		<!--<module name="LocalVariableName">-->
+		<!--<property name="format" value="^[a-z]([a-zA-Z0-9]+)*$" />-->
+		<!--</module>-->
+		<!-- BORDER LINE RULE ?? -->
+		<!--<module name="MemberName">-->
+		<!--<property name="format" value="^[a-z]([a-zA-Z0-9])*$" />-->
+		<!--</module>-->
+		<!-- BORDER LINE RULE ?? -->
+		<!--<module name="ParameterName">-->
+		<!--<property name="format" value="^[a-z]([a-zA-Z0-9]+)*$" />-->
+		<!--</module>-->
+		<!-- BORDER LINE RULE ?? -->
+		<!--<module name="TypeName">-->
+		<!--<property name="format" value="^[A-Z][a-zA-Z0-9]*$" />-->
+		<!--</module>-->
+		<!-- BORDER LINE RULE ?? -->
+		<!--<module name="StaticVariableName">-->
+		<!--<property name="format" value="^[a-z]([a-zA-Z0-9])*$" />-->
+		<!--</module>-->
+		<!-- BORDER LINE RULE ?? -->
+		<!--<module name="PackageName">-->
+		<!--
+			<property name="format" value="^[a-z]+(\.[a-zA-Z_][a-zA-Z_0-9]*)*$"
+			/>
+		-->
+		<!--</module>-->
+
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Size Violations    -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Enforce length limits -->
+		<module name="LineLength">
+			<property name="max" value="120" />
+			<property name="severity" value="warning"/>
+		</module>
+		<!-- THESE TEST IS ABOUT A BAD CODING ISSUE -->
+		<!--<module name="MethodLength">-->
+		<!--<property name="tokens" value="METHOD_DEF" />-->
+		<!--<property name="max" value="1000" />-->
+		<!--</module>-->
+		<!-- THESE TEST IS ABOUT A BAD CODING ISSUE -->
+		<!--<module name="MethodLength">-->
+		<!--<property name="tokens" value="CTOR_DEF" />-->
+		<!--<property name="max" value="150" />-->
+		<!--</module>-->
+		<!-- THESE TEST IS ABOUT A BAD CODING ISSUE -->
+		<!--<module name="ParameterNumber">-->
+		<!--<property name="max" value="20" />-->
+		<!--</module>-->
+		<!-- THESE TEST IS ABOUT A BAD CODING ISSUE -->
+		<!-- Enforce file length -->
+		<!--<module name="FileLength">-->
+		<!--<property name="max" value="10000" />-->
+		<!--</module>-->
+
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<!-- Whitespace         -->
+		<!-- xxxxxxxxxxxxxxxxxx -->
+		<module name="ParenPad">
+		    <property name="severity" value="warning"/>
+		</module>
+		<module name="NoWhitespaceAfter">
+		    <property name="severity" value="warning"/> 
+		</module>
+		<module name="NoWhitespaceBefore">
+		    <property name="severity" value="warning"/> 
+		</module>
+		<module name="WhitespaceAfter">
+			<property name="tokens" value="COMMA, SEMI" />
+			<property name="severity" value="warning"/> 
+		</module>
+		<!-- BORDER LINE RULE ?? -->
+		<!--<module name="WhitespaceAround" />-->
+		<!-- THIS MODULE REQUIRES CHECKSTYLE 5.0 -->
+		<!-- Don't allow tabs -->
+		<!--<module name="FileTabCharacter">-->
+		<!--<property name="eachLine" value="true" />-->
+		<!--</module>-->
+
+	</module>
+
+	<!-- NewlineAtEndOfFile -->
+	<module name="NewlineAtEndOfFile">
+		<property name="lineSeparator" value="lf" />
+		<property name="severity" value="warning"/> 
+	</module>
+
+</module>
