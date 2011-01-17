@@ -324,6 +324,21 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       deselectAllRecords();
       selectRecord(node);
    }
+   
+   /**
+    * Deselect item in the tree by it's href.
+    * 
+    * @param href item's href
+    */
+   public void deselectItem(String href)
+   {
+      TreeNode node = getNodeByHref(href);
+      if (node == null)
+      {
+         return;
+      }
+      deselectRecord(node);
+   }
 
    public List<Item> getSelectedItems()
    {

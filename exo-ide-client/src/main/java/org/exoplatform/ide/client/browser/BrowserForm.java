@@ -109,5 +109,13 @@ public class BrowserForm extends View implements BrowserPanel, BrowserPresenter.
    {
       treeGrid.setLocktokens(locktokens);
    }
+
+   /**
+    * @see org.exoplatform.ide.client.browser.BrowserPresenter.Display#deselectItem(java.lang.String)
+    */
+   public void deselectItem(String path)
+   {
+      treeGrid.deselectItem(path);
+   }
    
 }

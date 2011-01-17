@@ -98,4 +98,13 @@ public class BrowserFormNew extends View implements BrowserPanel, BrowserPresent
 
    }
 
+   /**
+    * @see org.exoplatform.ide.client.browser.BrowserPresenter.Display#deselectItem(java.lang.String)
+    */
+   public void deselectItem(String path)
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
 }

@@ -18,19 +18,10 @@
  */
 package org.exoplatform.ide.client.browser;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.tree.Tree;
-import org.exoplatform.gwtframework.ui.client.tree.TreeNode;
-import org.exoplatform.gwtframework.ui.client.tree.TreeRecord;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -43,6 +34,16 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.ResizedEvent;
 import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.layout.Layout;
+
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.tree.Tree;
+import org.exoplatform.gwtframework.ui.client.tree.TreeNode;
+import org.exoplatform.gwtframework.ui.client.tree.TreeRecord;
+import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -203,6 +204,8 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
    }
 
    private List<OpenHandler<Item>> openHandlers = new ArrayList<OpenHandler<Item>>();
+   
+   private List<CloseHandler<Item>> closeHandlers = new ArrayList<CloseHandler<Item>>();
 
    private List<SelectionHandler<Item>> selectionHandlers = new ArrayList<SelectionHandler<Item>>();
 
@@ -246,6 +249,22 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
       public void removeHandler()
       {
          openHandlers.remove(openHandler);
+      }
+   }
+   
+   private class CloseHandlerRegistration implements HandlerRegistration
+   {
+
+      private CloseHandler<Item> closeHandler;
+
+      public CloseHandlerRegistration(CloseHandler<Item> closeHandler)
+      {
+         this.closeHandler = closeHandler;
+      }
+
+      public void removeHandler()
+      {
+         closeHandlers.remove(closeHandler);
       }
    }
 
@@ -337,6 +356,15 @@ public class GWTItemTreeGrid extends Layout implements TreeGridItem<Item>
    public HandlerRegistration addKeyPressHandler(KeyPressHandler handler)
    {
       return null;
+   }
+
+   /**
+    * @see com.google.gwt.event.logical.shared.HasCloseHandlers#addCloseHandler(com.google.gwt.event.logical.shared.CloseHandler)
+    */
+   public HandlerRegistration addCloseHandler(CloseHandler<Item> closeHandler)
+   {
+      closeHandlers.add(closeHandler);
+      return new CloseHandlerRegistration(closeHandler);
    }
 
 }

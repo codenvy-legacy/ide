@@ -18,12 +18,19 @@
  */
 package org.exoplatform.ide.client.browser;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -66,17 +73,12 @@ import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointHandler;
 
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -94,14 +96,44 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    interface Display
    {
 
+      /**
+       * @return {@link TreeGridItem}
+       */
       TreeGridItem<Item> getBrowserTree();
 
+      /**
+       * Get selected items in the tree.
+       * 
+       * @return {@link List} selected items
+       */
       List<Item> getSelectedItems();
 
+      /**
+       * Select item in browser tree by path.
+       * 
+       * @param path item's path
+       */
       void selectItem(String path);
+      
+      /**
+       * Deselect item in browser tree by path.
+       * 
+       * @param path item's path
+       */
+      void deselectItem(String path);
 
+      /**
+       * Update the state of the item in the tree.
+       * 
+       * @param file
+       */
       void updateItemState(File file);
 
+      /**
+       * Set lock tokens to the items in the tree.
+       * 
+       * @param locktokens
+       */
       void setLockTokens(Map<String, String> locktokens);
 
    }
@@ -142,7 +174,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       handlers.removeHandlers();
    }
 
-   void bindDisplay(Display display)
+   void bindDisplay(final Display display)
    {
       this.display = display;
 
@@ -153,7 +185,22 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
             onFolderOpened((Folder)event.getTarget());
          }
       });
-
+      
+      display.getBrowserTree().addCloseHandler(new CloseHandler<Item>()
+      {
+         
+         public void onClose(CloseEvent<Item> event)
+         {
+            for (Item item : display.getSelectedItems())
+            {
+               if (item.getHref().startsWith(event.getTarget().getHref()))
+               {
+                  display.deselectItem(item.getHref());
+               }
+            }
+         }
+      });
+      
       display.getBrowserTree().addSelectionHandler(new SelectionHandler<Item>()
       {
          public void onSelection(SelectionEvent<Item> event)
