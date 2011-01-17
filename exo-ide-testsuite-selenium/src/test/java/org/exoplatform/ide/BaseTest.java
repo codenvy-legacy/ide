@@ -69,21 +69,27 @@ import javax.xml.parsers.ParserConfigurationException;
 @RunWith(RCRunner.class)
 public abstract class BaseTest
 {
-   protected static final String BASE_URL = IdeAddress.STANDALONE.getBaseUrl();
+   public static final String BASE_URL = IdeAddress.STANDALONE.getBaseUrl();
 
    protected static final String APPLICATION_URL = IdeAddress.STANDALONE.getApplicationUrl();
 
-   protected static final String REST_CONTEXT = "rest/private";
+   public static final String REST_CONTEXT = "rest/private";
 
-   protected static final String REPO_NAME = "repository";
+   public static final String REPO_NAME = "repository";
 
-   protected static final String WEBDAV_CONTEXT = "jcr";
+   public static final String WEBDAV_CONTEXT = "jcr";
 
-   protected static final String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME
+   public static final String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME
       + "/";
 
-   protected static final String WS_NAME = "dev-monit";
+   /**
+    * Default workspace.
+    */
+   public static final String WS_NAME = "dev-monit";
    
+   /**
+    * Second workspace. Needed in some tests.
+    */
    protected static final String WS_NAME_2 = "production";
 
    //   protected static final String USER_NAME = "__anonim";
@@ -99,7 +105,7 @@ public abstract class BaseTest
 
    public static final Selenium selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
    
-   protected static final IDE IDE = new IDE(selenium);
+   public static final IDE IDE = new IDE(selenium);
    
    /**
     * Workspaces for IDE. 
@@ -1205,9 +1211,11 @@ public abstract class BaseTest
 
    public enum IdeAddress {
       SHELL("http://127.0.0.1:8888/",
-         "http://127.0.0.1:8888/org.exoplatform.ide.IDEShell/IDEShell.html?gwt.codesvr=127.0.0.1:9997"), PORTAL(
-         "http://127.0.0.1:8080/", "http://127.0.0.1:8080/portal/private/default/ide"), STANDALONE(
-         "http://127.0.0.1:8080/", "http://127.0.0.1:8080/IDE/IDE/IDEApplication.html");
+         "http://127.0.0.1:8888/org.exoplatform.ide.IDEShell/IDEShell.html?gwt.codesvr=127.0.0.1:9997"), 
+      PORTAL("http://127.0.0.1:8080/", 
+         "http://127.0.0.1:8080/portal/private/default/ide"), 
+      STANDALONE("http://127.0.0.1:8080/", 
+         "http://127.0.0.1:8080/IDE/IDE/IDEApplication.html");
 
       private String baseUrl;
 

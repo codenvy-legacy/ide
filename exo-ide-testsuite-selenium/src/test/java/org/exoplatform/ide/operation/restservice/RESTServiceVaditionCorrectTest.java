@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.operation.restservice;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -85,10 +82,7 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationPanel\"]/tab[ID=Output]/"));
-      assertEquals("[INFO] " + FILE_NAME + " validated successfully.", selenium.getText("//font[@color='#007700']"));
+      RestServiceUtils.validate(FILE_NAME, 0);
    }
 
  

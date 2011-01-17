@@ -1,0 +1,16 @@
+// simple groovy script
+import javax.ws.rs.Path
+import javax.ws.rs.GET
+import javax.ws.rs.PathParam;
+import org.exoplatform.sample.Employee;
+
+@Path("/classpath-test")
+public class HelloWorld {
+  @GET
+  @Path("print-data/{name}")
+  public String hello(@PathParam("name") String name) {
+    Employee empl = new Employee();
+    
+    return "Hello " + name + " " + empl.getSurname();
+  }
+}

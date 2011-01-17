@@ -22,12 +22,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -36,6 +38,10 @@ import org.junit.Test;
 import java.io.IOException;
 
 /**
+ * Check, that Configure Classpath and Choose source dialog windows
+ * work correctly: buttons actions work correctly, and new entries 
+ * are added to .groovyclasspath file of project.
+ * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Jan 13, 2011 $
  *
@@ -97,9 +103,15 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       waitForRootElement();
       
       /*
+       * 0. Check, there is no .groovyclasspath file in workspace directory
+       */
+      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(URL + ".groovyclasspath").getStatusCode());
+      
+      /*
        * 1. Try to configure classpath for simple folder
        */
       selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
       
       /*
@@ -117,6 +129,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        * 2. Try to configure classpath for workspace
        */
       selectRootOfWorkspaceTree();
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
       
       /*
@@ -127,9 +140,15 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       IDE.dialogs().clickOkButton();
       
       /*
-       * 3. Try to configure classpath for project
+       * 3. Try to configure classpath for project.
+       * Check, that .groovyclasspath in project folder is hidden
        */
       selectItemInWorkspaceTree(PROJECT_NAME);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      assertElementNotPresentInWorkspaceTree(CLASSPATH_FILE_NAME);
+      
+      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
       Thread.sleep(TestConstants.SLEEP);
       
@@ -225,7 +244,6 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * 10. Open form and check, that it is empty
        */
-      
       selectItemInWorkspaceTree(PROJECT_NAME);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
       Thread.sleep(TestConstants.SLEEP);

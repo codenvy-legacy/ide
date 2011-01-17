@@ -90,6 +90,13 @@ public class Locators
       public static final String PROPERTIES_FORM_LOCATOR = "scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]";
       
       public static final String PROPERTIES_TAB_LOCATOR = OPERATION_TABSET_LOCATOR + "/tab[ID=idePropertiesView]";
+      
+      public static final String OUTPUT_TAB_LOCATOR = OPERATION_TABSET_LOCATOR + "/tab[ID=Output]";
+      
+      /**
+       * Form, where notifications are shown.
+       */
+      public static final String OUTPUT_FORM_LOCATOR = "//div[@eventproxy='ideOutputForm']";
    }
    
    /**
