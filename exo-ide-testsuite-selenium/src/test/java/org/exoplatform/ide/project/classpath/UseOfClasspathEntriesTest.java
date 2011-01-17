@@ -52,10 +52,8 @@ public class UseOfClasspathEntriesTest extends BaseTest
    
    private static final String REST_SERVICE_FILE_NAME = "Sample.grs";
    
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
    private static final String CLASSPATH_FILE_CONTENT = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" 
-      + WEBDAV_CONTEXT + "://" + REPO_NAME + "/" + WS_NAME + "#/" + FOLDER_NAME + "/\"}]}";;
+      + ClasspathUtils.CLASSPATH_RESOURCE_PREFIX + FOLDER_NAME + "/\"}]}";;
    
    private static final String CLASSPATH_FILE_NAME = ".groovyclasspath";
    
@@ -65,23 +63,23 @@ public class UseOfClasspathEntriesTest extends BaseTest
       final String filePath = "src/test/resources/org/exoplatform/ide/project/classpath/";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME);
          //create structure of folder for package org/exoplatform/sample, 
          //where will be placed Employee.groovy file
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME + "/org");
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME + "/org/exoplatform");
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME + "/org/exoplatform/sample");
+         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME + "/org");
+         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME + "/org/exoplatform");
+         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME + "/org/exoplatform/sample");
          //put Employee.groovy file
-         VirtualFileSystemUtils.put(filePath + "employee.groovy", MimeType.APPLICATION_GROOVY, URL + FOLDER_NAME 
+         VirtualFileSystemUtils.put(filePath + "employee.groovy", MimeType.APPLICATION_GROOVY, WORKSPACE_URL + FOLDER_NAME 
             + "/org/exoplatform/sample/" + EMPLOYEE_FILE_NAME);
          
-         VirtualFileSystemUtils.mkcol(URL + PROJECT_NAME);
+         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + PROJECT_NAME);
          //put rest service file
-         VirtualFileSystemUtils.put(filePath + "rest-service.grs", MimeType.GROOVY_SERVICE, URL + PROJECT_NAME 
+         VirtualFileSystemUtils.put(filePath + "rest-service.grs", MimeType.GROOVY_SERVICE, WORKSPACE_URL + PROJECT_NAME 
             + "/" + REST_SERVICE_FILE_NAME);
          //put classpath file
          VirtualFileSystemUtils.put(CLASSPATH_FILE_CONTENT.getBytes(), MimeType.APPLICATION_JSON, 
-            URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
+            WORKSPACE_URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
       }
       catch (IOException e)
       {
@@ -100,8 +98,8 @@ public class UseOfClasspathEntriesTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.delete(URL + PROJECT_NAME);
+         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WORKSPACE_URL + PROJECT_NAME);
       }
       catch (IOException e)
       {

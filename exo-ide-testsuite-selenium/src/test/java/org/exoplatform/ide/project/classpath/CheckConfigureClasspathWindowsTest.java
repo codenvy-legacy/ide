@@ -56,21 +56,24 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
    
    private static final String CREATED_PROJECT_NAME = CheckConfigureClasspathWindowsTest.class.getSimpleName() + "-created";
    
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
    private static final String CLASSPATH_FILE_CONTENT = "{\n\"entries\": [\n]\n}";
    
    private static final String CLASSPATH_FILE_NAME = ".groovyclasspath";
+   
+   /**
+    * Error message, that shown, when you try to configure classpath to no project folder.
+    */
+   private static final String ERROR_MSG = "Classpath settings not found.\n Probably you are not in project.";
    
    @Before
    public void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.mkcol(URL + PROJECT_NAME);
+         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + PROJECT_NAME);
          VirtualFileSystemUtils.put(CLASSPATH_FILE_CONTENT.getBytes(), MimeType.APPLICATION_JSON, 
-            URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
+            WORKSPACE_URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
       }
       catch (IOException e)
       {
@@ -87,8 +90,8 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.delete(URL + PROJECT_NAME);
+         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WORKSPACE_URL + PROJECT_NAME);
       }
       catch (IOException e)
       {
@@ -101,7 +104,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       
       try
       {
-         VirtualFileSystemUtils.delete(URL + CREATED_PROJECT_NAME);
+         VirtualFileSystemUtils.delete(WORKSPACE_URL + CREATED_PROJECT_NAME);
       }
       catch (IOException e)
       {
@@ -121,7 +124,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * 0. Check, there is no .groovyclasspath file in workspace directory
        */
-      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(URL + ".groovyclasspath").getStatusCode());
+      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(WORKSPACE_URL + ".groovyclasspath").getStatusCode());
       
       /*
        * 1. Try to configure classpath for simple folder
@@ -135,10 +138,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        */
       IDE.dialogs().checkOneBtnDialog("Error");
       
-      final String errorMsg = "Groovy class path location is not found.\n" 
-         + " Possible reason : Project is not selected in browser tree.";
-      
-      IDE.dialogs().checkTextInDialog(errorMsg);
+      IDE.dialogs().checkTextInDialog(ERROR_MSG);
       IDE.dialogs().clickOkButton();
       
       /*
@@ -152,7 +152,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        * Error dialog appeared
        */
       IDE.dialogs().checkOneBtnDialog("Error");
-      IDE.dialogs().checkTextInDialog(errorMsg);
+      IDE.dialogs().checkTextInDialog(ERROR_MSG);
       IDE.dialogs().clickOkButton();
       
       /*
@@ -220,7 +220,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       assertFalse(selenium.isElementPresent(ClasspathUtils.Locators.SC_CHOOSE_SOURCE_WINDOW));
       assertTrue(selenium.isElementPresent(ClasspathUtils.getScListGridEntryLocator(0, 0)));
       
-      final String folderPathForClasspath = WEBDAV_CONTEXT + "://" + REPO_NAME + "/" + WS_NAME + "#/" + FOLDER_NAME + "/";
+      final String folderPathForClasspath = ClasspathUtils.CLASSPATH_RESOURCE_PREFIX + FOLDER_NAME + "/";
       
       assertEquals(folderPathForClasspath, selenium.getText(ClasspathUtils.getScListGridEntryLocator(0, 0)));
       
@@ -294,8 +294,8 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        * Check file .groovyclasspath, that entry was added.
        */
       final String expectedContent = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" 
-         + WEBDAV_CONTEXT + "://" + REPO_NAME + "/" + WS_NAME + "#/" + FOLDER_NAME + "/\"}]}";
-      HTTPResponse response = VirtualFileSystemUtils.get(URL + PROJECT_NAME + "/" + ".groovyclasspath");
+         + ClasspathUtils.CLASSPATH_RESOURCE_PREFIX + FOLDER_NAME + "/\"}]}";
+      HTTPResponse response = VirtualFileSystemUtils.get(WORKSPACE_URL + PROJECT_NAME + "/" + ".groovyclasspath");
       final String content = new String(response.getData());
       
       assertEquals(expectedContent, content);
@@ -327,8 +327,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        */
       final String firstResourceLocator = ClasspathUtils.getScListGridEntryLocator(0, 0);
       assertTrue(selenium.isElementPresent(firstResourceLocator));
-      final String expectedResourceText = WEBDAV_CONTEXT + "://" + REPO_NAME + "/" + WS_NAME + "#/" + CREATED_PROJECT_NAME + "/";
-      assertEquals(expectedResourceText, selenium.getText(firstResourceLocator));
+      assertEquals(ClasspathUtils.CLASSPATH_RESOURCE_PREFIX + CREATED_PROJECT_NAME + "/", selenium.getText(firstResourceLocator));
       
       /*
        * 2. Close form.
@@ -342,8 +341,10 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * Check .groovyclasspath file
        */
-      final String expectedContent = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" + expectedResourceText + "\"}]}";
-      HTTPResponse response = VirtualFileSystemUtils.get(URL + CREATED_PROJECT_NAME + "/" + ".groovyclasspath");
+      final String expectedContent = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" 
+         + ClasspathUtils.CLASSPATH_RESOURCE_PREFIX + CREATED_PROJECT_NAME + "/" 
+         + "\"}]}";
+      HTTPResponse response = VirtualFileSystemUtils.get(WORKSPACE_URL + CREATED_PROJECT_NAME + "/" + ".groovyclasspath");
       final String content = new String(response.getData());
       
       assertEquals(expectedContent, content);

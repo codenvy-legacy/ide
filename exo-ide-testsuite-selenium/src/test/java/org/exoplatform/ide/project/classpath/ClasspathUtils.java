@@ -32,6 +32,15 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class ClasspathUtils
 {
+   /**
+    * Prefix of resource path, that displayed in Configure Classpath window.
+    * E.g.: jcr://repository/dev-monit#/
+    * After this prefix goes name of resource this the "/" at the end.:
+    * E.g.: jcr://repository/dev-monit#/ide-project/
+    */
+   public static final String CLASSPATH_RESOURCE_PREFIX = BaseTest.WEBDAV_CONTEXT + "://" + BaseTest.REPO_NAME + "/"
+      + BaseTest.WS_NAME + "#/";
+   
    private static final Selenium selenium;
    
    public interface Locators
