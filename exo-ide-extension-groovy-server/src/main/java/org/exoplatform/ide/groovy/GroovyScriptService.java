@@ -51,10 +51,7 @@ import java.security.Principal;
 import java.util.Collections;
 
 import javax.annotation.security.RolesAllowed;
-import javax.jcr.AccessDeniedException;
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -86,8 +83,6 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    private static final Log LOG = ExoLogger.getLogger(GroovyScriptService.class);
 
    public static final String DEVELOPER_ID = "ide.developer.id";
-
-   public static final String GROOVY_CLASSPATH = ".groovyclasspath";
 
    /**
     * Resource live time. Resource will be expired after this if it is deployed
@@ -170,7 +165,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
                jcrLocation[1] + "/" + jcrLocation[2]);
          Node rootNode = session.getRootNode();
          Node node = rootNode.getNode(jcrLocation[2]);
-         Node classpathNode = findClassPathNode(node);
+         Node classpathNode = GroovyScriptServiceUtil.findClassPathNode(node);
          if (classpathNode != null)
          {
             //Form the available href of the classpath file:
@@ -216,7 +211,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
                jcrLocation[1] + "/" + jcrLocation[2]);
          Node rootNode = session.getRootNode();
          Node scriptNode = rootNode.getNode(jcrLocation[2]);
-         Node classpathNode = findClassPathNode(scriptNode.getParent());
+         Node classpathNode = GroovyScriptServiceUtil.findClassPathNode(scriptNode.getParent());
          if (classpathNode != null)
          {
             return classpathNode.getNode("jcr:content").getProperty("jcr:data").getStream();
@@ -231,42 +226,6 @@ public class GroovyScriptService extends GroovyScript2RestLoader
          return null;
       }
       return null;
-   }
-
-   /**
-    * Find class path file's node by name step by step going upper in node hierarchy.
-    * 
-    * @param node node, in what child nodes to find class path file
-    * @return {@link Node} found jcr node
-    * @throws RepositoryException
-    */
-   private Node findClassPathNode(Node node) throws RepositoryException
-   {
-      if (node == null)
-         return null;
-      //Get all child node that end with ".groovyclasspath"
-      NodeIterator nodeIterator = node.getNodes("*" + GROOVY_CLASSPATH);
-      while (nodeIterator.hasNext())
-      {
-         Node childNode = nodeIterator.nextNode();
-         //The first found groovy class path file will be returned:
-         if (GROOVY_CLASSPATH.equals(childNode.getName()))
-            return childNode;
-      }
-      try
-      {
-         //Go upper to find class path file:   
-         Node parentNode = node.getParent();
-         return findClassPathNode(parentNode);
-      }
-      catch (ItemNotFoundException e)
-      {
-         return null;
-      }
-      catch (AccessDeniedException e)
-      {
-         return null;
-      }
    }
 
    /**

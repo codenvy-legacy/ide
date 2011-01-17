@@ -33,6 +33,10 @@ import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
 import java.io.InputStream;
 
+import javax.jcr.AccessDeniedException;
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -44,6 +48,8 @@ import javax.jcr.Session;
 public class GroovyScriptServiceUtil
 {
    public static final String WEBDAV_CONTEXT = "/jcr/";
+   
+   public static final String GROOVY_CLASSPATH = ".groovyclasspath";
 
    /**
     * Unmarshal classpath object in JSON format to Java bean {@link GroovyClassPath}.
@@ -108,5 +114,41 @@ public class GroovyScriptServiceUtil
 
       String workspace = repoPath.split("/")[0];
       return sp.getSession(workspace, repo);
+   }
+   
+   /**
+    * Find class path file's node by name step by step going upper in node hierarchy.
+    * 
+    * @param node node, in what child nodes to find class path file
+    * @return {@link Node} found jcr node
+    * @throws RepositoryException
+    */
+   public static Node findClassPathNode(Node node) throws RepositoryException
+   {
+      if (node == null)
+         return null;
+      //Get all child node that end with ".groovyclasspath"
+      NodeIterator nodeIterator = node.getNodes("*" + GROOVY_CLASSPATH);
+      while (nodeIterator.hasNext())
+      {
+         Node childNode = nodeIterator.nextNode();
+         //The first found groovy class path file will be returned:
+         if (GROOVY_CLASSPATH.equals(childNode.getName()))
+            return childNode;
+      }
+      try
+      {
+         //Go upper to find class path file:   
+         Node parentNode = node.getParent();
+         return findClassPathNode(parentNode);
+      }
+      catch (ItemNotFoundException e)
+      {
+         return null;
+      }
+      catch (AccessDeniedException e)
+      {
+         return null;
+      }
    }
 }
