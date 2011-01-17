@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import static org.exoplatform.ide.operation.templates.TemplateUtils.CREATE_BUTTON_LOCATOR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 
 import com.thoughtworks.selenium.Selenium;
@@ -43,9 +44,9 @@ public class TemplateUtils
    
    static final String NAME_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[name=ideCreateFileFromTemplateFormFileNameField]/element";
    
-   public static final String DEFAULT_PROJECT_TEMPLATE_NAME = "Sample project";
+   public static final String DEFAULT_PROJECT_TEMPLATE_NAME = "ide-project";
    
-   static void checkCreateProjectFromTemplateForm(Selenium selenium)
+   public static void checkCreateProjectFromTemplateForm(Selenium selenium)
    {
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/"));
       assertEquals("Create project", selenium.getText("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/header/"));
@@ -185,6 +186,32 @@ public class TemplateUtils
    public static void clickCreateProjectButton(Selenium selenium) throws Exception
    {
       selenium.click(CREATE_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.SLEEP);
+   }
+   
+   /**
+    * Create project from template: 
+    * 1. Call "Project From Template" form
+    * 2. Select <code>templateName</code> template in list grid
+    * 3. Type project name <code>projectName</code> (if null - leave the default project name)
+    * 4. Click Create button
+    * 
+    * @param selenium - selenium
+    * @param templateName - the template name in list grid
+    * @param projectName - new project name (if null - project with default name will be created).
+    * @throws Exception
+    */
+   public static void createProjectFromTemplate(Selenium selenium, String templateName, String projectName) throws Exception
+   {
+      BaseTest.IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      
+      TemplateUtils.checkCreateProjectFromTemplateForm(selenium);
+      TemplateUtils.selectProjectTemplate(selenium, templateName);
+      if (projectName != null)
+      {
+         TemplateUtils.typeProjectName(selenium, projectName);
+      }
+      TemplateUtils.clickCreateProjectButton(selenium);
       Thread.sleep(TestConstants.SLEEP);
    }
 }

@@ -31,8 +31,9 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.exoplatform.ide.operation.templates.TemplateUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -53,14 +54,16 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
    
    private static final String PROJECT_NAME = CheckConfigureClasspathWindowsTest.class.getSimpleName() + "-project";
    
+   private static final String CREATED_PROJECT_NAME = CheckConfigureClasspathWindowsTest.class.getSimpleName() + "-created";
+   
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    private static final String CLASSPATH_FILE_CONTENT = "{\n\"entries\": [\n]\n}";
    
    private static final String CLASSPATH_FILE_NAME = ".groovyclasspath";
    
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       try
       {
@@ -79,13 +82,26 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       }
    }
    
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void tearDown()
    {
       try
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
          VirtualFileSystemUtils.delete(URL + PROJECT_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+      
+      try
+      {
+         VirtualFileSystemUtils.delete(URL + CREATED_PROJECT_NAME);
       }
       catch (IOException e)
       {
@@ -283,6 +299,55 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       final String content = new String(response.getData());
       
       assertEquals(expectedContent, content);
+   }
+   
+   /**
+    * Check, that Configure classpath window dialog appeared,
+    * when new project created.
+    * 
+    * @throws Exception
+    */
+   @Test
+   public void testConfigureClasspathAppeared() throws Exception
+   {
+      refresh();
+      
+      /*
+       * 1. Create new project: New -> Project from template
+       */
+      TemplateUtils.createProjectFromTemplate(selenium, TemplateUtils.DEFAULT_PROJECT_TEMPLATE_NAME, CREATED_PROJECT_NAME);
+      
+      /*
+       * Check, Configure Classpath window appeared.
+       */
+      ClasspathUtils.checkConfigureClasspathDialog();
+      
+      /*
+       * Check, there is project folder in Classpath listgrid
+       */
+      final String firstResourceLocator = ClasspathUtils.getScListGridEntryLocator(0, 0);
+      assertTrue(selenium.isElementPresent(firstResourceLocator));
+      final String expectedResourceText = WEBDAV_CONTEXT + "://" + REPO_NAME + "/" + WS_NAME + "#/" + CREATED_PROJECT_NAME + "/";
+      assertEquals(expectedResourceText, selenium.getText(firstResourceLocator));
+      
+      /*
+       * 2. Close form.
+       */
+      ClasspathUtils.clickCancel();
+      
+      /*
+       * Check new project created.
+       */
+      assertElementPresentInWorkspaceTree(CREATED_PROJECT_NAME);
+      /*
+       * Check .groovyclasspath file
+       */
+      final String expectedContent = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" + expectedResourceText + "\"}]}";
+      HTTPResponse response = VirtualFileSystemUtils.get(URL + CREATED_PROJECT_NAME + "/" + ".groovyclasspath");
+      final String content = new String(response.getData());
+      
+      assertEquals(expectedContent, content);
+         
    }
 
 }
