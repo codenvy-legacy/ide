@@ -31,7 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
+ * Tree grid to display structure of repositories for
+ * Choose source dialog window.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
@@ -66,7 +67,13 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
       setCanSort(false);
       
       TreeGridField nameField = new TreeGridField(NAME);
-      setFields(nameField);
+      //TODO
+      //This field need for selenium.
+      //We can't select tree node, if click on first column.
+      //If you click on second column - tree item is selected.
+      TreeGridField mockField = new TreeGridField("mock");
+      mockField.setWidth(3);
+      setFields(nameField, mockField);
    }
 
    @Override
