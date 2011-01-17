@@ -95,7 +95,7 @@ public class ClasspathUtils
     * Check, that Configure Classpath Dialog window appeared 
     * and has list grid and 4 buttons: add, remove, save, cancel.
     */
-   static void checkConfigureClasspathDialog()
+   public static void checkConfigureClasspathDialog()
    {
       assertTrue(selenium.isElementPresent(Locators.SC_CONFIGURE_CLASSPATH_DIALOG));
       assertTrue(selenium.isElementPresent(Locators.SC_CLASSPATH_LISTGRID));
@@ -263,7 +263,7 @@ public class ClasspathUtils
     * Click cancel button.
     * @throws Exception
     */
-   static void clickCancel() throws Exception
+   public static void clickCancel() throws Exception
    {
       selenium.click(Locators.SC_CANCEL_BTN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);

@@ -81,5 +81,19 @@ public class Navigator
    {
       return selenium.getText(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[0]");
    }
+   
+   /**
+    * Click open icon of folder in navigation tree.
+    * If folder is closed, it will be opened,
+    * if it is opened, it will be closed.
+    * 
+    * @param folderName - the folder name.
+    * @throws Exception
+    */
+   public void clickOpenIconOfFolder(String folderName) throws Exception
+   {
+      selenium.click(getScLocator(folderName, 0) + "/open");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
 
 }
