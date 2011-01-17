@@ -60,7 +60,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
          VirtualFileSystemUtils.mkcol(URL + PROJECT_NAME);
-         VirtualFileSystemUtils.put(CLASSPATH_FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY_CLASSPATH, 
+         VirtualFileSystemUtils.put(CLASSPATH_FILE_CONTENT.getBytes(), MimeType.APPLICATION_JSON, 
             URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
       }
       catch (IOException e)
