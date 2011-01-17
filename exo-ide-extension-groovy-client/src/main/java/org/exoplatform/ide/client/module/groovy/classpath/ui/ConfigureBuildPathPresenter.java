@@ -339,7 +339,7 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
       if (event.getException() != null)
       {
          Dialogs.getInstance().showError(
-            "Groovy class path location is not found.<br> Possible reason : Project is not selected in browser tree.");
+            "Classpath settings not found.<br> Probably you are not in project.");
          return;
       }
       Display display = new ConfigureBuildPathForm(eventBus);
