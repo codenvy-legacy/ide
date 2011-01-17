@@ -26,7 +26,7 @@ package org.exoplatform.ide;
 public interface TestConstants
 {
    
-   public static final int IDE_INITIALIZATION_PERIOD = 2000;
+   public static final int IDE_INITIALIZATION_PERIOD = 3000;
    
    public static final int REDRAW_PERIOD = 500;
 

@@ -32,6 +32,11 @@ package org.exoplatform.ide;
 public class Locators
 {
    /**
+    * XPath locator for editor.
+    */
+   public static final String EDITOR_LOCATOR = "//body[@class='editbox']";
+   
+   /**
     * XPath locator for main form of IDE. Non-smartGWt.
     */
    public final static String MAIN_FORM_LOCATOR = "//div[@eventproxy = 'ideHorizontalSplitLayout' and @class='normal']";

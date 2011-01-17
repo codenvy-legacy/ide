@@ -22,12 +22,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.Autocompletion;
 import org.junit.Test;
 
 /**
- * Created by The eXo Platform SAS.
+ * Test to check, that autocomplete form
+ * works correctly inside method in Groovy class.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 8, 2010 2:36:49 PM evgen $
@@ -39,40 +42,73 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
    @Test
    public void testGroovyClassMethodCompletion() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
+      
+      /*
+       * 1. Open REST Service file.
+       */
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
+      /*
+       * 2. Go inside hello() method.
+       */
       for (int i = 0; i < 9; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
-      selenium.keyDown("//body[@class='editbox']", "\\35");
+      selenium.keyDown(Locators.EDITOR_LOCATOR, "" + java.awt.event.KeyEvent.VK_END);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      
+      /*
+       * 3. Type text "Collections."
+       */
       typeTextIntoEditor(0, "Collections.");
 
+      /*
+       * 4. Call autocomplete form.
+       */
       runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//table[@class='exo-autocomplete-panel']"));
+      assertTrue(selenium.isElementPresent(Autocompletion.Locators.PANEL));
 
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
+      /*
+       * 5. Type to the input field text "so".
+       */
+      selenium.focus(Autocompletion.Locators.INPUT);
+      Autocompletion.typeToInput("so");
 
-      selenium.typeKeys("//input[@class='exo-autocomplete-edit']", "so");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      /*
+       * Check, that to elements are found:
+       * sort(List):void
+       * sort(List, Comparator):void
+       */
+      Autocompletion.checkElementPresent("sort(List):void");
+      Autocompletion.checkElementPresent("sort(List, Comparator):void");
 
-      assertTrue(selenium.isElementPresent("//div[text()='sort(List):void']"));
-      assertTrue(selenium.isElementPresent("//div[text()='sort(List, Comparator):void']"));
-
+      /*
+       * 6. Select sort(List, Comparator):void element
+       */
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
+      /*
+       * 7. Press Enter to instert element info editor
+       */
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      assertFalse(selenium.isElementPresent("//table[@class='exo-autocomplete-panel']"));
+      /*
+       * Check, that autocomplete form dissapeared, and new text in editor appeared.
+       */
+      assertFalse(selenium.isElementPresent(Autocompletion.Locators.PANEL));
       assertTrue(getTextFromCodeEditor(0).contains("Collections.sort(List, Comparator)"));
+      
+      /*
+       * 8. Close file
+       */
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
