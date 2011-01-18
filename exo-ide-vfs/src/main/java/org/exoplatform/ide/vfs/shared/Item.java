@@ -16,7 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server;
+package org.exoplatform.ide.vfs.shared;
+
+import org.exoplatform.ide.vfs.server.OutputProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +46,6 @@ public class Item
    /** Creation date in long format. */
    private long creationDate;
 
-   /** Date of last modification in long format. */
-   private long lastModificationDate;
-
-   /** Locking flag. */
-   private boolean locked;
-
    private List<OutputProperty> properties;
 
    /**
@@ -57,20 +53,15 @@ public class Item
     * @param name the name of object
     * @param path path of object
     * @param creationDate creation date in long format
-    * @param lastModificationDate date of last modification in long format
-    * @param locked is object locked or not
     * @param properties other properties of object
     */
-   public Item(String id, String name, Type type, String path, long creationDate, long lastModificationDate,
-      boolean locked, List<OutputProperty> properties)
+   public Item(String id, String name, Type type, String path, long creationDate, List<OutputProperty> properties)
    {
       this.id = id;
       this.name = name;
       this.type = type;
       this.path = path;
       this.creationDate = creationDate;
-      this.lastModificationDate = lastModificationDate;
-      this.locked = locked;
       this.properties = properties;
    }
 
@@ -156,40 +147,6 @@ public class Item
    public void setCreationDate(long creationDate)
    {
       this.creationDate = creationDate;
-   }
-
-   /**
-    * @return date of last modification
-    */
-   public long getLastModificationDate()
-   {
-      return lastModificationDate;
-   }
-
-   /**
-    * @param lastModificationDate the date of last modification
-    */
-   public void setLastModificationDate(long lastModificationDate)
-   {
-      this.lastModificationDate = lastModificationDate;
-   }
-
-   /**
-    * @return <code>true</code> if object locked and <code>false</code>
-    *         otherwise
-    */
-   public boolean isLocked()
-   {
-      return locked;
-   }
-
-   /**
-    * @param locked locking flag. Must be <code>true</code> if object locked and
-    *           <code>false</code> otherwise
-    */
-   public void setLocked(boolean locked)
-   {
-      this.locked = locked;
    }
 
    /**

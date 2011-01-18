@@ -16,17 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server;
+package org.exoplatform.ide.vfs.shared;
+
+import org.exoplatform.ide.vfs.server.OutputProperty;
 
 import java.util.List;
 
 /**
- * Representation of Document object used to interaction with client via JSON.
+ * Representation of File object used to interaction with client via JSON.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class Document extends Item
+public class File extends Item
 {
    /** Identifier of version of document. */
    private String versionId;
@@ -36,6 +38,12 @@ public class Document extends Item
 
    /** Content length. */
    private long length = -1;
+
+   /** Date of last modification in long format. */
+   private long lastModificationDate;
+
+   /** Locking flag. */
+   private boolean locked;
 
    /**
     * Instance of Document with specified attributes.
@@ -51,10 +59,12 @@ public class Document extends Item
     * @param locked is document locked or not
     * @param properties other properties of document
     */
-   public Document(String id, String name, String path, long creationDate, long lastModificationDate, String versionId,
+   public File(String id, String name, String path, long creationDate, long lastModificationDate, String versionId,
       String contentType, long length, boolean locked, List<OutputProperty> properties)
    {
-      super(id, name, Type.DOCUMENT, path, creationDate, lastModificationDate, locked, properties);
+      super(id, name, Type.FILE, path, creationDate, properties);
+      this.lastModificationDate = lastModificationDate;
+      this.locked = locked;
       this.versionId = versionId;
       this.contentType = contentType;
       this.length = length;
@@ -63,7 +73,7 @@ public class Document extends Item
    /**
     * Empty instance of Document.
     */
-   public Document()
+   public File()
    {
       super();
    }
@@ -114,5 +124,39 @@ public class Document extends Item
    public void setLength(long length)
    {
       this.length = length;
+   }
+
+   /**
+    * @return date of last modification
+    */
+   public long getLastModificationDate()
+   {
+      return lastModificationDate;
+   }
+
+   /**
+    * @param lastModificationDate the date of last modification
+    */
+   public void setLastModificationDate(long lastModificationDate)
+   {
+      this.lastModificationDate = lastModificationDate;
+   }
+
+   /**
+    * @return <code>true</code> if object locked and <code>false</code>
+    *         otherwise
+    */
+   public boolean isLocked()
+   {
+      return locked;
+   }
+
+   /**
+    * @param locked locking flag. Must be <code>true</code> if object locked and
+    *           <code>false</code> otherwise
+    */
+   public void setLocked(boolean locked)
+   {
+      this.locked = locked;
    }
 }

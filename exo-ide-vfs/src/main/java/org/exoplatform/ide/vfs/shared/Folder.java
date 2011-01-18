@@ -16,7 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server;
+package org.exoplatform.ide.vfs.shared;
+
+import org.exoplatform.ide.vfs.server.OutputProperty;
 
 import java.util.List;
 
@@ -39,10 +41,9 @@ public class Folder extends Item
     * @param locked is folder locked or not
     * @param properties other properties of folder
     */
-   public Folder(String id, String name, String path, long creationDate, long lastModificationDate, boolean locked,
-      List<OutputProperty> properties)
+   public Folder(String id, String name, String path, long creationDate, List<OutputProperty> properties)
    {
-      super(id, name, Type.FOLDER, path, creationDate, lastModificationDate, locked, properties);
+      super(id, name, Type.FOLDER, path, creationDate, properties);
    }
 
    /**

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server;
+package org.exoplatform.ide.vfs.shared;
 
 /**
  * Object types.
@@ -25,7 +25,7 @@ package org.exoplatform.ide.vfs.server;
  * @version $Id$
  */
 public enum Type {
-   DOCUMENT("document"), FOLDER("folder");
+   FILE("file"), FOLDER("folder");
 
    private final String value;
 

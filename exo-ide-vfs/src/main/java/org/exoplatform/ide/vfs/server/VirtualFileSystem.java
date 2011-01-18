@@ -25,6 +25,13 @@ import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
 import org.exoplatform.ide.vfs.server.exceptions.ObjectNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.ObjectId;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.io.InputStream;
 import java.util.List;
@@ -79,21 +86,21 @@ public interface VirtualFileSystem
       ConstraintException, LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Create new document in specified folder. Example of JSON response:
+    * Create new File in specified folder. Example of JSON response:
     * 
     * <pre>
     * {"id":"/TESTROOT/folder01/DOCUMENT01.txt"}
     * </pre>
     * 
-    * @param parent parent for new document
-    * @param name name of document
+    * @param parent parent for new File
+    * @param name name of File
     * @param mediaType media type of content
-    * @param content content of document
+    * @param content content of File
     * @param lockTokens lock tokens. This lock tokens will be used if
     *           <code>parent</code> is locked. Pass <code>null</code> or empty
     *           list if there is no lock tokens
     * @param ext UriInfo that may contain other optional query parameters
-    * @return identifier of newly created document
+    * @return identifier of newly created File
     * @throws ObjectNotFoundException if <code>parent</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
@@ -110,11 +117,11 @@ public interface VirtualFileSystem
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @POST
-   @Path("document")
+   @Path("file")
    @Produces({MediaType.APPLICATION_JSON})
-   ObjectId createDocument(String parent, String name, MediaType mediaType, InputStream content,
-      List<String> lockTokens, @Context UriInfo ext) throws ObjectNotFoundException, InvalidArgumentException,
-      LockException, PermissionDeniedException, VirtualFileSystemException;
+   ObjectId createFile(String parent, String name, MediaType mediaType, InputStream content, List<String> lockTokens,
+      @Context UriInfo ext) throws ObjectNotFoundException, InvalidArgumentException, LockException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Create new folder in specified folder. Example of JSON response:
@@ -214,7 +221,7 @@ public interface VirtualFileSystem
     *   "items":[
     *       {
     *          "id":"/folder01/DOCUMENT01.txt",
-    *          "type":"DOCUMENT",
+    *          "type":"FILE",
     *          "path":"/folder01/DOCUMENT01.txt",
     *          "versionId":"current",
     *          "creationDate":1292574268440,
@@ -256,13 +263,12 @@ public interface VirtualFileSystem
       throws ObjectNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Get binary content of document.
+    * Get binary content of File.
     * 
-    * @param identifier identifier of document
+    * @param identifier identifier of File
     * @return content response
     * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws InvalidArgumentException if <code>identifier</code> is not
-    *            document
+    * @throws InvalidArgumentException if <code>identifier</code> is not File
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
@@ -287,7 +293,7 @@ public interface VirtualFileSystem
     * <pre>
     * {
     *   "id":"/folder01/DOCUMENT01.txt",
-    *   "type":"DOCUMENT",
+    *   "type":"FILE",
     *   "path":"/folder01/DOCUMENT01.txt",
     *   "versionId":"current",
     *   "creationDate":1292574268440,
@@ -324,7 +330,7 @@ public interface VirtualFileSystem
     * @throws ObjectNotFoundException if <code>identifier</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
-    *            <li><code>identifier</code> is not document</li>
+    *            <li><code>identifier</code> is not File</li>
     *            <li><code>versionIdentifier</code> points to version that does
     *            not exist</li>
     *            </ul>
@@ -338,9 +344,9 @@ public interface VirtualFileSystem
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Get list of versions of document. Even if document is not versionable
-    * result must contain at least one item (current version of document).
-    * Example of JSON response:
+    * Get list of versions of File. Even if File is not versionable result must
+    * contain at least one item (current version of File). Example of JSON
+    * response:
     * 
     * <pre>
     * {
@@ -348,7 +354,7 @@ public interface VirtualFileSystem
     *   "items":[
     *       {
     *          "id":"/folder01/DOCUMENT01.txt",
-    *          "type":"DOCUMENT",
+    *          "type":"FILE",
     *          "path":"/folder01/DOCUMENT01.txt",
     *          "versionId":"1",
     *          "creationDate":1292574263440,
@@ -360,7 +366,7 @@ public interface VirtualFileSystem
     *       }
     *       {
     *          "id":"/folder01/DOCUMENT01.txt",
-    *          "type":"DOCUMENT",
+    *          "type":"FILE",
     *          "path":"/folder01/DOCUMENT01.txt",
     *          "versionId":"2",
     *          "creationDate":1292574265640,
@@ -372,7 +378,7 @@ public interface VirtualFileSystem
     *       }
     *       {
     *          "id":"/folder01/DOCUMENT01.txt",
-    *          "type":"DOCUMENT",
+    *          "type":"FILE",
     *          "path":"/folder01/DOCUMENT01.txt",
     *          "versionId":"current",
     *          "creationDate":1292574267340,
@@ -387,7 +393,7 @@ public interface VirtualFileSystem
     * }
     * </pre>
     * 
-    * @param identifier identifier of document
+    * @param identifier identifier of File
     * @param maxItems max number of items in response. If -1 then no limit of
     *           max items in result set
     * @param skipCount the skip items. Must be equals or greater then 0
@@ -398,7 +404,7 @@ public interface VirtualFileSystem
     * @throws ObjectNotFoundException if <code>identifier</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
-    *            <li><code>identifier</code>O if not a document</li>
+    *            <li><code>identifier</code>object is not a File</li>
     *            <li><code>skipCount</code> is negative or greater then total
     *            number of items</li>
     *            </ul>
@@ -409,25 +415,23 @@ public interface VirtualFileSystem
    @GET
    @Path("versions")
    @Produces({MediaType.APPLICATION_JSON})
-   ItemList<Document> getVersions(String identifier, int maxItems, int skipCount, PropertyFilter propertyFilter)
+   ItemList<File> getVersions(String identifier, int maxItems, int skipCount, PropertyFilter propertyFilter)
       throws ObjectNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Place lock on object. Example of JSON response if locking is successful:
+    * Place lock on File object. Example of JSON response if locking is
+    * successful:
     * 
     * <pre>
     * {"lockToken":"f37ed0b2c0a8006600afbefda74c2dac"}
     * </pre>
     * 
     * @param identifier object to be locked
-    * @param isDeep if <code>true</code> this lock will apply to this object and
-    *           all its descendants (if object is folder). If <code>false</code>
-    *           , it applies only to this object. If parameter is not specified
-    *           then it is implementation specific
     * @return lock token
-    * @throws NotSupportedException if locking is not supported or
-    *            <code>isDeep == true</code> but deep locking is not supported
+    * @throws NotSupportedException if locking is not supported
     * @throws ObjectNotFoundException if <code>identifier</code> does not exist
+    * @throws InvalidArgumentException if <code>identifier</code> is not File
+    *            object
     * @throws LockException if object already locked
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
@@ -437,7 +441,7 @@ public interface VirtualFileSystem
    @POST
    @Path("lock")
    @Produces({MediaType.APPLICATION_JSON})
-   LockToken lock(String identifier, Boolean isDeep) throws NotSupportedException, ObjectNotFoundException,
+   LockToken lock(String identifier) throws NotSupportedException, ObjectNotFoundException, InvalidArgumentException,
       LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
@@ -476,20 +480,19 @@ public interface VirtualFileSystem
       ConstraintException, LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Rename and(or) set content type for document object.
+    * Rename and(or) set content type for File object.
     * 
-    * @param identifier identifier of document to be updated
+    * @param identifier identifier of File to be updated
     * @param mediaType new media type. May be not specified if not need to
     *           change content type, e.g. need rename only
-    * @param newname new name of document. May be not specified if not need to
+    * @param newname new name of File. May be not specified if not need to
     *           change name, e.g. need update content type only
     * @param lockTokens lock tokens. This lock tokens will be used if
     *           <code>identifier</code> is locked. Pass <code>null</code> or
     *           empty list if there is no lock tokens
     * @return identifier of updated object
     * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws InvalidArgumentException if <code>identifier</code> is not
-    *            document
+    * @throws InvalidArgumentException if <code>identifier</code> is not File
     * @throws LockException if object <code>identifier</code> is locked
     *            (directly or indirectly) and <code>lockTokens</code> is
     *            <code>null</code> or does not contains matched lock tokens
@@ -620,17 +623,16 @@ public interface VirtualFileSystem
       VirtualFileSystemException;
 
    /**
-    * Update binary content of document.
+    * Update binary content of File.
     * 
-    * @param identifier identifier of document
+    * @param identifier identifier of File
     * @param mediaType media type of content
-    * @param newcontent new content of document
+    * @param newcontent new content of File
     * @param lockTokens lock tokens. This lock tokens will be used if
     *           <code>identifier</code> is locked. Pass <code>null</code> or
     *           empty list if there is no lock tokens
     * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws InvalidArgumentException if <code>identifier</code> is not
-    *            document
+    * @throws InvalidArgumentException if <code>identifier</code> is not File
     * @throws LockException if object <code>identifier</code> is locked and
     *            <code>lockTokens</code> is <code>null</code> or does not
     *            contains matched lock tokens

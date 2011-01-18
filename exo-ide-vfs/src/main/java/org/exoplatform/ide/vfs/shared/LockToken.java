@@ -16,46 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server;
+package org.exoplatform.ide.vfs.shared;
 
 /**
- * Representation of object's identifier used to interaction with client via JSON.
+ * Representation of LockToken used to interaction with client via JSON. A lock
+ * token is a opaque token, which identifies a particular lock. Is used for
+ * replace existed lock or performing actions on locked object.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class ObjectId
+public class LockToken
 {
-   private final String id;
+   private final String token;
 
    /**
-    * @param id string representation of object identifier
-    * @throws IllegalArgumentException if <code>id == null</code>
+    * @param token string representation of lock token
+    * @throws IllegalArgumentException if <code>token == null</code>
     */
-   public ObjectId(String id)
+   public LockToken(String token)
    {
-      if (id == null)
-         throw new IllegalArgumentException("Id may not be null. ");
-      this.id = id;
+      if (token == null)
+         throw new IllegalArgumentException("Lock token may not be null. ");
+      this.token = token;
    }
 
-   /**
-    * @return object's identifier as string
-    */
-   public String getId()
+   public String getLockToken()
    {
-      return id;
-   }
-
-   /**
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      int hash = 7;
-      hash = hash * 31 + id.hashCode();
-      return hash;
+      return token;
    }
 
    /**
@@ -68,8 +56,19 @@ public class ObjectId
          return true;
       if ((obj == null) || (obj.getClass() != this.getClass()))
          return false;
-      ObjectId objectId = (ObjectId)obj;
-      return id.equals(objectId.id);
+      LockToken otherLockToken = (LockToken)obj;
+      return token.equals(otherLockToken.token);
+   }
+
+   /**
+    * @see java.lang.Object#hashCode()
+    */
+   @Override
+   public int hashCode()
+   {
+      int hash = 8;
+      hash = hash * 31 + token.hashCode();
+      return hash;
    }
 
    /**
@@ -78,6 +77,6 @@ public class ObjectId
    @Override
    public String toString()
    {
-      return "[ObjectId: " + id + "]";
+      return "[LockToken: " + token + "]";
    }
 }
