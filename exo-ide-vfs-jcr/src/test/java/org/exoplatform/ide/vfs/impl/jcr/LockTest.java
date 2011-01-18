@@ -118,9 +118,6 @@ public class LockTest extends JcrFileSystemTest
          .append("/vfs/jcr/db1/ws/lock") //
          .append(folder).toString();
       ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      assertEquals(200, response.getStatus());
-      log.info(new String(writer.getBody()));
-      Node folder = (Node)session.getItem(this.folder);
-      assertTrue("Folder must be locked. ", folder.isLocked());
+      assertEquals(400, response.getStatus());
    }
 }

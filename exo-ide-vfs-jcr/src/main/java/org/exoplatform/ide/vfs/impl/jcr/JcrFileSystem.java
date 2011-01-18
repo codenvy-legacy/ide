@@ -18,23 +18,10 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.AccessControlEntry;
-import org.exoplatform.ide.vfs.server.Document;
-import org.exoplatform.ide.vfs.server.Folder;
 import org.exoplatform.ide.vfs.server.InputProperty;
-import org.exoplatform.ide.vfs.server.Item;
-import org.exoplatform.ide.vfs.server.ItemList;
 import org.exoplatform.ide.vfs.server.LazyIterator;
-import org.exoplatform.ide.vfs.server.LockToken;
-import org.exoplatform.ide.vfs.server.ObjectId;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
-import org.exoplatform.ide.vfs.server.Type;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo.ACLCapability;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo.BasicPermissions;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo.LockCapability;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo.QueryCapability;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
@@ -42,6 +29,19 @@ import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
 import org.exoplatform.ide.vfs.server.exceptions.ObjectNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.ObjectId;
+import org.exoplatform.ide.vfs.shared.Type;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.LockCapability;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -114,13 +114,13 @@ public class JcrFileSystem implements VirtualFileSystem
    @POST
    @Path("document")
    @Produces({MediaType.APPLICATION_JSON})
-   public ObjectId _createDocument(@QueryParam("name") String name,
+   public ObjectId _createFile(@QueryParam("name") String name,
       @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType,
       InputStream content, @QueryParam("lockTokens") List<String> lockTokens, @Context UriInfo ext)
       throws ObjectNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      return createDocument("/", name, mediaType, content, lockTokens, ext);
+      return createFile("/", name, mediaType, content, lockTokens, ext);
    }
 
    /*
@@ -162,7 +162,7 @@ public class JcrFileSystem implements VirtualFileSystem
     */
    @Path("document/{parent:.*}")
    //@Path("document{X:(/)?}{parent:.*}")
-   public ObjectId createDocument(@PathParam("parent") String parent, @QueryParam("name") String name,
+   public ObjectId createFile(@PathParam("parent") String parent, @QueryParam("name") String name,
       @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType,
       InputStream content, @QueryParam("lockTokens") List<String> lockTokens, @Context UriInfo ext)
       throws ObjectNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
@@ -267,7 +267,7 @@ public class JcrFileSystem implements VirtualFileSystem
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       ItemData data = getItemData(identifier);
-      if (Type.DOCUMENT != data.getType())
+      if (Type.FILE != data.getType())
          throw new InvalidArgumentException("Object " + identifier + " is not a document. ");
       DocumentData docData = (DocumentData)data;
       // TODO : cache control, last modification date, etc ??
@@ -324,7 +324,7 @@ public class JcrFileSystem implements VirtualFileSystem
     *      int, int, org.exoplatform.ide.vfs.server.PropertyFilter)
     */
    @Path("versions/{identifier:.*}")
-   public ItemList<Document> getVersions(@PathParam("identifier") String identifier,
+   public ItemList<File> getVersions(@PathParam("identifier") String identifier,
       @DefaultValue("-1") @QueryParam("maxItems") int maxItems, @QueryParam("skipCount") int skipCount,
       @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter) throws ObjectNotFoundException,
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
@@ -333,7 +333,7 @@ public class JcrFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
 
       ItemData data = getItemData(identifier);
-      if (Type.DOCUMENT != data.getType())
+      if (Type.FILE != data.getType())
          throw new InvalidArgumentException("Object " + identifier + " is not a document. ");
 
       DocumentData docData = (DocumentData)data;
@@ -348,11 +348,11 @@ public class JcrFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException("'skipCount' parameter is greater then total number of items. ");
       }
 
-      List<Document> l = new ArrayList<Document>();
+      List<File> l = new ArrayList<File>();
       for (int count = 0; versions.hasNext() && (maxItems < 0 || count < maxItems); count++)
-         l.add((Document)fromItemData(versions.next(), propertyFilter));
+         l.add((File)fromItemData(versions.next(), propertyFilter));
 
-      ItemList<Document> il = new ItemList<Document>(l);
+      ItemList<File> il = new ItemList<File>(l);
       il.setNumItems(versions.size());
       il.setHasMoreItems(versions.hasNext());
 
@@ -364,11 +364,14 @@ public class JcrFileSystem implements VirtualFileSystem
     *      java.lang.Boolean)
     */
    @Path("lock/{identifier:.*}")
-   public LockToken lock(@PathParam("identifier") String identifier,
-      @DefaultValue("true") @QueryParam("isDeep") Boolean isDeep) throws NotSupportedException,
-      ObjectNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
+   public LockToken lock(@PathParam("identifier") String identifier) throws NotSupportedException,
+      ObjectNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
+      VirtualFileSystemException
    {
-      return new LockToken(getItemData(identifier).lock(isDeep));
+      ItemData itemData = getItemData(identifier);
+      if (itemData.getType() != Type.FILE)
+         throw new InvalidArgumentException("Locking allowed for Files only. ");
+      return new LockToken(((DocumentData)getItemData(identifier)).lock());
    }
 
    /**
@@ -400,7 +403,7 @@ public class JcrFileSystem implements VirtualFileSystem
       VirtualFileSystemException
    {
       ItemData data = getItemData(identifier);
-      if (Type.DOCUMENT != data.getType())
+      if (Type.FILE != data.getType())
          throw new InvalidArgumentException("Object " + identifier + " is not a document. ");
       ((DocumentData)data).rename(newname, mediaType, lockTokens);
       return new ObjectId(data.getId());
@@ -558,7 +561,7 @@ public class JcrFileSystem implements VirtualFileSystem
       InvalidArgumentException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
       ItemData data = getItemData(identifier);
-      if (Type.DOCUMENT != data.getType())
+      if (Type.FILE != data.getType())
          throw new InvalidArgumentException("Object " + identifier + " is not document. ");
       ((DocumentData)data).setContent(newcontent, mediaType, lockTokens);
    }
@@ -590,15 +593,15 @@ public class JcrFileSystem implements VirtualFileSystem
    private Item fromItemData(ItemData data, PropertyFilter propertyFilter) throws PermissionDeniedException,
       VirtualFileSystemException
    {
-      if (data.getType() == Type.DOCUMENT)
+      if (data.getType() == Type.FILE)
       {
          DocumentData docData = (DocumentData)data;
-         return new Document(docData.getId(), docData.getName(), docData.getPath(), docData.getCreationDate(),
+         return new File(docData.getId(), docData.getName(), docData.getPath(), docData.getCreationDate(),
             docData.getLastModificationDate(), docData.getVersionId(), docData.getContenType(),
             docData.getContenLength(), docData.isLocked(), docData.getProperties(propertyFilter));
       }
       return new Folder(data.getId(), data.getName(), data.getPath(), data.getCreationDate(),
-         data.getLastModificationDate(), data.isLocked(), data.getProperties(propertyFilter));
+         data.getProperties(propertyFilter));
    }
 
    private ItemData getItemData(String identifier) throws ObjectNotFoundException, PermissionDeniedException,
@@ -630,7 +633,7 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          String path = (identifier.charAt(0) != '/') ? ("/" + identifier) : identifier;
          ItemData data = ItemData.fromNode((Node)session.getItem(path));
-         if (Type.DOCUMENT != data.getType())
+         if (Type.FILE != data.getType())
             throw new InvalidArgumentException("Object " + identifier + " is not a document. ");
          if (DocumentData.CURRENT_VERSION_ID.equals(versionIdentifier))
             return (DocumentData)data;

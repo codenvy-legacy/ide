@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.AccessControlEntry;
 import org.exoplatform.ide.vfs.server.InputProperty;
 import org.exoplatform.ide.vfs.server.OutputProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
-import org.exoplatform.ide.vfs.server.Type;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemInfo.BasicPermissions;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Type;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.impl.core.value.StringValue;
@@ -54,7 +54,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
-import javax.jcr.lock.Lock;
 import javax.jcr.nodetype.NodeType;
 import javax.jcr.nodetype.PropertyDefinition;
 
@@ -425,47 +424,6 @@ abstract class ItemData
       catch (RepositoryException e)
       {
          throw new VirtualFileSystemException(e.getMessage(), e);
-      }
-   }
-
-   /**
-    * Place lock to current object.
-    * 
-    * @param isDeep if <code>true</code> this lock will apply to this object and
-    *           all its descendants (if any). If <code>false</code> , it applies
-    *           only to this object.
-    * @return lock token
-    * @throws LockException if object already locked
-    * @throws PermissionDeniedException if object can't be locked cause to
-    *            security restriction
-    * @throws VirtualFileSystemException if any other errors occurs
-    */
-   String lock(boolean isDeep) throws LockException, PermissionDeniedException, VirtualFileSystemException
-   {
-      if (isLocked())
-         throw new LockException("Object already locked. ");
-      try
-      {
-         if (node.canAddMixin("mix:lockable"))
-         {
-            Session session = node.getSession();
-            node.addMixin("mix:lockable");
-            session.save();
-         }
-         Lock lock = node.lock(isDeep, false);
-         return lock.getLockToken();
-      }
-      catch (javax.jcr.lock.LockException e)
-      {
-         throw new LockException("Unable place lock to object " + getId() + ". " + e.getMessage());
-      }
-      catch (AccessDeniedException e)
-      {
-         throw new PermissionDeniedException("Unable place lock to object " + getId() + ". Operation not permitted. ");
-      }
-      catch (RepositoryException e)
-      {
-         throw new VirtualFileSystemException("Unable place lock to object " + getId() + ". " + e.getMessage(), e);
       }
    }
 

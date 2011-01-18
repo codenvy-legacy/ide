@@ -19,12 +19,12 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.server.LazyIterator;
-import org.exoplatform.ide.vfs.server.Type;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
+import org.exoplatform.ide.vfs.shared.Type;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -37,6 +37,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.lock.Lock;
 import javax.jcr.version.Version;
 import javax.ws.rs.core.MediaType;
 
@@ -108,7 +109,7 @@ class DocumentData extends ItemData
 
    DocumentData(Node node)
    {
-      super(node, Type.DOCUMENT);
+      super(node, Type.FILE);
    }
 
    /**
@@ -236,6 +237,44 @@ class DocumentData extends ItemData
       catch (RepositoryException e)
       {
          throw new VirtualFileSystemException("Unable get versions of document " + getId() + ". " + e.getMessage(), e);
+      }
+   }
+
+   /**
+    * Place lock to current object.
+    * 
+    * @return lock token
+    * @throws LockException if object already locked
+    * @throws PermissionDeniedException if object can't be locked cause to
+    *            security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
+   String lock() throws LockException, PermissionDeniedException, VirtualFileSystemException
+   {
+      if (isLocked())
+         throw new LockException("Object already locked. ");
+      try
+      {
+         if (node.canAddMixin("mix:lockable"))
+         {
+            Session session = node.getSession();
+            node.addMixin("mix:lockable");
+            session.save();
+         }
+         Lock lock = node.lock(true, false);
+         return lock.getLockToken();
+      }
+      catch (javax.jcr.lock.LockException e)
+      {
+         throw new LockException("Unable place lock to object " + getId() + ". " + e.getMessage());
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Unable place lock to object " + getId() + ". Operation not permitted. ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException("Unable place lock to object " + getId() + ". " + e.getMessage(), e);
       }
    }
 

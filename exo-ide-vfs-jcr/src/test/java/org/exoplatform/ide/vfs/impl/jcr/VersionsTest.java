@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.Document;
-import org.exoplatform.ide.vfs.server.ItemList;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
@@ -71,7 +71,7 @@ public class VersionsTest extends JcrFileSystemTest
 
       document = documentNode.getPath();
    }
-   
+
    @SuppressWarnings("unchecked")
    public void testGetVersions() throws Exception
    {
@@ -82,9 +82,9 @@ public class VersionsTest extends JcrFileSystemTest
          .toString();
       ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
       assertEquals(200, response.getStatus());
-      List<Document> items = ((ItemList<Document>)response.getEntity()).getItems();
+      List<File> items = ((ItemList<File>)response.getEntity()).getItems();
       List<String> all = new ArrayList<String>(3);
-      for (Document i : items)
+      for (File i : items)
          all.add(i.getVersionId());
       assertEquals(3, all.size());
       assertEquals("1", all.get(0));
