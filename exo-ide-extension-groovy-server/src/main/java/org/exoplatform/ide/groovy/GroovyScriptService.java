@@ -51,7 +51,10 @@ import java.security.Principal;
 import java.util.Collections;
 
 import javax.annotation.security.RolesAllowed;
+import javax.jcr.AccessDeniedException;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -83,6 +86,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    private static final Log LOG = ExoLogger.getLogger(GroovyScriptService.class);
 
    public static final String DEVELOPER_ID = "ide.developer.id";
+
+   public static final String GROOVY_CLASSPATH = ".groovyclasspath";
 
    /**
     * Resource live time. Resource will be expired after this if it is deployed
@@ -131,7 +136,9 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       String name =
          (location != null && location.length() > 0) ? location.substring(location.lastIndexOf("/") + 1) : "";
       //Get dependent resources from classpath file if exist:
-      DependentResources dependentResources = getDependentResource(location, uriInfo.getBaseUri().toASCIIString());
+      DependentResources dependentResources =
+         GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
+            repositoryService, sessionProviderService);
       if (dependentResources != null)
       {
          return super.validateScript(name, inputStream, dependentResources.getFolderSources(),
@@ -165,7 +172,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
                jcrLocation[1] + "/" + jcrLocation[2]);
          Node rootNode = session.getRootNode();
          Node node = rootNode.getNode(jcrLocation[2]);
-         Node classpathNode = GroovyScriptServiceUtil.findClassPathNode(node);
+         Node classpathNode = findClassPathNode(node);
          if (classpathNode != null)
          {
             //Form the available href of the classpath file:
@@ -195,37 +202,39 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    }
 
    /**
-    * Get content of existed groovy class path file.
+    * Find class path file's node by name step by step going upper in node hierarchy.
     * 
-    * @param location script location
-    * @param baseUri base URI
-    * @return {@link InputStream} the content of proper groovy class path file
+    * @param node node, in what child nodes to find class path file
+    * @return {@link Node} found jcr node
+    * @throws RepositoryException
     */
-   private InputStream getClassPathContent(String location, String baseUri)
+   private Node findClassPathNode(Node node) throws RepositoryException
    {
-      String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(baseUri, location);
+      if (node == null)
+         return null;
+      //Get all child node that end with ".groovyclasspath"
+      NodeIterator nodeIterator = node.getNodes("*" + GROOVY_CLASSPATH);
+      while (nodeIterator.hasNext())
+      {
+         Node childNode = nodeIterator.nextNode();
+         //The first found groovy class path file will be returned:
+         if (GROOVY_CLASSPATH.equals(childNode.getName()))
+            return childNode;
+      }
       try
       {
-         Session session =
-            GroovyScriptServiceUtil.getSession(repositoryService, sessionProviderService, jcrLocation[0],
-               jcrLocation[1] + "/" + jcrLocation[2]);
-         Node rootNode = session.getRootNode();
-         Node scriptNode = rootNode.getNode(jcrLocation[2]);
-         Node classpathNode = GroovyScriptServiceUtil.findClassPathNode(scriptNode.getParent());
-         if (classpathNode != null)
-         {
-            return classpathNode.getNode("jcr:content").getProperty("jcr:data").getStream();
-         }
+         //Go upper to find class path file:   
+         Node parentNode = node.getParent();
+         return findClassPathNode(parentNode);
       }
-      catch (RepositoryException e)
+      catch (ItemNotFoundException e)
       {
          return null;
       }
-      catch (RepositoryConfigurationException e)
+      catch (AccessDeniedException e)
       {
          return null;
       }
-      return null;
    }
 
    /**
@@ -242,36 +251,6 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       @Context SecurityContext security, MultivaluedMap<String, String> properties)
    {
       return sandboxLoader(uriInfo, location, true, security, properties);
-   }
-
-   /**
-    * Get dependent resources of the script from classpath file.
-    * 
-    * @param scriptLocation location of script, which uses classpath file
-    * @param baseUri base URI
-    * @return {@link DependentResources} dependent resources
-    */
-   private DependentResources getDependentResource(String scriptLocation, String baseUri)
-   {
-      //Get content of groovy class path file:
-      InputStream classPathFileContent = getClassPathContent(scriptLocation, baseUri);
-      if (classPathFileContent != null)
-      {
-         try
-         {
-            //Unmarshal content in JSON format to  Java object:
-            GroovyClassPath groovyClassPath = GroovyScriptServiceUtil.json2ClassPath(classPathFileContent);
-            if (groovyClassPath != null)
-            {
-               return new DependentResources(groovyClassPath);
-            }
-         }
-         catch (JsonException e)
-         {
-            return null;
-         }
-      }
-      return null;
    }
 
    /**
@@ -312,7 +291,9 @@ public class GroovyScriptService extends GroovyScript2RestLoader
             .build();
       }
       //Get dependent resources from classpath file if exist:
-      DependentResources dependentResources = getDependentResource(location, uriInfo.getBaseUri().toASCIIString());
+      DependentResources dependentResources =
+         GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
+            repositoryService, sessionProviderService);
       if (dependentResources != null)
       {
          return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, dependentResources.getFolderSources(),
@@ -415,7 +396,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
 
             //Get dependent resources from classpath file if exist:
             DependentResources dependentResources =
-               getDependentResource(location, uriInfo.getBaseUri().toASCIIString());
+               GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
+                  repositoryService, sessionProviderService);
             if (dependentResources != null)
             {
                return load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, dependentResources.getFolderSources(),
@@ -424,7 +406,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
 
             return load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, Collections.<String> emptyList(),
                Collections.<String> emptyList(), properties);
-          //  groovyPublisher.publishPerRequest(script.getProperty("jcr:data").getStream(), key, properties, createSourceFolders(dependentResources.getFolderSources()), createSourceFiles(dependentResources.getFileSources()));
+            //  groovyPublisher.publishPerRequest(script.getProperty("jcr:data").getStream(), key, properties, createSourceFolders(dependentResources.getFolderSources()), createSourceFiles(dependentResources.getFileSources()));
          }
 
          return Response.status(Response.Status.NO_CONTENT).build();

@@ -22,6 +22,7 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.ws.frameworks.json.JsonHandler;
 import org.exoplatform.ws.frameworks.json.JsonParser;
@@ -48,7 +49,7 @@ import javax.jcr.Session;
 public class GroovyScriptServiceUtil
 {
    public static final String WEBDAV_CONTEXT = "/jcr/";
-   
+
    public static final String GROOVY_CLASSPATH = ".groovyclasspath";
 
    /**
@@ -115,7 +116,7 @@ public class GroovyScriptServiceUtil
       String workspace = repoPath.split("/")[0];
       return sp.getSession(workspace, repo);
    }
-   
+
    /**
     * Find class path file's node by name step by step going upper in node hierarchy.
     * 
@@ -150,5 +151,72 @@ public class GroovyScriptServiceUtil
       {
          return null;
       }
+   }
+
+   /**
+    * Get content of existed groovy class path file.
+    * 
+    * @param location script location
+    * @param baseUri base URI
+    * @return {@link InputStream} the content of proper groovy class path file
+    */
+    protected static InputStream getClassPathContent(String location, String baseUri, RepositoryService repositoryService,
+      ThreadLocalSessionProviderService sessionProviderService)
+   {
+      String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(baseUri, location);
+      try
+      {
+         Session session =
+            GroovyScriptServiceUtil.getSession(repositoryService, sessionProviderService, jcrLocation[0],
+               jcrLocation[1] + "/" + jcrLocation[2]);
+         Node rootNode = session.getRootNode();
+         Node scriptNode = rootNode.getNode(jcrLocation[2]);
+         Node classpathNode = findClassPathNode(scriptNode.getParent());
+         if (classpathNode != null)
+         {
+            return classpathNode.getNode("jcr:content").getProperty("jcr:data").getStream();
+         }
+      }
+      catch (RepositoryException e)
+      {
+         return null;
+      }
+      catch (RepositoryConfigurationException e)
+      {
+         return null;
+      }
+      return null;
+   }
+
+   /**
+    * Get dependent resources of the script from classpath file.
+    * 
+    * @param scriptLocation location of script, which uses classpath file
+    * @param baseUri base URI
+    * @return {@link DependentResources} dependent resources
+    */
+   public static DependentResources getDependentResource(String scriptLocation, String baseUri,
+      RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService)
+   {
+      //Get content of groovy class path file:
+      InputStream classPathFileContent =
+         getClassPathContent(scriptLocation, baseUri, repositoryService, sessionProviderService);
+      if (classPathFileContent != null)
+      {
+         try
+         {
+            //Unmarshal content in JSON format to  Java object:
+            GroovyClassPath groovyClassPath = GroovyScriptServiceUtil.json2ClassPath(classPathFileContent);
+            if (groovyClassPath != null)
+            {
+               return new DependentResources(groovyClassPath);
+            }
+         }
+         catch (JsonException e)
+         {
+            return null;
+         }
+      }
+      return null;
    }
 }
