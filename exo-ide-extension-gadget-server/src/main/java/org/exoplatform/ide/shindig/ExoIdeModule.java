@@ -37,7 +37,7 @@ import java.security.SecureRandom;
  * shindig properties file. By default it locate in shindig-common.jar 
  * In this properties file described location of container.js file.
  * We can't use container.js from GateIn in standalone build because it use eXoGadgetServer context.
- * We use IDE-application and describe in in our container.js 
+ * We use IDE and describe in in our container.js 
  * (see /exo-ide-module-gadget-server/src/main/resources/containers/default-ide/container.js).  
  * 
  * 2. It generate key file for gadget security (OAuth)

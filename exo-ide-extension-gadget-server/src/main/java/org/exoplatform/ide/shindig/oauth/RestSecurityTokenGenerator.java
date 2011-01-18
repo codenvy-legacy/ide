@@ -19,12 +19,11 @@
 package org.exoplatform.ide.shindig.oauth;
 
 import org.apache.shindig.common.crypto.BlobCrypterException;
-import org.exoplatform.container.monitor.jvm.J2EEServerInfo;
+import org.exoplatform.ide.shindig.KeyCreator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.ws.rs.Consumes;
@@ -56,7 +55,7 @@ public class RestSecurityTokenGenerator implements ResourceContainer
    {
       try
       {
-         return SecurityTokenGenerator.createToken(tokenRequest,getKeyFilePath());
+         return SecurityTokenGenerator.createToken(tokenRequest,KeyCreator.getKeyFilePath());
       }
       catch (IOException e)
       {
@@ -72,25 +71,5 @@ public class RestSecurityTokenGenerator implements ResourceContainer
       } 
       
    }
-   
-   private String getKeyFilePath(){
-      J2EEServerInfo info = new J2EEServerInfo();
-      String confPath = info.getExoConfigurationDirectory();
-      File keyFile = null;
-      
-      if (confPath != null) {
-         File confDir = new File(confPath);
-         if (confDir != null && confDir.exists() && confDir.isDirectory()) {
-            keyFile = new File(confDir, "gadgets/key.txt");
-         }
-      }
-
-      if (keyFile == null) {
-         keyFile = new File("key.txt");
-      }
-      
-      return keyFile.getAbsolutePath();
-  }
-
   
 }

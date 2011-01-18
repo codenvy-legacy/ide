@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.shindig;
 
+import org.exoplatform.container.monitor.jvm.J2EEServerInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -41,7 +42,7 @@ public class KeyCreator
       
    public static void createKeyFile()
    {
-      File keyFile = new File("key.txt");
+      File keyFile = new File(getKeyFilePath());
       if (!keyFile.exists())
       {
          File fic = keyFile.getAbsoluteFile();
@@ -83,6 +84,24 @@ public class KeyCreator
    }
    
    
+   public static String getKeyFilePath(){
+      J2EEServerInfo info = new J2EEServerInfo();
+      String confPath = info.getExoConfigurationDirectory();
+      File keyFile = null;
+      
+      if (confPath != null) {
+         File confDir = new File(confPath);
+         if (confDir != null && confDir.exists() && confDir.isDirectory()) {
+            keyFile = new File(confDir, "key.txt");
+         }
+      }
+
+      if (keyFile == null) {
+         keyFile = new File("key.txt");
+      }
+      
+      return keyFile.getAbsolutePath();
+  }
    
 
    /**

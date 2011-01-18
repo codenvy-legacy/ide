@@ -64,15 +64,15 @@
 // iframeBaseUri will automatically have the host inserted
 // if locked domain is enabled and the implementation supports it.
 // query parameters will be added.
-"gadgets.iframeBaseUri" : "/IDE-application/gadgets/ifr",
+"gadgets.iframeBaseUri" : "/IDE/gadgets/ifr",
 
 // jsUriTemplate will have %host% and %js% substituted.
 // No locked domain special cases, but jsUriTemplate must
 // never conflict with a lockedDomainSuffix.
-"gadgets.jsUriTemplate" : "http://%host%/IDE-application/gadgets/js/%js%",
+"gadgets.jsUriTemplate" : "http://%host%/IDE/gadgets/js/%js%",
 
 // Callback URL.  Scheme relative URL for easy switch between https/http.
-"gadgets.oauthGadgetCallbackTemplate" : "//%host%/IDE-application/gadgets/oauthcallback",
+"gadgets.oauthGadgetCallbackTemplate" : "//%host%/IDE/gadgets/oauthcallback",
 
 // Use an insecure security token by default
 "gadgets.securityTokenType" : "secure",
@@ -97,8 +97,8 @@
   "exclude-urls": "",
   "include-tags": ["link", "script", "embed", "img", "style"],
   "expires": "86400",
-  "proxy-url": "/IDE-application/gadgets/proxy?url=",
-  "concat-url": "/IDE-application/gadgets/concat?"
+  "proxy-url": "/IDE/gadgets/proxy?url=",
+  "concat-url": "/IDE/gadgets/concat?"
 },
 
 // This config data will be passed down to javascript. Please
@@ -110,18 +110,18 @@
 "gadgets.features" : {
   "core.io" : {
     // Note: /proxy is an open proxy. Be careful how you expose this!
-    "proxyUrl" : "http://%host%/IDE-application/gadgets/proxy?refresh=%refresh%&url=%url%",
-    "jsonProxyUrl" : "http://%host%/IDE-application/gadgets/makeRequest"
+    "proxyUrl" : "http://%host%/IDE/gadgets/proxy?refresh=%refresh%&url=%url%",
+    "jsonProxyUrl" : "http://%host%/IDE/gadgets/makeRequest"
   },
   "views" : {
     "home" : {
       "isOnlyVisible" : false,
-      "urlTemplate" : "http://%host%/IDE-application/gadgets/home?{var}",
+      "urlTemplate" : "http://%host%/IDE/gadgets/home?{var}",
       "aliases": ["DASHBOARD", "default"]
     },
     "canvas" : {
       "isOnlyVisible" : true,
-      "urlTemplate" : "http://%host%/IDE-application/gadgets/canvas?{var}",
+      "urlTemplate" : "http://%host%/IDE/gadgets/canvas?{var}",
       "aliases" : ["FULL_PAGE"]
     }
   },
@@ -130,7 +130,7 @@
     /// parameter if it passes input validation and is not null.
     // This should never be on the same host in a production environment!
     // Only use this for TESTING!
-    "parentRelayUrl" : "/IDE-application/gadgets/files/container/rpc_relay.html",
+    "parentRelayUrl" : "/IDE/gadgets/files/container/rpc_relay.html",
 
     // If true, this will use the legacy ifpc wire format when making rpc
     // requests.
