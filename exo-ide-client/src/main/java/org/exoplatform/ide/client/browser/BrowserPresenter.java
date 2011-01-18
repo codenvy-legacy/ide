@@ -191,13 +191,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
          
          public void onClose(CloseEvent<Item> event)
          {
-            for (Item item : display.getSelectedItems())
-            {
-               if (item.getHref().startsWith(event.getTarget().getHref()))
-               {
-                  display.deselectItem(item.getHref());
-               }
-            }
+            onCloseFolder((Folder)event.getTarget());
          }
       });
       
@@ -227,6 +221,22 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       });
    }
 
+   /**
+    * Perform actions when folder is closed in browser tree.
+    * 
+    * @param folder closed folder
+    */
+   public void onCloseFolder(Folder folder)
+   {
+      for (Item item : display.getSelectedItems())
+      {
+         if (item.getHref().startsWith(folder.getHref()) && !item.getHref().equals(folder.getHref()))
+         {
+            display.deselectItem(item.getHref());
+         }
+      }
+   }
+   
    /**
     * 
     * Handling item selected event from browser
