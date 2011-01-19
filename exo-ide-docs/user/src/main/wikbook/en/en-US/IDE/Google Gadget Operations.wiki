@@ -14,9 +14,9 @@ To create the Google Gadget within eXo IDE, do one of the following ways:
 
 2. Select *File > New > Google Gadget* on the top menu.
 
-3. Open the existed gadget from the local system by selecting *File > Open Local File* on the top menu.
+3. Open the existing gadget from the local system by selecting *File > Open Local File* on the top menu.
 
-4. Upload the existed gadget directly to JCR by selecting *File > Upload File...* on the top menu.
+4. Upload the existing gadget directly to JCR by selecting *File > Upload File...* on the top menu.
 
 For the third and forth ways, you must select the MIME type as _"application/x-google-gadget"_.
 
