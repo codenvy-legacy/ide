@@ -32,10 +32,13 @@ import javax.ws.rs.core.UriInfo;
 import org.chromattic.dataobject.CompilationSource;
 import org.chromattic.dataobject.DataObjectService;
 import org.chromattic.dataobject.NodeTypeFormat;
+import org.exoplatform.ide.groovy.util.DependentResources;
+import org.exoplatform.ide.groovy.util.GroovyScriptServiceUtil;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.impl.core.nodetype.NodeTypeManagerImpl;
 
 @Path("/ide/chromattic/")
@@ -51,11 +54,14 @@ public class RestDataObjectService
    private DataObjectService dataObjectService;
 
    private RepositoryService repositoryService;
+   
+   private ThreadLocalSessionProviderService sessionProviderService;
 
-   public RestDataObjectService(DataObjectService dataObjectService, RepositoryService repositoryService)
+   public RestDataObjectService(DataObjectService dataObjectService, RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService)
    {
       this.dataObjectService = dataObjectService;
       this.repositoryService = repositoryService;
+      this.sessionProviderService = sessionProviderService;
    }
 
    /**
@@ -67,8 +73,7 @@ public class RestDataObjectService
     */
    @POST
    @Path("/generate-nodetype-definition")
-   public String getNodeTypeDefinition(@Context UriInfo uriInfo, @QueryParam("dependencyPath") String dependencyPath,
-      @QueryParam("do-location") String location, @QueryParam("nodeTypeFormat") NodeTypeFormat format)
+   public String getNodeTypeDefinition(@Context UriInfo uriInfo, @QueryParam("do-location") String location, @QueryParam("nodeTypeFormat") NodeTypeFormat format)
       throws PathNotFoundException
    {
       String[] jcrLocation = parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
@@ -92,14 +97,20 @@ public class RestDataObjectService
 
       //TODO: 
       CompilationSource compilationSource;
-      if (dependencyPath != null)
+      DependentResources dependentResources = GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(), repositoryService, sessionProviderService);
+      if (dependentResources != null && dependentResources.getFolderSources().size() > 0)
       {
-         String[] depJcrLocation = parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), dependencyPath);
-         if (depJcrLocation == null)
+         //TODO only first one dir is taken at the moment
+         String dependentSource = dependentResources.getFolderSources().get(0);
+         dependentSource = dependentSource.replace("jcr://", "");
+         String[] pathParts =  dependentSource.split("/");
+         if (pathParts == null || pathParts.length < 3)
          {
-            throw new PathNotFoundException("Location of dependency  " + dependencyPath + " not found. ");
+            throw new PathNotFoundException("Location of dependency  " + dependentSource + " not found. ");
          }
-         compilationSource = new CompilationSource(depJcrLocation[0], depJcrLocation[1], depJcrLocation[3]);
+         String dependenceWorkspace = (pathParts[1].endsWith("#") ? pathParts[1].substring(0, pathParts[1].length()-1) : pathParts[1]);
+         String repwork = pathParts[0]+"/"+pathParts[1];
+         compilationSource = new CompilationSource(pathParts[0], dependenceWorkspace, dependentSource.replace(repwork, ""));
       }
       else
       {
