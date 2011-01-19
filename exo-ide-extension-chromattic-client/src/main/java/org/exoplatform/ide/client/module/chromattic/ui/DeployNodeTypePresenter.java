@@ -234,7 +234,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeC
          return;
       handlers.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this);
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), "", nodeTypeFormat);
+      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), nodeTypeFormat);
    }
 
    /**

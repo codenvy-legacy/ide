@@ -94,16 +94,13 @@ public class ChrommaticServiceImpl extends ChrommaticService
     * @see org.exoplatform.ide.client.module.chromattic.model.service.ChrommaticService#generateNodeType(java.lang.String, java.lang.String, org.exoplatform.ide.client.module.chromattic.model.EnumNodeTypeFormat)
     */
    @Override
-   public void generateNodeType(String location, String dependencyLocation, EnumNodeTypeFormat nodeTypeFormat)
+   public void generateNodeType(String location, EnumNodeTypeFormat nodeTypeFormat)
    {
       String url = restServiceContext + GENERATE_NODE_TYPE_METHOD_CONTEXT;
       GenerateNodeTypeResult result = new GenerateNodeTypeResult();
       NodeTypeGenerationResultReceivedEvent event = new NodeTypeGenerationResultReceivedEvent(result);
       GenerateNodeTypeResultUnmarshaller unmarshaller = new GenerateNodeTypeResultUnmarshaller(result);
       String params = "do-location=" + location + "&";
-      params +=
-         (dependencyLocation != null && dependencyLocation.length() > 0) ? "dependencyPath=" + dependencyLocation + "&"
-            : "";
       params += "nodeTypeFormat=" + nodeTypeFormat.value();
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);

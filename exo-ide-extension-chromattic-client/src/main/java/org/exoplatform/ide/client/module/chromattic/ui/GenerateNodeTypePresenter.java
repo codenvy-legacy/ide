@@ -176,7 +176,7 @@ public class GenerateNodeTypePresenter implements NodeTypeGenerationResultReceiv
          return;
       handlers.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this);
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), "", nodeTypeFormat);
+      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), nodeTypeFormat);
    }
 
    /**
