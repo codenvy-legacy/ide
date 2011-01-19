@@ -418,6 +418,16 @@
             <version>${version.chromattic}</version>
          </dependency>
          <dependency>
+           <groupId>org.chromattic</groupId>
+           <artifactId>chromattic.exo</artifactId>
+           <version>${version.chromattic}</version> 
+        </dependency>
+        <dependency>
+            <groupId>org.chromattic</groupId>
+            <artifactId>chromattic.metamodel</artifactId>
+            <version>${version.chromattic}</version>
+         </dependency>
+         <dependency>
             <groupId>org.chromattic</groupId>
             <artifactId>chromattic.dataobject</artifactId>
             <version>${version.chromattic}</version>

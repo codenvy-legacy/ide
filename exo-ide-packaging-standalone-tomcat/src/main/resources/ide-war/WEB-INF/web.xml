@@ -33,7 +33,8 @@
       org.apache.shindig.gadgets.DefaultGuiceModule:
       org.apache.shindig.social.sample.SampleModule:
       org.apache.shindig.gadgets.oauth.OAuthModule:
-      org.apache.shindig.common.cache.ehcache.EhCacheModule
+      org.apache.shindig.common.cache.ehcache.EhCacheModule:
+      org.exoplatform.ide.shindig.ExoIdeGuiceModule:
     </param-value>
    </context-param>
 
