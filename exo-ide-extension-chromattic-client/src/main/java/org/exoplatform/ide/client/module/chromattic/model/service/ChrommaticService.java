@@ -70,10 +70,9 @@ public abstract class ChrommaticService
     * node type generation result is received.
     * 
     * @param location location of groovy file with node type definition
-    * @param dependencyLocation dependency location
     * @param nodeTypeFormat node type format
     */
-   public abstract void generateNodeType(String location, String dependencyLocation, EnumNodeTypeFormat nodeTypeFormat);
+   public abstract void generateNodeType(String location, EnumNodeTypeFormat nodeTypeFormat);
    
    /**
     * Create (deploy) new node type.
