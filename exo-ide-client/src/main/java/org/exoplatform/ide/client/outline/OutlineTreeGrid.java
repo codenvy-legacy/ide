@@ -87,6 +87,8 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    
    private static final String ERROR_ICON = Images.Outline.ERROR_ITEM;
    
+   private static final String INTERFACE_ICON = Images.Outline.INTERFACE_ITEM;
+   
    private static final String NAME = "name";
 
    private Tree tree;
@@ -313,6 +315,9 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
 
          case ERROR :            
             return ERROR_ICON;
+
+         case INTERFACE :
+            return INTERFACE_ICON;            
             
          default :
             return "";
@@ -369,6 +374,9 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          case CLASS :
             return CLASS_ICON;
             
+         case INTERFACE :
+            return INTERFACE_ICON;
+
          default :
             return "";
       }
