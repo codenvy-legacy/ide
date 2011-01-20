@@ -52,12 +52,15 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
 
    private String editorId;
 
+   private ImportDeclarationsTokenCollectors collectors;
+
    /**
     * @param eventBus
     */
    public AssistImportDeclarationManager(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
+      collectors = new ImportDeclarationsTokenCollectors(eventBus);
       eventBus.addHandler(EditorErrorMarkClickedEvent.TYPE, this);
    }
 
@@ -74,10 +77,17 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
          top = event.getMarkOffsetX() + 4;
          editorId = event.getEditorId();
 
-         ImportDeclarationTokenCollector collector =
-            ImportDeclarationsTokenCollectors.getCollector(eventBus, event.getFileMimeType());
-         collector.collectImportDeclarationTokens(event.getCodeErrorList().get(0).getIncorrectToken(), this);
-         //     collector.getImportDeclarationTokens("Array", this);   
+         try
+         {
+            ImportDeclarationTokenCollector collector = collectors.getCollector(eventBus, event.getFileMimeType());
+            if (collector != null)
+               collector.collectImportDeclarationTokens(event.getCodeErrorList().get(0).getIncorrectToken(), this);
+            //     collector.getImportDeclarationTokens("Array", this);
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+         }
       }
    }
 

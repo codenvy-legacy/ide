@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.module.groovy.service.codeassistant.event;
 
+import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 import org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion.GroovyClass;
 
 import com.google.gwt.event.shared.GwtEvent;
@@ -29,12 +30,14 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: Nov 17, 2010 5:01:33 PM evgen $
  *
  */
-public class ClassDescriptionReceivedEvent extends GwtEvent<ClassDescriptionReceivedHandler>
+public class ClassDescriptionReceivedEvent extends ServerExceptionEvent<ClassDescriptionReceivedHandler>
 {
 
    public static GwtEvent.Type<ClassDescriptionReceivedHandler> TYPE = new Type<ClassDescriptionReceivedHandler>();
 
    private GroovyClass classInfo;
+
+   private Throwable exception;
 
    /**
     * @param classInfo
@@ -70,4 +73,20 @@ public class ClassDescriptionReceivedEvent extends GwtEvent<ClassDescriptionRece
       return classInfo;
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent#setException(java.lang.Throwable)
+    */
+   @Override
+   public void setException(Throwable exception)
+   {
+      this.exception = exception;
+   }
+
+   /**
+    * @return the exception
+    */
+   public Throwable getException()
+   {
+      return exception;
+   }
 }

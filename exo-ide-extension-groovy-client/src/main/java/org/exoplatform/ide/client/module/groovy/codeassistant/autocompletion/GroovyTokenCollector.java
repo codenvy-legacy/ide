@@ -22,13 +22,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.Modifier;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
@@ -38,6 +37,11 @@ import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallback;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.Types;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassDescriptionReceivedEvent;
@@ -53,9 +57,9 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 26, 2010 4:56:13 PM evgen $
  *
- */ 
+ */
 public class GroovyTokenCollector implements TokenCollectorExt, ClassDescriptionReceivedHandler, Comparator<TokenExt>,
-   ExceptionThrownHandler, ClassesNamesReceivedHandler
+   ExceptionThrownHandler, ClassesNamesReceivedHandler, EditorActiveFileChangedHandler
 {
 
    private enum Action {
@@ -160,7 +164,7 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       keywords.add(new TokenExt("while", TokenExtType.KEY_WORD));
    }
 
-   private static Map<String, GroovyClass> classes = new HashMap<String, GroovyClass>();
+   //   private static Map<String, GroovyClass> classes = new HashMap<String, GroovyClass>();
 
    private Handlers handlers;
 
@@ -180,9 +184,15 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
 
    private int currentLineNumber;
 
+   private File activeFile;
+
+   private HandlerManager eventBus;
+
    public GroovyTokenCollector(HandlerManager eventBus)
    {
+      this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**
@@ -193,11 +203,10 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       TokensCollectedCallback<TokenExt> tokensCollectedCallback)
    {
 
-      
       this.callback = tokensCollectedCallback;
       if (line == null)
       {
-         
+
          callback.onTokensCollected(new ArrayList<TokenExt>(), "", "", "");
          return;
       }
@@ -223,7 +232,7 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
 
          String varToken = token.substring(0, token.lastIndexOf('.'));
          tokenToComplete = token.substring(token.lastIndexOf('.') + 1);
-         beforeToken = subToken.substring(0, subToken.indexOf(varToken) + varToken.length() + 1);
+         beforeToken = subToken.substring(0, subToken.lastIndexOf(varToken) + varToken.length() + 1);
 
          if (currentToken == null)
          {
@@ -241,16 +250,20 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
          }
 
          curentFqn = currentToken.getFqn();
-         if (classes.containsKey(curentFqn))
+         //         if (classes.containsKey(curentFqn))
+         //         {
+         //            filterTokens(classes.get(curentFqn));
+         //            return;
+         //         }
+         if(curentFqn == null)
          {
-            filterTokens(classes.get(curentFqn));
+            callback.onTokensCollected(new ArrayList<TokenExt>(), beforeToken, tokenToComplete, afterToken);
             return;
          }
-
          handlers.addHandler(ClassDescriptionReceivedEvent.TYPE, this);
          handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
-         CodeAssistantService.getInstance().getClassDescription(curentFqn);
+         CodeAssistantService.getInstance().getClassDescription(curentFqn, activeFile.getHref());
       }
       else
       {
@@ -279,7 +292,7 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
             return;
          }
 
-         CodeAssistantService.getInstance().findClassesByPrefix(tokenToComplete);
+         CodeAssistantService.getInstance().findClassesByPrefix(tokenToComplete, activeFile.getHref());
       }
 
    }
@@ -360,13 +373,61 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
    @Override
    public void onClassDecriptionReceived(ClassDescriptionReceivedEvent event)
    {
+
       handlers.removeHandlers();
+      if (event.getException() != null)
+      {
+         ServerException exception = (ServerException)event.getException();
+         String outputContent =
+            "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
+         if (!exception.getMessage().equals(""))
+         {
+            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+         }
 
-      classes.put(curentFqn, event.getClassInfo());
+         //         findLineNumberAndColNumberOfError(exception.getMessage());
 
-      filterTokens(event.getClassInfo());
+         //         outputContent =
+         //            "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction(" + String.valueOf(errLineNumber)
+         //               + "," + String.valueOf(errColumnNumber) + ", '" + event.getFileHref() + "', '"
+         //               + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
+
+         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+
+      }
+      else
+      {
+         //      classes.put(curentFqn, event.getClassInfo());
+
+         filterTokens(event.getClassInfo());
+      }
    }
 
+   //   /**
+   //    * Parse text and find number of column and line number of error
+   //    * 
+   //    * @param text validation text, which contains number of column and line number of error
+   //    */
+   //   private void findLineNumberAndColNumberOfError(String text)
+   //   {
+   //      try
+   //      {
+   //         //find line number
+   //         int firstIndex = text.indexOf("@ line") + 7;
+   //         int lastIndex = text.indexOf(", column");
+   ////         errLineNumber = Integer.valueOf(text.substring(firstIndex, lastIndex));
+   //
+   //         //find column number
+   //         firstIndex = lastIndex + 9;
+   //         lastIndex = text.indexOf(".", firstIndex);
+   ////         errColumnNumber = Integer.valueOf(text.substring(firstIndex, lastIndex));
+   //
+   //      }
+   //      catch (Exception e)
+   //      {
+   //         e.printStackTrace();
+   //      }
+   //   }
    /**
     * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedHandler#onClassesNamesReceived(org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedEvent)
     */
@@ -374,7 +435,30 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
    public void onClassesNamesReceived(ClassesNamesReceivedEvent event)
    {
       handlers.removeHandlers();
-      filterTokens(event.getTokens());
+
+      if (event.getException() != null)
+      {
+         ServerException exception = (ServerException)event.getException();
+         String outputContent =
+            "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
+         if (!exception.getMessage().equals(""))
+         {
+            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+         }
+
+         //         findLineNumberAndColNumberOfError(exception.getMessage());
+
+         //         outputContent =
+         //            "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction(" + String.valueOf(errLineNumber)
+         //               + "," + String.valueOf(errColumnNumber) + ", '" + event.getFileHref() + "', '"
+         //               + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
+
+         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+      }
+      else
+      {
+         filterTokens(event.getTokens());
+      }
    }
 
    /**
@@ -619,28 +703,37 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
       return i;
    }
 
-//      /**
-//       * Print recursively all tokens
-//       * 
-//       * @param token {@link List} of {@link Token} to print
-//       */
-//      private void printTokens(List<Token> token)
-//      {
-//   
-//         for (Token t : token)
-//         {
-//            System.out.println(t.getName() + " " + t.getType());
-//            System.out.println("FQN - " + t.getFqn());
-//            System.out.println("JAVATYPE - " + t.getJavaType());
-//            //         if (t.getSubTokenList() != null)
-//            //         {
-//            //            printTokens(t.getSubTokenList());
-//            //         }
-//            //         if (t.getParameters() != null)
-//            //         {
-//            //            printTokens(t.getParameters());
-//            //         }
-//         }
-//         System.out.println("+++++++++++++++++++++++++");
-//      }
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
+   }
+
+   //      /**
+   //       * Print recursively all tokens
+   //       * 
+   //       * @param token {@link List} of {@link Token} to print
+   //       */
+   //      private void printTokens(List<Token> token)
+   //      {
+   //   
+   //         for (Token t : token)
+   //         {
+   //            System.out.println(t.getName() + " " + t.getType());
+   //            System.out.println("FQN - " + t.getFqn());
+   //            System.out.println("JAVATYPE - " + t.getJavaType());
+   //            //         if (t.getSubTokenList() != null)
+   //            //         {
+   //            //            printTokens(t.getSubTokenList());
+   //            //         }
+   //            //         if (t.getParameters() != null)
+   //            //         {
+   //            //            printTokens(t.getParameters());
+   //            //         }
+   //         }
+   //         System.out.println("+++++++++++++++++++++++++");
+   //      }
 }

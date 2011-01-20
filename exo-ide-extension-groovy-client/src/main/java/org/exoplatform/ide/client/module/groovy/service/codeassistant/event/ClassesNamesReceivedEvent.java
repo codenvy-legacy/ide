@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.module.groovy.service.codeassistant.event;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 
 import com.google.gwt.event.shared.GwtEvent;
@@ -31,12 +32,14 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: Nov 17, 2010 4:52:59 PM evgen $
  *
  */
-public class ClassesNamesReceivedEvent extends GwtEvent<ClassesNamesReceivedHandler>
+public class ClassesNamesReceivedEvent extends ServerExceptionEvent<ClassesNamesReceivedHandler>
 {
 
    public static GwtEvent.Type<ClassesNamesReceivedHandler> TYPE = new Type<ClassesNamesReceivedHandler>();
 
    private List<TokenExt> tokens;
+
+   private Throwable exception;
 
    /**
     * @param tokens
@@ -72,4 +75,22 @@ public class ClassesNamesReceivedEvent extends GwtEvent<ClassesNamesReceivedHand
    {
       return tokens;
    }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent#setException(java.lang.Throwable)
+    */
+   @Override
+   public void setException(Throwable exception)
+   {
+      this.exception = exception;
+   }
+
+   /**
+    * @return the exception
+    */
+   public Throwable getException()
+   {
+      return exception;
+   }
+
 }

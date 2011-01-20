@@ -21,8 +21,14 @@ package org.exoplatform.ide.client.module.groovy.codeassistant;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollector;
 import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollectorCallback;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedEvent;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassesNamesReceivedHandler;
@@ -36,19 +42,25 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Nov 22, 2010 2:47:20 PM evgen $
  *
  */
-public class GroovyImportDeclarationTokenCollector implements ImportDeclarationTokenCollector, ClassesNamesReceivedHandler, ExceptionThrownHandler
+public class GroovyImportDeclarationTokenCollector implements ImportDeclarationTokenCollector,
+   ClassesNamesReceivedHandler, ExceptionThrownHandler, EditorActiveFileChangedHandler
 {
-   
+
    private Handlers handlers;
-   
+
    private ImportDeclarationTokenCollectorCallback callback;
+
+   private HandlerManager eventBus;
+
+   private File activeFile;
 
    /**
     * @param eventBus
     */
    public GroovyImportDeclarationTokenCollector(HandlerManager eventBus)
    {
-      handlers = new Handlers(eventBus);       
+      handlers = new Handlers(eventBus);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**
@@ -59,7 +71,7 @@ public class GroovyImportDeclarationTokenCollector implements ImportDeclarationT
       this.callback = callback;
       handlers.addHandler(ClassesNamesReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      CodeAssistantService.getInstance().findClass(className);
+      CodeAssistantService.getInstance().findClass(className, activeFile.getHref());
    }
 
    /**
@@ -67,8 +79,30 @@ public class GroovyImportDeclarationTokenCollector implements ImportDeclarationT
     */
    public void onClassesNamesReceived(ClassesNamesReceivedEvent event)
    {
-      handlers.removeHandlers(); 
-      callback.tokensCollected(event.getTokens());
+      handlers.removeHandlers();
+      if (event.getException() != null)
+      {
+         ServerException exception = (ServerException)event.getException();
+         String outputContent =
+            "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
+         if (!exception.getMessage().equals(""))
+         {
+            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+         }
+
+         //         findLineNumberAndColNumberOfError(exception.getMessage());
+
+         //         outputContent =
+         //            "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction(" + String.valueOf(errLineNumber)
+         //               + "," + String.valueOf(errColumnNumber) + ", '" + event.getFileHref() + "', '"
+         //               + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
+
+         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+      }
+      else
+      {
+         callback.tokensCollected(event.getTokens());
+      }
    }
 
    /**
@@ -77,7 +111,16 @@ public class GroovyImportDeclarationTokenCollector implements ImportDeclarationT
    public void onError(ExceptionThrownEvent event)
    {
       handlers.removeHandlers();
-      
+
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
    }
 
 }

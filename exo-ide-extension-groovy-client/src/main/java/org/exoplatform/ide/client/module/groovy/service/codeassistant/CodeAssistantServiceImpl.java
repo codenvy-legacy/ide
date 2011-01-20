@@ -24,6 +24,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion.GroovyClass;
 import org.exoplatform.ide.client.module.groovy.service.codeassistant.event.ClassDescriptionReceivedEvent;
@@ -71,7 +72,7 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
     * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService#findClass(java.lang.String)
     */
    @Override
-   public void findClass(String className)
+   public void findClass(String className, String fileHref)
    {
       String url = restServiceContext + FIND_URL + className;
       
@@ -79,30 +80,30 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
       ClassesNamesReceivedEvent event = new ClassesNamesReceivedEvent(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
       
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event, event);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
    }
 
    /**
     * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService#getClassDescription(java.lang.String)
     */
    @Override
-   public void getClassDescription(String fqn)
+   public void getClassDescription(String fqn, String fileHref)
    {
       String url = restServiceContext + GET_CLASS_URL + fqn;
       
       GroovyClass classInfo = new GroovyClass();
       ClassDescriptionReceivedEvent event = new ClassDescriptionReceivedEvent(classInfo);
       ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller(classInfo);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event,event);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
    }
 
    /**
     * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService#findClassesByPrefix(java.lang.String)
     */
    @Override
-   public void findClassesByPrefix(String prefix)
+   public void findClassesByPrefix(String prefix, String fileHref)
    {
       String url = restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className";
       
@@ -110,8 +111,8 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
       ClassesNamesReceivedEvent event = new ClassesNamesReceivedEvent(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
       
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event, event);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
    }
 
    /**
@@ -129,7 +130,7 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
       ClassesNamesReceivedEvent event = new ClassesNamesReceivedEvent(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
       
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, event, event);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 

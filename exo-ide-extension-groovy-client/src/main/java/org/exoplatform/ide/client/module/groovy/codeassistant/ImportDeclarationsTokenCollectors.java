@@ -36,11 +36,9 @@ import com.google.gwt.event.shared.HandlerManager;
 public final class ImportDeclarationsTokenCollectors
 {
 
-   private static Map<String, ImportDeclarationTokenCollector> collectors = new HashMap<String, ImportDeclarationTokenCollector>();
-   
-   private static ImportDeclarationsTokenCollectors instance;
-   
-   private ImportDeclarationsTokenCollectors(HandlerManager eventBus)
+   private Map<String, ImportDeclarationTokenCollector> collectors = new HashMap<String, ImportDeclarationTokenCollector>();
+      
+   public ImportDeclarationsTokenCollectors(HandlerManager eventBus)
    {
       GroovyImportDeclarationTokenCollector collector = new GroovyImportDeclarationTokenCollector(eventBus);
       collectors.put(MimeType.GROOVY_SERVICE, collector);
@@ -49,12 +47,8 @@ public final class ImportDeclarationsTokenCollectors
    }
    
    
-   public static ImportDeclarationTokenCollector getCollector(HandlerManager eventBus, String mimeType)
+   public ImportDeclarationTokenCollector getCollector(HandlerManager eventBus, String mimeType)
    {
-      if(instance == null)
-      {
-         instance = new ImportDeclarationsTokenCollectors(eventBus);
-      }
       return collectors.get(mimeType);
    }
    

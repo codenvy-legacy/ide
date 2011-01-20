@@ -16,7 +16,11 @@
  */
 package org.exoplatform.ide.groovy.codeassistant;
 
-import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -25,21 +29,34 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.groovy.JcrUtils;
 import org.exoplatform.ide.groovy.codeassistant.bean.ShortTypeInfo;
 import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
+import org.exoplatform.ide.groovy.codeassistant.extractors.GroovyClassNamesExtractor;
+import org.exoplatform.ide.groovy.util.DependentResources;
+import org.exoplatform.ide.groovy.util.GroovyScriptServiceUtil;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.ws.frameworks.json.JsonHandler;
+import org.exoplatform.ws.frameworks.json.JsonParser;
+import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
+import org.exoplatform.ws.frameworks.json.impl.JsonException;
+import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
+import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
+import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -88,7 +105,8 @@ public class CodeAssistant
    @GET
    @Path("/class-description")
    @Produces(MediaType.APPLICATION_JSON)
-   public InputStream getClassByFQN(@QueryParam("fqn") String fqn) throws CodeAssistantException
+   public TypeInfo getClassByFQN(@Context UriInfo uriInfo, @QueryParam("fqn") String fqn,
+      @HeaderParam("location") String location) throws CodeAssistantException
    {
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:fqn='" + fqn + "'";
       try
@@ -101,10 +119,31 @@ public class CodeAssistant
          if (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            return node.getProperty("jcr:data").getStream();
+            JsonParser jsonParser = new JsonParserImpl();
+            JsonHandler jsonHandler = new JsonDefaultHandler();
+            jsonParser.parse(node.getProperty("jcr:data").getStream(), jsonHandler);
+            JsonValue jsonValue = jsonHandler.getJsonObject();
+            TypeInfo typeInfo = ObjectBuilder.createObject(TypeInfo.class, jsonValue);
+            return typeInfo;
          }
          else
          {
+            if (location != null)
+            {
+               DependentResources dependentResources =
+                  GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
+                     repositoryService, sessionProviderService);
+               if (dependentResources != null)
+               {
+                  TypeInfo classInfo =
+                     new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassInfo(fqn,
+                        dependentResources);
+                  if (classInfo == null)
+                     throw new CodeAssistantException(HTTPStatus.NOT_FOUND, "Class info for " + fqn + " not found");
+                  return classInfo;
+
+               }
+            }
             if (LOG.isDebugEnabled())
                LOG.error("Class info for " + fqn + " not found");
             throw new CodeAssistantException(HTTPStatus.NOT_FOUND, "Class info for " + fqn + " not found");
@@ -123,6 +162,24 @@ public class CodeAssistant
             e.printStackTrace();
          //TODO:need fix status code
          throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+      }
+      catch (JsonException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         throw new CodeAssistantException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (MalformedURLException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         throw new CodeAssistantException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (URISyntaxException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         throw new CodeAssistantException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
    }
 
@@ -151,29 +208,43 @@ public class CodeAssistant
     * @throws Exception 
     * */
    @GET
-   //use POST for fixing cache problem
    @Path("/find")
    @Produces(MediaType.APPLICATION_JSON)
-   public ShortTypeInfo[] findFQNsByClassName(@QueryParam("class") String className) throws CodeAssistantException
+   public List<ShortTypeInfo> findFQNsByClassName(@Context UriInfo uriInfo, @QueryParam("class") String className,
+      @HeaderParam("location") String location) throws CodeAssistantException
    {
+      //TODO add Groovy
+      List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:className='" + className + "'";
       try
       {
+         if (location != null && !location.isEmpty())
+         {
+            DependentResources dependentResources =
+               GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
+                  repositoryService, sessionProviderService);
+            if (dependentResources != null)
+            {
+
+               types =
+                  new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassNames(className,
+                     dependentResources);
+
+            }
+         }
+
          Session session = JcrUtils.getSession(repositoryService, sessionProviderService, wsName);
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
-         //TODO
-         ShortTypeInfo[] types = new ShortTypeInfo[(int)nodes.getSize()];
-         int i = 0;
+
          while (nodes.hasNext())
          {
 
             Node node = (Node)nodes.next();
-            types[i++] =
-               new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty(
-                  "exoide:className").getString(), node.getProperty("exoide:fqn").getString(), node.getProperty(
-                  "exoide:type").getString());
+            types.add(new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty(
+               "exoide:className").getString(), node.getProperty("exoide:fqn").getString(), node.getProperty(
+               "exoide:type").getString()));
          }
          return types;
       }
@@ -190,6 +261,18 @@ public class CodeAssistant
             e.printStackTrace();
          //TODO:need fix status code
          throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+      }
+      catch (MalformedURLException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         throw new CodeAssistantException(HTTPStatus.BAD_REQUEST, e.getMessage());
+      }
+      catch (URISyntaxException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         throw new CodeAssistantException(HTTPStatus.BAD_REQUEST, e.getMessage());
       }
 
    }
@@ -217,9 +300,11 @@ public class CodeAssistant
    @GET
    @Path("/find-by-prefix/{prefix}")
    @Produces(MediaType.APPLICATION_JSON)
-   public ShortTypeInfo[] findFQNsByPrefix(@PathParam("prefix") String prefix, @QueryParam("where") String where)
-      throws CodeAssistantException
+   public List<ShortTypeInfo> findFQNsByPrefix(@Context UriInfo uriInfo, @PathParam("prefix") String prefix,
+      @QueryParam("where") String where, @HeaderParam("location") String location) throws CodeAssistantException
    {
+      List<ShortTypeInfo> groovyClass = null;
+      ShortTypeInfo[] types = null;
       //by default search in className
       if (where == null || "".equals(where))
       {
@@ -232,13 +317,29 @@ public class CodeAssistant
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:" + where + " LIKE '" + prefix + "%'";
       try
       {
+         //find groovy classes only by name
+         if (location != null && !location.isEmpty() && where.equals("className"))
+         {
+
+            DependentResources dependentResources =
+               GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
+                  repositoryService, sessionProviderService);
+            if (dependentResources != null)
+            {
+               groovyClass =
+                  new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassNames(prefix,
+                     dependentResources);
+
+            }
+         }
+
          Session session = JcrUtils.getSession(repositoryService, sessionProviderService, wsName);
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
          //TODO
          //TODO
-         ShortTypeInfo[] types = new ShortTypeInfo[(int)nodes.getSize()];
+         types = new ShortTypeInfo[(int)nodes.getSize()];
          int i = 0;
          while (nodes.hasNext())
          {
@@ -247,7 +348,7 @@ public class CodeAssistant
                new ShortTypeInfo((int)0L, node.getProperty("exoide:className").getString(), node.getProperty(
                   "exoide:fqn").getString(), node.getProperty("exoide:type").getString());
          }
-         return types;
+
       }
       catch (RepositoryException e)
       {
@@ -263,6 +364,29 @@ public class CodeAssistant
          //TODO:need fix status code
          throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
       }
+      catch (MalformedURLException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      catch (URISyntaxException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+
+      List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
+
+      if (types != null)
+      {
+         result.addAll(Arrays.asList(types));
+      }
+      if (groovyClass != null)
+      {
+         result.addAll(groovyClass);
+      }
+
+      return result;
 
    }
 

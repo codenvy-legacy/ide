@@ -50,21 +50,25 @@ public abstract class CodeAssistantService
     * Get Classes FQN by name.
     *   
     * @param className
+    * @param fileHref for who autocompletion called (Need for find classpath)
     */
-   public abstract void findClass(String className);
+   public abstract void findClass(String className, String fileHref);
    
    /**
     * Get Class description (methods, fields etc.) by class FQN
     * 
     * @param fqn
+    * @param fileHref for who autocompletion called (Need for find classpath)
     */
-   public abstract void getClassDescription(String fqn);
+   public abstract void getClassDescription(String fqn, String fileHref);
+   
    
    /**
     * Find classes by prefix
-    * @param prefix the first letters of class name 
+    * @param prefix the first letters of class name
+    * @param fileHref for who autocompletion called (Need for find classpath)
     */
-   public abstract void findClassesByPrefix(String prefix);
+   public abstract void findClassesByPrefix(String prefix, String fileHref);
    
    /**
     * Find all classes or annotations or interfaces
