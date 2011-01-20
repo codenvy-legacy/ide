@@ -30,15 +30,15 @@ public interface MenuCommands
    {
       public static final String NEW = "New";
 
-      public static final String XML_FILE = "XML File";
+      public static final String XML_FILE = "XML";
 
-      public static final String HTML_FILE = "HTML File";
+      public static final String HTML_FILE = "HTML";
 
-      public static final String TEXT_FILE = "Text File";
+      public static final String TEXT_FILE = "Text";
 
-      public static final String JAVASCRIPT_FILE = "JavaScript File";
+      public static final String JAVASCRIPT_FILE = "JavaScript";
 
-      public static final String CSS_FILE = "CSS File";
+      public static final String CSS_FILE = "CSS";
 
       public static final String GOOGLE_GADGET_FILE = "Google Gadget";
 

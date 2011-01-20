@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.application.phases.LoadRegistryConfigurationPhase;
 import org.exoplatform.ide.client.application.phases.Phase;
 import org.exoplatform.ide.client.browser.BrowserPanel;
+import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
@@ -77,8 +78,11 @@ public class IDEPresenter implements ExceptionThrownHandler
          {
             //activate default view
             eventBus.fireEvent(new ActivateViewEvent(BrowserPanel.ID));
+
             
-            new ControlsFormatter(eventBus).format(controlsRegistration.getRegisteredControls());
+            //eventBus.fireEvent(new AddControlsFormatterEvent(new MainMenuControlsFormatter()));
+            eventBus.fireEvent(new AddControlsFormatterEvent(new NewItemControlsFormatter()));
+            //new NewItemControlsFormatter(eventBus).format(controlsRegistration.getRegisteredControls());
             eventBus.fireEvent(new ControlsUpdatedEvent(controlsRegistration.getRegisteredControls()));
             new LoadRegistryConfigurationPhase(eventBus, controlsRegistration);
          }

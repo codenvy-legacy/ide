@@ -184,16 +184,16 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
       eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl()));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl()));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML File", "XML File",
-         "Create New XML File", Images.FileTypes.XML, MimeType.TEXT_XML)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML File", "HTML File",
-         "Create New HTML File", Images.FileTypes.HTML, MimeType.TEXT_HTML)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT File", "Text File",
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML", "XML",
+         "Create New XML File", Images.FileTypes.XML, MimeType.TEXT_XML).setDelimiterBefore(true)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML", "HTML",
+         "Create New HTML File", Images.FileTypes.HTML, MimeType.TEXT_HTML).setDelimiterBefore(true)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT", "Text",
          "Create New Text File", Images.FileTypes.TXT, MimeType.TEXT_PLAIN)));
       eventBus.fireEvent(new RegisterControlEvent(
-         new NewItemControl("File/New/New Java Script File", "JavaScript File", "Create New Java Script File",
+         new NewItemControl("File/New/New Java Script", "JavaScript", "Create New Java Script File",
             Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS File", "CSS File",
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS", "CSS",
          "Create New CSS File", Images.FileTypes.CSS, MimeType.TEXT_CSS)));
 /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
          "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */

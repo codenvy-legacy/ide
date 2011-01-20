@@ -26,6 +26,8 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.framework.annotation.ClassAnnotationMap;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
+import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlHandler;
 
@@ -40,7 +42,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class ControlsRegistration implements RegisterControlHandler
+public class ControlsRegistration implements RegisterControlHandler, AddControlsFormatterHandler
 {
 
    private List<Control> registeredControls = new ArrayList<Control>();
@@ -61,6 +63,7 @@ public class ControlsRegistration implements RegisterControlHandler
       toolbarDefaultControls.add("");
       statusBarControls.add("");
       handlers.addHandler(RegisterControlEvent.TYPE, this);
+      handlers.addHandler(AddControlsFormatterEvent.TYPE, this);
    }
 
    public List<Control> getRegisteredControls()
@@ -85,7 +88,7 @@ public class ControlsRegistration implements RegisterControlHandler
          Dialogs.getInstance().showError("Only IDE controls can be registered! " + event.getControl().getClass());
          return;
       }
-
+      
       registeredControls.add(event.getControl());
 
       if (event.getDockTarget() == RegisterControlEvent.DockTarget.TOOLBAR)
@@ -185,6 +188,17 @@ public class ControlsRegistration implements RegisterControlHandler
 
       toolbarDefaultControls.retainAll(allowedIds);
       statusBarControls.retainAll(allowedIds);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.control.event.AddControlsFormatterHandler#onAddControlsFormatter(org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent)
+    */
+   public void onAddControlsFormatter(AddControlsFormatterEvent event)
+   {
+      if (event.getControlsFormatter() != null)
+      {
+         event.getControlsFormatter().format(registeredControls);
+      }
    }
 
 }

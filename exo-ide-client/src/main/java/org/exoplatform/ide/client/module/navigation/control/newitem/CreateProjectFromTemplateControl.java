@@ -45,6 +45,7 @@ public class CreateProjectFromTemplateControl extends NewFileCommand implements 
    {
       super(ID, "Project From Template...", "Create Project From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
          IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateProjectFromTemplateEvent());
+      setDelimiterBefore(true);
    }
    
    public void initialize(HandlerManager eventBus)

@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.module.groovy.ImageUtil;
 import org.exoplatform.ide.client.module.groovy.Images;
 import org.exoplatform.ide.client.module.groovy.classpath.EnumSourceType;
 import org.exoplatform.ide.client.module.groovy.classpath.GroovyClassPathEntry;
+import org.exoplatform.ide.client.module.groovy.classpath.GroovyClassPathUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,8 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
       }
       Image image = new Image(imageSrc);
       String imageHTML = ImageUtil.getHTML(image);
-      record.setAttribute(PATH, "<span>" + imageHTML + "&nbsp;&nbsp;" + item.getPath() + "</span>");
+      String path = item.getPath().replaceFirst(GroovyClassPathUtil.JCR_PROTOCOL, "");
+      record.setAttribute(PATH, "<span>" + imageHTML + "&nbsp;&nbsp;" + path + "</span>");
       record.setAttribute(GROOVY_CLASSPATH_ENTRY, item);
    }
 

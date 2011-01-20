@@ -18,12 +18,9 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFolderControl;
@@ -33,7 +30,10 @@ import org.exoplatform.ide.client.module.navigation.control.newitem.NewFileComma
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -41,23 +41,59 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class ControlsFormatter
+public class NewItemControlsFormatter implements ControlsFormatter
 {
-
-   private HandlerManager eventBus;
-
-   public ControlsFormatter(HandlerManager eventBus)
+   private List<String> controlIdsOrder;
+   
+   /**
+    * Initialize the order of the controls in menu "New".
+    */
+   private void initControlsOrder()
    {
-      this.eventBus = eventBus;
+      controlIdsOrder = new ArrayList<String>();
+      controlIdsOrder.add(CreateProjectTemplateControl.ID);
+      controlIdsOrder.add(CreateFolderControl.ID);
+
+      controlIdsOrder.add("File/New/New Google Gadget");
+      controlIdsOrder.add("File/New/New REST Service");
+      controlIdsOrder.add("File/New/New POGO");
+      controlIdsOrder.add("File/New/New Data Object");
+
+      controlIdsOrder.add("File/New/New HTML");
+      controlIdsOrder.add("File/New/New Java Script");
+      controlIdsOrder.add("File/New/New CSS");
+      controlIdsOrder.add("File/New/New Template");
+
+      controlIdsOrder.add("File/New/New XML");
+      controlIdsOrder.add("File/New/New TEXT");
+
+      controlIdsOrder.add(CreateProjectFromTemplateControl.ID);
+      controlIdsOrder.add(CreateFileFromTemplateControl.ID);
+   }
+   
+   /**
+    * @param eventBus
+    */
+   public NewItemControlsFormatter()
+   {
+      initControlsOrder();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.ControlsFormatter#format(java.util.List)
+    */
    public void format(List<Control> controls)
    {
+      System.out.println("NewItemControlsFormatter.format()");
       createNewItemGroup(controls);
-      Collections.sort(controls, controlComparator);
       fillNewItemPopupControl(controls);
    }
 
+   /**
+    * Fill new item popup control with sub controls.
+    * 
+    * @param controls
+    */
    private void fillNewItemPopupControl(List<Control> controls)
    {
       NewFilePopupMenuControl popup = null;
@@ -81,73 +117,34 @@ public class ControlsFormatter
             popup.getCommands().add((SimpleControl)control);
          }
       }
+      //Here the items are sorted:
+      Collections.sort(popup.getCommands(), controlComparator);
    }
 
+   /**
+    * Comparator for items order.
+    */
    private Comparator<Control> controlComparator = new Comparator<Control>()
    {
       public int compare(Control control1, Control control2)
       {
-         if (!control1.getId().startsWith("File/New/") && !control2.getId().startsWith("File/New/"))
+         if (!control1.getId().startsWith("File/New/") || !control2.getId().startsWith("File/New/"))
          {
             return 0;
          }
-
-         if (control1 instanceof CreateFileFromTemplateControl && control2 instanceof CreateFolderControl)
-         {
-            return -1;
-         }
-         else if (control1 instanceof CreateFolderControl && control2 instanceof CreateFileFromTemplateControl)
-         {
-            return 1;
-         }
-         if (control1 instanceof CreateProjectTemplateControl && control2 instanceof CreateFileFromTemplateControl)
-         {
-            return -1;
-         }
-         if (control1 instanceof CreateFileFromTemplateControl && control2 instanceof CreateProjectTemplateControl)
-         {
-            return 1;
-         }
-         if (control1 instanceof CreateProjectFromTemplateControl && control2 instanceof CreateFileFromTemplateControl)
-         {
-            return -1;
-         }
-         if (control1 instanceof CreateFileFromTemplateControl && control2 instanceof CreateProjectFromTemplateControl)
-         {
-            return 1;
-         }
-         if (control1 instanceof CreateProjectFromTemplateControl && control2 instanceof CreateFolderControl)
-         {
-            return -1;
-         }
-         else if (control1 instanceof CreateFolderControl && control2 instanceof CreateProjectFromTemplateControl)
-         {
-            return 1;
-         }
-         else if (control1 instanceof CreateFolderControl && !(control2 instanceof CreateFolderControl))
-         {
-            return 1;
-         }
-         else if (control1 instanceof CreateFileFromTemplateControl
-            && !(control2 instanceof CreateFileFromTemplateControl))
-         {
-            return 1;
-         }
-         else if (control1 instanceof CreateProjectFromTemplateControl
-            && !(control2 instanceof CreateProjectFromTemplateControl))
-         {
-            return 1;
-         }
-         else if (control1 instanceof CreateProjectTemplateControl
-            && !(control2 instanceof CreateProjectTemplateControl))
-         {
-            return 1;
-         }
-
-         return 0;
+         
+         Integer index1 = controlIdsOrder.indexOf(control1.getId());
+         Integer index2 = controlIdsOrder.indexOf(control2.getId());
+         //If item is not found in order list, then put it at the end
+         if (index2 == -1) return -1;
+         
+         return index1.compareTo(index2);
       }
    };
 
+   /**
+    * @param controls
+    */
    private void createNewItemGroup(List<Control> controls)
    {
       while (true)
@@ -173,11 +170,16 @@ public class ControlsFormatter
                new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
                   control.getIcon(), new CreateNewFileEvent(control.getMimeType()));
          }
-
+         command.setDelimiterBefore(control.hasDelimiterBefore());
+         
          controls.set(position, command);
       }
    }
 
+   /**
+    * @param controls
+    * @return
+    */
    private NewItemControl getNewItemControl(List<Control> controls)
    {
       for (Control control : controls)
@@ -187,7 +189,6 @@ public class ControlsFormatter
             return (NewItemControl)control;
          }
       }
-
       return null;
    }
 
