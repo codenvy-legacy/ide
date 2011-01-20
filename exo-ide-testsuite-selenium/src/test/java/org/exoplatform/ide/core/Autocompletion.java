@@ -74,4 +74,18 @@ public class Autocompletion
       assertTrue(selenium.isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
    }
 
+   /**
+    * Move cursor down
+    * @param row Number of row
+    * @throws InterruptedException
+    */
+   public static void moveCursorDown(int row) throws InterruptedException
+   {
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      for (int i = 0; i < row; i++)
+      {
+         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         Thread.sleep(TestConstants.SLEEP_SHORT);
+      }
+   }
 }
