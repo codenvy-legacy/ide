@@ -18,6 +18,24 @@
  */
 package org.exoplatform.ide.chromattic;
 
+import org.chromattic.dataobject.CompilationSource;
+import org.chromattic.dataobject.DataObjectCompiler;
+import org.chromattic.dataobject.DataObjectService;
+import org.chromattic.dataobject.NodeTypeFormat;
+import org.exoplatform.ide.groovy.util.DependentResources;
+import org.exoplatform.ide.groovy.util.GroovyScriptServiceUtil;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
+import org.exoplatform.services.jcr.ext.resource.NodeRepresentationService;
+import org.exoplatform.services.jcr.ext.resource.UnifiedNodeReference;
+import org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyCompiler;
+import org.exoplatform.services.jcr.impl.core.nodetype.NodeTypeManagerImpl;
+import org.exoplatform.services.rest.ext.groovy.SourceFile;
+import org.exoplatform.services.rest.ext.groovy.SourceFolder;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -32,39 +50,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-
-import org.chromattic.dataobject.CompilationSource;
-import org.chromattic.dataobject.DataObjectService;
-import org.chromattic.dataobject.NodeTypeFormat;
-import org.exoplatform.ide.groovy.util.DependentResources;
-import org.exoplatform.ide.groovy.util.GroovyScriptServiceUtil;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.resource.JcrURLConnection;
-import org.exoplatform.services.jcr.ext.resource.NodeRepresentationService;
-import org.exoplatform.services.jcr.ext.resource.UnifiedNodeReference;
-import org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyCompiler;
-import org.exoplatform.services.jcr.impl.core.nodetype.NodeTypeManagerImpl;
-import org.exoplatform.services.rest.ext.filter.UriNormalizationFilter;
-import org.exoplatform.services.rest.ext.groovy.SourceFile;
-import org.exoplatform.services.rest.ext.groovy.SourceFolder;
 
 @Path("/ide/chromattic/")
 public class RestDataObjectService
 {
 
    /**
-    * WebDav context uses for selecting jcr path of resource which is 
-    * adressed via WebDav or IDE Virtual File System service (server)
+    * WebDav context uses for selecting jcr path of resource which is adressed
+    * via WebDav or IDE Virtual File System service (server)
     */
    public static final String WEBDAV_CONTEXT = "/jcr/";
-
-   private DataObjectService dataObjectService;
 
    private RepositoryService repositoryService;
 
@@ -73,22 +69,22 @@ public class RestDataObjectService
    private JcrGroovyCompiler compiler;
 
    public RestDataObjectService(DataObjectService dataObjectService, RepositoryService repositoryService,
-      ThreadLocalSessionProviderService sessionProviderService, NodeRepresentationService nodeRepresentationService)
+      ThreadLocalSessionProviderService sessionProviderService, NodeRepresentationService nodeRepresentationService,
+      JcrGroovyCompiler compiler)
    {
-      this.dataObjectService = dataObjectService;
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;
-      this.compiler = new JcrGroovyCompiler();
+      this.compiler = compiler;
    }
 
    /**
     * Compile Data Object Service and return Node Type definition.
     * 
     * @param uriInfo - UriInfo
-    * @param location - Resource URL 
+    * @param location - Resource URL
     * @return
-    * @throws IOException 
-    * @throws URISyntaxException 
+    * @throws IOException
+    * @throws URISyntaxException
     */
    @POST
    @Path("/generate-nodetype-definition")
@@ -96,70 +92,56 @@ public class RestDataObjectService
       @QueryParam("nodeTypeFormat") NodeTypeFormat format) throws PathNotFoundException, IOException,
       URISyntaxException
    {
-      String[] jcrLocation = parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
       if (location == null)
-      {
          throw new IllegalArgumentException("You must specify location of the source script.");
-      }
+      
+      String[] jcrLocation = parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
+      
       if (jcrLocation == null)
-      {
          throw new PathNotFoundException("Location of script " + location + " not found. ");
-      }
+
       String repository = jcrLocation[0];
       String workspace = jcrLocation[1];
-
-      String pp = jcrLocation[2];
-      if (pp.startsWith("/"))
-      {
-         pp = pp.substring(1);
-      }
       String path = "/" + jcrLocation[2];
 
-      //TODO: 
-      CompilationSource compilationSource;
+      CompilationSource compilationSource = null;
       DependentResources dependentResources =
          GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
             repositoryService, sessionProviderService);
       if (dependentResources != null && dependentResources.getFolderSources().size() > 0)
       {
          //TODO only first one dir is taken at the moment
-         String dependentSource = dependentResources.getFolderSources().get(0);
-         dependentSource = dependentSource.replace("jcr://", "");
-         String[] pathParts = dependentSource.split("/");
-         if (pathParts == null || pathParts.length < 3)
-         {
-            throw new PathNotFoundException("Location of dependency  " + dependentSource + " not found. ");
-         }
-         String dependenceWorkspace =
-            (pathParts[1].endsWith("#") ? pathParts[1].substring(0, pathParts[1].length() - 1) : pathParts[1]);
-         String repwork = pathParts[0] + "/" + pathParts[1];
+         String dependencySource = dependentResources.getFolderSources().get(0);
+         UnifiedNodeReference sourceReference = new UnifiedNodeReference(dependencySource);
          compilationSource =
-            new CompilationSource(pathParts[0], dependenceWorkspace, dependentSource.replace(repwork, ""));
+            new CompilationSource(sourceReference.getRepository(), sourceReference.getWorkspace(),
+               sourceReference.getPath());
       }
       else
       {
          compilationSource = new CompilationSource(repository, workspace, path);
       }
 
-      String dep = dependentResources.getFolderSources().get(0);
-      SourceFolder[] sources = {new SourceFolder((new UnifiedNodeReference(dep)).getURL())};
+      SourceFolder[] sources = null;
+      if (dependentResources != null)
+      {
+         String dep = dependentResources.getFolderSources().get(0);
+         sources = new SourceFolder[]{new SourceFolder((new UnifiedNodeReference(dep)).getURL())};
+      }
 
-      SourceFile[] sourceFile = {new SourceFile((new UnifiedNodeReference(repository, workspace, path)).getURL())};
+      SourceFile[] sourceFile =
+         new SourceFile[]{new SourceFile((new UnifiedNodeReference(repository, workspace, path)).getURL())};
 
       List<String> nodeReferences = new ArrayList<String>();
-
       URL[] urls = compiler.getDependencies(sources, sourceFile);
-
       for (int i = 0; i < urls.length; i++)
       {
          if (MimeTypeResolver.resolve(new UnifiedNodeReference(urls[i]), "application/x-chromattic+groovy"))
-         {
             nodeReferences.add(new UnifiedNodeReference(urls[i]).getPath());
-         }
       }
 
-      return dataObjectService.generateSchema(format, compilationSource,
-         nodeReferences.toArray(new String[nodeReferences.size()]));
+      return new DataObjectCompiler(compiler, compilationSource, nodeReferences.toArray(new String[nodeReferences
+         .size()])).generateSchema(format);
    }
 
    @POST
@@ -188,8 +170,9 @@ public class RestDataObjectService
    /**
     * @param baseUri base URI
     * @param location location of groovy script
-    * @return array of {@link String}, which elements contain repository name, workspace name and 
-    * path the path to JCR node that contains groovy script to be deployed
+    * @return array of {@link String}, which elements contain repository name,
+    *         workspace name and path the path to JCR node that contains groovy
+    *         script to be deployed
     */
    private String[] parseJcrLocation(String baseUri, String location)
    {
