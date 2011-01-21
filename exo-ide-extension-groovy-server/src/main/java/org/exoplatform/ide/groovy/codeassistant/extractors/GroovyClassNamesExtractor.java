@@ -50,6 +50,8 @@ import org.exoplatform.services.rest.ext.groovy.SourceFile;
 import org.exoplatform.services.rest.ext.groovy.SourceFolder;
 
 /**
+ * Extracting meta information from given Groovy classes (methods & constructors) to the 
+ * bean object that can be transform to JSON
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyClassNamesExtractor Jan 18, 2011 9:30:38 AM evgen $
  *
@@ -65,11 +67,7 @@ public class GroovyClassNamesExtractor
 
    private ExtendedGroovyClassLoader classLoader;
 
-   /**
-    * @param prefix 
-    * @param repositoryService
-    * @param sessionProviderService
-    */
+
    public GroovyClassNamesExtractor(RepositoryService repositoryService,
       ThreadLocalSessionProviderService sessionProviderService)
    {
@@ -79,6 +77,16 @@ public class GroovyClassNamesExtractor
 
    }
 
+   /**
+    * Get list of Groovy class names in project classpath
+    * @param prefix of class name
+    * @param resources classpath
+    * @return {@link List} of {@link ShortTypeInfo} 
+    * @throws MalformedURLException
+    * @throws URISyntaxException
+    * @throws RepositoryException
+    * @throws RepositoryConfigurationException
+    */
    public List<ShortTypeInfo> getClassNames(String prefix, DependentResources resources) throws MalformedURLException,
       URISyntaxException, RepositoryException, RepositoryConfigurationException
    {
@@ -130,8 +138,9 @@ public class GroovyClassNamesExtractor
    }
 
    /**
-    * @param sources
-    * @return
+    * Convert {@link List} source folder paths to {@link SourceFolder} array
+    * @param sources {@link List} of source folders paths
+    * @return array of {@link SourceFolder}
     */
    private SourceFolder[] createSourceFolder(List<String> sources)
    {
@@ -161,8 +170,9 @@ public class GroovyClassNamesExtractor
    }
 
    /**
-    * @param fileSrc
-    * @return
+    * Convert {@link List} to {@link SourceFile} array
+    * @param fileSrc path for source file
+    * @return array of {@link SourceFile}
     * @throws MalformedURLException
     */
    private SourceFile[] createSourceFiles(List<String> fileSrc) throws MalformedURLException
@@ -185,6 +195,16 @@ public class GroovyClassNamesExtractor
       return srcFiles;
    }
 
+   /**
+    * Get type info for specific FQN
+    * @param fqn of type
+    * @param resources Classpath for current project
+    * @return type info
+    * @throws MalformedURLException
+    * @throws URISyntaxException
+    * @throws RepositoryException
+    * @throws RepositoryConfigurationException
+    */
    public TypeInfo getClassInfo(String fqn, DependentResources resources) throws MalformedURLException,
       URISyntaxException, RepositoryException, RepositoryConfigurationException
    {
@@ -233,6 +253,8 @@ public class GroovyClassNamesExtractor
    }
 
    /**
+    * Get Session for specific repository and workspace
+    * 
     * @param repositoryService repository service
     * @param sessionProviderService session provider service
     * @param repoName repository's name
