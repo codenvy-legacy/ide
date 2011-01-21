@@ -114,6 +114,11 @@ public class GroovyClassPathUtil
       path = JCR_PROTOCOL + path;
       return URL.encode(path);
    }
+   
+   public static String getDisplayPath(String path)
+   {
+      return "";
+   }
 
    /**
     * Build {@link JavaScriptObject} from string.

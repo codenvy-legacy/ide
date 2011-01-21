@@ -28,6 +28,8 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -67,7 +69,8 @@ import java.util.Map;
  */
 public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, AddSourceToBuildPathHandler,
    ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, ClassPathLocationReceivedHandler,
-   FileContentReceivedHandler, ItemPropertiesReceivedHandler, FileContentSavedHandler, EditorFileOpenedHandler
+   FileContentReceivedHandler, ItemPropertiesReceivedHandler, FileContentSavedHandler, EditorFileOpenedHandler,
+   EntryPointChangedHandler
 {
    public interface Display
    {
@@ -84,14 +87,14 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
        * @return {@link HasClickHandlers} remove source button
        */
       HasClickHandlers getRemoveButton();
-      
+
       /**
        * Get save classpath button.
        * 
        * @return {@link HasClickHandlers} save classpath button
        */
       HasClickHandlers getSaveButton();
-      
+
       /**
        * Get cancel button.
        * 
@@ -114,6 +117,8 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
       void enableRemoveButton(boolean isEnabled);
 
       List<GroovyClassPathEntry> getSelectedItems();
+
+      void setCurrentRepository(String repository);
 
    }
 
@@ -143,6 +148,11 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    private String restContext;
 
    /**
+    * Current entry point.
+    */
+   private String currentEntryPoint;
+
+   /**
     * Selected items in browser tree.
     */
    private Item selectedItem;
@@ -163,6 +173,7 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    /**
@@ -250,13 +261,13 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
     */
    private void getClassPathLocation(String projectLocation)
    {
-      if (projectLocation != null) 
+      if (projectLocation != null)
       {
          handlers.addHandler(ClassPathLocationReceivedEvent.TYPE, this);
          GroovyService.getInstance().getClassPathLocation(projectLocation);
          return;
       }
-      
+
       if (selectedItem == null)
          return;
       handlers.addHandler(ClassPathLocationReceivedEvent.TYPE, this);
@@ -338,12 +349,12 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
       handlers.removeHandler(ClassPathLocationReceivedEvent.TYPE);
       if (event.getException() != null)
       {
-         Dialogs.getInstance().showError(
-            "Classpath settings not found.<br> Probably you are not in project.");
+         Dialogs.getInstance().showError("Classpath settings not found.<br> Probably you are not in project.");
          return;
       }
       Display display = new ConfigureBuildPathForm(eventBus);
       bindDisplay(display);
+      display.setCurrentRepository(getRepositoryFromEntryPoint(currentEntryPoint));
       display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());
 
       File file = new File(event.getClassPath().getLocation());
@@ -413,5 +424,32 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
       openedFiles = event.getOpenedFiles();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler#onEntryPointChanged(org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent)
+    */
+   @Override
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      currentEntryPoint = event.getEntryPoint();
+      if (display != null)
+      {
+         display.setCurrentRepository(getRepositoryFromEntryPoint(event.getEntryPoint()));
+      }
+   }
+
+   private String getRepositoryFromEntryPoint(String entryPoint)
+   {
+      if (entryPoint == null)
+         return null;
+      String context = restContext + GroovyClassPathUtil.WEBDAV_CONTEXT;
+      int index = entryPoint.indexOf(context);
+      String path = (index >= 0) ? entryPoint.substring(index + context.length()) : null;
+      if (path == null)
+         return null;
+      path = path.startsWith("/") ? path.substring(1) : path;
+      index = path.indexOf("/");
+      return (index >= 0) ? path.substring(0, index) : null;
    }
 }

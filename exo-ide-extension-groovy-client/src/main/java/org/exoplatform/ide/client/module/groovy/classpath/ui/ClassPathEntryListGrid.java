@@ -50,6 +50,8 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
    private final String EMPTY_MESSAGE = "No sources. Click \"Add...\" button to add source directory or file.";
 
    private final String GROOVY_CLASSPATH_ENTRY = "GroovyClassPathEntry";
+   
+   private String currentRepository;
 
    public ClassPathEntryListGrid()
    {
@@ -85,7 +87,7 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
       }
       Image image = new Image(imageSrc);
       String imageHTML = ImageUtil.getHTML(image);
-      String path = item.getPath().replaceFirst(GroovyClassPathUtil.JCR_PROTOCOL, "");
+      String path = getDisplayPath(item.getPath());
       record.setAttribute(PATH, "<span>" + imageHTML + "&nbsp;&nbsp;" + path + "</span>");
       record.setAttribute(GROOVY_CLASSPATH_ENTRY, item);
    }
@@ -103,5 +105,22 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
          selectedItems.add((GroovyClassPathEntry)record.getAttributeAsObject(GROOVY_CLASSPATH_ENTRY));
       }
       return selectedItems;
+   }
+   
+   public void setCurrentRepository(String repository)
+   {
+      currentRepository = repository;
+   }
+   
+   private String getDisplayPath(String path)
+   {
+      if (currentRepository == null)
+      {
+         return path.replaceFirst(GroovyClassPathUtil.JCR_PROTOCOL, "");
+      } else 
+      {
+         path = path.replaceFirst(GroovyClassPathUtil.JCR_PROTOCOL, "");
+         return (path.startsWith(currentRepository)) ? path.replaceFirst(currentRepository, "") :path;
+      }
    }
 }

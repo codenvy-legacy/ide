@@ -93,7 +93,7 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
    private IButton removeButton;
 
    private ClassPathEntryListGrid classPathEntryListGrid;
-
+   
    /**
     * @param eventBus handler manager
     */
@@ -272,5 +272,14 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
    public List<GroovyClassPathEntry> getSelectedItems()
    {
       return classPathEntryListGrid.getSelectedItems();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.classpath.ui.ConfigureBuildPathPresenter.Display#setCurrentRepository(java.lang.String)
+    */
+   @Override
+   public void setCurrentRepository(String repository)
+   {
+      classPathEntryListGrid.setCurrentRepository(repository);
    }
 }
