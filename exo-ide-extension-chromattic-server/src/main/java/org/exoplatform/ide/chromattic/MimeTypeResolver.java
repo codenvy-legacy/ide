@@ -25,21 +25,27 @@ import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class MimeTypeResolver
 {
-   
+
    public static boolean resolve(UnifiedNodeReference url, String mimeType) throws IOException
    {
-      JcrURLConnection connection = (JcrURLConnection)url.getURL().openConnection();
-      String contentType = connection.getContentType();
-      if (contentType != null)
+      JcrURLConnection connection = null;
+      try
       {
-         return contentType.equals(mimeType);
+         connection = (JcrURLConnection)url.getURL().openConnection();
+         String contentType = connection.getContentType();
+         return contentType != null && contentType.equals(mimeType);
       }
-      return false;
+      finally
+      {
+         if (connection != null)
+            connection.disconnect();
+      }
    }
 
 }
