@@ -105,28 +105,24 @@ public class RestDataObjectService
       String path = "/" + jcrLocation[2];
 
       CompilationSource compilationSource = null;
-      DependentResources dependentResources =
+      SourceFolder[] sources = null;
+      DependentResources dependencyResources =
          GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
             repositoryService, sessionProviderService);
-      if (dependentResources != null && dependentResources.getFolderSources().size() > 0)
+      if (dependencyResources != null && dependencyResources.getFolderSources().size() > 0)
       {
          //TODO only first one dir is taken at the moment
-         String dependencySource = dependentResources.getFolderSources().get(0);
+         String dependencySource = dependencyResources.getFolderSources().get(0);
          UnifiedNodeReference sourceReference = new UnifiedNodeReference(dependencySource);
          compilationSource =
             new CompilationSource(sourceReference.getRepository(), sourceReference.getWorkspace(),
                sourceReference.getPath());
+         String dep = dependencyResources.getFolderSources().get(0);
+         sources = new SourceFolder[]{new SourceFolder((new UnifiedNodeReference(dep)).getURL())};
       }
       else
       {
          compilationSource = new CompilationSource(repository, workspace, path);
-      }
-
-      SourceFolder[] sources = null;
-      if (dependentResources != null)
-      {
-         String dep = dependentResources.getFolderSources().get(0);
-         sources = new SourceFolder[]{new SourceFolder((new UnifiedNodeReference(dep)).getURL())};
       }
 
       SourceFile[] sourceFile =
