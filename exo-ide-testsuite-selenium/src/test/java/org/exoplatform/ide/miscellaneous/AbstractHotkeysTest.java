@@ -69,11 +69,11 @@ public abstract class AbstractHotkeysTest extends BaseTest
    {
       public static final String CREATE_FILE_FROM_TEMPLATE = "Create File From Template...";
       
-      public static final String NEW_CSS_FILE = "New CSS File";
+      public static final String NEW_CSS_FILE = "New CSS";
       
-      public static final String NEW_TEXT_FILE = "New TEXT File";
+      public static final String NEW_TEXT_FILE = "New TEXT";
       
-      public static final String NEW_HTML_FILE = "New HTML File";
+      public static final String NEW_HTML_FILE = "New HTML";
    }
    
    @After

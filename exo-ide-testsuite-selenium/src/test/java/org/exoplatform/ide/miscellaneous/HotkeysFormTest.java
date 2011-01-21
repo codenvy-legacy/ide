@@ -293,7 +293,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       
       //Try to bind Ctrl+C
       //select row with Css file
-      selenium.click("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[5]/col[0]");
+      selectRow(Commands.NEW_CSS_FILE);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       //Press Ctrl+C
       selenium.controlKeyDown();
