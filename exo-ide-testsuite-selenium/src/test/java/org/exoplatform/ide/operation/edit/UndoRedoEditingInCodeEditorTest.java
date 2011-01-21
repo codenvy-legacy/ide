@@ -55,7 +55,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
 	   public void testUndoRedoEditingInCodeEditor() throws Exception {
 			
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("Text File");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       saveAsByTopMenu(UNDO_REDO_TXT);
@@ -219,7 +219,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
       
-      IDE.toolbar().runCommandFromNewPopupMenu("XML File");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, false);
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.UNDO, false);
