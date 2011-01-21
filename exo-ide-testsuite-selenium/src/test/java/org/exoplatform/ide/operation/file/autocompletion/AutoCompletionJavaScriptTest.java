@@ -37,7 +37,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    public void testPlainJS() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("JavaScript File");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       javaScriptTestVar();
@@ -52,7 +52,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    public void testGoogleGadget() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("Google Gadget");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -80,7 +80,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    public void testHTML() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("HTML File");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);

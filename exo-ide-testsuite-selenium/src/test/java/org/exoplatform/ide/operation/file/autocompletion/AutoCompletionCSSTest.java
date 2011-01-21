@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.file.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class AutoCompletionCSSTest extends BaseTest
    public void testPlainCSS() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("CSS File");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       cssTest();
@@ -53,7 +54,7 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("Google Gadget");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -92,7 +93,7 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("HTML File");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);

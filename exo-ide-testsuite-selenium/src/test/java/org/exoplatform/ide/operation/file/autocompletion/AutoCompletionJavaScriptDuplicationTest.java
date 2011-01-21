@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.file.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
    public void testDuplication() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("JavaScript File");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "var a;\n \n function a() {\n}");

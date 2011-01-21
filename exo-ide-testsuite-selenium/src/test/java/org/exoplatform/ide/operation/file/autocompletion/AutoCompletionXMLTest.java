@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.file.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
@@ -36,7 +37,7 @@ public class AutoCompletionXMLTest extends BaseTest
    public void openForm() throws Throwable
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("XML File");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       String text = selenium.getText("//body[@class='editbox']");
       assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
