@@ -220,7 +220,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       assertFalse(selenium.isElementPresent(ClasspathUtils.Locators.SC_CHOOSE_SOURCE_WINDOW));
       assertTrue(selenium.isElementPresent(ClasspathUtils.getScListGridEntryLocator(0, 0)));
       
-      final String folderPathForClasspath = ClasspathUtils.CLASSPATH_RESOURCE_PREFIX + FOLDER_NAME + "/";
+      final String folderPathForClasspath = "/" + WS_NAME + "#" + "/" + FOLDER_NAME + "/";
       
       assertEquals(folderPathForClasspath, selenium.getText(ClasspathUtils.getScListGridEntryLocator(0, 0)));
       
@@ -327,7 +327,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        */
       final String firstResourceLocator = ClasspathUtils.getScListGridEntryLocator(0, 0);
       assertTrue(selenium.isElementPresent(firstResourceLocator));
-      assertEquals(ClasspathUtils.CLASSPATH_RESOURCE_PREFIX + CREATED_PROJECT_NAME + "/", selenium.getText(firstResourceLocator));
+      assertEquals("/" + WS_NAME+ "#" + "/" + CREATED_PROJECT_NAME + "/", selenium.getText(firstResourceLocator));
       
       /*
        * 2. Close form.
