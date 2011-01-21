@@ -27,6 +27,9 @@ import org.exoplatform.services.jcr.ext.resource.NodeRepresentationService;
 import org.exoplatform.services.jcr.ext.resource.UnifiedNodeReference;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.net.URL;
 import java.util.Calendar;
@@ -49,7 +52,7 @@ public class MimeTypeResolverTest extends BaseTest
    
    private NodeRepresentationService representationService;
 
-   @Override
+   @Before
    public void setUp() throws Exception
    {
       super.setUp();
@@ -69,7 +72,7 @@ public class MimeTypeResolverTest extends BaseTest
       sessionProviderService.setSessionProvider(null, sessionProvider);
       representationService = (NodeRepresentationService)container.getComponentInstanceOfType(NodeRepresentationService.class);
    }
-   
+   @Test
    public void testResolver() 
    {
       try {
@@ -77,7 +80,7 @@ public class MimeTypeResolverTest extends BaseTest
 //      URL url = new URL("jcr://db1/ws/#/dependencies/DataObject.groovy");
 //      url1.getURL().
 //      JcrURLConnection conn = (JcrURLConnection)url1.getURL().openConnection();
-      assertTrue(MimeTypeResolver.resolve(url1, "script/groovy"));//, sessionProviderService.getSessionProvider(null), representationService));
+      Assert.assertTrue(MimeTypeResolver.resolve(url1, "script/groovy"));//, sessionProviderService.getSessionProvider(null), representationService));
       } catch (Exception e) {
          e.printStackTrace();
       }

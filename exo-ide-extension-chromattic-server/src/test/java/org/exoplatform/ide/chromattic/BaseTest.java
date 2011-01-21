@@ -49,7 +49,7 @@ import org.junit.Before;
  * @version $Id: $
 */
 
-public abstract class BaseTest extends TestCase
+public abstract class BaseTest 
 {
    
    protected final Log log = ExoLogger.getLogger(BaseTest.class.getCanonicalName());
