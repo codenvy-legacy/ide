@@ -139,7 +139,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       changeFileContent();
       
       //open javascript file
-      IDE.toolbar().runCommandFromNewPopupMenu("JavaScript File");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       
       //--------- 8 -------------------
       //Trying to reopen created earlier xml file. 

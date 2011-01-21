@@ -118,7 +118,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       
       //----- 2 ------------
       //Click "New -> XML File" button.
-      IDE.toolbar().runCommandFromNewPopupMenu("XML File");
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       
       //You will see default XML content  in the new file tab of "Content" panel.
       //is file opened
