@@ -84,11 +84,28 @@ public class NewItemControlsFormatter implements ControlsFormatter
     */
    public void format(List<Control> controls)
    {
-      System.out.println("NewItemControlsFormatter.format()");
+      List<Control> newItemControls = getNewItemsControls(controls);
+      controls.removeAll(newItemControls);
+      controls.addAll(newItemControls);
       createNewItemGroup(controls);
       fillNewItemPopupControl(controls);
+      
    }
 
+   private List<Control> getNewItemsControls(List<Control> controls)
+   {
+      List<Control> newItemControls = new ArrayList<Control>();
+      for (Control control : controls)
+      {
+         if (control.getId().startsWith("File/New/") && control instanceof SimpleControl)
+         {
+            newItemControls.add(control);
+         }
+      }
+      Collections.sort(newItemControls, controlComparator);
+      return newItemControls;
+   }
+   
    /**
     * Fill new item popup control with sub controls.
     * 
@@ -117,8 +134,6 @@ public class NewItemControlsFormatter implements ControlsFormatter
             popup.getCommands().add((SimpleControl)control);
          }
       }
-      //Here the items are sorted:
-      Collections.sort(popup.getCommands(), controlComparator);
    }
 
    /**
@@ -135,8 +150,10 @@ public class NewItemControlsFormatter implements ControlsFormatter
          
          Integer index1 = controlIdsOrder.indexOf(control1.getId());
          Integer index2 = controlIdsOrder.indexOf(control2.getId());
+         
          //If item is not found in order list, then put it at the end
          if (index2 == -1) return -1;
+         
          
          return index1.compareTo(index2);
       }
