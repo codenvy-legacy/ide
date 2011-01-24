@@ -16,17 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.codeassistant;
+package org.exoplatform.ide.client.module.netvibes;
+
+import com.google.gwt.resources.client.CssResource;
 
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 17, 2010 5:45:20 PM evgen $
+ * @version $Id: Nov 23, 2010 3:46:05 PM evgen $
  *
  */
-public enum TokenExtType {
-   CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION, 
-   /** Property type for JSON */
-   PROPERTY;
+public interface NetvibesCss extends CssResource
+{
+  @ClassName("exo-autocomplete-panel")
+  String panelStyle(); 
+  
+  @ClassName("exo-autocomplete-list-item")
+  String item();
+  
+  @ClassName("exo-autocomplete-list-item-overed")
+  String overedItem();
+  
+  @ClassName("exo-autocomplete-list-item-selected")
+  String selectedItem();
+  
+  @ClassName("exo-autocomplete-description")
+  String description();
+  
+  @ClassName("exo-autocomplete-list")
+  String listStyle();
+  
+  @ClassName("exo-autocomplete-fqn")
+  String fqnStyle();
+  
+  @ClassName("exo-autocomplete-keyword")
+  String keywordStyle();
 }

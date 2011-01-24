@@ -18,19 +18,23 @@
  */
 package org.exoplatform.ide.client.module.netvibes;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.JsAutocompleteImageBundle;
+import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.NetvibesTokenCollector;
+import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.NetvibesTokenWidgetFactory;
 import org.exoplatform.ide.client.module.netvibes.controls.DeployUwaWidgetControl;
 import org.exoplatform.ide.client.module.netvibes.service.deploy.DeployWidgetServiceImpl;
 import org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -61,6 +65,8 @@ public class NetvibesModule implements IDEModule, InitializeServicesHandler
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       
       new DeployUwaWidgetPresenter(eventBus);
+      
+      JsAutocompleteImageBundle.INSTANCE.css().ensureInjected();
    }
 
    /**
@@ -71,6 +77,10 @@ public class NetvibesModule implements IDEModule, InitializeServicesHandler
    {
       configuration = event.getApplicationConfiguration();
       new DeployWidgetServiceImpl(eventBus, configuration.getContext(), event.getLoader());
+      
+      NetvibesTokenWidgetFactory factory = new NetvibesTokenWidgetFactory(event.getApplicationConfiguration().getContext());
+      NetvibesTokenCollector collector = new NetvibesTokenCollector(eventBus);
+      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.UWA_WIDGET, factory, collector));
    }
 
 }

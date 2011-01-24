@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.autocompletion;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledEvent;
 import org.exoplatform.gwtframework.editor.event.EditorAutoCompleteCalledHandler;
@@ -90,7 +91,14 @@ public class AutoCompletionManager implements EditorAutoCompleteCalledHandler, T
       cursorOffsetX = event.getCursorOffsetX();
       cursorOffsetY = event.getCursorOffsetY();
       editorId = event.getEditorId();
-
+      
+      //TODO: to prevent call of JavaScript token collector,
+      //when press ctrl+space in netvibes widget inside javascript tag.
+      //See AutoCopletionManagerExt.
+      if (event.getMimeType().equals(MimeType.UWA_WIDGET)
+         && event.getLineMimeType().equals(MimeType.APPLICATION_JAVASCRIPT))
+         return;
+      
       TokenCollector<Token> collector = TokenCollectors.getTokenCollector(eventBus, event.getLineMimeType());
       if (collector != null)
       {

@@ -72,4 +72,5 @@
    <script src="token/javascript_tokens.js" />
    <script src="token/css_tokens.js" />
    <script src="token/html_tokens.js" />
+   <script src="token/js_netvibes_tokens.js" />
 </module>

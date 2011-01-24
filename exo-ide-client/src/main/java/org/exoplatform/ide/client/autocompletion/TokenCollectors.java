@@ -43,7 +43,7 @@ public final class TokenCollectors
 
    public TokenCollectors(HandlerManager eventBus)
    {
-      //tokenCollectors.put(MimeType.GROOVY_SERVICE, new GroovyTokenCollector(eventBus));
+      //tokenCollectors.put(MimeType.GROOVY_SERVICE, new NetvibesTokenCollector(eventBus));
       tokenCollectors.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptTokenCollector(eventBus));
       tokenCollectors.put(MimeType.TEXT_CSS, new CssTokenCollector(eventBus));
       tokenCollectors.put(MimeType.TEXT_HTML, new HtmlTokenCollector(eventBus));

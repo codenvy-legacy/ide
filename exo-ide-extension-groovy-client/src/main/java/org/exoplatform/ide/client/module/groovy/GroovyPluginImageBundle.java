@@ -21,7 +21,6 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
@@ -31,6 +30,13 @@ public interface GroovyPluginImageBundle extends ClientBundle
 
    public static final GroovyPluginImageBundle INSTANCE = GWT.create(GroovyPluginImageBundle.class);
 
+   /**
+    * To active bundle, call 
+    * <code>GroovyPluginImageBundle.INSTANCE.css().ensureInjected()</code>
+    * method in your module.
+    * 
+    * @return {@link GroovyCss}
+    */
    @Source("groovy.css")
    public GroovyCss css();
    

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.autocompletion.ui;
 
+import com.google.gwt.user.client.ui.SimplePanel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
 import org.exoplatform.ide.client.autocompletion.TokenSelectedHandler;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory;
+import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.ui.NetvibesTokenWidget;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -372,12 +375,24 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
          }
          if (selectedWidget != null)
          {
+            if (selectedWidget instanceof NetvibesTokenWidget)
+            {
+               if (selectedWidget.getTokenDecription() == null)
+               {
+                  return;
+               }
+               descriptionPanel = new SimplePanel();
+               descriptionPanel.getElement().setInnerHTML(selectedWidget.getTokenDecription());
+            }
+            else
+            {
+               descriptionPanel = new Frame(selectedWidget.getTokenDecription());
+            }
+
             int width = 300;
-            descriptionPanel = new Frame(selectedWidget.getTokenDecription());
             descriptionPanel.setWidth(width + "px");
             descriptionPanel.setHeight("" + (panel.getOffsetHeight() - 2));
 
-            //         descriptionPanel.getElement().setInnerText(selectedWidget.getTokenDecription());
             descriptionPanel.setStyleName(Style.AUTO_DESCRIPTION_PANEL);
             int clientWidth = Window.getClientWidth();
 

@@ -16,17 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion;
+package org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete;
 
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory;
-import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyClassTokenWidget;
-import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyConstructorWidget;
-import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyFieldWidget;
-import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyKeyWordWidget;
-import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyMethodWidget;
-import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyVariableWidget;
+import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.ui.NetvibesTokenWidget;
 
 /**
  * Created by The eXo Platform SAS.
@@ -35,7 +30,7 @@ import org.exoplatform.ide.client.module.groovy.codeassistant.ui.GroovyVariableW
  * @version $Id: Nov 25, 2010 4:50:06 PM evgen $
  *
  */
-public class GroovyTokenWidgetFactory implements TokenWidgetFactory<TokenExt>
+public class NetvibesTokenWidgetFactory implements TokenWidgetFactory<TokenExt>
 {
 
    private String restContext;
@@ -43,7 +38,7 @@ public class GroovyTokenWidgetFactory implements TokenWidgetFactory<TokenExt>
    /**
     * @param context
     */
-   public GroovyTokenWidgetFactory(String context)
+   public NetvibesTokenWidgetFactory(String context)
    {
       restContext = context;
    }
@@ -54,31 +49,7 @@ public class GroovyTokenWidgetFactory implements TokenWidgetFactory<TokenExt>
    @Override
    public TokenWidget<TokenExt> buildTokenWidget(TokenExt token)
    {
-      switch (token.getType())
-      {
-         case CLASS :
-         case INTERFACE:
-         case ANNOTATION :
-            return new GroovyClassTokenWidget(token, restContext);
-
-         case CONSTRUCTOR :
-            return new GroovyConstructorWidget(token, restContext);
-
-         case METHOD :
-            return new GroovyMethodWidget(token, restContext);
-
-         case FIELD :
-            return new GroovyFieldWidget(token, restContext);
-         case VARIABLE :
-             return new GroovyVariableWidget(token, restContext);
-         
-         case KEYWORD :
-            return new GroovyKeyWordWidget(token);
-             
-         default :
-            return new GroovyClassTokenWidget(token, restContext);
-
-      }
+      return new NetvibesTokenWidget(token, restContext);
    }
 
 }
