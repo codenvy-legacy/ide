@@ -69,7 +69,7 @@ public class NetvibesModule implements IDEModule, InitializeServicesHandler
       
       JsAutocompleteImageBundle.INSTANCE.css().ensureInjected();
       
-      eventBus.fireEvent(new RegisterDocumentationEvent(MimeType.UWA_WIDGET, "http://www.google.com.ua"));
+      eventBus.fireEvent(new RegisterDocumentationEvent(MimeType.UWA_WIDGET, "http://dev.netvibes.com/doc/uwa/documentation"));
    }
 
    /**
