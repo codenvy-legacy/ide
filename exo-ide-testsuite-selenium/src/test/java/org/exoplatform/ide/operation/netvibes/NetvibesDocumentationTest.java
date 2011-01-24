@@ -40,6 +40,11 @@ import org.junit.Test;
 public class NetvibesDocumentationTest extends BaseTest
 {
 
+   /**
+    *  Locator for documentation iframe
+    */
+   private static final String DE_DOCUMENTATION_FRAME = "//iframe[@id='gwt-debug-ideDocumentationFrame']";
+
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    private static String FILE_NAME = NetvibesDocumentationTest.class.getName(); 
@@ -55,31 +60,31 @@ public class NetvibesDocumentationTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_DOCUMENTATION);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
-      assertTrue(selenium.isElementPresent("//iframe[@id='gwt-debug-ideDocumentationFrame']"));
+      assertTrue(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
       
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
-      assertFalse(selenium.isElementPresent("//iframe[@id='gwt-debug-ideDocumentationFrame']"));
+      assertFalse(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
       
       IDE.editor().selectTab(0);
       
-      assertTrue(selenium.isElementPresent("//iframe[@id='gwt-debug-ideDocumentationFrame']"));
+      assertTrue(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
       
       saveAsByTopMenu(FILE_NAME);
       
-      assertTrue(selenium.isElementPresent("//iframe[@id='gwt-debug-ideDocumentationFrame']"));
+      assertTrue(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
       
       IDE.editor().selectTab(1);
       
-      assertFalse(selenium.isElementPresent("//iframe[@id='gwt-debug-ideDocumentationFrame']"));
+      assertFalse(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
       
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       waitForRootElement();
       
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertTrue(selenium.isElementPresent("//iframe[@id='gwt-debug-ideDocumentationFrame']"));
+      assertTrue(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
       
    }
    
