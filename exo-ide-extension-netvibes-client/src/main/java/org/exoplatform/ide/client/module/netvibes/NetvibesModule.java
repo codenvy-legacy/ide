@@ -28,6 +28,7 @@ import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationEvent;
 import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.JsAutocompleteImageBundle;
 import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.NetvibesTokenCollector;
@@ -67,6 +68,8 @@ public class NetvibesModule implements IDEModule, InitializeServicesHandler
       new DeployUwaWidgetPresenter(eventBus);
       
       JsAutocompleteImageBundle.INSTANCE.css().ensureInjected();
+      
+      eventBus.fireEvent(new RegisterDocumentationEvent(MimeType.UWA_WIDGET, "http://www.google.com.ua"));
    }
 
    /**

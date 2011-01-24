@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.module.development;
 
+import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.IDEModule;
@@ -41,6 +42,8 @@ public class DevelopmentModule implements IDEModule
       eventBus.fireEvent(new RegisterControlEvent(new ShowPreviewCommand(), DockTarget.TOOLBAR, true));
 
       new DevelopmentModuleEventHandler(eventBus);
+      
+      new DocumentationPresenter(eventBus);
    }
 
 }

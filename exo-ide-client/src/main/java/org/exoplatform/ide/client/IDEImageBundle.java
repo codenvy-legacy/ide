@@ -438,4 +438,11 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/outline/attribute.png")
    ImageResource attributeItem();
 
+   @Source("../public/images/bundled/documentation/documentation.png")
+   ImageResource documentation();
+   
+   @Source("../public/images/bundled/documentation/documentation_Disabled.png")
+   ImageResource documentation_Disabled();
+
+   
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,26 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.ui;
+package org.exoplatform.ide.client.framework.documentation;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Types of view.
- * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Dec 8, 2010 $
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: RegisterDocumentationHandler Jan 24, 2011 11:11:53 AM evgen $
  *
  */
-public interface ViewType
+public interface RegisterDocumentationHandler extends EventHandler
 {
-   public static final String PREVIEW = "preview";
+
+   void onRegisterDocumentation(RegisterDocumentationEvent event);
    
-   public static final String OUTPUT = "output";
-   
-   public static final String OUTLINE = "outline";
-   
-   public static final String PROPERTIES = "properties";
-   
-   public static final String VERSIONS = "versions";
-   
-   public static final String DOCUMENTATION = "documentation";
 }

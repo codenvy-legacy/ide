@@ -61,6 +61,7 @@ public class CodeHelperForm extends Panel implements CodeHelperPresenter.Display
 
       getViewTypes().add(ViewType.OUTLINE);
       getViewTypes().add(ViewType.VERSIONS);
+      getViewTypes().add(ViewType.DOCUMENTATION);
       
       createControlButtons();
 
