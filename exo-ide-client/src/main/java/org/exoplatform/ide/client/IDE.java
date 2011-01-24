@@ -22,8 +22,11 @@ import org.exoplatform.gwtframework.ui.client.smartgwt.SmartGWTDialogs;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.IDEForm;
+import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
+import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManager;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManagerExt;
+import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.chromattic.ChromatticModule;
 import org.exoplatform.ide.client.module.development.DevelopmentModule;
@@ -60,15 +63,17 @@ public class IDE extends VerticalPanel
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 
       ControlsRegistration controlsRegistration = new ControlsRegistration(eventBus);
-      
+
+      eventBus.fireEvent(new AddControlsFormatterEvent(new MainMenuControlsFormatter()));
+      eventBus.fireEvent(new AddControlsFormatterEvent(new NewItemControlsFormatter()));
       new IDEForm(eventBus, context, controlsRegistration);
-      
+
       new AutoCompletionManager(eventBus);
-      
+
       new AutoCompletionManagerExt(eventBus);
 
-      new ApplicationStateSnapshotListener(eventBus);         
-      
+      new ApplicationStateSnapshotListener(eventBus);
+
       /*
        * MODULES INITIALIZATION
        */
@@ -81,7 +86,8 @@ public class IDE extends VerticalPanel
       new GroovyModule(eventBus);
       new ChromatticModule(eventBus);
       new NetvibesModule(eventBus);
-      
+
+      controlsRegistration.formatControls();
       //new TestIFrame();
    }
 

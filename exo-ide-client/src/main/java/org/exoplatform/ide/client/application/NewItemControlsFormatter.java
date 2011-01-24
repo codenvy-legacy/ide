@@ -84,24 +84,33 @@ public class NewItemControlsFormatter implements ControlsFormatter
     */
    public void format(List<Control> controls)
    {
-      List<Control> newItemControls = getNewItemsControls(controls);
+      List<Control> newItemControls = sortNewItemsControls(controls);
+      //Remove new items controls:
       controls.removeAll(newItemControls);
+      //Add sorted items controls:
       controls.addAll(newItemControls);
+      
       createNewItemGroup(controls);
       fillNewItemPopupControl(controls);
-      
    }
 
-   private List<Control> getNewItemsControls(List<Control> controls)
+   /**
+    * Sort new items controls and return them.
+    * 
+    * @param controls all controls
+    * @return sorted only new item controls
+    */
+   private List<Control> sortNewItemsControls(List<Control> controls)
    {
       List<Control> newItemControls = new ArrayList<Control>();
       for (Control control : controls)
       {
-         if (control.getId().startsWith("File/New/") && control instanceof SimpleControl)
+         if (control.getId().startsWith("File/New/"))
          {
             newItemControls.add(control);
          }
       }
+      
       Collections.sort(newItemControls, controlComparator);
       return newItemControls;
    }
@@ -151,9 +160,9 @@ public class NewItemControlsFormatter implements ControlsFormatter
          Integer index1 = controlIdsOrder.indexOf(control1.getId());
          Integer index2 = controlIdsOrder.indexOf(control2.getId());
          
-         //If item is not found in order list, then put it at the end
+         //If item is not found in order list, then put it at the end of the list
          if (index2 == -1) return -1;
-         
+         if (index1 == -1) return 1;
          
          return index1.compareTo(index2);
       }
@@ -195,7 +204,7 @@ public class NewItemControlsFormatter implements ControlsFormatter
 
    /**
     * @param controls
-    * @return
+    * @return {@link NewItemControl}
     */
    private NewItemControl getNewItemControl(List<Control> controls)
    {

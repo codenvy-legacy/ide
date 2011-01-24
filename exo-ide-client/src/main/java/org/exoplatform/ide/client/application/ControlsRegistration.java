@@ -25,9 +25,11 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.framework.annotation.ClassAnnotationMap;
+import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterHandler;
+import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlHandler;
 
@@ -54,6 +56,8 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
    private HandlerManager eventBus;
 
    private Handlers handlers;
+   
+   private List<ControlsFormatter> controlsFormatters = new ArrayList<ControlsFormatter>();
 
    public ControlsRegistration(HandlerManager eventBus)
    {
@@ -195,10 +199,16 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
     */
    public void onAddControlsFormatter(AddControlsFormatterEvent event)
    {
-      if (event.getControlsFormatter() != null)
+      controlsFormatters.add(event.getControlsFormatter());
+   }
+
+   public void formatControls()
+   {
+      for (ControlsFormatter formatter : controlsFormatters)
       {
-         event.getControlsFormatter().format(registeredControls);
+         formatter.format(registeredControls);
       }
+      eventBus.fireEvent(new ControlsUpdatedEvent(registeredControls));
    }
 
 }

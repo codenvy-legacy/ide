@@ -78,12 +78,6 @@ public class IDEPresenter implements ExceptionThrownHandler
          {
             //activate default view
             eventBus.fireEvent(new ActivateViewEvent(BrowserPanel.ID));
-
-            
-            //eventBus.fireEvent(new AddControlsFormatterEvent(new MainMenuControlsFormatter()));
-            eventBus.fireEvent(new AddControlsFormatterEvent(new NewItemControlsFormatter()));
-            //new NewItemControlsFormatter(eventBus).format(controlsRegistration.getRegisteredControls());
-            eventBus.fireEvent(new ControlsUpdatedEvent(controlsRegistration.getRegisteredControls()));
             new LoadRegistryConfigurationPhase(eventBus, controlsRegistration);
          }
       }.schedule(Phase.DELAY_BETWEEN_PHASES);

@@ -64,12 +64,13 @@ public class MainMenuControlsFormatter implements ControlsFormatter
             (control1.getId().indexOf("/") > 0) ? control1.getId().substring(0, control1.getId().indexOf("/")) : null;
          String main2 =
             (control2.getId().indexOf("/") > 0) ? control2.getId().substring(0, control2.getId().indexOf("/")) : null;
-            
-            if (main1 == null || main2 == null)
+
+         if (main1 == null || main2 == null)
             return 0;
+
          Integer index1 = controlIdsOrder.indexOf(main1);
          Integer index2 = controlIdsOrder.indexOf(main2);
-         //If item is not found in order list, then put it at the end
+
          if (index1 == -1 || index2 == -1)
             return 0;
 
