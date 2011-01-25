@@ -138,6 +138,11 @@
          <activation>
             <activeByDefault>false</activeByDefault>
          </activation>
+
+         <properties>
+         	<jre.lib>${env.JAVA_HOME}${file.separator}jre${file.separator}lib</jre.lib>
+         </properties>
+         
          <dependencies>
             <dependency>
                <groupId>org.exoplatform.kernel</groupId>
@@ -349,9 +354,10 @@
                      </execution>
                   </executions>
                </plugin>
+               
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
-                  <artifactId>gwt-maven-plugin</artifactId>
+				  <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <runTarget>org.exoplatform.ide.IDEShell/IDEShell.html</runTarget>
@@ -363,6 +369,7 @@
                      <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m</extraJvmArgs>
                   </configuration>
                </plugin>
+               
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-compiler-plugin</artifactId>

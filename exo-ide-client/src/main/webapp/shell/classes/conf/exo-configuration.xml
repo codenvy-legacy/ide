@@ -253,18 +253,22 @@
          <object-param>
             <name>autocompletion.configuration</name>
             <object type="org.exoplatform.ide.groovy.codeassistant.bean.GroovyAutocompletionConfig">
+            
                <field name="wsName">
                   <string>production</string>
                </field>
+               
                <field name="runInThread">
                   <boolean>true</boolean>
                </field>
+               
                <field name="jarEntries">
                   <collection type="java.util.ArrayList">
+                  
                      <value>
                         <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
                            <field name="jarPath">
-                              <string>${env.JAVA_HOME}${file.separator}src.zip</string>
+                              <string>${jre.lib}${file.separator}rt.jar</string>
                            </field>
                            <field name="includePkg">
                               <collection type="java.util.ArrayList">
@@ -278,10 +282,13 @@
                            </field>
                         </object>
                      </value>
+                     
                   </collection>
                </field>
+                
                <field name="jarDocs">
                   <collection type="java.util.ArrayList">
+                  
                      <value>
                         <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
                            <field name="jarPath">
@@ -299,8 +306,10 @@
                            </field>
                         </object>
                      </value>
+                     
                   </collection>
                </field>
+               
             </object>
          </object-param>
       </init-params>

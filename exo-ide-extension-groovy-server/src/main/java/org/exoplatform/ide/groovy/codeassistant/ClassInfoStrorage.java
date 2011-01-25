@@ -107,10 +107,12 @@ public class ClassInfoStrorage
             {
                addClassesOnStartUp(jars);
             }
-            catch (SaveClassInfoException e)
-            {
-               if (LOG.isDebugEnabled())
-                  e.printStackTrace();
+//            catch (SaveClassInfoException e)
+//            {
+//               if (LOG.isDebugEnabled())
+//                  e.printStackTrace();
+            catch (Throwable e) {
+               e.printStackTrace();
             }
          }
       };
@@ -141,14 +143,14 @@ public class ClassInfoStrorage
     */
    @POST
    @Path("/jar")
-   public void addClassesFormJar(@QueryParam("jar-path") String jarPath, @QueryParam("package") String packageName)
+   public void addClassesFromJar(@QueryParam("jar-path") String jarPath, @QueryParam("package") String packageName)
       throws SaveClassInfoException
    {
       try
       {
          Thread thread = Thread.currentThread();
          ClassLoader classLoader = thread.getContextClassLoader();
-         List<String> fqns = ClassNamesExtractor.getClassesNamesInJar(jarPath, packageName);
+         List<String> fqns = ClassNamesExtractor.getCompiledClassesFromJar(jarPath, packageName);
          for (String fqn : fqns)
          {
             putClass(classLoader, JcrUtils.getSession(repositoryService, sessionProviderService, wsName), fqn);
@@ -208,7 +210,7 @@ public class ClassInfoStrorage
       {
          Thread thread = Thread.currentThread();
          ClassLoader classLoader = thread.getContextClassLoader();
-         List<String> fqns = ClassNamesExtractor.getClassesNamesFromJar(javaSrcPath, packageName);
+         List<String> fqns = ClassNamesExtractor.getSourceClassesFromJar(javaSrcPath, packageName);
          for (String fqn : fqns)
          {
             putClass(classLoader, JcrUtils.getSession(repositoryService, sessionProviderService, wsName), fqn);
@@ -275,28 +277,33 @@ public class ClassInfoStrorage
          {
             String path = entry.getJarPath();
             LOG.info("Load ClassInfo from jar -" + entry.getJarPath());
+            
             List<String> fqns = new ArrayList<String>();
             if (entry.getIncludePkgs() == null || entry.getIncludePkgs().isEmpty())
-            {
-               fqns.addAll(ClassNamesExtractor.getClassesNamesFromJar(path));
+            {               
+               fqns.addAll(ClassNamesExtractor.getCompiledClassesFromJar(path));
             }
             else
             {
                for (String pkg : entry.getIncludePkgs())
                {
                   LOG.info("Load ClassInfo from - " + pkg);
-                  fqns.addAll(ClassNamesExtractor.getClassesNamesFromJar(path, pkg));
-               }
-               for (String fqn : fqns)
-               {
-                  putClass(classLoader, session, fqn);
+                  fqns.addAll(ClassNamesExtractor.getCompiledClassesFromJar(path, pkg));
                }
             }
+
+            for (String fqn : fqns)
+            {
+               putClass(classLoader, session, fqn);
+            }
+            
          }
          LOG.info("Class info load complete");
       }
       catch (RepositoryException e)
       {
+         e.printStackTrace();
+         
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO: need think about status
@@ -304,6 +311,8 @@ public class ClassInfoStrorage
       }
       catch (IOException e)
       {
+         e.printStackTrace();
+         
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO: need think about status
@@ -311,6 +320,8 @@ public class ClassInfoStrorage
       }
       catch (IncompatibleClassChangeError e)
       {
+         e.printStackTrace();
+         
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO: need think about status
@@ -318,6 +329,8 @@ public class ClassInfoStrorage
       }
       catch (JsonException e)
       {
+         e.printStackTrace();
+         
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO: need think about status
@@ -325,6 +338,8 @@ public class ClassInfoStrorage
       }
       catch (RepositoryConfigurationException e)
       {
+         e.printStackTrace();
+         
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO: need think about status
@@ -332,6 +347,8 @@ public class ClassInfoStrorage
       }
       catch (ClassNotFoundException e)
       {
+         e.printStackTrace();
+         
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO: need think about status

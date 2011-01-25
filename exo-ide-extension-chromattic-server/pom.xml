@@ -131,6 +131,7 @@
          <version>4.7</version>
          <scope>test</scope>
       </dependency>
+      
       <dependency>
          <groupId>org.chromattic</groupId>
          <artifactId>chromattic.dataobject</artifactId>
@@ -141,10 +142,35 @@
             </exclusion>
          </exclusions>
       </dependency>
+      
+      <dependency>
+               <groupId>org.chromattic</groupId>
+               <artifactId>chromattic.ext</artifactId>
+      </dependency>
+      
+      <!--
+       
+       -->
+	  <dependency>                                                                                                                                                                                            
+         <groupId>quartz</groupId>                                                                                                                                                                            
+         <artifactId>quartz</artifactId>                                                                                                                                                                      
+      </dependency>      
+
       <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.exo</artifactId>
       </dependency>
+      
+     <dependency>                                                                                                                                                                                            
+         <groupId>org.jboss.cache</groupId>                                                                                                                                                                   
+         <artifactId>jbosscache-core</artifactId>                                                                                                                                                             
+      </dependency>
+      
+      <dependency>                                                                                                                                                                                            
+        <groupId>org.infinispan</groupId>                                                                                                                                                                     
+        <artifactId>infinispan-core</artifactId>                                                                                                                                                              
+      </dependency> 
+      
    <dependency>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-extension-groovy-server</artifactId>

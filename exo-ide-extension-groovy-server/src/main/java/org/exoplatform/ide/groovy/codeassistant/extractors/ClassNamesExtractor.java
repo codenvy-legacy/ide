@@ -45,9 +45,9 @@ public class ClassNamesExtractor
     * @return set of canonical names 
     * @throws IOException
     */
-   public static List<String> getClassesNamesInJar(String jarPath) throws IOException
+   public static List<String> getCompiledClassesFromJar(String jarPath) throws IOException
    {
-     return getClassesNamesInJar(jarPath, null);
+     return getCompiledClassesFromJar(jarPath, null);
    }
    
    /**
@@ -58,7 +58,7 @@ public class ClassNamesExtractor
     * @return set of canonical names
     * @throws IOException
     */
-   public static List<String> getClassesNamesInJar(String jarPath,  String packageName) throws IOException
+   public static List<String> getCompiledClassesFromJar(String jarPath,  String packageName) throws IOException
    {
       return extract(jarPath, packageName, ".class");
    }
@@ -70,10 +70,10 @@ public class ClassNamesExtractor
     * @return set of canonical names
     * @throws IOException
     */
-   public static List<String> getClassesNamesFromJar(String javaSrcPath) throws IOException
+   public static List<String> getSourceClassesFromJar(String javaSrcPath) throws IOException
    {
       
-      return getClassesNamesFromJar(javaSrcPath, null);
+      return getSourceClassesFromJar(javaSrcPath, null);
    }
 
    /**
@@ -84,7 +84,7 @@ public class ClassNamesExtractor
     * @return set of canonical names
     * @throws IOException
     */
-   public static List<String> getClassesNamesFromJar(String javaSrcPath, String packageName) throws IOException
+   public static List<String> getSourceClassesFromJar(String javaSrcPath, String packageName) throws IOException
    {
       return extract(javaSrcPath, packageName, ".java");
    }

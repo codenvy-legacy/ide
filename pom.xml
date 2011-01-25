@@ -21,10 +21,10 @@
       <exo.snapshots.repo.url>http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
       <exo.product.name>exo-ide</exo.product.name>
       <!-- eXo Modules -->
-      <org.exoplatform.jcr.version>1.14.0-CR1-SNAPSHOT</org.exoplatform.jcr.version>
-      <org.exoplatform.kernel.version>2.3.0-CR1-SNAPSHOT</org.exoplatform.kernel.version>
-      <org.exoplatform.core.version>2.4.0-CR1-SNAPSHOT</org.exoplatform.core.version>
-      <org.exoplatform.ws.version>2.2.0-CR1-SNAPSHOT</org.exoplatform.ws.version>
+      <org.exoplatform.jcr.version>1.14.0-Beta03</org.exoplatform.jcr.version>
+      <org.exoplatform.kernel.version>2.3.0-Beta03</org.exoplatform.kernel.version>
+      <org.exoplatform.core.version>2.4.0-Beta03</org.exoplatform.core.version>
+      <org.exoplatform.ws.version>2.2.0-Beta03</org.exoplatform.ws.version>
       <org.exoplatform.gwtframework.version>1.1.0-SNAPSHOT</org.exoplatform.gwtframework.version>
       <org.exoplatform.gatein.version>3.1.4-PLF</org.exoplatform.gatein.version>
       <!-- Third parties -->
@@ -38,8 +38,11 @@
       <version.chromattic>1.1.0-SNAPSHOT</version.chromattic>
       <apache.commons-compress.version>1.0</apache.commons-compress.version>
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
+      <javax.jcr.version>1.0</javax.jcr.version>
+      <javax.annotation.version>1.0</javax.annotation.version>
       <groovy.version>1.6.5</groovy.version>
       <javax.ws.version>1.0</javax.ws.version>
+      <javax.ws.rs.version>1.0</javax.ws.rs.version>
       <version.failsafe.plugin>2.6</version.failsafe.plugin>
    </properties>
 
@@ -457,6 +460,31 @@
             <artifactId>groovy-all</artifactId>
             <version>${groovy.version}</version>
          </dependency>
+
+		<dependency>
+			<groupId>quartz</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.jboss.cache</groupId>
+			<artifactId>jbosscache-core</artifactId>
+			<version>3.2.6.GA</version>
+			<exclusions>
+				<exclusion>
+					<groupId>jgroups</groupId>
+					<artifactId>jgroups</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-core</artifactId>
+			<version>4.1.0.FINAL</version>
+		</dependency>      
+         
       </dependencies>
    </dependencyManagement>
    <build>
@@ -557,13 +585,13 @@
       </plugins>
    </build>
    <modules>
-
       <module>exo-ide-server</module>
 
       <module>exo-ide-testframework</module>
 
-
       <module>exo-ide-framework-client</module>
+
+      <module>exo-ide-vfs-webdav-client</module>
 
       <module>exo-ide-extension-gadget-server</module>
       <module>exo-ide-extension-gadget-client</module>
@@ -580,6 +608,7 @@
       <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
+      
       <module>exo-ide-client-application</module>
       <module>exo-ide-client-gadget</module>
       <module>exo-ide-packaging-standalone-tomcat</module>

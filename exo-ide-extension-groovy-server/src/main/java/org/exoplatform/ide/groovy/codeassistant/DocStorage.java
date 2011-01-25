@@ -90,7 +90,7 @@ public class DocStorage
          {
             try
             {
-               addDocsOnStartUp(jars);
+               addJavaDocsOnStartUp(jars);
             }
             catch (Exception e)
             {
@@ -113,11 +113,10 @@ public class DocStorage
       }
    }
 
-   private void addDocsOnStartUp(List<JarEntry> jars) throws SaveDocException
+   private void addJavaDocsOnStartUp(List<JarEntry> jars) throws SaveDocException
    {
       try
       {
-         
          SessionProvider sp = sessionProviderService.getSystemSessionProvider(null);
          Session session = sp.getSession(wsName, JcrUtils.getRepository(repositoryService));
          for (JarEntry entry : jars)
@@ -129,6 +128,7 @@ public class DocStorage
                Set<String> keys = roots.keySet();
                for (String key : keys)
                {
+                  System.out.println("KEY [" + key + "]");
                   GroovyClassDoc[] docs = roots.get(key).classes();
                   for (GroovyClassDoc doc : docs)
                   {
@@ -155,6 +155,7 @@ public class DocStorage
                }
             }
          }
+         
          session.save();
          LOG.info("Load javadoc complete");
       }
@@ -265,6 +266,9 @@ public class DocStorage
       UnsupportedEncodingException
 
    {
+      
+      System.out.println("PUT DOC > " + fqn);
+      
       Node base;
       if (!session.getRootNode().hasNode("dev-doc"))
       {
