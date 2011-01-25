@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
 import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollector;
 import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollectorCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ide.client.module.groovy.codeassistant.event.RegisterImportTokenCollectorEvent;
 import org.exoplatform.ide.client.module.groovy.codeassistant.ui.AssistImportDeclarationForm;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -62,6 +63,7 @@ public class AssistImportDeclarationManager implements EditorErrorMarkClickedHan
       this.eventBus = eventBus;
       collectors = new ImportDeclarationsTokenCollectors(eventBus);
       eventBus.addHandler(EditorErrorMarkClickedEvent.TYPE, this);
+      eventBus.addHandler(RegisterImportTokenCollectorEvent.TYPE, collectors);
    }
 
    /**

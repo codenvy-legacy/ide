@@ -23,6 +23,8 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollector;
+import org.exoplatform.ide.client.module.groovy.codeassistant.event.RegisterImportTokenCollectorEvent;
+import org.exoplatform.ide.client.module.groovy.codeassistant.event.RegisterImportTokenCollectorHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -33,7 +35,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Nov 22, 2010 3:01:51 PM evgen $
  *
  */
-public final class ImportDeclarationsTokenCollectors
+public final class ImportDeclarationsTokenCollectors implements RegisterImportTokenCollectorHandler
 {
 
    private Map<String, ImportDeclarationTokenCollector> collectors = new HashMap<String, ImportDeclarationTokenCollector>();
@@ -50,6 +52,16 @@ public final class ImportDeclarationsTokenCollectors
    public ImportDeclarationTokenCollector getCollector(HandlerManager eventBus, String mimeType)
    {
       return collectors.get(mimeType);
+   }
+
+
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.codeassistant.event.RegisterImportTokenCollectorHandler#onRegisterImportTokenCollector(org.exoplatform.ide.client.module.groovy.codeassistant.event.RegisterImportTokenCollectorEvent)
+    */
+   @Override
+   public void onRegisterImportTokenCollector(RegisterImportTokenCollectorEvent event)
+   {
+      collectors.put(event.getMimeType(), event.getCollector());
    }
    
 }
