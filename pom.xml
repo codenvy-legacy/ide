@@ -509,8 +509,8 @@
                </properties>
                <excludes>
                   <exclude>**/firefoxProfile/**</exclude>
-				  <exclude>dev-resources/**</exclude>
-				  <exclude>**/src/test/resources/**</exclude>
+                  <exclude>dev-resources/**</exclude>
+                  <exclude>**/src/test/resources/**</exclude>
                   <exclude>**/*.log</exclude>
                   <exclude>**/*.txt</exclude>
                   <exclude>**/*.conf</exclude>
@@ -528,6 +528,9 @@
                   <exclude>**/*.svg</exclude>
                   <exclude>**/*RELEASE*</exclude>
                   <exclude>**/jquery/**</exclude>
+                  <exclude>**/bin/**</exclude>
+                  <exclude>**/copy/**</exclude>
+                  <exclude>**/*.cmd</exclude>
                   <exclude>**/*jquery*</exclude>
                   <exclude>**/*.htc</exclude>
                   <exclude>**/*.wiki</exclude>
@@ -535,7 +538,7 @@
                   <exclude>**/*.gadget</exclude>
                   <exclude>**/*.json</exclude>
                   <exclude>**/*.ext</exclude>
-				  <exclude>**/*.grs</exclude>
+                  <exclude>**/*.grs</exclude>
                </excludes>
                <mapping>
                   <java>SLASHSTAR_STYLE</java>
