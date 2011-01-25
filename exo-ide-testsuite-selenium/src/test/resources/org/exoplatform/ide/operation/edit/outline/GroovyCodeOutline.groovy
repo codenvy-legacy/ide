@@ -7,21 +7,21 @@ public class TestJSON {
    public java.lang.A a1, a2, a3;
    java.lang.B b1, b2; String b3;
 
-   if (curentState != null)
-   {
-     Identity identity = curentState.getIdentity();
-     3.times
-     {
-       println "Hello " + identity.getUserId();
-     }
-   }
-
    public java.lang.String getValue1() {
       String c1;
 
       if (true)
       {
          c1 = getValue2("test");
+
+         if (curentState != null)
+         {
+           Identity identity = curentState.getIdentity();
+           3.times
+           {
+             println "Hello " + identity.getUserId();
+           }
+         }
       }
 
       String c2 = "test";

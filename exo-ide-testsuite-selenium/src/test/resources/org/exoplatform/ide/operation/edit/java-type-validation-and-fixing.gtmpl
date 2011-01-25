@@ -21,6 +21,7 @@
           ResourceBundle.Control = classFromJavaUtilPackage;
         
           java.util.prefs.Base64 c;
+        }
      %>
    </body>
 </html>

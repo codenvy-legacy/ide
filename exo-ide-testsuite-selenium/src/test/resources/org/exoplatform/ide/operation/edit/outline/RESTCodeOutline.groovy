@@ -1,6 +1,6 @@
 // simple groovy script
 import javax.ws.rs.Path
-import javax.ws.rs.POST
+import POST
 
 @Path("/testService11")
 public class TestService {
@@ -29,23 +29,17 @@ public class TestService {
   }
 }
 
-class Dep extends String
+interface Dep extends String
 {
    private String name;
    private int age;
    
-   public int getAge(){
-     return age;
-   }
+   public int getAge;
    
-   public void addYear()
-   { int i = 1;
-     age += i;
-   }
+   public void addYear();
    
-   public String greet(
-   String begin) {
-     return begin+", " + name + "!";  }
-
+   public java.lang.String greet(
+   @PathParam("pathParam") String begin);
+   
    private int address;   
  }

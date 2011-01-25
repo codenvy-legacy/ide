@@ -101,7 +101,7 @@ public class ImportStatementInsertionTest extends BaseTest
          + "import javax.ws.rs.Path\n"
          + "import javax.ws.rs.GET\n"
          + "import javax.ws.rs.PathParam\n"
-         + "import java.util.prefs.Base64;\n"
+         + "import java.util.prefs.Base64\n"
          + "\n"
          + "@Path("
       ));
@@ -122,7 +122,7 @@ public class ImportStatementInsertionTest extends BaseTest
          + "import javax.ws.rs.Path\n"
          + "import javax.ws.rs.GET\n"
          + "import javax.ws.rs.PathParam\n"
-         + "import java.util.prefs.Base64;\n"
+         + "import java.util.prefs.Base64\n"
          + "\n"
          + "@Path("
       ));
@@ -143,7 +143,7 @@ public class ImportStatementInsertionTest extends BaseTest
          + "import javax.ws.rs.Path\n"
          + "import javax.ws.rs.GET\n"
          + "import javax.ws.rs.PathParam\n"
-         + "import java.util.prefs.Base64;\n"
+         + "import java.util.prefs.Base64\n"
          + "\n"
          + "@Path("
       ));
@@ -178,7 +178,7 @@ public class ImportStatementInsertionTest extends BaseTest
          + "       import javax.ws.rs.Path"
          + "       import javax.ws.rs.GET"
          + "       import javax.ws.rs.PathParam"
-         + "       import java.util.prefs.Base64;"
+         + "       import java.util.prefs.Base64"
          + "     %>"
          + "   </head>"
       ));     
@@ -201,7 +201,7 @@ public class ImportStatementInsertionTest extends BaseTest
          + "       import javax.ws.rs.Path"
          + "       import javax.ws.rs.GET"
          + "       import javax.ws.rs.PathParam"
-         + "       import java.util.prefs.Base64;"
+         + "       import java.util.prefs.Base64"
          + "     %>"
          + "   </head>"
       ));

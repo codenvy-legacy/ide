@@ -104,9 +104,9 @@ public class CodeOutLineGroovyTest extends BaseTest
       outlineTreeHelper.addOutlineItem(4, "b1 : java.lang.B", 8);
       outlineTreeHelper.addOutlineItem(5, "b2 : java.lang.B", 8, false);
       outlineTreeHelper.addOutlineItem(6, "b3 : String", 8, false);
-      outlineTreeHelper.addOutlineItem(7, "identity : Identity", 12);
-      outlineTreeHelper.addOutlineItem(8, "getValue1() : java.lang.String", 19); 
-      outlineTreeHelper.addOutlineItem(9, "c1 : String", 20);
+      outlineTreeHelper.addOutlineItem(7, "getValue1() : java.lang.String", 10); 
+      outlineTreeHelper.addOutlineItem(8, "c1 : String", 11);
+      outlineTreeHelper.addOutlineItem(9, "identity : Identity", 19);
       outlineTreeHelper.addOutlineItem(10, "c2 : String", 27);
       outlineTreeHelper.addOutlineItem(11, "d : java.lang.String", 31);      
 
