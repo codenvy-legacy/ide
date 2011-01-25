@@ -59,6 +59,12 @@
       <filter-name>BasicAuthFilter</filter-name>
       <filter-class>org.exoplatform.ide.authentication.BasicAuthFilter</filter-class>
    </filter>
+   
+   
+    <filter>
+      <filter-name>MakeRequestHeaderFilter</filter-name>
+      <filter-class>org.exoplatform.ide.filter.MakeRequestHeaderFilter</filter-class>
+   </filter>   
 
    <filter>
       <filter-name>RestEncodingFilter</filter-name>
@@ -82,6 +88,11 @@
    <filter-mapping>
       <filter-name>BasicAuthFilter</filter-name>
       <url-pattern>/rest/private/*</url-pattern>
+   </filter-mapping>
+   
+   <filter-mapping>
+      <filter-name>MakeRequestHeaderFilter</filter-name>
+      <url-pattern>/gadgets/makeRequest</url-pattern>
    </filter-mapping>
 
    <filter-mapping>
