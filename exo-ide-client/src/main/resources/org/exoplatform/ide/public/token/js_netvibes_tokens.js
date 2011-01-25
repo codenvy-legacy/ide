@@ -8,7 +8,7 @@ var js_netvibes_tokens = [
 					+ "// Params:\n"
 					+ "// * String: Json data url to fetch\n"
 					+ "// * Function: Callback\n"
-					+ "UWA.Data.getJson('http:', function(jsonData){\n"
+					+ "UWA.Data.getJson('http://api.twitter.com/1/statuses/public_timeline.json', function(jsonData){\n"
 					+ "    // process your data (jsonData is a JS object\n"
 					+ "});",
 			"fullDescription" : "<pre>// Json request snippet ////////////////////////////////////////////////////////////////////////////////\n"
@@ -16,7 +16,7 @@ var js_netvibes_tokens = [
 					+ "// Params:\n"
 					+ "// * String: Json data url to fetch\n"
 					+ "// * Function: Callback\n"
-					+ "UWA.Data.getJson('http:', function(jsonData){\n"
+					+ "UWA.Data.getJson('http://api.twitter.com/1/statuses/public_timeline.json', function(jsonData){\n"
 					+ "    // process your data (jsonData is a JS object\n"
 					+ "});</pre>"
 		},
@@ -26,7 +26,7 @@ var js_netvibes_tokens = [
 			"shortDescription" : "Create Flash object snippet",
 			"code" : "// Create flash object\n"
 					+ "var flashObject = new UWA.Controls.Flash({\n"
-					+ "    'url': 'http://',\n" + "    'width': 480,\n"
+					+ "    'url': 'http://www.youtube.com/v/6xJx1OPqQQg',\n" + "    'width': 480,\n"
 					+ "    'height': 385\n" + "});\n\n"
 					+ "// Inject into Dom\n"
 					+ "flashObject.inject(widget.body);",
@@ -84,7 +84,7 @@ var js_netvibes_tokens = [
 					+ "var display = function(offset){\n\n"
 					+ "    // Display items\n"
 					+ "    var text = '';\n"
-					+ "    for (var i = offset, l = offset + limit; i<l && i<dataSample.length; i++){\n"
+					+ "    for (var i = offset, l = offset + limit; i&lt;l && i&lt;dataSample.length; i++){\n"
 					+ "        text += dataSample[i] + ' ';\n"
 					+ "    }\n"
 					+ "    widget.body.setContent(text);\n\n"
@@ -151,8 +151,8 @@ var js_netvibes_tokens = [
 					+ "tabs.addTab('tab2', {text: 'Tab Two', icon: 'http://cdn.netvibes.com/img/ipod.png', customInfo: 'custom'});\n"
 					+ "tabs.addTab('tab3', [{text: 'Tab Three A', icon: 'http://cdn.netvibes.com/img/ipod.png'}, {text: 'Tab Three B'}]);\n\n"
 					+ "// Fill tabs with our content\n"
-					+ "tabs.setContent('tab1', '<p>Tab #1</p>');\n"
-					+ "tabs.setContent('tab2', '<p>Tab #2</p>');\n"
+					+ "tabs.setContent('tab1', '&lt;p>Tab #1&lt;/p>');\n"
+					+ "tabs.setContent('tab2', '&lt;p>Tab #2&lt;/p>');\n"
 					+ "tabs.setContent('tab3', widget.createElement('p', {'text':'Tab #3'}));\n\n"
 					+ "// Observe activeTabChange events\n"
 					+ "// * String - tabName: internal name of new current tab\n"
