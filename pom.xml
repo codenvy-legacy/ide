@@ -490,16 +490,16 @@
          </plugins>
       </pluginManagement>
       <plugins>
-         <!--plugin>
+         <plugin>
             <inherited>false</inherited>
             <groupId>com.mycila.maven-license-plugin</groupId>
             <artifactId>maven-license-plugin</artifactId>
             <version>1.9.0</version>
             <configuration>
-               <header>dev-resources/header2010.txt</header>
+               <header>dev-resources/src/main/resources/licences/header.txt</header>
                <validHeaders>
-                  <validHeader>dev-resources/header2010.txt</validHeader>
-                  <validHeader>dev-resources/header2010_now.txt</validHeader>
+                  <validHeader>dev-resources/src/main/resources/licences/header2010.txt</validHeader>
+                  <validHeader>dev-resources/src/main/resources/licences/header2010_now.txt</validHeader>
                </validHeaders>
                <failIfMissing>true</failIfMissing>
                <aggregate>true</aggregate>
@@ -509,6 +509,8 @@
                </properties>
                <excludes>
                   <exclude>**/firefoxProfile/**</exclude>
+				  <exclude>dev-resources/**</exclude>
+				  <exclude>**/src/test/resources/**</exclude>
                   <exclude>**/*.log</exclude>
                   <exclude>**/*.txt</exclude>
                   <exclude>**/*.conf</exclude>
@@ -533,6 +535,7 @@
                   <exclude>**/*.gadget</exclude>
                   <exclude>**/*.json</exclude>
                   <exclude>**/*.ext</exclude>
+				  <exclude>**/*.grs</exclude>
                </excludes>
                <mapping>
                   <java>SLASHSTAR_STYLE</java>
@@ -547,7 +550,7 @@
                   </goals>
                </execution>
             </executions>
-         </plugin-->
+         </plugin>
       </plugins>
    </build>
    <modules>
@@ -556,7 +559,6 @@
 
       <module>exo-ide-testframework</module>
 
-      <module>exo-ide-vfs-webdav-client</module>
 
       <module>exo-ide-framework-client</module>
 
