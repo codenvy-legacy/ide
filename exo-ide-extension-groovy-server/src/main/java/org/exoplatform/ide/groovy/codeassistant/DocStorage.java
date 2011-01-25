@@ -128,7 +128,6 @@ public class DocStorage
                Set<String> keys = roots.keySet();
                for (String key : keys)
                {
-                  System.out.println("KEY [" + key + "]");
                   GroovyClassDoc[] docs = roots.get(key).classes();
                   for (GroovyClassDoc doc : docs)
                   {
@@ -266,9 +265,6 @@ public class DocStorage
       UnsupportedEncodingException
 
    {
-      
-      System.out.println("PUT DOC > " + fqn);
-      
       Node base;
       if (!session.getRootNode().hasNode("dev-doc"))
       {
