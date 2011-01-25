@@ -40,12 +40,12 @@ import java.io.IOException;
  * inside "script" tag in Netvibes files.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: AutocompleteNetvibesJs.java Jan 24, 2011 11:35:17 AM vereshchaka $
+ * @version $Id: AutocompleteNetvibesJsTest.java Jan 24, 2011 11:35:17 AM vereshchaka $
  *
  */
-public class AutocompleteNetvibesJs extends BaseTest
+public class AutocompleteNetvibesJsTest extends BaseTest
 {
-   private static final String FOLDER_NAME = AutocompleteNetvibesJs.class.getSimpleName();
+   private static final String FOLDER_NAME = AutocompleteNetvibesJsTest.class.getSimpleName();
    
    private static final String NETVIBES_NAME = "Netvibes.html";
    
