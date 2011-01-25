@@ -265,7 +265,7 @@ public abstract class BaseTest
     * to return to them main frame, use selectMainFrame()
     * 
     */
-   protected static void selectMainFrame()
+   public static void selectMainFrame()
    {
       if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
       {

@@ -20,6 +20,7 @@ package org.exoplatform.ide.operation.file.autocompletion;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -35,6 +36,9 @@ import org.junit.Test;
 import java.io.IOException;
 
 /**
+ * Test for javascript autocomplete form
+ * inside "script" tag in Netvibes files.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: AutocompleteNetvibesJs.java Jan 24, 2011 11:35:17 AM vereshchaka $
  *
@@ -67,8 +71,10 @@ public class AutocompleteNetvibesJs extends BaseTest
    }
    
    @After
-   public void tearDown()
+   public void tearDown() throws Exception
    {
+      IDE.editor().closeFileTabIgnoreChanges(0);
+      
       try
       {
          VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
@@ -83,6 +89,11 @@ public class AutocompleteNetvibesJs extends BaseTest
       }
    }
    
+   /**
+    * Test, that autocomplete form contains all netvibes snippets.
+    * Also check javadoc form, which displays hint for selected snippet.
+    * @throws Exception
+    */
    @Test
    public void testAutocomplateList() throws Exception
    {
@@ -99,6 +110,7 @@ public class AutocompleteNetvibesJs extends BaseTest
        * 2. Go inside <code><script></code> tag.
        */
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       /*
        * 3. Type text to file
@@ -108,14 +120,15 @@ public class AutocompleteNetvibesJs extends BaseTest
       /*
        * 4. Press ctrl+enter to call autocomplete form.
        */
+      
       Autocomplete.openForm(0);
       
       /*
        * Check, that all UWA snippets are present.
        */
       Autocomplete.checkElementPresent("name");
-      Autocomplete.checkElementPresent("UWA");
       Autocomplete.checkElementPresent("flash");
+      Autocomplete.checkElementPresent("jsonrequest");
       Autocomplete.checkElementPresent("pager");
       Autocomplete.checkElementPresent("tabs");
       Autocomplete.checkElementPresent("thumbnailed");
@@ -129,16 +142,17 @@ public class AutocompleteNetvibesJs extends BaseTest
       /*
        * Check, that javadoc (description) panel appeared.
        */
-      assertTrue(selenium.isElementPresent(Autocomplete.Locators.JAVADOC_DIV));
-      assertEquals(UWA_CONTENT, selenium.getText(Autocomplete.Locators.JAVADOC_DIV));
-      
-      Autocomplete.moveCursorDown(1);
-      Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium.isElementPresent(Autocomplete.Locators.JAVADOC_DIV));
       assertEquals(FLASH_CONTENT, selenium.getText(Autocomplete.Locators.JAVADOC_DIV));
       
       Autocomplete.moveCursorDown(4);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      assertTrue(selenium.isElementPresent(Autocomplete.Locators.JAVADOC_DIV));
+      assertEquals(JSON_REQUEST_CONTENT, selenium.getText(Autocomplete.Locators.JAVADOC_DIV));
+      
+      Autocomplete.moveCursorDown(1);
       Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium.isElementPresent(Autocomplete.Locators.JAVADOC_DIV));
@@ -157,9 +171,143 @@ public class AutocompleteNetvibesJs extends BaseTest
       assertEquals(THUMBNAILED_CONTENT, selenium.getText(Autocomplete.Locators.JAVADOC_DIV));
    }
    
+   /**
+    * Test, that Flass template (snippet) inserted correctly.
+    * @throws Exception
+    */
+   @Test
+   public void testInsertNetvibesFlashTemplate() throws Exception
+   {
+      refresh();
+      testSnippetInAutocomplete(1, FLASH_CONTENT);
+   }
+   
+   /**
+    * Test, that Json Request template (snippet) inserted correctly.
+    * @throws Exception
+    */
+   @Test
+   public void testInsertNetvibesJsonRequestTemplate() throws Exception
+   {
+      refresh();
+      testSnippetInAutocomplete(5, JSON_REQUEST_CONTENT);
+   }
+   
+   /**
+    * Test, that Pager template (snippet) inserted correctly.
+    * @throws Exception
+    */
+   @Test
+   public void testInsertNetvibesPagerTemplate() throws Exception
+   {
+      refresh();
+      testSnippetInAutocomplete(6, PAGER_CONTENT);
+   }
+   
+   /**
+    * Test, that Tabs template (snippet) inserted correctly.
+    * @throws Exception
+    */
+   @Test
+   public void testInsertNetvibesTabsTemplate() throws Exception
+   {
+      refresh();
+      testSnippetInAutocomplete(7, TABS_CONTENT);
+   }
+   
+   /**
+    * Test, that Thumbnailed template (snippet) inserted correctly.
+    * @throws Exception
+    */
+   @Test
+   public void testInsertNetvibesThumbnailedTemplate() throws Exception
+   {
+      refresh();
+      testSnippetInAutocomplete(8, THUMBNAILED_CONTENT);
+   }
+   
+   /**
+    * Open netvibes file (with one tag "script".
+    * Type some text and call autocomplete form.
+    * Move down the autocomplete list on <code>rowNumber</code> rows
+    * and press enter.
+    * Check, that text in file contains snippet.
+    * 
+    * @param rowNumber - number of rows to move down in autocomplete list
+    * @param snippetTemplate - text of snippet, that will be inserted
+    * @throws Exception
+    */
+   private void testSnippetInAutocomplete(int rowNumber, String snippetTemplate) throws Exception
+   {
+      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      /*
+       * 1. Open netvibes file.
+       */
+      openFileFromNavigationTreeWithCodeEditor(NETVIBES_NAME, false);
+      
+      /*
+       * 2. Go inside <code><script></code> tag.
+       */
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      /*
+       * 3. Type text to file
+       */
+      typeTextIntoEditor(0, "var name = \"ivan\"\n");
+      
+      /*
+       * 4. Press ctrl+enter to call autocomplete form.
+       */
+      Autocomplete.openForm(0);
+      
+      /*
+       * 5. Move down, and click enter
+       */
+      Autocomplete.moveCursorDown(rowNumber);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
+      checkText(getTextFromCodeEditor(0), snippetTemplate);
+   }
+   
+   /**
+    * Compares two text in such way:
+    * split both strings of lines (by \n)
+    * and compare each line (before trim them).
+    * 
+    * @param fileContent
+    * @param snippetContent
+    */
+   private void checkText(String fileContent, String snippetContent)
+   {
+      final String[] fileLines = fileContent.split("\n");
+      final String[] snippetLines = snippetContent.split("\n");
+      int index = -1;
+      for (int i = 0; i < fileLines.length; i++)
+      {
+         if (fileLines[i].trim().equals(snippetLines[0].trim()))
+         {
+            index = i;
+            break;
+         }
+      }
+      if (index < 0)
+      {
+         fail("File content doesn't contains snippet content");
+      }
+      for (int i = 0; i < snippetLines.length; i++)
+      {
+         assertEquals(snippetLines[i].trim(), fileLines[i + index].trim());
+      }
+   }
+   
    //--------Netvibes Snippets----------
    
-   private static final String UWA_CONTENT = "// Json request snippet ////////////////////////////////////////////////////////////////////////////////\n"
+   private static final String JSON_REQUEST_CONTENT = "// Json request snippet ////////////////////////////////////////////////////////////////////////////////\n"
       + "////////////////////////////////////////////////////////////////////////////////////////////////////////\n\n"
       + "// Params:\n"
       + "// * String: Json data url to fetch\n"
