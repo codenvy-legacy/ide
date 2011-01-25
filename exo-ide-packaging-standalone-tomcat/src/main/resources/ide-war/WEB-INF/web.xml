@@ -61,7 +61,11 @@
          <param-value>UTF-8</param-value>
       </init-param>
    </filter>
-
+   
+   <filter>
+      <filter-name>MakeRequestHeaderFilter</filter-name>
+      <filter-class>org.exoplatform.ide.filter.MakeRequestHeaderFilter</filter-class>
+   </filter>
 
    <filter-mapping>
       <filter-name>RestEncodingFilter</filter-name>
@@ -76,6 +80,11 @@
    <filter-mapping>
       <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
       <url-pattern>/rest/*</url-pattern>
+   </filter-mapping>
+   
+   <filter-mapping>
+      <filter-name>MakeRequestHeaderFilter</filter-name>
+      <url-pattern>/gadgets/makeRequest</url-pattern>
    </filter-mapping>
 
 
