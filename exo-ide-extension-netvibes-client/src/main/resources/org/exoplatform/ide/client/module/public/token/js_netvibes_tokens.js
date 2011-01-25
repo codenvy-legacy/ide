@@ -1,6 +1,6 @@
 var js_netvibes_tokens = [
 		{
-			"name" : "UWA",
+			"name" : "jsonrequest",
 			"type" : "TEMPLATE",
 			"shortDescription" : "Json request snippet",
 			"code" : "// Json request snippet ////////////////////////////////////////////////////////////////////////////////\n"

@@ -31,4 +31,6 @@
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
 
    <source path="netvibes" />
+   
+   <script src="token/js_netvibes_tokens.js" />
 </module>
