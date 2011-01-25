@@ -547,6 +547,16 @@ h3. Netvibes Widget Autocomplete List
 
 The autocomplete list of the Netvibes Widget files is the same as that of the HTML files.
 
+The autocomplete list inside javascript tag is the same, as for the JavaScript files, and extended with Netvibes snippets:
+* JSON request snippet
+* Flash object snippet
+* Pager Control snippet
+* Tabview Control snippet
+* Thumbnailed List snippet
+
+More details about this snippets (and code, that will be inserted) you can see in hint window of autocomplete form
+
+
 h3. Groovy Code Specific Autocomplete List
 
 eXo IDE currently supports special features for the Groovy code autocomlete list, including *REST Service* ("application/x-jaxrs+groovy"), *POJO* ("application/x-groovy") and *Data Object* ("application/x-chromattic+groovy"). The autocomplete list varies, depending on Java types and is shown in the following cases:
