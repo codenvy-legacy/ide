@@ -10,7 +10,7 @@
 
   <artifactId>exo-ide-docs</artifactId>
   <packaging>pom</packaging>
-  <name>eXo IDE documentation</name>
+  <name>eXo IDE :: Documentation</name>
 
   <properties>
     <wikbook.source>${project.build.directory}/wikbook-src</wikbook.source>
