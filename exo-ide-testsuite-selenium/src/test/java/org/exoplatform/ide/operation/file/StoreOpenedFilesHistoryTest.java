@@ -28,6 +28,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Editor;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -178,8 +179,10 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       
       selenium.goBack();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
       refresh();
-      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
+//      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
+      waitForElementPresent(Editor.EditorLocators.CK_EDITOR);
       
       checkCkEditorOpened(1);
       

@@ -53,7 +53,7 @@ public class UseOfClasspathEntriesTest extends BaseTest
    private static final String REST_SERVICE_FILE_NAME = "Sample.grs";
    
    private static final String CLASSPATH_FILE_CONTENT = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" 
-      + ClasspathUtils.CLASSPATH_RESOURCE_PREFIX + FOLDER_NAME + "/\"}]}";;
+      + ClasspathUtils.CLASSPATH_RESOURCE_PREFIX + FOLDER_NAME + "/\"}]}";
    
    private static final String CLASSPATH_FILE_NAME = ".groovyclasspath";
    

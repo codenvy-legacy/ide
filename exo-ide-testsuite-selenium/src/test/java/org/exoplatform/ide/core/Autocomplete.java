@@ -30,7 +30,7 @@ import com.thoughtworks.selenium.Selenium;
  * @version $Id: Jan 17, 2011 2:27:36 PM vereshchaka $
  *
  */
-public class Autocompletion
+public class Autocomplete
 {
    public interface Locators
    {
@@ -43,6 +43,10 @@ public class Autocompletion
        * Xpath autocompletion input locator.
        */
       public static final String INPUT = "//input[@class='exo-autocomplete-edit']";
+      
+      public static final String JAVADOC_IFRAME = "//iframe[@class='exo-autocomplete-description']";
+      
+      public static final String JAVADOC_DIV = "//div[@class='exo-autocomplete-description']";
    }
    
    private static final Selenium selenium;
@@ -60,7 +64,7 @@ public class Autocompletion
     */
    public static void typeToInput(String text) throws Exception
    {
-      selenium.typeKeys(Autocompletion.Locators.INPUT, text);
+      selenium.typeKeys(Autocomplete.Locators.INPUT, text);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
@@ -76,7 +80,7 @@ public class Autocompletion
 
    /**
     * Move cursor down
-    * @param row Number of row
+    * @param row Number of rows to move down
     * @throws InterruptedException
     */
    public static void moveCursorDown(int row) throws InterruptedException
@@ -87,5 +91,12 @@ public class Autocompletion
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
+   }
+   
+   public static void openForm(int tabIndex) throws Exception
+   {
+      BaseTest.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
+      Thread.sleep(TestConstants.SLEEP);
+      assertTrue(selenium.isElementPresent(Locators.PANEL));
    }
 }

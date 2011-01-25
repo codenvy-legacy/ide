@@ -265,7 +265,7 @@ public abstract class BaseTest
     * to return to them main frame, use selectMainFrame()
     * 
     */
-   protected void selectMainFrame()
+   protected static void selectMainFrame()
    {
       if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
       {
@@ -902,7 +902,7 @@ public abstract class BaseTest
     * @param isAlt is alt key used
     * @param keyCode virtual code of key (code of key on keyboard)
     */
-   protected void runHotkeyWithinEditor(int tabIndex, boolean isCtrl, boolean isAlt, int keyCode) throws Exception
+   public static void runHotkeyWithinEditor(int tabIndex, boolean isCtrl, boolean isAlt, int keyCode) throws Exception
    {
       selectIFrameWithEditor(tabIndex);
 
@@ -1265,7 +1265,7 @@ public abstract class BaseTest
     * @param tabIndex begins from 0
     * @return content panel locator 
     */
-   protected String getContentPanelLocator(int tabIndex)
+   protected static String getContentPanelLocator(int tabIndex)
    {
       String divIndex = String.valueOf(tabIndex + 2);
       if (BROWSER_COMMAND.equals(EnumBrowserCommand.IE_EXPLORE_PROXY))
@@ -1283,7 +1283,7 @@ public abstract class BaseTest
     * 
     * @param tabIndex begins from 0
     */
-   public void selectIFrameWithEditor(int tabIndex) throws Exception
+   public static void selectIFrameWithEditor(int tabIndex) throws Exception
    {
       selenium.selectFrame(getContentPanelLocator(tabIndex) + "//iframe");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);

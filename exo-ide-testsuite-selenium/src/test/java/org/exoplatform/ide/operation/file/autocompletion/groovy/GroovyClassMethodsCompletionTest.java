@@ -25,7 +25,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.Autocompletion;
+import org.exoplatform.ide.core.Autocomplete;
 import org.junit.Test;
 
 /**
@@ -72,21 +72,21 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
        */
       runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent(Autocompletion.Locators.PANEL));
+      assertTrue(selenium.isElementPresent(Autocomplete.Locators.PANEL));
 
       /*
        * 5. Type to the input field text "so".
        */
-      selenium.focus(Autocompletion.Locators.INPUT);
-      Autocompletion.typeToInput("so");
+      selenium.focus(Autocomplete.Locators.INPUT);
+      Autocomplete.typeToInput("so");
 
       /*
        * Check, that to elements are found:
        * sort(List):void
        * sort(List, Comparator):void
        */
-      Autocompletion.checkElementPresent("sort(List):void");
-      Autocompletion.checkElementPresent("sort(List, Comparator):void");
+      Autocomplete.checkElementPresent("sort(List):void");
+      Autocomplete.checkElementPresent("sort(List, Comparator):void");
 
       /*
        * 6. Select sort(List, Comparator):void element
@@ -103,7 +103,7 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
       /*
        * Check, that autocomplete form dissapeared, and new text in editor appeared.
        */
-      assertFalse(selenium.isElementPresent(Autocompletion.Locators.PANEL));
+      assertFalse(selenium.isElementPresent(Autocomplete.Locators.PANEL));
       assertTrue(getTextFromCodeEditor(0).contains("Collections.sort(List, Comparator)"));
       
       /*

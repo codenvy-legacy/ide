@@ -111,6 +111,9 @@ public class CutFolderTest extends BaseTest
    public void testCutFolderOperation() throws Exception
    {
       waitForRootElement();
+      /*
+       * 1. Check, that FOLDER_1 and FOLDER_2, FOLDER_2/FILE_1, FOLDER_2/FOLDER_2 are present.
+       */
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       assertElementPresentInWorkspaceTree(FOLDER_1);
@@ -283,6 +286,15 @@ public class CutFolderTest extends BaseTest
       assertFalse(selenium.isElementPresent(IDE.navigator().getScLocator(5, 0)));
    }
 
+   /**
+    * Check, that FOLDER_1,  
+    * FOLDER_2, FOLDER_2/FOLDER2, FOLDER_2/FOLDER_2/FILE_1
+    * are present on webdav.
+    * 
+    * And FOLDER_1/FOLDER_2 are not present.
+    * 
+    * @throws Exception
+    */
    private void checkItemsOnWebDav() throws Exception
    {
       HTTPResponse response = VirtualFileSystemUtils.get(URL + FOLDER_1);

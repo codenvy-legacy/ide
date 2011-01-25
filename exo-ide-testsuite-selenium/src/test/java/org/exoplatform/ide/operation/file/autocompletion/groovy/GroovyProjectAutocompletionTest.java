@@ -29,7 +29,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Autocompletion;
+import org.exoplatform.ide.core.Autocomplete;
 import org.exoplatform.ide.project.classpath.ClasspathUtils;
 import org.exoplatform.ide.project.classpath.UseOfClasspathEntriesTest;
 import org.junit.AfterClass;
@@ -114,13 +114,13 @@ public class GroovyProjectAutocompletionTest extends BaseTest
 
       openFileFromNavigationTreeWithCodeEditor(REST_SERVICE_FILE_NAME, false);
 
-      Autocompletion.moveCursorDown(12);
+      Autocomplete.moveCursorDown(12);
 
       typeTextIntoEditor(0, "Po");
       
       openAutoCompleteForm();
       
-      Autocompletion.checkElementPresent("Pojo");
+      Autocomplete.checkElementPresent("Pojo");
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -136,11 +136,11 @@ public class GroovyProjectAutocompletionTest extends BaseTest
       
       openAutoCompleteForm();
       
-      Autocompletion.checkElementPresent("getName():String");
-      Autocompletion.checkElementPresent("printText(String):void");
-      Autocompletion.checkElementPresent("setName(String):void");
+      Autocomplete.checkElementPresent("getName():String");
+      Autocomplete.checkElementPresent("printText(String):void");
+      Autocomplete.checkElementPresent("setName(String):void");
       
-      Autocompletion.typeToInput("pr");
+      Autocomplete.typeToInput("pr");
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);

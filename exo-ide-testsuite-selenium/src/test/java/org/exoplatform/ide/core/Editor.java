@@ -45,6 +45,14 @@ public class Editor
    private Selenium selenium;
    
    private IDE ide;
+   
+   public interface EditorLocators
+   {
+      /**
+       * XPATH CK editor locator.
+       */
+      public static final String CK_EDITOR = "//table[@class='cke_editor']";
+   }
 
    public Editor(Selenium selenium, IDE ide)
    {
