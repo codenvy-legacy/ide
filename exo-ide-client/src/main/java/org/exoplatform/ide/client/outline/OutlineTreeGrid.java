@@ -195,7 +195,8 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          //and shows access modifier
          String modfImg = "";
          
-         if (TokenType.CLASS.equals(token.getType()))
+         if (TokenType.CLASS.equals(token.getType()) 
+                  || TokenType.INTERFACE.equals(token.getType()))
          {            
             if (isPrivate(token))
             {
