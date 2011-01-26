@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.model.template;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 
@@ -32,7 +35,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 public class FileTemplates
 {
 
-   private static final HashMap<String, String> templates = new HashMap<String, String>();
+   private static final HashMap<String,String> templates = new HashMap<String,String>();
 
    static
    {
@@ -55,7 +58,6 @@ public class FileTemplates
       {
          content = "";
       }
-
       return content;
    }
 
@@ -69,14 +71,12 @@ public class FileTemplates
             + "         Identity identity = curentState.getIdentity();\n" + "         3.times\n" + "         {\n"
             + "           println \"Hello \" + identity.getUserId();\n" + "         }\n" + "       }\n" + "     %>\n"
             + "   </body>\n" + "</html>";
-
       templates.put(MimeType.GROOVY_TEMPLATE, content);
    }
 
    private static void addXMLFileContent()
    {
       String content = "<?xml version='1.0' encoding='UTF-8'?>\n";
-
       templates.put(MimeType.TEXT_XML, content);
    }
    
@@ -96,7 +96,6 @@ public class FileTemplates
       String content =
          "" + "<html>\r\n" + "  <head>\r\n" + "    <title></title>\r\n" + "  </head>\r\n" + "  <body>\r\n"
             + "  </body>\r\n" + "</html>";
-
       templates.put(MimeType.TEXT_HTML, content);
    }
 
@@ -186,6 +185,12 @@ public class FileTemplates
             + "        UWA.Data.getFeed(widget.getValue('url'), YourWidgetName.display);\n" + "      }\n"
             + "    </script>\n" + "  </head>\n" + "  <body>\n" + "    <p>Hello world!</p>\n" + "  </body>\n"
             + "</html>\n";
+//      List<String> list = new ArrayList<String>();
+//      list.add(content);
+//      list.add(NetvibseWidgetTemplates.FLASH);
+//      list.add(NetvibseWidgetTemplates.CHART);
+//      list.add(NetvibseWidgetTemplates.TABVIEW);
+//      list.add(NetvibseWidgetTemplates.W3C);
       templates.put(MimeType.UWA_WIDGET, content);
    }
 
