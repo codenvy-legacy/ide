@@ -238,8 +238,16 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             name += getParametersList(token);
          }
          //Field type or method return type:
-         name += "<span style='color:#644a17;' title=\"" + annotationList + "\">" + getJavaType(token) + "</span>";
+         name += "<span style='color:#644a17;' title=\"" + annotationList + "\">" + getElementType(token) + "</span>";
       }
+      
+      // display type of javascript variables
+      else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType())
+               && token.getElementType() != null)
+      {
+         name += "<span style='color:#644a17;'>" + getElementType(token) + "</span>";
+      }
+         
       return name;
    }
    
@@ -533,15 +541,15 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    }
 
    /**
-    * get formatted string with java type from token.getJavaType() like " : java.lang.String"
+    * get formatted string with java type from token.getElementType() like " : java.lang.String"
     * @param token
     * @return string like " : java.lang.String", or "".
     */
-   private String getJavaType(Token token)
+   private String getElementType(Token token)
    {
-      if (token.getJavaType() != null)
+      if (token.getElementType() != null)
       {
-         return " : " + token.getJavaType();                  
+         return " : " + token.getElementType();                  
       }
       return "";
    }
@@ -570,7 +578,7 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             
             String annotationList = getAnnotationList(parameter);
             
-            parametersDescription += "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList) + parameter.getJavaType() + "</span>";
+            parametersDescription += "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList) + parameter.getElementType() + "</span>";
          } 
       }
 

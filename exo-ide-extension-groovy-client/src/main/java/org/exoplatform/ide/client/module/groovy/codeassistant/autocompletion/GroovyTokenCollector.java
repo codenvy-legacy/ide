@@ -552,13 +552,13 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
                break;
             case METHOD :
                tex = new TokenExt(t.getName(), TokenExtType.METHOD);
-               tex.setProperty(TokenExtProperties.RETURNTYPE, t.getJavaType());
+               tex.setProperty(TokenExtProperties.RETURNTYPE, t.getElementType());
                String param = "(";
                if (t.getParameters() != null)
                {
                   for (Token p : t.getParameters())
                   {
-                     param += p.getJavaType() + ", ";
+                     param += p.getElementType() + ", ";
                   }
                   if (param.endsWith(", "))
                   {
@@ -578,7 +578,7 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
             case PROPERTY :
                tex = new TokenExt(t.getName(), TokenExtType.FIELD);
                tex.setProperty(TokenExtProperties.FQN, t.getFqn());
-               tex.setProperty(TokenExtProperties.TYPE, t.getJavaType());
+               tex.setProperty(TokenExtProperties.TYPE, t.getElementType());
                modifires = getModifires(t.getModifiers());
                tex.setProperty(TokenExtProperties.MODIFIERS, String.valueOf(modifires));
                cl = t.getParentToken().getName();
@@ -590,7 +590,7 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
             case PARAMETER :
                tex = new TokenExt(t.getName(), TokenExtType.VARIABLE);
                tex.setProperty(TokenExtProperties.FQN, t.getFqn());
-               tex.setProperty(TokenExtProperties.TYPE, t.getJavaType());
+               tex.setProperty(TokenExtProperties.TYPE, t.getElementType());
                modifires = t.getModifiers() == null ? 0 : getModifires(t.getModifiers());
                tex.setProperty(TokenExtProperties.MODIFIERS, String.valueOf(modifires));
                tokens.add(tex);
@@ -724,7 +724,7 @@ public class GroovyTokenCollector implements TokenCollectorExt, ClassDescription
    //         {
    //            System.out.println(t.getName() + " " + t.getType());
    //            System.out.println("FQN - " + t.getFqn());
-   //            System.out.println("JAVATYPE - " + t.getJavaType());
+   //            System.out.println("JAVATYPE - " + t.getElementType());
    //            //         if (t.getSubTokenList() != null)
    //            //         {
    //            //            printTokens(t.getSubTokenList());
