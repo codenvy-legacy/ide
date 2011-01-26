@@ -208,7 +208,7 @@ public class NetvibseWidgetTemplates
          + "                            (MyWidget.feed) ? MyWidget.displayFeed(MyWidget.feed) : MyWidget.retrieveFeed();\n"
          + "                        break;\n"
          + "                    }\n"
-         + "                }\n\n"
+         + "                },\n\n"
 
          + "                /*\n"
          + "                    Our first tab just displays some simple HTML.\n"
@@ -219,7 +219,7 @@ public class NetvibseWidgetTemplates
 
          + "                    var htmlString = '<p>This is just some demo text.</p>'\n"
          + "                                   + '<p>Of course, you can use <b>any</b> <acronym title=\"Hypertext Mark-up Language\">HTML</acronym> <a href=\"http://www.w3.org/MarkUp/\">tag</a> you need.</p>'\n"
-         + "                                   + '<p>This widget demoes tabs. In the two other tabs, you\'ll see...</p>';\n"
+         + "                                   + '<p>This widget demoes tabs. In the two other tabs, you\\'ll see...</p>';\n"
 
          + "                    var content = widget.createElement('div', {\n"
          + "                       html: htmlString\n"
@@ -262,7 +262,7 @@ public class NetvibseWidgetTemplates
          + "                       });\n\n"
 
          + "                        var picturePath = matchesPicturePath[1];\n"
-         + "                        var matchesDescription = html.match(\\/<b>([^<>]*)<\\\\/b>.*<br>\\/);\n"
+         + "                        var matchesDescription = html.match(/<b>([^<>]*)<\\/b>.*<br>/);\n"
          + "                        var description = matchesDescription[1] || '?';\n"
          + "                        var imageWidth = widget.body.getDimensions().width;\n"
          + "                        var contentHtml = '<a href=\"http://antwrp.gsfc.nasa.gov/apod/\" target=\"_blank\" title=\"'+ description +'\">'\n"
