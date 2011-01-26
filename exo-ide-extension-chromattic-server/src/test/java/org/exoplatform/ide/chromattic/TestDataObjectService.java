@@ -81,8 +81,6 @@ public class TestDataObjectService extends BaseTest
    }
    
    @Test
-   @Ignore
-   //FIXIT  
    public void testNodeTypeGenration() throws Exception {
       String location = WEBDAV_CONTEXT + "db1/ws/dependencies/DataObject.groovy";
       ContainerResponse cres =
@@ -118,8 +116,6 @@ public class TestDataObjectService extends BaseTest
     }
    
    @Test
-   @Ignore
- //FIXIT
    public void testNodeTypeGenrationCND() throws Exception {
       String location = WEBDAV_CONTEXT + "db1/ws/dependencies/DataObject.groovy";
       ContainerResponse cres =

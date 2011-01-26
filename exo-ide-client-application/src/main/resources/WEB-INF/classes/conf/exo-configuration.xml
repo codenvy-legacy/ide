@@ -35,6 +35,14 @@
 
 
    <component>
+      <type>org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyCompiler</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyClassLoaderProvider</type>
+   </component>
+
+   <component>
       <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
       <type>org.exoplatform.services.log.LogConfigurationInitializer</type>
       <init-params>

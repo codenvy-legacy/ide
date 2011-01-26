@@ -58,6 +58,14 @@
 
 
    <component>
+      <type>org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyCompiler</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyClassLoaderProvider</type>
+   </component>
+
+   <component>
       <key>org.exoplatform.container.PropertyConfigurator</key>
       <type>org.exoplatform.container.PropertyConfigurator</type>
       <init-params>
