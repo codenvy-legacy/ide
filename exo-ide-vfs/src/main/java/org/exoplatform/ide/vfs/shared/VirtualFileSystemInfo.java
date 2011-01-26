@@ -20,6 +20,7 @@ package org.exoplatform.ide.vfs.shared;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Describe virtual file system and its capabilities.
@@ -141,58 +142,6 @@ public class VirtualFileSystemInfo
    }
 
    /**
-    * Locking capabilities.
-    */
-   public enum LockCapability {
-      /** Locking is not supported. */
-      NONE("none"),
-      /** Lock may be placed on object itself. Deep locking is not supported. */
-      OBJECT("object"),
-      /** Deep locking supported. */
-      DEEP("deep");
-
-      private final String value;
-
-      private LockCapability(String value)
-      {
-         this.value = value;
-      }
-
-      /**
-       * @return value of LockCapability
-       */
-      public String value()
-      {
-         return value;
-      }
-
-      /**
-       * Get LockCapability instance from string value.
-       * 
-       * @param value string value
-       * @return LockCapability
-       * @throws IllegalArgumentException if there is no corresponded
-       *            LockCapability for specified <code>value</code>
-       */
-      public static LockCapability fromValue(String value)
-      {
-         for (LockCapability e : LockCapability.values())
-            if (e.value.equals(value))
-               return e;
-         throw new IllegalArgumentException(value);
-      }
-
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString()
-      {
-         return value;
-      }
-   }
-
-   /**
     * Basic permissions.
     */
    public enum BasicPermissions {
@@ -250,13 +199,13 @@ public class VirtualFileSystemInfo
 
    private boolean versioningSupported;
 
+   private boolean lockSupported;
+
    private String anonymousPrincipal;
 
    private String anyPrincipal;
 
    private Collection<String> permissions;
-
-   private LockCapability lockCapability;
 
    private ACLCapability aclCapability;
 
@@ -266,22 +215,40 @@ public class VirtualFileSystemInfo
 
    private String rootFolderPath;
 
-   public VirtualFileSystemInfo(boolean versioningSupported, String anonymousPrincipal, String anyPrincipal,
-      Collection<String> permissions, LockCapability lockCapability, ACLCapability aclCapability,
-      QueryCapability queryCapability, String rootFolderId, String rootFolderPath)
+   /**
+    * Templates of URL than can be used by client to manage virtual file system.
+    * Templates may contains parameters. It is path or query segments like next:
+    * [parameter]. Client should replace parameters by corresponded value or
+    * remove it from template if there is now value for it. Example:
+    * 
+    * <pre>
+    * http://localhost/service/vfs/jcr/file/[parentId]?name=[name]&mediaType=[mediaType]
+    * become to
+    * http://localhost/service/vfs/jcr/file/MyFolder001?name=NewFile.txt&mediaType=text/plain
+    * </pre>
+    */
+   private Map<String, Link> urlTemplates;
+
+   public VirtualFileSystemInfo(boolean versioningSupported, boolean lockSupported, String anonymousPrincipal,
+      String anyPrincipal, Collection<String> permissions, ACLCapability aclCapability,
+      QueryCapability queryCapability, String rootFolderId, String rootFolderPath, Map<String, Link> urlTemplates)
    {
       this.versioningSupported = versioningSupported;
+      this.lockSupported = lockSupported;
       this.anonymousPrincipal = anonymousPrincipal;
+      this.anyPrincipal = anyPrincipal;
       this.permissions = permissions;
-      this.lockCapability = lockCapability;
       this.aclCapability = aclCapability;
       this.queryCapability = queryCapability;
+      this.rootFolderId = rootFolderId;
+      this.rootFolderPath = rootFolderPath;
+      this.urlTemplates = urlTemplates;
    }
 
    public VirtualFileSystemInfo()
    {
-      this(false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, new ArrayList<String>(), LockCapability.NONE, ACLCapability.NONE,
-         QueryCapability.NONE, null, null);
+      this(false, false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, new ArrayList<String>(), ACLCapability.NONE,
+         QueryCapability.NONE, null, null, null);
    }
 
    public boolean isVersioningSupported()
@@ -292,6 +259,16 @@ public class VirtualFileSystemInfo
    public void setVersioningSupported(boolean versioningSupported)
    {
       this.versioningSupported = versioningSupported;
+   }
+
+   public boolean isLockSupported()
+   {
+      return lockSupported;
+   }
+
+   public void setLockSupported(boolean lockSupported)
+   {
+      this.lockSupported = lockSupported;
    }
 
    public String getAnonymousPrincipal()
@@ -322,16 +299,6 @@ public class VirtualFileSystemInfo
    public void setPermissions(Collection<String> permissions)
    {
       this.permissions = permissions;
-   }
-
-   public LockCapability getLockCapability()
-   {
-      return lockCapability;
-   }
-
-   public void setLockSupported(LockCapability lockCapability)
-   {
-      this.lockCapability = lockCapability;
    }
 
    public ACLCapability getAclCapability()
@@ -372,5 +339,15 @@ public class VirtualFileSystemInfo
    public void setRootFolderPath(String rootFolderPath)
    {
       this.rootFolderPath = rootFolderPath;
+   }
+
+   public void setUrlTemplates(Map<String, Link> uriTemplates)
+   {
+      this.urlTemplates = uriTemplates;
+   }
+
+   public Map<String, Link> getUrlTemplates()
+   {
+      return urlTemplates;
    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,27 +16,53 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server.exceptions;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+package org.exoplatform.ide.vfs.shared;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-@Provider
-public class ObjectNotFoundExceptionMapper implements ExceptionMapper<ObjectNotFoundException>
+public class Link
 {
+   private String href;
+   private String type;
+
+   public Link(String href, String type)
+   {
+      this.href = href;
+      this.type = type;
+   }
+
+   public Link()
+   {
+   }
+
+   public String getHref()
+   {
+      return href;
+   }
+
+   public void setHref(String href)
+   {
+      this.href = href;
+   }
+
+   public String getType()
+   {
+      return type;
+   }
+
+   public void setType(String type)
+   {
+      this.type = type;
+   }
+
    /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
+    * @see java.lang.Object#toString()
     */
    @Override
-   public Response toResponse(ObjectNotFoundException exception)
+   public String toString()
    {
-      return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .build();
+      return "Link [href=" + href + ", type=" + type + "]";
    }
 }

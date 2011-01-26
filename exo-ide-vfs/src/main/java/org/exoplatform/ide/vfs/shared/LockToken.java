@@ -77,6 +77,6 @@ public class LockToken
    @Override
    public String toString()
    {
-      return "[LockToken: " + token + "]";
+      return "LockToken [token=" + token + "]";
    }
 }

@@ -96,9 +96,6 @@ public class PropertyFilter
    {
    }
 
-   /**
-    * {@inheritDoc}
-    */
    public boolean accept(String name)
    {
       return retrievalAllProperties || propertyNames.contains(name);

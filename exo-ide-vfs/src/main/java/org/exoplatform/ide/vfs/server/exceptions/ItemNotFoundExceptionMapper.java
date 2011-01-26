@@ -18,20 +18,26 @@
  */
 package org.exoplatform.ide.vfs.server.exceptions;
 
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
 /**
- * Thrown if requested object does not exist.
- * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: ItemNotFoundExceptionMapper.java 64086 2010-12-17 14:43:58Z
+ *          andrew00x $
  */
-@SuppressWarnings("serial")
-public class ObjectNotFoundException extends VirtualFileSystemException
+@Provider
+public class ItemNotFoundExceptionMapper implements ExceptionMapper<ItemNotFoundException>
 {
    /**
-    * @param message the message
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
-   public ObjectNotFoundException(String message)
+   @Override
+   public Response toResponse(ItemNotFoundException exception)
    {
-      super(message);
+      return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+         .build();
    }
 }

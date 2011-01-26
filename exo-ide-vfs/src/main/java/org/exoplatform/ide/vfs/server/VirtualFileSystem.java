@@ -20,9 +20,9 @@ package org.exoplatform.ide.vfs.server;
 
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
-import org.exoplatform.ide.vfs.server.exceptions.ObjectNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
@@ -30,7 +30,6 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.LockToken;
-import org.exoplatform.ide.vfs.shared.ObjectId;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.io.InputStream;
@@ -41,11 +40,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * Virtual file system abstraction.
@@ -56,52 +53,39 @@ import javax.ws.rs.core.UriInfo;
 public interface VirtualFileSystem
 {
    /**
-    * Create copy of object <code>source</code> in <code>parent</code> folder.
+    * Create copy of item <code>id</code> in <code>parentId</code> folder.
     * 
-    * @param identifier identifier of source object
-    * @param parent parent for new copy
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>parent</code> is locked. Pass <code>null</code> or empty
-    *           list if there is no lock tokens
-    * @return identifier of newly created object
-    * @throws ObjectNotFoundException if <code>source</code> or
-    *            <code>parent</code> does not exist
+    * @param id id of source item
+    * @param parentId parent for new copy
+    * @return Response with 201 status and Location header that point to newly
+    *         created copy of item
+    * @throws ItemNotFoundException if <code>source</code> or
+    *            <code>parentId</code> does not exist
     * @throws ConstraintException if any of following conditions are met:
     *            <ul>
-    *            <li><code>parent</code> if not a folder</li>
-    *            <li><code>parent</code> already contains item with the same
+    *            <li><code>parentId</code> if not a folder</li>
+    *            <li><code>parentId</code> already contains item with the same
     *            name</li>
     *            </ul>
-    * @throws LockException if <code>parent</code> is locked and
-    *            <code>lockTokens</code> is <code>null</code> or does not
-    *            contains matched lock tokens
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @POST
    @Path("copy")
-   @Produces({MediaType.APPLICATION_JSON})
-   ObjectId copy(String identifier, String parent, List<String> lockTokens) throws ObjectNotFoundException,
-      ConstraintException, LockException, PermissionDeniedException, VirtualFileSystemException;
+   Response copy(String id, String parentId) throws ItemNotFoundException, ConstraintException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Create new File in specified folder. Example of JSON response:
+    * Create new File in specified folder.
     * 
-    * <pre>
-    * {"id":"/TESTROOT/folder01/DOCUMENT01.txt"}
-    * </pre>
-    * 
-    * @param parent parent for new File
+    * @param parentId parent for new File
     * @param name name of File
     * @param mediaType media type of content
     * @param content content of File
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>parent</code> is locked. Pass <code>null</code> or empty
-    *           list if there is no lock tokens
-    * @param ext UriInfo that may contain other optional query parameters
-    * @return identifier of newly created File
-    * @throws ObjectNotFoundException if <code>parent</code> does not exist
+    * @return Response with 201 status and Location header that point to newly
+    *         created file
+    * @throws ItemNotFoundException if <code>parent</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
     *            <li><code>parent</code> if not a folder</li>
@@ -109,35 +93,23 @@ public interface VirtualFileSystem
     *            <li><code>parent</code> already contains item with the same
     *            name</li>
     *            </ul>
-    * @throws LockException if <code>parent</code> is locked and
-    *            <code>lockTokens</code> is <code>null</code> or does not
-    *            contains matched lock tokens
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @POST
    @Path("file")
-   @Produces({MediaType.APPLICATION_JSON})
-   ObjectId createFile(String parent, String name, MediaType mediaType, InputStream content, List<String> lockTokens,
-      @Context UriInfo ext) throws ObjectNotFoundException, InvalidArgumentException, LockException,
-      PermissionDeniedException, VirtualFileSystemException;
+   Response createFile(String parentId, String name, MediaType mediaType, InputStream content)
+      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Create new folder in specified folder. Example of JSON response:
+    * Create new folder in specified folder.
     * 
-    * <pre>
-    * {"id":"/TESTROOT/folder01/NEW_FOLDER"}
-    * </pre>
-    * 
-    * @param parent parent for new folder
+    * @param parentId parent for new folder
     * @param name name of new folder
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>parent</code> is locked. Pass <code>null</code> or empty
-    *           list if there is no lock tokens
-    * @param ext UriInfo that may contain other optional query parameters
-    * @return identifier of newly created folder
-    * @throws ObjectNotFoundException if <code>parent</code> does not exist
+    * @return Response with 201 status and Location header that point to newly
+    *         created folder
+    * @throws ItemNotFoundException if <code>parent</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
     *            <li><code>parent</code> if not a folder</li>
@@ -145,47 +117,40 @@ public interface VirtualFileSystem
     *            <li><code>parent</code> already contains item with the same
     *            name</li>
     *            </ul>
-    * @throws LockException if <code>parent</code> is locked and
-    *            <code>lockTokens</code> is <code>null</code> or does not
-    *            contains matched lock tokens
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @POST
    @Path("folder")
-   @Produces({MediaType.APPLICATION_JSON})
-   ObjectId createFolder(String parent, String name, List<String> lockTokens, @Context UriInfo ext)
-      throws ObjectNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
-      VirtualFileSystemException;
+   Response createFolder(String parentId, String name) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Delete object <code>identifier</code>. If object is folder then all
-    * children of this folder should be removed or ConstraintException must be
-    * thrown.
+    * Delete item <code>id</code>. If item is folder then all children of this
+    * folder should be removed or ConstraintException must be thrown.
     * 
-    * @param identifier identifier of object to be removed
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>identifier</code> is locked. Pass <code>null</code> or
-    *           empty list if there is no lock tokens
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws ConstraintException if object is folder which has children and
+    * @param id id of item to be removed
+    * @param lockToken lock token. This lock token will be used if
+    *           <code>id</code> is locked. Pass <code>null</code> if there is no
+    *           lock token, e.g. item is not locked
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws ConstraintException if item is folder which has children and
     *            implementation is not supported removing not empty folders
-    * @throws LockException if object <code>identifier</code> is locked
-    *            (directly or indirectly) and <code>lockTokens</code> is
-    *            <code>null</code> or does not contains matched lock tokens
+    * @throws LockException if item <code>id</code> is locked and
+    *            <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @POST
    @Path("delete")
-   void delete(String identifier, List<String> lockTokens) throws ObjectNotFoundException, ConstraintException,
-      LockException, PermissionDeniedException, VirtualFileSystemException;
+   void delete(String id, String lockToken) throws ItemNotFoundException, ConstraintException, LockException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Get ACL applied to <code>identifier</code>. If there is no any ACL applied
-    * to object this method must return empty list. Example of JSON response:
+    * Get ACL applied to <code>id</code>. If there is no any ACL applied to item
+    * this method must return empty list. Example of JSON response:
     * 
     * <pre>
     * [{"principal":"john","permissions":["all"]},{"principal":"marry","permissions":["read"]}]
@@ -197,10 +162,10 @@ public interface VirtualFileSystem
     * <li>principal "marry" has "read" permission only</li>
     * </ul>
     * 
-    * @param identifier identifier of object
-    * @return ACL applied to object or(and) inherited from its parent
+    * @param id id of item
+    * @return ACL applied to item or(and) inherited from its parent
     * @throws NotSupportedException if ACL is not supported
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
+    * @throws ItemNotFoundException if <code>id</code> does not exist
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
@@ -209,7 +174,7 @@ public interface VirtualFileSystem
    @GET
    @Path("acl")
    @Produces({MediaType.APPLICATION_JSON})
-   List<AccessControlEntry> getACL(String identifier) throws NotSupportedException, ObjectNotFoundException,
+   List<AccessControlEntry> getACL(String id) throws NotSupportedException, ItemNotFoundException,
       PermissionDeniedException, VirtualFileSystemException;
 
    /**
@@ -237,18 +202,18 @@ public interface VirtualFileSystem
     * 
     * </pre>
     * 
-    * @param parent identifier of parent folder
+    * @param folderId folder's id
     * @param maxItems max number of items in response. If -1 then no limit of
     *           max items in result set
     * @param skipCount the skip items. Must be equals or greater then 0
     * @param propertyFilter only properties which are accepted by filter should
     *           be included in response. See
     *           {@link PropertyFilter#accept(String)}
-    * @return list of children of specified parent
-    * @throws ObjectNotFoundException if <code>parent</code> does not exist
+    * @return list of children of specified folder
+    * @throws ItemNotFoundException if <code>folderId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
-    *            <li><code>parent</code> if not a folder</li>
+    *            <li><code>folderId</code> if not a folder</li>
     *            <li><code>skipCount</code> is negative or greater then total
     *            number of items</li>
     *            </ul>
@@ -259,24 +224,24 @@ public interface VirtualFileSystem
    @GET
    @Path("children")
    @Produces({MediaType.APPLICATION_JSON})
-   ItemList<Item> getChildren(String parent, int maxItems, int skipCount, PropertyFilter propertyFilter)
-      throws ObjectNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
+   ItemList<Item> getChildren(String folderId, int maxItems, int skipCount, PropertyFilter propertyFilter)
+      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Get binary content of File.
     * 
-    * @param identifier identifier of File
+    * @param id id of File
     * @return content response
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws InvalidArgumentException if <code>identifier</code> is not File
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws InvalidArgumentException if <code>id</code> is not File
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @GET
    @Path("content")
-   Response getContent(String identifier) throws ObjectNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException;
+   Response getContent(String id) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException,
+      VirtualFileSystemException;
 
    /**
     * Get information about virtual file system and its capabilities.
@@ -285,10 +250,10 @@ public interface VirtualFileSystem
     */
    @GET
    @Produces({MediaType.APPLICATION_JSON})
-   VirtualFileSystemInfo getVfsInfo(@javax.ws.rs.core.Context UriInfo uriInfo);
+   VirtualFileSystemInfo getVfsInfo();
 
    /**
-    * Get object by identifier. Example of JSON response:
+    * Get item by id. Example of JSON response:
     * 
     * <pre>
     * {
@@ -305,12 +270,12 @@ public interface VirtualFileSystem
     * }
     * </pre>
     * 
-    * @param identifier identifier of object
+    * @param id id of item
     * @param propertyFilter only properties which are accepted by filter should
     *           be included in response. See
     *           {@link PropertyFilter#accept(String)}
-    * @return object
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
+    * @return item
+    * @throws ItemNotFoundException if <code>id</code> does not exist
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
@@ -318,21 +283,21 @@ public interface VirtualFileSystem
    @GET
    @Path("item")
    @Produces({MediaType.APPLICATION_JSON})
-   Item getItem(String identifier, PropertyFilter propertyFilter) throws ObjectNotFoundException,
-      PermissionDeniedException, VirtualFileSystemException;
+   Item getItem(String id, PropertyFilter propertyFilter) throws ItemNotFoundException, PermissionDeniedException,
+      VirtualFileSystemException;
 
    /**
-    * Get binary content of version of object.
+    * Get binary content of version of File item.
     * 
-    * @param identifier identifier of object
-    * @param versionIdentifier version id
+    * @param id id of item
+    * @param versionId version id
     * @return content response
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
+    * @throws ItemNotFoundException if <code>id</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
-    *            <li><code>identifier</code> is not File</li>
-    *            <li><code>versionIdentifier</code> points to version that does
-    *            not exist</li>
+    *            <li><code>id</code> is not File</li>
+    *            <li><code>versionId</code> points to version that does not
+    *            exist</li>
     *            </ul>
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
@@ -340,8 +305,8 @@ public interface VirtualFileSystem
     */
    @GET
    @Path("version")
-   Response getVersion(String identifier, String versionIdentifier) throws ObjectNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
+   Response getVersion(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Get list of versions of File. Even if File is not versionable result must
@@ -393,7 +358,7 @@ public interface VirtualFileSystem
     * }
     * </pre>
     * 
-    * @param identifier identifier of File
+    * @param id id of File
     * @param maxItems max number of items in response. If -1 then no limit of
     *           max items in result set
     * @param skipCount the skip items. Must be equals or greater then 0
@@ -401,10 +366,10 @@ public interface VirtualFileSystem
     *           be included in response. See
     *           {@link PropertyFilter#accept(String)}
     * @return
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
+    * @throws ItemNotFoundException if <code>id</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
-    *            <li><code>identifier</code>object is not a File</li>
+    *            <li><code>id</code>item is not a File</li>
     *            <li><code>skipCount</code> is negative or greater then total
     *            number of items</li>
     *            </ul>
@@ -415,24 +380,23 @@ public interface VirtualFileSystem
    @GET
    @Path("versions")
    @Produces({MediaType.APPLICATION_JSON})
-   ItemList<File> getVersions(String identifier, int maxItems, int skipCount, PropertyFilter propertyFilter)
-      throws ObjectNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
+   ItemList<File> getVersions(String id, int maxItems, int skipCount, PropertyFilter propertyFilter)
+      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Place lock on File object. Example of JSON response if locking is
+    * Place lock on File item. Example of JSON response if locking is
     * successful:
     * 
     * <pre>
     * {"lockToken":"f37ed0b2c0a8006600afbefda74c2dac"}
     * </pre>
     * 
-    * @param identifier object to be locked
+    * @param id item to be locked
     * @return lock token
     * @throws NotSupportedException if locking is not supported
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws InvalidArgumentException if <code>identifier</code> is not File
-    *            object
-    * @throws LockException if object already locked
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws InvalidArgumentException if <code>id</code> is not File item
+    * @throws LockException if item already locked
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
@@ -441,34 +405,34 @@ public interface VirtualFileSystem
    @POST
    @Path("lock")
    @Produces({MediaType.APPLICATION_JSON})
-   LockToken lock(String identifier) throws NotSupportedException, ObjectNotFoundException, InvalidArgumentException,
+   LockToken lock(String id) throws NotSupportedException, ItemNotFoundException, InvalidArgumentException,
       LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Move object <code>identifier</code> in <code>newparent</code> folder.
-    * Example of JSON response:
+    * Move item <code>id</code> in <code>newparentId</code> folder. Example of
+    * JSON response:
     * 
     * <pre>
     * {"id":"/TESTROOT/NEW_PARENT/DOCUMENT01.txt"}
     * </pre>
     * 
-    * @param identifier identifier of object to be moved
-    * @param newparent parent
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>newparent</code> or <code>identifier</code> is locked.
-    *           Pass <code>null</code> or empty list if there is no lock tokens
-    * @return identifier of moved object
-    * @throws ObjectNotFoundException if <code>identifier</code> or
-    *            <code>newparent</code> does not exist
+    * @param id id of item to be moved
+    * @param parentId id of new parent
+    * @param lockToken lock token. This lock token will be used if
+    *           <code>id</code> is locked. Pass <code>null</code> if there is no
+    *           lock token, e.g. item is not locked
+    * @return Response with 201 status and Location header that point to moved
+    *         item
+    * @throws ItemNotFoundException if <code>id</code> or
+    *            <code>newparentId</code> does not exist
     * @throws ConstraintException if any of following conditions are met:
     *            <ul>
-    *            <li><code>parent</code> if not a folder</li>
-    *            <li><code>parent</code> already contains item with the same
-    *            name</li>
+    *            <li><code>newparentId</code> if not a folder</li>
+    *            <li><code>newparentId</code> already contains item with the
+    *            same name</li>
     *            </ul>
-    * @throws LockException if object <code>identifier</code> or
-    *            <code>newparent</code> is locked and <code>lockTokens</code> is
-    *            <code>null</code> or does not contains matched lock tokens
+    * @throws LockException if item <code>id</code> is locked and
+    *            <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
@@ -476,37 +440,36 @@ public interface VirtualFileSystem
    @POST
    @Path("move")
    @Produces({MediaType.APPLICATION_JSON})
-   ObjectId move(String identifier, String newparent, List<String> lockTokens) throws ObjectNotFoundException,
-      ConstraintException, LockException, PermissionDeniedException, VirtualFileSystemException;
+   Response move(String id, String parentId, String lockToken) throws ItemNotFoundException, ConstraintException,
+      LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Rename and(or) set content type for File object.
+    * Rename and(or) set content type for File item.
     * 
-    * @param identifier identifier of File to be updated
+    * @param id id of File to be updated
     * @param mediaType new media type. May be not specified if not need to
     *           change content type, e.g. need rename only
     * @param newname new name of File. May be not specified if not need to
     *           change name, e.g. need update content type only
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>identifier</code> is locked. Pass <code>null</code> or
-    *           empty list if there is no lock tokens
-    * @return identifier of updated object
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws InvalidArgumentException if <code>identifier</code> is not File
-    * @throws LockException if object <code>identifier</code> is locked
-    *            (directly or indirectly) and <code>lockTokens</code> is
-    *            <code>null</code> or does not contains matched lock tokens
-    * @throws ConstraintException if property can't be updated cause to any
-    *            constraint, e.g. property is read only
+    * @param lockToken lock token. This lock token will be used if
+    *           <code>id</code> is locked. Pass <code>null</code> if there is no
+    *           lock token, e.g. item is not locked
+    * @return Response with 201 status and Location header that point to renamed
+    *         file
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws InvalidArgumentException if <code>id</code> is not File
+    * @throws LockException if item <code>id</code> is locked and
+    *            <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws ConstraintException if file can't be updated cause to any
+    *            constraint
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     */
    @POST
    @Path("rename")
    @Produces({MediaType.APPLICATION_JSON})
-   ObjectId rename(String identifier, MediaType mediaType, String newname, List<String> lockTokens)
-      throws ObjectNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
-      VirtualFileSystemException;
+   Response rename(String id, MediaType mediaType, String newname, String lockToken) throws ItemNotFoundException,
+      InvalidArgumentException, LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Executes a SQL query statement against the contents of virtual file
@@ -518,6 +481,9 @@ public interface VirtualFileSystem
     * @param maxItems max number of items in response. If -1 then no limit of
     *           max items in result set
     * @param skipCount the skip items. Must be equals or greater the 0
+    * @param propertyFilter only properties which are accepted by filter should
+    *           be included in response. See
+    *           {@link PropertyFilter#accept(String)}
     * @return query result
     * @throws NotSupportedException query is not supported at all or specified
     *            query type is not supported, e.g. if full text query is not
@@ -535,8 +501,8 @@ public interface VirtualFileSystem
    @POST
    @Path("search")
    @Produces({MediaType.APPLICATION_JSON})
-   ItemList<Item> search(MultivaluedMap<String, String> query, int maxItems, int skipCount)
-      throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException;
+   ItemList<Item> search(MultivaluedMap<String, String> query, int maxItems, int skipCount,
+      PropertyFilter propertyFilter) throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException;
 
    /**
     * Execute a SQL query statement against the contents of virtual file system.
@@ -565,25 +531,25 @@ public interface VirtualFileSystem
       InvalidArgumentException, VirtualFileSystemException;
 
    /**
-    * Remove lock from object.
+    * Remove lock from item.
     * 
-    * @param identifier identifier of object to be unlocked
-    * @param lockTokens lock tokens
+    * @param id id of item to be unlocked
+    * @param lockToken lock token
     * @throws NotSupportedException if locking is not supported
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws LockException if object is not locked or <code>lockTokens</code>
-    *            is <code>null</code> or does not contains matched lock tokens
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws LockException if item is not locked or <code>lockToken</code> is
+    *            <code>null</code> or does not matched
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @POST
    @Path("unlock")
-   void unlock(String identifier, List<String> lockTokens) throws NotSupportedException, ObjectNotFoundException,
-      LockException, PermissionDeniedException, VirtualFileSystemException;
+   void unlock(String id, String lockToken) throws NotSupportedException, ItemNotFoundException, LockException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Update ACL of object. Example of JSON message:
+    * Update ACL of item. Example of JSON message:
     * 
     * <pre>
     * [{"principal":"john","permissions":["all"]},{"principal":"marry","permissions":["read"]}]
@@ -592,8 +558,8 @@ public interface VirtualFileSystem
     * JSON message as above will set "all" permissions for principal "john" and
     * "read" permission only for principal "marry".
     * 
-    * @param identifier identifier of object for ACL updates
-    * @param acl ACL to be applied to object. If method
+    * @param id id of item for ACL updates
+    * @param acl ACL to be applied to item. If method
     *           {@link AccessControlEntry#getPermissions()} for any principal
     *           return empty set of permissions then all permissions for this
     *           principal will be removed.
@@ -601,15 +567,14 @@ public interface VirtualFileSystem
     *           if <code>false</code> then specified ACL will be merged with
     *           previous if any. If such parameters is not specified then
     *           behavior is implementation specific
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>identifier</code> is locked. Pass <code>null</code> or
-    *           empty list if there is no lock tokens
+    * @param lockToken lock token. This lock token will be used if
+    *           <code>id</code> is locked. Pass <code>null</code> if there is no
+    *           lock token, e.g. item is not locked
     * @throws NotSupportedException if ACL is not supported at all or managing
     *            of ACL is not supported
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws LockException if object <code>identifier</code> is locked and
-    *            <code>lockTokens</code> is <code>null</code> or does not
-    *            contains matched lock tokens
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws LockException if item <code>id</code> is locked and
+    *            <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
@@ -618,46 +583,44 @@ public interface VirtualFileSystem
    @POST
    @Path("acl")
    @Consumes({MediaType.APPLICATION_JSON})
-   void updateACL(String identifier, List<AccessControlEntry> acl, Boolean override, List<String> lockTokens)
-      throws NotSupportedException, ObjectNotFoundException, LockException, PermissionDeniedException,
+   void updateACL(String id, List<AccessControlEntry> acl, Boolean override, String lockToken)
+      throws NotSupportedException, ItemNotFoundException, LockException, PermissionDeniedException,
       VirtualFileSystemException;
 
    /**
     * Update binary content of File.
     * 
-    * @param identifier identifier of File
+    * @param id id of File
     * @param mediaType media type of content
     * @param newcontent new content of File
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>identifier</code> is locked. Pass <code>null</code> or
-    *           empty list if there is no lock tokens
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws InvalidArgumentException if <code>identifier</code> is not File
-    * @throws LockException if object <code>identifier</code> is locked and
-    *            <code>lockTokens</code> is <code>null</code> or does not
-    *            contains matched lock tokens
+    * @param lockToken lock token. This lock token will be used if
+    *           <code>id</code> is locked. Pass <code>null</code> if there is no
+    *           lock token, e.g. item is not locked
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws InvalidArgumentException if <code>id</code> is not File
+    * @throws LockException if item <code>id</code> is locked and
+    *            <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @POST
    @Path("content")
-   void updateContent(String identifier, MediaType mediaType, InputStream newcontent, List<String> lockTokens)
-      throws ObjectNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
+   void updateContent(String id, MediaType mediaType, InputStream newcontent, String lockToken)
+      throws ItemNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
       VirtualFileSystemException;
 
    /**
-    * Update properties of object.
+    * Update properties of item.
     * 
-    * @param identifier identifier of object to be updated
+    * @param id id of item to be updated
     * @param properties new properties
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>identifier</code> is locked. Pass <code>null</code> or
-    *           empty list if there is no lock tokens
-    * @throws ObjectNotFoundException if <code>identifier</code> does not exist
-    * @throws LockException if object <code>identifier</code> is locked and
-    *            <code>lockTokens</code> is <code>null</code> or does not
-    *            contains matched lock tokens
+    * @param lockToken lock token. This lock token will be used if
+    *           <code>id</code> is locked. Pass <code>null</code> if there is no
+    *           lock token, e.g. item is not locked
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws LockException if item <code>id</code> is locked and
+    *            <code>lockToken</code> is <code>null</code> or does not matched
     * @throws ConstraintException if property can't be updated cause to any
     *            constraint, e.g. property is read only
     * @throws PermissionDeniedException if user which perform operation has not
@@ -665,8 +628,8 @@ public interface VirtualFileSystem
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @POST
-   @Path("properties")
+   @Path("item")
    @Consumes({MediaType.APPLICATION_JSON})
-   void updateProperties(String identifier, List<InputProperty> properties, List<String> lockTokens)
-      throws ObjectNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException;
+   void updateItem(String id, List<ConvertibleInputProperty> properties, String lockToken) throws ItemNotFoundException,
+      LockException, PermissionDeniedException, VirtualFileSystemException;
 }

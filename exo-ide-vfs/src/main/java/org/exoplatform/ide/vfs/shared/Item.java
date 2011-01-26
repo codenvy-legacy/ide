@@ -21,7 +21,9 @@ package org.exoplatform.ide.vfs.shared;
 import org.exoplatform.ide.vfs.server.OutputProperty;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Representation of abstract item used to interaction with client via JSON.
@@ -31,7 +33,7 @@ import java.util.List;
  */
 public class Item
 {
-   /** Identifier of object. */
+   /** Id of object. */
    private String id;
 
    /** Name of object. */
@@ -48,14 +50,18 @@ public class Item
 
    private List<OutputProperty> properties;
 
+   private Map<String, Link> links;
+
    /**
-    * @param id identifier of object
+    * @param id id of object
     * @param name the name of object
     * @param path path of object
     * @param creationDate creation date in long format
     * @param properties other properties of object
+    * @param links hyperlinks for retrieved or(and) manage item
     */
-   public Item(String id, String name, Type type, String path, long creationDate, List<OutputProperty> properties)
+   public Item(String id, String name, Type type, String path, long creationDate, List<OutputProperty> properties,
+      Map<String, Link> links)
    {
       this.id = id;
       this.name = name;
@@ -63,6 +69,7 @@ public class Item
       this.path = path;
       this.creationDate = creationDate;
       this.properties = properties;
+      this.links = links;
    }
 
    public Item()
@@ -70,7 +77,7 @@ public class Item
    }
 
    /**
-    * @return identifier of object
+    * @return id of object
     */
    public String getId()
    {
@@ -78,7 +85,7 @@ public class Item
    }
 
    /**
-    * @param id the identifier of object
+    * @param id the id of object
     */
    public void setId(String id)
    {
@@ -160,5 +167,26 @@ public class Item
       if (properties == null)
          properties = new ArrayList<OutputProperty>();
       return properties;
+   }
+
+   /**
+    * Links for retrieved or(and) manage item.
+    * 
+    * @return links map. Never <code>null</code> but empty map instead
+    */
+   public Map<String, Link> getLinks()
+   {
+      if (links == null)
+         links = new HashMap<String, Link>();
+      return links;
+   }
+
+   /**
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return "Item [id=" + id + ", name=" + name + ", type=" + type + "]";
    }
 }

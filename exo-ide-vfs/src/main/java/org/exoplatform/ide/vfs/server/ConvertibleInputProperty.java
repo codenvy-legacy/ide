@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.server;
 
+import org.exoplatform.ide.vfs.shared.InputProperty;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -26,13 +28,10 @@ import java.lang.reflect.Modifier;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.util.Arrays;
 
 /**
- * Input property. It will be restored from JSON source.To simplify JSON
- * structure we accept all values as array of String. It is implementation
- * specific how to transform it to required types. Values may be transformed to
- * required type via method {@link #valueAs(Class)}.
+ * Input property with possibility to transform it to required types. Values may
+ * be transformed to required type via method {@link #as(Class)}.
  * <p>
  * Here is example of JSON source for input property:
  * 
@@ -40,49 +39,26 @@ import java.util.Arrays;
  * {"name":"mediaType", "value":["text/plain;charset=utf8"]}"
  * </pre>
  * 
- * @see #valueAs(Class)
+ * @see #as(Class)
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class InputProperty
+public class ConvertibleInputProperty extends InputProperty
 {
-   /** Name of property. */
-   private String name;
-
-   /** Value of property. */
-   private String[] value;
-
-   /**
-    * @return name of property
-    */
-   public String getName()
+   public ConvertibleInputProperty(String name, String[] value)
    {
-      return name;
+      super(name, value);
    }
 
-   /**
-    * @param name the name of property
-    */
-   public void setName(String name)
+   public ConvertibleInputProperty(String name, String value)
    {
-      this.name = name;
+      super(name, value);
    }
 
-   /**
-    * @return value of property
-    */
-   public String[] getValue()
+   public ConvertibleInputProperty()
    {
-      return value;
-   }
-
-   /**
-    * @param value the value of property
-    */
-   public void setValue(String[] value)
-   {
-      this.value = value;
+      super();
    }
 
    /**
@@ -98,9 +74,9 @@ public class InputProperty
     * </p>
     * 
     * <pre>
-    * InputProperty in = new InputProperty();
+    * ConvertibleInputProperty in = new ConvertibleInputProperty();
     * in.setValue(new String[]{&quot;123&quot;, &quot;456&quot;});
-    * Integer[] res = in.valueAs(Integer[].class);
+    * Integer[] res = in.as(Integer[].class);
     * System.out.println(java.util.Arrays.toString(res));
     * </pre>
     * 
@@ -112,7 +88,7 @@ public class InputProperty
     *            described above
     */
    @SuppressWarnings("unchecked")
-   public <O> O[] valueAs(Class<? extends O[]> toType)
+   public <O> O[] as(Class<? extends O[]> toType)
    {
       if (value == null)
          return null;
@@ -232,13 +208,5 @@ public class InputProperty
       }
       throw new IllegalArgumentException("Unsupported type " + componentType.getName()
          + ". Must have Constructor with one String argument or static method 'valueOf' with String argument. ");
-   }
-
-   /**
-    * @see java.lang.Object#toString()
-    */
-   public String toString()
-   {
-      return "<" + name + ": " + Arrays.toString(value) + ">";
    }
 }

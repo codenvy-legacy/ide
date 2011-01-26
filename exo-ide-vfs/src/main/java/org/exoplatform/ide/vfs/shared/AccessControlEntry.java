@@ -82,7 +82,7 @@ public class AccessControlEntry
    }
 
    /**
-    * @param principal principla name
+    * @param principal principal name
     */
    public void setPrincipal(String principal)
    {
@@ -92,8 +92,9 @@ public class AccessControlEntry
    /**
     * @see java.lang.Object#toString()
     */
+   @Override
    public String toString()
    {
-      return "PRINCIPAL: " + principal + ", PERMISSIONS: " + permissions;
+      return "AccessControlEntry [principal=" + principal + ", permissions=" + permissions + "]";
    }
 }
