@@ -50,13 +50,21 @@ public class IDEServiceApplication extends Application
    public IDEServiceApplication(RepositoryService repositoryService, InitParams initParams)
    {
       String entryPoint = null;
+      boolean discoverable = true;
       if (initParams != null) 
       {
-         ValueParam param = initParams.getValueParam("entry-point");
-         if (param != null)
-            entryPoint = param.getValue();
+         if (initParams.getValueParam("entry-point") != null) {
+            entryPoint = initParams.getValueParam("entry-point").getValue();
+         }
+
+         if (initParams.getValueParam("discoverable") != null) {
+            discoverable = Boolean.parseBoolean(initParams.getValueParam("discoverable").getValue());
+         }
       }
-      objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint));
+      
+      System.out.println("discoverable >>>>>>>>>>>>>>>>>>>>>>>>>>> " + discoverable);
+      
+      objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
       objects.add(new UploadServiceExceptionMapper());
       
       classes.add(LoopbackContentService.class);

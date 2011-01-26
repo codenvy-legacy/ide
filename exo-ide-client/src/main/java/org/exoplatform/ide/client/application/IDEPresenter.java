@@ -24,8 +24,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.application.phases.LoadRegistryConfigurationPhase;
 import org.exoplatform.ide.client.application.phases.Phase;
 import org.exoplatform.ide.client.browser.BrowserPanel;
-import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
-import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
 
@@ -79,6 +77,27 @@ public class IDEPresenter implements ExceptionThrownHandler
             //activate default view
             eventBus.fireEvent(new ActivateViewEvent(BrowserPanel.ID));
             new LoadRegistryConfigurationPhase(eventBus, controlsRegistration);
+
+            //            IDEConfiguration ideConfiguration = new IDEConfiguration();
+            //
+            //            CommandQueue.getInstance().addCommand(new LoadRegistryConfigurationCommand(eventBus, ideConfiguration),
+            //               ConfigurationReceivedSuccessfullyEvent.TYPE);
+            //            
+            //            CommandQueue.getInstance().addCommand(new LoadUserInfoCommand(eventBus, controlsRegistration),
+            //               UserInfoReceivedEvent.TYPE);
+            //            
+            //            CommandQueue.getInstance().addCommand(
+            //               new LoadApplicationSettingsCommand(eventBus, controlsRegistration, ideConfiguration),
+            //               ApplicationSettingsReceivedEvent.TYPE);
+            //            
+            //            CommandQueue.getInstance().addCommand(new InitializeServicesCommand(eventBus, controlsRegistration),
+            //               InitializeServicesEvent.TYPE);
+            //            
+            //            CommandQueue.getInstance().addCommand(new LoadDefaultEntryPointCommand(eventBus, ideConfiguration),
+            //               DefaultEntryPointReceivedEvent.TYPE);
+            //
+            //            CommandQueue.getInstance().run();
+
          }
       }.schedule(Phase.DELAY_BETWEEN_PHASES);
 

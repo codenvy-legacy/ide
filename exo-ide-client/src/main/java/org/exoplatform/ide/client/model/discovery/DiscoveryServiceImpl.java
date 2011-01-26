@@ -31,8 +31,10 @@ import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.RestService;
 import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent;
 import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
 import org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedEvent;
 import org.exoplatform.ide.client.model.discovery.marshal.DefaultEntryPointUnmarshaller;
+import org.exoplatform.ide.client.model.discovery.marshal.DiscoveryServiceDiscoverableUnmarshaller;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPointListUnmarshaller;
 import org.exoplatform.ide.client.model.discovery.marshal.RestServicesUnmarshaller;
 
@@ -107,7 +109,7 @@ public class DiscoveryServiceImpl extends DiscoveryService
    public void getRestServices()
    {
       String url = restServiceContext;
-      if(!url.endsWith("/"))
+      if (!url.endsWith("/"))
       {
          url += "/";
       }
@@ -118,7 +120,22 @@ public class DiscoveryServiceImpl extends DiscoveryService
       ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
 
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   @Override
+   public void getIsDiscoverable()
+   {
+      String url = restServiceContext + "/ide/discovery/isdiscoverable";
+
+      IsDiscoverableResultReceivedEvent event = new IsDiscoverableResultReceivedEvent();
+      DiscoveryServiceDiscoverableUnmarshaller unmarshaller = new DiscoveryServiceDiscoverableUnmarshaller(event);
+      String errorMessage = "Service is not deployed.";
+      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
+
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
 }

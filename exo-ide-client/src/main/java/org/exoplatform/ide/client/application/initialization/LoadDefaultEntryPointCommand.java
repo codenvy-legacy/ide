@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,29 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.application.phases;
+package org.exoplatform.ide.client.application.initialization;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.ide.client.application.phases.CheckEntryPointPhase;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent;
 import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedHandler;
-import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
-import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 
-import com.google.gwt.dev.Disconnectable;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Command;
 
 /**
- * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class LoadDefaultEntryPointPhase extends Phase implements DefaultEntryPointReceivedHandler, IsDiscoverableResultReceivedHandler
+public class LoadDefaultEntryPointCommand implements Command, ApplicationSettingsReceivedHandler, DefaultEntryPointReceivedHandler
 {
 
    private HandlerManager eventBus;
@@ -46,22 +46,21 @@ public class LoadDefaultEntryPointPhase extends Phase implements DefaultEntryPoi
    private IDEConfiguration applicationConfiguration;
 
    private ApplicationSettings applicationSettings;
-   
+
    private Handlers handlers;
 
-   public LoadDefaultEntryPointPhase(HandlerManager eventBus, IDEConfiguration applicationConfiguration,
-      ApplicationSettings applicationSettings)
+   public LoadDefaultEntryPointCommand(HandlerManager eventBus, IDEConfiguration applicationConfiguration)
    {
       this.eventBus = eventBus;
       this.applicationConfiguration = applicationConfiguration;
-      this.applicationSettings = applicationSettings;
-      
+
       handlers = new Handlers(eventBus);
+      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       handlers.addHandler(DefaultEntryPointReceivedEvent.TYPE, this);
-      handlers.addHandler(IsDiscoverableResultReceivedEvent.TYPE, this);
    }
 
-   protected void execute()
+   @Override
+   public void execute()
    {
       /*
        * get default entry point
@@ -75,15 +74,13 @@ public class LoadDefaultEntryPointPhase extends Phase implements DefaultEntryPoi
    public void onDefaultEntryPointReceived(DefaultEntryPointReceivedEvent event)
    {
       applicationConfiguration.setDefaultEntryPoint(event.getDefaultEntryPoint());
-      
-      DiscoveryService.getInstance().getIsDiscoverable();
+      new CheckEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
    }
 
    @Override
-   public void isDiscoverableResultReceived(IsDiscoverableResultReceivedEvent event)
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      handlers.removeHandlers();
-      new CheckEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
+      this.applicationSettings = event.getApplicationSettings();
    }
 
 }

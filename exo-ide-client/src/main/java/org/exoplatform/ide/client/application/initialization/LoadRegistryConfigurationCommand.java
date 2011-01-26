@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,12 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.application.phases;
+package org.exoplatform.ide.client.application.initialization;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
@@ -31,16 +30,17 @@ import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.module.gadget.service.GadgetServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 
 /**
- * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class LoadRegistryConfigurationPhase extends Phase implements ConfigurationReceivedSuccessfullyHandler
+public class LoadRegistryConfigurationCommand implements Command, ConfigurationReceivedSuccessfullyHandler
 {
 
    private HandlerManager eventBus;
@@ -49,28 +49,22 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
 
    private IDEConfiguration applicationConfiguration;
 
-   private ControlsRegistration controls;
-
-   public LoadRegistryConfigurationPhase(HandlerManager eventBus, ControlsRegistration controls)
+   public LoadRegistryConfigurationCommand(HandlerManager eventBus, IDEConfiguration applicationConfiguration)
    {
       this.eventBus = eventBus;
-      this.controls = controls;
+      this.applicationConfiguration = applicationConfiguration;
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
 
    @Override
-   protected void execute()
+   public void execute()
    {
-      new IDEConfigurationLoader(eventBus, IDELoader.getInstance()).loadConfiguration(new IDEConfiguration());
+      new IDEConfigurationLoader(eventBus, IDELoader.getInstance()).loadConfiguration(applicationConfiguration);
    }
 
-   /**
-    * Called in case the valid configuration of the application is received
-    * 
-    * @see org.exoplatform.ide.client.model.configuration.ApplicationConfigurationReceivedHandler#onApplicationConfigurationReceived(org.exoplatform.ide.client.model.configuration.ApplicationConfigurationReceivedEvent)
-    */
+   @Override
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
       try
@@ -81,11 +75,11 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
 
          new TemplateServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL() + "/"
             + RegistryConstants.EXO_APPLICATIONS + "/" + IDEConfigurationLoader.APPLICATION_NAME);
-         
+
          new GadgetServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext(),
             applicationConfiguration.getGadgetServer(), applicationConfiguration.getPublicContext());
 
-         new LoadUserInfoPhase(eventBus, applicationConfiguration, controls);
+         //         new LoadUserInfoPhase(eventBus, applicationConfiguration, controls);
       }
       catch (Throwable e)
       {

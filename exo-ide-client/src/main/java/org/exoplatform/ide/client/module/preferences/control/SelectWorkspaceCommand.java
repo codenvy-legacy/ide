@@ -22,6 +22,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedHandler;
 import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -33,7 +35,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class SelectWorkspaceCommand extends SimpleControl implements IDEControl
+public class SelectWorkspaceCommand extends SimpleControl implements IDEControl, IsDiscoverableResultReceivedHandler
 {
 
    public static final String ID = "Window/Workspace...";
@@ -59,6 +61,22 @@ public class SelectWorkspaceCommand extends SimpleControl implements IDEControl
     */
    public void initialize(HandlerManager eventBus)
    {
+      eventBus.addHandler(IsDiscoverableResultReceivedEvent.TYPE, this);
+   }
+
+   @Override
+   public void isDiscoverableResultReceived(IsDiscoverableResultReceivedEvent event)
+   {
+      if (event.isDiscoverable())
+      {
+         setVisible(true);
+         setEnabled(true);
+      }
+      else
+      {
+         setVisible(false);
+         setEnabled(false);
+      }
    }
 
 }

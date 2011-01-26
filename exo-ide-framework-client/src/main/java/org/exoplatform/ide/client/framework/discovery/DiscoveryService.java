@@ -47,5 +47,7 @@ public abstract class DiscoveryService
     * Get list of all deployed REST Services 
     */
    public abstract void getRestServices();
+   
+   public abstract void getIsDiscoverable();
 
 }

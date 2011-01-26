@@ -99,6 +99,10 @@
             <name>defaultEntryPoint</name>
             <value>dev-monit</value>
          </value-param>
+         <value-param>
+         	<name>discoverable</name>
+         	<value>true</value>
+         </value-param>         
       </init-params>
    </component>
 

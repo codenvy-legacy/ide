@@ -55,6 +55,8 @@ public class RepositoryDiscoveryService
 
    private String entryPoint;
 
+   private boolean discoverable;
+
    /**
     * To disable cache control.
     */
@@ -69,7 +71,7 @@ public class RepositoryDiscoveryService
 
    private RepositoryService repositoryService;
 
-   public RepositoryDiscoveryService(RepositoryService repositoryService, String entryPoint)
+   public RepositoryDiscoveryService(RepositoryService repositoryService, String entryPoint, boolean discoverable)
    {
       this.repositoryService = repositoryService;
 
@@ -77,6 +79,8 @@ public class RepositoryDiscoveryService
          this.entryPoint = entryPoint;
       else
          this.entryPoint = DEF_WS;
+
+      this.discoverable = discoverable;
    }
 
    public final static String getWebDavConetxt()
@@ -127,6 +131,13 @@ public class RepositoryDiscoveryService
          uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, repository.getConfiguration().getName(), entryPoint, "/")
             .build().toString();
       return href;
+   }
+
+   @GET
+   @Path("/isdiscoverable/")
+   public String isDiscoverable()
+   {
+      return "" + discoverable;
    }
 
 }

@@ -52,8 +52,8 @@ public class IDE extends VerticalPanel
    {
       new SmartGWTDialogs();
 
-      //HandlerManager eventBus = new SafeHandlerManager();
-      HandlerManager eventBus = new HandlerManager(null);
+      HandlerManager eventBus = new IDEHandlerManager();
+      //HandlerManager eventBus = new HandlerManager(null);
       ApplicationContext context = new ApplicationContext();
 
       new ExceptionThrownEventHandler(eventBus);

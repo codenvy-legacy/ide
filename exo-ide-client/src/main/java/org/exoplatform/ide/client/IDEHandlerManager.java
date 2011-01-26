@@ -32,10 +32,10 @@ import com.google.gwt.user.client.Timer;
  * @version $
  */
 
-public class SafeHandlerManager extends HandlerManager
+public class IDEHandlerManager extends HandlerManager
 {
 
-   public SafeHandlerManager()
+   public IDEHandlerManager()
    {
       super(null);
    }
@@ -47,21 +47,22 @@ public class SafeHandlerManager extends HandlerManager
    @Override
    public void fireEvent(GwtEvent<?> event)
    {
-      String name = event.getClass().getName();
-      if (name.indexOf(".") >= 0)
-      {
-         name = name.substring(name.lastIndexOf(".") + 1, name.length());
-      }
-
-      refreshTab();
-
-      System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - event");
-      logEventParams(event);
-      depthIndex++;
-      refreshTab();
+      //      String name = event.getClass().getName();
+      //      if (name.indexOf(".") >= 0)
+      //      {
+      //         name = name.substring(name.lastIndexOf(".") + 1, name.length());
+      //      }
+      //
+      //      refreshTab();
+      //
+      //      System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - event");
+      //      logEventParams(event);
+      //      depthIndex++;
+      //      refreshTab();
 
       try
       {
+         CommandQueue.getInstance().eventFired(event.getAssociatedType());
          super.fireEvent(event);
       }
       catch (Exception e)
@@ -69,14 +70,14 @@ public class SafeHandlerManager extends HandlerManager
          e.printStackTrace();
       }
 
-      System.out.println();
-
-      depthIndex--;
-      refreshTab();
-      //System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - done");
-
-      printSpacesTimer.cancel();
-      printSpacesTimer.schedule(3000);
+      //      System.out.println();
+      //
+      //      depthIndex--;
+      //      refreshTab();
+      //      //System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - done");
+      //
+      //      printSpacesTimer.cancel();
+      //      printSpacesTimer.schedule(3000);
    }
 
    private void refreshTab()

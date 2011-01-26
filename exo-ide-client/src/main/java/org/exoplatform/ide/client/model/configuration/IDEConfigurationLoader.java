@@ -55,9 +55,9 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
    private boolean loaded = false;
 
    private HandlerManager eventBus;
-   
+
    private IDEConfiguration configuration;
-   
+
    private Loader loader;
 
    public IDEConfigurationLoader(HandlerManager eventBus, Loader loader)
@@ -65,23 +65,30 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
       this.eventBus = eventBus;
       this.loader = loader;
       eventBus.addHandler(ApplicationConfigurationReceivedEvent.TYPE, this);
-      configuration = new IDEConfiguration(getRegistryURL());
    }
-   
-   public void loadConfiguration() {
+
+//   public void loadConfiguration()
+//   {
+//      loadConfiguration(new IDEConfiguration());
+//   }
+
+   public void loadConfiguration(IDEConfiguration configuration)
+   {
+      this.configuration = configuration;
+      configuration.setRegistryURL(getRegistryURL());
       ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION_NAME, loader);
-      applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME);      
+      applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME);
    }
 
    public void onConfigurationReceived(ApplicationConfigurationReceivedEvent event)
    {
       JSONObject jsonConfiguration = event.getApplicationConfiguration().getConfiguration().isObject();
-      
+
       if (jsonConfiguration.containsKey(CONTEXT))
       {
          configuration.setContext(jsonConfiguration.get(IDEConfigurationLoader.CONTEXT).isString().stringValue());
          configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
-         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);         
+         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
       }
       else
       {
@@ -90,13 +97,13 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
       }
 
       if (jsonConfiguration.containsKey(PUBLIC_CONTEXT))
-         configuration.setPublicContext(jsonConfiguration.get(IDEConfigurationLoader.PUBLIC_CONTEXT).isString().stringValue());
+         configuration.setPublicContext(jsonConfiguration.get(IDEConfigurationLoader.PUBLIC_CONTEXT).isString()
+            .stringValue());
       else
       {
          showErrorMessage(PUBLIC_CONTEXT);
          return;
       }
-
 
       if (jsonConfiguration.containsKey(GADGET_SERVER))
          //TODO: now we can load gadget only from current host
@@ -124,7 +131,7 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
    }
 
    private static native String getRegistryURL() /*-{
-      return $wnd.registryURL;
-   }-*/;
+                                                 return $wnd.registryURL;
+                                                 }-*/;
 
 }
