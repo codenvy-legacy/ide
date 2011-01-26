@@ -124,7 +124,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(23)));
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(24)));
       
-      assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(31, "'Base64' cannot be resolved to a type; ")));      
+      assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(31, "'java.util.prefs.Base64' cannot be resolved to a type; ")));      
       
       // fix error
       selenium.clickAt(getCodeErrorMarkLocator(11, "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; "), "");
@@ -246,7 +246,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(17)));
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(19)));
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(21)));
-      assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(23, "'Base64' cannot be resolved to a type; ")));
+      assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(23, "'java.util.prefs.Base64' cannot be resolved to a type; ")));
       
       // fix error
       selenium.clickAt(getCodeErrorMarkLocator(11, "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; "), "");
