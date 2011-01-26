@@ -276,7 +276,7 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
    private void addFileToTemplate()
    {
       AbstractCreateFromTemplatePresenter<FileTemplate> addFilePresenter =
-         new CreateFileFromTemplatePresenter(eventBus, null, templateList)
+         new CreateFileFromTemplatePresenter(eventBus, null, templateList, null)
          {
             @Override
             void submitTemplate()

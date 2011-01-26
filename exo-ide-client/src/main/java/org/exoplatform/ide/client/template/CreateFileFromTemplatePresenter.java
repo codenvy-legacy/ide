@@ -18,14 +18,12 @@
  */
 package org.exoplatform.ide.client.template;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.template.FileTemplate;
@@ -36,10 +34,13 @@ import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS .
+ * Presenter for form "Create file from template"
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
@@ -57,11 +58,15 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
    
    private List<ProjectTemplate> usedProjectTemplates;
    
-   public CreateFileFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList)
+   private Map<String, File> openedFiles = new HashMap<String, File>();
+   
+   public CreateFileFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList,
+      Map<String, File> openedFiles)
    {
       super(eventBus, selectedItems);
       
       this.templateList = new ArrayList<FileTemplate>();
+      this.openedFiles = openedFiles;
       
       projectTemplateList = new ArrayList<ProjectTemplate>();
       
@@ -157,6 +162,8 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       FileTemplate selectedTemplate = (FileTemplate)selectedTemplates.get(0);
       
       String contentType = selectedTemplate.getMimeType();
+      
+      fileName = checkFileName(baseHref, fileName);
 
       File newFile = new File(baseHref + fileName);
       newFile.setContentType(contentType);
@@ -169,6 +176,37 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       eventBus.fireEvent(new OpenFileEvent(newFile));
 
       display.closeForm();
+   }
+   
+   /**
+    * Check, is there is the same file name in opened file.
+    * <p> 
+    * If file name is unique, return the same name.
+    * <p> 
+    * If there is file with such name in opened files,
+    * return new file name: old name and index at the end of name.
+    * 
+    * @param href - file href
+    * @param proposedName - proposed name for new file
+    * @return {@link String}
+    */
+   private String checkFileName(String href, String proposedName)
+   {
+      if (openedFiles == null || openedFiles.isEmpty())
+      {
+         return proposedName;
+      }
+      
+      final String nameWithoutExt = proposedName.substring(0, proposedName.lastIndexOf("."));
+      String extension = proposedName.substring(proposedName.lastIndexOf(".") + 1, proposedName.length());
+      int index = 1;
+      while (openedFiles.get(href + proposedName) != null)
+      {
+         proposedName = nameWithoutExt + " " + index + "." + extension;
+         index++;
+      }
+      
+      return proposedName;
    }
    
    /**

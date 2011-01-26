@@ -19,13 +19,20 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
@@ -42,14 +49,20 @@ import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
- * Created by The eXo Platform SAS .
+ * Handler for "Create file from template" command.
+ * 
+ * Handler "Create file from template" event and open form.
+ * 
+ * Also handlers events to store selected items and opened files.
+ * This data is needed for "Create file from template" presenter.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class CreateFileFromTemplateCommandHandler implements CreateFileFromTemplateHandler,
-   TemplateListReceivedHandler, ExceptionThrownHandler, ItemsSelectedHandler
+   TemplateListReceivedHandler, ExceptionThrownHandler, ItemsSelectedHandler, EditorFileOpenedHandler, 
+   EditorFileClosedHandler
 {
 
    private HandlerManager eventBus;
@@ -57,6 +70,8 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
    private Handlers handlers;
 
    private List<Item> selectedItems = new ArrayList<Item>();
+   
+   private Map<String, File> openedFiles = new HashMap<String, File>();
 
    public CreateFileFromTemplateCommandHandler(HandlerManager eventBus)
    {
@@ -65,6 +80,8 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
 
       eventBus.addHandler(CreateFileFromTemplateEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
    }
 
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
@@ -85,7 +102,7 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
 
       TemplateList templateList = event.getTemplateList();
       CreateFileFromTemplatePresenter createFilePresenter =
-         new CreateFileFromTemplatePresenter(eventBus, selectedItems, templateList.getTemplates());
+         new CreateFileFromTemplatePresenter(eventBus, selectedItems, templateList.getTemplates(), openedFiles);
       CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
          new CreateFileFromTemplateForm(eventBus, templateList.getTemplates(), createFilePresenter);
       createFilePresenter.bindDisplay(createFileDisplay);
@@ -94,6 +111,22 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
    public void onError(ExceptionThrownEvent event)
    {
       handlers.removeHandlers();
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
+    */
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
+    */
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
    }
 
 }
