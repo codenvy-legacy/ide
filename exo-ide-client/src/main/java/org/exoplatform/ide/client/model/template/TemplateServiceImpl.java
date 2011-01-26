@@ -57,17 +57,17 @@ public class TemplateServiceImpl extends TemplateService
       public static final String GOOGLE_GADGET = "Google Gadget";
 
       public static final String GREETING_GOOGLE_GADGET = "Greeting Google Gadget";
-      
+
       public static final String GREETING_GROOVY_REST_SERVICE = "Greeting Groovy REST Service";
-      
+
       public static final String POJO = "POJO";
-      
+
       public static final String DO_CHTOMATTIC = "DO Chromattic";
 
       public static final String GROOVY_REST_SERVICE = "Groovy REST Service";
 
       public static final String GROOVY_TEMPLATE = "Template";
-      
+
    }
 
    private static final String CONTEXT = "/templates";
@@ -151,11 +151,27 @@ public class TemplateServiceImpl extends TemplateService
          new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget", "Netvibes Widget Skeleton", FileTemplates
             .getTemplateFor(MimeType.UWA_WIDGET), null));
       
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget Flash", "Netvibes Widget Flash",
+            NetvibseWidgetTemplates.FLASH, null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget Chart", "Netvibes Widget Chart",
+            NetvibseWidgetTemplates.CHART, null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget Tabview", "Netvibes Widget Tabview",
+            NetvibseWidgetTemplates.TABVIEW, null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget W3C", "Netvibes Widget W3C",
+            NetvibseWidgetTemplates.W3C, null));
+
       templateList.getTemplates().add(createFileTemplateForSampleProject());
       templateList.getTemplates().add(createRestServiceForSampleProject());
       templateList.getTemplates().add(createPojoForSampleProject());
       templateList.getTemplates().add(createChromatticForSampleProject());
-      
+
       templateList.getTemplates().add(getSampleProject());
 
       TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
@@ -181,16 +197,14 @@ public class TemplateServiceImpl extends TemplateService
       FileTemplate gadgetFileTemplate =
          new FileTemplate(DefaultFileTemplates.GREETING_GOOGLE_GADGET, "GreetingGoogleGadget.xml");
       uiFolder.getChildren().add(gadgetFileTemplate);
-      
+
       FolderTemplate dataFolder = new FolderTemplate("data");
       dataFolder.setChildren(new ArrayList<Template>());
-      FileTemplate pojoTemplate =
-         new FileTemplate(DefaultFileTemplates.POJO, "Pojo.groovy");
-      FileTemplate doTemplate =
-         new FileTemplate(DefaultFileTemplates.DO_CHTOMATTIC, "DataObject.groovy");
+      FileTemplate pojoTemplate = new FileTemplate(DefaultFileTemplates.POJO, "Pojo.groovy");
+      FileTemplate doTemplate = new FileTemplate(DefaultFileTemplates.DO_CHTOMATTIC, "DataObject.groovy");
       dataFolder.getChildren().add(pojoTemplate);
       dataFolder.getChildren().add(doTemplate);
-      
+
       sampleProject.getChildren().add(dataFolder);
       sampleProject.getChildren().add(businessLogicFolder);
       sampleProject.getChildren().add(uiFolder);
@@ -244,16 +258,15 @@ public class TemplateServiceImpl extends TemplateService
 
       return gadgetFileTemplate;
    }
-   
+
    private FileTemplate createRestServiceForSampleProject()
    {
       String content =
          "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
-            + "import javax.ws.rs.PathParam\n" + "import data.Pojo\n" + "import data.DataObject\n\n" + "@Path(\"/my-service\")\n" + "public class HelloWorld {\n"
-            + "  @GET\n" + "  @Path(\"helloworld/{name}\")\n"
-            + "  public String hello(@PathParam(\"name\") String name) {\n" 
-            + "    return Pojo.say(name)\n"
-            + "  }\n" + "}\n";
+            + "import javax.ws.rs.PathParam\n" + "import data.Pojo\n" + "import data.DataObject\n\n"
+            + "@Path(\"/my-service\")\n" + "public class HelloWorld {\n" + "  @GET\n"
+            + "  @Path(\"helloworld/{name}\")\n" + "  public String hello(@PathParam(\"name\") String name) {\n"
+            + "    return Pojo.say(name)\n" + "  }\n" + "}\n";
 
       FileTemplate restServiceTemplate =
          new FileTemplate(MimeType.GROOVY_SERVICE, DefaultFileTemplates.GREETING_GROOVY_REST_SERVICE,
@@ -262,16 +275,13 @@ public class TemplateServiceImpl extends TemplateService
 
       return restServiceTemplate;
    }
-   
+
    private FileTemplate createChromatticForSampleProject()
    {
       String content =
-         "package data;\n"+
-         "@org.chromattic.api.annotations.PrimaryType(name=\"nt:unstructured\")\n"
-         +"class DataObject {\n"
-           +"@org.chromattic.api.annotations.Property(name = \"a\") def String a\n"
-         +"}";
-         
+         "package data;\n" + "@org.chromattic.api.annotations.PrimaryType(name=\"nt:unstructured\")\n"
+            + "class DataObject {\n" + "@org.chromattic.api.annotations.Property(name = \"a\") def String a\n" + "}";
+
       FileTemplate template =
          new FileTemplate(MimeType.CHROMATTIC_DATA_OBJECT, DefaultFileTemplates.DO_CHTOMATTIC,
             "Chromattic Data Object", content, null);
@@ -279,20 +289,15 @@ public class TemplateServiceImpl extends TemplateService
 
       return template;
    }
-   
+
    private FileTemplate createPojoForSampleProject()
    {
       String content =
-         "package data;\n\npublic class Pojo\n{\n"
-         +"public static String say(String name)\n"
-         +"{\n"
-         +"  return \"Hello \" + name;\n"
-         +"}\n"
-         +"}";
+         "package data;\n\npublic class Pojo\n{\n" + "public static String say(String name)\n" + "{\n"
+            + "  return \"Hello \" + name;\n" + "}\n" + "}";
 
       FileTemplate template =
-         new FileTemplate(MimeType.APPLICATION_GROOVY, DefaultFileTemplates.POJO,
-            "Template for POJO", content, null);
+         new FileTemplate(MimeType.APPLICATION_GROOVY, DefaultFileTemplates.POJO, "Template for POJO", content, null);
       template.setFileName("Pojo.groovy");
 
       return template;
