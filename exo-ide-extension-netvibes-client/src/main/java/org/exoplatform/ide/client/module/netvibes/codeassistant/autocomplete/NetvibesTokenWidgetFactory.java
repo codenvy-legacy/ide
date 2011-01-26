@@ -33,14 +33,11 @@ import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.ui.
 public class NetvibesTokenWidgetFactory implements TokenWidgetFactory<TokenExt>
 {
 
-   private String restContext;
-
    /**
     * @param context
     */
-   public NetvibesTokenWidgetFactory(String context)
+   public NetvibesTokenWidgetFactory()
    {
-      restContext = context;
    }
 
    /**
@@ -49,7 +46,7 @@ public class NetvibesTokenWidgetFactory implements TokenWidgetFactory<TokenExt>
    @Override
    public TokenWidget<TokenExt> buildTokenWidget(TokenExt token)
    {
-      return new NetvibesTokenWidget(token, restContext);
+      return new NetvibesTokenWidget(token);
    }
 
 }

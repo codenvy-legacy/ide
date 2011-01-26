@@ -58,4 +58,7 @@ public interface JsAutocompleteImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/client/module/netvibes/autocomplete/images/template.png")
    ImageResource template();
    
+   @Source("org/exoplatform/ide/client/module/netvibes/autocomplete/images/class.gif")
+   ImageResource classItem();
+   
 }

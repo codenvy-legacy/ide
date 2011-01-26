@@ -54,6 +54,8 @@ public class JSONTokenParser
       public static final String FULL_DESCRIPTION = "fullDescription";
 
       public static final String MIME_TYPE = "mimeType";
+
+      public static final String FQN = "fqn";
    }
 
    public List<Token> getTokens(JSONArray json)
@@ -63,18 +65,13 @@ public class JSONTokenParser
       {
          JSONObject jObject = json.get(i).isObject();
          Token t =
-            new Token(jObject.get(TokenFields.NAME).isString().stringValue(), TokenType.valueOf(jObject.get(
-               TokenFields.TYPE).isString().stringValue()));
+            new Token(jObject.get(TokenFields.NAME).isString().stringValue(), TokenType.valueOf(jObject
+               .get(TokenFields.TYPE).isString().stringValue()));
 
          if (jObject.get(TokenFields.LINE_NUMBER) != null)
          {
 
             t.setLineNumber(Integer.parseInt(jObject.get(TokenFields.LINE_NUMBER).isNumber().toString()));
-         }
-
-         if (jObject.get(TokenFields.SUB_TOKEN_LIST) != null)
-         {
-            t.setSubTokenList(getTokens(jObject.get(TokenFields.SUB_TOKEN_LIST).isArray()));
          }
 
          if (jObject.get(TokenFields.SHORT_DECRIPTION) != null)
@@ -94,6 +91,16 @@ public class JSONTokenParser
          {
             t.setMimeType(jObject.get(TokenFields.MIME_TYPE).isString().stringValue());
          }
+         if (jObject.get(TokenFields.FQN) != null)
+         {
+            t.setFqn(jObject.get(TokenFields.FQN).isString().stringValue());
+         }
+
+         if (jObject.get(TokenFields.SUB_TOKEN_LIST) != null)
+         {
+            t.setSubTokenList(getTokens(jObject.get(TokenFields.SUB_TOKEN_LIST).isArray()));
+         }
+
          tokens.add(t);
       }
 

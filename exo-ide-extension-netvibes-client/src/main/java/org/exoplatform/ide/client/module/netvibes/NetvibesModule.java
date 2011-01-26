@@ -81,7 +81,7 @@ public class NetvibesModule implements IDEModule, InitializeServicesHandler
       configuration = event.getApplicationConfiguration();
       new DeployWidgetServiceImpl(eventBus, configuration.getContext(), event.getLoader());
       
-      NetvibesTokenWidgetFactory factory = new NetvibesTokenWidgetFactory(event.getApplicationConfiguration().getContext());
+      NetvibesTokenWidgetFactory factory = new NetvibesTokenWidgetFactory();
       NetvibesTokenCollector collector = new NetvibesTokenCollector(eventBus);
       eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.UWA_WIDGET, factory, collector));
    }

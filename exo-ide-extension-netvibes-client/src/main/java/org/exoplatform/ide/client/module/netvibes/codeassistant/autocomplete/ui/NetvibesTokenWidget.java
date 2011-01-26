@@ -36,7 +36,7 @@ import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.JsA
  * @version $Id: Nov 19, 2010 5:00:40 PM evgen $
  *
  */
-public class NetvibesTokenWidget  extends TokenWidget<TokenExt>
+public class NetvibesTokenWidget extends TokenWidget<TokenExt>
 {
 
    private Grid grid;
@@ -45,7 +45,7 @@ public class NetvibesTokenWidget  extends TokenWidget<TokenExt>
     * @param token
     * @param number
     */
-   public NetvibesTokenWidget(TokenExt token, String restContext)
+   public NetvibesTokenWidget(TokenExt token)
    {
       super(token);
       grid = new Grid(1, 3);
@@ -56,13 +56,21 @@ public class NetvibesTokenWidget  extends TokenWidget<TokenExt>
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
-      Label nameLabel = new Label(token.getName(), false);
-      nameLabel.getElement().setInnerHTML(nameLabel.getElement().getInnerHTML());
+      String name = token.getName();
+      if (token.getProperty(TokenExtProperties.SHORT_HINT) != null)
+      {
+         name += token.getProperty(TokenExtProperties.SHORT_HINT);
+      }
+
+      Label nameLabel = new Label(name, false);
 
       grid.setWidget(0, 1, nameLabel);
-
-      String pack = token.getType().name();
-      Label l = new Label("-" + pack, false);
+      String pack = "";
+      if (token.getProperty(TokenExtProperties.FQN) != null)
+      {
+         pack = "-" + token.getProperty(TokenExtProperties.FQN);
+      }
+      Label l = new Label(pack, false);
       l.setStyleName(JsAutocompleteImageBundle.INSTANCE.css().fqnStyle());
       grid.setWidget(0, 2, l);
 
@@ -97,6 +105,8 @@ public class NetvibesTokenWidget  extends TokenWidget<TokenExt>
             return new Image(JsAutocompleteImageBundle.INSTANCE.keyword());
          case TEMPLATE :
             return new Image(JsAutocompleteImageBundle.INSTANCE.template());
+         case CLASS :
+            return new Image(JsAutocompleteImageBundle.INSTANCE.classItem());
          default :
             return new Image(JsAutocompleteImageBundle.INSTANCE.template());
 
@@ -110,11 +120,10 @@ public class NetvibesTokenWidget  extends TokenWidget<TokenExt>
    @Override
    public String getTokenValue()
    {
-      if (token.getType() == TokenExtType.TEMPLATE)
-      {
+
+      if (token.getProperty(TokenExtProperties.CODE) != null)
          return token.getProperty(TokenExtProperties.CODE);
-      }
-      
+
       return token.getName();
    }
 
@@ -124,11 +133,10 @@ public class NetvibesTokenWidget  extends TokenWidget<TokenExt>
    @Override
    public String getTokenDecription()
    {
-      if (getToken().getType() == TokenExtType.TEMPLATE)
-      {
-         return getToken().getProperty(TokenExtProperties.FULL_TEXT);
-      }
-      return null;
+
+      return getToken().getProperty(TokenExtProperties.FULL_TEXT);
+
+      //      return null;
    }
 
    /**

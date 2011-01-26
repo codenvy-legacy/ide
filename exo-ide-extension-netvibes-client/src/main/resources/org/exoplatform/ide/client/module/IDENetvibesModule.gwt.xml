@@ -33,4 +33,6 @@
    <source path="netvibes" />
    
    <script src="token/js_netvibes_tokens.js" />
+   <script src="token/netvibes_api_tokens.js" />
+   
 </module>

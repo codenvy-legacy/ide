@@ -34,6 +34,8 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
@@ -136,6 +138,8 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
     */
    private void openDocForm()
    {
+      settings.setValue("documentation", true, Store.COOKIES);
+      eventBus.fireEvent(new SaveApplicationSettingsEvent(settings, SaveType.COOKIES));
       DocumentationForm view = new DocumentationForm(eventBus);
       display = view;
       view.onOpenTab();
@@ -149,7 +153,6 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    @Override
    public void onShowDocumentation(ShowDocumentationEvent event)
    {
-      settings.setValue("documentation", event.isShow(), Store.COOKIES);
       if (event.isShow())
       {
          openDocForm();
@@ -184,6 +187,8 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    {
       if (DocumentationForm.ID.equals(event.getViewId()))
       {
+         settings.setValue("documentation", false, Store.COOKIES);
+         eventBus.fireEvent(new SaveApplicationSettingsEvent(settings, SaveType.COOKIES));
          control.setSelected(false);
          display.removeHandlers();
          display = null;
