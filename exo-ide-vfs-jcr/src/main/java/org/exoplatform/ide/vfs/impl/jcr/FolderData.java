@@ -20,7 +20,6 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
@@ -28,7 +27,6 @@ import org.exoplatform.ide.vfs.shared.Type;
 
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemExistsException;
@@ -91,7 +89,7 @@ public class FolderData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Access denied to content of folder " + getPath() + ". ");
+         throw new PermissionDeniedException("Access denied to content of folder " + getId() + ". ");
       }
       catch (RepositoryException e)
       {
@@ -99,38 +97,28 @@ public class FolderData extends ItemData
       }
    }
 
-   DocumentData createDocument(String name, String nodeType, String contentNodeType, MediaType mediaType,
-      InputStream content, List<String> lockTokens) throws InvalidArgumentException, LockException,
-      PermissionDeniedException, VirtualFileSystemException
+   FileData createFile(String name, String nodeType, String contentNodeType, MediaType mediaType,
+      InputStream content) throws InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
-         Session session = node.getSession();
-         if (lockTokens != null && lockTokens.size() > 0)
-         {
-            for (String lt : lockTokens)
-               session.addLockToken(lt);
-         }
-         Node documentNode = node.addNode(name, nodeType);
-         Node contentNode = documentNode.addNode("jcr:content", contentNodeType);
+         Node fileNode = node.addNode(name, nodeType);
+         Node contentNode = fileNode.addNode("jcr:content", contentNodeType);
          contentNode.setProperty("jcr:mimeType", (mediaType.getType() + "/" + mediaType.getSubtype()));
          contentNode.setProperty("jcr:encoding", mediaType.getParameters().get("charset"));
          contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
          contentNode.setProperty("jcr:data", content == null ? EMPTY : content);
+         Session session = node.getSession();
          session.save();
-         return (DocumentData)fromNode(documentNode);
+         return (FileData)fromNode(fileNode);
       }
       catch (ItemExistsException e)
       {
          throw new InvalidArgumentException("Item with the name: " + name + " already exists. ");
       }
-      catch (javax.jcr.lock.LockException e)
-      {
-         throw new LockException(e.getMessage());
-      }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable add document if folder " + getPath()
+         throw new PermissionDeniedException("Unable add file in folder " + getId()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
@@ -139,18 +127,13 @@ public class FolderData extends ItemData
       }
    }
 
-   FolderData createFolder(String name, String nodeType, List<String> lockTokens) throws InvalidArgumentException,
-      LockException, PermissionDeniedException, VirtualFileSystemException
+   FolderData createFolder(String name, String nodeType) throws InvalidArgumentException, PermissionDeniedException,
+      VirtualFileSystemException
    {
       try
       {
-         Session session = node.getSession();
-         if (lockTokens != null && lockTokens.size() > 0)
-         {
-            for (String lt : lockTokens)
-               session.addLockToken(lt);
-         }
          Node folderNode = node.addNode(name, nodeType);
+         Session session = node.getSession();
          session.save();
          return (FolderData)fromNode(folderNode);
       }
@@ -158,13 +141,9 @@ public class FolderData extends ItemData
       {
          throw new InvalidArgumentException("Item with the name: " + name + " already exists. ");
       }
-      catch (javax.jcr.lock.LockException e)
-      {
-         throw new LockException(e.getMessage());
-      }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable add new folder if folder " + getPath()
+         throw new PermissionDeniedException("Unable add new folder in folder " + getId()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)

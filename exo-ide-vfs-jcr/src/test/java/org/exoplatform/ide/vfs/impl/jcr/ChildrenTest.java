@@ -43,7 +43,7 @@ public class ChildrenTest extends JcrFileSystemTest
 {
    private Node childrenTestNode;
 
-   private String folder;
+   private String folderPath;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -58,8 +58,8 @@ public class ChildrenTest extends JcrFileSystemTest
 
       Node folderNode = childrenTestNode.addNode("ChildrenTest_FOLDER", "nt:folder");
 
-      Node childDocumentNode = folderNode.addNode("ChildrenTest_DOCUMENT01", "nt:file");
-      Node childContentNode = childDocumentNode.addNode("jcr:content", "nt:resource");
+      Node childFileNode = folderNode.addNode("ChildrenTest_FILE01", "nt:file");
+      Node childContentNode = childFileNode.addNode("jcr:content", "nt:resource");
       childContentNode.setProperty("jcr:mimeType", "text/plain");
       childContentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       childContentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
@@ -70,7 +70,7 @@ public class ChildrenTest extends JcrFileSystemTest
 
       session.save();
 
-      folder = folderNode.getPath();
+      folderPath = folderNode.getPath();
    }
 
    public void testGetChildren() throws Exception
@@ -79,12 +79,13 @@ public class ChildrenTest extends JcrFileSystemTest
       permissions.put("root", PermissionType.ALL);
       ((ExtendedNode)childrenTestNode).setPermissions(permissions);
       session.save();
-      
+
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/children") //
-         .append(folder).toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("children") //
+         .append(folderPath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -93,9 +94,10 @@ public class ChildrenTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/children") //
-         .append(folder).toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("children") //
+         .append(folderPath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
       @SuppressWarnings("unchecked")
@@ -106,7 +108,7 @@ public class ChildrenTest extends JcrFileSystemTest
       assertEquals(3, list.size());
       assertTrue(list.contains("ChildrenTest_FOLDER01"));
       assertTrue(list.contains("ChildrenTest_FOLDER02"));
-      assertTrue(list.contains("ChildrenTest_DOCUMENT01"));
+      assertTrue(list.contains("ChildrenTest_FILE01"));
    }
 
    @SuppressWarnings("unchecked")
@@ -114,9 +116,10 @@ public class ChildrenTest extends JcrFileSystemTest
    {
       // Get all children.
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/children") //
-         .append(folder).toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, null);
+         .append(SERVICE_URI) //
+         .append("children") //
+         .append(folderPath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
       List<String> all = new ArrayList<String>(3);
@@ -125,13 +128,14 @@ public class ChildrenTest extends JcrFileSystemTest
 
       // Skip first item in result.
       path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/children") //
-         .append(folder) //
+         .append(SERVICE_URI) //
+         .append("children") //
+         .append(folderPath) //
          .append("?") //
          .append("skipCount=") //
          .append("1") //
          .toString();
-      response = launcher.service("GET", path, "", null, null, null);
+      response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       children = (ItemList<Item>)response.getEntity();
       List<String> page = new ArrayList<String>(2);
@@ -150,9 +154,10 @@ public class ChildrenTest extends JcrFileSystemTest
    {
       // Get all children.
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/children") //
-         .append(folder).toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, null);
+         .append(SERVICE_URI) //
+         .append("children") //
+         .append(folderPath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
       List<String> all = new ArrayList<String>(3);
@@ -161,13 +166,14 @@ public class ChildrenTest extends JcrFileSystemTest
 
       // Exclude last item from result.
       path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/children") //
-         .append(folder) //
+         .append(SERVICE_URI) //
+         .append("children") //
+         .append(folderPath) //
          .append("?") //
          .append("maxItems=") //
          .append("2") //
          .toString();
-      response = launcher.service("GET", path, "", null, null, null);
+      response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       children = (ItemList<Item>)response.getEntity();
       List<String> page = new ArrayList<String>(2);
@@ -175,7 +181,7 @@ public class ChildrenTest extends JcrFileSystemTest
          page.add(i.getName());
 
       all.remove(2);
-      
+
       assertEquals(all, page);
    }
 }

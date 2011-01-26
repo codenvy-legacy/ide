@@ -38,7 +38,7 @@ public class VersionsTest extends JcrFileSystemTest
 {
    private Node versionsTestNode;
 
-   private String document;
+   private String filePath;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -51,25 +51,25 @@ public class VersionsTest extends JcrFileSystemTest
       versionsTestNode = testRoot.addNode(name, "nt:unstructured");
       versionsTestNode.addMixin("exo:privilegeable");
 
-      Node documentNode = versionsTestNode.addNode("VersionsTest_DOCUMENT", "nt:file");
-      Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
+      Node fileNode = versionsTestNode.addNode("VersionsTest_FILE", "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      documentNode.addMixin("mix:versionable");
+      fileNode.addMixin("mix:versionable");
       session.save();
 
-      documentNode.checkin();
-      documentNode.checkout();
+      fileNode.checkin();
+      fileNode.checkout();
       contentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST__001".getBytes()));
       session.save();
 
-      documentNode.checkin();
-      documentNode.checkout();
+      fileNode.checkin();
+      fileNode.checkout();
       contentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST__002".getBytes()));
       session.save();
 
-      document = documentNode.getPath();
+      filePath = fileNode.getPath();
    }
 
    @SuppressWarnings("unchecked")
@@ -77,10 +77,11 @@ public class VersionsTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/versions") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("versions") //
+         .append(filePath) //
          .toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       List<File> items = ((ItemList<File>)response.getEntity()).getItems();
       List<String> all = new ArrayList<String>(3);
@@ -97,11 +98,12 @@ public class VersionsTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/version") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("version") //
+         .append(filePath) //
          .append("/2") //
          .toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       assertEquals("__TEST__001", new String(writer.getBody()));
    }

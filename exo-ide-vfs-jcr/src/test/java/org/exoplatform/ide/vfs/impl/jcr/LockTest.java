@@ -38,9 +38,9 @@ public class LockTest extends JcrFileSystemTest
 {
    private Node lockTestNode;
 
-   private String folder;
+   private String folderPath;
 
-   private String document;
+   private String filePath;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -54,59 +54,62 @@ public class LockTest extends JcrFileSystemTest
       lockTestNode.addMixin("exo:privilegeable");
 
       Node folderNode = lockTestNode.addNode("LockTest_FOLDER", "nt:folder");
-      folder = folderNode.getPath();
+      folderPath = folderNode.getPath();
 
-      Node documentNode = lockTestNode.addNode("LockTest_DOCUMENT", "nt:file");
-      Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
+      Node fileNode = lockTestNode.addNode("LockTest_FILE", "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      document = documentNode.getPath();
+      filePath = fileNode.getPath();
 
       session.save();
    }
 
-   public void testLockDocument() throws Exception
+   public void testLockFile() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/lock") //
-         .append(document).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("lock") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       log.info(new String(writer.getBody()));
-      Node doc = (Node)session.getItem(document);
-      assertTrue("Document must be locked. ", doc.isLocked());
+      Node file = (Node)session.getItem(filePath);
+      assertTrue("File must be locked. ", file.isLocked());
    }
 
-   public void testLockDocumentAlreadyLocked() throws Exception
+   public void testLockFileAlreadyLocked() throws Exception
    {
-      Node node = ((Node)session.getItem(document));
+      Node node = ((Node)session.getItem(filePath));
       node.addMixin("mix:lockable");
       session.save();
       node.lock(true, false);
-      
+
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/lock") //
-         .append(document).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("lock") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
    }
 
-   public void testLockDocumentNoPermissions() throws Exception
+   public void testLockFileNoPermissions() throws Exception
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(1);
       permissions.put("root", PermissionType.ALL);
       ((ExtendedNode)lockTestNode).setPermissions(permissions);
       session.save();
-      
+
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/lock") //
-         .append(document).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("lock") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -115,9 +118,10 @@ public class LockTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/lock") //
-         .append(folder).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("lock") //
+         .append(folderPath).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(400, response.getStatus());
    }
 }

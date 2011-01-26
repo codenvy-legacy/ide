@@ -28,7 +28,6 @@ import org.exoplatform.ide.vfs.shared.Type;
 
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemExistsException;
@@ -45,15 +44,15 @@ import javax.ws.rs.core.MediaType;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-class DocumentData extends ItemData
+class FileData extends ItemData
 {
-   class DocumentVersionIterator extends LazyIterator<DocumentData>
+   class FileVersionIterator extends LazyIterator<FileData>
    {
       private javax.jcr.version.VersionIterator i;
 
       private boolean currentSeen;
 
-      DocumentVersionIterator(javax.jcr.version.VersionIterator i)
+      FileVersionIterator(javax.jcr.version.VersionIterator i)
       {
          this.i = i;
          fetchNext();
@@ -71,7 +70,7 @@ class DocumentData extends ItemData
             Version version = i.nextVersion();
             try
             {
-               next = (DocumentData)ItemData.fromNode(version.getNode("jcr:frozenNode"));
+               next = (FileData)ItemData.fromNode(version.getNode("jcr:frozenNode"));
             }
             catch (RepositoryException e)
             {
@@ -81,12 +80,12 @@ class DocumentData extends ItemData
          if (next == null && !currentSeen)
          {
             currentSeen = true;
-            next = DocumentData.this;
+            next = FileData.this;
          }
       }
    }
 
-   class SingleVersionIterator extends LazyIterator<DocumentData>
+   class SingleVersionIterator extends LazyIterator<FileData>
    {
       private boolean currentSeen;
 
@@ -100,20 +99,20 @@ class DocumentData extends ItemData
          if (!currentSeen)
          {
             currentSeen = true;
-            next = DocumentData.this;
+            next = FileData.this;
          }
       }
    }
 
    static final String CURRENT_VERSION_ID = "current";
 
-   DocumentData(Node node)
+   FileData(Node node)
    {
       super(node, Type.FILE);
    }
 
    /**
-    * @return identifier of version of current document
+    * @return id of version of current file
     * @throws VirtualFileSystemException if any errors occurs
     */
    String getVersionId() throws VirtualFileSystemException
@@ -122,7 +121,17 @@ class DocumentData extends ItemData
    }
 
    /**
-    * Get content of current document.
+    * Get id of latest version.
+    * 
+    * @return latest version's id
+    * @throws VirtualFileSystemException if any error occurs
+    */
+   String getCurrentVersionId() throws VirtualFileSystemException
+   {
+      return getId();
+   }
+   /**
+    * Get content of current file.
     * 
     * @return content
     * @throws PermissionDeniedException if content can't be retrieved cause to
@@ -137,11 +146,11 @@ class DocumentData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Access denied to content of document " + getId() + ". ");
+         throw new PermissionDeniedException("Access denied to content of file " + getId() + ". ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get content of document " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get content of file " + getId() + ". " + e.getMessage(), e);
       }
    }
 
@@ -171,12 +180,12 @@ class DocumentData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Access denied to content of document " + getId() + ". ");
+         throw new PermissionDeniedException("Access denied to content of file " + getId() + ". ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get type of content of document " + getId() + ". "
-            + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get type of content of file " + getId() + ". " + e.getMessage(),
+            e);
       }
    }
 
@@ -196,25 +205,25 @@ class DocumentData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Access denied to content of document " + getId() + ". ");
+         throw new PermissionDeniedException("Access denied to content of file " + getId() + ". ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get length of content of document " + getId() + ". "
-            + e.getMessage(), e);
+         throw new VirtualFileSystemException(
+            "Unable get length of content of file " + getId() + ". " + e.getMessage(), e);
       }
    }
 
    /**
-    * Get all versions of current document. If object has not any other versions
-    * the iterator will contains only current document.
+    * Get all versions of current file. If file has not any other versions the
+    * iterator will contains only current file.
     * 
-    * @return iterator over document's versions
+    * @return iterator over file's versions
     * @throws PermissionDeniedException if versions can't be retrieved cause to
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   LazyIterator<DocumentData> getAllVersions() throws PermissionDeniedException, VirtualFileSystemException
+   LazyIterator<FileData> getAllVersions() throws PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
@@ -226,33 +235,32 @@ class DocumentData extends ItemData
          {
             javax.jcr.version.VersionIterator i = node.getVersionHistory().getAllVersions();
             i.next(); // skip jcr:rootVersion
-            return new DocumentVersionIterator(i);
+            return new FileVersionIterator(i);
          }
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get versions of document " + getId()
-            + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable get versions of file " + getId() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get versions of document " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get versions of file " + getId() + ". " + e.getMessage(), e);
       }
    }
 
    /**
-    * Place lock to current object.
+    * Place lock to current file.
     * 
     * @return lock token
-    * @throws LockException if object already locked
-    * @throws PermissionDeniedException if object can't be locked cause to
+    * @throws LockException if file already locked
+    * @throws PermissionDeniedException if file can't be locked cause to
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    String lock() throws LockException, PermissionDeniedException, VirtualFileSystemException
    {
       if (isLocked())
-         throw new LockException("Object already locked. ");
+         throw new LockException("File already locked. ");
       try
       {
          if (node.canAddMixin("mix:lockable"))
@@ -266,53 +274,101 @@ class DocumentData extends ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable place lock to object " + getId() + ". " + e.getMessage());
+         throw new LockException("Unable place lock to file " + getId() + ". " + e.getMessage());
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable place lock to object " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable place lock to file " + getId() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable place lock to object " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable place lock to file " + getId() + ". " + e.getMessage(), e);
       }
    }
 
    /**
-    * Rename and(or) update content type of current document.
+    * Remove lock from file.
+    * 
+    * @param lockToken lock token
+    * @throws LockException if file is not locked or <code>lockToken</code> is
+    *            <code>null</code> or does not matched
+    * @throws PermissionDeniedException if lock can't be removed cause to
+    *            security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
+   void unlock(String lockToken) throws LockException, PermissionDeniedException, VirtualFileSystemException
+   {
+      if (!isLocked())
+         throw new LockException("File is not locked. ");
+      try
+      {
+         Session session = node.getSession();
+         if (lockToken != null)
+            session.addLockToken(lockToken);
+         node.unlock();
+      }
+      catch (javax.jcr.lock.LockException e)
+      {
+         throw new LockException("Unable remove lock from file " + getId() + ". " + e.getMessage());
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Unable remove lock from file " + getId() + ". Operation not permitted. ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException("Unable remove lock from file " + getId() + ". " + e.getMessage(), e);
+      }
+   }
+
+   /**
+    * Check is file locked or not.
+    * 
+    * @return <code>true</code> if file is locked and <code>false</code>
+    *         otherwise
+    * @throws VirtualFileSystemException if any errors occurs
+    */
+   boolean isLocked() throws VirtualFileSystemException
+   {
+      try
+      {
+         return node.isLocked();
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+   }
+
+   /**
+    * Rename and(or) update content type of current file.
     * 
     * @param newname new name. May be <code>null</code> if name is unchangeable
     * @param mediaType new media type. May be <code>null</code> if content type
     *           is unchangeable
-    * @param lockTokens lock tokens. This lock tokens will be used if document
-    *           is locked. Pass <code>null</code> or empty list if there is no
-    *           lock tokens
-    * @throws ConstraintException if parent folder already contains document
-    *            with the same name as specified or if <code>newname</code> is
+    * @param lockToken lock token. This lock token will be used if file is
+    *           locked. Pass <code>null</code> if there is no lock token
+    * @throws ConstraintException if parent folder already contains file with
+    *            the same name as specified or if <code>newname</code> is
     *            invalid
-    * @throws LockException if document is locked and <code>lockTokens</code> is
-    *            <code>null</code> or does not contains matched lock tokens
-    * @throws PermissionDeniedException if document can't be renamed cause to
+    * @throws LockException if file is locked and <code>lockToken</code> is
+    *            <code>null</code> or does not matched
+    * @throws PermissionDeniedException if file can't be renamed cause to
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   void rename(String newname, MediaType mediaType, List<String> lockTokens) throws ConstraintException, LockException,
+   void rename(String newname, MediaType mediaType, String lockToken) throws ConstraintException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
-      if (newname == null && mediaType == null)
+      if ((newname == null || newname.length() == 0) && mediaType == null)
          return;
-      if (newname.length() == 0)
-         throw new ConstraintException("Empty name is not allowed. ");
 
       try
       {
          Session session = node.getSession();
-         if (lockTokens != null && lockTokens.size() > 0)
-         {
-            for (String lt : lockTokens)
-               session.addLockToken(lt);
-         }
-         if (newname != null)
+         if (lockToken != null)
+            session.addLockToken(lockToken);
+         if (newname != null && newname.length() > 0)
          {
             String destinationPath = node.getParent().getPath() + "/" + newname;
             session.move(node.getPath(), destinationPath);
@@ -328,49 +384,45 @@ class DocumentData extends ItemData
       }
       catch (ItemExistsException e)
       {
-         throw new ConstraintException("Document with the same name already exists. ");
+         throw new ConstraintException("File with the same name already exists. ");
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable rename document " + getId() + ". Object is locked. ");
+         throw new LockException("Unable rename file " + getId() + ". File is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable rename document " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable rename file " + getId() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable rename document " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable rename file " + getId() + ". " + e.getMessage(), e);
       }
    }
 
    /**
-    * Update content of document. Previous state of JCR node saved in version
+    * Update content of file. Previous state of JCR node saved in version
     * history.
     * 
-    * @param content new content. If <code>content</code> then content of
-    *           document will be removed.
+    * @param content new content. If <code>content</code> then content of file
+    *           will be removed.
     * @param mediaType new content type
-    * @param lockTokens lock tokens. This lock tokens will be used if document
-    *           is locked. Pass <code>null</code> or empty list if there is no
-    *           lock tokens
-    * @throws LockException if document is locked and <code>lockTokens</code> is
-    *            <code>null</code> or does not contains matched lock tokens
+    * @param lockToken lock token. This lock token will be used if file is
+    *           locked. Pass <code>null</code> if there is no lock token
+    * @throws LockException if file is locked and <code>lockToken</code> is
+    *            <code>null</code> or does not matched
     * @throws PermissionDeniedException if content can't be updated cause to
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   void setContent(InputStream content, MediaType mediaType, List<String> lockTokens) throws LockException,
+   void setContent(InputStream content, MediaType mediaType, String lockToken) throws LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
          Session session = node.getSession();
-         if (lockTokens != null && lockTokens.size() > 0)
-         {
-            for (String lt : lockTokens)
-               session.addLockToken(lt);
-         }
+         if (lockToken != null)
+            session.addLockToken(lockToken);
 
          if (!node.isNodeType("mix:versionable"))
          {
@@ -399,16 +451,15 @@ class DocumentData extends ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable update content of document " + getId() + ". Object is locked. ");
+         throw new LockException("Unable update content of file " + getId() + ". File is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable update content of document " + getId()
-            + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable update content of file " + getId() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable update content of document " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable update content of file " + getId() + ". " + e.getMessage(), e);
       }
    }
 }

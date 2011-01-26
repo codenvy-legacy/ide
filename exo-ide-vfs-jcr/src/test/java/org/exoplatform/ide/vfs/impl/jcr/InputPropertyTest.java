@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.InputProperty;
+import org.exoplatform.ide.vfs.server.ConvertibleInputProperty;
 import org.exoplatform.ws.frameworks.json.JsonHandler;
 import org.exoplatform.ws.frameworks.json.JsonParser;
 import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
@@ -52,8 +52,8 @@ public class InputPropertyTest extends JcrFileSystemTest
       String json = "{\"name\":\"mediaType\", \"value\":[\"text/plain;charset=utf8\"]}";
       parser.parse(new StringReader(json), handler);
       JsonValue jsonValue = handler.getJsonObject();
-      InputProperty inputProperty = ObjectBuilder.createObject(InputProperty.class, jsonValue);
-      MediaType[] mediaTypes = inputProperty.valueAs(MediaType[].class);
+      ConvertibleInputProperty inputProperty = ObjectBuilder.createObject(ConvertibleInputProperty.class, jsonValue);
+      MediaType[] mediaTypes = inputProperty.as(MediaType[].class);
       assertNotNull(mediaTypes);
       assertEquals(1, mediaTypes.length);
       MediaType mt = mediaTypes[0];

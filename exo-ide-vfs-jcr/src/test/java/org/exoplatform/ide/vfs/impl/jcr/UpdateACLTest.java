@@ -42,7 +42,9 @@ public class UpdateACLTest extends JcrFileSystemTest
 {
    private Node updateAclTestNode;
 
-   private String document;
+   private String filePath;
+
+   private Node fileNode;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -53,31 +55,32 @@ public class UpdateACLTest extends JcrFileSystemTest
       super.setUp();
       String name = getClass().getName();
       updateAclTestNode = testRoot.addNode(name, "nt:unstructured");
-      updateAclTestNode.addMixin("mix:lockable");
 
-      Node documentNode = updateAclTestNode.addNode("UpdateACLTest_DOCUMENT", "nt:file");
-      Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
+      fileNode = updateAclTestNode.addNode("UpdateACLTest_FILE", "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      document = documentNode.getPath();
+      fileNode.addMixin("mix:lockable");
+      filePath = fileNode.getPath();
 
       session.save();
    }
 
-   public void testUpdateAclDocument() throws Exception
+   public void testUpdateAclFile() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/acl") //
-         .append(document).toString();
+         .append(SERVICE_URI) //
+         .append("acl") //
+         .append(filePath).toString();
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
-      ContainerResponse response = launcher.service("POST", path, "", h, acl.getBytes(), null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, acl.getBytes(), null);
       assertEquals(204, response.getStatus());
 
-      ExtendedNode node = (ExtendedNode)session.getItem(document);
+      ExtendedNode node = (ExtendedNode)session.getItem(filePath);
       AccessControlList jcrAcl = node.getACL();
 
       List<String> root = jcrAcl.getPermissions("root");
@@ -93,17 +96,18 @@ public class UpdateACLTest extends JcrFileSystemTest
       assertFalse(john.contains(PermissionType.REMOVE));
    }
 
-   public void testUpdateAclDocumentOverride() throws Exception
+   public void testUpdateAclFileOverride() throws Exception
    {
-      ExtendedNode node = (ExtendedNode)session.getItem(document);
+      ExtendedNode node = (ExtendedNode)session.getItem(filePath);
       node.addMixin("exo:privilegeable");
       node.setPermission("exo", PermissionType.ALL);
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/acl") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("acl") //
+         .append(filePath) //
          .append("?") //
          .append("override=") //
          .append(true) //
@@ -112,10 +116,10 @@ public class UpdateACLTest extends JcrFileSystemTest
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
-      ContainerResponse response = launcher.service("POST", path, "", h, acl.getBytes(), writer, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, acl.getBytes(), writer, null);
       assertEquals(204, response.getStatus());
 
-      node = (ExtendedNode)session.getItem(document);
+      node = (ExtendedNode)session.getItem(filePath);
       AccessControlList jcrAcl = node.getACL();
       List<String> root = jcrAcl.getPermissions("root");
       assertTrue(root.contains(PermissionType.READ));
@@ -134,25 +138,26 @@ public class UpdateACLTest extends JcrFileSystemTest
       assertTrue(exo.isEmpty());
    }
 
-   public void testUpdateAclDocumentMerge() throws Exception
+   public void testUpdateAclFileMerge() throws Exception
    {
-      ExtendedNode node = (ExtendedNode)session.getItem(document);
+      ExtendedNode node = (ExtendedNode)session.getItem(filePath);
       node.addMixin("exo:privilegeable");
       node.setPermission("exo", PermissionType.ALL);
       session.save();
 
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/acl") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("acl") //
+         .append(filePath) //
          .toString();
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
-      ContainerResponse response = launcher.service("POST", path, "", h, acl.getBytes(), null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, acl.getBytes(), null);
       assertEquals(204, response.getStatus());
 
-      node = (ExtendedNode)session.getItem(document);
+      node = (ExtendedNode)session.getItem(filePath);
       AccessControlList jcrAcl = node.getACL();
       List<String> root = jcrAcl.getPermissions("root");
       assertTrue(root.contains(PermissionType.READ));
@@ -174,25 +179,25 @@ public class UpdateACLTest extends JcrFileSystemTest
       assertTrue(exo.contains(PermissionType.REMOVE));
    }
 
-   public void testUpdateAclDocumentLocked() throws Exception
+   public void testUpdateAclFileLocked() throws Exception
    {
-      Lock lock = updateAclTestNode.lock(true, false);
-
+      Lock lock = fileNode.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/acl") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("acl") //
+         .append(filePath) //
          .append("?") //
-         .append("lockTokens=") //
+         .append("lockToken=") //
          .append(lock.getLockToken()) //
          .toString();
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
-      ContainerResponse response = launcher.service("POST", path, "", h, acl.getBytes(), writer, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, acl.getBytes(), writer, null);
       assertEquals(204, response.getStatus());
-      ExtendedNode node = (ExtendedNode)session.getItem(document);
+      ExtendedNode node = (ExtendedNode)session.getItem(filePath);
       AccessControlList jcrAcl = node.getACL();
 
       List<String> root = jcrAcl.getPermissions("root");
@@ -208,19 +213,19 @@ public class UpdateACLTest extends JcrFileSystemTest
       assertFalse(john.contains(PermissionType.REMOVE));
    }
 
-   public void testUpdateAclDocumentLocked_NoLockToken() throws Exception
+   public void testUpdateAclFileLocked_NoLockToken() throws Exception
    {
-      updateAclTestNode.lock(true, false);
-
+      fileNode.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/acl") //
-         .append(document).toString();
+         .append(SERVICE_URI) //
+         .append("acl") //
+         .append(filePath).toString();
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
-      ContainerResponse response = launcher.service("POST", path, "", h, acl.getBytes(), writer, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, acl.getBytes(), writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
    }

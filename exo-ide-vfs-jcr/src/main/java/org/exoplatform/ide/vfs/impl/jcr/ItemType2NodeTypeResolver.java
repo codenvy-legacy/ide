@@ -31,7 +31,7 @@ public class ItemType2NodeTypeResolver
    /**
     * By default return 'nt:file' always.
     */
-   public String getDocumentNodeTypeName(MediaType mediaType)
+   public String getFileNodeTypeName(MediaType mediaType)
    {
       return "nt:file";
    }
@@ -39,7 +39,7 @@ public class ItemType2NodeTypeResolver
    /**
     * By default return 'nt:resource' always.
     */
-   public String getDocumentContentNodeTypeName(MediaType mediaType)
+   public String getFileContentNodeTypeName(MediaType mediaType)
    {
       return "nt:resource";
    }

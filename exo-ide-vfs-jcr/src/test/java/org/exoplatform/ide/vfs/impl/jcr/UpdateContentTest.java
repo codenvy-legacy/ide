@@ -39,11 +39,13 @@ public class UpdateContentTest extends JcrFileSystemTest
 {
    private Node updateContentTestNode;
 
-   private String document;
+   private String filePath;
 
-   private String folder;
+   private String folderPath;
 
    private String content = "__UpdateContentTest__";
+
+   private Node fileNode;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -54,18 +56,18 @@ public class UpdateContentTest extends JcrFileSystemTest
       super.setUp();
       String name = getClass().getName();
       updateContentTestNode = testRoot.addNode(name, "nt:unstructured");
-      updateContentTestNode.addMixin("exo:privilegeable");
-      updateContentTestNode.addMixin("mix:lockable");
 
-      Node documentNode = updateContentTestNode.addNode("UpdateContentTest_DOCUMENT", "nt:file");
-      Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
+      fileNode = updateContentTestNode.addNode("UpdateContentTest_FILE", "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      document = documentNode.getPath();
+      fileNode.addMixin("exo:privilegeable");
+      fileNode.addMixin("mix:lockable");
+      filePath = fileNode.getPath();
 
       Node folderNode = updateContentTestNode.addNode("UpdateContentTest_FOLDER", "nt:folder");
-      folder = folderNode.getPath();
+      folderPath = folderNode.getPath();
 
       session.save();
    }
@@ -73,27 +75,29 @@ public class UpdateContentTest extends JcrFileSystemTest
    public void testUpdateContent() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/content") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("content") //
+         .append(filePath) //
          .append("?") //
          .append("mediaType=") //
          .append("text/plain;charset=utf8") //
          .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, content.getBytes(), null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), null);
       assertEquals(204, response.getStatus());
-      Node doc = (Node)session.getItem(document);
-      assertEquals(content, doc.getProperty("jcr:content/jcr:data").getString());
-      assertEquals("text/plain", doc.getProperty("jcr:content/jcr:mimeType").getString());
-      assertEquals("utf8", doc.getProperty("jcr:content/jcr:encoding").getString());
+      Node file = (Node)session.getItem(filePath);
+      assertEquals(content, file.getProperty("jcr:content/jcr:data").getString());
+      assertEquals("text/plain", file.getProperty("jcr:content/jcr:mimeType").getString());
+      assertEquals("utf8", file.getProperty("jcr:content/jcr:encoding").getString());
    }
 
    public void testUpdateContentFolder() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/content") //
-         .append(folder).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, content.getBytes(), writer, null);
+         .append(SERVICE_URI) //
+         .append("content") //
+         .append(folderPath).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -102,47 +106,50 @@ public class UpdateContentTest extends JcrFileSystemTest
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(1);
       permissions.put("root", PermissionType.ALL);
-      ((ExtendedNode)updateContentTestNode).setPermissions(permissions);
+      ((ExtendedNode)fileNode).setPermissions(permissions);
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/content") //
-         .append(document).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("content") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
    }
 
-   public void testUpdateContentLockedParent() throws Exception
+   public void testUpdateContentLocked() throws Exception
    {
-      Lock lock = updateContentTestNode.lock(true, false);
+      Lock lock = fileNode.lock(true, false);
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/content") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("content") //
+         .append(filePath) //
          .append("?") //
          .append("mediaType=") //
          .append("text/plain;charset=utf8") //
          .append("&") //
-         .append("lockTokens=") //
+         .append("lockToken=") //
          .append(lock.getLockToken()) //
          .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, content.getBytes(), null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), null);
       assertEquals(204, response.getStatus());
-      Node doc = (Node)session.getItem(document);
-      assertEquals(content, doc.getProperty("jcr:content/jcr:data").getString());
-      assertEquals("text/plain", doc.getProperty("jcr:content/jcr:mimeType").getString());
-      assertEquals("utf8", doc.getProperty("jcr:content/jcr:encoding").getString());
+      Node file = (Node)session.getItem(filePath);
+      assertEquals(content, file.getProperty("jcr:content/jcr:data").getString());
+      assertEquals("text/plain", file.getProperty("jcr:content/jcr:mimeType").getString());
+      assertEquals("utf8", file.getProperty("jcr:content/jcr:encoding").getString());
    }
 
-   public void testUpdateContentLockedParent_NoLockTokens() throws Exception
+   public void testUpdateContentLocked_NoLockTokens() throws Exception
    {
-      updateContentTestNode.lock(true, false);
+      fileNode.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/content") //
-         .append(document).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("content") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
    }

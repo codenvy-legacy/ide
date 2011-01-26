@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.shared.ObjectId;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -28,7 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.jcr.Node;
-import javax.jcr.lock.Lock;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -54,13 +52,13 @@ public class CreateTest extends JcrFileSystemTest
       CREATE_TEST_PATH = "/" + TEST_ROOT_NAME + "/" + name;
    }
 
-   public void testCreateDocument() throws Exception
+   public void testCreateFile() throws Exception
    {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String name = "testCreateDocument";
-      String content = "test create document";
+      String name = "testCreateFile";
+      String content = "test create file";
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/document") //
+         .append(SERVICE_URI) //
+         .append("file") //
          .append(CREATE_TEST_PATH) //
          .append("?") //
          .append("name=") //
@@ -68,136 +66,91 @@ public class CreateTest extends JcrFileSystemTest
          .append("&") //
          .append("mediaType=") //
          .append("text/plain;charset%3Dutf8").toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, content.getBytes(), writer, null);
-      assertEquals(200, response.getStatus());
-      //log.info(new String(writer.getBody()));
-      ObjectId id = (ObjectId)response.getEntity();
-      assertEquals(CREATE_TEST_PATH + "/" + name, id.getId());
-
-      assertTrue("Document was not created in expected location. ", session.itemExists(id.getId()));
-      Node document = (Node)session.getItem(id.getId());
-      assertEquals("text/plain", document.getNode("jcr:content").getProperty("jcr:mimeType").getString());
-      assertEquals("utf8", document.getNode("jcr:content").getProperty("jcr:encoding").getString());
-      assertEquals(content, document.getNode("jcr:content").getProperty("jcr:data").getString());
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), null);
+      
+      assertEquals(201, response.getStatus());
+      String expectedPath = CREATE_TEST_PATH + "/" + name;
+      String expectedLocation = SERVICE_URI + "item" + expectedPath;
+      String location = response.getHttpHeaders().getFirst("Location").toString();
+      
+      assertEquals(expectedLocation, location);
+      assertTrue("File was not created in expected location. ", session.itemExists(expectedPath));
+      Node file = (Node)session.getItem(expectedPath);
+      assertEquals("text/plain", file.getNode("jcr:content").getProperty("jcr:mimeType").getString());
+      assertEquals("utf8", file.getNode("jcr:content").getProperty("jcr:encoding").getString());
+      assertEquals(content, file.getNode("jcr:content").getProperty("jcr:data").getString());
    }
 
-   public void testCreateDocumentInLockedParent() throws Exception
+   public void testCreateFileNoContent() throws Exception
    {
-      Node parent = createTestNode.addNode("testCreateDocumentInLockedParent_PARENT", "nt:folder");
-      String parentPath = parent.getPath();
-      parent.addMixin("mix:lockable");
-      session.save();
-      Lock lock = parent.lock(true, false);
-
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String name = "testCreateDocumentInLockedParent";
-      String content = "test create document in locked parent";
+      String name = "testCreateFileNoContent";
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/document") //
-         .append(parentPath) //
-         .append("?") //
-         .append("name=") //
-         .append(name) //
-         .append("&") //
-         .append("lockTokens=") //
-         .append(lock.getLockToken()).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, content.getBytes(), writer, null);
-      assertEquals(200, response.getStatus());
-      //log.info(new String(writer.getBody()));
-      ObjectId id = (ObjectId)response.getEntity();
-      assertEquals(parentPath + "/" + name, id.getId());
-
-      assertTrue("Document was not created in expected location. ", session.itemExists(id.getId()));
-      Node document = (Node)session.getItem(id.getId());
-      assertEquals(MediaType.APPLICATION_OCTET_STREAM, document.getNode("jcr:content").getProperty("jcr:mimeType")
-         .getString());
-      assertEquals(content, document.getNode("jcr:content").getProperty("jcr:data").getString());
-   }
-
-   public void testCreateDocumentInLockedParent_NoLockToken() throws Exception
-   {
-      Node parent = createTestNode.addNode("testCreateDocumentInLockedParent_NoLockToken_PARENT", "nt:folder");
-      String parentPath = parent.getPath();
-      parent.addMixin("mix:lockable");
-      session.save();
-      parent.lock(true, false);
-
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String name = "testCreateDocumentInLockedParent_NoLockToken";
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/document") //
-         .append(parentPath) //
-         .append("?") //
-         .append("name=") //
-         .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, DEFAULT_CONTENT.getBytes(), writer, null);
-      assertEquals(423, response.getStatus());
-      log.info(new String(writer.getBody()));
-   }
-
-   public void testCreateDocumentNoContent() throws Exception
-   {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String name = "testCreateDocumentNoContent";
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/document") //
+         .append(SERVICE_URI) //
+         .append("file") //
          .append(CREATE_TEST_PATH) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      assertEquals(200, response.getStatus());
-      //log.info(new String(writer.getBody()));
-      ObjectId id = (ObjectId)response.getEntity();
-      assertEquals(CREATE_TEST_PATH + "/" + name, id.getId());
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
 
-      assertTrue("Document was not created in expected location. ", session.itemExists(id.getId()));
-      Node document = (Node)session.getItem(id.getId());
-      assertEquals(MediaType.APPLICATION_OCTET_STREAM, document.getNode("jcr:content").getProperty("jcr:mimeType")
+      assertEquals(201, response.getStatus());
+      String expectedPath = CREATE_TEST_PATH + "/" + name;
+      String expectedLocation = SERVICE_URI + "item" + expectedPath;
+      String location = response.getHttpHeaders().getFirst("Location").toString();
+      assertEquals(expectedLocation, location);
+
+      assertTrue("File was not created in expected location. ", session.itemExists(expectedPath));
+      Node file = (Node)session.getItem(expectedPath);
+      assertEquals(MediaType.APPLICATION_OCTET_STREAM, file.getNode("jcr:content").getProperty("jcr:mimeType")
          .getString());
-      assertFalse(document.getNode("jcr:content").hasProperty("jcr:encoding"));
-      assertEquals("", document.getNode("jcr:content").getProperty("jcr:data").getString());
+      assertFalse(file.getNode("jcr:content").hasProperty("jcr:encoding"));
+      assertEquals("", file.getNode("jcr:content").getProperty("jcr:data").getString());
    }
 
-   public void testCreateDocumentNoMediaType() throws Exception
+   public void testCreateFileNoMediaType() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String name = "testCreateDocumentNoMediaType";
-      String content = "test create document without media type";
+      String name = "testCreateFileNoMediaType";
+      String content = "test create file without media type";
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/document") //
+         .append(SERVICE_URI) //
+         .append("file") //
          .append(CREATE_TEST_PATH) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, content.getBytes(), writer, null);
-      assertEquals(200, response.getStatus());
-      //log.info(new String(writer.getBody()));
-      ObjectId id = (ObjectId)response.getEntity();
-      assertEquals(CREATE_TEST_PATH + "/" + name, id.getId());
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), writer, null);
 
-      assertTrue("Document was not created in expected location. ", session.itemExists(id.getId()));
-      Node document = (Node)session.getItem(id.getId());
-      assertEquals(MediaType.APPLICATION_OCTET_STREAM, document.getNode("jcr:content").getProperty("jcr:mimeType")
+      assertEquals(201, response.getStatus());
+      String expectedPath = CREATE_TEST_PATH + "/" + name;
+      String expectedLocation = SERVICE_URI + "item" + expectedPath;
+      String location = response.getHttpHeaders().getFirst("Location").toString();
+      assertEquals(expectedLocation, location);
+
+      assertTrue("File was not created in expected location. ", session.itemExists(expectedPath));
+      Node file = (Node)session.getItem(expectedPath);
+      assertEquals(MediaType.APPLICATION_OCTET_STREAM, file.getNode("jcr:content").getProperty("jcr:mimeType")
          .getString());
-      assertFalse(document.getNode("jcr:content").hasProperty("jcr:encoding"));
-      assertEquals(content, document.getNode("jcr:content").getProperty("jcr:data").getString());
+      assertFalse(file.getNode("jcr:content").hasProperty("jcr:encoding"));
+      assertEquals(content, file.getNode("jcr:content").getProperty("jcr:data").getString());
    }
 
-   public void testCreateDocumentNoName() throws Exception
+   public void testCreateFileNoName() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/document") //
+         .append(SERVICE_URI) //
+         .append("file") //
          .append(CREATE_TEST_PATH).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, DEFAULT_CONTENT.getBytes(), writer, null);
+      ContainerResponse response =
+         launcher.service("POST", path, BASE_URI, null, DEFAULT_CONTENT.getBytes(), writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
    }
 
-   public void testCreateDocumentNoPermissions() throws Exception
+   public void testCreateFileNoPermissions() throws Exception
    {
-      Node parent = createTestNode.addNode("testCreateDocumentNoPermissions_PARENT", "nt:folder");
+      Node parent = createTestNode.addNode("testCreateFileNoPermissions_PARENT", "nt:folder");
       parent.addMixin("exo:privilegeable");
       Map<String, String[]> permissions = new HashMap<String, String[]>(1);
       permissions.put("root", PermissionType.ALL);
@@ -205,113 +158,69 @@ public class CreateTest extends JcrFileSystemTest
       String parentPath = parent.getPath();
       session.save();
 
-      String name = "testCreateDocumentNoPermissions";
+      String name = "testCreateFileNoPermissions";
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/document") //
+         .append(SERVICE_URI) //
+         .append("file") //
          .append(parentPath) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, DEFAULT_CONTENT.getBytes(), writer, null);
+      ContainerResponse response =
+         launcher.service("POST", path, BASE_URI, null, DEFAULT_CONTENT.getBytes(), writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
    }
 
-   public void testCreateDocumentWrongParent() throws Exception
+   public void testCreateFileWrongParent() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String name = "testCreateDocumentWrongParent";
+      String name = "testCreateFileWrongParent";
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/document") //
+         .append(SERVICE_URI) //
+         .append("file") //
          .append(CREATE_TEST_PATH + "_WRONG_PATH") //
          .append("?") //
          .append("name=") //
          .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, DEFAULT_CONTENT.getBytes(), writer, null);
+      ContainerResponse response =
+         launcher.service("POST", path, BASE_URI, null, DEFAULT_CONTENT.getBytes(), writer, null);
       assertEquals(404, response.getStatus());
       log.info(new String(writer.getBody()));
    }
 
    public void testCreateFolder() throws Exception
    {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateFolder";
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/folder") //
+         .append(SERVICE_URI) //
+         .append("folder") //
          .append(CREATE_TEST_PATH) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      assertEquals(200, response.getStatus());
-      //log.info(new String(writer.getBody()));
-      ObjectId id = (ObjectId)response.getEntity();
-      assertEquals(CREATE_TEST_PATH + "/" + name, id.getId());
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
 
-      assertTrue("Folder was not created in expected location. ", session.itemExists(id.getId()));
-      Node folder = (Node)session.getItem(id.getId());
+      assertEquals(201, response.getStatus());
+      String expectedPath = CREATE_TEST_PATH + "/" + name;
+      String expectedLocation = SERVICE_URI + "item" + expectedPath;
+      String location = response.getHttpHeaders().getFirst("Location").toString();
+      assertEquals(expectedLocation, location);
+
+      assertTrue("Folder was not created in expected location. ", session.itemExists(expectedPath));
+      Node folder = (Node)session.getItem(expectedPath);
       assertTrue("nt:folder node type expected", folder.getPrimaryNodeType().isNodeType("nt:folder"));
-   }
-
-   public void testCreateFolderInLockedParent() throws Exception
-   {
-      Node parent = createTestNode.addNode("testCreateFolderInLockedParent_PARENT", "nt:folder");
-      String parentPath = parent.getPath();
-      parent.addMixin("mix:lockable");
-      session.save();
-      Lock lock = parent.lock(true, false);
-
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String name = "testCreateFolderInLockedParent";
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/folder") //
-         .append(parentPath) //
-         .append("?") //
-         .append("name=") //
-         .append(name) //
-         .append("&") //
-         .append("lockTokens=") //
-         .append(lock.getLockToken()).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      assertEquals(200, response.getStatus());
-      //log.info(new String(writer.getBody()));
-      ObjectId id = (ObjectId)response.getEntity();
-      assertEquals(parentPath + "/" + name, id.getId());
-
-      assertTrue("Folder was not created in expected location. ", session.itemExists(id.getId()));
-      Node folder = (Node)session.getItem(id.getId());
-      assertTrue("nt:folder node type expected", folder.getPrimaryNodeType().isNodeType("nt:folder"));
-   }
-
-   public void testCreateFolderInLockedParent_NoLockToken() throws Exception
-   {
-      Node parent = createTestNode.addNode("testCreateFolderInLockedParent_PARENT", "nt:folder");
-      String parentPath = parent.getPath();
-      parent.addMixin("mix:lockable");
-      session.save();
-      parent.lock(true, false);
-
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String name = "testCreateFolderInLockedParent";
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/folder") //
-         .append(parentPath) //
-         .append("?") //
-         .append("name=") //
-         .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      assertEquals(423, response.getStatus());
-      log.info(new String(writer.getBody()));
    }
 
    public void testCreateFolderNoName() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/folder") //
+         .append(SERVICE_URI) //
+         .append("folder") //
          .append(CREATE_TEST_PATH).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -329,12 +238,13 @@ public class CreateTest extends JcrFileSystemTest
       String name = "testCreateFolderNoPermissions";
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/folder") //
+         .append(SERVICE_URI) //
+         .append("folder") //
          .append(parentPath) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -344,12 +254,13 @@ public class CreateTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateFolderWrongParent";
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/folder") //
+         .append(SERVICE_URI) //
+         .append("folder") //
          .append(CREATE_TEST_PATH + "_WRONG_PATH") //
          .append("?") //
          .append("name=") //
          .append(name).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(404, response.getStatus());
       log.info(new String(writer.getBody()));
    }

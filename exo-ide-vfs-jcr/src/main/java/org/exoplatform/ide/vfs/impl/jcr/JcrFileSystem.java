@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.InputProperty;
+import org.exoplatform.ide.vfs.server.ConvertibleInputProperty;
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
-import org.exoplatform.ide.vfs.server.exceptions.ObjectNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
@@ -34,22 +34,25 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
-import org.exoplatform.ide.vfs.shared.ObjectId;
 import org.exoplatform.ide.vfs.shared.Type;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.LockCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Node;
@@ -67,12 +70,11 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -87,154 +89,150 @@ public class JcrFileSystem implements VirtualFileSystem
 
    protected final ItemType2NodeTypeResolver itemType2NodeTypeResolver;
 
+   protected final UriInfo uriInfo;
+
    private VirtualFileSystemInfo vfsInfo;
 
-   public JcrFileSystem(Session session, ItemType2NodeTypeResolver mediaType2NodeTypeResolver)
+   public JcrFileSystem(Session session, ItemType2NodeTypeResolver mediaType2NodeTypeResolver, UriInfo uriInfo)
    {
       this.session = session;
       this.itemType2NodeTypeResolver = mediaType2NodeTypeResolver;
+      this.uriInfo = uriInfo;
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#copy(java.lang.String,
+    *      java.lang.String)
+    */
+   @Path("copy/{id:.*}")
+   public Response copy(@PathParam("id") String id, //
+      @QueryParam("parentId") String parentId //
+   ) throws ItemNotFoundException, ConstraintException, PermissionDeniedException, VirtualFileSystemException
+   {
+      ItemData object = getItemData(id);
+      ItemData folder = getItemData(parentId);
+      if (Type.FOLDER != folder.getType())
+         throw new InvalidArgumentException("Unable copy. Item specified as parent is not a folder. ");
+      ItemData newobject = object.copyTo((FolderData)folder);
+      return Response.created(createURI("item", newobject.getId())).build();
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFile(java.lang.String,
+    *      java.lang.String, javax.ws.rs.core.MediaType, java.io.InputStream)
+    */
+   @Path("file/{parentId:.*}")
+   public Response createFile(@PathParam("parentId") String parentId, //
+      @QueryParam("name") String name, //
+      @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType, //
+      InputStream content //
+   ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      checkName(name);
+      ItemData parentData = getItemData(parentId);
+      if (Type.FOLDER != parentData.getType())
+         throw new InvalidArgumentException("Unable create file. Item specified as parent is not a folder. ");
+      FileData newfile =
+         ((FolderData)parentData).createFile(name, itemType2NodeTypeResolver.getFileNodeTypeName(mediaType),
+            itemType2NodeTypeResolver.getFileContentNodeTypeName(mediaType), mediaType, content);
+      return Response.created(createURI("item", newfile.getId())).build();
    }
 
    /*
-    * Since we are use path of JCR node as identifier we need such method for
+    * Since we are use path of JCR node as id we need such method for
     * creation item in root folder. Path in this case may be:
     * 
-    * 1. .../document/?[Query_Parameters] --- SLASH
-    * 2. .../document?[Query_Parameters]  --- NO SLASH
+    * 1. .../file/?[Query_Parameters] --- SLASH
+    * 2. .../file?[Query_Parameters]  --- NO SLASH
     * 
     * Path without slash at the end does not match to method
-    * createDocument(String, String, MediaType, InputStream, List<String>, UriInfo).
+    * createFile(String, String, MediaType, InputStream).
     * It is possible to create special template to fix this issue:
     * 
-    * document{X:(/)?}/{parent:.*} --- Make final slash optional if {parent} is not specified (Root item)  
+    * file{X:(/)?}/{parent:.*} --- Make final slash optional if {parent} is not specified (Root item)  
     * 
     * But to keep URI template more simple and clear is better to have one more
     * method with template matched to root folder.
     */
    @POST
-   @Path("document")
-   @Produces({MediaType.APPLICATION_JSON})
-   public ObjectId _createFile(@QueryParam("name") String name,
-      @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType,
-      InputStream content, @QueryParam("lockTokens") List<String> lockTokens, @Context UriInfo ext)
-      throws ObjectNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
+   @Path("file")
+   public Response createFile(@QueryParam("name") String name, //
+      @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType, //
+      InputStream content) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      return createFile("/", name, mediaType, content, lockTokens, ext);
-   }
-
-   /*
-    * This method has the same purposes as _createDocument(String, MediaType, InputStream, List<String>, UriInfo)
-    */
-   @POST
-   @Path("folder")
-   @Produces({MediaType.APPLICATION_JSON})
-   public ObjectId _createFolder(@QueryParam("name") String name, @QueryParam("lockTokens") List<String> lockTokens,
-      @Context UriInfo ext) throws ObjectNotFoundException, InvalidArgumentException, LockException,
-      PermissionDeniedException, VirtualFileSystemException
-   {
-      return createFolder("/", name, lockTokens, ext);
-   }
-
-   // ------------------- VirtualFileSystem ---------------------
-
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#copy(java.lang.String,
-    *      java.lang.String, java.util.List)
-    */
-   @Path("copy/{identifier:.*}")
-   public ObjectId copy(@PathParam("identifier") String identifier, @QueryParam("parent") String parent,
-      @QueryParam("lockTokens") List<String> lockTokens) throws ObjectNotFoundException, ConstraintException,
-      LockException, PermissionDeniedException, VirtualFileSystemException
-   {
-      ItemData object = getItemData(identifier);
-      ItemData folder = getItemData(parent);
-      if (Type.FOLDER != folder.getType())
-         throw new InvalidArgumentException("Object " + parent + " is not a folder. ");
-      ItemData newobject = object.copyTo((FolderData)folder, lockTokens);
-      return new ObjectId(newobject.getId());
-   }
-
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createDocument(java.lang.String,
-    *      java.lang.String, javax.ws.rs.core.MediaType, java.io.InputStream,
-    *      java.util.List, javax.ws.rs.core.UriInfo)
-    */
-   @Path("document/{parent:.*}")
-   //@Path("document{X:(/)?}{parent:.*}")
-   public ObjectId createFile(@PathParam("parent") String parent, @QueryParam("name") String name,
-      @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType,
-      InputStream content, @QueryParam("lockTokens") List<String> lockTokens, @Context UriInfo ext)
-      throws ObjectNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
-      VirtualFileSystemException
-   {
-      checkName(name);
-      ItemData parentData = getItemData(parent);
-      if (Type.FOLDER != parentData.getType())
-         throw new InvalidArgumentException("Item specified as parent is not a folder. ");
-      DocumentData newdoc =
-         ((FolderData)parentData).createDocument(name, itemType2NodeTypeResolver.getDocumentNodeTypeName(mediaType),
-            itemType2NodeTypeResolver.getDocumentContentNodeTypeName(mediaType), mediaType, content, lockTokens);
-      return new ObjectId(newdoc.getId());
+      return createFile("/", name, mediaType, content);
    }
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFolder(java.lang.String,
-    *      java.lang.String, java.util.List, javax.ws.rs.core.UriInfo)
+    *      java.lang.String)
     */
-   @Path("folder/{parent:.*}")
-   //@Path("folder{X:(/)?}{parent:.*}")
-   public ObjectId createFolder(@PathParam("parent") String parent, @QueryParam("name") String name,
-      @QueryParam("lockTokens") List<String> lockTokens, @Context UriInfo ext) throws ObjectNotFoundException,
-      InvalidArgumentException, LockException, PermissionDeniedException, VirtualFileSystemException
+   @Path("folder/{parentId:.*}")
+   public Response createFolder(@PathParam("parentId") String parentId, //
+      @QueryParam("name") String name //
+   ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       checkName(name);
-      ItemData parentData = getItemData(parent);
+      ItemData parentData = getItemData(parentId);
       if (Type.FOLDER != parentData.getType())
-         throw new InvalidArgumentException("Item specified as parent is not a folder. ");
+         throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
       FolderData newfolder =
-         ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeTypeName(), lockTokens);
-      return new ObjectId(newfolder.getId());
+         ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeTypeName());
+      return Response.created(createURI("item", newfolder.getId())).build();
+   }
+
+   /*
+    * This method has the same purposes as createFile(String, MediaType, InputStream)
+    */
+   @POST
+   @Path("folder")
+   public Response createFolder(@QueryParam("name") String name) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      return createFolder("/", name);
    }
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#delete(java.lang.String,
-    *      java.util.List)
+    *      java.lang.String)
     */
-   @Path("delete/{identifier:.*}")
-   public void delete(@PathParam("identifier") String identifier, @QueryParam("lockTokens") List<String> lockTokens)
-      throws ObjectNotFoundException, ConstraintException, LockException, PermissionDeniedException,
+   @Path("delete/{id:.*}")
+   public void delete(@PathParam("id") String id, //
+      @QueryParam("lockToken") String lockToken //
+   ) throws ItemNotFoundException, ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      getItemData(identifier).delete(lockTokens);
+      getItemData(id).delete(lockToken);
    }
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getACL(java.lang.String)
     */
-   @Path("acl/{identifier:.*}")
-   public List<AccessControlEntry> getACL(@PathParam("identifier") String identifier) throws NotSupportedException,
-      ObjectNotFoundException, PermissionDeniedException, VirtualFileSystemException
+   @Path("acl/{id:.*}")
+   public List<AccessControlEntry> getACL(@PathParam("id") String id) throws NotSupportedException,
+      ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException
    {
-      return getItemData(identifier).getACL();
+      return getItemData(id).getACL();
    }
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getChildren(java.lang.String,
     *      int, int, org.exoplatform.ide.vfs.server.PropertyFilter)
     */
-   @Path("children/{identifier:.*}")
-   public ItemList<Item> getChildren(@PathParam("identifier") String parent,
-      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, @QueryParam("skipCount") int skipCount,
-      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter) throws ObjectNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   @Path("children/{id:.*}")
+   public ItemList<Item> getChildren(@PathParam("id") String folderId, //
+      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
+      @QueryParam("skipCount") int skipCount, //
+      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
+   ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       if (skipCount < 0)
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
 
-      ItemData data = getItemData(parent);
+      ItemData data = getItemData(folderId);
       if (Type.FOLDER != data.getType())
-         throw new InvalidArgumentException("Object " + parent + " is not a folder. ");
+         throw new InvalidArgumentException("Unable get children. Item " + folderId + " is not a folder. ");
 
       FolderData folderData = (FolderData)data;
       LazyIterator<ItemData> children = folderData.getChildren();
@@ -248,6 +246,7 @@ public class JcrFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException("'skipCount' parameter is greater then total number of items. ");
       }
 
+      // TODO Make improvement  for large amount of items
       List<Item> l = new ArrayList<Item>();
       for (int count = 0; children.hasNext() && (maxItems < 0 || count < maxItems); count++)
          l.add(fromItemData(children.next(), propertyFilter));
@@ -262,22 +261,22 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContent(java.lang.String)
     */
-   @Path("content/{identifier:.*}")
-   public Response getContent(@PathParam("identifier") String identifier) throws ObjectNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   @Path("content/{id:.*}")
+   public Response getContent(@PathParam("id") String id) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException
    {
-      ItemData data = getItemData(identifier);
+      ItemData data = getItemData(id);
       if (Type.FILE != data.getType())
-         throw new InvalidArgumentException("Object " + identifier + " is not a document. ");
-      DocumentData docData = (DocumentData)data;
+         throw new InvalidArgumentException("Unable get content. Item " + id + " is not a file. ");
+      FileData fileData = (FileData)data;
       // TODO : cache control, last modification date, etc ??
-      return Response.ok(docData.getContent(), docData.getContenType()).build();
+      return Response.ok(fileData.getContent(), fileData.getContenType()).build();
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVfsInfo(javax.ws.rs.core.UriInfo)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVfsInfo()
     */
-   public VirtualFileSystemInfo getVfsInfo(@Context UriInfo uriInfo)
+   public VirtualFileSystemInfo getVfsInfo()
    {
       if (vfsInfo == null)
       {
@@ -286,35 +285,57 @@ public class JcrFileSystem implements VirtualFileSystem
          for (BasicPermissions bp : basicPermissions)
             permissions.add(bp.value());
          vfsInfo =
-            new VirtualFileSystemInfo(true, org.exoplatform.services.security.IdentityConstants.ANONIM,
-               org.exoplatform.services.security.IdentityConstants.ANY, permissions, LockCapability.DEEP,
-               ACLCapability.MANAGE, QueryCapability.BOTHCOMBINED, "", "/");
+            new VirtualFileSystemInfo(true, true, org.exoplatform.services.security.IdentityConstants.ANONIM,
+               org.exoplatform.services.security.IdentityConstants.ANY, permissions, ACLCapability.MANAGE,
+               QueryCapability.BOTHCOMBINED, "", "/", createUrlTemplates());
       }
       return vfsInfo;
+   }
+
+   private Map<String, Link> createUrlTemplates()
+   {
+      Map<String, Link> templates = new HashMap<String, Link>();
+      templates.put("create-file",
+         new Link(createURI("file", "[parentId]", "name", "[name]", "mediaType", "[mediaType]").toString(), ""));
+      templates.put("create-folder", new Link(createURI("folder", "[parentId]", "name", "[name]").toString(), ""));
+      templates.put("copy", new Link(createURI("copy", "[id]", "parentId", "[parentId]").toString(), ""));
+      templates.put("move", new Link(createURI("move", "[id]", "parentId", "[parentId]", "lockToken", "[lockToken]")
+         .toString(), ""));
+      templates.put("lock", new Link(createURI("lock", "[id]").toString(), ""));
+      templates.put("unlock", new Link(createURI("unlock", "[id]", "lockToken", "[lockToken]").toString(), ""));
+      /*templates.put(
+         "search",
+         new Link(createURI("search", null, "statement", "[statement]", "maxItems", "[maxItems]", "skipCount",
+            "[skipCount]").toString(), ""));*/
+      templates.put(
+         "search",
+         new Link(createURI("search", null, "maxItems", "[maxItems]", "skipCount", "[skipCount]", "propertyFilter",
+            "[propertyFilter]").toString(), MediaType.APPLICATION_FORM_URLENCODED));
+      return templates;
    }
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItem(java.lang.String,
     *      org.exoplatform.ide.vfs.server.PropertyFilter)
     */
-   @Path("item/{identifier:.*}")
-   public Item getItem(@PathParam("identifier") String identifier,
-      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter) throws ObjectNotFoundException,
-      PermissionDeniedException, VirtualFileSystemException
+   @Path("item/{id:.*}")
+   public Item getItem(@PathParam("id") String id, //
+      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
+   ) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException
    {
-      return fromItemData(getItemData(identifier), propertyFilter);
+      return fromItemData(getItemData(id), propertyFilter);
    }
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersion(java.lang.String,
     *      org.exoplatform.ide.vfs.VersionId)
     */
-   @Path("version/{identifier:.*}/{versionIdentifier}")
-   public Response getVersion(@PathParam("identifier") String identifier,
-      @PathParam("versionIdentifier") String versionIdentifier) throws ObjectNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   @Path("version/{id:.*}/{versionId}")
+   public Response getVersion(@PathParam("id") String id, //
+      @PathParam("versionId") String versionId //
+   ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
-      DocumentData versionData = getDocumentData(identifier, versionIdentifier);
+      FileData versionData = getFileData(id, versionId);
       // TODO : cache control, last modification date, etc ??
       return Response.ok(versionData.getContent(), versionData.getContenType()).build();
    }
@@ -323,21 +344,22 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersions(java.lang.String,
     *      int, int, org.exoplatform.ide.vfs.server.PropertyFilter)
     */
-   @Path("versions/{identifier:.*}")
-   public ItemList<File> getVersions(@PathParam("identifier") String identifier,
-      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, @QueryParam("skipCount") int skipCount,
-      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter) throws ObjectNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   @Path("versions/{id:.*}")
+   public ItemList<File> getVersions(@PathParam("id") String id, //
+      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
+      @QueryParam("skipCount") int skipCount, //
+      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
+   ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       if (skipCount < 0)
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
 
-      ItemData data = getItemData(identifier);
+      ItemData data = getItemData(id);
       if (Type.FILE != data.getType())
-         throw new InvalidArgumentException("Object " + identifier + " is not a document. ");
+         throw new InvalidArgumentException("Object " + id + " is not a file. ");
 
-      DocumentData docData = (DocumentData)data;
-      LazyIterator<DocumentData> versions = docData.getAllVersions();
+      FileData fileData = (FileData)data;
+      LazyIterator<FileData> versions = fileData.getAllVersions();
       try
       {
          if (skipCount > 0)
@@ -360,53 +382,54 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#lock(java.lang.String,
-    *      java.lang.Boolean)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#lock(java.lang.String)
     */
-   @Path("lock/{identifier:.*}")
-   public LockToken lock(@PathParam("identifier") String identifier) throws NotSupportedException,
-      ObjectNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
-      VirtualFileSystemException
+   @Path("lock/{id:.*}")
+   public LockToken lock(@PathParam("id") String id) throws NotSupportedException, ItemNotFoundException,
+      InvalidArgumentException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
-      ItemData itemData = getItemData(identifier);
+      ItemData itemData = getItemData(id);
       if (itemData.getType() != Type.FILE)
          throw new InvalidArgumentException("Locking allowed for Files only. ");
-      return new LockToken(((DocumentData)getItemData(identifier)).lock());
+      return new LockToken(((FileData)itemData).lock());
    }
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#move(java.lang.String,
-    *      java.lang.String, java.util.List)
+    *      java.lang.String, java.lang.String)
     */
-   @Path("move/{identifier:.*}")
-   public ObjectId move(@PathParam("identifier") String identifier, @QueryParam("newparent") String newparent,
-      @QueryParam("lockTokens") List<String> lockTokens) throws ObjectNotFoundException, ConstraintException,
-      LockException, PermissionDeniedException, VirtualFileSystemException
+   @Path("move/{id:.*}")
+   public Response move(@PathParam("id") String id, //
+      @QueryParam("parentId") String parentId, //
+      @QueryParam("lockToken") String lockToken //
+   ) throws ItemNotFoundException, ConstraintException, LockException, PermissionDeniedException,
+      VirtualFileSystemException
    {
-      ItemData object = getItemData(identifier);
-      ItemData folder = getItemData(newparent);
+      ItemData object = getItemData(id);
+      ItemData folder = getItemData(parentId);
       if (Type.FOLDER != folder.getType())
-         throw new InvalidArgumentException("Object " + newparent + " is not a folder. ");
-      String id = object.moveTo((FolderData)folder, lockTokens);
-      return new ObjectId(id);
+         throw new InvalidArgumentException("Object " + parentId + " is not a folder. ");
+      String movedId = object.moveTo((FolderData)folder, lockToken);
+      return Response.created(createURI("item", movedId)).build();
    }
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#rename(java.lang.String,
-    *      javax.ws.rs.core.MediaType, java.lang.String, java.util.List)
+    *      javax.ws.rs.core.MediaType, java.lang.String, java.lang.String)
     */
-   @Override
-   @Path("rename/{identifier:.*}")
-   public ObjectId rename(@PathParam("identifier") String identifier, @QueryParam("mediaType") MediaType mediaType,
-      @QueryParam("newname") String newname, @QueryParam("lockTokens") List<String> lockTokens)
-      throws ObjectNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
+   @Path("rename/{id:.*}")
+   public Response rename(@PathParam("id") String id, //
+      @QueryParam("mediaType") MediaType mediaType, //
+      @QueryParam("newname") String newname, //
+      @QueryParam("lockToken") String lockToken //
+   ) throws ItemNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      ItemData data = getItemData(identifier);
+      ItemData data = getItemData(id);
       if (Type.FILE != data.getType())
-         throw new InvalidArgumentException("Object " + identifier + " is not a document. ");
-      ((DocumentData)data).rename(newname, mediaType, lockTokens);
-      return new ObjectId(data.getId());
+         throw new InvalidArgumentException("Object " + id + " is not a file. ");
+      ((FileData)data).rename(newname, mediaType, lockToken);
+      return Response.created(createURI("item", data.getId())).build();
    }
 
    /**
@@ -414,70 +437,113 @@ public class JcrFileSystem implements VirtualFileSystem
     *      int, int)
     */
    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
-   public ItemList<Item> search(MultivaluedMap<String, String> query,
-      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, @QueryParam("skipCount") int skipCount)
-      throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
+   public ItemList<Item> search(MultivaluedMap<String, String> query, //
+      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
+      @QueryParam("skipCount") int skipCount, //
+      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
+   ) throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
    {
-      StringBuilder sql = new StringBuilder();
-      sql.append("SELECT ");
-      List<String> properties = query.get("properties");
-      if (properties == null || properties.size() == 0)
-      {
-         sql.append('*');
-      }
-      else
-      {
-         for (int i = 0; i < properties.size(); i++)
-         {
-            if (i > 0)
-               sql.append(',');
-            sql.append(properties.get(i));
-         }
-      }
+      if (skipCount < 0)
+         throw new InvalidArgumentException("'skipCount' parameter is negative. ");
 
-      sql.append(" FROM ");
-      List<String> types = query.get("types");
-      if (types == null || types.size() == 0)
+      StringBuilder sql = new StringBuilder();
+      sql.append("SELECT * FROM nt:resource");
+
+      List<String> where = new ArrayList<String>();
+
+      String path = query.getFirst("path");
+      if (path != null && path.length() > 0)
+         where.add("jcr:path LIKE '" + path + "/%'");
+
+      String text = query.getFirst("text");
+      if (text != null && text.length() > 0)
+         where.add("CONTAINS(*, '" + text + "')");
+
+      String mediaType = query.getFirst("mediaType");
+      if (mediaType != null && mediaType.length() > 0)
+         where.add("jcr:mimeType = '" + mediaType + "'");
+
+      if (where.size() > 0)
       {
-         sql.append("nt:base");
-      }
-      else
-      {
-         // TODO : type mapping
-         for (int i = 0; i < types.size(); i++)
+         sql.append(" WHERE ");
+         for (int i = 0; i < where.size(); i++)
          {
             if (i > 0)
-               sql.append(',');
-            sql.append(types.get(i));
-         }
-      }
-      String path = query.getFirst("path");
-      String contains = query.getFirst("contains");
-      boolean isPath = (path != null && path.length() > 0);
-      boolean isContains = (contains != null && contains.length() > 0);
-      if (isPath || isContains)
-      {
-         sql.append(" WHERE");
-         if (isPath)
-            sql.append(" jcr:path LIKE '").append(path).append("/%'");
-         if (isContains)
-         {
-            if (isPath)
-               sql.append(" AND");
-            sql.append(" CONTAINS(., \'").append(contains).append("\')");
+               sql.append(" AND ");
+            sql.append(where.get(i));
          }
       }
       //System.out.println(">>>>> SQL: " + sql.toString());
-      return search(sql.toString(), maxItems, skipCount);
+      try
+      {
+         QueryManager queryManager = session.getWorkspace().getQueryManager();
+         Query jcrQuery = queryManager.createQuery(sql.toString(), Query.SQL);
+         QueryResult result = jcrQuery.execute();
+
+         NodeIterator nodes = result.getNodes();
+         try
+         {
+            if (skipCount > 0)
+               nodes.skip(skipCount);
+         }
+         catch (NoSuchElementException nse)
+         {
+            throw new InvalidArgumentException("'skipCount' parameter is greater then total number of items. ");
+         }
+
+         String name = query.getFirst("name");
+         Pattern namePattern = null;
+         if (name != null && name.length() > 0)
+         {
+            StringBuilder pb = new StringBuilder();
+            pb.append(".*");
+            for (int i = 0; i < name.length(); i++)
+            {
+               char c = name.charAt(i);
+               if (c == '*' || c == '?')
+                  pb.append('.');
+               if (".()[]^$|".indexOf(c) != -1)
+                  pb.append('\\');
+               pb.append(c);
+            }
+            pb.append(".*");
+            namePattern = Pattern.compile(pb.toString(), Pattern.CASE_INSENSITIVE);
+         }
+
+         // TODO Make improvement  for large amount of items
+         List<Item> l = new ArrayList<Item>();
+         for (int count = 0; nodes.hasNext() && (maxItems < 0 || count < maxItems); count++)
+         {
+            ItemData data = ItemData.fromNode(nodes.nextNode());
+            if (namePattern == null || namePattern.matcher(data.getName()).matches())
+               l.add(fromItemData(data, propertyFilter));
+         }
+
+         ItemList<Item> il = new ItemList<Item>(l);
+         if (namePattern == null) // Total number is unknown since we apply additional filtering by name. 
+            il.setNumItems((int)nodes.getSize());
+         il.setHasMoreItems(nodes.hasNext());
+
+         return il;
+      }
+      catch (InvalidQueryException e)
+      {
+         throw new InvalidArgumentException(e.getMessage());
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
    }
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#search(java.lang.String,
     *      int, int)
     */
-   public ItemList<Item> search(@QueryParam("statement") String statement,
-      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, @QueryParam("skipCount") int skipCount)
-      throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
+   public ItemList<Item> search(@QueryParam("statement") String statement, //
+      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
+      @QueryParam("skipCount") int skipCount //
+   ) throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
    {
       if (skipCount < 0)
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
@@ -505,6 +571,7 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("'skipCount' parameter is greater then total number of items. ");
          }
+         // TODO Make improvement  for large amount of items
          List<Item> l = new ArrayList<Item>();
          for (int count = 0; nodes.hasNext() && (maxItems < 0 || count < maxItems); count++)
             l.add(fromItemData(ItemData.fromNode(nodes.nextNode()), new PropertyFilter(propertyFilter.toString())));
@@ -527,59 +594,68 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#unlock(java.lang.String,
-    *      java.util.List)
+    *      java.lang.String)
     */
-   @Path("unlock/{identifier:.*}")
-   public void unlock(@PathParam("identifier") String identifier, @QueryParam("lockTokens") List<String> lockTokens)
-      throws NotSupportedException, ObjectNotFoundException, LockException, PermissionDeniedException,
+   @Path("unlock/{id:.*}")
+   public void unlock(@PathParam("id") String id, //
+      @QueryParam("lockToken") String lockToken //
+   ) throws NotSupportedException, ItemNotFoundException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      getItemData(identifier).unlock(lockTokens);
+      ItemData itemData = getItemData(id);
+      if (itemData.getType() != Type.FILE)
+         throw new LockException("Object is not locked. "); // Folder can't be locked.
+      ((FileData)itemData).unlock(lockToken);
    }
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#updateACL(java.lang.String,
-    *      java.util.List, java.lang.Boolean, java.util.List)
+    *      java.util.List, java.lang.Boolean, java.lang.String)
     */
-   @Path("acl/{identifier:.*}")
-   public void updateACL(@PathParam("identifier") String identifier, List<AccessControlEntry> acl,
-      @DefaultValue("false") @QueryParam("override") Boolean override, @QueryParam("lockTokens") List<String> lockTokens)
-      throws NotSupportedException, ObjectNotFoundException, LockException, PermissionDeniedException,
+   @Path("acl/{id:.*}")
+   public void updateACL(@PathParam("id") String id, //
+      List<AccessControlEntry> acl, //
+      @DefaultValue("false") @QueryParam("override") Boolean override, //
+      @QueryParam("lockToken") String lockToken //
+   ) throws NotSupportedException, ItemNotFoundException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      getItemData(identifier).updateACL(acl, override, lockTokens);
+      getItemData(id).updateACL(acl, override, lockToken);
    }
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#updateContent(java.lang.String,
-    *      javax.ws.rs.core.MediaType, java.io.InputStream, java.util.List)
+    *      javax.ws.rs.core.MediaType, java.io.InputStream, java.lang.String)
     */
-   @Path("content/{identifier:.*}")
-   public void updateContent(@PathParam("identifier") String identifier,
-      @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType,
-      InputStream newcontent, @QueryParam("lockTokens") List<String> lockTokens) throws ObjectNotFoundException,
-      InvalidArgumentException, LockException, PermissionDeniedException, VirtualFileSystemException
+   @Path("content/{id:.*}")
+   public void updateContent(@PathParam("id") String id, //
+      @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType, //
+      InputStream newcontent, //
+      @QueryParam("lockToken") String lockToken //
+   ) throws ItemNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
+      VirtualFileSystemException
    {
-      ItemData data = getItemData(identifier);
+      ItemData data = getItemData(id);
       if (Type.FILE != data.getType())
-         throw new InvalidArgumentException("Object " + identifier + " is not document. ");
-      ((DocumentData)data).setContent(newcontent, mediaType, lockTokens);
+         throw new InvalidArgumentException("Object " + id + " is not file. ");
+      ((FileData)data).setContent(newcontent, mediaType, lockToken);
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#updateProperties(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#update(java.lang.String,
     *      java.util.Collection, java.util.List)
     */
-   @Path("properties/{identifier:.*}")
-   public void updateProperties(@PathParam("identifier") String identifier, List<InputProperty> properties,
-      @QueryParam("lockTokens") List<String> lockTokens) throws ObjectNotFoundException, LockException,
-      PermissionDeniedException, VirtualFileSystemException
+   @Path("item/{id:.*}")
+   public void updateItem(@PathParam("id") String id, //
+      List<ConvertibleInputProperty> properties, //
+      @QueryParam("lockToken") String lockToken //
+   ) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
       //System.out.println(">>>>>>>>> " + properties);
       if (properties == null || properties.size() == 0)
          return;
-      ItemData data = getItemData(identifier);
-      data.updateProperties(properties, lockTokens);
+      ItemData data = getItemData(id);
+      data.updateProperties(properties, lockToken);
    }
 
    //-----------------------------------------
@@ -595,30 +671,82 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       if (data.getType() == Type.FILE)
       {
-         DocumentData docData = (DocumentData)data;
-         return new File(docData.getId(), docData.getName(), docData.getPath(), docData.getCreationDate(),
-            docData.getLastModificationDate(), docData.getVersionId(), docData.getContenType(),
-            docData.getContenLength(), docData.isLocked(), docData.getProperties(propertyFilter));
+         FileData fileData = (FileData)data;
+         return new File(fileData.getId(), fileData.getName(), fileData.getPath(), fileData.getCreationDate(),
+            fileData.getLastModificationDate(), fileData.getVersionId(), fileData.getContenType(),
+            fileData.getContenLength(), fileData.isLocked(), fileData.getProperties(propertyFilter),
+            createFileLinks(fileData));
       }
       return new Folder(data.getId(), data.getName(), data.getPath(), data.getCreationDate(),
-         data.getProperties(propertyFilter));
+         data.getProperties(propertyFilter), createFolderLinks((FolderData)data));
    }
 
-   private ItemData getItemData(String identifier) throws ObjectNotFoundException, PermissionDeniedException,
+   private Map<String, Link> createFileLinks(FileData file) throws VirtualFileSystemException
+   {
+      Map<String, Link> links = createBaseLinks(file);
+      String id = file.getId();
+      links.put("content", new Link(createURI("content", id).toString(), file.getContenType()));
+      links.put("versions", new Link(createURI("versions", id).toString(), MediaType.APPLICATION_JSON));
+      links.put("current-version", new Link(createURI("item", file.getCurrentVersionId()).toString(),
+         MediaType.APPLICATION_JSON));
+      return links;
+   }
+
+   private Map<String, Link> createFolderLinks(FolderData folder) throws VirtualFileSystemException
+   {
+      Map<String, Link> links = createBaseLinks(folder);
+      String id = folder.getId();
+      links.put("children", new Link(createURI("children", id).toString(), MediaType.APPLICATION_JSON));
+      return links;
+   }
+
+   private Map<String, Link> createBaseLinks(ItemData data) throws VirtualFileSystemException
+   {
+      Map<String, Link> links = new HashMap<String, Link>();
+      String id = data.getId();
+      links.put("self", new Link(createURI("item", id).toString(), MediaType.APPLICATION_JSON));
+      links.put("acl", new Link(createURI("acl", id).toString(), MediaType.APPLICATION_JSON));
+      return links;
+   }
+
+   private URI createURI(String rel, String id, String... query)
+   {
+      UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+      List<String> matchedURIs = uriInfo.getMatchedURIs();
+      int n = matchedURIs.size();
+      for (int i = n - 1; i > 0; i--)
+         uriBuilder.path(matchedURIs.get(i));
+      uriBuilder.path(rel);
+      if (id != null)
+         uriBuilder.path(id);
+      if (query != null && query.length > 0)
+      {
+         for (int i = 0; i < query.length; i++)
+         {
+            String name = query[i];
+            String value = i < query.length ? query[++i] : "";
+            uriBuilder.queryParam(name, value);
+         }
+      }
+      URI uri = uriBuilder.build();
+      return uri;
+   }
+
+   private ItemData getItemData(String id) throws ItemNotFoundException, PermissionDeniedException,
       VirtualFileSystemException
    {
       try
       {
-         String path = (identifier.charAt(0) != '/') ? ("/" + identifier) : identifier;
+         String path = (id.charAt(0) != '/') ? ("/" + id) : id;
          return ItemData.fromNode((Node)session.getItem(path));
       }
       catch (PathNotFoundException e)
       {
-         throw new ObjectNotFoundException("Oject " + identifier + " does not exists. ");
+         throw new ItemNotFoundException("Oject " + id + " does not exists. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Access denied to object " + identifier + ". ");
+         throw new PermissionDeniedException("Access denied to object " + id + ". ");
       }
       catch (RepositoryException e)
       {
@@ -626,37 +754,37 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   private DocumentData getDocumentData(String identifier, String versionIdentifier) throws ObjectNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   private FileData getFileData(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
-         String path = (identifier.charAt(0) != '/') ? ("/" + identifier) : identifier;
+         String path = (id.charAt(0) != '/') ? ("/" + id) : id;
          ItemData data = ItemData.fromNode((Node)session.getItem(path));
          if (Type.FILE != data.getType())
-            throw new InvalidArgumentException("Object " + identifier + " is not a document. ");
-         if (DocumentData.CURRENT_VERSION_ID.equals(versionIdentifier))
-            return (DocumentData)data;
-         // If not document versionable then any version ID is not acceptable.
+            throw new InvalidArgumentException("Object " + id + " is not a file. ");
+         if (FileData.CURRENT_VERSION_ID.equals(versionId))
+            return (FileData)data;
+         // If not file versionable then any version ID is not acceptable.
          if (!(data.getNode().isNodeType("mix:versionable")))
-            throw new InvalidArgumentException("Version " + versionIdentifier + " does not exist. ");
+            throw new InvalidArgumentException("Version " + versionId + " does not exist. ");
          try
          {
-            return (DocumentData)ItemData.fromNode(data.getNode().getVersionHistory().getVersion(versionIdentifier)
+            return (FileData)ItemData.fromNode(data.getNode().getVersionHistory().getVersion(versionId)
                .getNode("jcr:frozenNode"));
          }
          catch (VersionException e)
          {
-            throw new InvalidArgumentException("Version " + versionIdentifier + " does not exist. ");
+            throw new InvalidArgumentException("Version " + versionId + " does not exist. ");
          }
       }
       catch (PathNotFoundException e)
       {
-         throw new ObjectNotFoundException("Oject " + identifier + " does not exists. ");
+         throw new ItemNotFoundException("Oject " + id + " does not exists. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Access denied to object " + identifier + ". ");
+         throw new PermissionDeniedException("Access denied to object " + id + ". ");
       }
       catch (RepositoryException e)
       {

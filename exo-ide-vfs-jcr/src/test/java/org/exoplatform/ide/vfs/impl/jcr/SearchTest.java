@@ -53,23 +53,23 @@ public class SearchTest extends JcrFileSystemTest
       String name = getClass().getName();
       searchTestNode = testRoot.addNode(name, "nt:unstructured");
 
-      Node documentNode01 = searchTestNode.addNode("SearchTest_DOCUMENT01", "nt:file");
-      Node contentNode01 = documentNode01.addNode("jcr:content", "nt:resource");
+      Node fileNode01 = searchTestNode.addNode("SearchTest_FILE01", "nt:file");
+      Node contentNode01 = fileNode01.addNode("jcr:content", "nt:resource");
       contentNode01.setProperty("jcr:mimeType", "text/plain");
       contentNode01.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode01.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      documentNode01.addMixin("exo:unstructuredMixin");
-      documentNode01.setProperty("MyProperty", "Hello World");
-      resultPath = documentNode01.getPath();
+      fileNode01.addMixin("exo:unstructuredMixin");
+      fileNode01.setProperty("MyProperty", "Hello World");
+      resultPath = fileNode01.getPath();
 
-      Node documentNode02 = searchTestNode.addNode("SearchTest_DOCUMENT02", "nt:file");
-      Node contentNode02 = documentNode02.addNode("jcr:content", "nt:resource");
+      Node fileNode02 = searchTestNode.addNode("SearchTest_FILE02", "nt:file");
+      Node contentNode02 = fileNode02.addNode("jcr:content", "nt:resource");
       contentNode02.setProperty("jcr:mimeType", "text/plain");
       contentNode02.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode02.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
 
-      Node documentNode03 = searchTestNode.addNode("SearchTest_DOCUMENT03", "nt:file");
-      Node contentNode03 = documentNode03.addNode("jcr:content", "nt:resource");
+      Node fileNode03 = searchTestNode.addNode("SearchTest_FILE03", "nt:file");
+      Node contentNode03 = fileNode03.addNode("jcr:content", "nt:resource");
       contentNode03.setProperty("jcr:mimeType", "text/plain");
       contentNode03.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode03.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
@@ -81,13 +81,14 @@ public class SearchTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/search") //
+         .append(SERVICE_URI) //
+         .append("search") //
          .append("?") //
          .append("statement=") //
          //.append("SELECT%20*%20FROM%20nt:file%20WHERE%20MyProperty%20IS%20NOT%20NULL") //
          .append("SELECT%20MyProperty%20FROM%20nt:file%20WHERE%20MyProperty%20IS%20NOT%20NULL") //
          .toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
       @SuppressWarnings("unchecked")
@@ -106,14 +107,15 @@ public class SearchTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/search") //
+         .append(SERVICE_URI) //
+         .append("search") //
          .toString();
-      String sql = "properties=MyProperty&contains=Hello&path=" + searchTestNode.getPath();
+      String sql = "name=SearchTest_FILE01&mediaType=text/plain&text=__TEST__&path=" + searchTestNode.getPath();
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/x-www-form-urlencoded"));
-      ContainerResponse response = launcher.service("POST", path, "", h, sql.getBytes(), writer, null);
-      assertEquals(200, response.getStatus());
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, sql.getBytes(), writer, null);
       //log.info(new String(writer.getBody()));
+      assertEquals(200, response.getStatus());
       @SuppressWarnings("unchecked")
       ItemList<Item> items = (ItemList<Item>)response.getEntity();
       assertEquals(1, items.getItems().size());

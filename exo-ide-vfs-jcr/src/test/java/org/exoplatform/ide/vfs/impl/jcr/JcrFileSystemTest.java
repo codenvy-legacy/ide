@@ -44,22 +44,18 @@ import javax.jcr.Session;
  */
 public abstract class JcrFileSystemTest extends TestCase
 {
+   protected final String BASE_URI = "http://localhost/service";
+   protected final String SERVICE_URI = BASE_URI + "/vfs/jcr/db1/ws/";
    protected final String DEFAULT_CONTENT = "__TEST__";
    
    protected Log log = ExoLogger.getExoLogger(getClass());
-
    protected String REPOSITORY_NAME = "db1";
-
    protected String WORKSPACE_NAME = "ws";
-
    protected String TEST_ROOT_NAME = "TESTROOT";
-
+   
    protected Session session;
-
    protected Node testRoot;
-
    protected ResourceLauncher launcher;
-
    private ThreadLocalSessionProviderService sessionFactory;
 
    /**

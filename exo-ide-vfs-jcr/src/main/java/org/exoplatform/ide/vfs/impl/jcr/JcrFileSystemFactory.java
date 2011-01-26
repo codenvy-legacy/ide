@@ -30,6 +30,8 @@ import javax.jcr.Session;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -54,11 +56,12 @@ public class JcrFileSystemFactory
    }
 
    @Path("{repository}/{workspace}")
-   public VirtualFileSystem getVFS(@PathParam("repository") String repository, @PathParam("workspace") String workspace)
+   public VirtualFileSystem getVFS(@PathParam("repository") String repository,
+      @PathParam("workspace") String workspace, @Context UriInfo uriInfo)
    {
       try
       {
-         return new JcrFileSystem(getSession(repository, workspace), itemType2NodeTypeResolver);
+         return new JcrFileSystem(getSession(repository, workspace), itemType2NodeTypeResolver, uriInfo);
       }
       catch (RepositoryException e)
       {

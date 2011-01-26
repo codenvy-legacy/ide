@@ -34,13 +34,9 @@ public class UnlockTest extends JcrFileSystemTest
 {
    private Node unlockTestNode;
 
-   private String folder;
+   private String filePath;
 
-   private String document;
-
-   private String documentLockToken;
-
-   private String folderLockToken;
+   private String fileLockToken;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -53,66 +49,48 @@ public class UnlockTest extends JcrFileSystemTest
       unlockTestNode = testRoot.addNode(name, "nt:unstructured");
       unlockTestNode.addMixin("exo:privilegeable");
 
-      Node folderNode = unlockTestNode.addNode("UnlockTest_FOLDER", "nt:folder");
-      folderNode.addMixin("mix:lockable");
-      folder = folderNode.getPath();
-
-      Node documentNode = unlockTestNode.addNode("UnlockTest_DOCUMENT", "nt:file");
-      Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
+      Node fileNode = unlockTestNode.addNode("UnlockTest_FILE", "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      documentNode.addMixin("mix:lockable");
-      document = documentNode.getPath();
+      fileNode.addMixin("mix:lockable");
+      filePath = fileNode.getPath();
 
       session.save();
-      
-      folderLockToken = folderNode.lock(true, false).getLockToken();
-      documentLockToken = documentNode.lock(true, false).getLockToken();
+
+      fileLockToken = fileNode.lock(true, false).getLockToken();
    }
-   
-   public void testUnlockDocument() throws Exception
+
+   public void testUnlockFile() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/unlock") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("unlock") //
+         .append(filePath) //
          .append("?") //
-         .append("lockTokens=") //
-         .append(documentLockToken) //
+         .append("lockToken=") //
+         .append(fileLockToken) //
          .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
-      Node node = (Node)session.getItem(document);
+      Node node = (Node)session.getItem(filePath);
       assertFalse("Lock must be removed. ", node.isLocked());
    }
 
-   public void testUnlockDocumentWrongLockTokens() throws Exception
+   public void testUnlockFileWrongLockTokens() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/unlock") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("unlock") //
+         .append(filePath) //
          .append("?") //
-         .append("lockTokens=") //
-         .append(documentLockToken + "_WRONG") //
+         .append("lockToken=") //
+         .append(fileLockToken + "_WRONG") //
          .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
-   }
-
-   public void testUnlockFolder() throws Exception
-   {
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/unlock") //
-         .append(folder) //
-         .append("?") //
-         .append("lockTokens=") //
-         .append(folderLockToken) //
-         .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, null);
-      assertEquals(204, response.getStatus());
-      Node node = (Node)session.getItem(folder);
-      assertFalse("Lock must be removed. ", node.isLocked());
    }
 }

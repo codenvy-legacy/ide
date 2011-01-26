@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.shared.ObjectId;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -30,7 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.jcr.Node;
-import javax.jcr.lock.Lock;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -42,9 +40,13 @@ public class CopyTest extends JcrFileSystemTest
 
    private Node copyTestDestinationNode;
 
-   private String folder;
+   private String folderPath;
 
-   private String document;
+   private String filePath;
+
+   private Node fileNode;
+
+   private Node folderNode;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -56,87 +58,49 @@ public class CopyTest extends JcrFileSystemTest
       String name = getClass().getName();
       copyTestNode = testRoot.addNode(name, "nt:unstructured");
 
-      Node folderNode = copyTestNode.addNode("CopyTest_FOLDER", "nt:folder");
+      folderNode = copyTestNode.addNode("CopyTest_FOLDER", "nt:folder");
       // add child in folder
-      Node childDocumentNode = folderNode.addNode("document", "nt:file");
-      Node childContentNode = childDocumentNode.addNode("jcr:content", "nt:resource");
+      Node childFileNode = folderNode.addNode("file", "nt:file");
+      Node childContentNode = childFileNode.addNode("jcr:content", "nt:resource");
       childContentNode.setProperty("jcr:mimeType", "text/plain");
       childContentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       childContentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      folder = folderNode.getPath();
+      folderPath = folderNode.getPath();
 
       copyTestDestinationNode = testRoot.addNode("CopyTest_DESTINATION_FOLDER", "nt:folder");
       copyTestDestinationNode.addMixin("mix:lockable");
       copyTestDestinationNode.addMixin("exo:privilegeable");
 
-      Node documentNode = copyTestNode.addNode("CopyTest_DOCUMENT", "nt:file");
-      Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
+      fileNode = copyTestNode.addNode("CopyTest_FILE", "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      document = documentNode.getPath();
+      filePath = fileNode.getPath();
 
       session.save();
    }
 
-   public void testCopyDocument() throws Exception
+   public void testCopyFile() throws Exception
    {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/copy") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("copy") //
+         .append(filePath) //
          .append("?") //
-         .append("parent=") //
+         .append("parentId=") //
          .append(copyTestDestinationNode.getPath()).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      //log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
-      ObjectId id = (ObjectId)response.getEntity();
-      assertTrue("Source document not found. ", session.itemExists(document));
-      assertTrue("Not found document in destination location. ", session.itemExists(id.getId()));
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      assertEquals(201, response.getStatus());
+      String expectedPath = copyTestDestinationNode.getPath() + "/" + fileNode.getName();
+      String expectedLocation = SERVICE_URI + "item" + expectedPath;
+      String location = response.getHttpHeaders().getFirst("Location").toString();
+      assertEquals(expectedLocation, location);
+      assertTrue("Source file not found. ", session.itemExists(filePath));
+      assertTrue("Not found file in destination location. ", session.itemExists(expectedPath));
    }
 
-   public void testCopyDocumentLockedDestination() throws Exception
-   {
-      Lock lock = copyTestDestinationNode.lock(true, false);
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/copy") //
-         .append(document) //
-         .append("?") //
-         .append("parent=") //
-         .append(copyTestDestinationNode.getPath()) //
-         .append("&") //
-         .append("lockTokens=") //
-         .append(lock.getLockToken()) //
-         .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      //log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
-      ObjectId id = (ObjectId)response.getEntity();
-      assertTrue("Source document not found. ", session.itemExists(document));
-      assertTrue("Not found document in destination location. ", session.itemExists(id.getId()));
-   }
-
-   public void testCopyDocumentLockedDestination_NoLockToken() throws Exception
-   {
-      copyTestDestinationNode.lock(true, false);
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/copy") //
-         .append(document) //
-         .append("?") //
-         .append("parent=") //
-         .append(copyTestDestinationNode.getPath()).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      log.info(new String(writer.getBody()));
-      assertEquals(423, response.getStatus());
-      assertTrue("Source document not found. ", session.itemExists(document));
-      assertFalse("Document must not be copied since destination folder is locked. ",
-         session.itemExists(copyTestDestinationNode.getPath() + "/CopyTest_DOCUMENT"));
-   }
-
-   public void testCopyDocumentDestination_NoPermissions() throws Exception
+   public void testCopyFileDestination_NoPermissions() throws Exception
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(2);
       permissions.put("root", PermissionType.ALL);
@@ -146,34 +110,37 @@ public class CopyTest extends JcrFileSystemTest
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/copy") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("copy") //
+         .append(filePath) //
          .append("?") //
-         .append("parent=") //
+         .append("parentId=") //
          .append(copyTestDestinationNode.getPath()).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(403, response.getStatus());
-      assertTrue("Source document not found. ", session.itemExists(document));
-      assertFalse("Document must not be copied since destination folder is locked. ",
-         session.itemExists(copyTestDestinationNode.getPath() + "/CopyTest_DOCUMENT"));
+      assertTrue("Source file not found. ", session.itemExists(filePath));
+      assertFalse("File must not be copied since destination folder is locked. ",
+         session.itemExists(copyTestDestinationNode.getPath() + "/CopyTest_FILE"));
    }
 
    public void testCopyFolder() throws Exception
    {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/copy") //
-         .append(folder) //
+         .append(SERVICE_URI) //
+         .append("copy") //
+         .append(folderPath) //
          .append("?") //
-         .append("parent=") //
+         .append("parentId=") //
          .append(copyTestDestinationNode.getPath()).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
-      //log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
-      ObjectId id = (ObjectId)response.getEntity();
-      assertTrue("Source folder not found. ", session.itemExists(folder));
-      assertTrue("Not found folder in destination location. ", session.itemExists(id.getId()));
-      assertTrue("Children of folder missing after coping. ", session.itemExists(id.getId() + "/document"));
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      assertEquals(201, response.getStatus());
+      String expectedPath = copyTestDestinationNode.getPath() + "/" + folderNode.getName();
+      String expectedLocation = SERVICE_URI + "item" + expectedPath;
+      String location = response.getHttpHeaders().getFirst("Location").toString();
+      assertEquals(expectedLocation, location);
+      assertTrue("Source folder not found. ", session.itemExists(folderPath));
+      assertTrue("Not found folder in destination location. ", session.itemExists(expectedPath));
+      assertTrue("Child of folder missing after coping. ", session.itemExists(expectedPath + "/file"));
    }
 }

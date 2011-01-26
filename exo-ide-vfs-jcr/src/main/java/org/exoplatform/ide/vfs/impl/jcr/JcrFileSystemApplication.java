@@ -20,9 +20,9 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentExceptionMapper;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.LockExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedExceptionMapper;
-import org.exoplatform.ide.vfs.server.exceptions.ObjectNotFoundExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedExceptionMapper;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
@@ -49,7 +49,7 @@ public class JcrFileSystemApplication extends Application
       singletons.add(new ConstraintExceptionMapper());
       singletons.add(new InvalidArgumentExceptionMapper());
       singletons.add(new LockExceptionMapper());
-      singletons.add(new ObjectNotFoundExceptionMapper());
+      singletons.add(new ItemNotFoundExceptionMapper());
       singletons.add(new NotSupportedExceptionMapper());
       singletons.add(new PermissionDeniedExceptionMapper());
    }

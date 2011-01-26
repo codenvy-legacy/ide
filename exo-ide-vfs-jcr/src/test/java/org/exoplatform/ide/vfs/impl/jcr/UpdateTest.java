@@ -31,13 +31,14 @@ import javax.jcr.Node;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: UpdatePropertiesTest.java 64090 2010-12-17 14:53:30Z andrew00x
+ *          $
  */
-public class UpdatePropertiesTest extends JcrFileSystemTest
+public class UpdateTest extends JcrFileSystemTest
 {
    private Node updatePropertiesTestNode;
 
-   private String document;
+   private String filePath;
 
    @Override
    protected void setUp() throws Exception
@@ -48,29 +49,30 @@ public class UpdatePropertiesTest extends JcrFileSystemTest
       updatePropertiesTestNode.addMixin("exo:privilegeable");
       updatePropertiesTestNode.addMixin("mix:lockable");
 
-      Node documentNode = updatePropertiesTestNode.addNode("UpdatePropertiesTest_DOCUMENT", "nt:file");
-      Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
+      Node fileNode = updatePropertiesTestNode.addNode("UpdatePropertiesTest_FILE", "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      documentNode.addMixin("exo:unstructuredMixin");
-      document = documentNode.getPath();
+      fileNode.addMixin("exo:unstructuredMixin");
+      filePath = fileNode.getPath();
 
       session.save();
    }
 
-   public void testUpdatePropertiesDocument() throws Exception
+   public void testUpdatePropertiesFile() throws Exception
    {
       String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/properties") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("item") //
+         .append(filePath) //
          .toString();
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
-      ContainerResponse response = launcher.service("POST", path, "", h, properties.getBytes(), null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, properties.getBytes(), null);
       assertEquals(204, response.getStatus());
-      Node doc = (Node)session.getItem(document);
-      assertEquals("MyValue", doc.getProperty("MyProperty").getString());
+      Node file = (Node)session.getItem(filePath);
+      assertEquals("MyValue", file.getProperty("MyProperty").getString());
    }
 }

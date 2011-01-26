@@ -40,9 +40,9 @@ public class GetContentTest extends JcrFileSystemTest
 {
    private Node getContentTestNode;
 
-   private String document;
+   private String filePath;
 
-   private String folder;
+   private String folderPath;
 
    private String content = "__GetContentTest__";
 
@@ -57,16 +57,16 @@ public class GetContentTest extends JcrFileSystemTest
       getContentTestNode = testRoot.addNode(name, "nt:unstructured");
       getContentTestNode.addMixin("exo:privilegeable");
 
-      Node documentNode = getContentTestNode.addNode("GetContentTest_DOCUMENT", "nt:file");
-      Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
+      Node fileNode = getContentTestNode.addNode("GetContentTest_FILE", "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:encoding", "utf8");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(content.getBytes()));
-      document = documentNode.getPath();
+      filePath = fileNode.getPath();
 
       Node folderNode = getContentTestNode.addNode("GetContentTest_FOLDER", "nt:folder");
-      folder = folderNode.getPath();
+      folderPath = folderNode.getPath();
 
       session.save();
    }
@@ -75,9 +75,10 @@ public class GetContentTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/content") //
-         .append(document).toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("content") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
       assertEquals(content, new String(writer.getBody()));
@@ -89,9 +90,10 @@ public class GetContentTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/content") //
-         .append(folder).toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("content") //
+         .append(folderPath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -105,9 +107,10 @@ public class GetContentTest extends JcrFileSystemTest
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/content") //
-         .append(document).toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("content") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
    }

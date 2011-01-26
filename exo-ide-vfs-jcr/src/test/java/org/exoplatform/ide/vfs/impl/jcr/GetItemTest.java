@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.server.OutputProperty;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -37,13 +37,13 @@ import javax.jcr.Node;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class GetObjectTest extends JcrFileSystemTest
+public class GetItemTest extends JcrFileSystemTest
 {
    private Node getObjectTestNode;
 
-   private String folder;
+   private String folderPath;
 
-   private String document;
+   private String filePath;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -57,42 +57,44 @@ public class GetObjectTest extends JcrFileSystemTest
       getObjectTestNode.addMixin("exo:privilegeable");
 
       Node folderNode = getObjectTestNode.addNode("GetObjectTest_FOLDER", "nt:folder");
-      folder = folderNode.getPath();
+      folderPath = folderNode.getPath();
 
-      Node documentNode = getObjectTestNode.addNode("GetObjectTest_DOCUMENT", "nt:file");
-      Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
+      Node fileNode = getObjectTestNode.addNode("GetObjectTest_FILE", "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      documentNode.addMixin("exo:unstructuredMixin");
-      documentNode.setProperty("MyProperty01", "hello world");
-      documentNode.setProperty("MyProperty02", "to be or not to be");
-      document = documentNode.getPath();
+      fileNode.addMixin("exo:unstructuredMixin");
+      fileNode.setProperty("MyProperty01", "hello world");
+      fileNode.setProperty("MyProperty02", "to be or not to be");
+      filePath = fileNode.getPath();
 
       session.save();
    }
 
-   public void testGetDocument() throws Exception
+   public void testGetFile() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/item") //
-         .append(document).toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("item") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
-      assertEquals(document, ((Item)response.getEntity()).getPath());
+      assertEquals(filePath, ((Item)response.getEntity()).getPath());
    }
 
-   public void testGetDocumentPropertyFilter() throws Exception
+   public void testGetFilePropertyFilter() throws Exception
    {
       // No filter - all properties
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/item") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("item") //
+         .append(filePath) //
          .toString();
 
-      ContainerResponse response = launcher.service("GET", path, "", null, null, null);
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       List<OutputProperty> properties = ((Item)response.getEntity()).getProperties();
       Map<String, Object[]> m = new HashMap<String, Object[]>(properties.size());
@@ -104,14 +106,15 @@ public class GetObjectTest extends JcrFileSystemTest
 
       // With filter
       path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/item") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("item") //
+         .append(filePath) //
          .append("?") //
          .append("propertyFilter=") //
          .append("MyProperty02") //
          .toString();
 
-      response = launcher.service("GET", path, "", null, null, null);
+      response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       m.clear();
       properties = ((Item)response.getEntity()).getProperties();
@@ -121,18 +124,19 @@ public class GetObjectTest extends JcrFileSystemTest
       assertEquals("to be or not to be", m.get("MyProperty02")[0]);
    }
 
-   public void testGetDocumentNotFound() throws Exception
+   public void testGetFileNotFound() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/item") //
-         .append(document + "_WRONG_IDENTIFIER").toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("item") //
+         .append(filePath + "_WRONG_ID_").toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(404, response.getStatus());
       log.info(new String(writer.getBody()));
    }
 
-   public void testGetDocumentNoPermissions() throws Exception
+   public void testGetFileNoPermissions() throws Exception
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(1);
       permissions.put("root", PermissionType.ALL);
@@ -140,9 +144,10 @@ public class GetObjectTest extends JcrFileSystemTest
       session.save();
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/item") //
-         .append(document).toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("item") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -151,9 +156,10 @@ public class GetObjectTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/item") //
-         .append(folder).toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+         .append(SERVICE_URI) //
+         .append("item") //
+         .append(folderPath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       log.info(new String(writer.getBody()));
    }

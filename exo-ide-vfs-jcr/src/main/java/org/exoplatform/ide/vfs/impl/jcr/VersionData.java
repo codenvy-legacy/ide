@@ -25,7 +25,6 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.InputStream;
-import java.util.List;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Node;
@@ -38,7 +37,7 @@ import javax.ws.rs.core.MediaType;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-class VersionData extends DocumentData
+class VersionData extends FileData
 {
    VersionData(Node node)
    {
@@ -94,10 +93,10 @@ class VersionData extends DocumentData
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.DocumentData#getAllVersions()
+    * @see org.exoplatform.ide.vfs.impl.jcr.FileData#getAllVersions()
     */
    @Override
-   LazyIterator<DocumentData> getAllVersions() throws PermissionDeniedException, VirtualFileSystemException
+   LazyIterator<FileData> getAllVersions() throws PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
@@ -105,42 +104,57 @@ class VersionData extends DocumentData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get versions of document " + getId()
+         throw new PermissionDeniedException("Unable get versions of file " + getId()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get versions of document " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get versions of file " + getId() + ". " + e.getMessage(), e);
       }
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.DocumentData#rename(java.lang.String,
-    *      javax.ws.rs.core.MediaType, java.util.List)
+    * @see org.exoplatform.ide.vfs.impl.jcr.FileData#rename(java.lang.String,
+    *      javax.ws.rs.core.MediaType, java.lang.String)
     */
    @Override
-   void rename(String newname, MediaType mediaType, List<String> lockTokens) throws LockException,
-      PermissionDeniedException, VirtualFileSystemException
+   void rename(String newname, MediaType mediaType, String lockToken) throws LockException, PermissionDeniedException,
+      VirtualFileSystemException
    {
-      throw new NotSupportedException("Unable update not current version of document. ");
+      throw new NotSupportedException("Unable update not current version of file. ");
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.DocumentData#setContent(java.io.InputStream,
-    *      javax.ws.rs.core.MediaType, java.util.List)
+    * @see org.exoplatform.ide.vfs.impl.jcr.FileData#setContent(java.io.InputStream,
+    *      javax.ws.rs.core.MediaType, java.lang.String)
     */
    @Override
-   void setContent(InputStream content, MediaType mediaType, List<String> lockTokens) throws LockException,
+   void setContent(InputStream content, MediaType mediaType, String lockToken) throws LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
-      throw new NotSupportedException("Unable update not current version of document. ");
+      throw new NotSupportedException("Unable update not current version of file. ");
    }
 
-   private DocumentData getCurrentVersion() throws RepositoryException
+   /**
+    * @see org.exoplatform.ide.vfs.impl.jcr.FileData#getCurrentVersionId()
+    */
+   String getCurrentVersionId() throws VirtualFileSystemException
+   {
+      try
+      {
+         return getCurrentVersion().getId();
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+   }
+
+   private FileData getCurrentVersion() throws RepositoryException
    {
       Version versionNode = (Version)node.getParent();
       String versionableUUID = versionNode.getContainingHistory().getVersionableUUID();
       Session session = node.getSession();
-      return (DocumentData)ItemData.fromNode(session.getNodeByUUID(versionableUUID));
+      return (FileData)ItemData.fromNode(session.getNodeByUUID(versionableUUID));
    }
 }

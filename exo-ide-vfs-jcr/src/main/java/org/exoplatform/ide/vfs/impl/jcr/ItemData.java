@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.InputProperty;
+import org.exoplatform.ide.vfs.server.ConvertibleInputProperty;
 import org.exoplatform.ide.vfs.server.OutputProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
@@ -29,6 +28,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.Type;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.impl.core.value.StringValue;
@@ -54,6 +54,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
+import javax.jcr.lock.Lock;
 import javax.jcr.nodetype.NodeType;
 import javax.jcr.nodetype.PropertyDefinition;
 
@@ -79,9 +80,9 @@ abstract class ItemData
    static ItemData fromNode(Node node) throws RepositoryException
    {
       if (node.isNodeType("nt:file") && node.getNode("jcr:content").isNodeType("nt:resource"))
-         return new DocumentData(node);
+         return new FileData(node);
       if (node.isNodeType("nt:resource") && "jcr:content".equals(node.getName()))
-         return new DocumentData(node.getParent());
+         return new FileData(node.getParent());
       if (node.isNodeType("nt:frozenNode"))
          return new VersionData(node);
       return new FolderData(node);
@@ -103,7 +104,7 @@ abstract class ItemData
    }
 
    /**
-    * @return unified identifier of this item
+    * @return unified id of this item
     * @throws VirtualFileSystemException if any errors occurs
     */
    String getId() throws VirtualFileSystemException
@@ -209,12 +210,12 @@ abstract class ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get properties of object " + getId()
+         throw new PermissionDeniedException("Unable get properties of item " + getId()
             + ". Operation not permitted.");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get properties of object " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get properties of item " + getId() + ". " + e.getMessage(), e);
       }
    }
 
@@ -291,33 +292,30 @@ abstract class ItemData
     * Update properties.
     * 
     * @param properties set of properties that should be updated.
-    * @param lockTokens lock tokens. This lock tokens will be used if object is
-    *           locked. Pass <code>null</code> or empty list if there is no lock
-    *           tokens
+    * @param lockToken lock token. This lock token will be used if item is
+    *           locked. Pass <code>null</code> if there is no lock token
     * @throws ConstraintException if any of following conditions are met:
     *            <ul>
     *            <li>at least one of updated properties is read-only</li>
     *            <li>value of any updated properties is not acceptable</li>
     *            </ul>
-    * @throws LockException if object is locked and <code>lockTokens</code> is
-    *            <code>null</code> or does not contains matched lock tokens
+    * @throws LockException if item is locked and <code>lockToken</code> is
+    *            <code>null</code> or does not matched
     * @throws PermissionDeniedException if properties can't be updated cause to
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   void updateProperties(List<InputProperty> properties, List<String> lockTokens) throws ConstraintException,
-      LockException, PermissionDeniedException, VirtualFileSystemException
+   void updateProperties(List<ConvertibleInputProperty> properties, String lockToken) throws ConstraintException, LockException,
+      PermissionDeniedException, VirtualFileSystemException
    {
       // TODO : property name mapping ?
       // vfs:blabla -> jcr:blabla
       try
       {
          Session session = node.getSession();
-         if (lockTokens != null && lockTokens.size() > 0)
-         {
-            for (String lt : lockTokens)
-               session.addLockToken(lt);
-         }
+         if (lockToken != null)
+            session.addLockToken(lockToken);
+
          NodeType nodeType =
             node.isNodeType("nt:frozenNode") ? session.getWorkspace().getNodeTypeManager()
                .getNodeType(node.getProperty("jcr:frozenPrimaryType").getString()) : node.getPrimaryNodeType();
@@ -325,7 +323,7 @@ abstract class ItemData
          Map<String, PropertyDefinition> cache = new HashMap<String, PropertyDefinition>(propertyDefinitions.length);
          for (int i = 0; i < propertyDefinitions.length; i++)
             cache.put(propertyDefinitions[i].getName(), propertyDefinitions[i]);
-         for (InputProperty property : properties)
+         for (ConvertibleInputProperty property : properties)
          {
             String name = property.getName();
             String[] value = property.getValue();
@@ -376,16 +374,16 @@ abstract class ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable to update properties of object " + getId() + ". Object is locked. ");
+         throw new LockException("Unable to update properties of item " + getId() + ". Item is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable to update properties of object " + getId()
+         throw new PermissionDeniedException("Unable to update properties of item " + getId()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable update properties of object " + getId() + ". " + e.getMessage(),
+         throw new VirtualFileSystemException("Unable update properties of item " + getId() + ". " + e.getMessage(),
             e);
       }
    }
@@ -409,107 +407,64 @@ abstract class ItemData
    }
 
    /**
-    * Check is object locked or not.
+    * Check is item locked or not.
     * 
-    * @return <code>true</code> if object is locked and <code>false</code>
-    *         otherwise
+    * @return always <code>false</code>. Will be overridden in FileData
     * @throws VirtualFileSystemException if any errors occurs
     */
    boolean isLocked() throws VirtualFileSystemException
    {
-      try
-      {
-         return node.isLocked();
-      }
-      catch (RepositoryException e)
-      {
-         throw new VirtualFileSystemException(e.getMessage(), e);
-      }
-   }
-
-   /**
-    * Remove lock from object.
-    * 
-    * @param lockTokens set of lock tokens
-    * @throws LockException if object is not locked or <code>lockTokens</code>
-    *            is <code>null</code> or does not contains matched lock tokens
-    * @throws PermissionDeniedException if lock can't be removed cause to
-    *            security restriction
-    * @throws VirtualFileSystemException if any other errors occurs
-    */
-   void unlock(List<String> lockTokens) throws LockException, PermissionDeniedException, VirtualFileSystemException
-   {
-      if (!isLocked())
-         throw new LockException("Object is not locked. ");
-      try
-      {
-         Session session = node.getSession();
-         if (lockTokens != null && lockTokens.size() > 0)
-         {
-            for (String lt : lockTokens)
-               session.addLockToken(lt);
-         }
-         node.unlock();
-      }
-      catch (javax.jcr.lock.LockException e)
-      {
-         throw new LockException("Unable remove lock from object " + getId() + ". " + e.getMessage());
-      }
-      catch (AccessDeniedException e)
-      {
-         throw new PermissionDeniedException("Unable remove lock from object " + getId()
-            + ". Operation not permitted. ");
-      }
-      catch (RepositoryException e)
-      {
-         throw new VirtualFileSystemException("Unable remove lock from object " + getId() + ". " + e.getMessage(), e);
-      }
+      return false;
    }
 
    /**
     * Delete item.
     * 
-    * @param lockTokens lock tokens. This lock tokens will be used if object is
-    *           locked. Pass <code>null</code> or empty list if there is no lock
-    *           tokens
-    * @throws LockException if object is locked and <code>lockTokens</code> is
-    *            <code>null</code> or does not contains matched lock tokens
-    * @throws PermissionDeniedException if object can't be removed cause to
+    * @param lockToken lock token. This lock token will be used if item is
+    *           locked. Pass <code>null</code> if there is no lock
+    * @throws LockException if item is locked and <code>lockToken</code> is
+    *            <code>null</code> or does not matched
+    * @throws PermissionDeniedException if item can't be removed cause to
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   void delete(List<String> lockTokens) throws LockException, PermissionDeniedException, VirtualFileSystemException
+   void delete(String lockToken) throws LockException, PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
          Session session = node.getSession();
-         if (lockTokens != null && lockTokens.size() > 0)
+         if (lockToken != null)
+            session.addLockToken(lockToken);
+         if (node.isLocked())
          {
-            for (String lt : lockTokens)
-               session.addLockToken(lt);
+            // ====== Workaround for disabling removing locked node. ======
+            // JCR back-end does not prevent removing locked node (need lock parent node).
+            Lock lock = node.getLock();
+            if (lock.getLockToken() == null)
+               throw new LockException("Unable delete item " + getId() + ". Item is locked. ");
          }
          node.remove();
          session.save();
          node = null;
       }
-      catch (javax.jcr.lock.LockException e)
+      /*catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable delete object " + getId() + ". Object is locked. ");
-      }
+         throw new LockException("Unable delete item " + getId() + ". Item is locked. ");
+      }*/
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable delete object " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable delete item " + getId() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable delete object " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable delete item " + getId() + ". " + e.getMessage(), e);
       }
    }
 
    /**
-    * Get ACL applied to object.
+    * Get ACL applied to item.
     * 
-    * @return ACL applied to object
+    * @return ACL applied to item
     * @throws PermissionDeniedException if ACL can't be retrieved cause to
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
@@ -553,31 +508,30 @@ abstract class ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get ACL of object " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable get ACL of item " + getId() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get ACL of object " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get ACL of item " + getId() + ". " + e.getMessage(), e);
       }
    }
 
    /**
-    * Update ACL applied to object.
+    * Update ACL applied to item.
     * 
     * @param acl ACL
     * @param override if <code>true</code> then previous ACL replaced by
     *           specified. If <code>false</code> then specified ACL will be
     *           merged with existed
-    * @param lockTokens lock tokens. This lock tokens will be used if object is
-    *           locked. Pass <code>null</code> or empty list if there is no lock
-    *           tokens
-    * @throws LockException if object is locked and <code>lockTokens</code> is
-    *            <code>null</code> or does not contains matched lock tokens
+    * @param lockToken lock token. This lock token will be used if item is
+    *           locked. Pass <code>null</code> if there is no lock token
+    * @throws LockException if item is locked and <code>lockToken</code> is
+    *            <code>null</code> or does not matched
     * @throws PermissionDeniedException if ACL can't be updated cause to
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   void updateACL(List<AccessControlEntry> acl, boolean override, List<String> lockTokens) throws LockException,
+   void updateACL(List<AccessControlEntry> acl, boolean override, String lockToken) throws LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
       Map<String, Set<String>> tmp = new HashMap<String, Set<String>>();
@@ -617,11 +571,8 @@ abstract class ItemData
       {
          Session session = extNode.getSession();
 
-         if (lockTokens != null && lockTokens.size() > 0)
-         {
-            for (String lt : lockTokens)
-               session.addLockToken(lt);
-         }
+         if (lockToken != null)
+            session.addLockToken(lockToken);
 
          if (!extNode.isNodeType("exo:privilegeable"))
             extNode.addMixin("exo:privilegeable");
@@ -640,15 +591,15 @@ abstract class ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable update ACL of object " + getId() + ". Object is locked. ");
+         throw new LockException("Unable update ACL of item " + getId() + ". Item is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable update ACL of object " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable update ACL of item " + getId() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable update ACL of object " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable update ACL of item " + getId() + ". " + e.getMessage(), e);
       }
    }
 
@@ -656,53 +607,36 @@ abstract class ItemData
     * Create copy of current item in specified folder.
     * 
     * @param folder parent
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>folder</folder> is locked. Pass <code>null</code> or empty
-    *           list if there is no lock tokens
     * @return newly create copy
-    * @throws ConstraintException if destination folder already contains object
+    * @throws ConstraintException if destination folder already contains item
     *            with the same name as current
-    * @throws LockException if <code>folder</folder> is locked and
-    *            <code>lockTokens</code> is <code>null</code> or does not
-    *            contains matched lock tokens
     * @throws PermissionDeniedException if new copy can't be created cause to
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   ItemData copyTo(FolderData folder, List<String> lockTokens) throws ConstraintException, LockException,
-      PermissionDeniedException, VirtualFileSystemException
+   ItemData copyTo(FolderData folder) throws ConstraintException, PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
-         Session session = node.getSession();
-         if (lockTokens != null && lockTokens.size() > 0)
-         {
-            for (String lt : lockTokens)
-               session.addLockToken(lt);
-         }
-         String objectPath = getPath();
+         String itemPath = getPath();
          String destinationPath = folder.getPath();
          destinationPath += destinationPath.equals("/") ? getName() : ("/" + getName());
-         session.getWorkspace().copy(objectPath, destinationPath);
+         Session session = node.getSession();
+         session.getWorkspace().copy(itemPath, destinationPath);
          return fromNode((Node)session.getItem(destinationPath));
       }
       catch (ItemExistsException e)
       {
-         throw new ConstraintException("Destination folder already contains object with the same name. ");
-      }
-      catch (javax.jcr.lock.LockException e)
-      {
-         throw new LockException("Unable copy object " + getId() + " to " + folder.getId()
-            + ". Destination folder is locked. ");
+         throw new ConstraintException("Destination folder already contains item with the same name. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable copy object " + getId() + " to " + folder.getId()
+         throw new PermissionDeniedException("Unable copy item " + getId() + " to " + folder.getId()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable copy object " + getId() + " to " + folder.getId() + ". "
+         throw new VirtualFileSystemException("Unable copy item " + getId() + " to " + folder.getId() + ". "
             + e.getMessage(), e);
       }
    }
@@ -711,54 +645,49 @@ abstract class ItemData
     * Move current item in specified folder.
     * 
     * @param folder new parent
-    * @param lockTokens lock tokens. This lock tokens will be used if
-    *           <code>folder</folder> is locked. Pass <code>null</code> or empty
-    *           list if there is no lock tokens
-    * @return identifier moved object
-    * @throws ConstraintException if destination folder already contains object
+    * @param lockToken lock token. This lock token will be used if this item
+    *           is locked. Pass <code>null</code> if there is no lock token
+    * @return id moved object
+    * @throws ConstraintException if destination folder already contains item
     *            with the same name as current
-    * @throws LockException if <code>folder</folder> is locked and
-    *            <code>lockTokens</code> is <code>null</code> or does not
-    *            contains matched lock tokens
-    * @throws PermissionDeniedException if object can't be moved cause to
+    * @throws LockException if this item is locked and <code>lockToken</code>
+    *            is <code>null</code> or does not matched
+    * @throws PermissionDeniedException if item can't be moved cause to
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   String moveTo(FolderData folder, List<String> lockTokens) throws ConstraintException, LockException,
+   String moveTo(FolderData folder, String lockToken) throws ConstraintException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
          Session session = node.getSession();
-         if (lockTokens != null && lockTokens.size() > 0)
-         {
-            for (String lt : lockTokens)
-               session.addLockToken(lt);
-         }
-         String objectPath = getPath();
+         if (lockToken != null)
+            session.addLockToken(lockToken);
+         String itemPath = getPath();
          String destinationPath = folder.getPath();
          destinationPath += destinationPath.equals("/") ? getName() : ("/" + getName());
-         session.getWorkspace().move(objectPath, destinationPath);
+         session.getWorkspace().move(itemPath, destinationPath);
          node = (Node)session.getItem(destinationPath);
          return getId();
       }
       catch (ItemExistsException e)
       {
-         throw new ConstraintException("Destination folder already contains object with the same name. ");
+         throw new ConstraintException("Destination folder already contains item with the same name. ");
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable move object " + getId() + " to " + folder.getId()
-            + ". Source object or destination folder is locked. ");
+         throw new LockException("Unable move item " + getId() + " to " + folder.getId()
+            + ". Source item is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable move object " + getId() + " to " + folder.getId()
+         throw new PermissionDeniedException("Unable move item " + getId() + " to " + folder.getId()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable move object " + getId() + " to " + folder.getId() + ". "
+         throw new VirtualFileSystemException("Unable move item " + getId() + " to " + folder.getId() + ". "
             + e.getMessage(), e);
       }
    }

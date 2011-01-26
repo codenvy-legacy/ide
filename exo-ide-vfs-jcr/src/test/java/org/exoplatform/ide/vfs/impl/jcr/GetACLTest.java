@@ -40,7 +40,7 @@ public class GetACLTest extends JcrFileSystemTest
 {
    private Node getAclTestNode;
 
-   private String document;
+   private String filePath;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -53,15 +53,15 @@ public class GetACLTest extends JcrFileSystemTest
       getAclTestNode = testRoot.addNode(name, "nt:unstructured");
       getAclTestNode.addMixin("exo:privilegeable");
 
-      Node documentNode = getAclTestNode.addNode("GetACLTest_DOCUMENT", "nt:file");
-      Node contentNode = documentNode.addNode("jcr:content", "nt:resource");
+      Node fileNode = getAclTestNode.addNode("GetACLTest_FILE", "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      documentNode.addMixin("exo:privilegeable");
-      ((ExtendedNode)documentNode).setPermission("root", PermissionType.ALL);
-      ((ExtendedNode)documentNode).setPermission("john", new String[]{PermissionType.READ});
-      document = documentNode.getPath();
+      fileNode.addMixin("exo:privilegeable");
+      ((ExtendedNode)fileNode).setPermission("root", PermissionType.ALL);
+      ((ExtendedNode)fileNode).setPermission("john", new String[]{PermissionType.READ});
+      filePath = fileNode.getPath();
 
       session.save();
    }
@@ -69,10 +69,11 @@ public class GetACLTest extends JcrFileSystemTest
    public void testGetACL() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/acl") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("acl") //
+         .append(filePath) //
          .toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, null);
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       @SuppressWarnings("unchecked")
       List<AccessControlEntry> acl = (List<AccessControlEntry>)response.getEntity();
@@ -89,15 +90,16 @@ public class GetACLTest extends JcrFileSystemTest
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(2);
       permissions.put("root", PermissionType.ALL);
-      ((ExtendedNode)session.getItem(document)).setPermissions(permissions);
+      ((ExtendedNode)session.getItem(filePath)).setPermissions(permissions);
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/acl") //
-         .append(document) //
+         .append(SERVICE_URI) //
+         .append("acl") //
+         .append(filePath) //
          .toString();
-      ContainerResponse response = launcher.service("GET", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
    }
