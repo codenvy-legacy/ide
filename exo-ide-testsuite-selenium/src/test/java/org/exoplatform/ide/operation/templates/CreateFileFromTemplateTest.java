@@ -25,9 +25,6 @@ import static org.exoplatform.ide.operation.templates.TemplateUtils.checkNameFie
 import static org.exoplatform.ide.operation.templates.TemplateUtils.closeCreateFromTemplateForm;
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
@@ -38,6 +35,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -68,14 +67,16 @@ public class CreateFileFromTemplateTest extends BaseTest
    
    private static final String GOOGLE_GADGET_FILE_NAME = "Test Gadget File.xml";
    
+   private static final String NETVIBES_WIDGET = "Netvibes Widget";
+   
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
-   private static String FOLDER;
+   private static String FOLDER = CreateFileFromTemplateTest.class.getSimpleName();
    
    @BeforeClass
    public static void setUp() throws Exception
    {
-      FOLDER = UUID.randomUUID().toString();
+      FOLDER += "-" + System.currentTimeMillis();
       try
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER);
@@ -126,6 +127,70 @@ public class CreateFileFromTemplateTest extends BaseTest
       testTemplate(EMPTY_HTML, HTML_FILE_NAME);
       testTemplate(GOOGLE_GADGET, GOOGLE_GADGET_FILE_NAME);
       testTemplate(EMPTY_TEXT, TEXT_FILE_NAME);
+   }
+   
+   /**
+    * IDE-573: If create new file from template and on opened files exist file with name "Untitled file.html" 
+    * content of open file replaced on template content 
+    * @throws Exception
+    */
+   @Test
+   public void testCreateFileFromTemplateWithDuplicatedName() throws Exception
+   {
+      refresh();
+      selectItemInWorkspaceTree(FOLDER);
+      /*
+       * 1. Open two html files. 
+       * They will have names: Untitled file.html, Untitled file 1.html
+       */
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      Thread.sleep(TestConstants.SLEEP);
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      Thread.sleep(TestConstants.SLEEP);
+      
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + ".html *", IDE.editor().getTabTitle(0));
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html *", IDE.editor().getTabTitle(1));
+      
+      /*
+       * 2. Open "Create file from template" form.
+       */
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      
+      /*
+       * 3. Select "Empty HTML" template and click "Create" button
+       */
+      TemplateUtils.selectItemInTemplateList(selenium, EMPTY_HTML);
+      TemplateUtils.clickCreateFileButton(selenium);
+      
+      /*
+       * Check, new file opened with name "Untitled file 2.html"
+       */
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 2.html *", IDE.editor().getTabTitle(2));
+      
+      /*
+       * 4. Go to file in second tab "Untitled file 1.html" and save file
+       */
+      IDE.editor().selectTab(1);
+      saveAsUsingToolbarButton(null);
+      
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html", IDE.editor().getTabTitle(1));
+      
+      /*
+       * 5. Create new Netvibes widget from template:
+       */
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      TemplateUtils.selectItemInTemplateList(selenium, NETVIBES_WIDGET);
+      TemplateUtils.clickCreateFileButton(selenium);
+      
+      /*
+       * Check, new file opened with name "Untitled file 3.html"
+       */
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 3.html *", IDE.editor().getTabTitle(3));
+      
+      /*
+       * Close saved file
+       */
+      IDE.editor().closeTab(0);
    }
    
    @Test

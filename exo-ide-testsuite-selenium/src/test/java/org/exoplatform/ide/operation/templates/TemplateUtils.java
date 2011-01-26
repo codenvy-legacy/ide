@@ -189,6 +189,12 @@ public class TemplateUtils
       Thread.sleep(TestConstants.SLEEP);
    }
    
+   public static void clickCreateFileButton(Selenium selenium) throws Exception
+   {
+      selenium.click(CREATE_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.SLEEP);
+   }
+   
    /**
     * Create project from template: 
     * 1. Call "Project From Template" form
