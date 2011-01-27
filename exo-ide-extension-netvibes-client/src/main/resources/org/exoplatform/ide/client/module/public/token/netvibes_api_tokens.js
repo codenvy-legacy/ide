@@ -854,7 +854,7 @@ var netvibes_api_tokens = [
 						"name" : "Element",
 						"type" : "CLASS",
 						"code" : "Element",
-						"fqn" : "Element",
+						"fqn" : "UWA",
 						"fullDescription" : "<div><p>Document Object Model extensions.</p></div>",
 						"subTokenList" : [
 								{
