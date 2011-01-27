@@ -553,6 +553,7 @@
                   <exclude>**/catalina.policy</exclude>
                   <exclude>**/server.xml</exclude>
                   <exclude>**/login.config</exclude>
+                  <exclude>**/web.xml</exclude>
                   <exclude>**/*.svg</exclude>
                   <exclude>**/*RELEASE*</exclude>
                   <exclude>**/jquery/**</exclude>
