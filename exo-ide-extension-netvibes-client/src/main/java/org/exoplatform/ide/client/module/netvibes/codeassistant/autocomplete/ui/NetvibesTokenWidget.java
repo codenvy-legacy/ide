@@ -57,7 +57,7 @@ public class NetvibesTokenWidget extends TokenWidget<TokenExt>
       grid.setWidget(0, 0, i);
 
       String name = token.getName();
-      if (token.getProperty(TokenExtProperties.SHORT_HINT) != null)
+      if (token.getProperty(TokenExtProperties.SHORT_HINT) != null && token.getType()!= TokenExtType.TEMPLATE)
       {
          name += token.getProperty(TokenExtProperties.SHORT_HINT);
       }
@@ -69,6 +69,10 @@ public class NetvibesTokenWidget extends TokenWidget<TokenExt>
       if (token.getProperty(TokenExtProperties.FQN) != null)
       {
          pack = "-" + token.getProperty(TokenExtProperties.FQN);
+      }
+      if(token.getType() == TokenExtType.TEMPLATE)
+      {
+         pack = token.getProperty(TokenExtProperties.SHORT_HINT);
       }
       Label l = new Label(pack, false);
       l.setStyleName(JsAutocompleteImageBundle.INSTANCE.css().fqnStyle());
