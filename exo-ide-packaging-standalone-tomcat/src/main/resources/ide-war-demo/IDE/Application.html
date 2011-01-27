@@ -21,13 +21,12 @@
 <!--                                           -->
 <script type="text/javascript" language="javascript">
 var isomorphicDir = "sc/";
-var registryURL = "/IDE/rest/private/registry/repository";
-var proxyServiceContext = "/IDE/rest/private/proxy";
+var registryURL = "/rest/private/registry/repository";
+var proxyServiceContext = "/rest/private/proxy";
 var appConfig = {
-  "context" : "/IDE/rest/private",
-  "publicContext" : "/IDE/rest",
-  "entryPoint" : "/IDE/rest/private/jcr/repository/dev-monit",
-  "gadgetServer" : "/IDE/gadgets/"
+  "context" : "/rest/private",
+  "publicContext" : "/rest",
+  "gadgetServer" : "/gadgets/"
 }
 </script>
 
@@ -41,6 +40,8 @@ var appConfig = {
 <!-- to create a completely dynamic UI.        -->
 <!--                                           -->
 <body>
+<div width="100%" alidn="right" style="position: absolute; top: 2px; right: 2px; z-index: 999999; padding: 0px; -moz-box-sizing: border-box; overflow: hidden;">
+<a href="../login/logout.jsp"><b>Logout</b></a><div>
 <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
 	style="position: absolute; width: 0; height: 0; border: 0"></iframe>
 </body>

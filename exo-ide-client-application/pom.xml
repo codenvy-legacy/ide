@@ -210,7 +210,21 @@
                   <phase>process-resources</phase>
                   <configuration>
                      <tasks>
-                        <unwar src="${project.build.directory}/dependency/exo-ide-client-1.1.0-SNAPSHOT.jar" dest="${project.build.directory}/share" />
+                        <unwar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share" />
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+               <execution>
+                  <id>move-compile-resources</id>
+                  <phase>prepare-package</phase>
+                  <configuration>
+                     <tasks>
+                        <move todir="${project.build.directory}/${project.artifactId}-${project.version}">
+                          <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE"/>
+                        </move>
                      </tasks>
                   </configuration>
                   <goals>
@@ -225,8 +239,8 @@
             <artifactId>gwt-maven-plugin</artifactId>
             <version>${gwt.maven.plugin.version}</version>
             <configuration>
-               <module>org.exoplatform.ide.IDEApplication</module>
-               <runTarget>org.exoplatform.ide.IDEApplication/IDEApplication.html</runTarget>
+               <module>org.exoplatform.ide.Application</module>
+               <runTarget>org.exoplatform.ide.Application/Application.html</runTarget>
                <logLevel>INFO</logLevel>
                <skipTests>${gwt.test.skip}</skipTests>
             </configuration>

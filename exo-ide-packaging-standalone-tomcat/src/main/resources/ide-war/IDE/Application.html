@@ -24,14 +24,15 @@ var isomorphicDir = "sc/";
 var registryURL = "/rest/private/registry/repository";
 var proxyServiceContext = "/rest/private/proxy";
 var appConfig = {
-		  "context" : "/rest/private",
-		  "publicContext" : "/rest",
-		  "gadgetServer" : "/gadgets/" /*under GWT Shell*/
-		}
+  "context" : "/rest/private",
+  "publicContext" : "/rest",
+  "entryPoint" : "/rest/private/jcr/repository/dev-monit",
+  "gadgetServer" : "/IDE/gadgets/"
+}
 </script>
 
 <script type="text/javascript" language="javascript"
-	src="org.exoplatform.ide.IDEShell.nocache.js"></script>
+	src="IDE.nocache.js"></script>
 </head>
 
 <!--                                           -->
@@ -40,14 +41,9 @@ var appConfig = {
 <!-- to create a completely dynamic UI.        -->
 <!--                                           -->
 <body>
-
-<!-- OPTIONAL: include this if you want history support -->
-
- <!-- <iframe src="preload.html" id="pre" tabIndex='-2'
-	style="position: absolute; width: 0; height: 0; border: 0"></iframe> --> 
-
+<div width="100%" alidn="right" style="position: absolute; top: 2px; right: 2px; z-index: 999999; padding: 0px; -moz-box-sizing: border-box; overflow: hidden;">
+<a href="../login/logout.jsp"><b>Logout</b></a><div>
 <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
 	style="position: absolute; width: 0; height: 0; border: 0"></iframe>
-
 </body>
 </html>

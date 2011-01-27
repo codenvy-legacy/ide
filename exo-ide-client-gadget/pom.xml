@@ -23,11 +23,7 @@
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
-<!--      <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-servlet</artifactId>
-         <scope>runtime</scope>
-       </dependency> -->
+      <!-- <dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-servlet</artifactId> <scope>runtime</scope> </dependency> -->
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
@@ -47,11 +43,7 @@
          <groupId>com.smartgwt</groupId>
          <artifactId>smartgwt</artifactId>
       </dependency>
-    <!--  <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <scope>test</scope>
-       </dependency> -->
+      <!-- <dependency> <groupId>junit</groupId> <artifactId>junit</artifactId> <scope>test</scope> </dependency> -->
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs-webdav-client</artifactId>
@@ -76,18 +68,13 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-chromattic-client</artifactId>
       </dependency>
-   <!--   <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-testframework</artifactId>
-         <scope>test</scope>
-       </dependency> -->
-        <dependency>
+      <!-- <dependency> <groupId>org.exoplatform.ide</groupId> <artifactId>exo-ide-testframework</artifactId> <scope>test</scope> </dependency> -->
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-client</artifactId>
       </dependency>
    </dependencies>
    <build>
-      <finalName>IDE</finalName>
       <resources>
          <resource>
             <directory>src/main/resources</directory>
@@ -134,7 +121,8 @@
                   <configuration>
                      <tasks>
                         <echo file="target/war/WEB-INF/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
-                           buildNumber = ${buildNumber}
+                           buildNumber =
+                           ${buildNumber}
                            buildTime =${timestamp}
                            version = ${project.version}</echo>
                      </tasks>
@@ -142,7 +130,7 @@
                </execution>
             </executions>
          </plugin>
-        <plugin>
+         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
             <executions>
@@ -153,34 +141,50 @@
                      <goal>copy</goal>
                   </goals>
                   <configuration>
-                    <artifactItems>
-                     <artifactItem>
-                        <groupId>org.exoplatform.ide</groupId>
-                        <artifactId>exo-ide-client</artifactId>
-                        <type>jar</type>
-                      </artifactItem>
-                    </artifactItems>
-                 </configuration>
+                     <artifactItems>
+                        <artifactItem>
+                           <groupId>org.exoplatform.ide</groupId>
+                           <artifactId>exo-ide-client</artifactId>
+                           <type>jar</type>
+                        </artifactItem>
+                     </artifactItems>
+                  </configuration>
                </execution>
             </executions>
-         </plugin>                                                                                                                                                                             
-               <plugin>                                                                                                                                                                                        
-                  <artifactId>maven-antrun-plugin</artifactId>                                                                                                                                                 
-                  <executions>                                                                                                                                                                                 
-                     <execution>                                                                                                                                                                               
-                        <id>unwar-ide</id>                                                                                                                                                                     
-                        <phase>process-resources</phase>                                                                                                                                                                 
-                        <configuration>                                                                                                                                                                        
-                           <tasks>                                                                                                                                                                             
-                              <unwar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share" />                 
-                           </tasks>                                                                                                                                                                            
-                        </configuration>                                                                                                                                                                       
-                        <goals>                                                                                                                                                                                
-                           <goal>run</goal>                                                                                                                                                                    
-                        </goals>
-                        </execution>
-                        </executions>
-                        </plugin>           
+         </plugin>
+         <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>unwar-ide</id>
+                  <phase>process-resources</phase>
+                  <configuration>
+                     <tasks>
+                        <unwar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share" />
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+                 <execution>
+                  <id>move-compile-resources</id>
+                  <phase>prepare-package</phase>
+                  <configuration>
+                     <tasks>
+                        <move todir="${project.build.directory}/${project.artifactId}-${project.version}">
+                          <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE"/>
+                        </move>
+                         <move file="${project.build.directory}/${project.artifactId}-${project.version}/org.exoplatform.ide.client.IDEGadget.gadget.xml"
+                          tofile="${project.build.directory}/${project.artifactId}-${project.version}/ide.xml"/>
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
       </plugins>
       <sourceDirectory>target/share</sourceDirectory>
       <outputDirectory>target/war/WEB-INF/classes</outputDirectory>
@@ -205,8 +209,8 @@
                   <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
-                     <module>org.exoplatform.ide.IDEGadget</module>
-                     <runTarget>org.exoplatform.ide.IDEGadget/IDEGadget.html</runTarget>
+                     <module>org.exoplatform.ide.Gadget</module>
+                     <runTarget>org.exoplatform.ide.Gadget/Gadget.html</runTarget>
                      <logLevel>INFO</logLevel>
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <tomcat>${basedir}/target/tomcat</tomcat>
@@ -227,7 +231,9 @@
                   <artifactId>maven-war-plugin</artifactId>
                   <configuration>
                      <webXml>src/main/resources/WEB-INF/web.xml</webXml>
-                     <packagingExcludes>.gwt-tmp/**,**/sc/**,**/lib/**,**/shell/**,**/application/**,**/gadget,**/gadget/gadget.xml,**/gadget/web.xml,**/classes/org/**</packagingExcludes>
+                     <packagingExcludes>.gwt-tmp/**,**/sc/**,**/lib/**,**/shell/**,**/application/**,**/gadgets/**,
+                                        **/gadget/gadget.xml,**/gadget/web.xml,**/classes/org/**,**/Application.html,
+                                        **/Shell.html,**/ShowCase.html,**/Gadget.html</packagingExcludes>
                      <webResources>
                         <resource>
                            <directory>src/main/resources/WEB-INF</directory>

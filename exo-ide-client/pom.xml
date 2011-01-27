@@ -360,7 +360,7 @@
 				  <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
-                     <runTarget>org.exoplatform.ide.IDEShell/IDEShell.html</runTarget>
+                     <runTarget>org.exoplatform.ide.Shell/Shell.html</runTarget>
                      <logLevel>INFO</logLevel>
                      <!-- <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel> -->
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
