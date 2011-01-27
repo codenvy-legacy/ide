@@ -165,7 +165,6 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
          {
             newCursorPos = (beforeToken + value.getTokenValue()).lastIndexOf('(') + 2;
          }
-         System.out.println(value.getTokenValue());
          String tokenToPaste = beforeToken + value.getTokenValue() + afterToken;
 
          eventBus.fireEvent(new EditorAutoCompleteEvent(editorId, tokenToPaste, newCursorPos));

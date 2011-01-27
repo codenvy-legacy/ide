@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.autocompletion.ui;
 
-import com.google.gwt.user.client.ui.SimplePanel;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,10 +43,6 @@ import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
@@ -65,6 +59,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -98,7 +93,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
    private TextBox textBox;
 
-   private TokenWidget<T> overedWidget;
+   //   private TokenWidget<T> overedWidget;
 
    private TokenWidget<T> selectedWidget;
 
@@ -176,7 +171,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       mousHandler = new MousHandler();
       flowPanel.setWidth("100%");
 
-      scrollPanel.addMouseOutHandler(mousHandler);
+      //      scrollPanel.addMouseOutHandler(mousHandler);
 
       scrollPanel.setHeight("195px");
       scrollPanel.setWidth("300px");
@@ -210,7 +205,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       {
          TokenWidget<T> w = widgetFactory.buildTokenWidget(t);
          w.addClickHandler(mousHandler);
-         w.addMouseOverHandler(mousHandler);
+         //         w.addMouseOverHandler(mousHandler);
          w.addDoubleClickHandler(mousHandler);
          allWidgets.add(w);
       }
@@ -286,6 +281,10 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       {
          selectWidget(i + 1);
       }
+      else
+      {
+         selectWidget(0);
+      }
    }
 
    /**
@@ -301,6 +300,10 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       {
          selectWidget(i - 1);
       }
+      else
+      {
+         selectWidget(widgets.size()-1);
+      }
    }
 
    private native void scroll(Element scroll, int pos)/*-{
@@ -312,6 +315,10 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
       Element scroll = scrollPanel.getElement();
       Element item = widgets.get(i).getElement();
+      if(i == 0)
+      {
+         scroll(scroll, -scroll.getScrollTop());
+      }else
       if (item.getAbsoluteTop() < scroll.getAbsoluteTop())
       {
          scroll(scroll, -item.getOffsetHeight());
@@ -341,14 +348,14 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
 
       selectedWidget = widget;
 
-      if (widget.equals(overedWidget))
-      {
-         selectedWidget.setOveredStyle();
-      }
-      else
-      {
-         selectedWidget.setSelectedStyle();
-      }
+      //      if (widget.equals(overedWidget))
+      //      {
+      //         selectedWidget.setOveredStyle();
+      //      }
+      //      else
+      //      {
+      //      }
+      selectedWidget.setSelectedStyle();
 
       timer.cancel();
       if (descriptionPanel != null)
@@ -405,43 +412,43 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       }
    };
 
-   private void overWidget(TokenWidget<T> t)
-   {
-
-      if (t == overedWidget)
-      {
-         return;
-      }
-
-      if (t == null)
-      {
-         if (overedWidget.equals(selectedWidget))
-         {
-            overedWidget.setSelectedStyle();
-         }
-         else
-         {
-            overedWidget.setDefaultStyle();
-         }
-         overedWidget = null;
-         return;
-      }
-
-      if (overedWidget != null)
-      {
-         if (overedWidget.equals(selectedWidget))
-         {
-            overedWidget.setSelectedStyle();
-         }
-         else
-         {
-            overedWidget.setDefaultStyle();
-         }
-      }
-
-      overedWidget = t;
-      overedWidget.setOveredStyle();
-   }
+   //   private void overWidget(TokenWidget<T> t)
+   //   {
+   //
+   //      if (t == overedWidget)
+   //      {
+   //         return;
+   //      }
+   //
+   //      if (t == null)
+   //      {
+   //         if (overedWidget.equals(selectedWidget))
+   //         {
+   //            overedWidget.setSelectedStyle();
+   //         }
+   //         else
+   //         {
+   //            overedWidget.setDefaultStyle();
+   //         }
+   //         overedWidget = null;
+   //         return;
+   //      }
+   //
+   //      if (overedWidget != null)
+   //      {
+   //         if (overedWidget.equals(selectedWidget))
+   //         {
+   //            overedWidget.setSelectedStyle();
+   //         }
+   //         else
+   //         {
+   //            overedWidget.setDefaultStyle();
+   //         }
+   //      }
+   //
+   //      overedWidget = t;
+   //      overedWidget.setOveredStyle();
+   //   }
 
    /**
     * 
@@ -554,7 +561,7 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       }
    }
 
-   protected class MousHandler implements ClickHandler, MouseOverHandler, DoubleClickHandler, MouseOutHandler
+   protected class MousHandler implements ClickHandler, DoubleClickHandler
    {
 
       /**
@@ -568,30 +575,11 @@ public class AutocompletionFormExt<T> extends Composite implements ChangeHandler
       }
 
       /**
-       * @see com.google.gwt.event.dom.client.MouseOverHandler#onMouseOver(com.google.gwt.event.dom.client.MouseOverEvent)
-       */
-      public void onMouseOver(MouseOverEvent event)
-      {
-         @SuppressWarnings("unchecked")
-         TokenWidget<T> t = (TokenWidget<T>)event.getSource();
-
-         overWidget(t);
-      }
-
-      /**
        * @see com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.google.gwt.event.dom.client.DoubleClickEvent)
        */
       public void onDoubleClick(DoubleClickEvent event)
       {
          tokenSelected();
-      }
-
-      /**
-       * @see com.google.gwt.event.dom.client.MouseOutHandler#onMouseOut(com.google.gwt.event.dom.client.MouseOutEvent)
-       */
-      public void onMouseOut(MouseOutEvent event)
-      {
-         overWidget(null);
       }
 
    }
