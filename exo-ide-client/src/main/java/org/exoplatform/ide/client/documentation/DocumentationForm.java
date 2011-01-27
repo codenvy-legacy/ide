@@ -26,7 +26,6 @@ import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.widgets.Canvas;
@@ -45,7 +44,7 @@ public class DocumentationForm extends LockableView implements DocumentationPres
    
    private static final String FRAME_ID = "ideDocumentationFrame";
 
-   private Image DOCUMENTATION_TAB_ICON = new Image(IDEImageBundle.INSTANCE.outline());
+   private Image DOCUMENTATION_TAB_ICON = new Image(IDEImageBundle.INSTANCE.documentation());
 
    private HandlerManager eventBus;
 
@@ -89,16 +88,16 @@ public class DocumentationForm extends LockableView implements DocumentationPres
    @Override
    public void bindClickHandlers()
    {
-      new Timer()
-      {
-
-         @Override
-         public void run()
-         {
-            //            addHandler(IFrameElement.as(iFrame.getElement()));
-
-         }
-      }.schedule(500);
+//      new Timer()
+//      {
+//
+//         @Override
+//         public void run()
+//         {
+//            //            addHandler(IFrameElement.as(iFrame.getElement()));
+//
+//         }
+//      }.schedule(500);
    }
 
    private native void addHandler(Element e)/*-{
