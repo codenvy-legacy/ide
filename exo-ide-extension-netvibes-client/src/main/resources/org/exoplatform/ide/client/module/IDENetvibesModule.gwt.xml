@@ -34,5 +34,6 @@
    
    <script src="token/js_netvibes_tokens.js" />
    <script src="token/netvibes_api_tokens.js" />
+   <script src="token/java_script_api.js" />
    
 </module>

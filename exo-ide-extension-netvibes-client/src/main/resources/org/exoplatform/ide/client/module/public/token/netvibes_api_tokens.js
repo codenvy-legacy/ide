@@ -854,7 +854,7 @@ var netvibes_api_tokens = [
 						"name" : "Element",
 						"type" : "CLASS",
 						"code" : "Element",
-						"fqn" : "UWA",
+						"fqn" : "Element",
 						"fullDescription" : "<div><p>Document Object Model extensions.</p></div>",
 						"subTokenList" : [
 								{
@@ -1159,6 +1159,165 @@ var netvibes_api_tokens = [
 									"shortDescription" : "(iterator): Boolean",
 									"fqn" : "UWA.Array",
 									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td nowrap=\"\">detect: function (</td><td nowrap=\"\">iterator</td><td nowrap=\"\">)</td></tr></tbody></table></td></tr></tbody></table></blockquote><p>Test wether a array value is valid using a function.</p><h4>Parameters</h4><ul><li>Function iterator: Test function with param value and index</li></ul><h4>Returns</h4><ul><li>Bool: true if Arrays is valid else false.</li></ul></div>"
+								} ]
+					},
+					{
+						"name" : "String",
+						"type" : "CLASS",
+						"code" : "String",
+						"subTokenList" : [
+								{
+
+									"name" : "stripTags",
+									"type" : "METHOD",
+									"code" : "stripTags()",
+									"shortDescription" : "(): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td>stripTags: function ()</td></tr></tbody></table></blockquote><p>Strips a string of any HTML tags.</p><h4>Returns</h4><ul><li>String: Converted string.</li></ul></div>"
+								},
+								{
+
+									"name" : "truncate",
+									"type" : "METHOD",
+									"code" : "truncate(length, truncation)",
+									"shortDescription" : "(length, truncation): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td nowrap=\"\">truncate: function (</td><td nowrap=\"\">length,</td></tr><tr><td></td><td nowrap=\"\">truncation</td><td nowrap=\"\">)</td></tr></tbody></table></td></tr></tbody></table></blockquote><p>Truncates a string to the given length and appends a suffix to it (indicating that it is only an excerpt).</p><h4>Parameters</h4><ul><li>Integer length: max length of the string.</li><li>Integer truncation: truncation String used for elipsis, “...” by default.</li></ul><h4>Returns</h4><ul><li>String: Truncate string.</li></ul></div>"
+								},
+								{
+
+									"name" : "cut",
+									"type" : "METHOD",
+									"code" : "cut(length, truncation)",
+									"shortDescription" : "(length, truncation): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td nowrap=\"\">cut: function (</td><td nowrap=\"\">length,</td></tr><tr><td></td><td nowrap=\"\">truncation</td><td nowrap=\"\">)</td></tr></tbody></table></td></tr></tbody></table></blockquote><p>Cut a string to the given length and appends a suffix to it (indicating that it is only an excerpt).</p><h4>Parameters</h4><ul><li>Integer length: max length of the string.</li><li>Integer truncation: truncation String used for elipsis, “...” by default.</li></ul><h4>Returns</h4><ul><li>String: Cut string.</li></ul></div>"
+								},
+								{
+
+									"name" : "escapeRegExp",
+									"type" : "METHOD",
+									"code" : "escapeRegExp()",
+									"shortDescription" : "(): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td>escapeRegExp: function ()</td></tr></tbody></table></blockquote><p>Returns string with escaped regular expression characters</p><h4>Returns</h4><ul><li>String: Escaped RegExp string.</li></ul></div>"
+								},
+								{
+
+									"name" : "trim",
+									"type" : "METHOD",
+									"code" : "trim()",
+									"shortDescription" : "(): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td>trim: function ()</td></tr></tbody></table></blockquote><p>Trims the leading and trailing spaces off a string.</p><h4>Returns</h4><ul><li>String: Trimed string.</li></ul></div>"
+								},
+								{
+
+									"name" : "isEmail",
+									"type" : "METHOD",
+									"code" : "isEmail()",
+									"shortDescription" : "(): Boolean",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td>isEmail: function ()</td></tr></tbody></table></blockquote><p>Validate if current String is a valid email adresse.</p><h4>Returns</h4><ul><li>Boolean: True if is a valid email adresse else false.</li></ul></div>"
+								},
+								{
+
+									"name" : "format",
+									"type" : "METHOD",
+									"code" : "format()",
+									"shortDescription" : "(): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td>format: function ()</td></tr></tbody></table></blockquote><p>Replace {d+} into string by the respetive argument position.</p><h4>Returns</h4><ul><li>String: Current String Instance.</li></ul></div>"
+								},
+								{
+
+									"name" : "parseRelativeTime",
+									"type" : "METHOD",
+									"code" : "parseRelativeTime(raw, offset)",
+									"shortDescription" : "(raw, offset): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td nowrap=\"\">parseRelativeTime: function (</td><td nowrap=\"\">raw,</td></tr><tr><td></td><td nowrap=\"\">offset</td><td nowrap=\"\">)</td></tr></tbody></table></td></tr></tbody></table></blockquote><p>Convert date string to a human readable elapsed time, like “2 days ago”.</p><h4>Parameters</h4><ul><li>String raw: TODO.</li><li>Integer offset: TODO.</li></ul><h4>Returns</h4><ul><li>String: Relative Time.</li></ul></div>"
+								},
+								{
+
+									"name" : "contains",
+									"type" : "METHOD",
+									"code" : "contains(string, separator)",
+									"shortDescription" : "(string, separator): Boolean",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td nowrap=\"\">contains: function (</td><td nowrap=\"\">string,</td></tr><tr><td></td><td nowrap=\"\">separator</td><td nowrap=\"\">)</td></tr></tbody></table></td></tr></tbody></table></blockquote><p>Check if String contain value using a separator.</p><h4>Parameters</h4><ul><li>String string: TODO.</li><li>String separator: TODO.</li></ul><h4>Returns</h4><ul><li>Boolean: True is String match requested String else false.</li></ul></div>"
+								},
+								{
+
+									"name" : "camelCase",
+									"type" : "METHOD",
+									"code" : "camelCase()",
+									"shortDescription" : "(): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td>camelCase: function ()</td></tr></tbody></table></blockquote><p>Convert current String with space and coma in CamelCase valid string.</p><h4>Returns</h4><ul><li>String: The converted string.</li></ul></div>"
+								},
+								{
+
+									"name" : "capitalize",
+									"type" : "METHOD",
+									"code" : "capitalize()",
+									"shortDescription" : "(): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td>capitalize: function ()</td></tr></tbody></table></blockquote><p>Converts the first letter of each word in a string to uppercase.</p><h4>Returns</h4><ul><li>String: The converted string.</li></ul></div>"
+								},
+								{
+
+									"name" : "unescapeHTML",
+									"type" : "METHOD",
+									"code" : "unescapeHTML()",
+									"shortDescription" : "(): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td>unescapeHTML: function ()</td></tr></tbody></table></blockquote><p>Unescape HTML on current String.</p><h4>Returns</h4><ul><li>String: The converted string.</li></ul></div>"
+								},
+								{
+
+									"name" : "escapeHTML",
+									"type" : "METHOD",
+									"code" : "escapeHTML()",
+									"shortDescription" : "(): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td>escapeHTML: function ()</td></tr></tbody></table></blockquote><p>Escape HTML on current String.</p><h4>Returns</h4><ul><li>String: The converted string.</li></ul></div>"
+								},
+								{
+
+									"name" : "test",
+									"type" : "METHOD",
+									"code" : "test(string, regexp)",
+									"shortDescription" : "(string, regexp): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td nowrap=\"\">test: function (</td><td nowrap=\"\">string,</td></tr><tr><td></td><td nowrap=\"\">regexp</td><td nowrap=\"\">)</td></tr></tbody></table></td></tr></tbody></table></blockquote><p>Apply regexp on current String.</p><h4>Parameters</h4><ul><li>String string: TODO.</li><li>String regexp: TODO.</li></ul><h4>Returns</h4><ul><li>String: The RegExp results.</li></ul></div>"
+								},
+								{
+
+									"name" : "makeClickable",
+									"type" : "METHOD",
+									"code" : "makeClickable()",
+									"shortDescription" : "(): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td>makeClickable: function ()</td></tr></tbody></table></blockquote><p>Convert Url String has clickable link.</p><h4>Returns</h4><ul><li>String: The &lt;a&gt; HTML link with String value has href attribute.</li></ul></div>"
+								},
+								{
+
+									"name" : "ucfirst",
+									"type" : "METHOD",
+									"code" : "ucfirst()",
+									"shortDescription" : "(): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td>ucfirst: function ()</td></tr></tbody></table></blockquote><p>Convert first String letter has UpperCase.</p><h4>Returns</h4><ul><li>String: updated String</li></ul></div>"
+								},
+								{
+
+									"name" : "highlight",
+									"type" : "METHOD",
+									"code" : "highlight(search)",
+									"shortDescription" : "(search): String",
+									"fqn" : "UWA.String",
+									"fullDescription" : "<div><blockquote><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td nowrap=\"\">highlight: function (</td><td nowrap=\"\">search</td><td nowrap=\"\">)</td></tr></tbody></table></td></tr></tbody></table></blockquote><p>Add span Element around search text.</p><h4>Parameters</h4><ul><li>String search: string to highlight.</li></ul><h4>Returns</h4><ul><li>String: updated String</li></ul></div>"
 								} ]
 					} ]
 		},

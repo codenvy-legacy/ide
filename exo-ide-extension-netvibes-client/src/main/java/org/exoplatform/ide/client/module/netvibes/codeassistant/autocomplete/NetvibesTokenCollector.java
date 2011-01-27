@@ -53,7 +53,7 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
 
    private static List<Token> defaultTokens;
 
-   private static List<Token> apiTokens;
+   private static List<Token> nVApiTokens;
 
    private static Map<String, Token> tokensByFQN = new HashMap<String, Token>();
 
@@ -82,6 +82,10 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
 
    private native JavaScriptObject getNetvibesApiTokens() /*-{
       return $wnd.netvibes_api_tokens;
+   }-*/;
+
+   private native JavaScriptObject getJavaScriptApiTokens() /*-{
+      return $wnd.java_script_api;
    }-*/;
 
    /**
@@ -177,12 +181,30 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
 
          defaultTokens.addAll(parser.getTokens(tokenArray));
       }
-      if (apiTokens == null)
+      if (nVApiTokens == null)
       {
          JSONTokenParser parser = new JSONTokenParser();
          JSONArray tokenArray = new JSONArray(getNetvibesApiTokens());
-         apiTokens = parser.getTokens(tokenArray);
-         putClassTokensToMapByFQN(apiTokens);
+         nVApiTokens = parser.getTokens(tokenArray);
+         putClassTokensToMapByFQN(nVApiTokens);
+
+         JSONArray jStokenArray = new JSONArray(getJavaScriptApiTokens());
+         List<Token> jSApiTokens = parser.getTokens(jStokenArray);
+         for (Token t : jSApiTokens)
+         {
+            if (tokensByFQN.containsKey(t.getName()))
+            {
+               Token nVt = tokensByFQN.get(t.getName());
+               if (nVt.getSubTokenList() != null)
+                  nVt.getSubTokenList().addAll(t.getSubTokenList());
+               else
+                  nVt.setSubTokenList(t.getSubTokenList());
+            }
+            else
+            {
+               tokensByFQN.put(t.getName(), t);
+            }
+         }
       }
 
       if (beforeToken.endsWith("."))
@@ -195,14 +217,14 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
          }
          else
          {
-            tokenFromParser.addAll(apiTokens);
+            tokenFromParser.addAll(nVApiTokens);
             filterToken(beforeToken, tokenFromParser);
          }
       }
       else
       {
          tokens.addAll(defaultTokens);
-         tokens.addAll(apiTokens);
+         tokens.addAll(nVApiTokens);
          filterToken(lineNum, tokenFromParser);
       }
       tokens.addAll(filteredToken.values());
@@ -545,6 +567,10 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
                tex.setProperty(TokenExtProperties.SHORT_HINT, t.getShortDescription());
                if (t.getFullDescription() != null)
                   tex.setProperty(TokenExtProperties.FULL_TEXT, t.getFullDescription());
+               if (t.getFqn() != null)
+               {
+                  tex.setProperty(TokenExtProperties.FQN, t.getFqn());
+               }
                tokens.add(tex);
                break;
             case VARIABLE :
@@ -553,6 +579,10 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
                   tex.setProperty(TokenExtProperties.SHORT_HINT, t.getShortDescription());
                if (t.getFullDescription() != null)
                   tex.setProperty(TokenExtProperties.FULL_TEXT, t.getFullDescription());
+               if (t.getFqn() != null)
+               {
+                  tex.setProperty(TokenExtProperties.FQN, t.getFqn());
+               }
                tokens.add(tex);
                break;
             case KEYWORD :
