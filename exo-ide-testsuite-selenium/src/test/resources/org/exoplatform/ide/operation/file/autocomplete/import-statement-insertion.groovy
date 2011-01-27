@@ -2,7 +2,7 @@
 import javax.ws.rs.Path
 import javax.ws.rs.GET
 import javax.ws.rs.PathParam
-import java.util.prefs.Base64;
+import java.util.prefs.Base64
 
 @Path("/my-service")
 public class HelloWorld {

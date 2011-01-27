@@ -281,7 +281,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //open script
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]/open");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertEquals("prefs", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
+      assertEquals("prefs : gadgets.Prefs", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
       assertEquals("displayGreeting", selenium
          .getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
 

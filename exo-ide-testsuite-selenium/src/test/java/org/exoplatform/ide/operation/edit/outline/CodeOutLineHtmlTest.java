@@ -175,7 +175,7 @@ public class CodeOutLineHtmlTest extends BaseTest
       assertEquals("br", IDE.outline().getTitle(3, 0));
       assertEquals("br", IDE.outline().getTitle(4, 0));
       assertEquals("script", IDE.outline().getTitle(5, 0));
-      assertEquals("prefs", IDE.outline().getTitle(6, 0));
+      assertEquals("prefs : gadgets.Prefs", IDE.outline().getTitle(6, 0));
       assertEquals("displayGreeting", IDE.outline().getTitle(7, 0));
       assertEquals("today", IDE.outline().getTitle(8, 0));
       assertEquals("time", IDE.outline().getTitle(9, 0));
