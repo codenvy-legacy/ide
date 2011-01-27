@@ -136,7 +136,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       /*
        * 5. Move down, and check, that javadoc form appeared with hint.
        */
-      Autocomplete.moveCursorDown(1);
+      Autocomplete.moveCursorDown(1+11);
       Thread.sleep(TestConstants.SLEEP);
       
       /*
@@ -179,7 +179,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
    public void testInsertNetvibesFlashTemplate() throws Exception
    {
       refresh();
-      testSnippetInAutocomplete(1, FLASH_CONTENT);
+      testSnippetInAutocomplete(1+11, FLASH_CONTENT);
    }
    
    /**
@@ -190,7 +190,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
    public void testInsertNetvibesJsonRequestTemplate() throws Exception
    {
       refresh();
-      testSnippetInAutocomplete(5, JSON_REQUEST_CONTENT);
+      testSnippetInAutocomplete(5+11, JSON_REQUEST_CONTENT);
    }
    
    /**
@@ -201,7 +201,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
    public void testInsertNetvibesPagerTemplate() throws Exception
    {
       refresh();
-      testSnippetInAutocomplete(6, PAGER_CONTENT);
+      testSnippetInAutocomplete(6+11, PAGER_CONTENT);
    }
    
    /**
@@ -212,7 +212,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
    public void testInsertNetvibesTabsTemplate() throws Exception
    {
       refresh();
-      testSnippetInAutocomplete(7, TABS_CONTENT);
+      testSnippetInAutocomplete(7+11, TABS_CONTENT);
    }
    
    /**
@@ -223,7 +223,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
    public void testInsertNetvibesThumbnailedTemplate() throws Exception
    {
       refresh();
-      testSnippetInAutocomplete(8, THUMBNAILED_CONTENT);
+      testSnippetInAutocomplete(8+11, THUMBNAILED_CONTENT);
    }
    
    /**
