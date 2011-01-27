@@ -46,14 +46,14 @@ public class ChrommaticImportAssistantTest extends BaseTest
       + "/";
 
    private final static String FILE_NAME = "importChrommatic.groovy";
-   
-   
+
    @BeforeClass
    public static void setUp()
    {
 
-      String serviceFilePath = "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/importAssistantChrommatic.groovy";
-      
+      String serviceFilePath =
+         "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/importAssistantChrommatic.groovy";
+
       try
       {
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
@@ -69,37 +69,34 @@ public class ChrommaticImportAssistantTest extends BaseTest
       }
    }
 
-   
    @Test
    public void testChrommaticImportAssistant() throws Exception
    {
       waitForRootElement();
-      
       selectItemInWorkspaceTree(TEST_FOLDER);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP * 2);   
-      
+      Thread.sleep(TestConstants.SLEEP * 2);
+
       selenium.click("//div[@class='CodeMirror-line-numbers']/div[contains(text(), '2')]");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(getTextFromCodeEditor(0).contains("import java.util.prefs.Base64;"));
-
+      assertTrue(getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
    }
 
    private String getErrorCorrectionListItemLocator(String packageName)
    {
       return "//div[@class='gwt-Label' and contains(text(),'" + packageName + "')]";
    }
-   
+
    @AfterClass
    public static void tearDown() throws Exception
    {
       IDE.editor().closeFileTabIgnoreChanges(0);
-      
+
       try
       {
          VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
