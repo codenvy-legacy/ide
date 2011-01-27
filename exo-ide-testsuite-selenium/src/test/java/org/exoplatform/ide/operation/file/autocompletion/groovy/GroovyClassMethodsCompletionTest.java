@@ -104,7 +104,7 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
        * Check, that autocomplete form dissapeared, and new text in editor appeared.
        */
       assertFalse(selenium.isElementPresent(Autocomplete.Locators.PANEL));
-      assertTrue(getTextFromCodeEditor(0).contains("Collections.sort(List, Comparator)"));
+      assertTrue(getTextFromCodeEditor(0).contains("Collections.sort(List)"));
       
       /*
        * 8. Close file
