@@ -1217,11 +1217,11 @@ public abstract class BaseTest
 
    public enum IdeAddress {
       SHELL("http://127.0.0.1:8888/",
-         "http://127.0.0.1:8888/org.exoplatform.ide.IDEShell/IDEShell.html?gwt.codesvr=127.0.0.1:9997"), 
+         "http://127.0.0.1:8888/IDE/Shell.html?gwt.codesvr=127.0.0.1:9997"), 
       PORTAL("http://127.0.0.1:8080/", 
          "http://127.0.0.1:8080/portal/private/default/ide"), 
       STANDALONE("http://127.0.0.1:8080/", 
-         "http://127.0.0.1:8080/IDE/IDE/IDEApplication.html");
+         "http://127.0.0.1:8080/IDE/Application.html");
 
       private String baseUrl;
 
