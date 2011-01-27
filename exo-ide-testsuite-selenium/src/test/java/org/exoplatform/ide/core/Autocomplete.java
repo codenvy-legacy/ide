@@ -93,7 +93,7 @@ public class Autocomplete
       }
    }
    
-   public static void openForm(int tabIndex) throws Exception
+   public static void openForm() throws Exception
    {
       BaseTest.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
       Thread.sleep(TestConstants.SLEEP);

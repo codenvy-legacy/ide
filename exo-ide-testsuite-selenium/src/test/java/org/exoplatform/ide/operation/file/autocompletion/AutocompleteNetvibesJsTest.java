@@ -121,7 +121,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
        * 4. Press ctrl+enter to call autocomplete form.
        */
       
-      Autocomplete.openForm(0);
+      Autocomplete.openForm();
       
       /*
        * Check, that all UWA snippets are present.
@@ -260,7 +260,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       /*
        * 4. Press ctrl+enter to call autocomplete form.
        */
-      Autocomplete.openForm(0);
+      Autocomplete.openForm();
       
       /*
        * 5. Move down, and click enter
