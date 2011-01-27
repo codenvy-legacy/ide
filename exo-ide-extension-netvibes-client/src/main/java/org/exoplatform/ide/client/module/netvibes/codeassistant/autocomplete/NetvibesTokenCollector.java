@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Token Collector for tokens, that used in netvibes files.
@@ -53,6 +54,8 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
    private static List<Token> defaultTokens;
 
    private static List<Token> apiTokens;
+
+   private static Map<String, Token> tokensByFQN = new HashMap<String, Token>();
 
    private HashMap<String, Token> filteredToken = new HashMap<String, Token>();
 
@@ -179,19 +182,28 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
          JSONTokenParser parser = new JSONTokenParser();
          JSONArray tokenArray = new JSONArray(getNetvibesApiTokens());
          apiTokens = parser.getTokens(tokenArray);
+         putClassTokensToMapByFQN(apiTokens);
       }
 
       if (beforeToken.endsWith("."))
       {
-         tokenFromParser.addAll(apiTokens);
-         filterToken(beforeToken, tokenFromParser);
+         if (token != null && token.getElementType() != null)
+         {
+            Token clazz = tokensByFQN.get(token.getElementType());
+            if (clazz != null)
+               tokens.addAll(clazz.getSubTokenList());
+         }
+         else
+         {
+            tokenFromParser.addAll(apiTokens);
+            filterToken(beforeToken, tokenFromParser);
+         }
       }
       else
       {
          tokens.addAll(defaultTokens);
          tokens.addAll(apiTokens);
          filterToken(lineNum, tokenFromParser);
-
       }
       tokens.addAll(filteredToken.values());
 
@@ -200,6 +212,26 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
       Collections.sort(tokensExt, this);
 
       tokensCollectedCallback.onTokensCollected(tokensExt, beforeToken, tokenToComplete, afterToken);
+   }
+
+   /**
+    * Put all Class tokens in to map, where key is FQN plus Name of the Class
+    * @param tokens list 
+    */
+   private void putClassTokensToMapByFQN(List<Token> tokens)
+   {
+      for (Token t : tokens)
+      {
+         if (t.getType() == TokenType.CLASS)
+         {
+            String pack = t.getFqn() == null ? "" : t.getFqn() + ".";
+            tokensByFQN.put(pack + t.getName(), t);
+         }
+         if (t.getSubTokenList() != null)
+         {
+            putClassTokensToMapByFQN(t.getSubTokenList());
+         }
+      }
    }
 
    private List<Token> getJsTokens(List<Token> tokens)
@@ -238,11 +270,17 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
       Token foundToken = null;
       if (tokens.length != 0)
       {
-         foundToken = findToken(tokens[tokens.length - 1], list);
+         if ("widget".equals(tokens[tokens.length - 1]))
+            foundToken = tokensByFQN.get("UWA.Widget");
+         else
+            foundToken = findToken(tokens[tokens.length - 1], list);
       }
       else
       {
-         foundToken = findToken(token, list);
+         if ("widget".equals(token))
+            foundToken = tokensByFQN.get("UWA.Widget");
+         else
+            foundToken = findToken(token, list);
       }
       if (foundToken != null)
       {
@@ -268,24 +306,24 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
          String to[] = token.split("\\.");
          List<Token> tokens = list;
          Token t = null;
-         for(String fqnPath : to)
+         for (String fqnPath : to)
          {
-           t = findTokenInList(fqnPath, tokens);
-           if(t != null)
-              tokens = t.getSubTokenList();
-           else
-           {
-              return null;
-           }
+            t = findTokenInList(fqnPath, tokens);
+            if (t != null)
+               tokens = t.getSubTokenList();
+            else
+            {
+               return null;
+            }
          }
          return t;
       }
       else
       {
-        return findTokenInList(token, list);
+         return findTokenInList(token, list);
       }
    }
-   
+
    private Token findTokenInList(String token, List<Token> list)
    {
       for (Token t : list)
@@ -297,6 +335,7 @@ public class NetvibesTokenCollector implements TokenCollectorExt, Comparator<Tok
       }
       return null;
    }
+
    /**
     * @param currentLine
     * @param token

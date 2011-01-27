@@ -56,6 +56,8 @@ public class JSONTokenParser
       public static final String MIME_TYPE = "mimeType";
 
       public static final String FQN = "fqn";
+      
+      public static final String VARTYPE = "varType";
    }
 
    public List<Token> getTokens(JSONArray json)
@@ -99,6 +101,10 @@ public class JSONTokenParser
          if (jObject.get(TokenFields.SUB_TOKEN_LIST) != null)
          {
             t.setSubTokenList(getTokens(jObject.get(TokenFields.SUB_TOKEN_LIST).isArray()));
+         }
+         if (jObject.get(TokenFields.VARTYPE) != null)
+         {
+            t.setElementType(jObject.get(TokenFields.VARTYPE).isString().stringValue());
          }
 
          tokens.add(t);
