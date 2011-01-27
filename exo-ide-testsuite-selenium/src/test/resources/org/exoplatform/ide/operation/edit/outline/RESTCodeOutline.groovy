@@ -34,8 +34,6 @@ interface Dep extends String
    private String name;
    private int age;
    
-   public int getAge;
-   
    public void addYear();
    
    public java.lang.String greet(
