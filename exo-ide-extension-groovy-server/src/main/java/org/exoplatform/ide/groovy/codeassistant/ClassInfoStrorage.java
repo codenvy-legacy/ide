@@ -18,21 +18,6 @@
  */
 package org.exoplatform.ide.groovy.codeassistant;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.groovy.JcrUtils;
-import org.exoplatform.ide.groovy.codeassistant.bean.JarEntry;
-import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
-import org.exoplatform.ide.groovy.codeassistant.extractors.ClassNamesExtractor;
-import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +38,21 @@ import javax.jcr.version.VersionException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.groovy.JcrUtils;
+import org.exoplatform.ide.groovy.codeassistant.bean.JarEntry;
+import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
+import org.exoplatform.ide.groovy.codeassistant.extractors.ClassNamesExtractor;
+import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.ws.frameworks.json.impl.JsonException;
+import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 
 /**
  * Created by The eXo Platform SAS.
@@ -97,6 +97,7 @@ public class ClassInfoStrorage
       this.sessionProviderService = sessionProvider;
       this.repositoryService = repositoryService;
       this.wsName = wsName;
+
       Runnable run = new Runnable()
       {
 
@@ -107,11 +108,8 @@ public class ClassInfoStrorage
             {
                addClassesOnStartUp(jars);
             }
-//            catch (SaveClassInfoException e)
-//            {
-//               if (LOG.isDebugEnabled())
-//                  e.printStackTrace();
-            catch (Throwable e) {
+            catch (Throwable e)
+            {
                e.printStackTrace();
             }
          }
@@ -276,34 +274,48 @@ public class ClassInfoStrorage
          for (JarEntry entry : jars)
          {
             String path = entry.getJarPath();
-            LOG.info("Load ClassInfo from jar -" + entry.getJarPath());
-            
-            List<String> fqns = new ArrayList<String>();
-            if (entry.getIncludePkgs() == null || entry.getIncludePkgs().isEmpty())
-            {               
-               fqns.addAll(ClassNamesExtractor.getCompiledClassesFromJar(path));
-            }
-            else
+
+            FileFinder fileFinder = new FileFinder(path);
+
+            for (String jarFile : fileFinder.getFileList())
             {
-               for (String pkg : entry.getIncludePkgs())
+               LOG.info("Load ClassInfo from jar -" + jarFile);
+               List<String> fqns = new ArrayList<String>();
+
+               if (entry.getIncludePkgs() == null || entry.getIncludePkgs().isEmpty())
                {
-                  LOG.info("Load ClassInfo from - " + pkg);
-                  fqns.addAll(ClassNamesExtractor.getCompiledClassesFromJar(path, pkg));
+                  fqns.addAll(ClassNamesExtractor.getCompiledClassesFromJar(jarFile));
+               }
+               else
+               {
+                  for (String pkg : entry.getIncludePkgs())
+                  {
+                     LOG.info("Load ClassInfo from - " + pkg);
+                     fqns.addAll(ClassNamesExtractor.getCompiledClassesFromJar(jarFile, pkg));
+                  }
+               }
+
+               for (String fqn : fqns)
+               {
+                  try
+                  {
+                     putClass(classLoader, session, fqn);
+                  }
+                  catch (Exception e)
+                  {
+                     LOG.error("Could not ad class " + fqn);
+                     e.printStackTrace();
+                  }
                }
             }
 
-            for (String fqn : fqns)
-            {
-               putClass(classLoader, session, fqn);
-            }
-            
          }
          LOG.info("Class info load complete");
       }
       catch (RepositoryException e)
       {
          e.printStackTrace();
-         
+
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO: need think about status
@@ -312,7 +324,7 @@ public class ClassInfoStrorage
       catch (IOException e)
       {
          e.printStackTrace();
-         
+
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO: need think about status
@@ -321,39 +333,39 @@ public class ClassInfoStrorage
       catch (IncompatibleClassChangeError e)
       {
          e.printStackTrace();
-         
+
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO: need think about status
          throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
-      catch (JsonException e)
-      {
-         e.printStackTrace();
-         
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         //TODO: need think about status
-         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
+      //      catch (JsonException e)
+      //      {
+      //         e.printStackTrace();
+      //
+      //         if (LOG.isDebugEnabled())
+      //            e.printStackTrace();
+      //         //TODO: need think about status
+      //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      //      }
       catch (RepositoryConfigurationException e)
       {
          e.printStackTrace();
-         
+
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO: need think about status
          throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
-      catch (ClassNotFoundException e)
-      {
-         e.printStackTrace();
-         
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         //TODO: need think about status
-         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
+      //      catch (ClassNotFoundException e)
+      //      {
+      //         e.printStackTrace();
+      //
+      //         if (LOG.isDebugEnabled())
+      //            e.printStackTrace();
+      //         //TODO: need think about status
+      //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      //      }
    }
 
    private void putClass(ClassLoader classLoader, Session session, String fqn) throws RepositoryException,

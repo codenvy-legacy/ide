@@ -26,6 +26,10 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.exoplatform.ide.groovy.codeassistant.ClassInfoStrorage;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 /**
  * Extracting class names from jar's or from jdk source.
  * 
@@ -37,6 +41,8 @@ import java.util.zip.ZipInputStream;
 
 public class ClassNamesExtractor
 {
+   
+   private static final Log LOG = ExoLogger.getLogger(ClassNamesExtractor.class);
 
    /**
     * Extract all class names from jar
@@ -104,19 +110,26 @@ public class ClassNamesExtractor
          if (zipEntry.getName().endsWith(fileExtension))
          {
             String fqn = zipEntry.getName();
-            fqn = fqn.substring(0, fqn.lastIndexOf("."));
-            fqn = fqn.replaceAll("/", "\\.");
-            if (packageName != null)
-            {
-               if (fqn.startsWith(packageName))
+
+            try {
+               fqn = fqn.substring(0, fqn.lastIndexOf("."));
+               fqn = fqn.replaceAll("/", "\\.");
+               if (packageName != null)
+               {
+                  if (fqn.startsWith(packageName))
+                  {
+                     classes.add(fqn);
+                  }
+               }
+               else
                {
                   classes.add(fqn);
                }
+               
+            } catch (Exception e) {
+               LOG.error("Could not add class " + fqn);
             }
-            else
-            {
-               classes.add(fqn);
-            }
+                        
          }
       }
       return classes;

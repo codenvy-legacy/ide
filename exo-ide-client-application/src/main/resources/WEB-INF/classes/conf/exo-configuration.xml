@@ -147,222 +147,40 @@
                            </field>
                         </object>
                      </value>
- 				
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/jcr-1.0.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/chromattic.api-1.1.0-SNAPSHOT.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/chromattic.apt-1.1.0-SNAPSHOT.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/chromattic.core-1.1.0-SNAPSHOT.jar</string>
-                           </field>
-                        </object>
-                     </value>
- 
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/chromattic.ext-1.1.0-SNAPSHOT.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/chromattic.spi-1.1.0-SNAPSHOT.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/jsr250-api-1.0.jar</string>
-                           </field>
-                        </object>
-                     </value>
- 
-                      <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/jsr311-api-1.0.jar</string>
-                           </field>
-                        </object>
-                     </value>
                       
+                      <!-- 
                      <value>
                         <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
                            <field name="jarPath">
-                              <string>../lib-sources/exo.ws.commons-2.2.0-Beta03.jar</string>
+                              <string>
+                              	../webapps/IDE/WEB-INF/lib/jcr-1.0.jar;
+                              	../webapps/IDE/WEB-INF/lib/chromattic.*.jar;
+                              	../webapps/IDE/WEB-INF/lib/jsr250-api-1.0.jar;
+                              	../webapps/IDE/WEB-INF/lib/jsr311-api-1.0.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.ws.commons*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.ws.frameworks.json*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.ws.rest.core*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.ws.rest.ext*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.kernel.commons*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.kernel.component.command*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.kernel.component.common*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.kernel.container*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.core.component.database*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.core.component.document*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.core.component.organization.api*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.core.component.script.groovy*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.core.component.security.core*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.core.component.xml-processing*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.jcr.component.core*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.jcr.component.ext*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.jcr.component.webdav*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.jcr.framework.command*.jar;
+                              	../webapps/IDE/WEB-INF/lib/exo.jcr.framework.web*.jar
+                              </string>
                            </field>
                         </object>
                      </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.ws.frameworks.json-2.2.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.ws.rest.core-2.2.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.ws.rest.ext-2.2.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.kernel.commons-2.3.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.kernel.component.command-2.3.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.kernel.component.common-2.3.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.kernel.container-2.3.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.database-2.4.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.document-2.4.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.organization.api-2.4.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.script.groovy-2.4.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.security.core-2.4.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.xml-processing-2.4.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.jcr.component.core-1.14.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.jcr.component.ext-1.14.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.jcr.component.webdav-1.14.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.jcr.framework.command-1.14.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.jcr.framework.web-1.14.0-Beta03.jar</string>
-                           </field>
-                        </object>
-                     </value>
+                      -->
 
                   </collection>
                </field>
@@ -370,7 +188,6 @@
                <field name="jarDocs">
                   <collection type="java.util.ArrayList">
                   
-                  <!-- 
                      <value>
                         <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
                            <field name="jarPath">
@@ -388,224 +205,41 @@
                            </field>
                         </object>
                      </value>
+
+					<!-- 
+                     <value>
+                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                           <field name="jarPath">
+                              <string>
+                              	../lib-docs/jcr-1.0-sources.jar;
+                              	../lib-docs/chromattic.*-sources.jar;
+                              	../lib-docs/jsr250-api-1.0-sources.jar;
+                              	../lib-docs/jsr311-api-1.0-sources.jar;
+                              	../lib-docs/exo.ws.commons*-sources.jar;
+                              	../lib-docs/exo.ws.frameworks.json*-sources.jar;
+                              	../lib-docs/exo.ws.rest.core*-sources.jar;
+                              	../lib-docs/exo.ws.rest.ext*-sources.jar;
+                              	../lib-docs/exo.kernel.commons*-sources.jar;
+                              	../lib-docs/exo.kernel.component.command*-sources.jar;
+                              	../lib-docs/exo.kernel.component.common*-sources.jar;
+                              	../lib-docs/exo.kernel.container*-sources.jar;
+                              	../lib-docs/exo.core.component.database*-sources.jar;
+                              	../lib-docs/exo.core.component.document*-sources.jar;
+                              	../lib-docs/exo.core.component.organization.api*-sources.jar;
+                              	../lib-docs/exo.core.component.script.groovy*-sources.jar;
+                              	../lib-docs/exo.core.component.security.core*-sources.jar;
+                              	../lib-docs/exo.core.component.xml-processing*-sources.jar;
+                              	../lib-docs/exo.jcr.component.core*-sources.jar;
+                              	../lib-docs/exo.jcr.component.ext*-sources.jar;
+                              	../lib-docs/exo.jcr.component.webdav*-sources.jar;
+                              	../lib-docs/exo.jcr.framework.command*-sources.jar;
+                              	../lib-docs/exo.jcr.framework.web*-sources.jar
+                              </string>
+                           </field>
+                        </object>
+                     </value>
                       -->
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/jcr-1.0-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/chromattic.api-1.1.0-SNAPSHOT-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/chromattic.apt-1.1.0-SNAPSHOT-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/chromattic.core-1.1.0-SNAPSHOT-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
  
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/chromattic.ext-1.1.0-SNAPSHOT-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/chromattic.spi-1.1.0-SNAPSHOT-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/jsr250-api-1.0-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
- 
-                      <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/jsr311-api-1.0-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                      
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.ws.commons-2.2.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.ws.frameworks.json-2.2.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.ws.rest.core-2.2.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.ws.rest.ext-2.2.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.kernel.commons-2.3.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.kernel.component.command-2.3.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.kernel.component.common-2.3.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.kernel.container-2.3.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.database-2.4.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.document-2.4.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.organization.api-2.4.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.script.groovy-2.4.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.security.core-2.4.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.core.component.xml-processing-2.4.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-                     
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.jcr.component.core-1.14.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.jcr.component.ext-1.14.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.jcr.component.webdav-1.14.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.jcr.framework.command-1.14.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>../lib-sources/exo.jcr.framework.web-1.14.0-Beta03-sources.jar</string>
-                           </field>
-                        </object>
-                     </value>
-
                   </collection>
                </field>
             </object>

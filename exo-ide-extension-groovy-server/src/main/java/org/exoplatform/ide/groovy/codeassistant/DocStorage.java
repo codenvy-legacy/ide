@@ -76,8 +76,8 @@ public class DocStorage
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(DocStorage.class);
 
-   public DocStorage(String wsName, RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService,
-      final List<JarEntry> jars, boolean runInThread)
+   public DocStorage(String wsName, RepositoryService repositoryService,
+      ThreadLocalSessionProviderService sessionProviderService, final List<JarEntry> jars, boolean runInThread)
    {
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;
@@ -121,40 +121,57 @@ public class DocStorage
          Session session = sp.getSession(wsName, JcrUtils.getRepository(repositoryService));
          for (JarEntry entry : jars)
          {
-            LOG.info("Load JavaDoc from jar - " + entry.getJarPath());
-            if (entry.getIncludePkgs() == null || entry.getIncludePkgs().isEmpty())
+            String path = entry.getJarPath();
+
+            FileFinder fileFinder = new FileFinder(path);
+
+            for (String jarFile : fileFinder.getFileList())
             {
-               Map<String, GroovyRootDoc> roots = DocExtractor.extract(entry.getJarPath());
-               Set<String> keys = roots.keySet();
-               for (String key : keys)
+               try
                {
-                  GroovyClassDoc[] docs = roots.get(key).classes();
-                  for (GroovyClassDoc doc : docs)
+                  LOG.info("Load JavaDoc from jar - " + jarFile);
+                  if (entry.getIncludePkgs() == null || entry.getIncludePkgs().isEmpty())
                   {
-                     putDoc(session, doc, key + "." + doc.name());
+                     Map<String, GroovyRootDoc> roots = DocExtractor.extract(jarFile);
+                     Set<String> keys = roots.keySet();
+                     for (String key : keys)
+                     {
+                        GroovyClassDoc[] docs = roots.get(key).classes();
+                        for (GroovyClassDoc doc : docs)
+                        {
+                           putDoc(session, doc, key + "." + doc.name());
+                        }
+                     }
+
                   }
+                  else
+                  {
+                     for (String pkgs : entry.getIncludePkgs())
+                     {
+                        LOG.info("Load JavaDoc from - " + pkgs);
+                        Map<String, GroovyRootDoc> roots = DocExtractor.extract(jarFile, pkgs);
+                        Set<String> keys = roots.keySet();
+                        for (String key : keys)
+                        {
+                           GroovyClassDoc[] docs = roots.get(key).classes();
+                           for (GroovyClassDoc doc : docs)
+                           {
+                              putDoc(session, doc, key + "." + doc.name());
+                           }
+                        }
+                     }
+                  }
+
+               }
+               catch (Exception e)
+               {
+                  LOG.error("Could not load JavaDoc from " + jarFile);
                }
 
             }
-            else
-            {
-               for (String pkgs : entry.getIncludePkgs())
-               {
-                  LOG.info("Load JavaDoc from - " + pkgs);
-                  Map<String, GroovyRootDoc> roots = DocExtractor.extract(entry.getJarPath(), pkgs);
-                  Set<String> keys = roots.keySet();
-                  for (String key : keys)
-                  {
-                     GroovyClassDoc[] docs = roots.get(key).classes();
-                     for (GroovyClassDoc doc : docs)
-                     {
-                        putDoc(session, doc, key + "." + doc.name());
-                     }
-                  }
-               }
-            }
+
          }
-         
+
          session.save();
          LOG.info("Load javadoc complete");
       }
@@ -172,23 +189,23 @@ public class DocStorage
          //TODO:need fix status code
          throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
       }
-      catch (IOException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         //TODO:need fix status code
-         throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
-      }
-      catch (RecognitionException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-      }
-      catch (TokenStreamException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-      }
+      //      catch (IOException e)
+      //      {
+      //         if (LOG.isDebugEnabled())
+      //            e.printStackTrace();
+      //         //TODO:need fix status code
+      //         throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
+      //      }
+      //      catch (RecognitionException e)
+      //      {
+      //         if (LOG.isDebugEnabled())
+      //            e.printStackTrace();
+      //      }
+      //      catch (TokenStreamException e)
+      //      {
+      //         if (LOG.isDebugEnabled())
+      //            e.printStackTrace();
+      //      }
    }
 
    /**

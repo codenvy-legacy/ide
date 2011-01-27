@@ -62,8 +62,6 @@ public class IDEServiceApplication extends Application
          }
       }
       
-      System.out.println("discoverable >>>>>>>>>>>>>>>>>>>>>>>>>>> " + discoverable);
-      
       objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
       objects.add(new UploadServiceExceptionMapper());
       
