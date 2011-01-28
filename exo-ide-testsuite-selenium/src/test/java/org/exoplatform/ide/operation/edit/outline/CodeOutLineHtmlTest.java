@@ -176,10 +176,10 @@ public class CodeOutLineHtmlTest extends BaseTest
       assertEquals("br", IDE.outline().getTitle(4, 0));
       assertEquals("script", IDE.outline().getTitle(5, 0));
       assertEquals("prefs : gadgets.Prefs", IDE.outline().getTitle(6, 0));
-      assertEquals("displayGreeting", IDE.outline().getTitle(7, 0));
-      assertEquals("today", IDE.outline().getTitle(8, 0));
-      assertEquals("time", IDE.outline().getTitle(9, 0));
-      assertEquals("html", IDE.outline().getTitle(10, 0));
+      assertEquals("displayGreeting()", IDE.outline().getTitle(7, 0));
+      assertEquals("today : Date", IDE.outline().getTitle(8, 0));
+      assertEquals("time : Object", IDE.outline().getTitle(9, 0));
+      assertEquals("html : Object", IDE.outline().getTitle(10, 0));  
       assertEquals("style", IDE.outline().getTitle(11, 0));
       assertEquals("table", IDE.outline().getTitle(12, 0));
       
@@ -288,8 +288,8 @@ public class CodeOutLineHtmlTest extends BaseTest
       //open script node
       IDE.outline().clickOpenImg(19, 0);
       //check subnodes of script
-      assertEquals("prefs", IDE.outline().getTitle(20, 0));
-      assertEquals("displayGreeting", IDE.outline().getTitle(21, 0));
+      assertEquals("prefs : gadgets.Prefs", IDE.outline().getTitle(20, 0));
+      assertEquals("displayGreeting()", IDE.outline().getTitle(21, 0));
       //check other nodes
       assertEquals("style", IDE.outline().getTitle(22, 0));
       assertEquals("table", IDE.outline().getTitle(23, 0));
@@ -297,9 +297,10 @@ public class CodeOutLineHtmlTest extends BaseTest
       //open displayGreeting node
       IDE.outline().clickOpenImg(21, 0);
       //check subnodes of displayGreeting
-      assertEquals("today", IDE.outline().getTitle(22, 0));
-      assertEquals("time", IDE.outline().getTitle(23, 0));
-      assertEquals("html", IDE.outline().getTitle(24, 0));
+      assertEquals("today : Date", IDE.outline().getTitle(22, 0));
+      assertEquals("time : Object", IDE.outline().getTitle(23, 0));
+      assertEquals("html : Object", IDE.outline().getTitle(24, 0));      
+
       //check other nodes
       assertEquals("style", IDE.outline().getTitle(25, 0));
       assertEquals("table", IDE.outline().getTitle(26, 0));
