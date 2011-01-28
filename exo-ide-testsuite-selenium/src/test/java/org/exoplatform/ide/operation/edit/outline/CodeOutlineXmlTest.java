@@ -26,6 +26,7 @@ import java.io.IOException;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -86,24 +87,34 @@ public class CodeOutlineXmlTest extends BaseTest
       }
    }
 
-   // IDE-174:XML Code Outline
+   /**
+    * IDE-174:XML Code Outline
+    * @throws Exception
+    */
    @Test
    public void testXmlCodeOutline() throws Exception
    {
-      //---- 1-2 -----------------
-      //open file with text
-      Thread.sleep(TestConstants.SLEEP);
-
-      openOrCloseFolder(TEST_FOLDER);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      waitForRootElement();
+      
+      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      
+      /*
+       * 1. Open file with text
+       */
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
+      /*
+       * 2. Open outline
+       */
       IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      
       Thread.sleep(TestConstants.SLEEP);
       
-      //check Outline Panel appeared
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=isc_OutlineForm_0]/"));
+      /*
+       * Check Outline Panel appeared
+       */
+      assertTrue(selenium.isElementPresent(Locators.CodeHelperPanel.SC_OUTLINE_TAB_LOCATOR));
+      //"scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=isc_OutlineForm_0]/"));
       
       checkTreeCorrectlyCreated();
       
@@ -115,20 +126,25 @@ public class CodeOutlineXmlTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
      
-      IDE.editor().closeTab(0);
-      selenium
-         .click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/member[Class=Canvas||index=0||length=2||classIndex=0||classLength=1]/");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
-      Thread.sleep(700);
+      IDE.editor().closeFileTabIgnoreChanges(0);
+//      selenium
+//         .click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/member[Class=Canvas||index=0||length=2||classIndex=0||classLength=1]/");
+//      Thread.sleep(TestConstants.SLEEP);
+//      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+//      Thread.sleep(700);
    }
    
    private void checkCodeNavigation() throws Exception
    {
-      //click on editor
+      /*
+       * Click on editor
+       */
       IDE.editor().clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-     //press key DOWN to navigate in editor
+      
+      /*
+       * Press key DOWN to navigate in editor
+       */
       for (int i = 0; i < 4; i++){
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
@@ -209,40 +225,35 @@ public class CodeOutlineXmlTest extends BaseTest
       //type text
       typeTextIntoEditor(0, "\n<settings>\n");
       //check, that after typing outline tree is the same
-      assertEquals("display-name", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
       typeTextIntoEditor(0, "<value>value</value>\n");
+      Thread.sleep(TestConstants.SLEEP);
       //check, that after typing outline tree is the same
-      assertEquals("display-name", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
       typeTextIntoEditor(0, "</settings>\n");
       //check, that after typing outline tree is the same
-      assertEquals("display-name", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
 
       //pause
       Thread.sleep(TestConstants.SLEEP);
       
       //check, that after 2 seconds tree is updated
-      assertEquals("web-app", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
-      assertEquals("display-name", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
+      assertEquals("web-app", IDE.outline().getTitle(0, 0));
+      assertEquals("display-name", IDE.outline().getTitle(1, 0));
       //new nodes added
-      assertEquals("settings", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("value", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
-      assertEquals("CDATA", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
-      assertEquals("filter", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
+      assertEquals("settings", IDE.outline().getTitle(2, 0));
+      assertEquals("value", IDE.outline().getTitle(3, 0));
+      assertEquals("context-param", IDE.outline().getTitle(4, 0));
+      assertEquals("context-param", IDE.outline().getTitle(5, 0));
+      assertEquals("CDATA", IDE.outline().getTitle(6, 0));
+      assertEquals("filter", IDE.outline().getTitle(7, 0));
       
       //close node settings
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]/open");
+      IDE.outline().clickOpenImg(2, 0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check, than node value is hidden
-      assertEquals("settings", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
-      assertEquals("CDATA", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
-      assertEquals("filter", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
+      assertEquals("settings", IDE.outline().getTitle(2, 0));
+      assertEquals("context-param", IDE.outline().getTitle(3, 0));
+      assertEquals("context-param", IDE.outline().getTitle(4, 0));
+      assertEquals("CDATA", IDE.outline().getTitle(5, 0));
+      assertEquals("filter", IDE.outline().getTitle(6, 0));
       
       //check cursor position
       assertEquals("10 : 3", getCursorPositionUsingStatusBar());
@@ -252,7 +263,7 @@ public class CodeOutlineXmlTest extends BaseTest
       //works correctly with new node
       
       //click on node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[1]");
+      IDE.outline().select(3);
       
       //click on editor
       IDE.editor().clickOnEditor();
@@ -268,15 +279,15 @@ public class CodeOutlineXmlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check, that after 2 seconds tree is updated
-      assertEquals("web-app", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
-      assertEquals("display-name", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
+      assertEquals("web-app", IDE.outline().getTitle(0, 0));
+      assertEquals("display-name", IDE.outline().getTitle(1, 0));
       //new nodes added
-      assertEquals("settings", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("value", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
-      assertEquals("CDATA", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
-      assertEquals("filter", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
+      assertEquals("settings", IDE.outline().getTitle(2, 0));
+      assertEquals("value", IDE.outline().getTitle(3, 0));
+      assertEquals("context-param", IDE.outline().getTitle(4, 0));
+      assertEquals("context-param", IDE.outline().getTitle(5, 0));
+      assertEquals("CDATA", IDE.outline().getTitle(6, 0));
+      assertEquals("filter", IDE.outline().getTitle(7, 0));
       
       IDE.outline().checkOutlineTreeNodeSelected(3, "value", true);
       
@@ -295,14 +306,14 @@ public class CodeOutlineXmlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check, that tree is the same, as on the previous step 
-      assertEquals("web-app", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
-      assertEquals("display-name", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
-      assertEquals("settings", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("value", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
-      assertEquals("CDATA", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
-      assertEquals("filter", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
+      assertEquals("web-app", IDE.outline().getTitle(0, 0));
+      assertEquals("display-name", IDE.outline().getTitle(1, 0));
+      assertEquals("settings", IDE.outline().getTitle(2, 0));
+      assertEquals("value", IDE.outline().getTitle(3, 0));
+      assertEquals("context-param", IDE.outline().getTitle(4, 0));
+      assertEquals("context-param", IDE.outline().getTitle(5, 0));
+      assertEquals("CDATA", IDE.outline().getTitle(6, 0));
+      assertEquals("filter", IDE.outline().getTitle(7, 0));
       
       //check, that settings node is selected
       IDE.outline().checkOutlineTreeNodeSelected(2, "settings", true);
@@ -311,7 +322,7 @@ public class CodeOutlineXmlTest extends BaseTest
       
       //now click on node "settings" in tree
       //and cursor must go to <settings> tab in editor: line 7, column 1
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[1]");
+      IDE.outline().select(2);
       Thread.sleep(TestConstants.SLEEP);
       IDE.outline().checkOutlineTreeNodeSelected(2, "settings", true);
       assertEquals("7 : 1", getCursorPositionUsingStatusBar());
@@ -320,26 +331,23 @@ public class CodeOutlineXmlTest extends BaseTest
    private void checkTreeNavigation() throws Exception
    {
       //click on node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[1]");
+      IDE.outline().select(4);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //cursor jump to the node in editor
       assertEquals("12 : 1", getCursorPositionUsingStatusBar());
       
       //close filter node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[1]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(9, 1);
       //cursor stay at the same position
       assertEquals("12 : 1", getCursorPositionUsingStatusBar());
       
       //click on CDATA node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[1]");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().select(8);
       //cursor jump to the node in editor
       assertEquals("24 : 1", getCursorPositionUsingStatusBar());
       
       //click on root node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[1]");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().select(0);
       //cursor jump to the node in editor
       assertEquals("2 : 1", getCursorPositionUsingStatusBar());
    }
