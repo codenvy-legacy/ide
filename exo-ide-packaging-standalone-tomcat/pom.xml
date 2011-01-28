@@ -519,11 +519,12 @@
                         <phase>install</phase>                                                                                                                                                                 
                         <configuration>                                                                                                                                                                        
                            <tasks>                                                                                                                                                                             
-                              <!-- copy file="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war"
-                               tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" /-->
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/tomcat-ide/webapps/IDE" />
+                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war"
+                               tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" />
                               <copy todir="${project.build.directory}/tomcat-ide" overwrite="true" >                                                                                                                             
-                                 <fileset dir="${basedir}/src/main/resources/tomcat/demo-site"/> 
+                                 <fileset dir="${basedir}/src/main/resources/tomcat/demo-site">
+                                   <exclude name="**/server.xml"/>
+                                 </fileset> 
                               </copy>
                               <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x"   includes="**/*.sh"/>                                                                                                                                                                          
                            </tasks>                                                                                                                                                                            
