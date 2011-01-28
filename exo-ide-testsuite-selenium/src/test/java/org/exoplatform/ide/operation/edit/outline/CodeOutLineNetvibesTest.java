@@ -203,14 +203,11 @@ public class CodeOutLineNetvibesTest extends BaseTest
       
       //open "script" node
       IDE.outline().clickOpenImg(13, 0);
-      assertEquals("YourWidgetName", IDE.outline().getTitle(14, 0));
-      assertEquals("body", IDE.outline().getTitle(15, 0));
-      
-      //open "YourWidgetName" node
-      IDE.outline().clickOpenImg(14, 0);
-      assertEquals("argument", IDE.outline().getTitle(15, 0));
-      assertEquals("body", IDE.outline().getTitle(16, 0));
-      
+      assertEquals("YourWidgetName : Object", IDE.outline().getTitle(14, 0));
+      assertEquals("function()", IDE.outline().getTitle(15, 0));
+      assertEquals("function()", IDE.outline().getTitle(16, 0));      
+      assertEquals("body", IDE.outline().getTitle(17, 0));
+     
       //close "head" node
       IDE.outline().clickOpenImg(1, 0);
       
