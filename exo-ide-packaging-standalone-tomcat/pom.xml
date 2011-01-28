@@ -315,7 +315,7 @@
                         <configuration>
                            <tasks>
                               <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/ide-war">
+                                 <fileset dir="${basedir}/src/main/resources/ide-war-demo">
                                     <exclude name="**/conf/exo-jcr-config-mysql.xml" />
                                     <exclude name="**/exo-configuration.xml"/>
                                     <exclude name="**/exo-jcr-config.xml"/>
@@ -406,7 +406,7 @@
                         <configuration>
                            <tasks>
                               <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
-                                  <fileset dir="${basedir}/src/main/resources/ide-war">
+                                  <fileset dir="${basedir}/src/main/resources/ide-war-demo">
                                     <exclude name="**/conf/exo-jcr-config-hsql.xml" />
                                     <exclude name="**/exo-configuration.xml"/>
                                     <exclude name="**/exo-jcr-config.xml"/>
@@ -470,7 +470,7 @@
                         <configuration>
                            <tasks>
                               <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/ide-war">
+                                 <fileset dir="${basedir}/src/main/resources/ide-war-selenium">
                                     <exclude name="**/conf/exo-jcr-config-hsql.xml" />
                                     <exclude name="**/conf/exo-jcr-config-mysql.xml" />
                                     <exclude name="**/exo-jcr-config.xml"/>
