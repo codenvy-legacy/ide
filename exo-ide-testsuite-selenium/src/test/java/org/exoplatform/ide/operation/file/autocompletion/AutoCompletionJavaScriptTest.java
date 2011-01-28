@@ -42,7 +42,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
 
       javaScriptTestVar();
       javaScriptTestFunction();
-      javaScriptTestJSON();
+//      javaScriptTestJSON();
       javaScriptTestFunctions();
 
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
