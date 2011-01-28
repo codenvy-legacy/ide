@@ -64,7 +64,7 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       openAutoCompleteForm();
       Thread.sleep(TestConstants.SLEEP);
       
-      assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]") && selenium.isElementPresent("//div[contains(text(), 'FUNCTION')]"));
+      assertTrue(selenium.isElementPresent("//div[contains(text(), 'a()')]") && selenium.isElementPresent("//div[contains(text(), 'FUNCTION')]"));
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
