@@ -138,8 +138,6 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
     */
    private void openDocForm()
    {
-      settings.setValue("documentation", true, Store.COOKIES);
-      eventBus.fireEvent(new SaveApplicationSettingsEvent(settings, SaveType.COOKIES));
       DocumentationForm view = new DocumentationForm(eventBus);
       display = view;
       view.onOpenTab();
@@ -153,6 +151,8 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    @Override
    public void onShowDocumentation(ShowDocumentationEvent event)
    {
+      settings.setValue("documentation", event.isShow(), Store.COOKIES);
+      eventBus.fireEvent(new SaveApplicationSettingsEvent(settings, SaveType.COOKIES));
       if (event.isShow())
       {
          openDocForm();
