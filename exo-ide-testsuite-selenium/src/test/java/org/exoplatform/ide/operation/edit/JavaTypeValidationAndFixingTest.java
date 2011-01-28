@@ -32,6 +32,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -136,18 +137,18 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       IDE.editor().clickOnEditor();
       assertTrue(getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" 
-         + "import javax.ws.rs.Path\n"
+         + "import Path\n"
          + "import javax.ws.rs.GET\n"
          + "import some.pack.String\n"
-         + "import java.util.prefs.Base64\n"
+         + "import java.util.prefs.Base64\n" 
          + "\n"
          + "@Path("
       ));
       
       // test code error marks
-      assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(15, "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));      
-      assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(16)));
-      assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(31)));      
+      assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(16, "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));      
+      assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(17)));
+      assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(32)));      
       
       // edit text
       IDE.editor().deleteFileContent();
@@ -171,6 +172,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
 
       // fix error
       selenium.clickAt(getCodeErrorMarkLocator(3), "");
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP * 2);
@@ -250,6 +252,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       
       // fix error
       selenium.clickAt(getCodeErrorMarkLocator(11, "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; "), "");
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
       Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
