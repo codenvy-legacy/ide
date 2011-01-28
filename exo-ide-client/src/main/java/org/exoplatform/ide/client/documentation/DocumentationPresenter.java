@@ -73,6 +73,8 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    private File activeFile;
 
    private ApplicationSettings settings;
+   
+   private boolean isClosedByUser = true;
 
    private Map<String, String> docs = new HashMap<String, String>();
 
@@ -128,6 +130,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
       if (display != null)
       {
          display.removeHandlers();
+         isClosedByUser = false;
          eventBus.fireEvent(new CloseViewEvent(DocumentationForm.ID));
       }
 
@@ -185,7 +188,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (DocumentationForm.ID.equals(event.getViewId()))
+      if (DocumentationForm.ID.equals(event.getViewId())&& isClosedByUser)
       {
          settings.setValue("documentation", false, Store.COOKIES);
          eventBus.fireEvent(new SaveApplicationSettingsEvent(settings, SaveType.COOKIES));
@@ -195,6 +198,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
          control.setEvent(new ShowDocumentationEvent(true));
          control.setPrompt(ShowDocumentationControl.PROMPT_SHOW);
       }
+      isClosedByUser = true;
    }
 
    /**
