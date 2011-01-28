@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.server.OutputProperty;
@@ -25,9 +26,11 @@ import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -126,5 +129,70 @@ public class SearchTest extends JcrFileSystemTest
       for (OutputProperty o : properties)
          m.put(o.getName(), o.getValue());
       assertEquals("Hello World", m.get("MyProperty")[0]);
+   }
+
+   public void testSearchPagingSkipCount() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("search") //
+         .toString();
+      String sql = "name=SearchTest&mediaType=text/plain&text=__TEST__&path=" + searchTestNode.getPath();
+      Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+      h.put("Content-Type", Arrays.asList("application/x-www-form-urlencoded"));
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, sql.getBytes(), writer, null);
+      //log.info(new String(writer.getBody()));
+      assertEquals(200, response.getStatus());
+      @SuppressWarnings("unchecked")
+      ItemList<Item> items = (ItemList<Item>)response.getEntity();
+      assertEquals(3, items.getItems().size());
+      List<Object> all = new ArrayList<Object>(3);
+      for (Item i : items.getItems())
+         all.add(i.getId());
+      Iterator<Object> iteratorAll = all.iterator();
+      iteratorAll.next();
+      iteratorAll.remove();
+
+      path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("search") //
+         .append("?") //
+         .append("skipCount=") //
+         .append("1") //
+         .toString();
+      
+      checkPage(path, "POST", h, sql.getBytes(), File.class.getMethod("getId"), all);
+   }
+
+   public void testSearchPagingMaxItems() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("search") //
+         .toString();
+      String sql = "name=SearchTest&mediaType=text/plain&text=__TEST__&path=" + searchTestNode.getPath();
+      Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+      h.put("Content-Type", Arrays.asList("application/x-www-form-urlencoded"));
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, sql.getBytes(), writer, null);
+      //log.info(new String(writer.getBody()));
+      assertEquals(200, response.getStatus());
+      @SuppressWarnings("unchecked")
+      ItemList<Item> items = (ItemList<Item>)response.getEntity();
+      List<Object> all = new ArrayList<Object>(3);
+      for (Item i : items.getItems())
+         all.add(i.getId());
+      all.remove(2);
+
+      path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("search") //
+         .append("?") //
+         .append("maxItems=") //
+         .append("2") //
+         .toString();
+      
+      checkPage(path, "POST", h, sql.getBytes(), File.class.getMethod("getId"), all);
    }
 }

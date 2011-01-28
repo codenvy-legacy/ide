@@ -26,6 +26,7 @@ import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -106,5 +107,66 @@ public class VersionsTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       assertEquals("__TEST__001", new String(writer.getBody()));
+   }
+
+   public void testGetVersionsPagingSkipCount() throws Exception
+   {
+      // Get all versions.
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("versions") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
+      assertEquals(200, response.getStatus());
+      @SuppressWarnings("unchecked")
+      ItemList<File> children = (ItemList<File>)response.getEntity();
+      List<Object> all = new ArrayList<Object>(3);
+      for (File i : children.getItems())
+         all.add(i.getVersionId());
+
+      // Skip first item in result.
+      path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("versions") //
+         .append(filePath) //
+         .append("?") //
+         .append("skipCount=") //
+         .append("1") //
+         .toString();
+      Iterator<Object> iteratorAll = all.iterator();
+      iteratorAll.next();
+      iteratorAll.remove();
+      checkPage(path, "GET", File.class.getMethod("getVersionId"), all);
+   }
+
+   public void testGetVersionsPagingMaxItems() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("versions") //
+         .append(filePath) //
+         .toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      assertEquals(200, response.getStatus());
+      @SuppressWarnings("unchecked")
+      List<File> items = ((ItemList<File>)response.getEntity()).getItems();
+      List<Object> all = new ArrayList<Object>(3);
+      for (File i : items)
+         all.add(i.getVersionId());
+      assertEquals(3, all.size());
+      
+      all.remove(2);
+
+      path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("versions") //
+         .append(filePath) //
+         .append("?") //
+         .append("maxItems=") //
+         .append("2") //
+         .toString();
+
+      checkPage(path, "GET", File.class.getMethod("getVersionId"), all);
    }
 }

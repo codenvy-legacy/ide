@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.server.OutputProperty;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.services.jcr.access.PermissionType;
@@ -45,6 +46,8 @@ public class ChildrenTest extends JcrFileSystemTest
 
    private String folderPath;
 
+   private String propertyFilter = "PropertyA";
+
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
     */
@@ -59,14 +62,23 @@ public class ChildrenTest extends JcrFileSystemTest
       Node folderNode = childrenTestNode.addNode("ChildrenTest_FOLDER", "nt:folder");
 
       Node childFileNode = folderNode.addNode("ChildrenTest_FILE01", "nt:file");
+      childFileNode.addMixin("exo:unstructuredMixin");
+      childFileNode.setProperty("PropertyA", "A");
+      childFileNode.setProperty("PropertyB", "B");
       Node childContentNode = childFileNode.addNode("jcr:content", "nt:resource");
       childContentNode.setProperty("jcr:mimeType", "text/plain");
       childContentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       childContentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
 
-      folderNode.addNode("ChildrenTest_FOLDER01", "nt:folder");
+      Node childFolderNode1 = folderNode.addNode("ChildrenTest_FOLDER01", "nt:folder");
+      childFolderNode1.addMixin("exo:unstructuredMixin");
+      childFolderNode1.setProperty("PropertyA", "A");
+      childFolderNode1.setProperty("PropertyB", "B");
 
-      folderNode.addNode("ChildrenTest_FOLDER02", "nt:folder");
+      Node childFolderNode2 = folderNode.addNode("ChildrenTest_FOLDER02", "nt:folder");
+      childFolderNode2.addMixin("exo:unstructuredMixin");
+      childFolderNode2.setProperty("PropertyA", "A");
+      childFolderNode2.setProperty("PropertyB", "B");
 
       session.save();
 
@@ -122,9 +134,13 @@ public class ChildrenTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
-      List<String> all = new ArrayList<String>(3);
+      List<Object> all = new ArrayList<Object>(3);
       for (Item i : children.getItems())
          all.add(i.getName());
+
+      Iterator<Object> iteratorAll = all.iterator();
+      iteratorAll.next();
+      iteratorAll.remove();
 
       // Skip first item in result.
       path = new StringBuilder() //
@@ -135,18 +151,7 @@ public class ChildrenTest extends JcrFileSystemTest
          .append("skipCount=") //
          .append("1") //
          .toString();
-      response = launcher.service("GET", path, BASE_URI, null, null, null);
-      assertEquals(200, response.getStatus());
-      children = (ItemList<Item>)response.getEntity();
-      List<String> page = new ArrayList<String>(2);
-      for (Item i : children.getItems())
-         page.add(i.getName());
-
-      Iterator<String> iteratorAll = all.iterator();
-      iteratorAll.next();
-      iteratorAll.remove();
-
-      assertEquals(all, page);
+      checkPage(path, "GET", Item.class.getMethod("getName"), all);
    }
 
    @SuppressWarnings("unchecked")
@@ -160,7 +165,7 @@ public class ChildrenTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
-      List<String> all = new ArrayList<String>(3);
+      List<Object> all = new ArrayList<Object>(3);
       for (Item i : children.getItems())
          all.add(i.getName());
 
@@ -173,15 +178,65 @@ public class ChildrenTest extends JcrFileSystemTest
          .append("maxItems=") //
          .append("2") //
          .toString();
-      response = launcher.service("GET", path, BASE_URI, null, null, null);
-      assertEquals(200, response.getStatus());
-      children = (ItemList<Item>)response.getEntity();
-      List<String> page = new ArrayList<String>(2);
-      for (Item i : children.getItems())
-         page.add(i.getName());
-
       all.remove(2);
+      checkPage(path, "GET", Item.class.getMethod("getName"), all);
+   }
 
-      assertEquals(all, page);
+   @SuppressWarnings("unchecked")
+   public void testGetChildrenNoPropertyFilter() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      // Get children without filter.
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("children") //
+         .append(folderPath) //
+         .toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      //log.info(new String(writer.getBody()));
+      assertEquals(200, response.getStatus());
+      ItemList<Item> children = (ItemList<Item>)response.getEntity();
+      assertEquals(3, children.getItems().size());
+      for (Item i : children.getItems())
+      {
+         assertTrue(hasProperty(i, "PropertyA"));
+         assertTrue(hasProperty(i, "PropertyB"));
+      }
+   }
+
+   @SuppressWarnings("unchecked")
+   public void testGetChildrenPropertyFilter() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      // Get children and apply filter for properties.
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("children") //
+         .append(folderPath) //
+         .append("?") //
+         .append("propertyFilter=") //
+         .append(propertyFilter) //
+         .toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      //log.info(new String(writer.getBody()));
+      assertEquals(200, response.getStatus());
+      ItemList<Item> children = (ItemList<Item>)response.getEntity();
+      assertEquals(3, children.getItems().size());
+      for (Item i : children.getItems())
+      {
+         assertTrue(hasProperty(i, "PropertyA"));
+         assertFalse(hasProperty(i, "PropertyB")); // must be excluded
+      }
+   }
+
+   private boolean hasProperty(Item i, String propertyName)
+   {
+      List<OutputProperty> properties = i.getProperties();
+      if (properties.size() == 0)
+         return false;
+      for (OutputProperty p : properties)
+         if (p.getName().equals(propertyName))
+            return true;
+      return false;
    }
 }

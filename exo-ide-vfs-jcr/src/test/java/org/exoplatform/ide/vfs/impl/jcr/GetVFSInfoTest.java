@@ -58,6 +58,7 @@ public class GetVFSInfoTest extends JcrFileSystemTest
          expectedPermissions.add(bp.value());
       Collection<String> permissions = vfsInfo.getPermissions();
       assertTrue(permissions.containsAll(expectedPermissions));
+      // TODO test URL templates
       //log.info(">>>>>>>>> "+vfsInfo.getUrlTemplates());
    }
 }

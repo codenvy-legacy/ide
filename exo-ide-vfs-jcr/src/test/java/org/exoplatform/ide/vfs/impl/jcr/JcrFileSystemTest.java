@@ -21,6 +21,8 @@ package org.exoplatform.ide.vfs.impl.jcr;
 import junit.framework.TestCase;
 
 import org.exoplatform.container.StandaloneContainer;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.core.ManageableRepository;
@@ -30,10 +32,17 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.RequestHandler;
 import org.exoplatform.services.rest.impl.ApplicationContextImpl;
+import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.ProviderBinder;
+import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.services.rest.tools.ResourceLauncher;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
@@ -47,12 +56,12 @@ public abstract class JcrFileSystemTest extends TestCase
    protected final String BASE_URI = "http://localhost/service";
    protected final String SERVICE_URI = BASE_URI + "/vfs/jcr/db1/ws/";
    protected final String DEFAULT_CONTENT = "__TEST__";
-   
+
    protected Log log = ExoLogger.getExoLogger(getClass());
    protected String REPOSITORY_NAME = "db1";
    protected String WORKSPACE_NAME = "ws";
    protected String TEST_ROOT_NAME = "TESTROOT";
-   
+
    protected Session session;
    protected Node testRoot;
    protected ResourceLauncher launcher;
@@ -122,5 +131,26 @@ public abstract class JcrFileSystemTest extends TestCase
          log.error(e.getMessage(), e);
       }
       super.tearDown();
+   }
+
+   // --------------------------------------------
+
+   protected void checkPage(String url, String httpMethod, Method m, List<Object> expected) throws Exception
+   {
+      checkPage(url, httpMethod, null, null, m, expected);
+   }
+
+   protected void checkPage(String url, String httpMethod, Map<String, List<String>> headers, byte[] body, Method m,
+      List<Object> expected) throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      ContainerResponse response = launcher.service(httpMethod, url, BASE_URI, headers, body, writer, null);
+      assertEquals(200, response.getStatus());
+      @SuppressWarnings("unchecked")
+      List<Item> items = ((ItemList<Item>)response.getEntity()).getItems();
+      List<Object> all = new ArrayList<Object>(expected.size());
+      for (Item i : items)
+         all.add(m.invoke(i));
+      assertEquals(all, expected);
    }
 }

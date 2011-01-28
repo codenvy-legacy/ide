@@ -49,7 +49,7 @@ public class UnlockTest extends JcrFileSystemTest
       unlockTestNode = testRoot.addNode(name, "nt:unstructured");
       unlockTestNode.addMixin("exo:privilegeable");
 
-      Node fileNode = unlockTestNode.addNode("UnlockTest_FILE", "nt:file");
+      Node fileNode = unlockTestNode.addNode("UnlockTest", "nt:file");
       Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
@@ -78,7 +78,20 @@ public class UnlockTest extends JcrFileSystemTest
       assertFalse("Lock must be removed. ", node.isLocked());
    }
 
-   public void testUnlockFileWrongLockTokens() throws Exception
+   public void testUnlockFileNoLockToken() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("unlock") //
+         .append(filePath) //
+         .toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
+      assertEquals(423, response.getStatus());
+      log.info(new String(writer.getBody()));
+   }
+
+   public void testUnlockFileWrongLockToken() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
@@ -88,6 +101,26 @@ public class UnlockTest extends JcrFileSystemTest
          .append("?") //
          .append("lockToken=") //
          .append(fileLockToken + "_WRONG") //
+         .toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
+      assertEquals(423, response.getStatus());
+      log.info(new String(writer.getBody()));
+   }
+   
+   
+   public void testUnlockFileNotLocked() throws Exception
+   {
+      Node fileNode = unlockTestNode.addNode("UnlockTest_NOT_LOCKED", "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
+      contentNode.setProperty("jcr:mimeType", "text/plain");
+      contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
+      contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
+      session.save();
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("unlock") //
+         .append(fileNode.getPath()) //
          .toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
