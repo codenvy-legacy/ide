@@ -125,7 +125,7 @@ public class GroovyProjectAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      assertTrue(getTextFromCodeEditor(0).contains("import org.exoplatform.sample.Pojo;"));
+      assertTrue(getTextFromCodeEditor(0).contains("import org.exoplatform.sample.Pojo"));
       
       typeTextIntoEditor(0, " p");
       
