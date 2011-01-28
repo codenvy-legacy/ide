@@ -127,11 +127,6 @@ public class CodeOutlineXmlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
      
       IDE.editor().closeFileTabIgnoreChanges(0);
-//      selenium
-//         .click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/member[Class=Canvas||index=0||length=2||classIndex=0||classLength=1]/");
-//      Thread.sleep(TestConstants.SLEEP);
-//      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
-//      Thread.sleep(700);
    }
    
    private void checkCodeNavigation() throws Exception
@@ -364,36 +359,34 @@ public class CodeOutlineXmlTest extends BaseTest
    private void checkTreeCorrectlyCreated() throws Exception
    {
       // check when all nodex closed, except root
-      assertEquals("web-app", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[0]/col[0]"));
-      assertEquals("display-name", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      assertEquals("CDATA", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
-      assertEquals("filter", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
+      assertEquals("web-app", IDE.outline().getTitle(0, 0));
+      assertEquals("display-name", IDE.outline().getTitle(1, 0));
+      assertEquals("context-param", IDE.outline().getTitle(2, 0));
+      assertEquals("context-param", IDE.outline().getTitle(3, 0));
+      assertEquals("CDATA", IDE.outline().getTitle(4, 0));
+      assertEquals("filter", IDE.outline().getTitle(5, 0));
+      
       // open first context-param
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(2, 0);
       // check two nodes under context-param added
-      assertEquals("param-name", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
-      assertEquals("param-value", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[4]/col[0]"));
+      assertEquals("param-name", IDE.outline().getTitle(3, 0));
+      assertEquals("param-value", IDE.outline().getTitle(4, 0));
       // check other nodes do down on two positions
-      assertEquals("context-param", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]"));
-      assertEquals("CDATA", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
-      assertEquals("filter", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
+      assertEquals("context-param", IDE.outline().getTitle(5, 0));
+      assertEquals("CDATA", IDE.outline().getTitle(6, 0));
+      assertEquals("filter", IDE.outline().getTitle(7, 0));
       // open second node context-param
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[5]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(5, 0);
       // check two nodes under context-param added
-      assertEquals("param-name", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[6]/col[0]"));
-      assertEquals("param-value", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[7]/col[0]"));
+      assertEquals("param-name", IDE.outline().getTitle(6, 0));
+      assertEquals("param-value", IDE.outline().getTitle(7, 0));
       // check other nodes do down on two positions
-      assertEquals("CDATA", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[8]/col[0]"));
-      assertEquals("filter", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]"));
+      assertEquals("CDATA", IDE.outline().getTitle(8, 0));
+      assertEquals("filter", IDE.outline().getTitle(9, 0));
       // open filter node
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[9]/col[0]/open");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.outline().clickOpenImg(9, 0);
       // check two nodes under filter node added
-      assertEquals("filter-name", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[10]/col[0]"));
-      assertEquals("filter-class", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[11]/col[0]"));
+      assertEquals("filter-name", IDE.outline().getTitle(10, 0));
+      assertEquals("filter-class", IDE.outline().getTitle(11, 0));
    }
 }
