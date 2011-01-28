@@ -35,7 +35,7 @@
       <maven.compiler.source>1.6</maven.compiler.source>
       <maven.compiler.target>1.6</maven.compiler.target>
       <org.slf4j.version>1.5.6</org.slf4j.version>
-      <version.chromattic>1.1.0-SNAPSHOT</version.chromattic>
+      <chromattic.version>1.1.0-beta1</chromattic.version>
       <apache.commons-compress.version>1.0</apache.commons-compress.version>
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
       <javax.jcr.version>1.0</javax.jcr.version>
@@ -397,48 +397,48 @@
          <dependency>
             <groupId>org.chromattic</groupId>
             <artifactId>chromattic.apt</artifactId>
-            <version>${version.chromattic}</version>
+            <version>${chromattic.version}</version>
             <scope>compile</scope>
          </dependency>
          <dependency>
             <groupId>org.chromattic</groupId>
             <artifactId>chromattic.api</artifactId>
-            <version>${version.chromattic}</version>
+            <version>${chromattic.version}</version>
          </dependency>
          <dependency>
             <groupId>org.chromattic</groupId>
             <artifactId>chromattic.spi</artifactId>
-            <version>${version.chromattic}</version>
+            <version>${chromattic.version}</version>
          </dependency>
          <dependency>
             <groupId>org.chromattic</groupId>
             <artifactId>chromattic.core</artifactId>
-            <version>${version.chromattic}</version>
+            <version>${chromattic.version}</version>
          </dependency>
          <dependency>
             <groupId>org.chromattic</groupId>
             <artifactId>chromattic.ext</artifactId>
-            <version>${version.chromattic}</version>
+            <version>${chromattic.version}</version>
          </dependency>
          <dependency>
            <groupId>org.chromattic</groupId>
            <artifactId>chromattic.exo</artifactId>
-           <version>${version.chromattic}</version> 
+           <version>${chromattic.version}</version> 
         </dependency>
         <dependency>
             <groupId>org.chromattic</groupId>
             <artifactId>chromattic.metamodel</artifactId>
-            <version>${version.chromattic}</version>
+            <version>${chromattic.version}</version>
          </dependency>
          <dependency>
             <groupId>org.chromattic</groupId>
             <artifactId>chromattic.dataobject</artifactId>
-            <version>${version.chromattic}</version>
+            <version>${chromattic.version}</version>
          </dependency>
          <dependency>
             <groupId>org.chromattic</groupId>
             <artifactId>chromattic.exo</artifactId>
-            <version>${version.chromattic}</version>
+            <version>${chromattic.version}</version>
          </dependency>
          <dependency>
             <groupId>org.apache.commons</groupId>
