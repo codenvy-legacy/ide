@@ -138,7 +138,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       outlineTreeHelper.addOutlineItem(4, "name : String", 34);
       outlineTreeHelper.addOutlineItem(5, "age : int", 35);
       outlineTreeHelper.addOutlineItem(6, "addYear() : void", 37);
-      outlineTreeHelper.addOutlineItem(7, "greet(@ String) : java.lang.String", 39);
+      outlineTreeHelper.addOutlineItem(7, "greet(@   String) : java.lang.String", 39);
       outlineTreeHelper.addOutlineItem(8, "address : int", 42);
 
       // check is tree created correctly
