@@ -7,8 +7,8 @@ var a = {
   
   var b = b1.b2;
   
-  var c = function(){};
-
+  var c = function()
+  {};
 function d() {
   var d1 = d2.d3;
   var d4 = function() {};
