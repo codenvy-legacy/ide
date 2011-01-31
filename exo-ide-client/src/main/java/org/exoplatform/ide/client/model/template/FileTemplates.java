@@ -88,7 +88,7 @@ public class FileTemplates
           +"]\n"
           +"}";
 
-      templates.put(MimeType.APPLICATION_JSON, content);
+//      templates.put(MimeType.APPLICATION_JSON, content);
    }
 
    private static void addEmptyHTML()

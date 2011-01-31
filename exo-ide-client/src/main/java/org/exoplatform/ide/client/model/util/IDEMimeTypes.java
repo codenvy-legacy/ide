@@ -67,12 +67,10 @@ public class IDEMimeTypes
       add("xml", MimeType.TEXT_XML);
       add("grs", MimeType.GROOVY_SERVICE);
       add("groovy", MimeType.APPLICATION_GROOVY);
-      add("groovyclasspath", MimeType.APPLICATION_JSON);
       add("xml", MimeType.GOOGLE_GADGET);
       add("html", MimeType.UWA_WIDGET);
       add("gtmpl", MimeType.GROOVY_TEMPLATE);      
       add("groovy", MimeType.CHROMATTIC_DATA_OBJECT);
-      add("json", MimeType.APPLICATION_JSON);      
    }
 
    public static boolean isMimeTypeSupported(String mimeType)

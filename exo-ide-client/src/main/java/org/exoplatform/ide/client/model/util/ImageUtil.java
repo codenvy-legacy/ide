@@ -51,7 +51,6 @@ public class ImageUtil
       images.put(MimeType.UWA_WIDGET, Images.FileTypes.UWA_WIDGET);
       images.put(MimeType.GROOVY_TEMPLATE, Images.FileTypes.GROOVY_TEMPLATE);      
       images.put(MimeType.CHROMATTIC_DATA_OBJECT, Images.FileTypes.CHROMATTIC);
-      images.put(MimeType.APPLICATION_JSON, Images.FileTypes.JSON);      
       images.put(null, Images.FileTypes.DEFAULT);
    }
 

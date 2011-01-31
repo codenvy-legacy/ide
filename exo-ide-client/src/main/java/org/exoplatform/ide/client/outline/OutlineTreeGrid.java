@@ -524,8 +524,7 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          || file.getContentType().equals(MimeType.APPLICATION_GROOVY)
          || file.getContentType().equals(MimeType.GROOVY_TEMPLATE)
          || file.getContentType().equals(MimeType.UWA_WIDGET)
-         || file.getContentType().equals(MimeType.CHROMATTIC_DATA_OBJECT)
-         || file.getContentType().equals(MimeType.APPLICATION_JSON);
+         || file.getContentType().equals(MimeType.CHROMATTIC_DATA_OBJECT);
    }
    
    public List<Token> getSelectedTokens()
