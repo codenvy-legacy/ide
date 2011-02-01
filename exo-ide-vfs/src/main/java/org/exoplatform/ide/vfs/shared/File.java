@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
-import org.exoplatform.ide.vfs.server.OutputProperty;
-
 import java.util.List;
 import java.util.Map;
 
@@ -49,20 +47,33 @@ public class File extends Item
    /**
     * Instance of file with specified attributes.
     * 
-    * @param id id of object
-    * @param name the name of object
-    * @param path path of object
-    * @param creationDate creation date in long format
-    * @param lastModificationDate date of last modification in long format
-    * @param versionId id of versions of file
-    * @param contentType content type
-    * @param length content length
-    * @param locked is file locked or not
-    * @param properties other properties of file
-    * @param links hyperlinks for retrieved or(and) manage item
+    * @param id
+    *           id of object
+    * @param name
+    *           the name of object
+    * @param path
+    *           path of object
+    * @param creationDate
+    *           creation date in long format
+    * @param lastModificationDate
+    *           date of last modification in long format
+    * @param versionId
+    *           id of versions of file
+    * @param contentType
+    *           content type
+    * @param length
+    *           content length
+    * @param locked
+    *           is file locked or not
+    * @param properties
+    *           other properties of file
+    * @param links
+    *           hyperlinks for retrieved or(and) manage item
     */
-   public File(String id, String name, String path, long creationDate, long lastModificationDate, String versionId,
-      String contentType, long length, boolean locked, List<OutputProperty> properties, Map<String, Link> links)
+   public File(String id, String name, String path, long creationDate,
+         long lastModificationDate, String versionId, String contentType,
+         long length, boolean locked, List<OutputProperty> properties,
+         Map<String, Link> links)
    {
       super(id, name, Type.FILE, path, creationDate, properties, links);
       this.lastModificationDate = lastModificationDate;
@@ -89,7 +100,8 @@ public class File extends Item
    }
 
    /**
-    * @param versionId the version id
+    * @param versionId
+    *           the version id
     */
    public void setVersionId(String versionId)
    {
@@ -105,7 +117,8 @@ public class File extends Item
    }
 
    /**
-    * @param contentType the content type
+    * @param contentType
+    *           the content type
     */
    public void setContentType(String contentType)
    {
@@ -121,7 +134,8 @@ public class File extends Item
    }
 
    /**
-    * @param length the content length
+    * @param length
+    *           the content length
     */
    public void setLength(long length)
    {
@@ -137,7 +151,8 @@ public class File extends Item
    }
 
    /**
-    * @param lastModificationDate the date of last modification
+    * @param lastModificationDate
+    *           the date of last modification
     */
    public void setLastModificationDate(long lastModificationDate)
    {
@@ -154,13 +169,13 @@ public class File extends Item
    }
 
    /**
-    * @param locked locking flag. Must be <code>true</code> if object locked and
+    * @param locked
+    *           locking flag. Must be <code>true</code> if object locked and
     *           <code>false</code> otherwise
     */
    public void setLocked(boolean locked)
    {
       this.locked = locked;
    }
-   
-   
+
 }

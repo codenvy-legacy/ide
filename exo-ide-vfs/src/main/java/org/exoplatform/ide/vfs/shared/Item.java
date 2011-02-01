@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
-import org.exoplatform.ide.vfs.server.OutputProperty;
 
 import java.util.ArrayList;
 import java.util.HashMap;

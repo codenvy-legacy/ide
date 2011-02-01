@@ -18,6 +18,18 @@
  */
 package org.exoplatform.ide.vfs.server;
 
+import java.io.InputStream;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -32,18 +44,6 @@ import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.io.InputStream;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-
 /**
  * Virtual file system abstraction.
  * 
@@ -56,7 +56,7 @@ public interface VirtualFileSystem
     * Create copy of item <code>id</code> in <code>parentId</code> folder.
     * 
     * @param id id of source item
-    * @param parentId parent for new copy
+    * @param parentId id of parent for new copy
     * @return Response with 201 status and Location header that point to newly
     *         created copy of item
     * @throws ItemNotFoundException if <code>source</code> or
@@ -79,18 +79,18 @@ public interface VirtualFileSystem
    /**
     * Create new File in specified folder.
     * 
-    * @param parentId parent for new File
+    * @param parentId id of parent for new File
     * @param name name of File
     * @param mediaType media type of content
     * @param content content of File
     * @return Response with 201 status and Location header that point to newly
     *         created file
-    * @throws ItemNotFoundException if <code>parent</code> does not exist
+    * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
-    *            <li><code>parent</code> if not a folder</li>
+    *            <li><code>parentId</code> if not a folder</li>
     *            <li><code>name</code> is not specified</li>
-    *            <li><code>parent</code> already contains item with the same
+    *            <li><code>parentId</code> already contains item with the same
     *            name</li>
     *            </ul>
     * @throws PermissionDeniedException if user which perform operation has not
@@ -105,16 +105,16 @@ public interface VirtualFileSystem
    /**
     * Create new folder in specified folder.
     * 
-    * @param parentId parent for new folder
+    * @param parentId id of parent for new folder
     * @param name name of new folder
     * @return Response with 201 status and Location header that point to newly
     *         created folder
-    * @throws ItemNotFoundException if <code>parent</code> does not exist
+    * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
-    *            <li><code>parent</code> if not a folder</li>
+    *            <li><code>parentId</code> if not a folder</li>
     *            <li><code>name</code> is not specified</li>
-    *            <li><code>parent</code> already contains item with the same
+    *            <li><code>parentId</code> already contains item with the same
     *            name</li>
     *            </ul>
     * @throws PermissionDeniedException if user which perform operation has not
@@ -125,6 +125,35 @@ public interface VirtualFileSystem
    @Path("folder")
    Response createFolder(String parentId, String name) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException;
+
+   /**
+    * Create new project in specified folder.
+    * 
+    * NOTE: It should NOT be allowable to create project inside project
+    * 
+    * @param parentId parent's folder id
+    * @param name project name
+    * @param type project type
+    * @param properties
+    * @return Response with 201 status and Location header that point to newly
+    *         created project
+    * @throws ItemNotFoundException if <code>parentId</code> does not exist
+    * @throws InvalidArgumentException if any of following conditions are met:
+    *            <ul>
+    *            <li><code>parentId</code> if not a folder</li>
+    *            <li><code>name</code> is not specified</li>
+    *            <li><code>parentId</code> already contains item with the same
+    *            name</li>
+    *            <li><code>type</code> is not known</li>
+    *            </ul>
+    * @throws PermissionDeniedException if user which perform operation has not
+    *            permissions to do it
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
+   @POST
+   @Path("project")
+   Response createProject(String parentId, String name, String type, List<ConvertibleInputProperty> properties)
+      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Delete item <code>id</code>. If item is folder then all children of this
@@ -378,7 +407,7 @@ public interface VirtualFileSystem
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @GET
-   @Path("versions")
+   @Path("version-history")
    @Produces({MediaType.APPLICATION_JSON})
    ItemList<File> getVersions(String id, int maxItems, int skipCount, PropertyFilter propertyFilter)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
@@ -630,6 +659,6 @@ public interface VirtualFileSystem
    @POST
    @Path("item")
    @Consumes({MediaType.APPLICATION_JSON})
-   void updateItem(String id, List<ConvertibleInputProperty> properties, String lockToken) throws ItemNotFoundException,
-      LockException, PermissionDeniedException, VirtualFileSystemException;
+   void updateItem(String id, List<ConvertibleInputProperty> properties, String lockToken)
+      throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException;
 }
