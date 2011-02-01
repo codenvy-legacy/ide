@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.OutputProperty;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.OutputProperty;
+import org.exoplatform.ide.vfs.shared.Type;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -82,7 +83,10 @@ public class GetItemTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
-      assertEquals(filePath, ((Item)response.getEntity()).getPath());
+      Item item = (Item)response.getEntity();
+      assertEquals(Type.FILE, item.getType());
+      assertEquals(filePath, item.getPath());
+      validateLinks(item);
    }
 
    public void testGetFilePropertyFilter() throws Exception
@@ -160,7 +164,10 @@ public class GetItemTest extends JcrFileSystemTest
          .append("item") //
          .append(folderPath).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
-      log.info(new String(writer.getBody()));
+      Item item = (Item)response.getEntity();
+      assertEquals(Type.FOLDER, item.getType());
+      validateLinks(item);
    }
 }

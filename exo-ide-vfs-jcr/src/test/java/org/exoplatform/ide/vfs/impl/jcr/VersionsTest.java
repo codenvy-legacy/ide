@@ -79,7 +79,7 @@ public class VersionsTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("versions") //
+         .append("version-history") //
          .append(filePath) //
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
@@ -87,7 +87,10 @@ public class VersionsTest extends JcrFileSystemTest
       List<File> items = ((ItemList<File>)response.getEntity()).getItems();
       List<String> all = new ArrayList<String>(3);
       for (File i : items)
+      {
+         validateLinks(i);
          all.add(i.getVersionId());
+      }
       assertEquals(3, all.size());
       assertEquals("1", all.get(0));
       assertEquals("2", all.get(1));
@@ -109,12 +112,26 @@ public class VersionsTest extends JcrFileSystemTest
       assertEquals("__TEST__001", new String(writer.getBody()));
    }
 
+   public void testGetVersionByIdInvalidVersion() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("version") //
+         .append(filePath) //
+         .append("/5") //
+         .toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      assertEquals(400, response.getStatus());
+     log.info(new String(writer.getBody()));
+   }
+
    public void testGetVersionsPagingSkipCount() throws Exception
    {
       // Get all versions.
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("versions") //
+         .append("version-history") //
          .append(filePath).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
@@ -122,12 +139,15 @@ public class VersionsTest extends JcrFileSystemTest
       ItemList<File> children = (ItemList<File>)response.getEntity();
       List<Object> all = new ArrayList<Object>(3);
       for (File i : children.getItems())
+      {
+         validateLinks(i);
          all.add(i.getVersionId());
+      }
 
       // Skip first item in result.
       path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("versions") //
+         .append("version-history") //
          .append(filePath) //
          .append("?") //
          .append("skipCount=") //
@@ -144,7 +164,7 @@ public class VersionsTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("versions") //
+         .append("version-history") //
          .append(filePath) //
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
@@ -153,14 +173,17 @@ public class VersionsTest extends JcrFileSystemTest
       List<File> items = ((ItemList<File>)response.getEntity()).getItems();
       List<Object> all = new ArrayList<Object>(3);
       for (File i : items)
+      {
+         validateLinks(i);
          all.add(i.getVersionId());
+      }
       assertEquals(3, all.size());
       
       all.remove(2);
 
       path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("versions") //
+         .append("version-history") //
          .append(filePath) //
          .append("?") //
          .append("maxItems=") //

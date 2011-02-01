@@ -31,4 +31,14 @@
          </propertyDefinition>
       </propertyDefinitions>
    </nodeType>
+
+   <nodeType name="exo:folderMixin01" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+         <supertype>nt:base</supertype>
+      </supertypes>
+      <propertyDefinitions>
+         <propertyDefinition name="exo:property01" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+         </propertyDefinition>
+      </propertyDefinitions>
+   </nodeType>
 </nodeTypes>

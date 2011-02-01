@@ -21,7 +21,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.server.OutputProperty;
+import org.exoplatform.ide.vfs.shared.OutputProperty;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
@@ -123,6 +123,7 @@ public class SearchTest extends JcrFileSystemTest
       ItemList<Item> items = (ItemList<Item>)response.getEntity();
       assertEquals(1, items.getItems().size());
       Item result = items.getItems().get(0);
+      validateLinks(result);
       assertEquals(resultPath, result.getPath());
       List<OutputProperty> properties = result.getProperties();
       Map<String, Object[]> m = new HashMap<String, Object[]>(properties.size());
@@ -149,7 +150,10 @@ public class SearchTest extends JcrFileSystemTest
       assertEquals(3, items.getItems().size());
       List<Object> all = new ArrayList<Object>(3);
       for (Item i : items.getItems())
+      {
+         validateLinks(i);
          all.add(i.getId());
+      }
       Iterator<Object> iteratorAll = all.iterator();
       iteratorAll.next();
       iteratorAll.remove();
@@ -182,7 +186,10 @@ public class SearchTest extends JcrFileSystemTest
       ItemList<Item> items = (ItemList<Item>)response.getEntity();
       List<Object> all = new ArrayList<Object>(3);
       for (Item i : items.getItems())
+      {
+         validateLinks(i);
          all.add(i.getId());
+      }
       all.remove(2);
 
       path = new StringBuilder() //

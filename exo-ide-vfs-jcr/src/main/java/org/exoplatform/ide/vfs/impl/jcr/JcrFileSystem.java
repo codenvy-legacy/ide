@@ -64,7 +64,6 @@ import javax.jcr.query.InvalidQueryException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.jcr.version.VersionException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
@@ -133,8 +132,8 @@ public class JcrFileSystem implements VirtualFileSystem
       if (Type.FOLDER != parentData.getType())
          throw new InvalidArgumentException("Unable create file. Item specified as parent is not a folder. ");
       FileData newfile =
-         ((FolderData)parentData).createFile(name, itemType2NodeTypeResolver.getFileNodeTypeName(mediaType),
-            itemType2NodeTypeResolver.getFileContentNodeTypeName(mediaType), mediaType, content);
+         ((FolderData)parentData).createFile(name, itemType2NodeTypeResolver.getFileNodeType(mediaType),
+            itemType2NodeTypeResolver.getFileContentNodeType(mediaType), mediaType, null, null, content);
       return Response.created(createURI("item", newfile.getId())).build();
    }
 
@@ -178,7 +177,7 @@ public class JcrFileSystem implements VirtualFileSystem
       if (Type.FOLDER != parentData.getType())
          throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
       FolderData newfolder =
-         ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeTypeName());
+         ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeType(null), null, null);
       return Response.created(createURI("item", newfolder.getId())).build();
    }
 
@@ -191,6 +190,30 @@ public class JcrFileSystem implements VirtualFileSystem
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       return createFolder("/", name);
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createProject(java.lang.String,
+    *      java.lang.String, java.lang.String, java.util.List)
+    */
+   @Override
+   public Response createProject(String parentId, String name, String type, List<ConvertibleInputProperty> properties)
+      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      checkName(name);
+      ItemData parentData = getItemData(parentId);
+      if (Type.FOLDER != parentData.getType())
+         throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
+      FolderData newproject =
+         ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeType(type),
+            itemType2NodeTypeResolver.getFolderMixins(type), properties);
+      return Response.created(createURI("item", newproject.getId())).build();
+   }
+
+   public Response createProject(String name, String type, List<ConvertibleInputProperty> properties)
+      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      return createProject("/", name, type, properties);
    }
 
    /**
@@ -295,22 +318,36 @@ public class JcrFileSystem implements VirtualFileSystem
    private Map<String, Link> createUrlTemplates()
    {
       Map<String, Link> templates = new HashMap<String, Link>();
-      templates.put("create-file",
-         new Link(createURI("file", "[parentId]", "name", "[name]", "mediaType", "[mediaType]").toString(), ""));
-      templates.put("create-folder", new Link(createURI("folder", "[parentId]", "name", "[name]").toString(), ""));
-      templates.put("copy", new Link(createURI("copy", "[id]", "parentId", "[parentId]").toString(), ""));
-      templates.put("move", new Link(createURI("move", "[id]", "parentId", "[parentId]", "lockToken", "[lockToken]")
-         .toString(), ""));
-      templates.put("lock", new Link(createURI("lock", "[id]").toString(), ""));
-      templates.put("unlock", new Link(createURI("unlock", "[id]", "lockToken", "[lockToken]").toString(), ""));
-      /*templates.put(
-         "search",
-         new Link(createURI("search", null, "statement", "[statement]", "maxItems", "[maxItems]", "skipCount",
-            "[skipCount]").toString(), ""));*/
+      templates.put(Link.REL_CREATE_FILE, //
+         new Link(createURI("file", "[parentId]", "name", "[name]", "mediaType", "[mediaType]").toString(), //
+            Link.REL_CREATE_FILE, //
+            MediaType.WILDCARD));
+      templates.put(Link.REL_CREATE_FOLDER, //
+         new Link(createURI("folder", "[parentId]", "name", "[name]").toString(), //
+            Link.REL_CREATE_FOLDER, //
+            null));
+      templates.put(Link.REL_COPY, //
+         new Link(createURI("copy", "[id]", "parentId", "[parentId]").toString(), //
+            Link.REL_MOVE, //
+            null));
+      templates.put(Link.REL_MOVE, //
+         new Link(createURI("move", "[id]", "parentId", "[parentId]", "lockToken", "[lockToken]").toString(), //
+            Link.REL_MOVE, //
+            null));
+      templates.put(Link.REL_LOCK, //
+         new Link(createURI("lock", "[id]").toString(), //
+            Link.REL_LOCK, //
+            null));
+      templates.put(Link.REL_UNLOCK, //
+         new Link(createURI("unlock", "[id]", "lockToken", "[lockToken]").toString(), //
+            Link.REL_UNLOCK, //
+            null));
       templates.put(
-         "search",
+         Link.REL_SEARCH, //
          new Link(createURI("search", null, "maxItems", "[maxItems]", "skipCount", "[skipCount]", "propertyFilter",
-            "[propertyFilter]").toString(), MediaType.APPLICATION_FORM_URLENCODED));
+            "[propertyFilter]").toString(), //
+            Link.REL_SEARCH, //
+            MediaType.APPLICATION_FORM_URLENCODED));
       return templates;
    }
 
@@ -335,7 +372,10 @@ public class JcrFileSystem implements VirtualFileSystem
       @PathParam("versionId") String versionId //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
-      FileData versionData = getFileData(id, versionId);
+      ItemData data = getItemData(id);
+      if (Type.FILE != data.getType())
+         throw new InvalidArgumentException("Object " + id + " is not a file. ");
+      FileData versionData = ((FileData)data).getVersion(versionId);
       // TODO : cache control, last modification date, etc ??
       return Response.ok(versionData.getContent(), versionData.getContenType()).build();
    }
@@ -344,7 +384,7 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersions(java.lang.String,
     *      int, int, org.exoplatform.ide.vfs.server.PropertyFilter)
     */
-   @Path("versions/{id:.*}")
+   @Path("version-history/{id:.*}")
    public ItemList<File> getVersions(@PathParam("id") String id, //
       @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
       @QueryParam("skipCount") int skipCount, //
@@ -651,9 +691,6 @@ public class JcrFileSystem implements VirtualFileSystem
       @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
-      //System.out.println(">>>>>>>>> " + properties);
-      if (properties == null || properties.size() == 0)
-         return;
       ItemData data = getItemData(id);
       data.updateProperties(properties, lockToken);
    }
@@ -685,10 +722,13 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       Map<String, Link> links = createBaseLinks(file);
       String id = file.getId();
-      links.put("content", new Link(createURI("content", id).toString(), file.getContenType()));
-      links.put("versions", new Link(createURI("versions", id).toString(), MediaType.APPLICATION_JSON));
-      links.put("current-version", new Link(createURI("item", file.getCurrentVersionId()).toString(),
-         MediaType.APPLICATION_JSON));
+      links.put(Link.REL_CONTENT, //
+         new Link(createURI("content", id).toString(), Link.REL_CONTENT, file.getContenType()));
+      links.put(Link.REL_VERSION_HISTORY, //
+         new Link(createURI("version-history", id).toString(), Link.REL_VERSION_HISTORY, MediaType.APPLICATION_JSON));
+      links.put(Link.REL_CURRENT, // 
+         new Link(createURI("item", file.getCurrentVersionId()).toString(), Link.REL_CURRENT,
+            MediaType.APPLICATION_JSON));
       return links;
    }
 
@@ -696,7 +736,8 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       Map<String, Link> links = createBaseLinks(folder);
       String id = folder.getId();
-      links.put("children", new Link(createURI("children", id).toString(), MediaType.APPLICATION_JSON));
+      links.put(Link.REL_CHILDREN, //
+         new Link(createURI("children", id).toString(), Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
       return links;
    }
 
@@ -704,8 +745,10 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       Map<String, Link> links = new HashMap<String, Link>();
       String id = data.getId();
-      links.put("self", new Link(createURI("item", id).toString(), MediaType.APPLICATION_JSON));
-      links.put("acl", new Link(createURI("acl", id).toString(), MediaType.APPLICATION_JSON));
+      links.put(Link.REL_SELF, //
+         new Link(createURI("item", id).toString(), Link.REL_SELF, MediaType.APPLICATION_JSON));
+      links.put(Link.REL_ACL, //
+         new Link(createURI("acl", id).toString(), Link.REL_ACL, MediaType.APPLICATION_JSON));
       return links;
    }
 
@@ -739,44 +782,6 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          String path = (id.charAt(0) != '/') ? ("/" + id) : id;
          return ItemData.fromNode((Node)session.getItem(path));
-      }
-      catch (PathNotFoundException e)
-      {
-         throw new ItemNotFoundException("Oject " + id + " does not exists. ");
-      }
-      catch (AccessDeniedException e)
-      {
-         throw new PermissionDeniedException("Access denied to object " + id + ". ");
-      }
-      catch (RepositoryException e)
-      {
-         throw new VirtualFileSystemException(e.getMessage(), e);
-      }
-   }
-
-   private FileData getFileData(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException
-   {
-      try
-      {
-         String path = (id.charAt(0) != '/') ? ("/" + id) : id;
-         ItemData data = ItemData.fromNode((Node)session.getItem(path));
-         if (Type.FILE != data.getType())
-            throw new InvalidArgumentException("Object " + id + " is not a file. ");
-         if (FileData.CURRENT_VERSION_ID.equals(versionId))
-            return (FileData)data;
-         // If not file versionable then any version ID is not acceptable.
-         if (!(data.getNode().isNodeType("mix:versionable")))
-            throw new InvalidArgumentException("Version " + versionId + " does not exist. ");
-         try
-         {
-            return (FileData)ItemData.fromNode(data.getNode().getVersionHistory().getVersion(versionId)
-               .getNode("jcr:frozenNode"));
-         }
-         catch (VersionException e)
-         {
-            throw new InvalidArgumentException("Version " + versionId + " does not exist. ");
-         }
       }
       catch (PathNotFoundException e)
       {

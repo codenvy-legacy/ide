@@ -24,14 +24,15 @@ import javax.ws.rs.core.MediaType;
  * Provide JCR node type name dependent to specified media or item type.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: ItemType2NodeTypeResolver.java 65533 2011-01-26 12:31:23Z
+ *          andrew00x $
  */
 public class ItemType2NodeTypeResolver
 {
    /**
     * By default return 'nt:file' always.
     */
-   public String getFileNodeTypeName(MediaType mediaType)
+   public String getFileNodeType(MediaType mediaType)
    {
       return "nt:file";
    }
@@ -39,16 +40,44 @@ public class ItemType2NodeTypeResolver
    /**
     * By default return 'nt:resource' always.
     */
-   public String getFileContentNodeTypeName(MediaType mediaType)
+   public String getFileContentNodeType(MediaType mediaType)
    {
       return "nt:resource";
    }
 
    /**
-    * By default return 'nt:folder' always.
+    * Get mixin for adding to JCR file node.
+    * 
+    * @param type type of project
+    * @return mixins set of mixin node types
     */
-   public String getFolderNodeTypeName()
+   public String[] getFileMixins(MediaType mediaType)
+   {
+      // TODO
+      return null;
+   }
+
+   /**
+    * Get node type for folder of specified type. 
+    * By default return 'nt:folder' always.
+    * 
+    * @param type type of folder
+    * @return node type name
+    */
+   public String getFolderNodeType(String type)
    {
       return "nt:folder";
+   }
+
+   /**
+    * Get mixin for adding to JCR folder node.
+    * 
+    * @param type type of project
+    * @return mixins set of mixin node types
+    */
+   public String[] getFolderMixins(String type)
+   {
+      // TODO
+      return null;
    }
 }

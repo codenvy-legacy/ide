@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.OutputProperty;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.OutputProperty;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -87,6 +87,29 @@ public class ChildrenTest extends JcrFileSystemTest
 
    public void testGetChildren() throws Exception
    {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("children") //
+         .append(folderPath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      assertEquals(200, response.getStatus());
+      //log.info(new String(writer.getBody()));
+      @SuppressWarnings("unchecked")
+      ItemList<Item> children = (ItemList<Item>)response.getEntity();
+      List<String> list = new ArrayList<String>(3);
+      for (Item i : children.getItems()){
+         validateLinks(i);
+         list.add(i.getName());
+      }
+      assertEquals(3, list.size());
+      assertTrue(list.contains("ChildrenTest_FOLDER01"));
+      assertTrue(list.contains("ChildrenTest_FOLDER02"));
+      assertTrue(list.contains("ChildrenTest_FILE01"));
+   }
+
+   public void testGetChildrenNoPermissions() throws Exception
+   {
       Map<String, String[]> permissions = new HashMap<String, String[]>(1);
       permissions.put("root", PermissionType.ALL);
       ((ExtendedNode)childrenTestNode).setPermissions(permissions);
@@ -100,27 +123,6 @@ public class ChildrenTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
-   }
-
-   public void testGetChildrenNoPermissions() throws Exception
-   {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("children") //
-         .append(folderPath).toString();
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
-      assertEquals(200, response.getStatus());
-      //log.info(new String(writer.getBody()));
-      @SuppressWarnings("unchecked")
-      ItemList<Item> children = (ItemList<Item>)response.getEntity();
-      List<String> list = new ArrayList<String>(3);
-      for (Item i : children.getItems())
-         list.add(i.getName());
-      assertEquals(3, list.size());
-      assertTrue(list.contains("ChildrenTest_FOLDER01"));
-      assertTrue(list.contains("ChildrenTest_FOLDER02"));
-      assertTrue(list.contains("ChildrenTest_FILE01"));
    }
 
    @SuppressWarnings("unchecked")

@@ -19,7 +19,6 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.server.ConvertibleInputProperty;
-import org.exoplatform.ide.vfs.server.OutputProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
@@ -27,6 +26,7 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.OutputProperty;
 import org.exoplatform.ide.vfs.shared.Type;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.services.jcr.access.PermissionType;
@@ -210,8 +210,7 @@ abstract class ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get properties of item " + getId()
-            + ". Operation not permitted.");
+         throw new PermissionDeniedException("Unable get properties of item " + getId() + ". Operation not permitted.");
       }
       catch (RepositoryException e)
       {
@@ -219,7 +218,7 @@ abstract class ItemData
       }
    }
 
-   private Object[] createProperty(javax.jcr.Property property) throws RepositoryException
+   Object[] createProperty(javax.jcr.Property property) throws RepositoryException
    {
       PropertyDefinition definition = property.getDefinition();
       boolean multiple = definition.isMultiple();
@@ -305,9 +304,12 @@ abstract class ItemData
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   void updateProperties(List<ConvertibleInputProperty> properties, String lockToken) throws ConstraintException, LockException,
-      PermissionDeniedException, VirtualFileSystemException
+   void updateProperties(List<ConvertibleInputProperty> properties, String lockToken) throws ConstraintException,
+      LockException, PermissionDeniedException, VirtualFileSystemException
    {
+      if (properties == null || properties.size() == 0)
+         return;
+      
       // TODO : property name mapping ?
       // vfs:blabla -> jcr:blabla
       try
@@ -316,60 +318,10 @@ abstract class ItemData
          if (lockToken != null)
             session.addLockToken(lockToken);
 
-         NodeType nodeType =
-            node.isNodeType("nt:frozenNode") ? session.getWorkspace().getNodeTypeManager()
-               .getNodeType(node.getProperty("jcr:frozenPrimaryType").getString()) : node.getPrimaryNodeType();
-         PropertyDefinition[] propertyDefinitions = nodeType.getPropertyDefinitions();
-         Map<String, PropertyDefinition> cache = new HashMap<String, PropertyDefinition>(propertyDefinitions.length);
-         for (int i = 0; i < propertyDefinitions.length; i++)
-            cache.put(propertyDefinitions[i].getName(), propertyDefinitions[i]);
+         Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
          for (ConvertibleInputProperty property : properties)
-         {
-            String name = property.getName();
-            String[] value = property.getValue();
-            PropertyDefinition pd = cache.get(name);
-            try
-            {
-               if (pd != null)
-               {
-                  if (pd.isProtected())
-                     throw new ConstraintException("Property " + name + " is read-only. ");
-
-                  if (value == null || value.length == 0)
-                  {
-                     if (pd.isMandatory())
-                        throw new ConstraintException("Property " + name + " can't have null value. ");
-                     removeProperty(name);
-                  }
-                  else
-                  {
-                     boolean multiple = pd.isMultiple();
-                     if (multiple)
-                        updateProperty(name, value);
-                     else
-                        updateProperty(name, value[0]);
-                  }
-               }
-               else
-               {
-                  // Try to set property even there is no definition for that.
-                  if (value == null || value.length == 0)
-                     removeProperty(name);
-                  else if (value.length == 1)
-                     updateProperty(name, value[0]);
-                  else
-                     updateProperty(name, value);
-               }
-            }
-            catch (IOException e)
-            {
-               throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
-            }
-            catch (ValueFormatException e)
-            {
-               throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
-            }
-         }
+            updateProperty(propertyDefinitions.get(property.getName()), property);
+         
          session.save();
       }
       catch (javax.jcr.lock.LockException e)
@@ -383,27 +335,76 @@ abstract class ItemData
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable update properties of item " + getId() + ". " + e.getMessage(),
-            e);
+         throw new VirtualFileSystemException("Unable update properties of item " + getId() + ". " + e.getMessage(), e);
       }
    }
 
-   private void updateProperty(String name, String value) throws RepositoryException, IOException
+   void updateProperty(PropertyDefinition pd, ConvertibleInputProperty property) throws ConstraintException,
+      LockException, PermissionDeniedException, VirtualFileSystemException
    {
-      node.setProperty(name, new StringValue(value));
-   }
+      String name = property.getName();
+      String[] value = property.getValue();
+      if (value == null)
+         value = new String[0];
 
-   private void updateProperty(String name, String[] value) throws RepositoryException, IOException
-   {
-      Value[] jcrValue = new Value[value.length];
-      for (int i = 0; i < value.length; i++)
-         jcrValue[i] = new StringValue(value[i]);
-      node.setProperty(name, jcrValue);
-   }
+      if (pd != null)
+      {
+         if (pd.isProtected())
+            throw new ConstraintException("Property " + name + " is read-only. ");
+         if (pd.isMandatory() && value.length == 0)
+            throw new ConstraintException("Property " + name + " can't have null value. ");
+      }
 
-   private void removeProperty(String name) throws RepositoryException
+      try
+      {
+         if (value.length == 0)
+         {
+            node.setProperty(name, (Value)null);
+         }
+         else
+         {
+            // If property definition exists then use it to determine is property
+            // multiple otherwise determine it from specified value. 
+            boolean multiple = pd != null ? pd.isMultiple() : value.length > 1;
+            if (multiple)
+            {
+               Value[] jcrValue = new Value[value.length];
+               for (int i = 0; i < value.length; i++)
+                  jcrValue[i] = new StringValue(value[i]);
+               node.setProperty(name, jcrValue);
+            }
+            else
+            {
+               node.setProperty(name, new StringValue(value[0]));
+            }
+         }
+      }
+      catch (ValueFormatException e)
+      {
+         throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
+      }
+      catch (javax.jcr.lock.LockException e)
+      {
+         throw new LockException("Unable to update property " + name + ". Item is locked. ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException("Unable update property " + name + ". " + e.getMessage(), e);
+      }
+      catch (IOException e)
+      {
+         throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+      }
+   }
+   
+   Map<String, PropertyDefinition> getPropertyDefinitions() throws RepositoryException
    {
-      node.setProperty(name, (Value)null);
+      NodeType nodeType = node.getPrimaryNodeType();
+      PropertyDefinition[] propertyDefinitions = nodeType.getPropertyDefinitions();
+      Map<String, PropertyDefinition> cache = new HashMap<String, PropertyDefinition>(propertyDefinitions.length);
+      for (int i = 0; i < propertyDefinitions.length; i++)
+         cache.put(propertyDefinitions[i].getName(), propertyDefinitions[i]);
+      return cache;
    }
 
    /**
@@ -645,15 +646,15 @@ abstract class ItemData
     * Move current item in specified folder.
     * 
     * @param folder new parent
-    * @param lockToken lock token. This lock token will be used if this item
-    *           is locked. Pass <code>null</code> if there is no lock token
+    * @param lockToken lock token. This lock token will be used if this item is
+    *           locked. Pass <code>null</code> if there is no lock token
     * @return id moved object
     * @throws ConstraintException if destination folder already contains item
     *            with the same name as current
-    * @throws LockException if this item is locked and <code>lockToken</code>
-    *            is <code>null</code> or does not matched
-    * @throws PermissionDeniedException if item can't be moved cause to
-    *            security restriction
+    * @throws LockException if this item is locked and <code>lockToken</code> is
+    *            <code>null</code> or does not matched
+    * @throws PermissionDeniedException if item can't be moved cause to security
+    *            restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    String moveTo(FolderData folder, String lockToken) throws ConstraintException, LockException,
@@ -677,8 +678,7 @@ abstract class ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable move item " + getId() + " to " + folder.getId()
-            + ". Source item is locked. ");
+         throw new LockException("Unable move item " + getId() + " to " + folder.getId() + ". Source item is locked. ");
       }
       catch (AccessDeniedException e)
       {

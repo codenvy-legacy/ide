@@ -45,7 +45,7 @@ public class GetVFSInfoTest extends JcrFileSystemTest
       VirtualFileSystemInfo vfsInfo = (VirtualFileSystemInfo)response.getEntity();
       assertNotNull(vfsInfo);
       assertEquals("", vfsInfo.getRootFolderId());
-      vfsInfo.getUriTemplates();
+      vfsInfo.getUrlTemplates();
       assertEquals(true, vfsInfo.isVersioningSupported());
       assertEquals(true, vfsInfo.isLockSupported());
       assertEquals(ACLCapability.MANAGE, vfsInfo.getAclCapability());

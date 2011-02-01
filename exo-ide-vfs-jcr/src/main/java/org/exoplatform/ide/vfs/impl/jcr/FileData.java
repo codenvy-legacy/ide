@@ -20,6 +20,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -38,6 +39,7 @@ import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.lock.Lock;
 import javax.jcr.version.Version;
+import javax.jcr.version.VersionException;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -130,6 +132,7 @@ class FileData extends ItemData
    {
       return getId();
    }
+
    /**
     * Get content of current file.
     * 
@@ -245,6 +248,35 @@ class FileData extends ItemData
       catch (RepositoryException e)
       {
          throw new VirtualFileSystemException("Unable get versions of file " + getId() + ". " + e.getMessage(), e);
+      }
+   }
+
+   FileData getVersion(String versionId) throws InvalidArgumentException, PermissionDeniedException,
+      VirtualFileSystemException
+   {
+      try
+      {
+         if (getVersionId().equals(versionId))
+            return this;
+         // If not file versionable then any version ID is not acceptable.
+         if (!(node.isNodeType("mix:versionable")))
+            throw new InvalidArgumentException("Version " + versionId + " does not exist. ");
+         try
+         {
+            return (FileData)fromNode(node.getVersionHistory().getVersion(versionId).getNode("jcr:frozenNode"));
+         }
+         catch (VersionException e)
+         {
+            throw new InvalidArgumentException("Version " + versionId + " does not exist. ");
+         }
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Access denied to version " + versionId + " of file " + getId() + ". ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
       }
    }
 
