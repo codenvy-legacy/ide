@@ -435,11 +435,6 @@
             <version>${chromattic.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.exo</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>${apache.commons-compress.version}</version>

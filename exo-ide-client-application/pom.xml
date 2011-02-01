@@ -178,33 +178,6 @@
                      </tasks>
                   </configuration>
                </execution>
-            </executions>
-         </plugin>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-               <execution>
-                  <id>copy-dependencies</id>
-                  <phase>generate-sources</phase>
-                  <goals>
-                     <goal>copy</goal>
-                  </goals>
-                  <configuration>
-                    <artifactItems>
-                     <artifactItem>
-                        <groupId>org.exoplatform.ide</groupId>
-                        <artifactId>exo-ide-client</artifactId>
-                        <type>jar</type>
-                      </artifactItem>
-                    </artifactItems>
-                 </configuration>
-               </execution>
-            </executions>
-         </plugin>
-         <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
                <execution>
                   <id>unwar-ide</id>
                   <phase>process-resources</phase>
@@ -230,6 +203,28 @@
                   <goals>
                      <goal>run</goal>
                   </goals>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>copy-dependencies</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                    <artifactItems>
+                     <artifactItem>
+                        <groupId>org.exoplatform.ide</groupId>
+                        <artifactId>exo-ide-client</artifactId>
+                        <type>jar</type>
+                      </artifactItem>
+                    </artifactItems>
+                 </configuration>
                </execution>
             </executions>
          </plugin>
