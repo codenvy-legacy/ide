@@ -30,9 +30,9 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
-public class VFSClient
+public class VirtualFileSystem
 {
-   private static VFSClient instance;
+   private static VirtualFileSystem instance;
 
    private final HandlerManager eventBus;
 
@@ -41,21 +41,21 @@ public class VFSClient
    public static void init(HandlerManager eventBus)
    {
       if (instance == null)
-         instance = new VFSClient(eventBus);
+         instance = new VirtualFileSystem(eventBus);
    }
 
-   public static VFSClient instance()
+   public static VirtualFileSystem instance()
    {
       return instance;
    }
 
    // never called
-   private VFSClient()
+   private VirtualFileSystem()
    {
       this.eventBus = null;
    }
 
-   private VFSClient(HandlerManager eventBus)
+   private VirtualFileSystem(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
    }
