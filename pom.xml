@@ -223,6 +223,16 @@
             <version>${project.version}</version>
          </dependency>
          <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-vfs</artifactId>
+           <version>${project.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-vfs-jcr</artifactId>
+           <version>${project.version}</version>
+         </dependency> 
+         <dependency>
             <groupId>org.exoplatform.portal</groupId>
             <artifactId>exo.portal.component.application-registry</artifactId>
             <version>${org.exoplatform.gatein.version}</version>
@@ -587,7 +597,10 @@
       <module>exo-ide-framework-client</module>
 
       <module>exo-ide-vfs-webdav-client</module>
-     
+
+      <module>exo-ide-vfs</module>
+      <module>exo-ide-vfs-jcr</module>
+
       <module>exo-ide-extension-gadget-server</module>
       <module>exo-ide-extension-gadget-client</module>
 
