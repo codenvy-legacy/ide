@@ -159,7 +159,6 @@
             <artifactId>exo-ide-server</artifactId>
             <version>${project.version}</version>
          </dependency>
-
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-groovy-server</artifactId>
@@ -594,9 +593,6 @@
 
       <module>exo-ide-vfs-webdav-client</module>
      
-      <module>exo-ide-vfs</module>
-      <module>exo-ide-vfs-jcr</module>
-
       <module>exo-ide-extension-gadget-server</module>
       <module>exo-ide-extension-gadget-client</module>
 
