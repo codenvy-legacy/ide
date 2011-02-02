@@ -20,7 +20,9 @@ package org.exoplatform.ide.vfs.client;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONNull;
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
@@ -59,7 +61,7 @@ public abstract class JSONSerializer<O>
       {
          if (object == null)
             return JSONNull.getInstance();
-         return new ExtJSONNumber(object.doubleValue());
+         return new JSONNumber(object.doubleValue());
       }
    };
 
@@ -100,8 +102,7 @@ public abstract class JSONSerializer<O>
             target.put(source.getName(), NUMBER_SERIALIZER.fromCollection(source.getValue()));
             return target;
          }
-         // TODO throw exception if can't serialize
-         return null;
+         throw new JSONException("Not found JSONSerializer for type " + typename);
       }
    };
 
