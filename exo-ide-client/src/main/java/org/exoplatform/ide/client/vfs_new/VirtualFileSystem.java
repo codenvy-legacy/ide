@@ -18,25 +18,17 @@
  */
 package org.exoplatform.ide.client.vfs_new;
 
-import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.vfs.client.JSONMarshaller;
-import org.exoplatform.ide.vfs.client.JSONUnmarshaller;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Link;
 
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
 
 public class VirtualFileSystem
 {
    private static VirtualFileSystem instance;
 
    private final HandlerManager eventBus;
+   
+   private String workspace;
 
    private Loader loader;
 
@@ -45,24 +37,26 @@ public class VirtualFileSystem
       return instance;
    }
 
-   public VirtualFileSystem(HandlerManager eventBus,  Loader loader, String restServiceURI, String repository, String workspace)
+   public VirtualFileSystem(HandlerManager eventBus,  Loader loader, String workspace)
    {
       instance = this;
       
       this.eventBus = eventBus;
       this.loader = loader;
+      this.workspace = workspace;
    }
-
+   
+   public void getVFSInfo() {
+      
+   }
+   
    /**
     * Get folder content
     * 
     * @param path
     */
-   public void getChildren(Folder folder, GwtEvent<?> postEvent, ServerExceptionEvent<?> errorEvent)
+   public void getChildren(String id)
    {
-      String url = folder.getLinks().get(Link.REL_CHILDREN).getHref();
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, new JSONUnmarshaller(), postEvent, errorEvent);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).data(new JSONMarshaller()).send(callback);
    }
 
    /**
@@ -70,18 +64,8 @@ public class VirtualFileSystem
     * 
     * @param path
     */
-   public void createFolder(Folder parent, String name)
+   public void createFolder(String parentId, String name)
    {
-      
-//      String path = new StringBuilder() //
-//      .append(SERVICE_URI) //
-//      .append("folder") //
-//      .append(CREATE_TEST_PATH) //
-//      .append("?") //
-//      .append("name=") //
-//      .append(name).toString();
-//   ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);      
-      
    }
 
    /**
@@ -89,8 +73,33 @@ public class VirtualFileSystem
     * 
     * @param file
     */
-   public void getContent(File file)
+   public void getFileContent(String id)
    {
+   }
+   
+   public void saveFileContent(String id, String mediaType, String content, String lockToken) {
+   }
+   
+   public void copy(String source, String destination) {
+   }
+   
+   public void move(String id, String parentId, String lockToken) {
+      
+   }
+   
+   public void delete(String id, String lockToken) {
+      
+   }
+   
+   public void rename(String id, String mediaType, String newname, String lockToken) {
+      
+   }
+   
+   public void lock(String id) {
+   }
+   
+   public void unlock(String id, String lockToken) {
+      
    }
    
 }
