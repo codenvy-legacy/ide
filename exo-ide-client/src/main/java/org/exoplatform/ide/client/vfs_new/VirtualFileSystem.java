@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.vfs_new.event.ChildrenReceivedEvent;
+import org.exoplatform.ide.client.vfs_new.event.FolderCreatedEvent;
 import org.exoplatform.ide.client.vfs_new.event.VirtualFileSystemInfoReceivedEvent;
 import org.exoplatform.ide.client.vfs_new.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.client.vfs_new.marshal.VFSInfoUnmarshaller;
@@ -68,7 +69,7 @@ public class VirtualFileSystem
       static final String LOCK = "Locking...";
 
    }
-   
+
    private static VirtualFileSystem instance;
 
    private final HandlerManager eventBus;
@@ -93,7 +94,7 @@ public class VirtualFileSystem
 
    public void getVFSInfo()
    {
-      String url = Utils.encodeURI(workspace+"/");
+      String url = Utils.encodeURI(workspace + "/");
 
       VirtualFileSystemInfo virtualFileSystemInfo = new VirtualFileSystemInfo();
 
@@ -116,16 +117,18 @@ public class VirtualFileSystem
    public void getChildren(String id)
    {
       String url = Utils.encodeURI(workspace + "/children/" + id);
+
       ItemList<Item> items = new ItemList<Item>();
       ChildrenReceivedEvent event = new ChildrenReceivedEvent(items);
       ChildrenUnmarshaller unmarshaller = new ChildrenUnmarshaller(id, items);
+
       String errorMessage = "Service is not deployed.<br>Parent folder not found.";
       ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
 
       loader.setMessage(Messages.GET_FOLDER_CONTENT);
       AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
-      
+
    }
 
    /**
@@ -135,6 +138,28 @@ public class VirtualFileSystem
     */
    public void createFolder(String parentId, String name)
    {
+      String url = workspace + "/folder" + parentId;
+      if (url.endsWith("/"))
+      {
+         url = url.substring(0, url.length() - 1);
+      }
+
+      url += "?name=" + name;
+      url = Utils.encodeURI(url);
+
+      String newFolderID = parentId;
+      if (!newFolderID.endsWith("/"))
+         newFolderID += "/";
+      newFolderID += name;
+
+      FolderCreatedEvent event = new FolderCreatedEvent(newFolderID);
+
+      String errorMessage = "Service is not deployed.<br>Resource already exist.<br>Parent folder not found.";
+      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+
+      loader.setMessage(Messages.COPY_FOLDER);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
    /**

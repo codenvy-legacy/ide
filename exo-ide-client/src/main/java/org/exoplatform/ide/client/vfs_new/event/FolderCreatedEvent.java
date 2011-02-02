@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.vfs_new.event;
 
+import com.google.gwt.event.shared.GwtEvent;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -25,7 +27,41 @@ package org.exoplatform.ide.client.vfs_new.event;
  * @version $
  */
 
-public class FolderCreatedEvent
+public class FolderCreatedEvent extends GwtEvent<FolderCreatedHandler>
 {
+
+   public static GwtEvent.Type<FolderCreatedHandler> TYPE = new Type<FolderCreatedHandler>();
+
+   private String folderId;
+
+   public FolderCreatedEvent(String folderId)
+   {
+      this.folderId = folderId;
+   }
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<FolderCreatedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(FolderCreatedHandler handler)
+   {
+      handler.onFolderCreated(this);
+   }
+
+   /**
+    * @return the folderId
+    */
+   public String getFolderId()
+   {
+      return folderId;
+   }
 
 }
