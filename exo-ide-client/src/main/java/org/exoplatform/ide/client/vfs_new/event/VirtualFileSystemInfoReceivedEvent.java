@@ -20,6 +20,8 @@ package org.exoplatform.ide.client.vfs_new.event;
 
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import com.google.gwt.event.shared.GwtEvent;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -27,13 +29,43 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $
  */
 
-public class VirtualFileSystemInfoReceivedEvent
+public class VirtualFileSystemInfoReceivedEvent extends GwtEvent<VirtualFileSystemInfoReceivedHandler>
 {
-   
+
+   public static GwtEvent.Type<VirtualFileSystemInfoReceivedHandler> TYPE =
+      new Type<VirtualFileSystemInfoReceivedHandler>();
+
    private VirtualFileSystemInfo virtualFileSystemInfo;
-   
-   public VirtualFileSystemInfoReceivedEvent(VirtualFileSystemInfo virtualFileSystemInfo) {
+
+   public VirtualFileSystemInfoReceivedEvent(VirtualFileSystemInfo virtualFileSystemInfo)
+   {
       this.virtualFileSystemInfo = virtualFileSystemInfo;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<VirtualFileSystemInfoReceivedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(VirtualFileSystemInfoReceivedHandler handler)
+   {
+      handler.onVirtualFileSystemInfoReceived(this);
+   }
+
+   /**
+    * @return the virtualFileSystemInfo
+    */
+   public VirtualFileSystemInfo getVirtualFileSystemInfo()
+   {
+      return virtualFileSystemInfo;
    }
 
 }

@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.client.vfs_new.event;
 
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
+
+import com.google.gwt.event.shared.GwtEvent;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -25,7 +30,46 @@ package org.exoplatform.ide.client.vfs_new.event;
  * @version $
  */
 
-public class ChildrenReceivedEvent
+public class ChildrenReceivedEvent extends GwtEvent<ChildrenReceivedHandler>
 {
+
+   public static GwtEvent.Type<ChildrenReceivedHandler> TYPE = new Type<ChildrenReceivedHandler>();
+
+   private ItemList<Item> childrens;
+
+   /**
+    * @param childrens
+    */
+   public ChildrenReceivedEvent(ItemList<Item> childrens)
+   {
+      super();
+      this.childrens = childrens;
+   }
+
+   /**
+    * @return the childrens
+    */
+   public ItemList<Item> getChildrens()
+   {
+      return childrens;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ChildrenReceivedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(ChildrenReceivedHandler handler)
+   {
+      handler.onChildrenReceived(this);
+   }
 
 }
