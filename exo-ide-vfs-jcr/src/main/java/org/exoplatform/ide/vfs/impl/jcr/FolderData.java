@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.ConvertibleInputProperty;
+import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -102,8 +102,9 @@ public class FolderData extends ItemData
       }
    }
 
-   FileData createFile(String name, String nodeType, String contentNodeType, MediaType mediaType, String[] mixinTypes, List<ConvertibleInputProperty> properties, InputStream content)
-      throws InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   FileData createFile(String name, String nodeType, String contentNodeType, MediaType mediaType, String[] mixinTypes,
+      List<ConvertibleProperty> properties, InputStream content) throws InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
@@ -113,23 +114,22 @@ public class FolderData extends ItemData
          contentNode.setProperty("jcr:encoding", mediaType.getParameters().get("charset"));
          contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
          contentNode.setProperty("jcr:data", content == null ? EMPTY : content);
-         
+
          if (mixinTypes != null)
          {
             for (int i = 0; i < mixinTypes.length; i++)
                fileNode.addMixin(mixinTypes[i]);
          }
-         
+
          // TODO : property name mapping ?
          // vfs:blabla -> jcr:blabla
          if (properties != null && properties.size() > 0)
          {
             Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
-            for (ConvertibleInputProperty property : properties)
+            for (ConvertibleProperty property : properties)
                updateProperty(propertyDefinitions.get(property.getName()), property);
          }
 
-         
          Session session = node.getSession();
          session.save();
          return (FileData)fromNode(fileNode);
@@ -169,7 +169,7 @@ public class FolderData extends ItemData
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   FolderData createFolder(String name, String nodeType, String[] mixinTypes, List<ConvertibleInputProperty> properties)
+   FolderData createFolder(String name, String nodeType, String[] mixinTypes, List<ConvertibleProperty> properties)
       throws InvalidArgumentException, ConstraintException, PermissionDeniedException, VirtualFileSystemException
    {
       try
@@ -186,7 +186,7 @@ public class FolderData extends ItemData
          if (properties != null && properties.size() > 0)
          {
             Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
-            for (ConvertibleInputProperty property : properties)
+            for (ConvertibleProperty property : properties)
                updateProperty(propertyDefinitions.get(property.getName()), property);
          }
 

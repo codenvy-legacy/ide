@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.ConvertibleInputProperty;
+import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
@@ -26,7 +26,11 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.OutputProperty;
+import org.exoplatform.ide.vfs.shared.BooleanProperty;
+import org.exoplatform.ide.vfs.shared.DoubleProperty;
+import org.exoplatform.ide.vfs.shared.LongProperty;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.Type;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.services.jcr.access.PermissionType;
@@ -191,20 +195,19 @@ abstract class ItemData
     *            to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   List<OutputProperty> getProperties(PropertyFilter filter) throws PermissionDeniedException,
-      VirtualFileSystemException
+   List<Property> getProperties(PropertyFilter filter) throws PermissionDeniedException, VirtualFileSystemException
    {
       // TODO : property name mapping ?
       // jcr:blabla -> vfs:blabla
       try
       {
-         List<OutputProperty> properties = new ArrayList<OutputProperty>();
+         List<Property> properties = new ArrayList<Property>();
          for (PropertyIterator i = node.getProperties(); i.hasNext();)
          {
             javax.jcr.Property jcrProperty = i.nextProperty();
             String name = jcrProperty.getName();
             if (!SKIPPED_PROPERTIES.contains(name) && filter.accept(name))
-               properties.add(new OutputProperty(name, createProperty(jcrProperty)));
+               properties.add(createProperty(jcrProperty));
          }
          return properties;
       }
@@ -218,55 +221,75 @@ abstract class ItemData
       }
    }
 
-   Object[] createProperty(javax.jcr.Property property) throws RepositoryException
+   Property createProperty(javax.jcr.Property property) throws RepositoryException
    {
       PropertyDefinition definition = property.getDefinition();
       boolean multiple = definition.isMultiple();
       switch (property.getType())
       {
          case PropertyType.DATE : {
+            List<Long> v;
             if (multiple)
             {
                Value[] jcrValues = property.getValues();
-               Long[] values = new Long[jcrValues.length];
+               v = new ArrayList<Long>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
-                  values[i] = jcrValues[i].getLong();
-               return values;
+                  v.add(jcrValues[i].getLong());
             }
-            return new Long[]{property.getLong()};
+            else
+            {
+               v = new ArrayList<Long>(1);
+               v.add(property.getLong());
+            }
+            return new LongProperty(property.getName(), v);
          }
          case PropertyType.DOUBLE : {
+            List<Double> v;
             if (multiple)
             {
                Value[] jcrValues = property.getValues();
-               Double[] values = new Double[jcrValues.length];
+               v = new ArrayList<Double>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
-                  values[i] = jcrValues[i].getDouble();
-               return values;
+                  v.add(jcrValues[i].getDouble());
             }
-            return new Double[]{property.getDouble()};
+            else
+            {
+               v = new ArrayList<Double>(1);
+               v.add(property.getDouble());
+            }
+            return new DoubleProperty(property.getName(), v);
          }
          case PropertyType.LONG : {
+            List<Long> v;
             if (multiple)
             {
                Value[] jcrValues = property.getValues();
-               Long[] values = new Long[jcrValues.length];
+               v = new ArrayList<Long>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
-                  values[i] = jcrValues[i].getLong();
-               return values;
+                  v.add(jcrValues[i].getLong());
             }
-            return new Long[]{property.getLong()};
+            else
+            {
+               v = new ArrayList<Long>(1);
+               v.add(property.getLong());
+            }
+            return new LongProperty(property.getName(), v);
          }
          case PropertyType.BOOLEAN : {
+            List<Boolean> v;
             if (multiple)
             {
                Value[] jcrValues = property.getValues();
-               Boolean[] values = new Boolean[jcrValues.length];
+               v = new ArrayList<Boolean>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
-                  values[i] = jcrValues[i].getBoolean();
-               return values;
+                  v.add(jcrValues[i].getBoolean());
             }
-            return new Boolean[]{property.getBoolean()};
+            else
+            {
+               v = new ArrayList<Boolean>(1);
+               v.add(property.getBoolean());
+            }
+            return new BooleanProperty(property.getName(), v);
          }
          case PropertyType.STRING :
          case PropertyType.BINARY :
@@ -274,15 +297,20 @@ abstract class ItemData
          case PropertyType.PATH :
          case PropertyType.REFERENCE :
          default : {
+            List<String> v;
             if (multiple)
             {
                Value[] jcrValues = property.getValues();
-               String[] values = new String[jcrValues.length];
+               v = new ArrayList<String>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
-                  values[i] = jcrValues[i].getString();
-               return values;
+                  v.add(jcrValues[i].getString());
             }
-            return new String[]{property.getString()};
+            else
+            {
+               v = new ArrayList<String>(1);
+               v.add(property.getString());
+            }
+            return new StringProperty(property.getName(), v);
          }
       }
    }
@@ -304,12 +332,12 @@ abstract class ItemData
     *            security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   void updateProperties(List<ConvertibleInputProperty> properties, String lockToken) throws ConstraintException,
+   void updateProperties(List<ConvertibleProperty> properties, String lockToken) throws ConstraintException,
       LockException, PermissionDeniedException, VirtualFileSystemException
    {
       if (properties == null || properties.size() == 0)
          return;
-      
+
       // TODO : property name mapping ?
       // vfs:blabla -> jcr:blabla
       try
@@ -319,9 +347,9 @@ abstract class ItemData
             session.addLockToken(lockToken);
 
          Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
-         for (ConvertibleInputProperty property : properties)
+         for (ConvertibleProperty property : properties)
             updateProperty(propertyDefinitions.get(property.getName()), property);
-         
+
          session.save();
       }
       catch (javax.jcr.lock.LockException e)
@@ -339,11 +367,11 @@ abstract class ItemData
       }
    }
 
-   void updateProperty(PropertyDefinition pd, ConvertibleInputProperty property) throws ConstraintException,
-      LockException, PermissionDeniedException, VirtualFileSystemException
+   void updateProperty(PropertyDefinition pd, ConvertibleProperty property) throws ConstraintException, LockException,
+      PermissionDeniedException, VirtualFileSystemException
    {
       String name = property.getName();
-      String[] value = property.getValue();
+      String[] value = property.getValue().toArray(new String[0]);
       if (value == null)
          value = new String[0];
 
@@ -396,7 +424,7 @@ abstract class ItemData
          throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
       }
    }
-   
+
    Map<String, PropertyDefinition> getPropertyDefinitions() throws RepositoryException
    {
       NodeType nodeType = node.getPrimaryNodeType();

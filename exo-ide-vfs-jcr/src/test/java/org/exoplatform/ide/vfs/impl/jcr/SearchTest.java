@@ -21,7 +21,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.OutputProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
@@ -99,11 +99,11 @@ public class SearchTest extends JcrFileSystemTest
       assertEquals(1, items.getItems().size());
       Item result = items.getItems().get(0);
       assertEquals(resultPath, result.getPath());
-      List<OutputProperty> properties = result.getProperties();
-      Map<String, Object[]> m = new HashMap<String, Object[]>(properties.size());
-      for (OutputProperty o : properties)
+      List<Property> properties = result.getProperties();
+      Map<String, List> m = new HashMap<String, List>(properties.size());
+      for (Property o : properties)
          m.put(o.getName(), o.getValue());
-      assertEquals("Hello World", m.get("MyProperty")[0]);
+      assertEquals("Hello World", m.get("MyProperty").get(0));
    }
 
    public void testSearchBuildStatement() throws Exception
@@ -125,11 +125,11 @@ public class SearchTest extends JcrFileSystemTest
       Item result = items.getItems().get(0);
       validateLinks(result);
       assertEquals(resultPath, result.getPath());
-      List<OutputProperty> properties = result.getProperties();
-      Map<String, Object[]> m = new HashMap<String, Object[]>(properties.size());
-      for (OutputProperty o : properties)
+      List<Property> properties = result.getProperties();
+      Map<String, List> m = new HashMap<String, List>(properties.size());
+      for (Property o : properties)
          m.put(o.getName(), o.getValue());
-      assertEquals("Hello World", m.get("MyProperty")[0]);
+      assertEquals("Hello World", m.get("MyProperty").get(0));
    }
 
    public void testSearchPagingSkipCount() throws Exception

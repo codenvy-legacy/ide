@@ -19,7 +19,7 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.OutputProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.Type;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -68,6 +68,10 @@ public class GetItemTest extends JcrFileSystemTest
       fileNode.addMixin("exo:unstructuredMixin");
       fileNode.setProperty("MyProperty01", "hello world");
       fileNode.setProperty("MyProperty02", "to be or not to be");
+      fileNode.setProperty("MyProperty03", 123);
+      fileNode.setProperty("MyProperty04", true);
+      fileNode.setProperty("MyProperty05", Calendar.getInstance());
+      fileNode.setProperty("MyProperty06", 123.456);
       filePath = fileNode.getPath();
 
       session.save();
@@ -91,22 +95,28 @@ public class GetItemTest extends JcrFileSystemTest
 
    public void testGetFilePropertyFilter() throws Exception
    {
-      // No filter - all properties
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+     // No filter - all properties
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("item") //
          .append(filePath) //
          .toString();
 
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
-      List<OutputProperty> properties = ((Item)response.getEntity()).getProperties();
-      Map<String, Object[]> m = new HashMap<String, Object[]>(properties.size());
-      for (OutputProperty p : properties)
+      List<Property> properties = ((Item)response.getEntity()).getProperties();
+      Map<String, List> m = new HashMap<String, List>(properties.size());
+      for (Property p : properties)
          m.put(p.getName(), p.getValue());
-      assertEquals(2, m.size());
-      assertEquals("hello world", m.get("MyProperty01")[0]);
-      assertEquals("to be or not to be", m.get("MyProperty02")[0]);
+      assertEquals(6, m.size());
+      assertTrue(m.containsKey("MyProperty01"));
+      assertTrue(m.containsKey("MyProperty02"));
+      assertTrue(m.containsKey("MyProperty03"));
+      assertTrue(m.containsKey("MyProperty04"));
+      assertTrue(m.containsKey("MyProperty05"));
+      assertTrue(m.containsKey("MyProperty06"));
 
       // With filter
       path = new StringBuilder() //
@@ -122,10 +132,10 @@ public class GetItemTest extends JcrFileSystemTest
       assertEquals(200, response.getStatus());
       m.clear();
       properties = ((Item)response.getEntity()).getProperties();
-      for (OutputProperty p : properties)
+      for (Property p : properties)
          m.put(p.getName(), p.getValue());
       assertEquals(1, m.size());
-      assertEquals("to be or not to be", m.get("MyProperty02")[0]);
+      assertEquals("to be or not to be", m.get("MyProperty02").get(0));
    }
 
    public void testGetFileNotFound() throws Exception

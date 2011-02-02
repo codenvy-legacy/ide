@@ -20,7 +20,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.OutputProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -233,10 +233,10 @@ public class ChildrenTest extends JcrFileSystemTest
 
    private boolean hasProperty(Item i, String propertyName)
    {
-      List<OutputProperty> properties = i.getProperties();
+      List<Property> properties = i.getProperties();
       if (properties.size() == 0)
          return false;
-      for (OutputProperty p : properties)
+      for (Property p : properties)
          if (p.getName().equals(propertyName))
             return true;
       return false;

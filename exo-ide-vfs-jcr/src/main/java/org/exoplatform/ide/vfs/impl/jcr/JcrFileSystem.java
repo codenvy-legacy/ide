@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.ConvertibleInputProperty;
+import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -197,7 +197,7 @@ public class JcrFileSystem implements VirtualFileSystem
     *      java.lang.String, java.lang.String, java.util.List)
     */
    @Override
-   public Response createProject(String parentId, String name, String type, List<ConvertibleInputProperty> properties)
+   public Response createProject(String parentId, String name, String type, List<ConvertibleProperty> properties)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       checkName(name);
@@ -210,7 +210,7 @@ public class JcrFileSystem implements VirtualFileSystem
       return Response.created(createURI("item", newproject.getId())).build();
    }
 
-   public Response createProject(String name, String type, List<ConvertibleInputProperty> properties)
+   public Response createProject(String name, String type, List<ConvertibleProperty> properties)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       return createProject("/", name, type, properties);
@@ -687,7 +687,7 @@ public class JcrFileSystem implements VirtualFileSystem
     */
    @Path("item/{id:.*}")
    public void updateItem(@PathParam("id") String id, //
-      List<ConvertibleInputProperty> properties, //
+      List<ConvertibleProperty> properties, //
       @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
