@@ -64,6 +64,12 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-chromattic-client</artifactId>
       </dependency>
+      
+      <dependency>
+      	<groupId>org.exoplatform.ide</groupId>
+      	<artifactId>exo-ide-vfs</artifactId>
+      </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-testframework</artifactId>
@@ -143,7 +149,13 @@
          	<jre.lib>${env.JAVA_HOME}${file.separator}jre${file.separator}lib</jre.lib>
          </properties>
          
-         <dependencies>
+        <dependencies>
+			<dependency>
+				<groupId>org.exoplatform.ide</groupId>
+				<artifactId>exo-ide-vfs-jcr</artifactId>
+				<scope>runtime</scope>
+			</dependency>
+         
             <dependency>
                <groupId>org.exoplatform.kernel</groupId>
                <artifactId>exo.kernel.commons</artifactId>
