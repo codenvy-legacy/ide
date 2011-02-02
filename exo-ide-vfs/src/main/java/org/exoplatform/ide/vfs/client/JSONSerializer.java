@@ -25,6 +25,13 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.BooleanProperty;
+import org.exoplatform.ide.vfs.shared.DoubleProperty;
+import org.exoplatform.ide.vfs.shared.LongProperty;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.StringProperty;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -35,8 +42,8 @@ import java.util.Map;
  */
 public abstract class JSONSerializer<O>
 {
-   public static final JSONSerializer<String> STRING_SERIALIZER = new JSONSerializer<String>()
-   {
+   // --------- Common serializers. -------------
+   public static final JSONSerializer<String> STRING_SERIALIZER = new JSONSerializer<String>() {
       @Override
       public JSONValue fromObject(String object)
       {
@@ -45,9 +52,8 @@ public abstract class JSONSerializer<O>
          return new JSONString(object);
       }
    };
-   
-   public static final JSONSerializer<Double> NUMBER_SERIALIZER = new JSONSerializer<Double>()
-   {
+
+   public static final JSONSerializer<Double> NUMBER_SERIALIZER = new JSONSerializer<Double>() {
       @Override
       public JSONValue fromObject(Double object)
       {
@@ -57,14 +63,59 @@ public abstract class JSONSerializer<O>
       }
    };
 
-   public static final JSONSerializer<Boolean> BOLEAN_SERIALIZER = new JSONSerializer<Boolean>()
-   {
+   public static final JSONSerializer<Boolean> BOLEAN_SERIALIZER = new JSONSerializer<Boolean>() {
       @Override
       public JSONValue fromObject(Boolean object)
       {
          if (object == null)
             return JSONNull.getInstance();
          return JSONBoolean.getInstance(object.booleanValue());
+      }
+   };
+
+   // --------- Customized serializers. -------------
+   public static final JSONSerializer<Property> PROPERTY_SERIALIZER = new JSONSerializer<Property>() {
+      @Override
+      public JSONValue fromObject(Property source)
+      {
+         if (source == null)
+            return JSONNull.getInstance();
+         String typename = source.getClass().getName();
+         if (typename.equals(BooleanProperty.class.getName()))
+         {
+            JSONObject target = new JSONObject();
+            target.put(source.getName(), BOLEAN_SERIALIZER.fromCollection(source.getValue()));
+            return target;
+         }
+         if (typename.equals(StringProperty.class.getName()))
+         {
+            JSONObject target = new JSONObject();
+            target.put(source.getName(), STRING_SERIALIZER.fromCollection(source.getValue()));
+            return target;
+
+         }
+         if (typename.equals(LongProperty.class.getName()) || typename.equals(DoubleProperty.class.getName()))
+         {
+            JSONObject target = new JSONObject();
+            target.put(source.getName(), NUMBER_SERIALIZER.fromCollection(source.getValue()));
+            return target;
+         }
+         // TODO throw exception if can't serialize
+         return null;
+      }
+   };
+
+   public static final JSONSerializer<AccessControlEntry> ACL_SERIALIZER = new JSONSerializer<AccessControlEntry>() {
+
+      @Override
+      public JSONValue fromObject(AccessControlEntry source)
+      {
+         if (source == null)
+            return JSONNull.getInstance();
+         JSONObject target = new JSONObject();
+         target.put("principal", STRING_SERIALIZER.fromObject(source.getPrincipal()));
+         target.put("permissions", STRING_SERIALIZER.fromCollection(source.getPermissions()));
+         return target;
       }
    };
 
@@ -84,8 +135,8 @@ public abstract class JSONSerializer<O>
          return JSONNull.getInstance();
       JSONArray target = new JSONArray();
       int idx = 0;
-      for (Iterator<O> i = source.iterator();i.hasNext();)
-         target.set(idx, fromObject(i.next()));
+      for (Iterator<O> i = source.iterator(); i.hasNext();)
+         target.set(idx++, fromObject(i.next()));
       return target;
    }
 
@@ -94,7 +145,7 @@ public abstract class JSONSerializer<O>
       if (source == null)
          return JSONNull.getInstance();
       JSONObject target = new JSONObject();
-      for (Iterator<Map.Entry<String, O>> i = source.entrySet().iterator();i.hasNext();)
+      for (Iterator<Map.Entry<String, O>> i = source.entrySet().iterator(); i.hasNext();)
       {
          Map.Entry<String, O> next = i.next();
          target.put(next.getKey(), fromObject(next.getValue()));
@@ -102,5 +153,5 @@ public abstract class JSONSerializer<O>
       return target;
    }
 
-   public abstract JSONValue fromObject(O object);
+   public abstract JSONValue fromObject(O source);
 }
