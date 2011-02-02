@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.client;
 
+import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * Created by The eXo Platform SAS .
@@ -26,12 +27,18 @@ package org.exoplatform.ide.vfs.client;
  * @version $
  */
 
-public class GwtTestVirtualFileSystem extends BaseTest
+public abstract class BaseTest extends GWTTestCase
 {
-
-   public void testGetChildren()
+   
+   public String getModuleName()
    {
-      System.out.println("Hello from GWT JUnit Test");
+      return "org.exoplatform.ide.vfs.IDEVFS";
+   }   
+   
+   @Override
+   protected void gwtSetUp() throws Exception
+   {
+      super.gwtSetUp();
    }
 
 }

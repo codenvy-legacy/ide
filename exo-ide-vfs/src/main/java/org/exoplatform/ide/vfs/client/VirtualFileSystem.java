@@ -38,26 +38,17 @@ public class VirtualFileSystem
 
    private Loader loader;
 
-   public static void init(HandlerManager eventBus)
-   {
-      if (instance == null)
-         instance = new VirtualFileSystem(eventBus);
-   }
-
-   public static VirtualFileSystem instance()
+   public static VirtualFileSystem getInstance()
    {
       return instance;
    }
 
-   // never called
-   private VirtualFileSystem()
+   public VirtualFileSystem(HandlerManager eventBus,  Loader loader, String restServiceURI, String repository, String workspace)
    {
-      this.eventBus = null;
-   }
-
-   private VirtualFileSystem(HandlerManager eventBus)
-   {
+      instance = this;
+      
       this.eventBus = eventBus;
+      this.loader = loader;
    }
 
    /**
@@ -77,8 +68,18 @@ public class VirtualFileSystem
     * 
     * @param path
     */
-   public void createFolder(Folder folder)
+   public void createFolder(Folder parent, String name)
    {
+      
+//      String path = new StringBuilder() //
+//      .append(SERVICE_URI) //
+//      .append("folder") //
+//      .append(CREATE_TEST_PATH) //
+//      .append("?") //
+//      .append("name=") //
+//      .append(name).toString();
+//   ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);      
+      
    }
 
    /**
@@ -89,4 +90,5 @@ public class VirtualFileSystem
    public void getContent(File file)
    {
    }
+   
 }
