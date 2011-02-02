@@ -47,7 +47,7 @@ public class Item
    /** Creation date in long format. */
    private long creationDate;
 
-   private List<OutputProperty> properties;
+   private List<Property> properties;
 
    private Map<String, Link> links;
 
@@ -59,7 +59,7 @@ public class Item
     * @param properties other properties of object
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   public Item(String id, String name, Type type, String path, long creationDate, List<OutputProperty> properties,
+   public Item(String id, String name, Type type, String path, long creationDate, List<Property> properties,
       Map<String, Link> links)
    {
       this.id = id;
@@ -161,10 +161,10 @@ public class Item
     * @return properties. If there is no properties then empty list returned,
     *         never <code>null</code>
     */
-   public List<OutputProperty> getProperties()
+   public List<Property> getProperties()
    {
       if (properties == null)
-         properties = new ArrayList<OutputProperty>();
+         properties = new ArrayList<Property>();
       return properties;
    }
 

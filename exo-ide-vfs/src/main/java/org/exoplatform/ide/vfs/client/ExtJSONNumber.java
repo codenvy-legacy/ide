@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,27 +16,43 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.shared;
+package org.exoplatform.ide.vfs.client;
 
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.json.client.JSONNumber;
 
 /**
- * The Project - folder w/ special meaning
+ * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
+ * @version $Id$
  */
-public class Project extends Folder
+public class ExtJSONNumber extends JSONNumber
 {
-   private String projectType;
-
-   public Project(String id, String name, String path, long creationDate, List<Property> properties,
-      Map<String, Link> links, String type)
+   public ExtJSONNumber(double value)
    {
-      super(id, name, path, creationDate, properties, links);
-      this.projectType = type;
+      super(value);
    }
 
-   public final String getProjectType()
+   public byte byteValue()
    {
-      return projectType;
+      return (byte)doubleValue();
+   }
+
+   public short shortValue()
+   {
+      return (short)doubleValue();
+   }
+
+   public int intValue()
+   {
+      return (int)doubleValue();
+   }
+
+   public long longValue()
+   {
+      return (long)doubleValue();
+   }
+
+   public float floatValue()
+   {
+      return (float)doubleValue();
    }
 }

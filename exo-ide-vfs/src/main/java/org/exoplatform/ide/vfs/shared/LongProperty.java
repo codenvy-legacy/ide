@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,39 +19,36 @@
 package org.exoplatform.ide.vfs.shared;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * Representation of Folder object used to interaction with client via JSON.
- * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class Folder extends Item
+public class LongProperty extends Property<Long>
 {
-   /**
-    * Instance of Folder with specified attributes.
-    * 
-    * @param id id of object
-    * @param name the name of object
-    * @param path path of object
-    * @param creationDate creation date in long format
-    * @param lastModificationDate date of last modification in long format
-    * @param locked is folder locked or not
-    * @param properties other properties of folder
-    * @param links hyperlinks for retrieved or(and) manage item
-    */
-   public Folder(String id, String name, String path, long creationDate, List<Property> properties,
-      Map<String, Link> links)
-   {
-      super(id, name, Type.FOLDER, path, creationDate, properties, links);
-   }
-
-   /**
-    * Empty instance of Folder.
-    */
-   public Folder()
+   public LongProperty()
    {
       super();
    }
+
+   public LongProperty(String name, Long value)
+   {
+      super(name, value);
+   }
+
+   public LongProperty(String name, List<Long> value)
+   {
+      super(name, value);
+   }
+
+   public List<Long> getValue()
+   {
+      return value;
+   }
+
+   public void setValue(List<Long> value)
+   {
+      this.value = value;
+   }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,86 +18,76 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Output property. It will be serialized to JSON format. Example :
- * 
- * <pre>
- * OutputProperty property = new OutputProperty(&quot;name&quot;, new String[]{&quot;value_1&quot;, &quot;value_2&quot;});
- * </pre>
- * 
- * will be serialized to:
- * 
- * <pre>
- * {"name":"name", "value":["value_1", "value_2"]}
- * </pre>
- * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class OutputProperty
+public abstract class Property<V>
 {
-   /** Name of property. */
-   private String name;
+   protected String name;
 
-   /** Value of property. */
-   private Object[] value;
+   protected List<V> value;
 
-   /**
-    * Multiple property.
-    * 
-    * @param name the name of property
-    * @param value the multiple value
-    */
-   public OutputProperty(String name, Object[] value)
+   public Property(String name, List<V> value)
    {
       this.name = name;
       this.value = value;
    }
 
    /**
-    * Property with single value.
+    * Create single-valued Property. Using this constructor is equivalent to:
+    * 
+    * <pre>
+    * V val = ...;
+    * List&lt;V&gt; l = new ArrayList&lt;V&gt;(1);
+    * l.add(val);
+    * new Property(&quot;MyName&quot;, l) {
+    * };
+    * </pre>
     * 
     * @param name the name of property
-    * @param value the value of property
+    * @param value the value. If <code>value == null</code> it means no value
     */
-   public OutputProperty(String name, Object value)
+   public Property(String name, V value)
    {
       this.name = name;
       if (value != null)
-         this.value = new Object[]{value};
+      {
+         this.value = new ArrayList<V>(1);
+         this.value.add(value);
+      }
    }
 
-   /**
-    * Property without value.
-    * 
-    * @param name the name of property
-    */
-   public OutputProperty(String name)
+   public Property()
    {
-      this.name = name;
    }
 
-   /**
-    * @return name of property
-    */
    public String getName()
    {
       return name;
    }
 
-   /**
-    * @return value of property
-    */
-   public Object[] getValue()
+   public void setName(String name)
    {
-      return value;
+      this.name = name;
    }
 
+   // NOTE getter and setter for value must be overridden.
+   // Need this for correct fork of JSON tool on server side. Implementation of such
+   // methods here make impossible to determine type of array via reflection. 
+   public abstract List<V> getValue();
+
+   public abstract void setValue(List<V> value);
+   
    /**
     * @see java.lang.Object#toString()
     */
+   @Override
    public String toString()
    {
-      return "[name: " + name + " values: " + java.util.Arrays.toString(value) + "]";
+      return "Property [name=" + name + ", value=" + value + "]";
    }
 }

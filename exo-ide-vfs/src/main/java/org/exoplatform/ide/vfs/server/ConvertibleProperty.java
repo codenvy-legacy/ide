@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.vfs.server;
 
-import org.exoplatform.ide.vfs.shared.InputProperty;
+import org.exoplatform.ide.vfs.shared.StringProperty;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -28,37 +28,38 @@ import java.lang.reflect.Modifier;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.util.List;
 
 /**
  * Input property with possibility to transform it to required types. Values may
- * be transformed to required type via method {@link #as(Class)}.
+ * be transformed to required type via method {@link #valueToArray(Class)}.
  * <p>
- * Here is example of JSON source for input property:
+ * Here is example of JSON source for property:
  * 
  * <pre>
  * {"name":"mediaType", "value":["text/plain;charset=utf8"]}"
  * </pre>
  * 
- * @see #as(Class)
+ * @see #valueToArray(Class)
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class ConvertibleInputProperty extends InputProperty
+public class ConvertibleProperty extends StringProperty
 {
-   public ConvertibleInputProperty(String name, String[] value)
-   {
-      super(name, value);
-   }
-
-   public ConvertibleInputProperty(String name, String value)
-   {
-      super(name, value);
-   }
-
-   public ConvertibleInputProperty()
+   public ConvertibleProperty()
    {
       super();
+   }
+
+   public ConvertibleProperty(String name, List<String> value)
+   {
+      super(name, value);
+   }
+
+   public ConvertibleProperty(String name, String value)
+   {
+      super(name, value);
    }
 
    /**
@@ -75,8 +76,11 @@ public class ConvertibleInputProperty extends InputProperty
     * 
     * <pre>
     * ConvertibleInputProperty in = new ConvertibleInputProperty();
-    * in.setValue(new String[]{&quot;123&quot;, &quot;456&quot;});
-    * Integer[] res = in.as(Integer[].class);
+    * List&lt;String&gt; vl = new ArrayList&lt;String&gt;();
+    * vl.add(&quot;123&quot;);
+    * vl.add(&quot;456&quot;); 
+    * in.setValue(vl);
+    * Integer[] res = in.valueToArray(Integer[].class);
     * System.out.println(java.util.Arrays.toString(res));
     * </pre>
     * 
@@ -88,16 +92,17 @@ public class ConvertibleInputProperty extends InputProperty
     *            described above
     */
    @SuppressWarnings("unchecked")
-   public <O> O[] as(Class<? extends O[]> toType)
+   public <O> O[] valueToArray(Class<? extends O[]> toType)
    {
       if (value == null)
          return null;
+      String [] aValue = this.value.toArray(new String[this.value.size()]);
       final Class<?> componentType = toType.getComponentType();
       // If String then just copy array.
       if (componentType == String.class)
       {
-         String[] a = new String[value.length];
-         System.arraycopy(value, 0, a, 0, a.length);
+         String[] a = new String[aValue.length];
+         System.arraycopy(aValue, 0, a, 0, a.length);
          return (O[])a;
       }
 
@@ -124,12 +129,12 @@ public class ConvertibleInputProperty extends InputProperty
       }
       if (stringConstr != null)
       {
-         Object a = (O[])Array.newInstance(componentType, value.length);
-         for (int i = 0; i < value.length; i++)
+         Object a = (O[])Array.newInstance(componentType, aValue.length);
+         for (int i = 0; i < aValue.length; i++)
          {
             try
             {
-               Array.set(a, i, stringConstr.newInstance(value[i]));
+               Array.set(a, i, stringConstr.newInstance(aValue[i]));
             }
             catch (ArrayIndexOutOfBoundsException e)
             {
@@ -180,12 +185,12 @@ public class ConvertibleInputProperty extends InputProperty
       }
       if (valueOf != null)
       {
-         Object a = (O[])Array.newInstance(componentType, value.length);
-         for (int i = 0; i < value.length; i++)
+         Object a = (O[])Array.newInstance(componentType, aValue.length);
+         for (int i = 0; i < aValue.length; i++)
          {
             try
             {
-               Array.set(a, i, valueOf.invoke(null, value[i]));
+               Array.set(a, i, valueOf.invoke(null, aValue[i]));
             }
             catch (ArrayIndexOutOfBoundsException e)
             {

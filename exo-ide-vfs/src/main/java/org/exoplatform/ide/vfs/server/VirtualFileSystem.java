@@ -18,18 +18,6 @@
  */
 package org.exoplatform.ide.vfs.server;
 
-import java.io.InputStream;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -43,6 +31,18 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.io.InputStream;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 
 /**
  * Virtual file system abstraction.
@@ -152,7 +152,7 @@ public interface VirtualFileSystem
     */
    @POST
    @Path("project")
-   Response createProject(String parentId, String name, String type, List<ConvertibleInputProperty> properties)
+   Response createProject(String parentId, String name, String type, List<ConvertibleProperty> properties)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
@@ -659,6 +659,6 @@ public interface VirtualFileSystem
    @POST
    @Path("item")
    @Consumes({MediaType.APPLICATION_JSON})
-   void updateItem(String id, List<ConvertibleInputProperty> properties, String lockToken)
-      throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException;
+   void updateItem(String id, List<ConvertibleProperty> properties, String lockToken) throws ItemNotFoundException,
+      LockException, PermissionDeniedException, VirtualFileSystemException;
 }
