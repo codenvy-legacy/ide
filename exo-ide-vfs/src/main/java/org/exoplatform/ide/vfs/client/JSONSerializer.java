@@ -29,8 +29,7 @@ import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.BooleanProperty;
-import org.exoplatform.ide.vfs.shared.DoubleProperty;
-import org.exoplatform.ide.vfs.shared.LongProperty;
+import org.exoplatform.ide.vfs.shared.NumberProperty;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.StringProperty;
 
@@ -96,7 +95,7 @@ public abstract class JSONSerializer<O>
             return target;
 
          }
-         if (typename.equals(LongProperty.class.getName()) || typename.equals(DoubleProperty.class.getName()))
+         if (typename.equals(NumberProperty.class.getName()))
          {
             JSONObject target = new JSONObject();
             target.put(source.getName(), NUMBER_SERIALIZER.fromCollection(source.getValue()));

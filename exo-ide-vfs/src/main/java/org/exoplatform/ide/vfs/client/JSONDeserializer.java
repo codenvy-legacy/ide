@@ -25,6 +25,16 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.BooleanProperty;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.NumberProperty;
+import org.exoplatform.ide.vfs.shared.StringProperty;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,7 +50,7 @@ import java.util.Set;
 public abstract class JSONDeserializer<O>
 {
    // ----------- Common deserializers. -------------
-   public static final JSONDeserializer<String> STRING_SERIALIZER = new JSONDeserializer<String>() {
+   public static final JSONDeserializer<String> STRING_DESERIALIZER = new JSONDeserializer<String>() {
       @Override
       public String toObject(JSONValue json)
       {
@@ -59,7 +69,7 @@ public abstract class JSONDeserializer<O>
       }
    };
 
-   public static final JSONDeserializer<Boolean> BOOLEAN_SERIALIZER = new JSONDeserializer<Boolean>() {
+   public static final JSONDeserializer<Boolean> BOOLEAN_DESERIALIZER = new JSONDeserializer<Boolean>() {
       @Override
       public Boolean toObject(JSONValue json)
       {
@@ -78,7 +88,7 @@ public abstract class JSONDeserializer<O>
       }
    };
 
-   public static final JSONDeserializer<Double> NUMBER_SERIALIZER = new JSONDeserializer<Double>() {
+   public static final JSONDeserializer<Double> NUMBER_DESERIALIZER = new JSONDeserializer<Double>() {
       @Override
       public Double toObject(JSONValue json)
       {
@@ -97,6 +107,182 @@ public abstract class JSONDeserializer<O>
       }
    };
 
+   // --------- Customized deserializers. -------------
+   public static final JSONDeserializer<AccessControlEntry> ACL_DESERIALIZER =
+      new JSONDeserializer<AccessControlEntry>() {
+         @Override
+         public AccessControlEntry toObject(JSONValue json)
+         {
+            if (json == null)
+               return null;
+            JSONObject jsonObject = json.isObject();
+            if (jsonObject == null)
+               return null;
+            return new AccessControlEntry( //
+               STRING_DESERIALIZER.toObject(jsonObject.get("principal")), //
+               STRING_DESERIALIZER.toSet(jsonObject.get("permissions")) //
+            );
+         }
+
+         @Override
+         protected AccessControlEntry[] createArray(int length)
+         {
+            return new AccessControlEntry[length];
+         }
+      };
+
+   public static final JSONDeserializer<StringProperty> STRING_PROPERTY_DESERIALIZER =
+      new JSONDeserializer<StringProperty>() {
+         @Override
+         public StringProperty toObject(JSONValue json)
+         {
+            if (json == null)
+               return null;
+            JSONObject jsonObject = json.isObject();
+            if (jsonObject == null)
+               return null;
+            JSONValue jsonValue = jsonObject.get("value");
+            if (jsonValue != null && jsonValue.isArray() != null)
+               return new StringProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
+                  STRING_DESERIALIZER.toList(jsonValue));
+            // Single String, null or some unexpected type.
+            return new StringProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
+               STRING_DESERIALIZER.toObject(jsonValue));
+         }
+
+         @Override
+         protected StringProperty[] createArray(int length)
+         {
+            return new StringProperty[length];
+         }
+      };
+
+   public static final JSONDeserializer<BooleanProperty> BOOLEAN_PROPERTY_DESERIALIZER =
+      new JSONDeserializer<BooleanProperty>() {
+         @Override
+         public BooleanProperty toObject(JSONValue json)
+         {
+            if (json == null)
+               return null;
+            JSONObject jsonObject = json.isObject();
+            if (jsonObject == null)
+               return null;
+            JSONValue jsonValue = jsonObject.get("value");
+            if (jsonValue != null && jsonValue.isArray() != null)
+               return new BooleanProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
+                  BOOLEAN_DESERIALIZER.toList(jsonValue));
+            // Single Boolean, null or some unexpected type.
+            return new BooleanProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
+               BOOLEAN_DESERIALIZER.toObject(jsonValue));
+         }
+
+         @Override
+         protected BooleanProperty[] createArray(int length)
+         {
+            return new BooleanProperty[length];
+         }
+      };
+
+   public static final JSONDeserializer<NumberProperty> NUMBER_PROPERTY_DESERIALIZER =
+      new JSONDeserializer<NumberProperty>() {
+         @Override
+         public NumberProperty toObject(JSONValue json)
+         {
+            if (json == null)
+               return null;
+            JSONObject jsonObject = json.isObject();
+            if (jsonObject == null)
+               return null;
+            JSONValue jsonValue = jsonObject.get("value");
+            if (jsonValue != null && jsonValue.isArray() != null)
+               return new NumberProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
+                  NUMBER_DESERIALIZER.toList(jsonValue));
+            // Single Boolean, null or some unexpected type.
+            return new NumberProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
+               NUMBER_DESERIALIZER.toObject(jsonValue));
+         }
+
+         @Override
+         protected NumberProperty[] createArray(int length)
+         {
+            return new NumberProperty[length];
+         }
+      };
+
+   public static final JSONDeserializer<Link> LINK_DESERIALIZER = new JSONDeserializer<Link>() {
+      @Override
+      public Link toObject(JSONValue json)
+      {
+         if (json == null)
+            return null;
+         JSONObject jsonObject = json.isObject();
+         if (jsonObject == null)
+            return null;
+         return new Link( //
+            STRING_DESERIALIZER.toObject(jsonObject.get("href")), //
+            STRING_DESERIALIZER.toObject(jsonObject.get("rel")), //
+            STRING_DESERIALIZER.toObject(jsonObject.get("type")) //
+         );
+      }
+
+      @Override
+      protected Link[] createArray(int length)
+      {
+         return new Link[length];
+      }
+   };
+
+   public static final JSONDeserializer<LockToken> LOCK_TOKEN_DESERIALIZER = new JSONDeserializer<LockToken>() {
+      @Override
+      public LockToken toObject(JSONValue json)
+      {
+         if (json == null)
+            return null;
+         JSONObject jsonObject = json.isObject();
+         if (jsonObject == null)
+            return null;
+         return new LockToken(STRING_DESERIALIZER.toObject(jsonObject.get("token")));
+      }
+
+      // not used, just to complete impl.
+      @Override
+      protected LockToken[] createArray(int length)
+      {
+         return new LockToken[length];
+      }
+   };
+
+   public static final JSONDeserializer<VirtualFileSystemInfo> VFSINFO_DESERIALIZER =
+      new JSONDeserializer<VirtualFileSystemInfo>() {
+         @Override
+         public VirtualFileSystemInfo toObject(JSONValue json)
+         {
+            if (json == null)
+               return null;
+            JSONObject jsonObject = json.isObject();
+            return new VirtualFileSystemInfo(
+               BOOLEAN_DESERIALIZER.toObject(jsonObject.get("versioningSupported")), //
+               BOOLEAN_DESERIALIZER.toObject(jsonObject.get("lockSupported")), //
+               STRING_DESERIALIZER.toObject(jsonObject.get("anonymousPrincipal")), //
+               STRING_DESERIALIZER.toObject(jsonObject.get("anyPrincipal")), //
+               STRING_DESERIALIZER.toSet(jsonObject.get("permissions")), //
+               ACLCapability.fromValue(STRING_DESERIALIZER.toObject(jsonObject.get("aclCapability")).toLowerCase()), //
+               QueryCapability.fromValue(STRING_DESERIALIZER.toObject(jsonObject.get("queryCapability")).toLowerCase()),
+               STRING_DESERIALIZER.toObject(jsonObject.get("rootFolderId")), //
+               STRING_DESERIALIZER.toObject(jsonObject.get("rootFolderPath")), //
+               LINK_DESERIALIZER.toMap(jsonObject.get("urlTemplates")) //
+            );
+         }
+
+         // not used, just to complete impl.
+         @Override
+         protected VirtualFileSystemInfo[] createArray(int length)
+         {
+            return new VirtualFileSystemInfo[length];
+         }
+      };
+
+   // --------------------------------------
    public O[] toArray(JSONValue json)
    {
       if (json == null)

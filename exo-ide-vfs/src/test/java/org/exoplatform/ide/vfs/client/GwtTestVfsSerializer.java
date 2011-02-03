@@ -19,7 +19,6 @@
 package org.exoplatform.ide.vfs.client;
 
 import com.google.gwt.json.client.JSONParser;
-
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
 
@@ -95,15 +94,15 @@ public class GwtTestVfsSerializer extends GWTTestCase
    public void test2()
    {
       String json = "{\"a\":\"A\", \"b\":\"B\", \"c\":\"C\", \"d\":\"D\", \"e\":\"E\"}";
-      Map map = JSONDeserializer.STRING_SERIALIZER.toMap(JSONParser.parse(json));
+      Map map = JSONDeserializer.STRING_DESERIALIZER.toMap(JSONParser.parse(json));
       System.out.println("toMap: " + map);
 
       json = "{\"a\":true, \"b\":false, \"c\":true, \"d\":false, \"e\":false}";
-      map = JSONDeserializer.BOOLEAN_SERIALIZER.toMap(JSONParser.parse(json));
+      map = JSONDeserializer.BOOLEAN_DESERIALIZER.toMap(JSONParser.parse(json));
       System.out.println("toMap: " + map);
 
       json = "{\"a\":123, \"b\":456, \"c\":789, \"d\":987, \"e\":654}";
-      map = JSONDeserializer.NUMBER_SERIALIZER.toMap(JSONParser.parse(json));
+      map = JSONDeserializer.NUMBER_DESERIALIZER.toMap(JSONParser.parse(json));
       System.out.println("toMap: " + map);
-}
+   }
 }

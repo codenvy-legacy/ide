@@ -24,19 +24,19 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class DoubleProperty extends Property<Double>
+public class NumberProperty extends Property<Double>
 {
-   public DoubleProperty()
+   public NumberProperty()
    {
       super();
    }
 
-   public DoubleProperty(String name, Double value)
+   public NumberProperty(String name, Double value)
    {
       super(name, value);
    }
 
-   public DoubleProperty(String name, List<Double> value)
+   public NumberProperty(String name, List<Double> value)
    {
       super(name, value);
    }
