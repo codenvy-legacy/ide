@@ -27,8 +27,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.BooleanProperty;
-import org.exoplatform.ide.vfs.shared.DoubleProperty;
-import org.exoplatform.ide.vfs.shared.LongProperty;
+import org.exoplatform.ide.vfs.shared.NumberProperty;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.Type;
@@ -228,20 +227,20 @@ abstract class ItemData
       switch (property.getType())
       {
          case PropertyType.DATE : {
-            List<Long> v;
+            List<Double> v;
             if (multiple)
             {
                Value[] jcrValues = property.getValues();
-               v = new ArrayList<Long>(jcrValues.length);
+               v = new ArrayList<Double>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
-                  v.add(jcrValues[i].getLong());
+                  v.add((double)jcrValues[i].getLong());
             }
             else
             {
-               v = new ArrayList<Long>(1);
-               v.add(property.getLong());
+               v = new ArrayList<Double>(1);
+               v.add((double)property.getLong());
             }
-            return new LongProperty(property.getName(), v);
+            return new NumberProperty(property.getName(), v);
          }
          case PropertyType.DOUBLE : {
             List<Double> v;
@@ -257,23 +256,23 @@ abstract class ItemData
                v = new ArrayList<Double>(1);
                v.add(property.getDouble());
             }
-            return new DoubleProperty(property.getName(), v);
+            return new NumberProperty(property.getName(), v);
          }
          case PropertyType.LONG : {
-            List<Long> v;
+            List<Double> v;
             if (multiple)
             {
                Value[] jcrValues = property.getValues();
-               v = new ArrayList<Long>(jcrValues.length);
+               v = new ArrayList<Double>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
-                  v.add(jcrValues[i].getLong());
+                  v.add(jcrValues[i].getDouble());
             }
             else
             {
-               v = new ArrayList<Long>(1);
-               v.add(property.getLong());
+               v = new ArrayList<Double>(1);
+               v.add(property.getDouble());
             }
-            return new LongProperty(property.getName(), v);
+            return new NumberProperty(property.getName(), v);
          }
          case PropertyType.BOOLEAN : {
             List<Boolean> v;
