@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.vfs.server;
 
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
