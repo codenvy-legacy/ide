@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.module.navigation;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -134,16 +137,8 @@ import org.exoplatform.ide.client.upload.OpenFileByPathForm;
 import org.exoplatform.ide.client.upload.OpenLocalFileForm;
 import org.exoplatform.ide.client.upload.UploadFileForm;
 import org.exoplatform.ide.client.upload.UploadForm;
-import org.exoplatform.ide.client.vfs_new.VirtualFileSystem;
-import org.exoplatform.ide.client.vfs_new.event.ChildrenReceivedEvent;
-import org.exoplatform.ide.client.vfs_new.event.ChildrenReceivedHandler;
-import org.exoplatform.ide.client.vfs_new.event.FolderCreatedEvent;
-import org.exoplatform.ide.client.vfs_new.event.FolderCreatedHandler;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -154,7 +149,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, SearchFilesHandler,
    GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
    EditorFileClosedHandler, EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler,
-   EditorActiveFileChangedHandler, InitializeServicesHandler, OpenFileByPathHandler, ChildrenReceivedHandler, FolderCreatedHandler
+   EditorActiveFileChangedHandler, InitializeServicesHandler, OpenFileByPathHandler
 {
    private HandlerManager eventBus;
 
@@ -289,11 +284,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new WebDavVirtualFileSystem(eventBus, event.getLoader(), ImageUtil.getIcons(), event
-         .getApplicationConfiguration().getContext());
-      
-      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-      handlers.addHandler(FolderCreatedEvent.TYPE, this);
-      new VirtualFileSystem(eventBus,event.getLoader(), "/rest/private/vfs/jcr/repository/dev-monit");
+         .getApplicationConfiguration().getContext());      
    }
 
    public void onOpenFileWith(OpenFileWithEvent event)
@@ -388,8 +379,7 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
 
    public void onSearchFiles(SearchFilesEvent event)
    {
-      VirtualFileSystem.getInstance().createFolder("/", "new best Folder");
-//      new SearchForm(eventBus, selectedItems, entryPoint);
+      new SearchForm(eventBus, selectedItems, entryPoint);
    }
 
    public void onGetFileURL(GetFileURLEvent event)
@@ -431,28 +421,6 @@ public class NavigationModule implements IDEModule, OpenFileWithHandler, UploadF
    public void onOpenFileByPath(OpenFileByPathEvent event)
    {
       new OpenFileByPathForm(eventBus);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.vfs_new.event.ChildrenReceivedHandler#onChildrenReceived(org.exoplatform.ide.client.vfs_new.event.ChildrenReceivedEvent)
-    */
-   @Override
-   public void onChildrenReceived(ChildrenReceivedEvent event)
-   {
-      for(org.exoplatform.ide.vfs.shared.Item i : event.getChildrens().getItems())
-      {
-         System.out.println(i.getId() + " " + i.getType());
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.vfs_new.event.FolderCreatedHandler#onFolderCreated(org.exoplatform.ide.client.vfs_new.event.FolderCreatedEvent)
-    */
-   @Override
-   public void onFolderCreated(FolderCreatedEvent event)
-   {
-      System.out.println(event.getFolderId());
-      VirtualFileSystem.getInstance().getChildren("/");
    }
 
 }
