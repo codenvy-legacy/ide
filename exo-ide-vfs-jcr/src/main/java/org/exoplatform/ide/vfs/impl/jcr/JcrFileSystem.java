@@ -247,7 +247,7 @@ public class JcrFileSystem implements VirtualFileSystem
    public ItemList<Item> getChildren(@PathParam("id") String folderId, //
       @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
       @QueryParam("skipCount") int skipCount, //
-      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
+      @DefaultValue(PropertyFilter.NONE) @QueryParam("propertyFilter") PropertyFilter propertyFilter //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       if (skipCount < 0)
@@ -614,7 +614,7 @@ public class JcrFileSystem implements VirtualFileSystem
          // TODO Make improvement  for large amount of items
          List<Item> l = new ArrayList<Item>();
          for (int count = 0; nodes.hasNext() && (maxItems < 0 || count < maxItems); count++)
-            l.add(fromItemData(ItemData.fromNode(nodes.nextNode()), new PropertyFilter(propertyFilter.toString())));
+            l.add(fromItemData(ItemData.fromNode(nodes.nextNode()), PropertyFilter.valueOf(propertyFilter.toString())));
 
          ItemList<Item> il = new ItemList<Item>(l);
          il.setNumItems((int)nodes.getSize());

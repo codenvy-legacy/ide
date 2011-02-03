@@ -201,8 +201,9 @@ public class ChildrenTest extends JcrFileSystemTest
       assertEquals(3, children.getItems().size());
       for (Item i : children.getItems())
       {
-         assertTrue(hasProperty(i, "PropertyA"));
-         assertTrue(hasProperty(i, "PropertyB"));
+         // No properties without filter. 'none' filter is used if nothing set by client.
+         assertFalse(hasProperty(i, "PropertyA"));
+         assertFalse(hasProperty(i, "PropertyB"));
       }
    }
 
