@@ -30,7 +30,7 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.Type;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -166,11 +166,11 @@ public class ChildrenUnmarshaller implements Unmarshallable
       for (int i = 0; i < itemsArray.size(); i++)
       {
          JSONObject object = itemsArray.get(i).isObject();
-         Type type = Type.valueOf(object.get(TYPE).isString().stringValue());
-         if (type == Type.FOLDER)
+         ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
+         if (type == ItemType.FOLDER)
          {
             Folder folder = new Folder();
-            folder.setType(type);
+            folder.setItemType(type);
             parseBaseFields(object, folder);
             
             items.add(folder);
@@ -178,7 +178,7 @@ public class ChildrenUnmarshaller implements Unmarshallable
          else
          {
             File file = new File();
-            file.setType(type);
+            file.setItemType(type);
             parseBaseFields(object, file);
 
             if (object.containsKey(CONTENT_LENGTH))

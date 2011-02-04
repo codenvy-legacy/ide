@@ -24,12 +24,12 @@ package org.exoplatform.ide.vfs.shared;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public enum Type {
+public enum ItemType {
    FILE("file"), FOLDER("folder");
 
    private final String value;
 
-   private Type(String value)
+   private ItemType(String value)
    {
       this.value = value;
    }
@@ -50,9 +50,9 @@ public enum Type {
     * @throws IllegalArgumentException if there is no corresponded Type for
     *            specified <code>value</code>
     */
-   public static Type fromValue(String value)
+   public static ItemType fromValue(String value)
    {
-      for (Type e : Type.values())
+      for (ItemType e : ItemType.values())
          if (e.value.equals(value))
             return e;
       throw new IllegalArgumentException(value);

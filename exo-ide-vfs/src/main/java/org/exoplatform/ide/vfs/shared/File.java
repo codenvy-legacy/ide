@@ -49,6 +49,7 @@ public class File extends Item
     * 
     * @param id id of object
     * @param name the name of object
+    * @param iconHint hint of icon display item on client side
     * @param path path of object
     * @param creationDate creation date in long format
     * @param lastModificationDate date of last modification in long format
@@ -59,10 +60,10 @@ public class File extends Item
     * @param properties other properties of file
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   public File(String id, String name, String path, long creationDate, long lastModificationDate, String versionId,
+   public File(String id, String name, String iconHint, String path, long creationDate, long lastModificationDate, String versionId,
       String contentType, long length, boolean locked, List<Property> properties, Map<String, Link> links)
    {
-      super(id, name, Type.FILE, path, creationDate, properties, links);
+      super(id, name, ItemType.FILE, iconHint, path, creationDate, properties, links);
       this.lastModificationDate = lastModificationDate;
       this.locked = locked;
       this.versionId = versionId;

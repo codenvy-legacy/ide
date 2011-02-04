@@ -34,6 +34,7 @@ public class Folder extends Item
     * 
     * @param id id of object
     * @param name the name of object
+    * @param iconHint hint of icon display item on client side
     * @param path path of object
     * @param creationDate creation date in long format
     * @param lastModificationDate date of last modification in long format
@@ -41,10 +42,10 @@ public class Folder extends Item
     * @param properties other properties of folder
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   public Folder(String id, String name, String path, long creationDate, List<Property> properties,
+   public Folder(String id, String name, String iconHint, String path, long creationDate, List<Property> properties,
       Map<String, Link> links)
    {
-      super(id, name, Type.FOLDER, path, creationDate, properties, links);
+      super(id, name, ItemType.FOLDER, iconHint, path, creationDate, properties, links);
    }
 
    /**

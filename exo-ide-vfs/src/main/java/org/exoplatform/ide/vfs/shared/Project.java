@@ -28,10 +28,10 @@ public class Project extends Folder
 {
    private String projectType;
 
-   public Project(String id, String name, String path, long creationDate, List<Property> properties,
+   public Project(String id, String name, String iconHint, String path, long creationDate, List<Property> properties,
       Map<String, Link> links, String type)
    {
-      super(id, name, path, creationDate, properties, links);
+      super(id, name, iconHint, path, creationDate, properties, links);
       this.projectType = type;
    }
 

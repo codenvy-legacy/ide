@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +38,10 @@ public class Item
    private String name;
 
    /** Type of object. */
-   private Type type;
+   private ItemType itemType;
+
+   /** Used for display item on client side. */
+   private String iconHint;
 
    /** Path. */
    private String path;
@@ -52,19 +54,22 @@ public class Item
    private Map<String, Link> links;
 
    /**
-    * @param id id of object
-    * @param name the name of object
-    * @param path path of object
+    * @param id id of item
+    * @param name the name of item
+    * @param itemType type of item
+    * @param iconHint hint of icon display item on client side
+    * @param path path of item
     * @param creationDate creation date in long format
     * @param properties other properties of object
-    * @param links hyperlinks for retrieved or(and) manage item
+    * @param links hyper-links for retrieved or(and) manage item
     */
-   public Item(String id, String name, Type type, String path, long creationDate, List<Property> properties,
-      Map<String, Link> links)
+   public Item(String id, String name, ItemType itemType, String iconHint, String path, long creationDate,
+      List<Property> properties, Map<String, Link> links)
    {
       this.id = id;
       this.name = name;
-      this.type = type;
+      this.itemType = itemType;
+      this.iconHint = iconHint;
       this.path = path;
       this.creationDate = creationDate;
       this.properties = properties;
@@ -108,19 +113,35 @@ public class Item
    }
 
    /**
-    * @return type of object
+    * @return type of item
     */
-   public Type getType()
+   public ItemType getItemType()
    {
-      return type;
+      return itemType;
    }
 
    /**
-    * @param type the type of object
+    * @param type the type of item
     */
-   public void setType(Type type)
+   public void setItemType(ItemType type)
    {
-      this.type = type;
+      this.itemType = type;
+   }
+
+   /**
+    * @param iconHint the icon hint
+    */
+   public void setIconHint(String iconHint)
+   {
+      this.iconHint = iconHint;
+   }
+
+   /**
+    * @return the icon hint
+    */
+   public String getIconHint()
+   {
+      return iconHint;
    }
 
    /**
@@ -186,6 +207,6 @@ public class Item
    @Override
    public String toString()
    {
-      return "Item [id=" + id + ", name=" + name + ", type=" + type + "]";
+      return "Item [id=" + id + ", name=" + name + ", type=" + itemType + "]";
    }
 }
