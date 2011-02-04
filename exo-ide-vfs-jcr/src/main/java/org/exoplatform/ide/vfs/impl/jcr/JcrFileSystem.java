@@ -36,7 +36,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
-import org.exoplatform.ide.vfs.shared.Type;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
@@ -110,7 +110,7 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       ItemData object = getItemData(id);
       ItemData folder = getItemData(parentId);
-      if (Type.FOLDER != folder.getType())
+      if (ItemType.FOLDER != folder.getType())
          throw new InvalidArgumentException("Unable copy. Item specified as parent is not a folder. ");
       ItemData newobject = object.copyTo((FolderData)folder);
       return Response.created(createURI("item", newobject.getId())).build();
@@ -129,7 +129,7 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       checkName(name);
       ItemData parentData = getItemData(parentId);
-      if (Type.FOLDER != parentData.getType())
+      if (ItemType.FOLDER != parentData.getType())
          throw new InvalidArgumentException("Unable create file. Item specified as parent is not a folder. ");
       FileData newfile =
          ((FolderData)parentData).createFile(name, itemType2NodeTypeResolver.getFileNodeType(mediaType),
@@ -174,7 +174,7 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       checkName(name);
       ItemData parentData = getItemData(parentId);
-      if (Type.FOLDER != parentData.getType())
+      if (ItemType.FOLDER != parentData.getType())
          throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
       FolderData newfolder =
          ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeType(null), null, null);
@@ -202,7 +202,7 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       checkName(name);
       ItemData parentData = getItemData(parentId);
-      if (Type.FOLDER != parentData.getType())
+      if (ItemType.FOLDER != parentData.getType())
          throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
       FolderData newproject =
          ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeType(type),
@@ -254,7 +254,7 @@ public class JcrFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
 
       ItemData data = getItemData(folderId);
-      if (Type.FOLDER != data.getType())
+      if (ItemType.FOLDER != data.getType())
          throw new InvalidArgumentException("Unable get children. Item " + folderId + " is not a folder. ");
 
       FolderData folderData = (FolderData)data;
@@ -289,7 +289,7 @@ public class JcrFileSystem implements VirtualFileSystem
       PermissionDeniedException, VirtualFileSystemException
    {
       ItemData data = getItemData(id);
-      if (Type.FILE != data.getType())
+      if (ItemType.FILE != data.getType())
          throw new InvalidArgumentException("Unable get content. Item " + id + " is not a file. ");
       FileData fileData = (FileData)data;
       // TODO : cache control, last modification date, etc ??
@@ -373,7 +373,7 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       ItemData data = getItemData(id);
-      if (Type.FILE != data.getType())
+      if (ItemType.FILE != data.getType())
          throw new InvalidArgumentException("Object " + id + " is not a file. ");
       FileData versionData = ((FileData)data).getVersion(versionId);
       // TODO : cache control, last modification date, etc ??
@@ -395,7 +395,7 @@ public class JcrFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
 
       ItemData data = getItemData(id);
-      if (Type.FILE != data.getType())
+      if (ItemType.FILE != data.getType())
          throw new InvalidArgumentException("Object " + id + " is not a file. ");
 
       FileData fileData = (FileData)data;
@@ -429,7 +429,7 @@ public class JcrFileSystem implements VirtualFileSystem
       InvalidArgumentException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
       ItemData itemData = getItemData(id);
-      if (itemData.getType() != Type.FILE)
+      if (ItemType.FILE != itemData.getType())
          throw new InvalidArgumentException("Locking allowed for Files only. ");
       return new LockToken(((FileData)itemData).lock());
    }
@@ -447,7 +447,7 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       ItemData object = getItemData(id);
       ItemData folder = getItemData(parentId);
-      if (Type.FOLDER != folder.getType())
+      if (ItemType.FOLDER != folder.getType())
          throw new InvalidArgumentException("Object " + parentId + " is not a folder. ");
       String movedId = object.moveTo((FolderData)folder, lockToken);
       return Response.created(createURI("item", movedId)).build();
@@ -466,7 +466,7 @@ public class JcrFileSystem implements VirtualFileSystem
       VirtualFileSystemException
    {
       ItemData data = getItemData(id);
-      if (Type.FILE != data.getType())
+      if (ItemType.FILE != data.getType())
          throw new InvalidArgumentException("Object " + id + " is not a file. ");
       ((FileData)data).rename(newname, mediaType, lockToken);
       return Response.created(createURI("item", data.getId())).build();
@@ -643,7 +643,7 @@ public class JcrFileSystem implements VirtualFileSystem
       VirtualFileSystemException
    {
       ItemData itemData = getItemData(id);
-      if (itemData.getType() != Type.FILE)
+      if (itemData.getType() != ItemType.FILE)
          throw new LockException("Object is not locked. "); // Folder can't be locked.
       ((FileData)itemData).unlock(lockToken);
    }
@@ -676,7 +676,7 @@ public class JcrFileSystem implements VirtualFileSystem
       VirtualFileSystemException
    {
       ItemData data = getItemData(id);
-      if (Type.FILE != data.getType())
+      if (ItemType.FILE != data.getType())
          throw new InvalidArgumentException("Object " + id + " is not file. ");
       ((FileData)data).setContent(newcontent, mediaType, lockToken);
    }
@@ -706,16 +706,22 @@ public class JcrFileSystem implements VirtualFileSystem
    private Item fromItemData(ItemData data, PropertyFilter propertyFilter) throws PermissionDeniedException,
       VirtualFileSystemException
    {
-      if (data.getType() == Type.FILE)
+      if (data.getType() == ItemType.FILE)
       {
          FileData fileData = (FileData)data;
-         return new File(fileData.getId(), fileData.getName(), fileData.getPath(), fileData.getCreationDate(),
-            fileData.getLastModificationDate(), fileData.getVersionId(), fileData.getContenType(),
-            fileData.getContenLength(), fileData.isLocked(), fileData.getProperties(propertyFilter),
-            createFileLinks(fileData));
+         return new File(fileData.getId(), fileData.getName(), getIconHint(fileData), fileData.getPath(),
+            fileData.getCreationDate(), fileData.getLastModificationDate(), fileData.getVersionId(),
+            fileData.getContenType(), fileData.getContenLength(), fileData.isLocked(),
+            fileData.getProperties(propertyFilter), createFileLinks(fileData));
       }
-      return new Folder(data.getId(), data.getName(), data.getPath(), data.getCreationDate(),
+      return new Folder(data.getId(), data.getName(), getIconHint(data), data.getPath(), data.getCreationDate(),
          data.getProperties(propertyFilter), createFolderLinks((FolderData)data));
+   }
+
+   private String getIconHint(ItemData itemData)
+   {
+      // TODO
+      return null;
    }
 
    private Map<String, Link> createFileLinks(FileData file) throws VirtualFileSystemException

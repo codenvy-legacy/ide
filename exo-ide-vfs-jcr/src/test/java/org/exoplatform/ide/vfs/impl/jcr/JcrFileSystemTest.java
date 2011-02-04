@@ -25,7 +25,7 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.Type;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.core.ManageableRepository;
@@ -181,8 +181,8 @@ public abstract class JcrFileSystemTest extends TestCase
       assertEquals(Link.REL_ACL, link.getRel());
       assertEquals(UriBuilder.fromPath(SERVICE_URI).path("acl").path(item.getId()).build().toString(), link.getHref());
 
-      Type type = item.getType();
-      if (type == Type.FILE)
+      ItemType type = item.getItemType();
+      if (type == ItemType.FILE)
       {
          File file = (File)item;
 

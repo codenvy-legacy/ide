@@ -30,7 +30,7 @@ import org.exoplatform.ide.vfs.shared.BooleanProperty;
 import org.exoplatform.ide.vfs.shared.NumberProperty;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.StringProperty;
-import org.exoplatform.ide.vfs.shared.Type;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -98,9 +98,9 @@ abstract class ItemData
 
    protected Node node;
 
-   protected Type type;
+   protected ItemType type;
 
-   ItemData(Node node, Type type)
+   ItemData(Node node, ItemType type)
    {
       this.node = node;
       this.type = type;
@@ -135,7 +135,7 @@ abstract class ItemData
     * @return type of this item
     * @see Type
     */
-   Type getType()
+   ItemType getType()
    {
       return type;
    }

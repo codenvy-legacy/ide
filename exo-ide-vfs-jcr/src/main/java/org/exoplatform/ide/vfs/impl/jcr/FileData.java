@@ -25,7 +25,7 @@ import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
-import org.exoplatform.ide.vfs.shared.Type;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -110,7 +110,7 @@ class FileData extends ItemData
 
    FileData(Node node)
    {
-      super(node, Type.FILE);
+      super(node, ItemType.FILE);
    }
 
    /**

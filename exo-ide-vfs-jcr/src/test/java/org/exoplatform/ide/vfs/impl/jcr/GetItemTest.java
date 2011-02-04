@@ -20,7 +20,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.Type;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -88,7 +88,7 @@ public class GetItemTest extends JcrFileSystemTest
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
       Item item = (Item)response.getEntity();
-      assertEquals(Type.FILE, item.getType());
+      assertEquals(ItemType.FILE, item.getItemType());
       assertEquals(filePath, item.getPath());
       validateLinks(item);
    }
@@ -177,7 +177,7 @@ public class GetItemTest extends JcrFileSystemTest
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
       Item item = (Item)response.getEntity();
-      assertEquals(Type.FOLDER, item.getType());
+      assertEquals(ItemType.FOLDER, item.getItemType());
       validateLinks(item);
    }
 }

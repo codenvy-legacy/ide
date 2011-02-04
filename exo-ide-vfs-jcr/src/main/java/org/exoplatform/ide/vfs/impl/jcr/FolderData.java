@@ -25,7 +25,7 @@ import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
-import org.exoplatform.ide.vfs.shared.Type;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -82,7 +82,7 @@ public class FolderData extends ItemData
 
    FolderData(Node node)
    {
-      super(node, Type.FOLDER);
+      super(node, ItemType.FOLDER);
    }
 
    LazyIterator<ItemData> getChildren() throws PermissionDeniedException, VirtualFileSystemException
