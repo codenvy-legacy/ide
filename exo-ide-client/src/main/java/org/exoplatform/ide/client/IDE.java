@@ -27,14 +27,11 @@ import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManager;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManagerExt;
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
+import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.module.chromattic.ChromatticModule;
 import org.exoplatform.ide.client.module.development.DevelopmentModule;
 import org.exoplatform.ide.client.module.edit.TextEditModule;
-import org.exoplatform.ide.client.module.gadget.GadgetModule;
-import org.exoplatform.ide.client.module.groovy.GroovyModule;
 import org.exoplatform.ide.client.module.navigation.NavigationModule;
-import org.exoplatform.ide.client.module.netvibes.NetvibesModule;
 import org.exoplatform.ide.client.module.preferences.PreferencesModule;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -45,14 +42,15 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class IDE extends VerticalPanel
+public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 {
 
    public IDE()
    {
+
       new SmartGWTDialogs();
 
-      HandlerManager eventBus = new IDEHandlerManager();
+      HandlerManager eventBus =new IDEHandlerManager();
       //HandlerManager eventBus = new HandlerManager(null);
       ApplicationContext context = new ApplicationContext();
 
@@ -82,10 +80,17 @@ public class IDE extends VerticalPanel
       new DevelopmentModule(eventBus);
       new PreferencesModule(eventBus);
 
-      new GadgetModule(eventBus);
-      new GroovyModule(eventBus);
-      new ChromatticModule(eventBus);
-      new NetvibesModule(eventBus);
+      //initialize module
+      for (Extension ext : extensions)
+      {
+         ext.initialize(eventBus);
+      }
+
+      
+      //      new GadgetModule(eventBus);
+      //      new GroovyModule(eventBus);
+      //      new ChromatticModule(eventBus);
+      //      new NetvibesModule(eventBus);
 
       controlsRegistration.formatControls();
       //new TestIFrame();

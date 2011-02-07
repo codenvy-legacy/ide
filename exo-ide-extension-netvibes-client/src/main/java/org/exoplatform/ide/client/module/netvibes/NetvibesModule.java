@@ -29,7 +29,7 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationEvent;
-import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.JsAutocompleteImageBundle;
 import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.NetvibesTokenCollector;
 import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.NetvibesTokenWidgetFactory;
@@ -43,7 +43,7 @@ import org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter;
  * @version $Id: $
  */
 
-public class NetvibesModule implements IDEModule, InitializeServicesHandler
+public class NetvibesModule extends Extension implements InitializeServicesHandler
 {
    private HandlerManager eventBus;
 
@@ -53,9 +53,10 @@ public class NetvibesModule implements IDEModule, InitializeServicesHandler
    private IDEConfiguration configuration;
 
    /**
-    * @param eventBus
+    * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
     */
-   public NetvibesModule(HandlerManager eventBus)
+   @Override
+   public void initialize(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 
@@ -64,12 +65,13 @@ public class NetvibesModule implements IDEModule, InitializeServicesHandler
       eventBus.fireEvent(new RegisterControlEvent(new DeployUwaWidgetControl(), DockTarget.TOOLBAR, true));
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-      
+
       new DeployUwaWidgetPresenter(eventBus);
-      
+
       JsAutocompleteImageBundle.INSTANCE.css().ensureInjected();
-      
-      eventBus.fireEvent(new RegisterDocumentationEvent(MimeType.UWA_WIDGET, "http://dev.netvibes.com/doc/uwa/documentation"));
+
+      eventBus.fireEvent(new RegisterDocumentationEvent(MimeType.UWA_WIDGET,
+         "http://dev.netvibes.com/doc/uwa/documentation"));
    }
 
    /**
@@ -80,7 +82,7 @@ public class NetvibesModule implements IDEModule, InitializeServicesHandler
    {
       configuration = event.getApplicationConfiguration();
       new DeployWidgetServiceImpl(eventBus, configuration.getContext(), event.getLoader());
-      
+
       NetvibesTokenWidgetFactory factory = new NetvibesTokenWidgetFactory();
       NetvibesTokenCollector collector = new NetvibesTokenCollector(eventBus);
       eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.UWA_WIDGET, factory, collector));

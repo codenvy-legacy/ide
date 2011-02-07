@@ -29,6 +29,9 @@
    <inherits name='com.google.gwt.xml.XML' />
    <inherits name='com.google.gwt.json.JSON' />
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-
+   
+   
+   <entry-point class='org.exoplatform.ide.client.module.gadget.GadgetModule' />
+   
    <source path="gadget" />
 </module>

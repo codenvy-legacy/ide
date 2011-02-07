@@ -40,7 +40,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
@@ -74,7 +73,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class PreferencesModule implements IDEModule, InitializeServicesHandler, ApplicationSettingsReceivedHandler,
+public class PreferencesModule implements InitializeServicesHandler, ApplicationSettingsReceivedHandler,
    ControlsUpdatedHandler, EntryPointsReceivedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    SelectWorkspaceHandler, CustomizeToolbarHandler, CustomizeHotKeysHandler, ShowAboutDialogHandler
 {

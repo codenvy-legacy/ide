@@ -45,8 +45,6 @@
    <inherits name='org.exoplatform.ide.client.module.IDEChromatticModule' />
    <inherits name='org.exoplatform.ide.client.module.IDENetvibesModule' />
    
-   <inherits name='org.exoplatform.ide.vfs.IDEVFS' />
-
    <inherits name="com.allen_sauer.gwt.log.gwt-log-TRACE" />
    <inherits name="com.allen_sauer.gwt.log.gwt-log-RemoteLogger" />
    <set-property name="log_DivLogger" value="DISABLED" />

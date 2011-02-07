@@ -36,6 +36,7 @@
    <inherits name="com.smartgwt.SmartGwt" />
    <inherits name='com.smartgwt.tools.SmartGwtTools' />
 
+   
    <!-- load GWT Commons Libraries -->
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
    <inherits name='org.exoplatform.gwtframework.editor.Editor' />
@@ -47,15 +48,13 @@
    <inherits name='org.exoplatform.ide.client.module.IDEGroovyModule' />
    <inherits name='org.exoplatform.ide.client.module.IDEChromatticModule' />
    <inherits name='org.exoplatform.ide.client.module.IDENetvibesModule' />
-   
-   <inherits name='org.exoplatform.ide.vfs.IDEVFS' />
-   
+      
    <inherits name="com.allen_sauer.gwt.log.gwt-log-DEBUG" />
    <set-property name="log_DivLogger" value="DISABLED" />
 
    <!-- Specify the app entry point class. -->
    <entry-point class='org.exoplatform.ide.client.IDEShell' />
-   <source path="client" excludes="IDEGadget.java" />
+   <source path="client" excludes="IDEGadget.java" />  
 
    <!-- Load CodeMirror editor files. -->
    <stylesheet src='codemirror/css/editor.css' />

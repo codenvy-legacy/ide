@@ -29,6 +29,7 @@
    <inherits name='com.google.gwt.xml.XML' />
    <inherits name='com.google.gwt.json.JSON' />
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
+   <entry-point class='org.exoplatform.ide.client.module.chromattic.ChromatticModule' />
 
    <source path="chromattic" />
 </module>

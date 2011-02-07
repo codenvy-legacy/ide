@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.module;
 
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -25,13 +27,18 @@ package org.exoplatform.ide.client.framework.module;
  * @version $Id: $
  */
 
-public interface IDEModule
+public abstract class Extension implements EntryPoint
 {
-   
-//   List<Control> getControls();
-//   
-//   List<String> getToolbarItems();
-//   
-//   List<String> getStatusbarItems();
+
+   /**
+    * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
+    */
+   @Override
+   public void onModuleLoad()
+   {
+      IDE.registerExtension(this);
+   }
+
+   public abstract void initialize(HandlerManager eventBus);
 
 }

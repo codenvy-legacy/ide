@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocom
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
-import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.module.chromattic.controls.DeployNodeTypeControl;
 import org.exoplatform.ide.client.module.chromattic.controls.GenerateNodeTypeControl;
 import org.exoplatform.ide.client.module.chromattic.handler.CompileGroovyCommandHandler;
@@ -46,7 +46,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Sep 28, 2010 $
  *
  */
-public class ChromatticModule implements IDEModule, InitializeServicesHandler
+public class ChromatticModule extends Extension implements InitializeServicesHandler
 {
 
    /**
@@ -55,15 +55,15 @@ public class ChromatticModule implements IDEModule, InitializeServicesHandler
    private HandlerManager eventBus;
 
    /**
-    * @param eventBus Event Bus
+    * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
     */
-   public ChromatticModule(HandlerManager eventBus)
+   @Override
+   public void initialize(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Data Object",
-         "Data Object", "Create Data Object", Images.FileType.CHROMATTIC,
-         MimeType.CHROMATTIC_DATA_OBJECT)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Data Object", "Data Object",
+         "Create Data Object", Images.FileType.CHROMATTIC, MimeType.CHROMATTIC_DATA_OBJECT)));
 
       eventBus.fireEvent(new RegisterControlEvent(new GenerateNodeTypeControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new DeployNodeTypeControl(), DockTarget.TOOLBAR, true));
@@ -72,6 +72,7 @@ public class ChromatticModule implements IDEModule, InitializeServicesHandler
       new GenerateNodeTypePresenter(eventBus);
       new DeployNodeTypePresenter(eventBus);
       new CompileGroovyCommandHandler(eventBus);
+
    }
 
    /**
@@ -82,8 +83,10 @@ public class ChromatticModule implements IDEModule, InitializeServicesHandler
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new ChrommaticServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
-      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.CHROMATTIC_DATA_OBJECT,new GroovyTokenWidgetFactory(event.getApplicationConfiguration().getContext()) ,new GroovyTokenCollector(eventBus)));
-      eventBus.fireEvent(new RegisterImportTokenCollectorEvent(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyImportDeclarationTokenCollector(eventBus)));
+      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyTokenWidgetFactory(
+         event.getApplicationConfiguration().getContext()), new GroovyTokenCollector(eventBus)));
+      eventBus.fireEvent(new RegisterImportTokenCollectorEvent(MimeType.CHROMATTIC_DATA_OBJECT,
+         new GroovyImportDeclarationTokenCollector(eventBus)));
    }
 
 }

@@ -27,6 +27,7 @@ import com.google.gwt.gadgets.client.NeedsDynamicHeight;
 import com.google.gwt.gadgets.client.UserPreferences;
 import com.google.gwt.gadgets.client.Gadget.ModulePrefs;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -41,8 +42,9 @@ public class IDEGadget extends Gadget<UserPreferences> implements NeedsDynamicHe
    @Override
    protected void init(UserPreferences preferences)
    {
-      final IDE ide = new IDE();
-      RootPanel.get().add(ide);
+      final VerticalPanel idePanel = new VerticalPanel();
+      
+      RootPanel.get().add(idePanel);
       if (BrowserResolver.CURRENT_BROWSER == Browser.CHROME)
       {
          Utils.expandGadgetHeight();
@@ -52,11 +54,12 @@ public class IDEGadget extends Gadget<UserPreferences> implements NeedsDynamicHe
          Integer h = getFixHeight();
          if (h != null)
          {
-            ide.setHeight(h + "px");
+            idePanel.setHeight(h + "px");
             dynamicHeightFeature.adjustHeight();
          }
       }
-
+      
+      new IDE();
    }
 
    public void initializeFeature(DynamicHeightFeature feature)

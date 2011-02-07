@@ -51,8 +51,6 @@
    <inherits name='org.exoplatform.ide.client.module.IDEChromatticModule' />
    <inherits name='org.exoplatform.ide.client.module.IDENetvibesModule' />
    
-   <inherits name='org.exoplatform.ide.vfs.IDEVFS' />
-
    <inherits name="com.allen_sauer.gwt.log.gwt-log-OFF" />   
 
    <!-- Specify the app entry point class. -->

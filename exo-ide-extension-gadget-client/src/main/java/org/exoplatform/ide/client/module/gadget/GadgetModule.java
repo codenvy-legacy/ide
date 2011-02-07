@@ -24,7 +24,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
-import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.module.gadget.controls.DeployGadgetCommand;
 import org.exoplatform.ide.client.module.gadget.controls.UndeployGadgetCommand;
 import org.exoplatform.ide.client.module.gadget.service.GadgetServiceImpl;
@@ -36,28 +36,33 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class GadgetModule implements IDEModule, InitializeServicesHandler
+public class GadgetModule extends Extension implements InitializeServicesHandler
 {
 
    private HandlerManager eventBus;
 
-   public GadgetModule(HandlerManager eventBus)
+   /**
+    * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google Gadget",
-         Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setDelimiterBefore(true)));
-      
+
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Google Gadget", "Google Gadget",
+         "Create New Google Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setDelimiterBefore(true)));
+
       eventBus.fireEvent(new RegisterControlEvent(new DeployGadgetCommand(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new UndeployGadgetCommand(), DockTarget.TOOLBAR, true));
 
-//      addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google 4Gadget",
-//         Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET));
-//      addControl(new DeployGadgetCommand(eventBus), true, true);
-//      addControl(new UndeployGadgetCommand(eventBus), true, true);
+      //      addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google 4Gadget",
+      //         Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET));
+      //      addControl(new DeployGadgetCommand(eventBus), true, true);
+      //      addControl(new UndeployGadgetCommand(eventBus), true, true);
 
       new GadgetPluginEventHandler(eventBus);
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+
    }
 
    public void onInitializeServices(InitializeServicesEvent event)

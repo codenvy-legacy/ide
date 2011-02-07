@@ -33,5 +33,7 @@
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
   <!-- <inherits name='org.exoplatform.ide.testframework.IDEallTestFramework' /> -->  
    
+    <entry-point class='org.exoplatform.ide.client.module.groovy.GroovyModule' />
+   
    <source path="groovy" />
 </module>

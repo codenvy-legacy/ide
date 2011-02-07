@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.module.development;
 import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
-import org.exoplatform.ide.client.framework.module.IDEModule;
 import org.exoplatform.ide.client.module.development.control.ShowOutlineControl;
 import org.exoplatform.ide.client.module.development.control.ShowPreviewCommand;
 
@@ -33,7 +32,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class DevelopmentModule implements IDEModule
+public class DevelopmentModule
 {
 
    public DevelopmentModule(HandlerManager eventBus)

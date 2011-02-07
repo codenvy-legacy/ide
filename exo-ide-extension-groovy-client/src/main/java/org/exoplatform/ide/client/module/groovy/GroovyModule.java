@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.module.IDEModule;
+import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
@@ -83,7 +83,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler, SetAutoloadHandler,
+public class GroovyModule extends Extension implements RestServiceOutputReceivedHandler, SetAutoloadHandler,
    PreviewWadlOutputHandler, WadlServiceOutputReceiveHandler, InitializeServicesHandler,
    ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler
 {
@@ -102,7 +102,11 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
    //undeploy service on cancel 
    private boolean undeployOnCancel = false;
 
-   public GroovyModule(HandlerManager eventBus)
+   /**
+    * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
@@ -111,8 +115,8 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New REST Service", "REST Service",
          "Create REST Service", Images.FileType.REST_SERVICE, MimeType.GROOVY_SERVICE)));
 
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New POGO", "POGO",
-         "Create POGO", Images.FileType.GROOVY, MimeType.APPLICATION_GROOVY)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New POGO", "POGO", "Create POGO",
+         Images.FileType.GROOVY, MimeType.APPLICATION_GROOVY)));
 
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Template", "Template",
          "Create Template", Images.FileType.GROOVY_TEMPLATE, MimeType.GROOVY_TEMPLATE)));
@@ -124,13 +128,14 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new RunGroovyServiceCommand(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new DeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true));
+      eventBus
+         .fireEvent(new RegisterControlEvent(new UndeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(), DockTarget.TOOLBAR, true));
 
       handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(SetAutoloadEvent.TYPE, this);
       handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
-//      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
+      //      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
@@ -140,7 +145,7 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       new UndeployGroovyCommandHandler(eventBus);
       new AssistImportDeclarationManager(eventBus);
       new ConfigureBuildPathPresenter(eventBus);
-      
+
       GroovyPluginImageBundle.INSTANCE.css().ensureInjected();
    }
 
@@ -149,11 +154,14 @@ public class GroovyModule implements IDEModule, RestServiceOutputReceivedHandler
       configuration = event.getApplicationConfiguration();
       new GroovyServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
       new WadlServiceImpl(eventBus, event.getLoader());
-      new CodeAssistantServiceImpl(eventBus,event.getApplicationConfiguration().getContext(), event.getLoader());
-      GroovyTokenWidgetFactory groovyTokenWidgetFactory = new GroovyTokenWidgetFactory(event.getApplicationConfiguration().getContext());
+      new CodeAssistantServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      GroovyTokenWidgetFactory groovyTokenWidgetFactory =
+         new GroovyTokenWidgetFactory(event.getApplicationConfiguration().getContext());
       GroovyTokenCollector groovyTokenCollector = new GroovyTokenCollector(eventBus);
-      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.GROOVY_SERVICE, groovyTokenWidgetFactory, groovyTokenCollector));
-      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.APPLICATION_GROOVY, groovyTokenWidgetFactory, groovyTokenCollector));
+      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.GROOVY_SERVICE, groovyTokenWidgetFactory,
+         groovyTokenCollector));
+      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.APPLICATION_GROOVY, groovyTokenWidgetFactory,
+         groovyTokenCollector));
    }
 
    /**
