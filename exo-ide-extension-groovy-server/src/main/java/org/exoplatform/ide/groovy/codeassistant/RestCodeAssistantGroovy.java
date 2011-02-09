@@ -175,8 +175,11 @@ public class RestCodeAssistantGroovy
       List<ShortTypeInfo> info = codeAssistantStorage.findFQNsByPrefix(prefix, where);
       
       if ("className".equals(where))
-         info.addAll(codeAssistantStorage.findFQNsByPrefixInProject(uriInfo.getBaseUri().toASCIIString(), prefix, location));
-
+      {
+         List<ShortTypeInfo> projectInfo =codeAssistantStorage.findFQNsByPrefixInProject(uriInfo.getBaseUri().toASCIIString(), prefix, location);
+         if(projectInfo != null)
+            info.addAll(projectInfo);
+      }
       return info;
    }
 
