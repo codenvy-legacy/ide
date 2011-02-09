@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!--
-
-    Copyright (C) 2010 eXo Platform SAS.
-
-    This is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation; either version 2.1 of
-    the License, or (at your option) any later version.
-
-    This software is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this software; if not, write to the Free
-    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-    02110-1301 USA, or see the FSF site: http://www.fsf.org.
-
--->
+<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
+   License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
+   in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+   See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
+   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
 <!-- Copyright (C) 2009 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
    License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
    in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
@@ -89,39 +74,26 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+      <key>org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant</key>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStrorage</type>
       <init-params>
          <object-param>
-            <name>autocompletion.configuration</name>
-            <object type="org.exoplatform.ide.groovy.codeassistant.bean.GroovyAutocompletionConfig">
+            <name>classinfostrorage.configuration</name>
+            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
                <field name="wsName">
                   <string>ws</string>
                </field>
                <field name="runInThread">
                   <boolean>false</boolean>
                </field>
-               <field name="jarEntries">
+               <field name="jars">
                   <collection type="java.util.ArrayList">
                      <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
-                           <field name="jarPath">
-                              <string>${java.src}</string>
-                           </field>
-                           <field name="includePkg">
-                              <collection type="java.util.ArrayList">
-                                 <value>
-                                    <string>java.math</string>
-                                 </value>
-                              </collection>
-                           </field>
-                        </object>
-                     </value>
-                  </collection>
-               </field>
-               <field name="jarDocs">
-                  <collection type="java.util.ArrayList">
-                     <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
                               <string>${java.src}</string>
                            </field>
@@ -139,6 +111,45 @@
             </object>
          </object-param>
       </init-params>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorage</type>
+      <init-params>
+         <object-param>
+            <name>docstrorage.configuration</name>
+            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+               <field name="wsName">
+                  <string>ws</string>
+               </field>
+               <field name="runInThread">
+                  <boolean>false</boolean>
+               </field>
+               <field name="jars">
+                  <collection type="java.util.ArrayList">
+                     <value>
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                           <field name="jarPath">
+                              <string>${java.src}</string>
+                           </field>
+                           <field name="includePkg">
+                              <collection type="java.util.ArrayList">
+                                 <value>
+                                    <string>java.math</string>
+                                 </value>
+                              </collection>
+                           </field>
+                        </object>
+                     </value>
+                  </collection>
+               </field>
+            </object>
+         </object-param>
+      </init-params>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
    </component>
 
    <component>

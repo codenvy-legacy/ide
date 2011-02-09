@@ -18,9 +18,26 @@
  */
 package org.exoplatform.ide.groovy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.jcr.InvalidItemStateException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.ValueFactory;
+import javax.jcr.ValueFormatException;
+import javax.jcr.Workspace;
+
+import junit.framework.TestCase;
+
 import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
-import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
+import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.dataflow.PersistentDataManager;
@@ -44,30 +61,6 @@ import org.exoplatform.ws.frameworks.json.impl.JsonException;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.junit.After;
 import org.junit.Before;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.jcr.AccessDeniedException;
-import javax.jcr.InvalidItemStateException;
-import javax.jcr.ItemExistsException;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.ValueFactory;
-import javax.jcr.ValueFormatException;
-import javax.jcr.Workspace;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
-import javax.jcr.version.VersionException;
-
-import junit.framework.TestCase;
 
 /**
  * Created by The eXo Platform SAS.
@@ -216,57 +209,5 @@ public class Base extends TestCase
       return data;
    }
    
-   protected void putClass(String fqn) throws RepositoryException, IncompatibleClassChangeError, ValueFormatException, JsonException,
-   InvalidItemStateException
-{
-   Node base;
-   if (!session.getRootNode().hasNode("classpath"))
-   {
-      base = session.getRootNode().addNode("classpath", "nt:folder");
-
-   }
-   else
-   {
-      base = session.getRootNode().getNode("classpath");
-   }
-
-   try
-   {
-      String clazz = fqn;
-      TypeInfo cd = TypeInfoExtractor.extract(ClassLoader.getSystemClassLoader().loadClass(clazz));
-      Node child = base;
-      String[] seg = fqn.split("\\.");
-      String path = new String();
-      for (int i = 0; i < seg.length - 1; i++)
-      {
-         path = path + seg[i];
-         if (!child.hasNode(path))
-         {
-            child = child.addNode(path, "nt:folder");
-         }
-         else
-         {
-            child = child.getNode(path);
-         }
-         path = path + ".";
-      }
-
-      if (!child.hasNode(clazz))
-      {
-         child = child.addNode(clazz, "nt:file");
-         child = child.addNode("jcr:content", "exoide:classDescription");
-         JsonGeneratorImpl jsonGenerator = new JsonGeneratorImpl();
-         child.setProperty("jcr:data", jsonGenerator.createJsonObject(cd).toString());
-         child.setProperty("jcr:lastModified", Calendar.getInstance());
-         child.setProperty("jcr:mimeType", "text/plain");
-         child.setProperty("exoide:className", clazz.substring(clazz.lastIndexOf(".") + 1));
-         child.setProperty("exoide:fqn", clazz);
-      }
-   }
-   catch (ClassNotFoundException e)
-   {
-      e.printStackTrace();
-   }
-
-}
+  
 }

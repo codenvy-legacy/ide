@@ -18,8 +18,17 @@
  */
 package org.exoplatform.ide.groovy;
 
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.jcr.Node;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.SecurityContext;
+
 import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.groovy.util.GroovyScriptServiceUtil;
+import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -33,15 +42,6 @@ import org.exoplatform.services.test.mock.MockPrincipal;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.jcr.Node;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.SecurityContext;
 
 /**
  * Created by The eXo Platform SAS.

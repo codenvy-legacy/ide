@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.groovy;
 
-import org.exoplatform.ide.groovy.util.DependentResources;
-import org.exoplatform.ide.groovy.util.GroovyClassPath;
-import org.exoplatform.ide.groovy.util.GroovyClassPathEntry;
-import org.exoplatform.ide.groovy.util.GroovyScriptServiceUtil;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-
 import java.io.ByteArrayInputStream;
 
 import junit.framework.TestCase;
+
+import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
+import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
+import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPathEntry;
+import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
+import org.exoplatform.ws.frameworks.json.impl.JsonException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>

@@ -39,11 +39,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
+import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
 import org.exoplatform.ide.groovy.Base;
-import org.exoplatform.ide.groovy.codeassistant.bean.ShortTypeInfo;
-import org.exoplatform.ide.groovy.codeassistant.bean.TypeInfo;
-import org.exoplatform.ide.groovy.codeassistant.extractors.TypeInfoExtractor;
-import org.exoplatform.ide.groovy.util.GroovyScriptServiceUtil;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
 import org.exoplatform.ws.frameworks.json.JsonHandler;

@@ -18,18 +18,14 @@
  */
 package org.exoplatform.ide.groovy;
 
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.groovy.codeassistant.ClassInfoStrorage;
-import org.exoplatform.ide.groovy.codeassistant.CodeAssistant;
-import org.exoplatform.ide.groovy.codeassistant.DocStorage;
-import org.exoplatform.ide.groovy.codeassistant.bean.GroovyAutocompletionConfig;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.ws.rs.core.Application;
+
+import org.exoplatform.ide.groovy.codeassistant.RestCodeAssistantGroovy;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 
 /**
  * Created by The eXo Platform SAS .
@@ -45,30 +41,30 @@ public class GroovyScriptServiceApplication extends Application
 
    private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
-   public GroovyScriptServiceApplication(ThreadLocalSessionProviderService sessionProvider, RepositoryService repositoryService,
-      InitParams initParams)
+   public GroovyScriptServiceApplication(ThreadLocalSessionProviderService sessionProvider, RepositoryService repositoryService)
    {
-      if (initParams != null)
-      {
-         GroovyAutocompletionConfig config =
-            (GroovyAutocompletionConfig)initParams.getObjectParam("autocompletion.configuration").getObject();
-
-         if (config.getJarEntries() != null)
-         {
-            objects.add(new ClassInfoStrorage(sessionProvider, repositoryService, config.getWsName(), config
-               .getJarEntries(), config.isRunInThread()));
-         }
-
-         if (config.getJarsDocs() != null)
-         {
-            objects.add(new DocStorage(config.getWsName(), repositoryService, sessionProvider, config.getJarsDocs(),
-               config.isRunInThread()));
-         }
-
-         objects.add(new CodeAssistant(config.getWsName(), repositoryService, sessionProvider));
-
-      }
+//      if (initParams != null)
+//      {
+//         GroovyAutocompletionConfig config =
+//            (GroovyAutocompletionConfig)initParams.getObjectParam("autocompletion.configuration").getObject();
+//
+//         if (config.getJarEntries() != null)
+//         {
+//            objects.add(new ClassInfoStrorage(sessionProvider, repositoryService, config.getWsName(), config
+//               .getJarEntries(), config.isRunInThread()));
+//         }
+//
+//         if (config.getJarsDocs() != null)
+//         {
+//            objects.add(new DocStorage(config.getWsName(), repositoryService, sessionProvider, config.getJarsDocs(),
+//               config.isRunInThread()));
+//         }
+//
+////         objects.add(new RestCodeAssistantGroovy(config.getWsName(), repositoryService, sessionProvider));
+//
+//      }
       classes.add(GroovyTemplateService.class);
+      classes.add(RestCodeAssistantGroovy.class);
 
    }
 
