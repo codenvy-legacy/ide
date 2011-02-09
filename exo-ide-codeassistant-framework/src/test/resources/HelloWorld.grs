@@ -1,0 +1,16 @@
+package services;
+// simple groovy script
+import javax.ws.rs.Path
+import javax.ws.rs.GET
+import javax.ws.rs.PathParam
+import data.Pojo
+
+@Path("/vip/my-service")
+public class HelloWorld {
+  @GET
+  @Path("helloworld/{name}")
+  public String hello(@PathParam("name") String name) {
+    
+    return Pojo.say(name)
+  }
+}
