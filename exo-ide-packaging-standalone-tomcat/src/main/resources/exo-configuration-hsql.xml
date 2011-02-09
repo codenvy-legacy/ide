@@ -114,24 +114,27 @@
       </init-params>
    </component>
 
+   <component>
+      <key>org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant</key>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
+   </component>
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStrorage</type>
       <init-params>
          <object-param>
-            <name>autocompletion.configuration</name>
-            <object type="org.exoplatform.ide.groovy.codeassistant.bean.GroovyAutocompletionConfig">
+            <name>classinfostrorage.configuration</name>
+            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
                <field name="wsName">
                   <string>production</string>
                </field>
                <field name="runInThread">
                   <boolean>true</boolean>
                </field>
-               <field name="jarEntries">
+               <field name="jars">
                   <collection type="java.util.ArrayList">
-                  
                      <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
                               <string>${jre.lib}${file.separator}rt.jar</string>
                            </field>
@@ -147,10 +150,8 @@
                            </field>
                         </object>
                      </value>
-                      
-                      
                      <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
                               <string>
                               	../lib/jcr-1.0.jar;
@@ -180,16 +181,29 @@
                            </field>
                         </object>
                      </value>
-                      -->
-
                   </collection>
                </field>
+            </object>
+         </object-param>
+      </init-params>
+   </component>
 
-               <field name="jarDocs">
+   <component>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorage</type>
+      <init-params>
+         <object-param>
+            <name>docstrorage.configuration</name>
+            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+               <field name="wsName">
+                  <string>production</string>
+               </field>
+               <field name="runInThread">
+                  <boolean>true</boolean>
+               </field>
+               <field name="jars">
                   <collection type="java.util.ArrayList">
-                  
                      <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
                               <string>${javasrc}</string>
                            </field>
@@ -205,10 +219,9 @@
                            </field>
                         </object>
                      </value>
-
 					<!-- 
                      <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
                               <string>
                               	../lib-docs/jcr-1.0-sources.jar;
@@ -239,12 +252,15 @@
                         </object>
                      </value>
                       -->
- 
                   </collection>
                </field>
             </object>
          </object-param>
       </init-params>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
    </component>
 
    <component>
