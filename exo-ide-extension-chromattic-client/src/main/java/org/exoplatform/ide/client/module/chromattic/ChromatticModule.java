@@ -32,10 +32,10 @@ import org.exoplatform.ide.client.module.chromattic.handler.CompileGroovyCommand
 import org.exoplatform.ide.client.module.chromattic.model.service.ChrommaticServiceImpl;
 import org.exoplatform.ide.client.module.chromattic.ui.DeployNodeTypePresenter;
 import org.exoplatform.ide.client.module.chromattic.ui.GenerateNodeTypePresenter;
-import org.exoplatform.ide.client.module.groovy.codeassistant.GroovyImportDeclarationTokenCollector;
-import org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion.GroovyTokenCollector;
-import org.exoplatform.ide.client.module.groovy.codeassistant.autocompletion.GroovyTokenWidgetFactory;
-import org.exoplatform.ide.client.module.groovy.codeassistant.event.RegisterImportTokenCollectorEvent;
+import org.exoplatform.ide.extension.groovy.client.codeassistant.GroovyImportDeclarationTokenCollector;
+import org.exoplatform.ide.extension.groovy.client.codeassistant.autocompletion.GroovyTokenCollector;
+import org.exoplatform.ide.extension.groovy.client.codeassistant.autocompletion.GroovyTokenWidgetFactory;
+import org.exoplatform.ide.extension.groovy.client.codeassistant.event.RegisterImportTokenCollectorEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

@@ -149,11 +149,21 @@
             <artifactId>exo-gwtframework-smartgwt</artifactId>
             <version>${org.exoplatform.gwtframework.version}</version>
          </dependency>
+
+<!--
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-groovy-client</artifactId>
             <version>${project.version}</version>
          </dependency>
+-->
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-groovy</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-server</artifactId>
@@ -164,11 +174,15 @@
           <artifactId>exo-ide-codeassistant-framework</artifactId>
           <version>${project.version}</version>
          </dependency>
+
+<!--
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-groovy-server</artifactId>
             <version>${project.version}</version>
          </dependency>
+-->
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-gadget-server</artifactId>
@@ -610,8 +624,11 @@
       <module>exo-ide-extension-gadget-server</module>
       <module>exo-ide-extension-gadget-client</module>
 
+      <module>exo-ide-extension-groovy</module>
+<!--
       <module>exo-ide-extension-groovy-server</module>
       <module>exo-ide-extension-groovy-client</module>
+-->
 
       <module>exo-ide-extension-netvibes-server</module>
       <module>exo-ide-extension-netvibes-client</module>
@@ -623,8 +640,10 @@
 
       <module>exo-ide-client</module>
       
+<!--
       <module>exo-ide-client-application</module>
       <module>exo-ide-client-gadget</module>
       <module>exo-ide-packaging-standalone-tomcat</module>
+-->
    </modules>
 </project>

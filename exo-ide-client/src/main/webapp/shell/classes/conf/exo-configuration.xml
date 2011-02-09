@@ -244,7 +244,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptService</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type>
       <init-params>
          <object-param>
             <name>observation.config</name>
@@ -347,7 +347,7 @@
 
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
    </component>
 
    <component>

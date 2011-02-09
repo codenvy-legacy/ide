@@ -173,7 +173,7 @@
       
    <dependency>
       <groupId>org.exoplatform.ide</groupId>
-      <artifactId>exo-ide-extension-groovy-server</artifactId>
+      <artifactId>exo-ide-extension-groovy</artifactId>
    </dependency>
    </dependencies>
    <build>

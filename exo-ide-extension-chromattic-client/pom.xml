@@ -31,10 +31,12 @@
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-groovy-client</artifactId>
+         <artifactId>exo-ide-extension-groovy</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>com.smartgwt</groupId>
          <artifactId>smartgwt</artifactId>

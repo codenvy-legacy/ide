@@ -37,10 +37,10 @@ import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.util.ImageUtil;
-import org.exoplatform.ide.client.module.groovy.classpath.EnumSourceType;
-import org.exoplatform.ide.client.module.groovy.classpath.GroovyClassPathEntry;
-import org.exoplatform.ide.client.module.groovy.classpath.GroovyClassPathUtil;
-import org.exoplatform.ide.client.module.groovy.event.ConfigureBuildPathEvent;
+import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
+import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
+import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
+import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

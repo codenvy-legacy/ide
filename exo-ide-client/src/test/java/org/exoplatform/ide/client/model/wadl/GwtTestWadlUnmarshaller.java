@@ -28,7 +28,7 @@ import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.ide.client.AbstractGwtTest;
 import org.exoplatform.ide.client.TestResponse;
-import org.exoplatform.ide.client.module.groovy.service.wadl.marshal.WadlServiceOutputUnmarshaller;
+import org.exoplatform.ide.extension.groovy.client.service.wadl.marshal.WadlServiceOutputUnmarshaller;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Header;

@@ -45,7 +45,9 @@
    <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
    <inherits name='org.exoplatform.ide.client.module.IDEGadgetModule' />
-   <inherits name='org.exoplatform.ide.client.module.IDEGroovyModule' />
+   
+   <inherits name='org.exoplatform.ide.extension.groovy.IDEGroovyModule' />
+   
    <inherits name='org.exoplatform.ide.client.module.IDEChromatticModule' />
    <inherits name='org.exoplatform.ide.client.module.IDENetvibesModule' />
       

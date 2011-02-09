@@ -36,11 +36,11 @@ import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.RestService;
 import org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedEvent;
 import org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedHandler;
-import org.exoplatform.ide.client.module.groovy.service.wadl.WadlService;
-import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceiveHandler;
-import org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceivedEvent;
 import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryEvent;
 import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryHandler;
+import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
+import org.exoplatform.ide.extension.groovy.client.service.wadl.event.WadlServiceOutputReceiveHandler;
+import org.exoplatform.ide.extension.groovy.client.service.wadl.event.WadlServiceOutputReceivedEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
