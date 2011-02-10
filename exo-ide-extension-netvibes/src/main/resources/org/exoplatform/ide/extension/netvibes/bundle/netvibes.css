@@ -1,0 +1,83 @@
+.exo-autocomplete-panel
+{
+  background-color: #FFFFFF;
+  border: #A7ABB4 1px solid;
+}
+
+
+.exo-autocomplete-list-item,
+.exo-autocomplete-list-item-overed,
+.exo-autocomplete-list-item-selected
+{
+	background-color: #FFFFFF;
+	font-family: monospace;
+    font-size: 10pt;
+    border: 0 none;
+    padding: 0px;
+}
+
+.exo-autocomplete-list-item TBODY TR TD DIV,
+.exo-autocomplete-list-item-overed TBODY TR TD DIV,
+.exo-autocomplete-list-item-selected TBODY TR TD DIV
+{
+	font-family: monospace;
+    font-size: 10pt;
+    border: 0 none;
+    padding: 0px;
+}
+
+
+.exo-autocomplete-list
+{
+	border: 0 none;
+	background:white;
+}
+
+.exo-autocomplete-list option
+{
+	cursor:default;
+    font-family: monospace;
+    font-size: 10pt;
+    color: #333333;
+}
+
+.exo-autocomplete-list-item,
+.exo-autocomplete-list-item-selected,
+.exo-autocomplete-list-item-overed
+{
+	height: 20px;
+	border-collapse: collapse;
+	cursor: default;
+	outline: none;
+}
+.exo-autocomplete-list-item-selected
+{
+	background-image: url("images/autoComplete/row-selected.png");
+	background-repeat: repeat-x;
+}
+
+.exo-autocomplete-list-item-overed
+{
+	background-image: url("images/autoComplete/row_over.png");
+	background-repeat: repeat-x;
+}
+
+.exo-autocomplete-description
+{
+	border: #A7ABB4 1px solid;
+	background-color: #e0e9ee;
+	font-family: monospace;
+    font-size: 10pt;
+    overflow: scroll;
+}
+
+.exo-autocomplete-fqn
+{
+	color: gray;
+}
+
+.exo-autocomplete-keyword
+{
+	font-weight: bold;
+}
+
