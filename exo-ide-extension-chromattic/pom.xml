@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.exoplatform.ide</groupId>
+		<artifactId>exo-ide-parent</artifactId>
+		<version>1.2.0-SNAPSHOT</version>
+	</parent>
+	<groupId>org.exoplatform.ide</groupId>
+	<artifactId>exo-ide-extension-chromattic</artifactId>
+	<packaging>jar</packaging>
+	<name>eXo IDE :: Extension : Chromattic</name>
+	
+	<dependencies>
+	
+		<dependency>
+			<groupId>org.exoplatform.jcr</groupId>
+			<artifactId>exo.jcr.component.core</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>avalon-framework</groupId>
+					<artifactId>avalon-framework</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcmail-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>c3p0</groupId>
+					<artifactId>c3p0</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.objectweb.carol</groupId>
+					<artifactId>carol</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.infinispan</groupId>
+					<artifactId>infinispan-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.infinispan</groupId>
+					<artifactId>infinispan-cachestore-jdbc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>quartz</groupId>
+					<artifactId>quartz</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>stax</groupId>
+					<artifactId>stax-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.woodstox</groupId>
+					<artifactId>wstx-asl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xdoclet</groupId>
+					<artifactId>xdoclet-hibernate-module</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xdoclet</groupId>
+					<artifactId>xdoclet-xdoclet-module</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xdoclet</groupId>
+					<artifactId>xjavadoc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xstream</groupId>
+					<artifactId>xstream</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jgroups</groupId>
+					<artifactId>jgroups</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jboss.cache</groupId>
+					<artifactId>jbosscache-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>jboss.jbossts</groupId>
+					<artifactId>jbossjts</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>jboss.jbossts</groupId>
+					<artifactId>jbossts-common</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.exoplatform.kernel</groupId>
+			<artifactId>exo.kernel.commons</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.exoplatform.kernel</groupId>
+			<artifactId>exo.kernel.container</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.jcr</groupId>
+			<artifactId>jcr</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.exoplatform.ws</groupId>
+			<artifactId>exo.ws.rest.core</artifactId>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.xml.stream</groupId>
+					<artifactId>stax-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.chromattic</groupId>
+			<artifactId>chromattic.dataobject</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId> org.exoplatform.ws</groupId>
+					<artifactId>exo.ws.testframework</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.chromattic</groupId>
+			<artifactId>chromattic.ext</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>quartz</groupId>
+			<artifactId>quartz</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.chromattic</groupId>
+			<artifactId>chromattic.exo</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.cache</groupId>
+			<artifactId>jbosscache-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-extension-groovy</artifactId>
+		</dependency>
+		
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<outputDirectory>target/classes</outputDirectory>
+	</build>
+</project>
