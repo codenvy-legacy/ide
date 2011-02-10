@@ -150,13 +150,17 @@
             <version>${org.exoplatform.gwtframework.version}</version>
          </dependency>
 
-<!--
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-groovy-client</artifactId>
+            <artifactId>exo-ide-server</artifactId>
             <version>${project.version}</version>
          </dependency>
--->
+
+	 <dependency>
+          <groupId>org.exoplatform.ide</groupId>
+          <artifactId>exo-ide-codeassistant-framework</artifactId>
+          <version>${project.version}</version>
+         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -166,53 +170,16 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-server</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-	 <dependency>
-          <groupId>org.exoplatform.ide</groupId>
-          <artifactId>exo-ide-codeassistant-framework</artifactId>
-          <version>${project.version}</version>
-         </dependency>
-
-<!--
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-groovy-server</artifactId>
-            <version>${project.version}</version>
-         </dependency>
--->
-
-<!--
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-gadget-server</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-gadget-client</artifactId>
-            <version>${project.version}</version>
-         </dependency>
--->
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-gadget</artifactId>
             <version>${project.version}</version>
          </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-chromattic-client</artifactId>
+            <artifactId>exo-ide-extension-chromattic</artifactId>
             <version>${project.version}</version>
          </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-chromattic-server</artifactId>
-            <version>${project.version}</version>
-         </dependency>
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-client</artifactId>
@@ -229,19 +196,6 @@
             <version>${project.version}</version>
          </dependency>
 
-<!--
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-netvibes-client</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-netvibes-server</artifactId>
-            <version>${project.version}</version>
-         </dependency>
--->
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-netvibes</artifactId>
@@ -639,17 +593,9 @@
       <module>exo-ide-codeassistant-framework</module>
 	
       <module>exo-ide-extension-gadget</module>
-
-<!--
-      <module>exo-ide-extension-gadget-server</module>
-      <module>exo-ide-extension-gadget-client</module>
--->
-
       <module>exo-ide-extension-groovy</module>
       <module>exo-ide-extension-netvibes</module>
-
-      <module>exo-ide-extension-chromattic-client</module>
-      <module>exo-ide-extension-chromattic-server</module>
+      <module>exo-ide-extension-chromattic</module>
 
       <module>exo-ide-docs</module>
 

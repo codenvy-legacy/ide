@@ -53,8 +53,7 @@
    <inherits name='org.exoplatform.ide.extension.netvibes.NetvibesExtension' />
    <inherits name='org.exoplatform.ide.extension.groovy.GroovyExtension' />
    <inherits name='org.exoplatform.ide.extension.gadget.GadgetExtension' />
-      
-   <inherits name='org.exoplatform.ide.client.module.IDEChromatticModule' />
+   <inherits name='org.exoplatform.ide.extension.chromattic.ChromatticExtension' />
 
    <inherits name="com.allen_sauer.gwt.log.gwt-log-DEBUG" />
    <set-property name="log_DivLogger" value="DISABLED" />

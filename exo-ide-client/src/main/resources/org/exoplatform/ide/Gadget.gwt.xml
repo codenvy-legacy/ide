@@ -46,10 +46,12 @@
    <inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />
    <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
-   <inherits name='org.exoplatform.ide.client.module.IDEGadgetModule' />
-   <inherits name='org.exoplatform.ide.client.module.IDEGroovyModule' />
-   <inherits name='org.exoplatform.ide.client.module.IDEChromatticModule' />
-   <inherits name='org.exoplatform.ide.client.module.IDENetvibesModule' />
+   
+   <!-- EXTENSIONS -->
+   <inherits name='org.exoplatform.ide.extension.netvibes.NetvibesExtension' />
+   <inherits name='org.exoplatform.ide.extension.groovy.GroovyExtension' />
+   <inherits name='org.exoplatform.ide.extension.gadget.GadgetExtension' />
+   <inherits name='org.exoplatform.ide.extension.chromattic.ChromatticExtension' />
    
    <inherits name="com.allen_sauer.gwt.log.gwt-log-OFF" />   
 

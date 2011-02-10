@@ -131,7 +131,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.chromattic.ChromatticServiceApplication</type>
+      <type>org.exoplatform.ide.extension.chromattic.server.ChromatticServiceApplication</type>
    </component>
 
    <component>
