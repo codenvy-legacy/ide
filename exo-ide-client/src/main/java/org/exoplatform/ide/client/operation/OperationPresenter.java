@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.client.operation;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -35,18 +34,19 @@ import org.exoplatform.ide.client.framework.output.event.OutputHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
-import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
-import org.exoplatform.ide.client.module.gadget.service.GadgetService;
-import org.exoplatform.ide.client.module.gadget.service.TokenRequest;
-import org.exoplatform.ide.client.module.gadget.service.TokenResponse;
-import org.exoplatform.ide.client.module.gadget.service.event.GadgetMetadaRecievedEvent;
-import org.exoplatform.ide.client.module.gadget.service.event.GadgetMetadaRecievedHandler;
-import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedEvent;
-import org.exoplatform.ide.client.module.gadget.service.event.SecurityTokenRecievedHandler;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesEvent;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesHandler;
+import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
+import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
+import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
+import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
+import org.exoplatform.ide.extension.gadget.client.service.event.GadgetMetadaRecievedEvent;
+import org.exoplatform.ide.extension.gadget.client.service.event.GadgetMetadaRecievedHandler;
+import org.exoplatform.ide.extension.gadget.client.service.event.SecurityTokenRecievedEvent;
+import org.exoplatform.ide.extension.gadget.client.service.event.SecurityTokenRecievedHandler;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
 
 /**
  * Created by The eXo Platform SAS .

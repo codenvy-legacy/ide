@@ -30,12 +30,12 @@
    <context-param>
       <param-name>guice-modules</param-name>
       <param-value>
-      org.exoplatform.ide.shindig.ExoIdeShellModule:
+      org.exoplatform.ide.extension.gadget.server.shindig.ExoIdeShellModule:
       org.apache.shindig.gadgets.DefaultGuiceModule:
       org.apache.shindig.social.sample.SampleModule:
       org.apache.shindig.gadgets.oauth.OAuthModule:
       org.apache.shindig.common.cache.ehcache.EhCacheModule:
-      org.exoplatform.ide.shindig.ExoIdeGuiceModule
+      org.exoplatform.ide.extension.gadget.server.shindig.ExoIdeGuiceModule
     </param-value>
    </context-param>
 
@@ -63,7 +63,7 @@
    
     <filter>
       <filter-name>MakeRequestHeaderFilter</filter-name>
-      <filter-class>org.exoplatform.ide.filter.MakeRequestHeaderFilter</filter-class>
+      <filter-class>org.exoplatform.ide.extension.gadget.server.filter.MakeRequestHeaderFilter</filter-class>
    </filter>   
 
    <filter>

@@ -27,11 +27,10 @@ import org.exoplatform.ide.client.framework.configuration.event.ConfigurationRec
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.conversation.ConversationServiceImpl;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.module.gadget.service.GadgetServiceImpl;
+import org.exoplatform.ide.extension.gadget.client.service.GadgetServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .

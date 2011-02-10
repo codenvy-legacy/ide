@@ -121,8 +121,8 @@
    </component>
 
    <component>
-      <key>org.exoplatform.ide.netvibes.NetvibesServiceApplication</key>
-      <type>org.exoplatform.ide.netvibes.NetvibesServiceApplication</type>
+      <key>org.exoplatform.ide.extension.netvibes.server.NetvibesServiceApplication</key>
+      <type>org.exoplatform.ide.extension.netvibes.server.NetvibesServiceApplication</type>
    </component>
 
    <component>
@@ -200,10 +200,8 @@
 
 
    <component>
-      <type>org.exoplatform.ide.shindig.oauth.RestSecurityTokenGenerator</type>
+      <type>org.exoplatform.ide.extension.gadget.server.shindig.oauth.RestSecurityTokenGenerator</type>
    </component>
-
-
 
    <component>
       <!-- <key>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</key> -->

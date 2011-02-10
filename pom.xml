@@ -183,6 +183,8 @@
          </dependency>
 -->
 
+<!--
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-gadget-server</artifactId>
@@ -193,6 +195,14 @@
             <artifactId>exo-ide-extension-gadget-client</artifactId>
             <version>${project.version}</version>
          </dependency>
+-->
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-gadget</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-chromattic-client</artifactId>
@@ -628,20 +638,15 @@
       <module>exo-ide-vfs-jcr</module>
       <module>exo-ide-codeassistant-framework</module>
 	
+      <module>exo-ide-extension-gadget</module>
+
+<!--
       <module>exo-ide-extension-gadget-server</module>
       <module>exo-ide-extension-gadget-client</module>
+-->
 
       <module>exo-ide-extension-groovy</module>
-<!--
-      <module>exo-ide-extension-groovy-server</module>
-      <module>exo-ide-extension-groovy-client</module>
--->
       <module>exo-ide-extension-netvibes</module>
-
-<!--
-      <module>exo-ide-extension-netvibes-server</module>
-      <module>exo-ide-extension-netvibes-client</module>
--->
 
       <module>exo-ide-extension-chromattic-client</module>
       <module>exo-ide-extension-chromattic-server</module>

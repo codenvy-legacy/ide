@@ -22,11 +22,13 @@
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
          <scope>provided</scope>
       </dependency>
+      
       <dependency>
          <groupId>com.google.gwt.google-apis</groupId>
          <artifactId>gwt-gadgets</artifactId>
@@ -53,10 +55,18 @@
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
       
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-gadget-client</artifactId>
-      </dependency>
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-gadget</artifactId>
+               <!-- 
+               <exclusions>
+                  <exclusion>
+                     <groupId>pull-parser</groupId>
+                     <artifactId>pull-parser</artifactId>
+                  </exclusion>
+               </exclusions>
+                -->
+            </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -242,6 +252,8 @@
                <artifactId>exo-ide-extension-chromattic-server</artifactId>
                <scope>runtime</scope>
             </dependency>
+            
+            <!-- 
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-gadget-server</artifactId>
@@ -253,6 +265,8 @@
                </exclusions>
                <scope>runtime</scope>
             </dependency>
+             -->
+            
             <dependency>
                <groupId>hsqldb</groupId>
                <artifactId>hsqldb</artifactId>

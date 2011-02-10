@@ -21,12 +21,12 @@ package org.exoplatform.ide.client.gadget;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.client.AbstractGwtTest;
 import org.exoplatform.ide.client.TestResponse;
-import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
-import org.exoplatform.ide.client.module.gadget.service.TokenRequest;
-import org.exoplatform.ide.client.module.gadget.service.TokenResponse;
-import org.exoplatform.ide.client.module.gadget.service.marshal.GadgetMetadataUnmarshaler;
-import org.exoplatform.ide.client.module.gadget.service.marshal.TokenRequestMarshaler;
-import org.exoplatform.ide.client.module.gadget.service.marshal.TokenResponseUnmarshal;
+import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
+import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
+import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
+import org.exoplatform.ide.extension.gadget.client.service.marshal.GadgetMetadataUnmarshaler;
+import org.exoplatform.ide.extension.gadget.client.service.marshal.TokenRequestMarshaler;
+import org.exoplatform.ide.extension.gadget.client.service.marshal.TokenResponseUnmarshal;
 
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONParser;

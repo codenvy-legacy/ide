@@ -18,17 +18,6 @@
  */
 package org.exoplatform.ide.client.operation;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.widgets.events.MouseDownEvent;
-import com.smartgwt.client.widgets.events.MouseDownHandler;
-import com.smartgwt.client.widgets.tab.Tab;
-import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
-import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
-
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredEvent;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredHandler;
@@ -37,12 +26,22 @@ import org.exoplatform.ide.client.framework.ui.LockableView;
 import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.module.gadget.service.GadgetMetadata;
-import org.exoplatform.ide.client.module.gadget.ui.GadgetPreviewPane;
 import org.exoplatform.ide.client.operation.output.OutputForm;
 import org.exoplatform.ide.client.operation.preview.PreviewForm;
 import org.exoplatform.ide.client.operation.properties.PropertiesForm;
 import org.exoplatform.ide.client.panel.Panel;
+import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
+import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.ui.Image;
+import com.smartgwt.client.widgets.events.MouseDownEvent;
+import com.smartgwt.client.widgets.events.MouseDownHandler;
+import com.smartgwt.client.widgets.tab.Tab;
+import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 /**
  * Form, displayed in bottom side of IDE.
