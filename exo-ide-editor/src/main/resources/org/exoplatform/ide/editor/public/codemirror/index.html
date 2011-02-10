@@ -1,0 +1,100 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <script src="js/codemirror.js" type="text/javascript"></script>
+    <title>CodeMirror: Groovy demonstration</title>
+    <link rel="stylesheet" type="text/css" href="css/docs.css"/>
+  </head>
+  <body style="padding: 20px;">
+
+<p>Demonstration of <a href="http://marijn.haverbeke.nl/codemirror/">CodeMirror</a>'s <b>Groovy</b> highlighter.</p>
+<hr />
+<p>Created by eXo Platform SAS (<a href="LICENSE">license</a>).</p>
+
+<div class="border">
+<textarea id="code-groovy" cols="120" rows="50">
+// simple groovy script
+import javax.ws.rs.Path
+import javax.ws.rs.GET
+import javax.ws.rs.PathParam
+import javax.ws.rs.POST
+
+@Path("/")
+public class HelloWorld {
+  @GET
+  @Path("helloworld/{name}")
+  public String hello(@PathParam("name") String name) {
+    return "Hello " + name
+  }
+  
+  @POST
+  @Path("helloworld/{name}")
+  public String hello2(@PathParam("name") String name) {
+    return "Hello " + name
+  }
+}
+</textarea>
+</div>
+
+<script type="text/javascript">
+  var editorGroovy = CodeMirror.fromTextArea('code-groovy', {
+    height: "450px",
+    parserfile: ["parsegroovy.js", "tokenizegroovy.js"],
+    stylesheet: "css/groovycolors.css",
+    path: "js/",
+    textWrapping: false
+  });
+</script>
+<br /><br />
+<p>Demonstration of <a href="http://marijn.haverbeke.nl/codemirror/">CodeMirror</a>'s <b>Groovy template</b> highlighter.</p>
+<hr />
+<p>Created by eXo Platform SAS (<a href="LICENSE">license</a>).</p>
+
+<div class="border">
+<textarea id="code-groovy-template" cols="120" rows="50">
+&lt;%    
+    def rcontext = _ctx.getRequestContext(); 
+%>
+    &lt;div class="TitleBar">&lt;%=_ctx.appRes(uicomponent.getName() + ".title")%>&lt;/div>
+    &lt;% uiform.begin() %>
+       &lt;table class="UIFormGrid">
+        &lt;tr>
+          &lt;td colspan="2" class="FieldComponent">&lt;span class="UIForgetPasswordWizard" id="UIForgetPasswordWizard">&lt;%=_ctx.appRes(uicomponent.getName() + ".info")%>&lt;/span>&lt;/td>
+        &lt;/tr>
+                &lt;% 
+                    for(field in uiform.getChildren()) { 
+                        if(field.isRendered()) {
+                %>
+                &lt;tr>
+                    &lt;%fieldName = uicomponent.getLabel(field.getName());%>
+                    &lt;%if(!fieldName.equals(uicomponent.getId())) { %>                                                
+                        &lt;td class="FieldLabel">
+                            &lt;%if(fieldName != null && fieldName.length() > 0) {%> 
+                                &lt;%=uicomponent.getLabel(field.getName()) %>
+                            &lt;%}%>
+                        &lt;/td>
+                        &lt;td class="FieldComponent">&lt;% uiform.renderField(field) %>&lt;/td>
+                    &lt;%} else {%>
+                        &lt;td class="FieldComponent" colspan="2">&lt;% uiform.renderField(field) %>&lt;/td>
+                    &lt;%}%>
+                &lt;/tr>
+                &lt;%
+                        }
+                    }
+                %>
+       &lt;/table>
+    &lt;%uiform.end()%>
+</textarea>
+</div>
+
+<script type="text/javascript">
+  var editorGroovyTemplate = CodeMirror.fromTextArea('code-groovy-template', {
+    height: "600px",
+    parserfile: ["parsegtmpl.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "tokenizegroovy.js", "parsegroovy.js", "parsegtmplmixed.js"],
+    stylesheet: ["css/gtmplcolors.css", "css/jscolors.css", "css/csscolors.css", "css/groovycolors.css"],
+    path: "js/"
+  });
+</script>
+
+
+</body>
+</html>
