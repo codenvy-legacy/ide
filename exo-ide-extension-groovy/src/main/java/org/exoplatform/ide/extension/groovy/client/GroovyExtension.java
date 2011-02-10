@@ -83,7 +83,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class GroovyModule extends Extension implements RestServiceOutputReceivedHandler, SetAutoloadHandler,
+public class GroovyExtension extends Extension implements RestServiceOutputReceivedHandler, SetAutoloadHandler,
    PreviewWadlOutputHandler, WadlServiceOutputReceiveHandler, InitializeServicesHandler,
    ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler
 {

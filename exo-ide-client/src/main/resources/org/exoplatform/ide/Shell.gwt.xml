@@ -42,15 +42,22 @@
    <inherits name='org.exoplatform.gwtframework.editor.Editor' />
    <inherits name='org.exoplatform.gwtframework.ui.UI' />
    <inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />
-   <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
+
+   <!-- IDE Client Framework  -->   
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
-   <inherits name='org.exoplatform.ide.client.module.IDEGadgetModule' />
+
+   <!-- Virtual File System  -->
+   <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
    
-   <inherits name='org.exoplatform.ide.extension.groovy.IDEGroovyModule' />
-   
+   <!-- EXTENSIONS -->
+   <inherits name='org.exoplatform.ide.extension.netvibes.NetvibesExtension' />
+   <inherits name='org.exoplatform.ide.extension.groovy.GroovyExtension' />
+
+   <inherits name='org.exoplatform.ide.client.module.IDEGadgetModule' />   
    <inherits name='org.exoplatform.ide.client.module.IDEChromatticModule' />
-   <inherits name='org.exoplatform.ide.client.module.IDENetvibesModule' />
-      
+
+
+
    <inherits name="com.allen_sauer.gwt.log.gwt-log-DEBUG" />
    <set-property name="log_DivLogger" value="DISABLED" />
 

@@ -31,23 +31,28 @@
          <groupId>com.google.gwt.google-apis</groupId>
          <artifactId>gwt-gadgets</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>com.google.code.gwt-log</groupId>
          <artifactId>gwt-log</artifactId>
          <version>3.0.4</version>
       </dependency>
+      
       <dependency>
          <groupId>com.smartgwt</groupId>
          <artifactId>smartgwt</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs-webdav-client</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-gadget-client</artifactId>
@@ -60,8 +65,9 @@
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-netvibes-client</artifactId>
+         <artifactId>exo-ide-extension-netvibes</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-chromattic-client</artifactId>
@@ -77,6 +83,7 @@
          <artifactId>exo-ide-testframework</artifactId>
          <scope>test</scope>
       </dependency>
+      
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
@@ -230,15 +237,6 @@
                <artifactId>exo-ide-server</artifactId>
                <scope>runtime</scope>
             </dependency>
-            
-            <!-- 
-            <dependency>
-               <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-extension-groovy-server</artifactId>
-               <scope>runtime</scope>
-            </dependency>
-             -->
-             
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-chromattic-server</artifactId>
@@ -253,11 +251,6 @@
                      <artifactId>pull-parser</artifactId>
                   </exclusion>
                </exclusions>
-               <scope>runtime</scope>
-            </dependency>
-            <dependency>
-               <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-extension-netvibes-server</artifactId>
                <scope>runtime</scope>
             </dependency>
             <dependency>

@@ -29,7 +29,7 @@ import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
 import org.exoplatform.ide.client.autocompletion.TokenSelectedHandler;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenWidgetFactory;
-import org.exoplatform.ide.client.module.netvibes.codeassistant.autocomplete.ui.NetvibesTokenWidget;
+import org.exoplatform.ide.extension.netvibes.client.codeassistant.autocomplete.ui.NetvibesTokenWidget;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;

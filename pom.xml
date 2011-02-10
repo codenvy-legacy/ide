@@ -219,6 +219,7 @@
             <version>${project.version}</version>
          </dependency>
 
+<!--
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-netvibes-client</artifactId>
@@ -228,6 +229,12 @@
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-netvibes-server</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+-->
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-netvibes</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -629,9 +636,12 @@
       <module>exo-ide-extension-groovy-server</module>
       <module>exo-ide-extension-groovy-client</module>
 -->
+      <module>exo-ide-extension-netvibes</module>
 
+<!--
       <module>exo-ide-extension-netvibes-server</module>
       <module>exo-ide-extension-netvibes-client</module>
+-->
 
       <module>exo-ide-extension-chromattic-client</module>
       <module>exo-ide-extension-chromattic-server</module>
