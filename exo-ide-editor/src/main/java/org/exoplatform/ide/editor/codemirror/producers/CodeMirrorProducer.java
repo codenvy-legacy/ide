@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror;
+package org.exoplatform.ide.editor.codemirror.producers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,33 +24,38 @@ import java.util.Map;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorParams;
 
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: CodeMirrorPlainTextProduser Feb 10, 2011 9:38:20 AM evgen $
+ * @version $Id: CodeMirrorProducer Feb 11, 2011 2:30:49 PM evgen $
  *
  */
-public class CodeMirrorPlainTextProducer extends EditorProducer
+public class CodeMirrorProducer extends EditorProducer
 {
-
+   
    private Map<String, Object> params = new HashMap<String, Object>();
-
+   
    /**
     * @param mimeType
     * @param description
     * @param ext
     * @param isDefault
     */
-   public CodeMirrorPlainTextProducer(String mimeType, String description, String ext, boolean isDefault)
+   public CodeMirrorProducer(String mimeType, String description, String ext, boolean isDefault)
    {
       super(mimeType, description, ext, isDefault);
-      params.put(CodeMirrorParams.CONFIGURATION, new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js']", // generic code parsers
-         "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']" // code styles
-      ));
-
       params.put(CodeMirrorParams.MIME_TYPE, mimeType);
+   }
+   
+   public CodeMirrorProducer(String mimeType, String description, String ext, boolean isDefault, CodeMirrorConfiguration configuration)
+   {
+      this(mimeType, description, ext, isDefault);
+      params.put(CodeMirrorParams.CONFIGURATION, configuration);
    }
 
    /**
@@ -62,5 +67,6 @@ public class CodeMirrorPlainTextProducer extends EditorProducer
       params.putAll(this.params);
       return new CodeMirror(file, params, eventBus);
    }
+   
 
 }

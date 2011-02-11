@@ -16,39 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror;
+package org.exoplatform.ide.editor.codemirror.parser;
 
 import java.util.List;
 
+import org.exoplatform.ide.editor.api.Parser;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+
+import com.google.gwt.core.client.JavaScriptObject;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: CodeMirrorParams Feb 10, 2011 9:41:09 AM evgen $
+ * @version $Id: CssParser Feb 11, 2011 2:24:21 PM evgen $
  *
  */
-public interface CodeMirrorParams
+public class CssParser extends Parser
 {
+
    /**
-    * Key for {@link CodeMirrorConfiguration} object
+    * @see org.exoplatform.ide.editor.api.Parser#getTokenList(com.google.gwt.core.client.JavaScriptObject)
     */
-   String CONFIGURATION = "configuration";
-   
-   /**
-    * Key for {@link Boolean}, set editor in read only mode
-    */
-   String IS_READ_ONLY = "is_read_only";
-   
-   /**
-    * Key for {@link Boolean}, set show/hide line numbers
-    */
-   String IS_SHOW_LINE_NUMER = "is_show_line_number";
-   
-   /**
-    * Key for {@link List} of hot keys
-    */
-   String HOT_KEY_LIST = "hot_key_list";
-   
-   /**
-    * Key for content mime type
-    */
-   String MIME_TYPE = "mime_type";
+   @Override
+   public List<Token> getTokenList(JavaScriptObject editor)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
 }

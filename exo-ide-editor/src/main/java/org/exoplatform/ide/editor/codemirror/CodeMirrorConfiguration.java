@@ -28,6 +28,8 @@ import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoComple
 import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.DefaultAutocompleteHelper;
 import org.exoplatform.ide.editor.api.codeassitant.codevalidator.CodeValidator;
 import org.exoplatform.ide.editor.api.codeassitant.codevalidator.DefaultCodeValidator;
+import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
+import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 
 import com.google.gwt.core.client.GWT;
 
@@ -61,7 +63,7 @@ public class CodeMirrorConfiguration
    private CodeValidator codeValidator;
 
    private AutoCompleteHelper autocompleteHelper;
-   
+
    private Set<String> compositeMimeTypes;
 
    public CodeMirrorConfiguration()
@@ -72,21 +74,21 @@ public class CodeMirrorConfiguration
    public CodeMirrorConfiguration(String codeParsers, String codeStyles)
    {
       this(codeParsers, codeStyles, false, false, new DefaultParser(), new DefaultAutocompleteHelper(), false,
-         new DefaultCodeValidator(),new HashSet<String>());
+         new DefaultCodeValidator(), new HashSet<String>());
    }
 
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
       boolean canBeAutocompleted, Parser parser)
    {
       this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, new DefaultAutocompleteHelper(), false,
-         new DefaultCodeValidator(),new HashSet<String>());
+         new DefaultCodeValidator(), new HashSet<String>());
    }
 
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
       boolean canBeAutocompleted, Parser parser, AutoCompleteHelper autocompleteHelper)
    {
       this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, false,
-         new DefaultCodeValidator(),new HashSet<String>());
+         new DefaultCodeValidator(), new HashSet<String>());
    }
 
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
@@ -102,6 +104,13 @@ public class CodeMirrorConfiguration
       this.canBeValidated = canBeValidated;
       this.codeValidator = codeValidator;
       this.compositeMimeTypes = compositeMimeType;
+   }
+
+   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
+      boolean canBeAutocompleted, Parser parser, AutoCompleteHelper autocompleteHelper, Set<String> comTypes)
+   {
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, false,
+         new DefaultCodeValidator(), comTypes);
    }
 
    public String getCodeParsers()
