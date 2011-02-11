@@ -79,7 +79,7 @@ public class CodeMirror extends Editor
    private static int characterWidth = 8; // width of character in the CodeMirror in px
 
    private static int firstCharacterOffsetLeft = (BrowserResolver.CURRENT_BROWSER.equals(Browser.IE) ? 0 : 5); // left offset of character of the line in px
-   
+
    /**
     * @param file
     * @param params
@@ -101,7 +101,7 @@ public class CodeMirror extends Editor
       if (params.get(CodeMirrorParams.CONFIGURATION) != null)
          configuration = (CodeMirrorConfiguration)params.get(CodeMirrorParams.CONFIGURATION);
       else
-         configuration = new CodeMirrorConfiguration();      
+         configuration = new CodeMirrorConfiguration();
    }
 
    /**
@@ -397,7 +397,7 @@ public class CodeMirror extends Editor
       if (hasLineNumbers) {
          cursorOffsetX += this.@org.exoplatform.ide.editor.codemirror.CodeMirror::lineNumberFieldWidth;
       }
-      
+
       var cursor = editor.cursorPosition(true);     
       var lineContent = editor.lineContent(cursor.line);
 
@@ -410,13 +410,13 @@ public class CodeMirror extends Editor
       {
          var currentNode = editor.nextLine(cursor.line).previousSibling;
       }
-      
+
       var token = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getTokenBeforeCursor(Lcom/google/gwt/core/client/JavaScriptObject;II)(
          currentNode, 
          this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCursorRow()(),
          cursorCol         
       );
-      
+
       // fire editorAutoCompleteCalledEvent
       var editorAutoCompleteCalledEventInstance = @org.exoplatform.ide.editor.api.event.EditorAutoCompleteCalledEvent::new(Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;IILjava/util/List;Ljava/lang/String;Lorg/exoplatform/ide/editor/api/codeassitant/Token;)(
          this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getEditorId()(),
@@ -610,8 +610,20 @@ public class CodeMirror extends Editor
    @Override
    public boolean isCapable(EditorCapability capability)
    {
-      // TODO Auto-generated method stub
-      return false;
+      switch (capability)
+      {
+         case CREATE_TOKEN_LIST :
+         case FIND_AND_REPLACE :
+         case DELETE_CURRENT_LINE :
+         case FORMAT_SOURCE :
+         case GO_TO_POSITION :
+         case SHOW_LINE_NUMBERS :
+            return true;
+
+         default :
+            return false;
+
+      }
    }
 
    /**
