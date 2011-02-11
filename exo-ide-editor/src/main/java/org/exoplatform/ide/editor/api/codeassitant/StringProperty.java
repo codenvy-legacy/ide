@@ -18,29 +18,36 @@
  */
 package org.exoplatform.ide.editor.api.codeassitant;
 
-import java.util.Collection;
-import java.util.Set;
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public interface Token
+public class StringProperty extends TokenProperty
 {
 
-   String getName();
+   private String value;
 
-   TokenType getType();
+   /**
+    * @param value
+    */
+   public StringProperty(String value)
+   {
+      super();
+      this.value = value;
+   }
 
-   Set<String> getPropertiesNames();
+   @Override
+   public StringProperty isStringProperty()
+   {
+      return this;
+   }
 
-   Collection<TokenProperty> getProperties();
-
-   TokenProperty getProperty(String name);
-
-   void setProperty(String name, TokenProperty property);
-   
-   boolean containsProperty(String name);
-
+   /**
+    * @return value of this property
+    */
+   public String stringValue()
+   {
+      return value;
+   }
 }

@@ -18,29 +18,48 @@
  */
 package org.exoplatform.ide.editor.api.codeassitant;
 
-import java.util.Collection;
-import java.util.Set;
-
 /**
+ * Abstract {@link Token} property class.
+ * <br>
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public interface Token
+public abstract class TokenProperty
 {
-
-   String getName();
-
-   TokenType getType();
-
-   Set<String> getPropertiesNames();
-
-   Collection<TokenProperty> getProperties();
-
-   TokenProperty getProperty(String name);
-
-   void setProperty(String name, TokenProperty property);
    
-   boolean containsProperty(String name);
+   
+   /**
+    * @return instance of {@link StringProperty} or <code>null</code>
+    */
+   public StringProperty isStringProperty()
+   {
+      return null;
+   }
+   
+   
+   /**
+    * @return instance of {@link NumericProperty} or <code>null</code>
+    */
+   public NumericProperty isNumericProperty()
+   {
+      return null;
+   }
+   
+   /**
+    * @return instance of {@link ArrayProperty} or <code>null</code>
+    */
+   public ArrayProperty isArrayProperty()
+   {
+      return null;
+   }
+   
+   /**
+    * @return instance of {@link ObjectProperty} or <code>null</code>
+    */
+   public ObjectProperty isObjectProperty()
+   {
+      return null;
+   }
 
 }
