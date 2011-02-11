@@ -10,70 +10,84 @@
    <artifactId>exo-ide-client-gadget</artifactId>
    <packaging>war</packaging>
    <name>eXo IDE :: Client : Gadget</name>
+   
    <dependencies>
+   
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
+   
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-editor</artifactId>
       </dependency>
+   
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
-      <!-- <dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-servlet</artifactId> <scope>runtime</scope> </dependency> -->
+   
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
          <scope>provided</scope>
       </dependency>
+
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
          <version>${gwt.version}</version>
       </dependency>
+
       <dependency>
          <groupId>com.google.code.gwt-log</groupId>
          <artifactId>gwt-log</artifactId>
          <version>3.0.4</version>
       </dependency>
+
       <dependency>
          <groupId>com.smartgwt</groupId>
          <artifactId>smartgwt</artifactId>
       </dependency>
-      <!-- <dependency> <groupId>junit</groupId> <artifactId>junit</artifactId> <scope>test</scope> </dependency> -->
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs-webdav-client</artifactId>
       </dependency>
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-gadget-client</artifactId>
+         <artifactId>exo-ide-extension-gadget</artifactId>
       </dependency>
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-groovy-client</artifactId>
+         <artifactId>exo-ide-extension-groovy</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-netvibes-client</artifactId>
+         <artifactId>exo-ide-extension-netvibes</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-chromattic-client</artifactId>
+         <artifactId>exo-ide-extension-chromattic</artifactId>
       </dependency>
-      <!-- <dependency> <groupId>org.exoplatform.ide</groupId> <artifactId>exo-ide-testframework</artifactId> <scope>test</scope> </dependency> -->
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-client</artifactId>
       </dependency>
+      
    </dependencies>
+   
    <build>
       <resources>
          <resource>
