@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Basic implementation of {@link Token} interface
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -103,10 +104,10 @@ public class TokenImpl implements Token
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.Token#containsProperty(java.lang.String)
+    * @see org.exoplatform.ide.editor.api.codeassitant.Token#hasProperty(java.lang.String)
     */
    @Override
-   public boolean containsProperty(String name)
+   public boolean hasProperty(String name)
    {
       return properties.containsKey(name);
    }

@@ -24,11 +24,21 @@ import java.util.Map;
 
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 
 /**
+ * This is abstract Editor for eXo IDE<br>
+ * Editor - a visual component designed to display and edit content file.<br> 
+ * Furthermore the editor may support additional features (capabilities), such as:
+ *  
+ * <li>Syntax coloring ;
+ * <li>Validation Code (according to the syntax file to be edited); 
+ * <li>CodeAssistant (autocomlation, viewing documentation to the code, etc.);
+ * <li>Deliver a set of content dependent tokens for alternative interviews (for example CodeOutline);
+ *  
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Editor Feb 9, 2011 4:24:07 PM evgen $
  *
@@ -93,12 +103,27 @@ public abstract class Editor extends AbsolutePanel
     * @param column
     * @param row
     */
-   public abstract  void goToPosition(int row, int column);
+   public abstract void goToPosition(int row, int column);
 
+   /**
+    * Delete line content at cursor 
+    */
    public abstract void deleteCurrentLine();
 
+   /**
+    * Find and select text
+    * @param find pattern
+    * @param caseSensitive is pattern case sensitive
+    * @return <code>true</code> if editor text contains par matched to pattern
+    */
    public abstract boolean findAndSelect(String find, boolean caseSensitive);
 
+   /**
+    * Replace founded text block
+    * @param find pattern
+    * @param replace text to replace
+    * @param caseSensitive is pattern case sensetive
+    */
    public abstract void replaceFoundedText(String find, String replace, boolean caseSensitive);
 
    /**
@@ -126,12 +151,29 @@ public abstract class Editor extends AbsolutePanel
     */
    public abstract boolean isReadOnly();
 
+   /**
+    * Get cursor row
+    * @return number of row with cursor
+    */
    public abstract int getCursorRow();
 
+   /**
+    * Get cursor column
+    * @return number of column with cursor
+    */
    public abstract int getCursorCol();
 
+   /**
+    * Set hot keys that editor must ignore, every hot keys must transport to main IDE frame via {@link EditorHotKeyCalledEvent}  
+    * @param hotKeyList
+    */
    public abstract void setHotKeyList(List<String> hotKeyList);
 
+   /**
+    * If editor support autocompletion and outline feature,
+    * this method return {@link List} of {@link Token} parsed from current file
+    * @return {@link List} of {@link Token}
+    */
    public abstract List<Token> getTokenList();
 
    /**
@@ -139,4 +181,3 @@ public abstract class Editor extends AbsolutePanel
     */
    public abstract void replaceTextAtCurrentLine(String line, int cursorPosition);
 }
-
