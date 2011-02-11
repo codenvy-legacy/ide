@@ -39,4 +39,8 @@ public interface CodeMirrorParams
     * Key for {@link Boolean}, set show/hide line numbers
     */
    String IS_SHOW_LINE_NUMER = "is_show_line_number";
+   
+   String HOT_KEY_LIST = "hot_key_list";
+   
+   String MIME_TYPE = "mime_type";
 }

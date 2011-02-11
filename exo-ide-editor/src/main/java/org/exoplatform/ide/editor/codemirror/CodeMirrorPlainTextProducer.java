@@ -21,7 +21,6 @@ package org.exoplatform.ide.editor.codemirror;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.editor.codemirror.CodemirrorProducer;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorProducer;
@@ -33,24 +32,25 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: CodeMirrorPlainTextProduser Feb 10, 2011 9:38:20 AM evgen $
  *
  */
-public class CodeMirrorPlainTextProduser extends EditorProducer
+public class CodeMirrorPlainTextProducer extends EditorProducer
 {
 
    private Map<String, Object> params = new HashMap<String, Object>();
-   
+
    /**
     * @param mimeType
     * @param description
     * @param ext
     * @param isDefault
     */
-   public CodeMirrorPlainTextProduser(String mimeType, String description, String ext, boolean isDefault)
+   public CodeMirrorPlainTextProducer(String mimeType, String description, String ext, boolean isDefault)
    {
       super(mimeType, description, ext, isDefault);
-      params.put(CodeMirrorParams.CONFIGURATION, new CodeMirrorConfiguration(
-         "['parsexml.js', 'parsecss.js']",  // generic code parsers
+      params.put(CodeMirrorParams.CONFIGURATION, new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js']", // generic code parsers
          "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']" // code styles
       ));
+
+      params.put(CodeMirrorParams.MIME_TYPE, mimeType);
    }
 
    /**

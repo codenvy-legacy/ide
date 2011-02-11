@@ -36,17 +36,17 @@ public interface TokenProperties
 
    public static String MODIFIERS = "MODIFIERS";
 
-   public static String DECLARINGCLASS = "DECLARINGCLASS";
+   public static String DECLARING_CLASS = "DECLARINGCLASS";
 
-   public static String GENERICPARAMETERTYPES = "GENERICPARAMETERTYPES";
+   public static String GENERIC_PARAMETER_TYPES = "GENERICPARAMETERTYPES";
 
    public static String TYPE = "TYPE";
 
-   public static String GENERICRETURNTYPE = "GENERICRETURNTYPE";
+   public static String GENERIC_RETURN_TYPE = "GENERICRETURNTYPE";
 
-   public static String PARAMETERTYPES = "PARAMETERTYPES";
+   public static String PARAMETER_TYPES = "PARAMETERTYPES";
 
-   public static String RETURNTYPE = "RETURNTYPE";
+   public static String RETURN_TYPE = "RETURNTYPE";
    
    /**
     * Code, that will be inserted if token selected.

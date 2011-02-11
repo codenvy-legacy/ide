@@ -16,25 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror;
+package org.exoplatform.ide.editor.api;
 
-import com.google.gwt.junit.client.GWTTestCase;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+
+import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: CodeMirrorBaseTest Feb 10, 2011 11:36:26 AM evgen $
+ * @version $Id: DafaultParser Feb 10, 2011 9:55:42 AM evgen $
  *
  */
-public abstract class Base extends GWTTestCase
+public class DefaultParser extends Parser
 {
 
    /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
+    * @see org.exoplatform.ide.editor.api.Parser#getTokenList(com.google.gwt.core.client.JavaScriptObject)
     */
    @Override
-   public String getModuleName()
+   public List<Token> getTokenList(JavaScriptObject editor)
    {
-      return "org.exoplatform.ide.editor.Editor";
+      return new ArrayList<Token>();
    }
 
 }
