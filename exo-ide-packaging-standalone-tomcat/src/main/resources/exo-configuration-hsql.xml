@@ -133,6 +133,7 @@
                </field>
                <field name="jars">
                   <collection type="java.util.ArrayList">
+                  
                      <value>
                         <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
@@ -150,6 +151,7 @@
                            </field>
                         </object>
                      </value>
+                     
                      <value>
                         <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
@@ -181,6 +183,7 @@
                            </field>
                         </object>
                      </value>
+                     
                   </collection>
                </field>
             </object>
@@ -202,6 +205,7 @@
                </field>
                <field name="jars">
                   <collection type="java.util.ArrayList">
+
                      <value>
                         <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
@@ -219,7 +223,7 @@
                            </field>
                         </object>
                      </value>
-					<!-- 
+
                      <value>
                         <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
@@ -251,7 +255,7 @@
                            </field>
                         </object>
                      </value>
-                      -->
+                     
                   </collection>
                </field>
             </object>
@@ -260,7 +264,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
    </component>
 
    <component>
@@ -324,7 +328,7 @@
 
 
    <component>
-      <type>org.exoplatform.ide.shindig.oauth.RestSecurityTokenGenerator</type>
+      <type>org.exoplatform.ide.extension.gadget.server.shindig.oauth.RestSecurityTokenGenerator</type>
    </component>
 
 
@@ -367,14 +371,16 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptService</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type>
       <init-params>
          <object-param>
             <name>observation.config</name>
             <object type="org.exoplatform.services.jcr.ext.script.groovy.ObservationListenerConfiguration">
+               
                <field name="repository">
                   <string>repository</string>
                </field>
+               
                <field name="workspaces">
                   <collection type="java.util.ArrayList">
                      <value>
@@ -382,13 +388,14 @@
                      </value>
                   </collection>
                </field>
+               
             </object>
          </object-param>
       </init-params>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.chromattic.ChromatticServiceApplication</type>
+      <type>org.exoplatform.ide.extension.chromattic.server.ChromatticServiceApplication</type>
    </component>
 
    <component>
@@ -503,7 +510,7 @@
          <init-params>
             <value-param>
                <name>method.developer.access.filter</name>
-               <value>org.exoplatform.ide.groovy.DevelopmentResourceMethodFilter</value>
+               <value>org.exoplatform.ide.extension.groovy.server.DevelopmentResourceMethodFilter</value>
             </value-param>
          </init-params>
       </component-plugin>

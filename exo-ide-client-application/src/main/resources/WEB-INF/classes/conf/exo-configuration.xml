@@ -116,11 +116,11 @@
 
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
       <init-params>
          <object-param>
             <name>autocompletion.configuration</name>
-            <object type="org.exoplatform.ide.groovy.codeassistant.bean.GroovyAutocompletionConfig">
+            <object type="org.exoplatform.ide.extension.groovy.server.codeassistant.bean.GroovyAutocompletionConfig">
                <field name="wsName">
                   <string>production</string>
                </field>
@@ -131,7 +131,7 @@
                   <collection type="java.util.ArrayList">
                   
                      <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                        <object type="org.exoplatform.ide.extension.groovy.server.codeassistant.bean.JarEntry">
                            <field name="jarPath">
                               <string>${jre.lib}${file.separator}rt.jar</string>
                            </field>
@@ -154,7 +154,7 @@
                   <collection type="java.util.ArrayList">
                   
                      <value>
-                        <object type="org.exoplatform.ide.groovy.codeassistant.bean.JarEntry">
+                        <object type="org.exoplatform.ide.extension.groovy.server.codeassistant.bean.JarEntry">
                            <field name="jarPath">
                               <string>${javasrc}</string>
                            </field>
@@ -236,12 +236,9 @@
       </init-params>
    </component>
 
-
    <component>
-      <type>org.exoplatform.ide.shindig.oauth.RestSecurityTokenGenerator</type>
+      <type>org.exoplatform.ide.extension.gadget.server.shindig.oauth.RestSecurityTokenGenerator</type>
    </component>
-
-
 
    <component>
       <key>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</key>
@@ -281,7 +278,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptService</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type>
       <init-params>
          <object-param>
             <name>observation.config</name>
@@ -302,7 +299,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.chromattic.ChromatticServiceApplication</type>
+      <type>org.exoplatform.ide.extension.chromattic.server.ChromatticServiceApplication</type>
    </component>
 
    <component>
@@ -314,7 +311,9 @@
    </component>
 
    <external-component-plugins>
+      
       <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>
+      
       <component-plugin>
          <name>add.nodeType</name>
          <set-method>addPlugin</set-method>
@@ -329,6 +328,7 @@
             </values-param>
          </init-params>
       </component-plugin>
+      
       <component-plugin>
          <name>add.namespaces</name>
          <set-method>addPlugin</set-method>
@@ -348,6 +348,7 @@
             </properties-param>
          </init-params>
       </component-plugin>
+      
    </external-component-plugins>
 
    <external-component-plugins>

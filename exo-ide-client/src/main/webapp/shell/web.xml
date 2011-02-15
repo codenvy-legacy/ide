@@ -265,6 +265,4 @@
       <url-pattern>/rest/private/*</url-pattern>
    </servlet-mapping>
 
-
-
 </web-app>

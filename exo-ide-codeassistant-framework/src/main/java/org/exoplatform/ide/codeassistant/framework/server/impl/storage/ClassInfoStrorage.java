@@ -409,6 +409,7 @@ public class ClassInfoStrorage implements Startable
       base = session.getRootNode().getNode("classpath");
 
       String clazz = fqn;
+      
       Class<?> cls = classLoader.loadClass(clazz);
       TypeInfo cd = TypeInfoExtractor.extract(cls);
       Node child = base;

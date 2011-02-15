@@ -255,7 +255,7 @@
    </component>
  
    <component>
-   <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+   <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication2</type>
    </component>
 
    <component>
