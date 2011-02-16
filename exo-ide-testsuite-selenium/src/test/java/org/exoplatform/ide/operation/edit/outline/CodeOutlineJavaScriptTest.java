@@ -102,11 +102,38 @@ public class CodeOutlineJavaScriptTest extends BaseTest
 
       //---- 5 -----------------
       //Click Enter and enter text in editor:
-      final String jsText =
-         "\n" + "var b = b1.b2;\n" + "\n" + "var c = function(){};\n" + "\n" + "function d() {\n" + "var d1 = d2.d3;\n"
-            + "var d4 = function() {};\n" + "function d5(){};\n" + "}\n" + "\n" + "var g = function() {\n"
-            + "var g1 = g2.g3;\n" + "var g4 = function() {};\n" + "function g5(){};\n" + "}\n" + "\n" + "var e;\n"
-            + "e;\n" + "\n" + "function f(){}\n" + "f();";
+      final String jsText = "\n" + "var b = b1.b2;\n"
+            + "\n"
+            + "var c = function(){};\n"
+            + "\n"
+            + "function d() {\n"
+            + "var d1 = d2.d3;\n"
+            + "var d4 = function() {};\n" 
+            + "function d5(){};\n"
+            + "}\n"
+            + "\n"
+            + "var g = function() {\n"
+            + "var g1 = g2.g3;\n"
+            + "var g4 = function() {};\n"
+            + "function g5(){}; var i = {a: 1};\n"
+            + "}\n"
+            + "\n"
+            + "var e;\n"
+            + "e;\n"
+            + "\n"
+            + "function f(){}\n\n"
+            + "f();\n"
+            + "var a = UWA.Data({\"type\": 1}\n"
+            + "   var h = window.document.getElementById(\"a\")\n"
+            + "var l = Array()\n"
+            + "  var d = ...UWA.Data(  // error\n"
+            + "  var b = 11;  // atomic type Number\n"
+            + " var c = true    // atomic type Boolean\n"
+            + "var f = null; var g = \"string\"\n"
+            + "var e = widget;\n"
+            + "var k = window.document\n"
+            + "             var i = {a: 1}\n"
+            + "var j = [1, \"two\", false, null, undefined]";      
 
       //click on editor
       selenium.clickAt(Locators.EDITOR_LOCATOR, "5,5");
@@ -125,7 +152,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       assertEquals("e", IDE.outline().getTitle(5, 0));
-      assertEquals("f()", IDE.outline().getTitle(6, 0));
+      assertEquals("f()", IDE.outline().getTitle(6, 0));     
       IDE.outline().checkOutlineTreeNodeSelected(6, "f()", true);
       OulineTreeHelper.checkIconNearToken(0, "var-item.png", false);
       OulineTreeHelper.checkIconNearToken(1, "var-item.png", false);
@@ -135,6 +162,40 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       OulineTreeHelper.checkIconNearToken(5, "var-item.png", false);
       OulineTreeHelper.checkIconNearToken(6, "function-item.png", true);
 
+      // test issue GWTX-76 "Return initialization statement of JavaScript variable in the InitializationStatement property of token from JavaScriptParser"
+      assertEquals("a : Object", IDE.outline().getTitle(7, 0));      
+      OulineTreeHelper.checkIconNearToken(7, "var-item.png", false);
+      
+      assertEquals("h : Object", IDE.outline().getTitle(8, 0));      
+      OulineTreeHelper.checkIconNearToken(8, "var-item.png", false);
+      
+      assertEquals("l : Object", IDE.outline().getTitle(9, 0));      
+      OulineTreeHelper.checkIconNearToken(9, "var-item.png", false);
+
+      assertEquals("b : number", IDE.outline().getTitle(10, 0));      
+      OulineTreeHelper.checkIconNearToken(10, "var-item.png", false);
+      
+      assertEquals("c : boolean", IDE.outline().getTitle(11, 0));      
+      OulineTreeHelper.checkIconNearToken(11, "var-item.png", false);
+      
+      assertEquals("f : Object", IDE.outline().getTitle(12, 0));      
+      OulineTreeHelper.checkIconNearToken(12, "var-item.png", false);
+      
+      assertEquals("g : string", IDE.outline().getTitle(13, 0));      
+      OulineTreeHelper.checkIconNearToken(13, "var-item.png", false);
+      
+      assertEquals("e : Object", IDE.outline().getTitle(14, 0));      
+      OulineTreeHelper.checkIconNearToken(14, "var-item.png", false);
+
+      assertEquals("k : Object", IDE.outline().getTitle(15, 0));      
+      OulineTreeHelper.checkIconNearToken(15, "var-item.png", false);
+      
+      assertEquals("i : Object", IDE.outline().getTitle(16, 0));      
+      OulineTreeHelper.checkIconNearToken(16, "var-item.png", false);
+
+      assertEquals("j : Array", IDE.outline().getTitle(17, 0));      
+      OulineTreeHelper.checkIconNearToken(17, "var-item.png", false);
+      
       //open node a
 //      IDE.outline().clickOpenImg(0, 0);
 //      firstCheckJavaScriptOutlineTree();
@@ -159,13 +220,17 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       assertEquals("g1 : Object", IDE.outline().getTitle(8, 0));
       assertEquals("g4()", IDE.outline().getTitle(9, 0));
       assertEquals("g5()", IDE.outline().getTitle(10, 0));
+      assertEquals("i : Object", IDE.outline().getTitle(11, 0));      
+      
       OulineTreeHelper.checkIconNearToken(8, "var-item.png", false);
       OulineTreeHelper.checkIconNearToken(9, "function-item.png", false);
       OulineTreeHelper.checkIconNearToken(10, "function-item.png", false);
+      OulineTreeHelper.checkIconNearToken(11, "var-item.png", false);
+      
       //other nodes
-      assertEquals("e", IDE.outline().getTitle(11, 0));
-      assertEquals("f()", IDE.outline().getTitle(12, 0));
-
+      assertEquals("e", IDE.outline().getTitle(12, 0));
+      assertEquals("f()", IDE.outline().getTitle(13, 0));     
+      
       //---- 6 -----------------
       //Click a node in Outline tree.
       //cursor jump to line, where a variable is defined
