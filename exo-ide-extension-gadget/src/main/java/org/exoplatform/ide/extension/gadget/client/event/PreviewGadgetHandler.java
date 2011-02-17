@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,24 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.client;
+package org.exoplatform.ide.extension.gadget.client.event;
 
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: $
+ * @version $Id: PreviewGadgetHandler Feb 17, 2011 11:23:33 AM evgen $
  *
  */
-public interface Images
+public interface PreviewGadgetHandler extends EventHandler 
 {
-   
-   public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
-   
-   public static final String GOOGLE_GADGET = IMAGE_URL +  "gadget-images/gadget.png";
-   
-//   public static final String DEPLOY_GADGET = IMAGE_URL + "gadget-images/bundled/deploy_gadget.png";
-//   
-//   public static final String UNDEPLOY_GADGET = IMAGE_URL + "gadget-images/bundled/undeploy_gadget.png";
+
+   void onPreviewGadget(PreviewGadgetEvent event);
    
 }

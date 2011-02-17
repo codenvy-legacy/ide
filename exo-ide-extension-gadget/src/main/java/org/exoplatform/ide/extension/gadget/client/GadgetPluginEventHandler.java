@@ -18,24 +18,39 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetHadndler;
+import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent;
+import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetHandler;
 import org.exoplatform.ide.extension.gadget.client.event.UndeployGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.UndeployGadgetHandler;
 import org.exoplatform.ide.extension.gadget.client.service.DeployUndeployGadgetCallback;
+import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadataCallback;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
+import org.exoplatform.ide.extension.gadget.client.service.SecurityTokenCallback;
+import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
+import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
+import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -43,7 +58,8 @@ import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
  *
  */
 public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployGadgetHandler,
-   EditorActiveFileChangedHandler
+   EditorActiveFileChangedHandler, PreviewGadgetHandler,
+   ConfigurationReceivedSuccessfullyHandler
 {
 
    private HandlerManager eventBus;
@@ -51,6 +67,10 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    private Handlers handlers;
 
    private File activeFile;
+
+   private IDEConfiguration  applicationConfiguration;
+   
+   private boolean previewOpened = false;
 
    public GadgetPluginEventHandler(HandlerManager eventBus)
    {
@@ -61,6 +81,9 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(DeployGadgetEvent.TYPE, this);
       handlers.addHandler(UndeployGadgetEvent.TYPE, this);
+      handlers.addHandler(PreviewGadgetEvent.TYPE, this);
+      handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+
    }
 
    /**
@@ -146,5 +169,81 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    {
       this.activeFile = event.getFile();
    }
+
+   /**
+    * @see org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetHandler#onPreviewGadget(org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent)
+    */
+   @Override
+   public void onPreviewGadget(PreviewGadgetEvent event)
+   {
+      if(previewOpened)
+      {
+         eventBus.fireEvent(new CloseViewEvent(GadgetPreviewPane.ID));
+         previewOpened = false;
+      }
+      String owner = "root";
+      String viewer = "root";
+      Long moduleId = 0L;
+      String container = "default";
+      String domain = null;
+
+      String href = activeFile.getHref();
+      href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
+
+      TokenRequest tokenRequest = new TokenRequest(URL.encode(href), owner, viewer, moduleId, container, domain);
+      GadgetService.getInstance().getSecurityToken(tokenRequest, new SecurityTokenCallback()
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            TokenResponse tokenResponse = this.getTokenResponse();
+            getGadgetMetadata(tokenResponse);
+         }
+         
+         @Override
+         public void handleError(Throwable exc)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exc));
+         }
+      });
+   }
+   
+   /**
+    * @param tokenResponse
+    */
+   private void getGadgetMetadata(TokenResponse tokenResponse)
+   {
+      GadgetService.getInstance().getGadgetMetadata(tokenResponse, new GadgetMetadataCallback()
+      {
+         
+         public void onResponseReceived(Request request, Response response)
+         {
+            GadgetPreviewPane gadgetPreviewPane = new GadgetPreviewPane(eventBus, applicationConfiguration, this.getMetadata());
+            gadgetPreviewPane.setType(ViewType.PREVIEW);
+            gadgetPreviewPane.setImage(new Image(GadgetClientBundle.INSTANCE.preview()));
+            eventBus.fireEvent(new OpenViewEvent(gadgetPreviewPane));
+            previewOpened = true;
+         }
+         
+         public void handleError(Throwable exc)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exc));
+         }
+      });
+   }
+
+   
+
+
+   /**
+    * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)
+    */
+   @Override
+   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
+   {
+      applicationConfiguration = event.getConfiguration();
+   }
+
 
 }

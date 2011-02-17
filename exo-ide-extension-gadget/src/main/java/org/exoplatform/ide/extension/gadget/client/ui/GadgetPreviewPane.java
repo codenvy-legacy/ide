@@ -20,14 +20,26 @@ package org.exoplatform.ide.extension.gadget.client.ui;
 
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.LockableView;
+import org.exoplatform.ide.client.framework.ui.PreviewFrame;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.event.dom.client.HasLoadHandlers;
+import com.google.gwt.event.dom.client.HasMouseDownHandlers;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
 
@@ -118,22 +130,24 @@ public class GadgetPreviewPane extends LockableView
       {
          url = url + "&parent=" + Location.getHref() + "&nocache=1";
       }
-      final Frame frame = new Frame(url);
+      final PreviewFrame frame = new PreviewFrame(url);
       DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
       DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
       frame.setWidth("100%");
       frame.setHeight("100%");
-      addMember(frame);
+      frame.setStyleName("");
 
-      new Timer()
+      frame.addLoadHandler(new LoadHandler()
       {
 
          @Override
-         public void run()
+         public void onLoad(LoadEvent event)
          {
             setHandler(IFrameElement.as(frame.getElement()));
          }
-      }.schedule(2000);
+      });
+
+      addMember(frame);
    }
 
    private native void setHandler(Element e)/*-{
@@ -141,16 +155,12 @@ public class GadgetPreviewPane extends LockableView
       var instance = this;
       if(typeof e.contentDocument != "undefined")
       {
-        e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activateView()();},false);
+      e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activateView()();},false);
       }
       else if (typeof e.contentWindow != "undefined")
       {
-        e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activateView()();});
+      e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activateView()();});
       }
-   }-*/;
-
-   private native Document getIFrameDocument(IFrameElement iframe)/*-{
-      return iframe.contentDocument || iframe.contentWindow.document;
    }-*/;
 
    public String getId()

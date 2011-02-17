@@ -319,6 +319,7 @@ public class Panel extends TabSet implements SelectViewHandler, ChangePanelTitle
             {
                selectTab(event.getView().getViewId());
                eventBus.fireEvent(new ViewOpenedEvent(view.getViewId()));
+               event.getView().onOpenTab();
             }
          });
       }

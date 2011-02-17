@@ -20,11 +20,15 @@ package org.exoplatform.ide.client.operation.preview;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.LockableView;
+import org.exoplatform.ide.client.framework.ui.PreviewFrame;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.widgets.HTMLPane;
@@ -41,7 +45,7 @@ public class PreviewForm extends LockableView
 
    private static final String TAB_ID = "Preview";
 
-   private HTMLPane htmlPane;
+   private PreviewFrame frame;
 
    private Image image;
 
@@ -78,34 +82,31 @@ public class PreviewForm extends LockableView
     */
    public void showPreview(String href)
    {
-      if (htmlPane != null)
+      if (frame != null)
       {
-         htmlPane.removeFromParent();
-         htmlPane.destroy();
+         frame.removeFromParent();
       }
-      htmlPane = new HTMLPane();
+      frame = new PreviewFrame();
+      frame.setUrl(href);
+      DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
+      DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
 
-      //String fileURL = Configuration.getInstance().getContext() + "/jcr" + path;
-      String iframe =
-         "<iframe name=\"eXo-IDE-preview-frame\" id=\"eXo-IDE-preview-frame\" src=\"" + href
-            + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\">";
-      iframe += "<p>Your browser does not support iframes.</p>";
-      iframe += "</iframe>";
-
-      htmlPane.setContents(iframe);
-      //      addChild(htmlPane);
-      addMember(htmlPane);
-
-      new Timer()
+      frame.getElement().setId("eXo-IDE-preview-frame");
+      frame.getElement().setAttribute("name", "eXo-IDE-preview-frame");
+      frame.setStyleName("");
+      frame.setWidth("100%");
+      frame.setHeight("100%");
+      
+      frame.addLoadHandler(new LoadHandler()
       {
 
          @Override
-         public void run()
+         public void onLoad(LoadEvent event)
          {
-            setHandler(IFrameElement.as(Document.get().getElementById("eXo-IDE-preview-frame")));
+            setHandler(IFrameElement.as(frame.getElement()));
          }
-      }.schedule(1500);
-
+      });
+      addMember(frame);
    }
 
    private native void setHandler(Element e)/*-{
@@ -119,18 +120,6 @@ public class PreviewForm extends LockableView
       {
          e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.operation.preview.PreviewForm::activateView()();});
       }
-//      if(typeof e.addEventListener != "undefined")
-//      {
-//      e.addEventListener(type,function(){instance.@org.exoplatform.ide.client.operation.preview.PreviewForm::activateView()();},false);
-//      }
-//      else
-//      {
-//      e.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.operation.preview.PreviewForm::activateView()();});
-//      }
-   }-*/;
-
-   private native Document getIFrameDocument(IFrameElement iframe)/*-{
-      return iframe.contentDocument || iframe.contentWindow.document;
    }-*/;
 
    @Override

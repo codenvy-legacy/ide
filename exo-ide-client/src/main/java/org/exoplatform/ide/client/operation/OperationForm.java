@@ -236,23 +236,23 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
 
    public void showGadget(GadgetMetadata metadata, IDEConfiguration applicationConfiguration)
    {
-      show();
-      gadgetPreviewPane = new GadgetPreviewPane(eventBus, applicationConfiguration, metadata);
-      // if preview already opened
-      Tab gadgetPreviewTab = getTab(gadgetPreviewPane.getViewId());
-      if (gadgetPreviewTab == null)
-      {
-         openView(gadgetPreviewPane, gadgetPreviewPane.getTitle(), new Image(IDEImageBundle.INSTANCE.preview()), true);
-      }
-      DeferredCommand.addCommand(new Command()
-      {
-         public void execute()
-         {
-            selectTab(gadgetPreviewPane.getViewId());
-            eventBus.fireEvent(new ViewOpenedEvent(gadgetPreviewPane.getViewId()));
-            gadgetPreviewPane.onOpenTab();
-         }
-      });
+//      show();
+//      gadgetPreviewPane = new GadgetPreviewPane(eventBus, applicationConfiguration, metadata);
+//      // if preview already opened
+//      Tab gadgetPreviewTab = getTab(gadgetPreviewPane.getViewId());
+//      if (gadgetPreviewTab == null)
+//      {
+//         openView(gadgetPreviewPane, gadgetPreviewPane.getTitle(), new Image(IDEImageBundle.INSTANCE.preview()), true);
+//      }
+//      DeferredCommand.addCommand(new Command()
+//      {
+//         public void execute()
+//         {
+//            selectTab(gadgetPreviewPane.getViewId());
+//            eventBus.fireEvent(new ViewOpenedEvent(gadgetPreviewPane.getViewId()));
+//            gadgetPreviewPane.onOpenTab();
+//         }
+//      });
       
       
    }

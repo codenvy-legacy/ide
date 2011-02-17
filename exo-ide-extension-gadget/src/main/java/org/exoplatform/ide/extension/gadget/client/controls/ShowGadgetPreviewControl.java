@@ -16,16 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.development.control;
+package org.exoplatform.ide.extension.gadget.client.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
+import org.exoplatform.ide.extension.gadget.client.GadgetClientBundle;
+import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -36,20 +36,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class ShowPreviewCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class ShowGadgetPreviewControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "Run/Show Preview";
+   public static final String ID = "Run/Show Gadget Preview";
 
-   public static final String TITLE = "Show Preview";
+   public static final String TITLE = "Show Gadget Preview";
 
-   public ShowPreviewCommand()
+   public ShowGadgetPreviewControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.preview(), IDEImageBundle.INSTANCE.previewDisabled());
-      setEvent(new PreviewFileEvent());
+      setImages(GadgetClientBundle.INSTANCE.preview(), GadgetClientBundle.INSTANCE.previewDisabled());
+      setEvent(new PreviewGadgetEvent());
    }
 
    /**
@@ -69,7 +69,7 @@ public class ShowPreviewCommand extends SimpleControl implements IDEControl, Edi
          return;
       }
 
-      if (MimeType.TEXT_HTML.equals(event.getFile().getContentType()))
+      if (MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))
       {
          setVisible(true);
          if (event.getFile().isNewFile())

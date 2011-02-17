@@ -24,7 +24,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.extension.gadget.client.Images;
+import org.exoplatform.ide.extension.gadget.client.GadgetClientBundle;
 import org.exoplatform.ide.extension.gadget.client.event.UndeployGadgetEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -48,12 +48,10 @@ public class UndeployGadgetCommand extends SimpleControl implements IDEControl, 
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      // setImages(GadgetPluginImageBundle.INSTANCE.undeployGadget(),
-      // GadgetPluginImageBundle.INSTANCE
-      // .undeployGadgetDisabled());
-      setIcon(Images.UNDEPLOY_GADGET);
+      setImages(GadgetClientBundle.INSTANCE.undeployGadget(), GadgetClientBundle.INSTANCE.undeployGadgetDisabled());
+      //      setIcon(Images.UNDEPLOY_GADGET);
       setEvent(new UndeployGadgetEvent());
-      
+
    }
 
    /**
@@ -63,7 +61,7 @@ public class UndeployGadgetCommand extends SimpleControl implements IDEControl, 
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
-   
+
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)

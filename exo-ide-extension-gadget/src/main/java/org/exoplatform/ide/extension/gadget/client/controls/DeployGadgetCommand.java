@@ -24,7 +24,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.extension.gadget.client.Images;
+import org.exoplatform.ide.extension.gadget.client.GadgetClientBundle;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -48,12 +48,10 @@ public class DeployGadgetCommand extends SimpleControl implements IDEControl, Ed
       setTitle(TITLE);
       setPrompt(TITLE);
       setDelimiterBefore(true);
-      //      setImages(GadgetPluginImageBundle.INSTANCE.deployGadget(), GadgetPluginImageBundle.INSTANCE
-      //         .deployGadgetDisabled());
-      setIcon(Images.DEPLOY_GADGET);
+      setImages(GadgetClientBundle.INSTANCE.deployGadget(), GadgetClientBundle.INSTANCE.deployGadgetDisabled());
       setEvent(new DeployGadgetEvent());
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
