@@ -20,7 +20,7 @@ package org.exoplatform.ide.extension.groovy.client.codeassistant.ui;
 
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
-import org.exoplatform.ide.extension.groovy.client.GroovyPluginImageBundle;
+import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -47,7 +47,7 @@ public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
    {
       super(token, restContext);
       grid = new Grid(1, 3);
-      grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
+      grid.setStyleName(GroovyClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
 
       Image i = getImage();
@@ -63,7 +63,7 @@ public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
       if (pack.contains("."))
          pack = pack.substring(0, pack.lastIndexOf("."));
       Label l = new Label("-" + pack, false);
-      l.setStyleName(GroovyPluginImageBundle.INSTANCE.css().fqnStyle());
+      l.setStyleName(GroovyClientBundle.INSTANCE.css().fqnStyle());
       grid.setWidget(0, 2, l);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
@@ -88,14 +88,14 @@ public class GroovyClassTokenWidget extends GroovyTokenWidgetBase
 
          case INTERFACE :
 
-            return new Image(GroovyPluginImageBundle.INSTANCE.intrfaceItem());
+            return new Image(GroovyClientBundle.INSTANCE.intrfaceItem());
 
          case ANNOTATION :
-            return new Image(GroovyPluginImageBundle.INSTANCE.annotationItem());
+            return new Image(GroovyClientBundle.INSTANCE.annotationItem());
 
          case CLASS :
          default :
-            return new Image(GroovyPluginImageBundle.INSTANCE.classItem());
+            return new Image(GroovyClientBundle.INSTANCE.classItem());
 
       }
 

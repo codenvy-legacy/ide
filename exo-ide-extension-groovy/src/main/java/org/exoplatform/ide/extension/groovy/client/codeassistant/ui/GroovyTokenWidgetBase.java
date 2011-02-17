@@ -22,7 +22,7 @@ import org.exoplatform.ide.client.framework.codeassistant.ModifierHelper;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
-import org.exoplatform.ide.extension.groovy.client.GroovyPluginImageBundle;
+import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
 
 /**
  * Created by The eXo Platform SAS.
@@ -81,7 +81,7 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
    @Override
    public void setSelectedStyle()
    {
-      setStyleName(GroovyPluginImageBundle.INSTANCE.css().selectedItem());
+      setStyleName(GroovyClientBundle.INSTANCE.css().selectedItem());
    }
 
    /**
@@ -90,7 +90,7 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
    @Override
    public void setOveredStyle()
    {
-      setStyleName(GroovyPluginImageBundle.INSTANCE.css().overedItem());
+      setStyleName(GroovyClientBundle.INSTANCE.css().overedItem());
    }
 
    /**
@@ -99,7 +99,7 @@ public abstract class GroovyTokenWidgetBase extends TokenWidget<TokenExt>
    @Override
    public void setDefaultStyle()
    {
-      setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
+      setStyleName(GroovyClientBundle.INSTANCE.css().item());
    }
 
    /**

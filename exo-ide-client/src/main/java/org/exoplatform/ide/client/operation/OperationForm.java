@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.operation;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredEvent;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredHandler;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.LockableView;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
 import org.exoplatform.ide.client.framework.ui.ViewType;
@@ -30,8 +29,6 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.operation.output.OutputForm;
 import org.exoplatform.ide.client.operation.properties.PropertiesForm;
 import org.exoplatform.ide.client.panel.Panel;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
-import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Command;
@@ -65,8 +62,6 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
    private OutputForm outputForm;
 
    private PreviewForm previewForm;
-
-   private GadgetPreviewPane gadgetPreviewPane;
 
    public OperationForm(HandlerManager eventBus)
    {
@@ -132,11 +127,6 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
          previewForm.showPreview(file.getHref());
       }
 
-      Tab gadgetPreviewTab = getTab(GadgetPreviewPane.ID);
-      if (gadgetPreviewTab != null)
-      {
-         removeTab(GadgetPreviewPane.ID);
-      }
    }
 
    private TabSelectedHandler tabSelectedHandler = new TabSelectedHandler()

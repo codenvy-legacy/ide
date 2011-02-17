@@ -21,16 +21,17 @@ package org.exoplatform.ide.extension.groovy.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
-public interface GroovyPluginImageBundle extends ClientBundle
+public interface GroovyClientBundle extends ClientBundle
 {
 
-   public static final GroovyPluginImageBundle INSTANCE = GWT.create(GroovyPluginImageBundle.class);
+   public static final GroovyClientBundle INSTANCE = GWT.create(GroovyClientBundle.class);
 
    /**
     * To active bundle, call 
@@ -87,6 +88,12 @@ public interface GroovyPluginImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/groovy/client/images/blank.png")
    ImageResource blankImage();
 
+   @Source("org/exoplatform/ide/extension/groovy/client/images/preview.png")
+   ImageResource preview();
+   
+   @Source("org/exoplatform/ide/extension/groovy/client/images/preview_Disabled.png")
+   ImageResource previewDisabled();
+   
    //   @Source("../public/images/module/groovy/bundled/set_autoload.png")
 //   ImageResource setAutoLoad();
 //

@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.groovy.client.codeassistant.ui;
 import org.exoplatform.ide.client.framework.codeassistant.ModifierHelper;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
-import org.exoplatform.ide.extension.groovy.client.GroovyPluginImageBundle;
+import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -48,7 +48,7 @@ public class GroovyMethodWidget extends GroovyTokenWidgetBase
    {
       super(token, restContext);
       grid = new Grid(1, 3);
-      grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
+      grid.setStyleName(GroovyClientBundle.INSTANCE.css().item());
       //      grid.setWidth("100%");
 
       Image i = getImage();
@@ -64,7 +64,7 @@ public class GroovyMethodWidget extends GroovyTokenWidgetBase
 
       String pack = token.getProperty(TokenExtProperties.DECLARINGCLASS);
       Label label = new Label("-" + pack, false);
-      label.setStyleName(GroovyPluginImageBundle.INSTANCE.css().fqnStyle());
+      label.setStyleName(GroovyClientBundle.INSTANCE.css().fqnStyle());
       grid.setWidget(0, 2, label);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
@@ -82,19 +82,19 @@ public class GroovyMethodWidget extends GroovyTokenWidgetBase
      
       if (ModifierHelper.isPrivate(modifieres))
       {
-         return new Image(GroovyPluginImageBundle.INSTANCE.privateMethod());
+         return new Image(GroovyClientBundle.INSTANCE.privateMethod());
       }
       else if (ModifierHelper.isProtected(modifieres))
       {
-         return new Image(GroovyPluginImageBundle.INSTANCE.protectedMethod());
+         return new Image(GroovyClientBundle.INSTANCE.protectedMethod());
       }
       else if (ModifierHelper.isPublic(modifieres))
       {
-         return new Image(GroovyPluginImageBundle.INSTANCE.publicMethod());
+         return new Image(GroovyClientBundle.INSTANCE.publicMethod());
       }
       else
       {
-         return new Image(GroovyPluginImageBundle.INSTANCE.defaultMethod());
+         return new Image(GroovyClientBundle.INSTANCE.defaultMethod());
       }
      
    }

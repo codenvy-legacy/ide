@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.groovy.client;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -42,6 +43,12 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.PreviewForm;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
@@ -57,6 +64,7 @@ import org.exoplatform.ide.extension.groovy.client.controls.DeployGroovySandboxC
 import org.exoplatform.ide.extension.groovy.client.controls.PreviewWadlOutputCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.RunGroovyServiceCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.SetAutoloadCommand;
+import org.exoplatform.ide.extension.groovy.client.controls.ShowGroovyTemplatePreviewControl;
 import org.exoplatform.ide.extension.groovy.client.controls.UndeployGroovyCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.UndeployGroovySandboxCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.ValidateGroovyCommand;
@@ -64,6 +72,8 @@ import org.exoplatform.ide.extension.groovy.client.event.PreviewWadlOutputEvent;
 import org.exoplatform.ide.extension.groovy.client.event.PreviewWadlOutputHandler;
 import org.exoplatform.ide.extension.groovy.client.event.SetAutoloadEvent;
 import org.exoplatform.ide.extension.groovy.client.event.SetAutoloadHandler;
+import org.exoplatform.ide.extension.groovy.client.event.ShowGroovyTemplatePreviewEvent;
+import org.exoplatform.ide.extension.groovy.client.event.ShowGroovyTemplatePreviewHandler;
 import org.exoplatform.ide.extension.groovy.client.handlers.DeployGroovyCommandHandler;
 import org.exoplatform.ide.extension.groovy.client.handlers.RunGroovyServiceCommandHandler;
 import org.exoplatform.ide.extension.groovy.client.handlers.UndeployGroovyCommandHandler;
@@ -88,7 +98,8 @@ import java.util.Map;
  */
 
 public class GroovyExtension extends Extension implements RestServiceOutputReceivedHandler, SetAutoloadHandler,
-   PreviewWadlOutputHandler, InitializeServicesHandler, ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler
+   PreviewWadlOutputHandler, InitializeServicesHandler, ApplicationSettingsReceivedHandler,
+   EditorActiveFileChangedHandler, ViewClosedHandler, ShowGroovyTemplatePreviewHandler
 {
 
    private HandlerManager eventBus;
@@ -104,6 +115,8 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    //need for http://jira.exoplatform.org/browse/IDE-347
    //undeploy service on cancel 
    private boolean undeployOnCancel = false;
+   
+   private boolean previewOpened = false;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
@@ -134,6 +147,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       eventBus
          .fireEvent(new RegisterControlEvent(new UndeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowGroovyTemplatePreviewControl(), DockTarget.TOOLBAR, true));
 
       handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(SetAutoloadEvent.TYPE, this);
@@ -141,6 +155,8 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       //      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      handlers.addHandler(ViewClosedEvent.TYPE, this);
+      handlers.addHandler(ShowGroovyTemplatePreviewEvent.TYPE, this);
 
       new RunGroovyServiceCommandHandler(eventBus);
       new ValidateGroovyCommandHandler(eventBus);
@@ -149,7 +165,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       new AssistImportDeclarationManager(eventBus);
       new ConfigureBuildPathPresenter(eventBus);
 
-      GroovyPluginImageBundle.INSTANCE.css().ensureInjected();
+      GroovyClientBundle.INSTANCE.css().ensureInjected();
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
@@ -274,6 +290,39 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       }
 
       lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if(PreviewForm.ID.equals(event.getViewId()))
+      {
+         previewOpened = false;
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.groovy.client.event.ShowGroovyTemplatePreviewHandler#onShowGroovyTemplatePreview(org.exoplatform.ide.extension.groovy.client.event.ShowGroovyTemplatePreviewEvent)
+    */
+   @Override
+   public void onShowGroovyTemplatePreview(ShowGroovyTemplatePreviewEvent event)
+   {
+      if(previewOpened)
+      {
+         eventBus.fireEvent(new CloseViewEvent(PreviewForm.ID));
+         previewOpened = false;
+      }
+      
+      PreviewForm form = new PreviewForm(eventBus);
+      form.setType(ViewType.PREVIEW);
+      form.setImage(new Image(GroovyClientBundle.INSTANCE.preview()));
+      form.showPreview(configuration.getContext() + "/ide/gtmpl/render?url=" + activeFile.getHref());
+      
+      eventBus.fireEvent(new OpenViewEvent(form));
+      previewOpened = true;
    }
 
 }

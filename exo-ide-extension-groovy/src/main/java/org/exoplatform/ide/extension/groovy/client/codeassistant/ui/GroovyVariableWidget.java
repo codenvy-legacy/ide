@@ -20,7 +20,7 @@ package org.exoplatform.ide.extension.groovy.client.codeassistant.ui;
 
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
-import org.exoplatform.ide.extension.groovy.client.GroovyPluginImageBundle;
+import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -47,8 +47,8 @@ public class GroovyVariableWidget extends GroovyTokenWidgetBase
    {
       super(token, restContext);
       grid = new Grid(1, 2);
-      grid.setStyleName(GroovyPluginImageBundle.INSTANCE.css().item());
-      Image i = new Image(GroovyPluginImageBundle.INSTANCE.variable());
+      grid.setStyleName(GroovyClientBundle.INSTANCE.css().item());
+      Image i = new Image(GroovyClientBundle.INSTANCE.variable());
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 

@@ -20,14 +20,8 @@ package org.exoplatform.ide.client.operation;
 
 import java.util.List;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -42,12 +36,6 @@ import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesEvent;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesHandler;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadataCallback;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
-import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetMetadaRecievedEvent;
-import org.exoplatform.ide.extension.gadget.client.service.event.SecurityTokenRecievedEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -157,30 +145,8 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       eventBus.fireEvent(new RestorePerspectiveEvent());
 
 
-     if(MimeType.UWA_WIDGET.equals(activeFile.getContentType()))
-      {
-         previewUWAWidget(activeFile);
-      }
-      else if (MimeType.GROOVY_TEMPLATE.equals(activeFile.getContentType()))
-      {
-         previewGroovyTemplate(activeFile);
-      }
-      else
-      {
          display.showPreview(activeFile.getHref());
-      }
-   }
-
-   private void previewUWAWidget(File file)
-   {
-      String href = file.getHref();
-      href = href.replace("jcr", "ide/netvibes");
-      display.showPreview(href);
-   }
-   
-   private void previewGroovyTemplate(File file)
-   {
-      display.showPreview(applicationConfiguration.getContext() + "/ide/gtmpl/render?url=" + file.getHref());
+      
    }
 
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)

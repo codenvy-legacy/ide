@@ -25,7 +25,7 @@ import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
-import org.exoplatform.ide.extension.groovy.client.GroovyPluginImageBundle;
+import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
 import org.exoplatform.ide.extension.groovy.client.codeassistant.AssistImportDeclarationHandler;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -128,7 +128,7 @@ public class AssistImportDeclarationForm extends Composite implements WindowResi
 
       scrollPanel.addMouseOutHandler(mousHandler);
 
-      scrollPanel.setStylePrimaryName(GroovyPluginImageBundle.INSTANCE.css().panelStyle());
+      scrollPanel.setStylePrimaryName(GroovyClientBundle.INSTANCE.css().panelStyle());
 
       focusPanel.setHeight("100px");
       focusPanel.setWidth("350px");
