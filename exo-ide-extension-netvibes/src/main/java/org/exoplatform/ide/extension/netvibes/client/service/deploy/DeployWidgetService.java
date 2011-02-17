@@ -19,8 +19,8 @@
 package org.exoplatform.ide.extension.netvibes.client.service.deploy;
 
 import org.exoplatform.ide.extension.netvibes.client.model.DeployWidget;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.event.WidgetCategoriesReceivedEvent;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.event.WidgetDeployResultReceivedEvent;
+import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetCategoryCallback;
+import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetDeployCallback;
 
 /**
  * Service, contains operations for deploying UWA widget to Netvibes Ecosystem.
@@ -55,17 +55,18 @@ public abstract class DeployWidgetService
    /**
     * Gets the list of available widget's categories.
     * The location of the categories must be pointed in the service implementation.
-    * When response with categories is received, then {@link WidgetCategoriesReceivedEvent} event will be fired.
+    * 
+    * @param widgetCallback - the callback code which the user has to implement
     */
-   public abstract void getCategories();
+   public abstract void getCategories(WidgetCategoryCallback widgetCallback);
 
    /**
     * Deploys widget to Netvibes Ecosystem.
-    * When deploy result is received, {@link WidgetDeployResultReceivedEvent} will be fired.
     * 
     * @param deployWidget deploy data used for deploy
     * @param login user's login in Netvibes Ecosystem
     * @param password user's pasword in Netvibes Ecosystem
+    * @param widgetCallback - the callback code which the user has to implement
     */
-   public abstract void deploy(DeployWidget deployWidget, String login, String password);
+   public abstract void deploy(DeployWidget deployWidget, String login, String password, WidgetDeployCallback widgetCallback);
 }

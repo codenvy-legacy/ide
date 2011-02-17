@@ -19,11 +19,12 @@
 package org.exoplatform.ide.client.application.phases;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorUtil;
@@ -35,12 +36,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
+import org.exoplatform.ide.client.framework.vfs.FileCallback;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -55,8 +53,8 @@ import java.util.Map;
  * @version $
  */
 
-public class RestoreOpenedFilesPhase extends Phase implements ItemPropertiesReceivedHandler,
-   FileContentReceivedHandler, ExceptionThrownHandler, EditorFileOpenedHandler
+public class RestoreOpenedFilesPhase extends Phase implements ExceptionThrownHandler, 
+EditorFileOpenedHandler
 {
 
    private HandlerManager eventBus;
@@ -84,8 +82,6 @@ public class RestoreOpenedFilesPhase extends Phase implements ItemPropertiesRece
       handlers = new Handlers(eventBus);
 
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-      handlers.addHandler(FileContentReceivedEvent.TYPE, this);
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
    }
 
@@ -126,25 +122,35 @@ public class RestoreOpenedFilesPhase extends Phase implements ItemPropertiesRece
          fileToLoad = new File(href);
          filesToLoad.remove(0);
 
-         VirtualFileSystem.getInstance().getProperties(fileToLoad);
+         VirtualFileSystem.getInstance().getPropertiesCallback(fileToLoad, new ItemPropertiesCallback()
+         {
+            public void onResponseReceived(Request request, Response response)
+            {
+               fileToLoad.setNewFile(false);
+               fileToLoad.setContentChanged(false);
+               VirtualFileSystem.getInstance().getContent(fileToLoad, new FileCallback(eventBus)
+               {
+                  
+                  @Override
+                  public void onResponseReceived(Request request, Response response)
+                  {
+                     openedFiles.put(fileToLoad.getHref(), fileToLoad);
+                     preloadNextFile();
+                  }
+               });
+            }
+            
+            @Override
+            public void fireErrorEvent()
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+            }
+         });
       }
       catch (Exception exc)
       {
          exc.printStackTrace();
       }
-   }
-
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   {
-      fileToLoad.setNewFile(false);
-      fileToLoad.setContentChanged(false);
-      VirtualFileSystem.getInstance().getContent(fileToLoad);
-   }
-
-   public void onFileContentReceived(FileContentReceivedEvent event)
-   {
-      openedFiles.put(fileToLoad.getHref(), fileToLoad);
-      preloadNextFile();
    }
 
    public void onError(ExceptionThrownEvent event)

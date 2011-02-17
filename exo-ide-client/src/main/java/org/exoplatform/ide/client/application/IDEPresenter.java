@@ -18,17 +18,16 @@
  */
 package org.exoplatform.ide.client.application;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.application.phases.LoadRegistryConfigurationPhase;
 import org.exoplatform.ide.client.application.phases.Phase;
 import org.exoplatform.ide.client.browser.BrowserPanel;
+import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
-import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS .
@@ -49,8 +48,6 @@ public class IDEPresenter implements ExceptionThrownHandler
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private Display display;
 
    private ControlsRegistration controlsRegistration;
@@ -59,9 +56,6 @@ public class IDEPresenter implements ExceptionThrownHandler
    {
       this.eventBus = eventBus;
       this.controlsRegistration = controlsRegistration;
-
-      handlers = new Handlers(eventBus);
-      //handlers.addHandler(ExceptionThrownEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -105,7 +99,7 @@ public class IDEPresenter implements ExceptionThrownHandler
 
    public void onError(ExceptionThrownEvent event)
    {
-      eventBus.fireEvent(new ClearFocusEvent());
+      ClearFocusForm.getInstance().clearFocus();
    }
 
 }

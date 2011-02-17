@@ -89,36 +89,32 @@ public class TemplateServiceImpl extends TemplateService
    }
 
    @Override
-   public void createTemplate(Template template)
+   public void createTemplate(Template template, TemplateCreatedCallback templateCallback)
    {
       String url = restContext + CONTEXT + "/" + TEMPLATE + System.currentTimeMillis() + "/?createIfNotExist=true";
       TemplateMarshaller marshaller = new TemplateMarshaller(template);
-      TemplateCreatedEvent event = new TemplateCreatedEvent(template);
-
-      String errorMessage = "Registry service is not deployed.<br>Template already exist.";
-      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
+      
+      templateCallback.setTemplate(template);
+      
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, templateCallback);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
    }
 
    @Override
-   public void deleteTemplate(Template template)
+   public void deleteTemplate(Template template, TemplateDeletedCallback templateCallback)
    {
       String url = restContext + CONTEXT + "/" + template.getNodeName();
-      String errorMessage = "Registry service is not deployed.<br>Template not found.";
-      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-      TemplateDeletedEvent event = new TemplateDeletedEvent(template);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
+      templateCallback.setTemplate(template);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, templateCallback);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "DELETE")
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).send(callback);
 
    }
 
    @Override
-   public void getTemplates()
+   public void getTemplates(TemplateListReceivedCallback templateCallback)
    {
       String url = restContext + CONTEXT + "/?noCache=" + Random.nextInt();
       TemplateList templateList = new TemplateList();
@@ -175,9 +171,9 @@ public class TemplateServiceImpl extends TemplateService
       templateList.getTemplates().add(getSampleProject());
 
       TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
-      TemplateListReceivedEvent event = new TemplateListReceivedEvent(templateList);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
+      templateCallback.setTemplateList(templateList);
+      
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, templateCallback);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 

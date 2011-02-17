@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -36,13 +36,13 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -51,9 +51,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveAllFilesCommandHandler implements FileContentSavedHandler, ItemPropertiesSavedHandler,
-   ExceptionThrownHandler, SaveAllFilesHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
-   ApplicationSettingsReceivedHandler
+public class SaveAllFilesCommandHandler implements ExceptionThrownHandler, SaveAllFilesHandler, EditorFileOpenedHandler, 
+EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
 
    private Handlers handlers;
@@ -77,8 +76,6 @@ public class SaveAllFilesCommandHandler implements FileContentSavedHandler, Item
 
    public void onSaveAllFiles(SaveAllFilesEvent event)
    {
-      handlers.addHandler(FileContentSavedEvent.TYPE, this);
-      handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
       saveNextUnsavedFile();
@@ -90,32 +87,47 @@ public class SaveAllFilesCommandHandler implements FileContentSavedHandler, Item
       {
          if (!file.isNewFile() && file.isContentChanged())
          {
-            VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()));
+            VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback(eventBus)
+            {
+               
+               public void onResponseReceived(Request request, Response response)
+               {
+                  if (this.getFile().isPropertiesChanged())
+                  {
+                     String lockToken = lockTokens.get(this.getFile().getHref());
+                     saveFileProperties(this.getFile(), lockToken);
+                  }
+                  else
+                  {
+                     eventBus.fireEvent(new FileSavedEvent(this.getFile(), null));
+                     saveNextUnsavedFile();
+                  }
+               }
+            });
             return;
          }
       }
 
       handlers.removeHandlers();
    }
-
-   public void onFileContentSaved(FileContentSavedEvent event)
+   
+   private void saveFileProperties(File file, String lockToken)
    {
-      if (event.getFile().isPropertiesChanged())
+      VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
       {
-         String lockToken = lockTokens.get(event.getFile().getHref());
-         VirtualFileSystem.getInstance().saveProperties(event.getFile(), lockToken);
-      }
-      else
-      {
-         eventBus.fireEvent(new FileSavedEvent(event.getFile(), null));
-         saveNextUnsavedFile();
-      }
-   }
-
-   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
-   {
-      eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), null));
-      saveNextUnsavedFile();
+         
+         public void onResponseReceived(Request request, Response response)
+         {
+            eventBus.fireEvent(new FileSavedEvent((File)this.getItem(), null));
+            saveNextUnsavedFile();
+         }
+         
+         @Override
+         public void fireErrorEvent()
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+         }
+      });
    }
 
    public void onError(ExceptionThrownEvent event)

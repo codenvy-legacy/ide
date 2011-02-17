@@ -18,11 +18,9 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
@@ -41,14 +39,13 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.CopyCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteEvent;
-import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteHandler;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
+import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
@@ -57,15 +54,19 @@ import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
 import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class PasteItemsCommandHandler implements PasteItemsHandler, CopyCompleteHandler, MoveCompleteHandler,
-   ExceptionThrownHandler, FileContentSavedHandler, ItemDeletedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
+public class PasteItemsCommandHandler implements PasteItemsHandler, MoveCompleteHandler,
+   ExceptionThrownHandler, ItemDeletedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
    EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
@@ -104,7 +105,6 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
    {
       if (context.getItemsToCopy().size() != 0)
       {
-         handlers.addHandler(CopyCompleteEvent.TYPE, this);
          handlers.addHandler(ExceptionThrownEvent.TYPE, this);
          folderToPaste = getPathToPaste();
          folderFromPaste = getPahtFromPaste(context.getItemsToCopy().get(0));
@@ -117,7 +117,6 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
       {
          handlers.addHandler(MoveCompleteEvent.TYPE, this);
          handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-         handlers.addHandler(FileContentSavedEvent.TYPE, this);
          folderToPaste = getPathToPaste();
          folderFromPaste = getPahtFromPaste(context.getItemsToCut().get(0));
          numItemToCut = context.getItemsToCut().size();
@@ -170,17 +169,29 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
       }
 
       String destination = folderToPaste + item.getName();
-      VirtualFileSystem.getInstance().copy(item, destination);
+      VirtualFileSystem.getInstance().copy(item, destination, new CopyCallback(eventBus)
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            if (context.getItemsToCopy().size() != 0)
+            {
+               context.getItemsToCopy().remove(this.getItem());
+               copyNextItem();
+            }
+         }
+      });
    }
 
-   public void onCopyComplete(CopyCompleteEvent event)
-   {
-      if (context.getItemsToCopy().size() != 0)
-      {
-         context.getItemsToCopy().remove(event.getCopiedItem());
-         copyNextItem();
-      }
-   }
+//   public void onCopyComplete(CopyCompleteEvent event)
+//   {
+//      if (context.getItemsToCopy().size() != 0)
+//      {
+//         context.getItemsToCopy().remove(event.getCopiedItem());
+//         copyNextItem();
+//      }
+//   }
 
    private void copyComlited()
    {
@@ -204,7 +215,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
          return;
       }
 
-      Item item = context.getItemsToCut().get(0);
+      final Item item = context.getItemsToCut().get(0);
 
       if (item instanceof File)
       {
@@ -222,7 +233,13 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
                         if (value != null && value == true)
                         {
                            VirtualFileSystem.getInstance()
-                              .saveContent(openedFile, lockTokens.get(openedFile.getHref()));
+                              .saveContent(openedFile, lockTokens.get(openedFile.getHref()), new FileContentSaveCallback(eventBus)
+                              {
+                                 public void onResponseReceived(Request request, Response response)
+                                 {
+                                    cutNextItem();
+                                 }
+                              });
                         }
                         else
                         {
@@ -246,7 +263,14 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
 
       String destination = folderToPaste + item.getName();
 
-      VirtualFileSystem.getInstance().move(item, destination,lockTokens.get(item.getHref()));
+      
+      VirtualFileSystem.getInstance().move(item, destination,lockTokens.get(item.getHref()), new MoveItemCallback(eventBus)
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            eventBus.fireEvent(new MoveCompleteEvent(this.getItem(), this.getSourceHref()));
+         }
+      });
    }
 
    private void cutCompleted()
@@ -268,6 +292,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
     * FINALIZE
     ****************************************************************************************************/
 
+   //TODO: move code to callback
    public void onError(ExceptionThrownEvent event)
    {
       handlers.removeHandlers();
@@ -338,11 +363,6 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, CopyComplete
          cutNextItem();
       }
 
-   }
-
-   public void onFileContentSaved(FileContentSavedEvent event)
-   {
-      cutNextItem();
    }
 
    public void onItemDeleted(ItemDeletedEvent event)

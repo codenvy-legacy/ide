@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.client.model.configuration;
 
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.initializer.ApplicationConfiguration;
+import org.exoplatform.gwtframework.commons.initializer.ApplicationConfigurationCallback;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
+import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedFailedEvent;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -77,12 +83,27 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
       this.configuration = configuration;
       configuration.setRegistryURL(getRegistryURL());
       ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION_NAME, loader);
-      applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME);
+      applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME, new ApplicationConfigurationCallback()
+      {
+
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            configurationReceived(this.getConfiguration());
+         }
+
+         @Override
+         public void handleError(Throwable exc)
+         {
+            eventBus.fireEvent(new ApplicationConfigurationReceivedFailedEvent());
+         }
+         
+      });
    }
 
-   public void onConfigurationReceived(ApplicationConfigurationReceivedEvent event)
+   private void configurationReceived(ApplicationConfiguration appConfiguration)
    {
-      JSONObject jsonConfiguration = event.getApplicationConfiguration().getConfiguration().isObject();
+      JSONObject jsonConfiguration = appConfiguration.getConfiguration().isObject();
 
       if (jsonConfiguration.containsKey(CONTEXT))
       {
@@ -133,5 +154,14 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
    private static native String getRegistryURL() /*-{
                                                  return $wnd.registryURL;
                                                  }-*/;
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler#onConfigurationReceived(org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent)
+    */
+   @Override
+   public void onConfigurationReceived(ApplicationConfigurationReceivedEvent event)
+   {
+      configurationReceived(event.getApplicationConfiguration());
+   }
 
 }

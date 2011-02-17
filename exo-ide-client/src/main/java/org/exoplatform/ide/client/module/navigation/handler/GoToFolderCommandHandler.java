@@ -18,26 +18,27 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import java.util.ArrayList;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
+import org.exoplatform.ide.client.framework.vfs.ChildrenReceivedCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.module.navigation.event.GoToFolderEvent;
 import org.exoplatform.ide.client.module.navigation.event.GoToFolderHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
 
 /**
  * Created by The eXo Platform SAS .
@@ -46,7 +47,7 @@ import com.google.gwt.user.client.Timer;
  * @version $
  */
 
-public class GoToFolderCommandHandler implements GoToFolderHandler, ChildrenReceivedHandler, ExceptionThrownHandler,
+public class GoToFolderCommandHandler implements GoToFolderHandler, 
    EntryPointChangedHandler, EditorActiveFileChangedHandler
 {
 
@@ -117,47 +118,49 @@ public class GoToFolderCommandHandler implements GoToFolderHandler, ChildrenRece
          }
       }
 
-      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
+      openNextFolder(new Folder(pathToOpen));
    }
-
-   /**
-    * Folder content received handler.
-    * Get subfolder content here
-    * 
-    */
-   public void onChildrenReceived(ChildrenReceivedEvent event)
+   
+   public void openNextFolder(Folder folderToOpen)
    {
-      new Timer()
+      /*
+       * Folder content received handler.
+       * Get subfolder content here
+       */
+      VirtualFileSystem.getInstance().getChildren(folderToOpen, new ChildrenReceivedCallback()
       {
-         @Override
-         public void run()
+         public void onResponseReceived(Request request, Response response)
          {
-            if (pathes.size() > 0)
+            new Timer()
             {
-               String name = pathes.get(0);
-               pathes.remove(0);
-               pathToOpen += name + "/";
-               eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
-            }
-            else
-            {
-               // try to select file.........
-               handlers.removeHandlers();
-               eventBus.fireEvent(new SelectItemEvent(activeFile.getHref()));
-            }
+               @Override
+               public void run()
+               {
+                  if (pathes.size() > 0)
+                  {
+                     String name = pathes.get(0);
+                     pathes.remove(0);
+                     pathToOpen += name + "/";
+                     eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
+                     openNextFolder(new Folder(pathToOpen));
+                  }
+                  else
+                  {
+                     // try to select file.........
+                     handlers.removeHandlers();
+                     eventBus.fireEvent(new SelectItemEvent(activeFile.getHref()));
+                  }
+               }
+            }.schedule(100);
          }
-      }.schedule(10);
-      //
-   }
 
-   /**
-    * Handling any errors here!
-    */
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandlers();
+         @Override
+         public void fireErrorEvent()
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
+         }
+      });
    }
 
 }

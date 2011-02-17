@@ -22,7 +22,7 @@ import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.DefaultEntryPointCallback;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,16 +34,16 @@ import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointRec
 public class DefaultEntryPointUnmarshaller implements Unmarshallable
 {
    
-   private DefaultEntryPointReceivedEvent event;
+   private DefaultEntryPointCallback entryPointCallback;
    
-   public DefaultEntryPointUnmarshaller(DefaultEntryPointReceivedEvent event)
+   public DefaultEntryPointUnmarshaller(DefaultEntryPointCallback callback)
    {
-      this.event = event;
+      this.entryPointCallback = callback;
    }
 
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      event.setDefaultEntryPoint(response.getText());
+      entryPointCallback.setDefaultEntryPoint(response.getText());
    }
 
 }

@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.model.discovery.marshal;
 
+import com.google.gwt.http.client.Response;
+
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
-
-import com.google.gwt.http.client.Response;
+import org.exoplatform.ide.client.framework.discovery.DiscoverableCallback;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,17 +34,17 @@ import com.google.gwt.http.client.Response;
 public class DiscoveryServiceDiscoverableUnmarshaller implements Unmarshallable
 {
 
-   private IsDiscoverableResultReceivedEvent event;
+   private DiscoverableCallback discoverableCallback;
 
-   public DiscoveryServiceDiscoverableUnmarshaller(IsDiscoverableResultReceivedEvent event)
+   public DiscoveryServiceDiscoverableUnmarshaller(DiscoverableCallback discoverableCallback)
    {
-      this.event = event;
+      this.discoverableCallback = discoverableCallback;
    }
 
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      event.setDiscoverable(Boolean.parseBoolean(response.getText()));
+      discoverableCallback.setDiscoverable(Boolean.parseBoolean(response.getText()));
    }
 
 }

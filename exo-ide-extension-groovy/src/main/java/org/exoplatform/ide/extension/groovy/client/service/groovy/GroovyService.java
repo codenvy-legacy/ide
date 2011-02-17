@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.groovy;
 
-import java.util.List;
-
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.ClassPathLocationReceivedEvent;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -48,38 +47,44 @@ public abstract class GroovyService
    /**
     * Validate Groovy script.
     * 
-    * @param fileName
-    * @param content
+    * @param fileName - file name
+    * @param fileHref - file location
+    * @param fileContent - file content
+    * @param groovyCallback - callback to handler response from server
     */
-   public abstract void validate(String fileName, String fileHref, String fileContent);
+   public abstract void validate(String fileName, String fileHref, String fileContent, GroovyValidateCallback groovyCallback);
    
    /**
     * Deploy Groovy script.
     * 
-    * @param path
+    * @param href - href of source to deploy
+    * @param groovyCallback - the callback code which the user has to implement
     */
-   public abstract void deploy(String href);
+   public abstract void deploy(String href, GroovyDeployUndeployCallback groovyCallback);
    
    /**
     * Deploy Groovy script.
     * 
-    * @param path
+    * @param href - href of source to deploy
+    * @param groovyCallback - the callback code which the user has to implement
     */
-   public abstract void deploySandbox(String href);
+   public abstract void deploySandbox(String href, GroovyDeployUndeployCallback groovyCallback);
    
    /**
     * Undeploy deployed Groovy script.
     * 
-    * @param path
+    * @param href - href of source to undeploy
+    * @param groovyCallback - the callback code which the user has to implement
     */
-   public abstract void undeploySandbox(String href);
+   public abstract void undeploySandbox(String href, GroovyDeployUndeployCallback groovyCallback);
    
    /**
     * Undeploy deployed Groovy script.
     * 
-    * @param path
+    * @param href - href of source to undeploy
+    * @param groovyCallback - the callback code which the user has to implement
     */
-   public abstract void undeploy(String href);
+   public abstract void undeploy(String href, GroovyDeployUndeployCallback groovyCallback);
    
 
    /**
@@ -88,19 +93,24 @@ public abstract class GroovyService
     * 200 - groovy classpath location in the response body
     * 404 - groovy classpath location is not found.
     * 500 - internal server error, message of the error is in the response body.
-    * Listen to {@link ClassPathLocationReceivedEvent} event.
     * 
     * @param href location of the item, 
     * with respect to which the classpath location must be found (file or folder).
+    * @param classpathCallback - handle the results when they are returned from the server
     */
-   public abstract void getClassPathLocation(String href);
+   public abstract void getClassPathLocation(String href, ClasspathCallback classpathCallback);
    
    /**
-    * Get Groovy script output
+    * Get Groovy script output.
     * 
-    * @param url
+    * @param url - the url of request
+    * @param method - the method of request
+    * @param headers - the headers of request
+    * @param params - the params of request
+    * @param body - the body of request
+    * @param classpathCallback - handle the results when they are returned from the server
     */
    public abstract void getOutput(String url, String method, List<SimpleParameterEntry> headers,
-      List<SimpleParameterEntry> params, String body);
+      List<SimpleParameterEntry> params, String body, GroovyOutputCallback groovyCallback);
 
 }

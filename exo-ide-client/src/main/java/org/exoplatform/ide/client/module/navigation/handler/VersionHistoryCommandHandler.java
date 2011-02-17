@@ -18,27 +18,19 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import com.google.gwt.user.client.ui.Image;
-
-import com.google.gwt.user.client.Timer;
-
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
@@ -48,14 +40,19 @@ import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileCallback;
 import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.client.framework.vfs.VersionsCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedHandler;
+import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionHandler;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionHandler;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionEvent;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionHandler;
+import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 
@@ -67,9 +64,8 @@ import java.util.List;
  * @version $Id: Sep 27, 2010 $
  *
  */
-public class VersionHistoryCommandHandler implements OpenVersionHandler, ExceptionThrownHandler,
-   ItemVersionsReceivedHandler, EditorActiveFileChangedHandler, ShowPreviousVersionHandler, ShowNextVersionHandler,
-   FileContentReceivedHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHandler
+public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorActiveFileChangedHandler, ShowPreviousVersionHandler, 
+ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHandler
 {
    private HandlerManager eventBus;
 
@@ -127,58 +123,48 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, Excepti
       if (activeFile != null)
       {
          versionHistory.clear();
-         handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-         handlers.addHandler(ItemVersionsReceivedEvent.TYPE, this);
-         VirtualFileSystem.getInstance().getVersions(activeFile);
+         VirtualFileSystem.getInstance().getVersions(activeFile, new VersionsCallback(eventBus)
+         {
+            public void onResponseReceived(Request request, Response response)
+            {
+               if (this.getVersions() != null && this.getVersions().size() > 0)
+               {
+                  versionHistory = this.getVersions();
+                  int index = 0;
+                  if (version != null)
+                  {
+                     index = getVersionIndexInList(version.getHref());
+                     index = (index > 0) ? index : 0;
+                  }
+                  openVersion(this.getVersions().get(index));
+               }
+               else
+               {
+                  Dialogs.getInstance().showInfo("Item \"" + this.getItem().getName() + "\" has no versions.");
+               }
+            }
+            
+            @Override
+            public void fireErrorEvent()
+            {
+               String errorMessage = "Versions were not received.";
+               eventBus.fireEvent(new ExceptionThrownEvent(errorMessage));
+               
+               if (versionToOpenOnError != null && ignoreErrorCount > 0)
+               {
+                  ignoreErrorCount--;
+                  getVersionContent(versionToOpenOnError);
+                  return;
+               }
+
+               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+            }
+         });
       }
       else
       {
          Dialogs.getInstance().showInfo("Please, open file.");
       }
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
-    */
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandler(ExceptionThrownEvent.TYPE);
-      handlers.removeHandler(FileContentReceivedEvent.TYPE);
-
-      if (versionToOpenOnError != null && ignoreErrorCount > 0)
-      {
-         ignoreErrorCount--;
-         getVersionContent(versionToOpenOnError);
-         return;
-      }
-
-      handlers.removeHandler(ItemVersionsReceivedEvent.TYPE);
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.event.ItemVersionsReceivedHandler#onItemVersionsReceived(org.exoplatform.ide.client.framework.vfs.event.event.ItemVersionsReceivedEvent)
-    */
-   public void onItemVersionsReceived(final ItemVersionsReceivedEvent event)
-   {
-      handlers.removeHandler(ExceptionThrownEvent.TYPE);
-      handlers.removeHandler(ItemVersionsReceivedEvent.TYPE);
-      if (event.getVersions() != null && event.getVersions().size() > 0)
-      {
-         versionHistory = event.getVersions();
-         int index = 0;
-         if (version != null)
-         {
-            index = getVersionIndexInList(version.getHref());
-            index = (index > 0) ? index : 0;
-         }
-         openVersion(event.getVersions().get(index));
-      }
-      else
-      {
-         Dialogs.getInstance().showInfo("Item \"" + event.getItem().getName() + "\" has no versions.");
-      }
-
    }
 
    /**
@@ -229,45 +215,59 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, Excepti
       ignoreErrorCount = 3;
       versionToOpenOnError = version;
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      handlers.addHandler(FileContentReceivedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getContent(version);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.event.FileContentReceivedHandler#onFileContentReceived(org.exoplatform.ide.client.framework.vfs.event.event.FileContentReceivedEvent)
-    */
-   public void onFileContentReceived(final FileContentReceivedEvent event)
-   {
-      if (event.getFile() instanceof Version)
+      VirtualFileSystem.getInstance().getContent(version, new FileCallback(eventBus)
       {
-         handlers.removeHandler(FileContentReceivedEvent.TYPE);
-         handlers.removeHandler(ExceptionThrownEvent.TYPE);
-         version = (Version)event.getFile();
-         if (!isVersionPanelOpened)
+         public void onResponseReceived(Request request, Response response)
          {
-            View view = new VersionContentForm(eventBus, version);
-            view.setImage(new Image(IDEImageBundle.INSTANCE.viewVersions()));
-            view.setTitle("Version");
-            view.setType(ViewType.VERSIONS);
-            eventBus.fireEvent(new OpenViewEvent(view));
-            Timer timer = new Timer()
+            if (this.getFile() instanceof Version)
             {
-               @Override
-               public void run()
-               {
-                  eventBus.fireEvent(new ShowVersionContentEvent((Version)event.getFile()));
-               }
-            };
-            timer.schedule(1000);
-         }
-         else
-         {
-            eventBus.fireEvent(new ShowVersionContentEvent((Version)event.getFile()));
+               showVersion((Version)this.getFile());
+            }
          }
 
-         eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+         @Override
+         public void fireErrorEvent()
+         {
+            super.fireErrorEvent();
+
+            if (versionToOpenOnError != null && ignoreErrorCount > 0)
+            {
+               ignoreErrorCount--;
+               getVersionContent(versionToOpenOnError);
+               return;
+            }
+
+            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+         }
+      });
+   }
+   
+   private void showVersion(final Version versionToShow)
+   {
+      version = versionToShow;
+      if (!isVersionPanelOpened)
+      {
+         View view = new VersionContentForm(eventBus, version);
+         view.setImage(new Image(IDEImageBundle.INSTANCE.viewVersions()));
+         view.setTitle("Version");
+         view.setType(ViewType.VERSIONS);
+         eventBus.fireEvent(new OpenViewEvent(view));
+         Timer timer = new Timer()
+         {
+            @Override
+            public void run()
+            {
+               eventBus.fireEvent(new ShowVersionContentEvent(versionToShow));
+            }
+         };
+         timer.schedule(2000);
       }
+      else
+      {
+         eventBus.fireEvent(new ShowVersionContentEvent(versionToShow));
+      }
+
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
    }
 
    /**

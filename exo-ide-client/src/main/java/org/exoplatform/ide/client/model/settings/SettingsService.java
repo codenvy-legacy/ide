@@ -18,19 +18,20 @@
  */
 package org.exoplatform.ide.client.model.settings;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -40,17 +41,19 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSa
 import org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsHandler;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsHandler;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsHandler;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsMarshaller;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsUnmarshaller;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Random;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -108,19 +111,43 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
     */
    public void onGetApplicationSettings(GetApplicationSettingsEvent event)
    {
-      getApplicationSettings(applicationSettings);
+      getApplicationSettings(applicationSettings, new ClientRequestCallback()
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
+            eventBus.fireEvent(event);
+         }
+         
+         @Override
+         public void onError(Request request, Throwable exception)
+         {
+            ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
+            event.setException(exception);
+            eventBus.fireEvent(event);
+         }
+         
+         @Override
+         public void onUnsuccess(Throwable exception)
+         {
+            ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
+            event.setException(exception);
+            eventBus.fireEvent(event);
+         }
+      });
    }
 
-   private void getApplicationSettings(ApplicationSettings applicationSettings)
+   private void getApplicationSettings(ApplicationSettings applicationSettings, ClientRequestCallback appCallback)
    {
       restoreFromCookies(applicationSettings);
 
       String url = getURL() + "/?nocache=" + Random.nextInt();
 
-      ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
       ApplicationSettingsUnmarshaller unmarshaller = new ApplicationSettingsUnmarshaller(applicationSettings);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, appCallback);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
@@ -146,20 +173,39 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
          storeCookies(event.getApplicationSettings());
       }
 
-      saveSettingsToRegistry(event.getApplicationSettings(), event.getSaveType());
+      saveSettingsToRegistry(event.getApplicationSettings(), event.getSaveType(), new ClientRequestCallback()
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            ApplicationSettingsSavedEvent settingsEvent = new ApplicationSettingsSavedEvent(
+               event.getApplicationSettings(), event.getSaveType());
+            eventBus.fireEvent(settingsEvent);
+         }
+         
+         @Override
+         public void onError(Request request, Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Registry service is not deployed."));
+         }
+         
+         @Override
+         public void onUnsuccess(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Registry service is not deployed."));
+         }
+      });
    }
 
-   private void saveSettingsToRegistry(ApplicationSettings applicationSettings, SaveType saveType)
+   private void saveSettingsToRegistry(ApplicationSettings applicationSettings, SaveType saveType, 
+      ClientRequestCallback settingsCallback)
    {
       String url = getURL() + "/?createIfNotExist=true";
 
       ApplicationSettingsMarshaller marshaller = new ApplicationSettingsMarshaller(applicationSettings);
-      ApplicationSettingsSavedEvent event = new ApplicationSettingsSavedEvent(applicationSettings, saveType);
 
-      String errorMessage = "Registry service is not deployed.";
-      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, settingsCallback);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
 

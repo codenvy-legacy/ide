@@ -20,14 +20,12 @@ package org.exoplatform.ide.extension.chromattic.client.ui;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -35,8 +33,8 @@ import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEve
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
+import org.exoplatform.ide.extension.chromattic.client.model.service.callback.NodeTypeGenerationCallback;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
-import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedHandler;
 
 /**
  * Presenter for generating new node type definition view.
@@ -45,8 +43,7 @@ import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeT
  * @version $Id: Dec 6, 2010 $
  *
  */
-public class GenerateNodeTypePresenter implements NodeTypeGenerationResultReceivedHandler, GenerateNodeTypeHandler,
-   EditorActiveFileChangedHandler
+public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, EditorActiveFileChangedHandler
 {
    interface Display
    {
@@ -95,11 +92,6 @@ public class GenerateNodeTypePresenter implements NodeTypeGenerationResultReceiv
    private HandlerManager eventBus;
 
    /**
-    * Handlers of this presenter.
-    */
-   private Handlers handlers;
-
-   /**
     * Active file in editor.
     */
    private File activeFile;
@@ -110,7 +102,6 @@ public class GenerateNodeTypePresenter implements NodeTypeGenerationResultReceiv
    public GenerateNodeTypePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
       eventBus.addHandler(GenerateNodeTypeEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       new GeneratedNodeTypePreviewPresenter(eventBus);
@@ -146,16 +137,6 @@ public class GenerateNodeTypePresenter implements NodeTypeGenerationResultReceiv
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeGenerationResultReceivedHandler#onNodeTypeGenerationResultReceived(org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeGenerationResultReceivedEvent)
-    */
-   @Override
-   public void onNodeTypeGenerationResultReceived(NodeTypeGenerationResultReceivedEvent event)
-   {
-      handlers.removeHandler(NodeTypeGenerationResultReceivedEvent.TYPE);
-      display.closeView();
-   }
-
-   /**
     * @see org.exoplatform.ide.client.module.chromattic.event.GenerateNodeTypeHandler#onGenerateNodeType(org.exoplatform.ide.client.module.chromattic.event.GenerateNodeTypeEvent)
     */
    @Override
@@ -174,9 +155,23 @@ public class GenerateNodeTypePresenter implements NodeTypeGenerationResultReceiv
    {
       if (activeFile == null)
          return;
-      handlers.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this);
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), nodeTypeFormat);
+      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), nodeTypeFormat, new NodeTypeGenerationCallback()
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            eventBus.fireEvent(new NodeTypeGenerationResultReceivedEvent(this.getGenerateNodeTypeResult()));
+            display.closeView();
+         }
+         
+         public void handleError(Throwable exception)
+         {
+            NodeTypeGenerationResultReceivedEvent event = new NodeTypeGenerationResultReceivedEvent(this.getGenerateNodeTypeResult());
+            event.setException(exception);
+            eventBus.fireEvent(event);
+            display.closeView();
+         }
+      });
    }
 
    /**

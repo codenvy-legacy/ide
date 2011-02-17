@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.client.permissions;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -32,14 +30,15 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.permissions.event.ShowPermissionsEvent;
 import org.exoplatform.ide.client.permissions.event.ShowPermissionsHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class handle {@link ShowPermissionsEvent} event,
@@ -50,12 +49,10 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, ItemsSelectedHandler,
-   ExceptionThrownHandler, ItemPropertiesReceivedHandler, ApplicationSettingsReceivedHandler
+   ApplicationSettingsReceivedHandler
 {
 
    private HandlerManager eventBus;
-
-   private Handlers handlers;
 
    private Item selectedItem;
 
@@ -64,7 +61,6 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
    public ShowPermissionsCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
 
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       eventBus.addHandler(ShowPermissionsEvent.TYPE, this);
@@ -79,11 +75,21 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
       if (selectedItem == null)
          return;
 
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+      VirtualFileSystem.getInstance().getPropertiesCallback(selectedItem,
+         Arrays.asList(new QName[]{ItemProperty.ACL.ACL, ItemProperty.OWNER}), new ItemPropertiesCallback()
+         {
 
-      VirtualFileSystem.getInstance().getProperties(selectedItem,
-         Arrays.asList(new QName[]{ItemProperty.ACL.ACL, ItemProperty.OWNER}));
+            public void onResponseReceived(Request request, Response response)
+            {
+               new PermissionsManagerForm(eventBus, this.getItem(), lockTokens);
+            }
+
+            @Override
+            public void fireErrorEvent()
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+            }
+         });
    }
 
    /**
@@ -95,23 +101,6 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
       {
          selectedItem = event.getSelectedItems().get(0);
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent)
-    */
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   {
-      handlers.removeHandlers();
-      new PermissionsManagerForm(eventBus, event.getItem(), lockTokens);
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
-    */
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandlers();
    }
 
    /**

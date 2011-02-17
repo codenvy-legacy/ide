@@ -18,17 +18,15 @@
  */
 package org.exoplatform.ide.client.application.phases;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
-import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent;
-import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedHandler;
-import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
-import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-
-import com.google.gwt.dev.Disconnectable;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.discovery.DefaultEntryPointCallback;
+import org.exoplatform.ide.client.framework.discovery.DiscoverableCallback;
+import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 
 /**
  * 
@@ -38,7 +36,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class LoadDefaultEntryPointPhase extends Phase implements DefaultEntryPointReceivedHandler, IsDiscoverableResultReceivedHandler
+public class LoadDefaultEntryPointPhase extends Phase
 {
 
    private HandlerManager eventBus;
@@ -47,18 +45,12 @@ public class LoadDefaultEntryPointPhase extends Phase implements DefaultEntryPoi
 
    private ApplicationSettings applicationSettings;
    
-   private Handlers handlers;
-
    public LoadDefaultEntryPointPhase(HandlerManager eventBus, IDEConfiguration applicationConfiguration,
       ApplicationSettings applicationSettings)
    {
       this.eventBus = eventBus;
       this.applicationConfiguration = applicationConfiguration;
       this.applicationSettings = applicationSettings;
-      
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(DefaultEntryPointReceivedEvent.TYPE, this);
-      handlers.addHandler(IsDiscoverableResultReceivedEvent.TYPE, this);
    }
 
    protected void execute()
@@ -66,24 +58,25 @@ public class LoadDefaultEntryPointPhase extends Phase implements DefaultEntryPoi
       /*
        * get default entry point
        */
-      DiscoveryService.getInstance().getDefaultEntryPoint();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedHandler#onDefaultEntryPointReceived(org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent)
-    */
-   public void onDefaultEntryPointReceived(DefaultEntryPointReceivedEvent event)
-   {
-      applicationConfiguration.setDefaultEntryPoint(event.getDefaultEntryPoint());
-      
-      DiscoveryService.getInstance().getIsDiscoverable();
-   }
-
-   @Override
-   public void isDiscoverableResultReceived(IsDiscoverableResultReceivedEvent event)
-   {
-      handlers.removeHandlers();
-      new CheckEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
+      DiscoveryService.getInstance().getDefaultEntryPoint(new DefaultEntryPointCallback(eventBus)
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            applicationConfiguration.setDefaultEntryPoint(this.getDefaultEntryPoint());
+            
+            DiscoveryService.getInstance().getIsDiscoverable(new DiscoverableCallback(eventBus)
+            {
+               
+               @Override
+               public void onResponseReceived(Request request, Response response)
+               {
+                  new CheckEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
+               }
+            });
+         }
+      });
    }
 
 }

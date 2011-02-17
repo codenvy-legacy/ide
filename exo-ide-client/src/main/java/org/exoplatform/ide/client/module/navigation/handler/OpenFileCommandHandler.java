@@ -36,12 +36,13 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorUtil;
@@ -57,16 +58,11 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
+import org.exoplatform.ide.client.framework.vfs.FileCallback;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,8 +71,9 @@ import java.util.Map;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileCommandHandler implements OpenFileHandler, FileContentReceivedHandler, ExceptionThrownHandler,
-   ItemPropertiesReceivedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+public class OpenFileCommandHandler implements OpenFileHandler, ExceptionThrownHandler,
+   //ItemPropertiesReceivedHandler, 
+   EditorFileOpenedHandler, EditorFileClosedHandler,
    ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
@@ -138,40 +135,71 @@ public class OpenFileCommandHandler implements OpenFileHandler, FileContentRecei
          file = new File(event.getHref());
       }
 
+      //TODO: remove handler
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      handlers.addHandler(FileContentReceivedEvent.TYPE, this);
 
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      
-      VirtualFileSystem.getInstance().getProperties(file);
-   }
-
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   {
-      File file = (File)event.getItem();
-//      if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
-//         getFileContent(file);
-      
-      if (file.getContent() != null)
+      VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
       {
-         openFile(file);
-         return;
-      }
-      getFileContent(file);
+         public void onResponseReceived(Request request, Response response)
+         {
+            handlers.removeHandlers();
+            File file = (File)this.getItem();
+//          if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
+//             getFileContent(file);
+          
+          if (file.getContent() != null)
+          {
+             openFile(file);
+             return;
+          }
+          getFileContent(file);
+         }
+         
+         @Override
+         public void fireErrorEvent()
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
+            
+            if (fileToOpenOnError != null && ignoreErrorsCount > 0)
+            {
+               ignoreErrorsCount--;
+               getFileContent(fileToOpenOnError);
+               return;
+            }
+            
+            handlers.removeHandlers();
+            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+         }
+      });
    }
+
+//   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+//   {
+//      File file = (File)event.getItem();
+////      if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
+////         getFileContent(file);
+//      
+//      if (file.getContent() != null)
+//      {
+//         openFile(file);
+//         return;
+//      }
+//      getFileContent(file);
+//   }
 
    private void getFileContent(File file)
    {
       fileToOpenOnError = file;
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-      VirtualFileSystem.getInstance().getContent(file);
-   }
-
-   public void onFileContentReceived(FileContentReceivedEvent event)
-   {
-      handlers.removeHandlers();
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-      openFile(event.getFile());
+      VirtualFileSystem.getInstance().getContent(file, new FileCallback(eventBus)
+      {
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+            openFile(this.getFile());
+         }
+      });
    }
 
    private void openFile(File file)

@@ -19,6 +19,8 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -33,13 +35,9 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -51,9 +49,8 @@ import java.util.Map;
  * @version $
  */
 
-public class SaveFileCommandHandler implements FileContentSavedHandler, ItemPropertiesReceivedHandler,
-   ExceptionThrownHandler, SaveFileHandler, ItemPropertiesSavedHandler, EditorActiveFileChangedHandler,
-   ApplicationSettingsReceivedHandler
+public class SaveFileCommandHandler implements ExceptionThrownHandler, SaveFileHandler, 
+EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
 {
 
    private Handlers handlers;
@@ -85,23 +82,40 @@ public class SaveFileCommandHandler implements FileContentSavedHandler, ItemProp
          return;
       }
 
-      handlers.addHandler(FileContentSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       
       String lockToken = lockTokens.get(file.getHref());
 
       if (file.isContentChanged())
       {
-         VirtualFileSystem.getInstance().saveContent(file, lockToken);
+         VirtualFileSystem.getInstance().saveContent(file, lockToken, new FileContentSaveCallback(eventBus)
+         {
+            public void onResponseReceived(Request request, Response response)
+            {
+               getProperties(this.getFile());
+            }
+         });
          return;
       }
       else
       {
          if (file.isPropertiesChanged())
          {
-            VirtualFileSystem.getInstance().saveProperties(file, lockToken);
+            VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
+            {
+               
+               public void onResponseReceived(Request request, Response response)
+               {
+                  handlers.removeHandlers();
+                  eventBus.fireEvent(new FileSavedEvent((File)this.getItem(), null));
+               }
+               
+               @Override
+               public void fireErrorEvent()
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+               }
+            });
             return;
          }
       }
@@ -109,30 +123,30 @@ public class SaveFileCommandHandler implements FileContentSavedHandler, ItemProp
       handlers.removeHandlers();
    }
 
-   public void onFileContentSaved(FileContentSavedEvent event)
+   private void getProperties(File file)
    {
-      VirtualFileSystem.getInstance().getProperties(event.getFile());
+      VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
+      {
+         
+         public void onResponseReceived(Request request, Response response)
+         {
+            handlers.removeHandlers();
+            eventBus.fireEvent(new FileSavedEvent((File)this.getItem(), null));
+         }
+         
+         @Override
+         public void fireErrorEvent()
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+            handlers.removeHandlers();
+         }
+      });
    }
 
    public void onError(ExceptionThrownEvent event)
    {
       handlers.removeHandlers();
       event.getError().printStackTrace();
-   }
-
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   {
-      handlers.removeHandlers();
-      eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), null));
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.vfs.api.event.ItemPropertiesSavedHandler#onItemPropertiesSaved(org.exoplatform.ide.client.framework.vfs.event.vfs.api.event.ItemPropertiesSavedEvent)
-    */
-   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
-   {
-      handlers.removeHandlers();
-      eventBus.fireEvent(new FileSavedEvent((File)event.getItem(), null));
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

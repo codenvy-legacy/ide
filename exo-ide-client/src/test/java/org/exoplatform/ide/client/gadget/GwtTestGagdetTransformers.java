@@ -67,7 +67,7 @@ public class GwtTestGagdetTransformers extends AbstractGwtTest
    public void testGadgetMetadataUnmarshaler()
    {
       GadgetMetadata gadgetMetadata = new GadgetMetadata();
-      GadgetMetadataUnmarshaler unmarshaler = new GadgetMetadataUnmarshaler(null, gadgetMetadata);
+      GadgetMetadataUnmarshaler unmarshaler = new GadgetMetadataUnmarshaler(gadgetMetadata);
       TestResponse testResponse = new TestResponse(gadgetMetadataString);
       try
       {
@@ -109,7 +109,7 @@ public class GwtTestGagdetTransformers extends AbstractGwtTest
    public void testGadgetMetadataWithErrorUnmarshaler()
    {
       GadgetMetadata gadgetMetadata = new GadgetMetadata();
-      GadgetMetadataUnmarshaler unmarshaler = new GadgetMetadataUnmarshaler(null, gadgetMetadata);
+      GadgetMetadataUnmarshaler unmarshaler = new GadgetMetadataUnmarshaler(gadgetMetadata);
       TestResponse testResponse = new TestResponse(gadgetMetadataWithError);
       try
       {
@@ -164,7 +164,7 @@ public class GwtTestGagdetTransformers extends AbstractGwtTest
    public void testTokenResponseUnmarshaler()
    {
       TokenResponse tokenResponse = new TokenResponse();
-      TokenResponseUnmarshal unmarshaler = new TokenResponseUnmarshal(null, tokenResponse);
+      TokenResponseUnmarshal unmarshaler = new TokenResponseUnmarshal(tokenResponse);
       TestResponse response = new TestResponse(securityToken);
       try
       {

@@ -18,8 +18,10 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -38,11 +40,11 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptEvent;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
+import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyValidateCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyValidateResultReceivedEvent;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyValidateResultReceivedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -53,7 +55,7 @@ import com.google.gwt.user.client.Timer;
  */
 
 public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler, EditorActiveFileChangedHandler,
-   GroovyValidateResultReceivedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ExceptionThrownHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, ExceptionThrownHandler
 {
 
    private HandlerManager eventBus;
@@ -104,7 +106,6 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(GroovyValidateResultReceivedEvent.TYPE, this);
       eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
 
       initGoToErrorFunction();
@@ -153,45 +154,54 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
 
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
-      GroovyService.getInstance().validate(activeFile.getName(), activeFile.getHref(), activeFile.getContent());
-   }
-
-   /**
-    * @see org.exoplatform.ide.groovy.event.GroovyValidateResultReceivedHandler#onGroovyValidateResultReceived(org.exoplatform.ide.groovy.event.GroovyValidateResultReceivedEvent)
-    */
-   public void onGroovyValidateResultReceived(GroovyValidateResultReceivedEvent event)
-   {
-      if (event.getException() == null)
-      {
-         /*
-          * Validation successfully
-          */
-         String outputContent = "<b>" + event.getFileName() + "</b> validated successfully.";
-         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-      }
-      else
-      {
-         /*
-          * Validation failed
-          */
-         ServerException exception = (ServerException)event.getException();
-
-         String outputContent = "<b>" + event.getFileName() + "</b> validation failed.&nbsp;";
-         outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
-         if (!exception.getMessage().equals(""))
+      GroovyService.getInstance().validate(activeFile.getName(), activeFile.getHref(), activeFile.getContent(),
+         new GroovyValidateCallback()
          {
-            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
-         }
 
-         findLineNumberAndColNumberOfError(exception.getMessage());
+            @Override
+            public void onResponseReceived(Request request, Response response)
+            {
+               String outputContent = "<b>" + this.getFileName() + "</b> validated successfully.";
+               eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+               eventBus.fireEvent(new GroovyValidateResultReceivedEvent(this.getFileName(), this.getFileHref()));
+            }
 
-         outputContent =
-            "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction(" + String.valueOf(errLineNumber)
-               + "," + String.valueOf(errColumnNumber) + ", '" + event.getFileHref() + "', '"
-               + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
+            @Override
+            public void fireErrorEvent(Throwable exception)
+            {
+               if (exception instanceof ServerException)
+               {
+                  ServerException serverException = (ServerException)exception;
 
-         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
-      }
+                  String outputContent = "<b>" + this.getFileName() + "</b> validation failed.&nbsp;";
+                  outputContent +=
+                     "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText()
+                        + "</i>)";
+
+                  if (!serverException.getMessage().equals(""))
+                  {
+                     outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+                  }
+
+                  findLineNumberAndColNumberOfError(exception.getMessage());
+
+                  outputContent =
+                     "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction("
+                        + String.valueOf(errLineNumber) + "," + String.valueOf(errColumnNumber) + ", '"
+                        + this.getFileHref() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
+
+                  eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+               }
+               else
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               }
+               GroovyValidateResultReceivedEvent event =
+                  new GroovyValidateResultReceivedEvent(this.getFileName(), this.getFileHref());
+               event.setException(exception);
+               eventBus.fireEvent(event);
+            }
+         });
    }
 
    private native void initGoToErrorFunction() /*-{

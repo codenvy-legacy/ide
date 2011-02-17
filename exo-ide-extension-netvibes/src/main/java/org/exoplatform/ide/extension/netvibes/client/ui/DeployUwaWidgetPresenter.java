@@ -18,14 +18,19 @@
  */
 package org.exoplatform.ide.extension.netvibes.client.ui;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -36,26 +41,17 @@ import org.exoplatform.ide.extension.netvibes.client.model.DeployWidget;
 import org.exoplatform.ide.extension.netvibes.client.model.Languages;
 import org.exoplatform.ide.extension.netvibes.client.model.Regions;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.DeployWidgetService;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.event.WidgetCategoriesReceivedEvent;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.event.WidgetCategoriesReceivedHandler;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.event.WidgetDeployResultReceivedEvent;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.event.WidgetDeployResultReceivedHandler;
+import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetCategoryCallback;
+import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetDeployCallback;
 
 import java.util.LinkedHashMap;
-
-import com.google.gwt.event.shared.HandlerManager;
-
-import com.google.gwt.user.client.ui.HasValue;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 29, 2010 $
  *
  */
-public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, WidgetCategoriesReceivedHandler,
-   WidgetDeployResultReceivedHandler
+public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
 {
    interface Display
    {
@@ -512,35 +508,30 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, WidgetC
    {
       if (categories == null || categories.getCategoryMap().size() < 0)
       {
-         handlers.addHandler(WidgetCategoriesReceivedEvent.TYPE, this);
-         DeployWidgetService.getInstance().getCategories();
+         DeployWidgetService.getInstance().getCategories(new WidgetCategoryCallback()
+         {
+            
+            @Override
+            public void onResponseReceived(Request request, Response response)
+            {
+               categories = this.getCategories();
+               display.setCategoryValueMap(categories.getCategoryMap());
+            }
+            
+            @Override
+            public void handleError(Throwable exception)
+            {
+               String message = "Can not get widget's categories.";
+               message += (exception == null) ? "" : "Possible reason: <br>" + exception.getMessage();
+
+               Dialogs.getInstance().showError(message);
+            }
+         });
       }
       else
       {
          display.setCategoryValueMap(categories.getCategoryMap());
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.netvibes.service.deploy.event.WidgetCategoriesReceivedHandler#onWidgetCategoriesReceived(org.exoplatform.ide.client.module.netvibes.service.deploy.event.WidgetCategoriesReceivedEvent)
-    */
-   public void onWidgetCategoriesReceived(WidgetCategoriesReceivedEvent event)
-   {
-      //TODO exception
-
-      handlers.removeHandler(WidgetCategoriesReceivedEvent.TYPE);
-      if (event.getException() != null)
-      {
-         String message = "Can not get widget's categories.";
-         message +=
-            (event.getException().getMessage() == null) ? "" : "Possible reason: <br>"
-               + event.getException().getMessage();
-
-         Dialogs.getInstance().showError(message);
-         return;
-      }
-      categories = event.getCategories();
-      display.setCategoryValueMap(categories.getCategoryMap());
    }
 
    /**
@@ -566,23 +557,28 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, WidgetC
       widget.setVersion(display.getVersion().getValue());
       widget.setTitle(display.getWigdetTitle().getValue());
 
-      handlers.addHandler(WidgetDeployResultReceivedEvent.TYPE, this);
-      DeployWidgetService.getInstance().deploy(widget, display.getLogin().getValue(), display.getPassword().getValue());
+      DeployWidgetService.getInstance().deploy(widget, display.getLogin().getValue(), display.getPassword().getValue(),
+         new WidgetDeployCallback()
+         {
+            @Override
+            public void onResponseReceived(Request request, Response response)
+            {
+               display.closeForm();
+
+               OutputMessage.Type responseType =
+                  this.getDeployResult().isSuccess() ? OutputMessage.Type.INFO : OutputMessage.Type.ERROR;
+               String message =
+                  this.getDeployResult().isSuccess() ? "<b>" + this.getDeployWidget().getUrl() + "</b>"
+                     + " deployed successfully." : this.getDeployResult().getMessage();
+               eventBus.fireEvent(new OutputEvent(message, responseType));
+            }
+            
+            @Override
+            public void handleError(Throwable exception)
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent("Can't deploye widget"));
+            }
+         });
    }
 
-   /**
-    * @see org.exoplatform.ide.client.module.netvibes.service.deploy.event.WidgetDeployResultReceivedHandler#onWidgetDeployResultReceived(org.exoplatform.ide.client.module.netvibes.service.deploy.event.WidgetDeployResultReceivedEvent)
-    */
-   public void onWidgetDeployResultReceived(WidgetDeployResultReceivedEvent event)
-   {
-      handlers.removeHandler(WidgetDeployResultReceivedEvent.TYPE);
-      display.closeForm();
-
-      OutputMessage.Type responseType =
-         event.getDeployResult().isSuccess() ? OutputMessage.Type.INFO : OutputMessage.Type.ERROR;
-      String message =
-         event.getDeployResult().isSuccess() ? "<b>" + event.getDeployWidget().getUrl() + "</b>"
-            + " deployed successfully." : event.getDeployResult().getMessage();
-      eventBus.fireEvent(new OutputEvent(message, responseType));
-   }
 }

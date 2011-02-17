@@ -18,25 +18,6 @@
  */
 package org.exoplatform.ide.client.permissions;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.webdav.Property;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
-import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
-import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
-import org.exoplatform.ide.client.framework.vfs.event.SetACLResultReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.SetACLResultReceivedHandler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -44,7 +25,26 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
+
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.webdav.Property;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
+import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  *This class is presenter for {@link PermissionsManagerForm}<br>
@@ -53,7 +53,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id: Oct 19, 2010 $
  *
  */
-public class PermissionsManagerPresenter implements SetACLResultReceivedHandler, ExceptionThrownHandler
+public class PermissionsManagerPresenter
 {
 
    public interface Dispaly
@@ -177,7 +177,6 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
 
       });
 
-      handlers.addHandler(SetACLResultReceivedEvent.TYPE, this);
    }
 
    /**
@@ -191,7 +190,27 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
    private void saveACL()
    {
       acl.removeEmptyPermissions();
-      VirtualFileSystem.getInstance().setACL(item, acl, lockTokens.get(item.getHref()));
+      VirtualFileSystem.getInstance().setACL(item, acl, lockTokens.get(item.getHref()), new ClientRequestCallback()
+      {
+         
+         public void onResponseReceived(Request request, Response response)
+         {
+            dispaly.closeForm();
+         }
+         
+         public void onError(Request request, Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found.<br /> Resource locked."));
+            dispaly.closeForm();
+         }
+         
+         @Override
+         public void onUnsuccess(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found.<br /> Resource locked."));
+            dispaly.closeForm();
+         }
+      });
    }
 
    /**
@@ -200,22 +219,6 @@ public class PermissionsManagerPresenter implements SetACLResultReceivedHandler,
    public void destroy()
    {
       handlers.removeHandlers();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.SetACLResultReceivedHandler#onSetACLResultReceived(org.exoplatform.ide.client.framework.vfs.event.SetACLResultReceivedEvent)
-    */
-   public void onSetACLResultReceived(SetACLResultReceivedEvent event)
-   {
-      dispaly.closeForm();
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
-    */
-   public void onError(ExceptionThrownEvent event)
-   {
-      dispaly.closeForm();
    }
 
    private void removeSelectedPermission()

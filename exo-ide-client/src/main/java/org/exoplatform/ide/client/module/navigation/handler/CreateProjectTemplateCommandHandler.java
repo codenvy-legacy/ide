@@ -20,13 +20,9 @@ package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.model.template.TemplateList;
+import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
 import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateHandler;
 import org.exoplatform.ide.client.template.CreateProjectTemplateForm;
@@ -36,49 +32,31 @@ import org.exoplatform.ide.client.template.CreateProjectTemplateForm;
  * @version $Id: Sep 27, 2010 $
  *
  */
-public class CreateProjectTemplateCommandHandler implements CreateProjectTemplateHandler, TemplateListReceivedHandler, 
-ExceptionThrownHandler
+public class CreateProjectTemplateCommandHandler implements CreateProjectTemplateHandler
 {
    private HandlerManager eventBus;
-
-   private Handlers handlers;
 
    public CreateProjectTemplateCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
       
       eventBus.addHandler(CreateProjectTemplateEvent.TYPE, this);
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
-    */
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandlers();
-   }
-   
-   /**
     * @see org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateHandler#onCreateProjectTemplate(org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateEvent)
     */
    public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
    {
-      handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      
-      TemplateService.getInstance().getTemplates();
+      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+      {
+         @Override
+         public void onTemplateListReceived()
+         {
+            TemplateList templateList = this.getTemplateList();
+            new CreateProjectTemplateForm(eventBus, templateList.getTemplates());
+         }
+      });
    }
-
-   /**
-    * @see org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent)
-    */
-   public void onTemplateListReceived(TemplateListReceivedEvent event)
-   {
-      handlers.removeHandlers();
-      
-      TemplateList templateList = event.getTemplateList();
-      new CreateProjectTemplateForm(eventBus, templateList.getTemplates());
-   }
-
+   
 }

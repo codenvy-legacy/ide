@@ -18,10 +18,14 @@
  */
 package org.exoplatform.ide.client.operation;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -37,16 +41,14 @@ import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesEvent;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesHandler;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
+import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadataCallback;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
+import org.exoplatform.ide.extension.gadget.client.service.SecurityTokenCallback;
 import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
 import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
 import org.exoplatform.ide.extension.gadget.client.service.event.GadgetMetadaRecievedEvent;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetMetadaRecievedHandler;
-import org.exoplatform.ide.extension.gadget.client.service.event.SecurityTokenRecievedEvent;
-import org.exoplatform.ide.extension.gadget.client.service.event.SecurityTokenRecievedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -56,8 +58,7 @@ import com.google.gwt.http.client.URL;
  */
 
 public class OperationPresenter implements ShowItemPropertiesHandler, EditorActiveFileChangedHandler, OutputHandler,
-   PreviewFileHandler, GadgetMetadaRecievedHandler, SecurityTokenRecievedHandler,
-   ConfigurationReceivedSuccessfullyHandler
+   PreviewFileHandler, ConfigurationReceivedSuccessfullyHandler
 {
 
    public interface Display
@@ -113,8 +114,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(OutputEvent.TYPE, this);
       handlers.addHandler(PreviewFileEvent.TYPE, this);
-      handlers.addHandler(GadgetMetadaRecievedEvent.TYPE, this);
-      handlers.addHandler(SecurityTokenRecievedEvent.TYPE, this);
 
    }
 
@@ -202,13 +201,41 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
 
       TokenRequest tokenRequest = new TokenRequest(URL.encode(href), owner, viewer, moduleId, container, domain);
-      GadgetService.getInstance().getSecurityToken(tokenRequest);
+      GadgetService.getInstance().getSecurityToken(tokenRequest, new SecurityTokenCallback()
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            TokenResponse tokenResponse = this.getTokenResponse();
+            getGadgetMetadata(tokenResponse);
+         }
+         
+         @Override
+         public void handleError(Throwable exc)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exc));
+         }
+      });
    }
-
-   public void onSecurityTokenRecieved(SecurityTokenRecievedEvent securityTokenRecievedEvent)
+   
+   private void getGadgetMetadata(TokenResponse tokenResponse)
    {
-      TokenResponse tokenResponse = securityTokenRecievedEvent.getTokenResponse();
-      GadgetService.getInstance().getGadgetMetadata(tokenResponse);
+      GadgetService.getInstance().getGadgetMetadata(tokenResponse, new GadgetMetadataCallback()
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            display.showGadget(this.getMetadata(), applicationConfiguration);
+         }
+         
+         @Override
+         public void handleError(Throwable exc)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exc));
+         }
+      });
    }
 
    public void onMetadataRecieved(GadgetMetadaRecievedEvent event)

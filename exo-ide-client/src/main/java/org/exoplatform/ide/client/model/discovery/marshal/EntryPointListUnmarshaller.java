@@ -26,9 +26,7 @@ import com.google.gwt.json.client.JSONValue;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
-import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,17 +39,15 @@ import java.util.List;
 public class EntryPointListUnmarshaller implements Unmarshallable
 {
    
-   private EntryPointsReceivedEvent event;
+   private List<EntryPoint> entryPointList;
    
-   public EntryPointListUnmarshaller(EntryPointsReceivedEvent event)
+   public EntryPointListUnmarshaller(List<EntryPoint> entryPointList)
    {
-      this.event = event;
+      this.entryPointList = entryPointList;
    }
 
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      List<EntryPoint> entryPointList = new ArrayList<EntryPoint>();
-      
       JavaScriptObject json = build(response.getText());
       JSONArray jsonArray = new JSONArray(json);
       
@@ -59,9 +55,7 @@ public class EntryPointListUnmarshaller implements Unmarshallable
       {
          JSONValue value = jsonArray.get(i);
          entryPointList.add(EntryPoint.build(value.toString()));
-         
       }
-      event.setEntryPointList(entryPointList);
    }
    
    public static native JavaScriptObject build(String json) /*-{

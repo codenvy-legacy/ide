@@ -18,20 +18,19 @@
  */
 package org.exoplatform.ide.client.template;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.FolderCreateCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
@@ -42,7 +41,8 @@ import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntr
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
 import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -51,8 +51,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class CreateProjectFromTemplatePresenter extends AbstractCreateFromTemplatePresenter<ProjectTemplate> 
-implements FolderCreatedHandler, FileContentSavedHandler
+public class CreateProjectFromTemplatePresenter extends AbstractCreateFromTemplatePresenter<ProjectTemplate>
 {
    private List<FileTemplate> fileTemplateList = new ArrayList<FileTemplate>();
    
@@ -175,9 +174,7 @@ implements FolderCreatedHandler, FileContentSavedHandler
       projectFolder = new Folder(baseHref + projectName + "/");
       fileList.add(getClasspathFile(baseHref + projectName + "/"));
       
-      handlers.addHandler(FolderCreatedEvent.TYPE, this);
-
-      VirtualFileSystem.getInstance().createFolder(projectFolder);
+      createFolder(projectFolder);
    }
    
    private void build(List<Template>templates, String href)
@@ -235,42 +232,50 @@ implements FolderCreatedHandler, FileContentSavedHandler
    }
    
    
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.FolderCreatedHandler#onFolderCreated(org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent)
-    */
-   public void onFolderCreated(FolderCreatedEvent event)
+   private void createFolder(Folder folder)
+   {
+      VirtualFileSystem.getInstance().createFolder(folder, new FolderCreateCallback(eventBus)
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            onFolderCreated(this.getFolder());
+         }
+      });
+   }
+   
+   private void onFolderCreated(Folder folder)
    {
       if (itemsCreated < folderList.size())
       {
-         VirtualFileSystem.getInstance().createFolder(folderList.get(itemsCreated));
+         createFolder(folderList.get(itemsCreated));
          itemsCreated++;
          return;
       }
-      handlers.removeHandler(FolderCreatedEvent.TYPE);
       if (fileList.size() == 0)
       {
         finishProjectCreation();
          return;
       }
       
-      handlers.addHandler(FileContentSavedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().saveContent(fileList.get(0), null);
+      saveFileContent(fileList.get(0));
       itemsCreated = 1;
    }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent)
-    */
-   public void onFileContentSaved(FileContentSavedEvent event)
+   
+   private void saveFileContent(File file)
    {
-      if (itemsCreated < fileList.size())
+      VirtualFileSystem.getInstance().saveContent(file, null, new FileContentSaveCallback(eventBus)
       {
-         VirtualFileSystem.getInstance().saveContent(fileList.get(itemsCreated), null);
-         itemsCreated++;
-         return;
-      }
-      handlers.removeHandler(FileContentSavedEvent.TYPE);
-      finishProjectCreation();
+         public void onResponseReceived(Request request, Response response)
+         {
+            if (itemsCreated < fileList.size())
+            {
+               saveFileContent(fileList.get(itemsCreated));
+               itemsCreated++;
+               return;
+            }
+            finishProjectCreation();
+         }
+      });
    }
 
    /**

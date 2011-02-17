@@ -18,40 +18,36 @@
  */
 package org.exoplatform.ide.client.module.vfs.webdav;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.xml.QName;
+import org.exoplatform.ide.client.framework.vfs.ChildrenReceivedCallback;
+import org.exoplatform.ide.client.framework.vfs.CopyCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileCallback;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.FolderCreateCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
+import org.exoplatform.ide.client.framework.vfs.ItemUnlockCallback;
 import org.exoplatform.ide.client.framework.vfs.LockToken;
 import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.client.framework.vfs.VersionsCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
-import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.SetACLResultReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemVersionsReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
-import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.callback.ItemLockCallback;
+import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.CopyRequestMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.CopyResponseUnmarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.FileContentMarshaller;
@@ -74,8 +70,9 @@ import org.exoplatform.ide.client.module.vfs.webdav.marshal.SearchResultUnmarsha
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.UnlockItemMarshaller;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.UnlockItemUnmarshaller;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -149,18 +146,18 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       return new ExceptionThrownEvent(message);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getContent(org.exoplatform.ide.client.framework.vfs.File, org.exoplatform.ide.client.framework.vfs.FileCallback)
+    */
    @Override
-   public void getContent(File file)
+   public void getContent(File file, FileCallback fileCallback)
    {
       String url = javaScriptEncodeURI(file.getHref());
 
       FileContentUnmarshaller unmarshaller = new FileContentUnmarshaller(file);
-      FileContentReceivedEvent event = new FileContentReceivedEvent(file);
+      fileCallback.setFile(file);
 
-      String errorMessage = " Service is not deployed.<br>Resource not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, fileCallback);
 
       loader.setMessage(Messages.GET_FILE_CONTENT);
 
@@ -168,8 +165,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          .send(callback);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getChildren(org.exoplatform.ide.client.framework.vfs.Folder, org.exoplatform.ide.client.framework.vfs.ChildrenReceivedCallback)
+    */
    @Override
-   public void getChildren(Folder folder)
+   public void getChildren(Folder folder, ChildrenReceivedCallback childrenReceivedCallback)
    {
       String href = folder.getHref();
       if (!href.endsWith("/"))
@@ -179,7 +179,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       String url = javaScriptEncodeURI(href);
 
-      ChildrenReceivedEvent event = new ChildrenReceivedEvent(folder);
+      childrenReceivedCallback.setFolder(folder);
       List<QName> propeties = new ArrayList<QName>();
       propeties.add(ItemProperty.LOCKDISCOVERY);
       propeties.add(ItemProperty.ISVERSIONED);
@@ -187,11 +187,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       PropFindRequestMarshaller marshaller = new PropFindRequestMarshaller(propeties);
       FolderContentUnmarshaller unmarshaller = new FolderContentUnmarshaller(folder, images);
 
-      String errorMessage = "Service is not deployed.<br>Parent folder not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, acceptStatus, childrenReceivedCallback);
 
       loader.setMessage(Messages.GET_FOLDER_CONTENT);
 
@@ -202,15 +199,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    @Override
-   public void createFolder(Folder folder)
+   public void createFolder(Folder folder, FolderCreateCallback folderCallback)
    {
       String url = javaScriptEncodeURI(folder.getHref());
-      FolderCreatedEvent event = new FolderCreatedEvent(folder);
+      folderCallback.setFolder(folder);
 
-      String errorMessage = "Service is not deployed.<br>Resource already exist.<br>Parent folder not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, folderCallback);
 
       loader.setMessage(Messages.CREATE_FOLDER);
 
@@ -219,15 +213,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    @Override
-   public void deleteItem(Item item)
+   public void deleteItem(Item item, ClientRequestCallback itemCallback)
    {
       String url = javaScriptEncodeURI(item.getHref());
-      ItemDeletedEvent event = new ItemDeletedEvent(item);
 
-      String errorMessage = "Service is not deployed.<br>Resource not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, itemCallback);
 
       if (item instanceof File)
       {
@@ -241,23 +231,18 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#saveContent(org.exoplatform.ide.client.framework.vfs.File, org.exoplatform.ide.client.framework.vfs.LockToken)
-    */
    @Override
-   public void saveContent(File file, String lockToken)
+   public void saveContent(File file, String lockToken, FileContentSaveCallback fileCallback)
    {
       String url = javaScriptEncodeURI(file.getHref());
-      boolean isNewFile = file.isNewFile();
+      final boolean isNewFile = file.isNewFile();
 
       FileContentMarshaller marshaller = new FileContentMarshaller(file);
-      FileContentSavedEvent event = new FileContentSavedEvent(file, isNewFile);
+      fileCallback.setFile(file);
+      fileCallback.setNew(isNewFile);
       FileContentSavingResultUnmarshaller unmarshaller = new FileContentSavingResultUnmarshaller(file);
 
-      String errorMessage = "Service is not deployed.<br>Resource not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, fileCallback);
 
       loader.setMessage(Messages.SAVE_FILE_CONTENT);
       if (lockToken != null)
@@ -276,21 +261,24 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getProperties(org.exoplatform.ide.client.framework.vfs.Item)
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getProperties(org.exoplatform.ide.client.framework.vfs.Item, org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback)
     */
    @Override
-   public void getProperties(Item item)
+   public void getPropertiesCallback(Item item, ItemPropertiesCallback itemCallback)
    {
       List<QName> propeties = new ArrayList<QName>();
       
       propeties.add(ItemProperty.LOCKDISCOVERY);
       propeties.add(ItemProperty.ISVERSIONED);
       
-      getProperties(item, propeties);
+      getPropertiesCallback(item, propeties, itemCallback);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getProperties(org.exoplatform.ide.client.framework.vfs.Item, java.util.List, org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback)
+    */
    @Override
-   public void getProperties(Item item, List<QName> properties)
+   public void getPropertiesCallback(Item item, List<QName> properties, ItemPropertiesCallback itemCallback)
    {
       String url = javaScriptEncodeURI(item.getHref());
 
@@ -298,13 +286,10 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       ItemPropertiesUnmarshaller unmarshaller = new ItemPropertiesUnmarshaller(item, images);
 
-      ItemPropertiesReceivedEvent event = new ItemPropertiesReceivedEvent(item);
-
-      String errorMessage = "Service is not deployed.<br>Resource not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+      itemCallback.setItem(item);
 
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, acceptStatus, itemCallback);
 
       loader.setMessage(Messages.GET_PROPERTIES);
 
@@ -319,18 +304,15 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
     * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#saveProperties(org.exoplatform.ide.client.framework.vfs.Item, org.exoplatform.ide.client.framework.vfs.LockToken)
     */
    @Override
-   public void saveProperties(Item item, String lockToken)
+   public void saveProperties(Item item, String lockToken, ItemPropertiesCallback itemCallback)
    {
       String url = javaScriptEncodeURI(item.getHref());
 
       ItemPropertiesMarshaller marshaller = new ItemPropertiesMarshaller(item);
-      ItemPropertiesSavedEvent event = new ItemPropertiesSavedEvent(item);
+      itemCallback.setItem(item);
       ItemPropertiesSavingResultUnmarshaller unmarshaller = new ItemPropertiesSavingResultUnmarshaller(item);
 
-      String errorMessage = "Service is not deployed.<br>Resource not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, itemCallback);
 
       loader.setMessage(Messages.SAVE_PROPERTIES);
 
@@ -350,19 +332,14 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
    }
 
-   @Override
-   public void search(Folder folder, String text, String mimeType, String path)
+   public void search(Folder folder, String text, String mimeType, String path, ClientRequestCallback searchCallback)
    {
       String url = javaScriptEncodeURI(folder.getHref());
       SearchRequestMarshaller requestMarshaller = new SearchRequestMarshaller(text, mimeType, path);
 
       SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(restContext, eventBus, folder, images);
-      SearchResultReceivedEvent event = new SearchResultReceivedEvent(folder);
 
-      String errorMessage = "Service is not deployed.<br>Search path does not exist.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, searchCallback);
 
       loader.setMessage(Messages.SEARCH);
 
@@ -370,67 +347,16 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(requestMarshaller).send(callback);
    }
 
-   //   @Override
-   //   public void move(Item item, String destination)
-   //   {
-   //      String url = javaScriptEncodeURI(item.getHref());
-   //      MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
-   //      MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
-   //
-   //      String errorMessage =
-   //         "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name.";
-   //      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-   //
-   //      if (item instanceof File)
-   //      {
-   //         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
-   //
-   //         loader.setMessage(Messages.MOVE_FILE);
-   //
-   //         AsyncRequest.build(RequestBuilder.POST, url, loader)
-   //            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
-   //            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
-   //      }
-   //      else
-   //      {
-   //         if (!url.endsWith("/"))
-   //         {
-   //            url += "/";
-   //         }
-   //
-   //         if (!destination.endsWith("/"))
-   //         {
-   //            destination += "/";
-   //         }
-   //
-   //         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
-   //
-   //         loader.setMessage(Messages.MOVE_FOLDER);
-   //
-   //         AsyncRequest.build(RequestBuilder.POST, url, loader)
-   //            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
-   //            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
-   //      }
-   //
-   //   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#move(org.exoplatform.ide.client.framework.vfs.Item, java.lang.String, org.exoplatform.ide.client.framework.vfs.LockToken)
-    */
-   @Override
-   public void move(Item item, String destination, String lockToken)
+   public void move(Item item, String destination, String lockToken, MoveItemCallback moveCallback)
    {
       String url = javaScriptEncodeURI(item.getHref());
-      MoveCompleteEvent event = new MoveCompleteEvent(item, item.getHref());
+      moveCallback.setItem(item);
+      moveCallback.setSourceHref(item.getHref());
       MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
-
-      String errorMessage =
-         "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
 
       if (item instanceof File)
       {
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, moveCallback);
 
          loader.setMessage(Messages.MOVE_FILE);
          if (lockToken != null)
@@ -460,7 +386,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
             destination += "/";
          }
 
-         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, moveCallback);
 
          loader.setMessage(Messages.MOVE_FOLDER);
 
@@ -471,26 +397,22 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    @Override
-   public void copy(Item item, String destination)
+   public void copy(Item item, String destination, CopyCallback copyCallback)
    {
       String url = javaScriptEncodeURI(item.getHref());
 
       String destinationURL = destination;
 
-      CopyCompleteEvent event = new CopyCompleteEvent(item, destination);
+      copyCallback.setItem(item);
+      copyCallback.setDestination(destination);
 
       int[] acceptStatus = new int[]{HTTPStatus.CREATED};
       CopyResponseUnmarshaller unmarshaller = new CopyResponseUnmarshaller();
       CopyRequestMarshaller marshaller = new CopyRequestMarshaller();
 
-      String errorMessage =
-         "Service is not deployed.<br>Destination path does not exist.<br>Folder already has item with same name.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
       if (item instanceof File)
       {
-         AsyncRequestCallback callback =
-            new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+         AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, acceptStatus, copyCallback);
 
          loader.setMessage(Messages.COPY_FILE);
 
@@ -511,7 +433,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          }
 
          AsyncRequestCallback callback =
-            new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+            new AsyncRequestCallback(eventBus, unmarshaller, acceptStatus, copyCallback);
 
          loader.setMessage(Messages.COPY_FOLDER);
 
@@ -521,8 +443,35 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       }
    }
 
+//   @Override
+//   public void lock(Item item, int timeout, String userName)
+//   {
+//      String url = javaScriptEncodeURI(item.getHref());
+//      
+//      LockToken lockToken = new LockToken();
+//
+//      int[] acceptStatus = new int[]{HTTPStatus.OK};
+//
+//      LockItemMarshaller marshaller = new LockItemMarshaller(userName);
+//      LockItemUnmarshaller unmarshaller = new LockItemUnmarshaller(lockToken);
+//
+//      String errorMessage = "Service is not deployed.<br />Lock was not enforceable on this resource.";
+//      ItemLockResultReceivedEvent event = new ItemLockResultReceivedEvent(item, lockToken, errorMessage);
+//      //      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+//
+//      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event, acceptStatus);
+//
+//      loader.setMessage(Messages.LOCK);
+//
+//      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.LOCK)
+//         .header(HTTPHeader.TIMEOUT, "Infinite, Second-" + timeout).data(marshaller).send(callback);
+//   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#lock(org.exoplatform.ide.client.framework.vfs.Item, int, java.lang.String, org.exoplatform.ide.client.framework.vfs.callback.ItemLockCallback)
+    */
    @Override
-   public void lock(Item item, int timeout, String userName)
+   public void lock(Item item, int timeout, String userName, ItemLockCallback itemCallback)
    {
       String url = javaScriptEncodeURI(item.getHref());
       
@@ -533,11 +482,14 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       LockItemMarshaller marshaller = new LockItemMarshaller(userName);
       LockItemUnmarshaller unmarshaller = new LockItemUnmarshaller(lockToken);
 
-      String errorMessage = "Service is not deployed.<br />Lock was not enforceable on this resource.";
-      ItemLockResultReceivedEvent event = new ItemLockResultReceivedEvent(item, lockToken, errorMessage);
-      //      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+      itemCallback.setItem(item);
+      itemCallback.setLockToken(lockToken);
+//      String errorMessage = "Service is not deployed.<br />Lock was not enforceable on this resource.";
+//      ItemLockResultReceivedEvent event = new ItemLockResultReceivedEvent(item, lockToken, errorMessage);
+//      //      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+//      itemCallback.setItem(item);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event, acceptStatus);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, acceptStatus, itemCallback);
 
       loader.setMessage(Messages.LOCK);
 
@@ -546,35 +498,29 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#unlock(org.exoplatform.ide.client.framework.vfs.Item, org.exoplatform.ide.client.framework.vfs.LockToken)
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#unlock(org.exoplatform.ide.client.framework.vfs.Item, java.lang.String, org.exoplatform.ide.client.framework.vfs.ItemUnlockCallback)
     */
    @Override
-   public void unlock(Item item, String lockToken)
+   public void unlock(Item item, String lockToken, ItemUnlockCallback itemCallback)
    {
       String url = javaScriptEncodeURI(item.getHref());
 
       UnlockItemMarshaller marshaller = new UnlockItemMarshaller();
       UnlockItemUnmarshaller unmarshaller = new UnlockItemUnmarshaller();
 
-      ItemUnlockedEvent event = new ItemUnlockedEvent(item);
+      itemCallback.setItem(item);
 
       int[] acceptStatus = new int[]{HTTPStatus.NO_CONTENT, 1223}; //1223 for IE
 
-      String errorMessage = "Service is not deployed.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, acceptStatus, itemCallback);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.UNLOCK)
          .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">").data(marshaller).send(callback);
 
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getVersions(org.exoplatform.ide.client.framework.vfs.Item)
-    */
    @Override
-   public void getVersions(Item item)
+   public void getVersions(Item item, VersionsCallback versionCallback)
    {
       String url = javaScriptEncodeURI(item.getHref());
 
@@ -583,14 +529,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       ItemVersionsMarshaller marshaller = new ItemVersionsMarshaller();
       ItemVersionsUnmarshaller unmarshaller = new ItemVersionsUnmarshaller(item, versions, images);
 
-      ItemVersionsReceivedEvent event = new ItemVersionsReceivedEvent(item, versions);
+      versionCallback.setItem(item);
+      versionCallback.setVersions(versions);
 
       int[] acceptStatus = new int[]{HTTPStatus.MULTISTATUS};
 
-      String errorMessage = "Versions were not received.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, acceptStatus, versionCallback);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.REPORT)
          .data(marshaller).send(callback);
@@ -622,24 +566,19 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    //   }
 
    /**
-    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#setACL(org.exoplatform.ide.client.framework.vfs.Item)
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#setACL(org.exoplatform.ide.client.framework.vfs.Item, org.exoplatform.ide.client.framework.vfs.acl.AccessControlList, java.lang.String, org.exoplatform.gwtframework.commons.rest.ClientRequestCallback)
     */
    @Override
-   public void setACL(Item item, AccessControlList acl, String lockToken)
+   public void setACL(Item item, AccessControlList acl, String lockToken, ClientRequestCallback aclCallback)
    {
       String url = javaScriptEncodeURI(item.getHref());
 
       ItemSetACLMarshaller marshaller = new ItemSetACLMarshaller(acl);
       ItemSetACLUnmarshaller unmarshaller = new ItemSetACLUnmarshaller();
 
-      SetACLResultReceivedEvent event = new SetACLResultReceivedEvent(item);
-
       int[] acceptStatus = new int[]{HTTPStatus.OK};
 
-      String errorMessage = "Service is not deployed.<br>Resource not found.<br /> Resource locked.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent, acceptStatus);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, acceptStatus, aclCallback);
 
       if (lockToken != null)
       {

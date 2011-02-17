@@ -18,19 +18,24 @@
  */
 package org.exoplatform.ide.client.search.file;
 
-import java.util.List;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -63,9 +68,12 @@ public class SearchPresenter
    private List<Item> selectedItems;
    
    private String entryPoint;
+   
+   private HandlerManager eventBus;
 
    public SearchPresenter(HandlerManager eventBus, List<Item> selectedItems, String entryPoint)
    {
+      this.eventBus = eventBus;
       this.selectedItems = selectedItems;
       this.entryPoint = entryPoint;
    }
@@ -143,8 +151,25 @@ public class SearchPresenter
          path = "/" + path;
       }
 
-      Folder folder = new Folder(entryPoint);
-      VirtualFileSystem.getInstance().search(folder, content, contentType, path);
+      final Folder folder = new Folder(entryPoint);
+      VirtualFileSystem.getInstance().search(folder, content, contentType, path, new ClientRequestCallback()
+      {
+         
+         public void onResponseReceived(Request request, Response response)
+         {
+            eventBus.fireEvent(new SearchResultReceivedEvent(folder));
+         }
+         
+         public void onError(Request request, Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Search path does not exist."));
+         }
+         
+         public void onUnsuccess(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Search path does not exist."));
+         }
+      });
       display.closeForm();
    }
 

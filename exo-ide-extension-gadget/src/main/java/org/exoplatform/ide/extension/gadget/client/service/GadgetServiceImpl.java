@@ -18,22 +18,18 @@
  */
 package org.exoplatform.ide.extension.gadget.client.service;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.URL;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetDeployResultEvent;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetMetadaRecievedEvent;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetUndeployResultEvent;
-import org.exoplatform.ide.extension.gadget.client.service.event.SecurityTokenRecievedEvent;
 import org.exoplatform.ide.extension.gadget.client.service.marshal.GadgetMetadataUnmarshaler;
 import org.exoplatform.ide.extension.gadget.client.service.marshal.TokenRequestMarshaler;
 import org.exoplatform.ide.extension.gadget.client.service.marshal.TokenResponseUnmarshal;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.URL;
 
 
 /**
@@ -70,7 +66,7 @@ public class GadgetServiceImpl extends GadgetService
       this.publicContext = publicContext;
    }
 
-   public void getGadgetMetadata(TokenResponse tokenResponse)
+   public void getGadgetMetadata(TokenResponse tokenResponse, GadgetMetadataCallback gadgetCallback)
    {
       String data =
          "{\"context\":{\"country\":\"" + "us" + "\",\"language\":\"" + "en" + "\"},\"gadgets\":[" + "{\"moduleId\":"
@@ -78,22 +74,24 @@ public class GadgetServiceImpl extends GadgetService
       // Send data
       GadgetMetadata metadata = new GadgetMetadata();
       metadata.setSecurityToken(tokenResponse.getSecurityToken());
-      GadgetMetadataUnmarshaler unmarshaller = new GadgetMetadataUnmarshaler(eventBus, metadata);
-      GadgetMetadaRecievedEvent event = new GadgetMetadaRecievedEvent(metadata);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event);
+      GadgetMetadataUnmarshaler unmarshaller = new GadgetMetadataUnmarshaler(metadata);
+//      GadgetMetadaRecievedEvent event = new GadgetMetadaRecievedEvent(metadata);
+      gadgetCallback.setMetadata(metadata);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, gadgetCallback);
 
       String url = gadgetServer + "metadata";
       
       AsyncRequest.build(RequestBuilder.POST, url, loader).data(data).send(callback);
    }
 
-   public void getSecurityToken(TokenRequest request)
+   public void getSecurityToken(TokenRequest request, SecurityTokenCallback securityTokenCallback)
    {
       TokenResponse tokenResponse = new TokenResponse();
-      SecurityTokenRecievedEvent postEvent = new SecurityTokenRecievedEvent(tokenResponse);
-      TokenResponseUnmarshal unmarshal = new TokenResponseUnmarshal(eventBus, tokenResponse);
+//      SecurityTokenRecievedEvent postEvent = new SecurityTokenRecievedEvent(tokenResponse);
+      securityTokenCallback.setTokenResponse(tokenResponse);
+      TokenResponseUnmarshal unmarshal = new TokenResponseUnmarshal(tokenResponse);
       TokenRequestMarshaler marshaler = new TokenRequestMarshaler(request);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshal, postEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshal, securityTokenCallback);
 
       String url = restServiceContext + "/services/shindig/securitytoken/createToken";
       //String url = Configuration.getInstance().getContext() + "/services/shindig/securitytoken/createToken";
@@ -102,28 +100,30 @@ public class GadgetServiceImpl extends GadgetService
    }
 
    @Override
-   public void deployGadget(String href)
+   public void deployGadget(String href, DeployUndeployGadgetCallback gadgetCallback)
    {
       String url =
          restServiceContext +
          /*Configuration.getInstance().getContext() + */CONTEXT + DEPLOY + "?" + QueryParams.GADGET_URL + "="
             + URL.encodeComponent(href) + "&" + QueryParams.PRIVATE_CONTEXT + "=" + URL.encodeComponent(restServiceContext)
             + "&" + QueryParams.PUBLIC_CONTEXT + "=" + URL.encodeComponent(publicContext);
-      GadgetDeployResultEvent event = new GadgetDeployResultEvent(url);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
+//      GadgetDeployResultEvent event = new GadgetDeployResultEvent(url);
+      gadgetCallback.setUrl(url);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, gadgetCallback);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
    @Override
-   public void undeployGadget(String href)
+   public void undeployGadget(String href, DeployUndeployGadgetCallback gadgetCallback)
    {
       String url =
          restServiceContext + /*Configuration.getInstance().getContext() + */CONTEXT + UNDEPLOY + "?"
             + QueryParams.GADGET_URL + "=" + URL.encodeComponent(href) + "&" + QueryParams.PRIVATE_CONTEXT + "="
             + URL.encodeComponent(restServiceContext) + "&" + QueryParams.PUBLIC_CONTEXT + "="
             + URL.encodeComponent(publicContext);
-      GadgetUndeployResultEvent event = new GadgetUndeployResultEvent(url);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
+//      GadgetUndeployResultEvent event = new GadgetUndeployResultEvent(url);
+      gadgetCallback.setUrl(url);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, gadgetCallback);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 

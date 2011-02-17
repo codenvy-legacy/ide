@@ -18,18 +18,22 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.ItemUnlockCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,15 +45,11 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private Map<String, String> lockTokens;
 
    public FileClosedHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-
-      handlers = new Handlers(eventBus);
 
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -68,7 +68,20 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
       
       if (lockToken != null)
       {
-         VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken);
+         VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new ItemUnlockCallback()
+         {
+            
+            public void onResponseReceived(Request request, Response response)
+            {
+               eventBus.fireEvent(new ItemUnlockedEvent(this.getItem()));
+            }
+            
+            @Override
+            public void fireErrorEvent()
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+            }
+         });
       }
    }
 

@@ -28,6 +28,6 @@ package org.exoplatform.ide.client.model.conversation;
 public interface ConversationService
 {
 
-   void getUserInfo();
+   void getUserInfo(UserInfoCallback userInfoCallback);
 
 }

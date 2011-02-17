@@ -18,7 +18,12 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -29,13 +34,8 @@ import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetHadndler;
 import org.exoplatform.ide.extension.gadget.client.event.UndeployGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.UndeployGadgetHandler;
+import org.exoplatform.ide.extension.gadget.client.service.DeployUndeployGadgetCallback;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetDeployResultEvent;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetDeployResultHandler;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetUndeployResultEvent;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetUndeployResultHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -43,7 +43,7 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployGadgetHandler,
-   GadgetDeployResultHandler, GadgetUndeployResultHandler, EditorActiveFileChangedHandler
+   EditorActiveFileChangedHandler
 {
 
    private HandlerManager eventBus;
@@ -61,8 +61,6 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(DeployGadgetEvent.TYPE, this);
       handlers.addHandler(UndeployGadgetEvent.TYPE, this);
-      handlers.addHandler(GadgetDeployResultEvent.TYPE, this);
-      handlers.addHandler(GadgetUndeployResultEvent.TYPE, this);
    }
 
    /**
@@ -70,7 +68,31 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
     */
    public void onDeployGadget(DeployGadgetEvent event)
    {
-      GadgetService.getInstance().deployGadget(activeFile.getHref());
+      GadgetService.getInstance().deployGadget(activeFile.getHref(), new DeployUndeployGadgetCallback()
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            String outputContent = "<b>" + this.getUrl() + "</b> deployed successfully.";
+            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+         }
+         
+         @Override
+         public void handleError(Throwable exc)
+         {
+            if (exc instanceof ServerException)
+            {
+               ServerException exception = (ServerException)exc;
+               String outputContent = "<b>" + this.getUrl() + "</b> deploy failed.&nbsp;";
+               sendExceptionEvent(exception, outputContent);
+            }
+            else
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent(exc));
+            }
+         }
+      });
    }
 
    /**
@@ -78,47 +100,32 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
     */
    public void onUndeployGadget(UndeployGadgetEvent event)
    {
-      GadgetService.getInstance().undeployGadget(activeFile.getHref());
-   }
-
-   /**
-    * @see org.exoplatform.ideall.gadget.event.GadgetDeployResultHandler#onGadgetDeployResultReceived(org.exoplatform.ideall.gadget.event.GadgetDeployResultEvent)
-    */
-   public void onGadgetDeployResultReceived(GadgetDeployResultEvent event)
-   {
-      if (event.getException() == null)
+      GadgetService.getInstance().undeployGadget(activeFile.getHref(), new DeployUndeployGadgetCallback()
       {
-         //Deploying successfully
-         String outputContent = "<b>" + event.getUrl() + "</b> deployed successfully.";
-         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-      }
-      else
-      {
-         //Deploying failed
-         ServerException exception = (ServerException)event.getException();
-         String outputContent = "<b>" + event.getUrl() + "</b> deploy failed.&nbsp;";
-         sendExceptionEvent(exception, outputContent);
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ideall.gadget.event.GadgetUndeployResultHandler#onGadgetUndeployResultReceived(org.exoplatform.ideall.gadget.event.GadgetUndeployResultEvent)
-    */
-   public void onGadgetUndeployResultReceived(GadgetUndeployResultEvent event)
-   {
-      if (event.getException() == null)
-      {
-         // Deploying successfully
-         String outputContent = "<b>" + event.getUrl() + "</b> undeployed successfully.";
-         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-      }
-      else
-      {
-         //Deploying failed
-         ServerException exception = (ServerException)event.getException();
-         String outputContent = "<b>" + event.getUrl() + "</b> undeploy failed.&nbsp;";
-         sendExceptionEvent(exception, outputContent);
-      }
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            String outputContent = "<b>" + this.getUrl() + "</b> undeployed successfully.";
+            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));            
+         }
+         
+         @Override
+         public void handleError(Throwable exc)
+         {
+            if (exc instanceof ServerException)
+            {
+               ServerException exception = (ServerException)exc;
+               String outputContent = "<b>" + this.getUrl() + "</b> undeploy failed.&nbsp;";
+               sendExceptionEvent(exception, outputContent);
+            }
+            else
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent(exc));
+            }
+            
+         }
+      });
    }
 
    /**

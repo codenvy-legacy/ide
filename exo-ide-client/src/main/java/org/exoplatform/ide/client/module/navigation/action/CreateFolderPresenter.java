@@ -18,21 +18,22 @@
  */
 package org.exoplatform.ide.client.module.navigation.action;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedHandler;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.FolderCreateCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 
 /**
  * Created by The eXo Platform SAS .
@@ -41,7 +42,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class CreateFolderPresenter implements FolderCreatedHandler
+public class CreateFolderPresenter //implements FolderCreatedHandler
 {
 
    private CreateFolderDisplay display;
@@ -95,7 +96,7 @@ public class CreateFolderPresenter implements FolderCreatedHandler
          }
       });
 
-      handlers.addHandler(FolderCreatedEvent.TYPE, this);
+//      handlers.addHandler(FolderCreatedEvent.TYPE, this);
    }
 
    public void destroy()
@@ -107,20 +108,32 @@ public class CreateFolderPresenter implements FolderCreatedHandler
    {
       String newFolderHref = href + display.getFolderNameField().getValue() + "/";
       Folder newFolder = new Folder(newFolderHref);
-      VirtualFileSystem.getInstance().createFolder(newFolder);
+      VirtualFileSystem.getInstance().createFolder(newFolder, new FolderCreateCallback(eventBus)
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            String folder = selectedItem.getHref();
+            if (selectedItem instanceof File)
+            {
+               folder = folder.substring(0, folder.lastIndexOf("/") + 1);
+            }
+            eventBus.fireEvent(new RefreshBrowserEvent(new Folder(folder), this.getFolder()));
+            display.closeForm();
+         }
+      });
    }
 
-   public void onFolderCreated(FolderCreatedEvent event)
-   {
-      //Item item = selectedItem; context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      String folder = selectedItem.getHref();
-      if (selectedItem instanceof File)
-      {
-         folder = folder.substring(0, folder.lastIndexOf("/") + 1);
-      }
-      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(folder), event.getFolder()));
-      display.closeForm();
-   }
+//   public void onFolderCreated(FolderCreatedEvent event)
+//   {
+//      //Item item = selectedItem; context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
+//      String folder = selectedItem.getHref();
+//      if (selectedItem instanceof File)
+//      {
+//         folder = folder.substring(0, folder.lastIndexOf("/") + 1);
+//      }
+//      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(folder), event.getFolder()));
+//      display.closeForm();
+//   }
    //   
    //   public void onItemsSelected(ItemsSelectedEvent event)
    //   {

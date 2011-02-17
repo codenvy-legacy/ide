@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.model.wadl;
 
-import java.util.HashMap;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -30,22 +33,18 @@ import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.ide.client.AbstractGwtTest;
 import org.exoplatform.ide.client.Const;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
+import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyDeployUndeployCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyServiceImpl;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyDeployResultReceivedEvent;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyDeployResultReceivedHandler;
+import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlCallback;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.event.WadlServiceOutputReceiveHandler;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.event.WadlServiceOutputReceivedEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
+import java.util.HashMap;
 
 /**
  * Created by The eXo Platform SAS.
@@ -125,83 +124,107 @@ public class GwtTestWadlService extends AbstractGwtTest
     */
    public void testGetWadl()
    {
-      eventbus.addHandler(WadlServiceOutputReceivedEvent.TYPE, new WadlServiceOutputReceiveHandler()
+      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
-         public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
+         public void onError(ExceptionThrownEvent event)
          {
-            if (event.getException() == null)
+            if (event.getError() != null && event.getError().getMessage() != null)
             {
-               WadlApplication application = event.getApplication();
-               
-               assertEquals(testUrlGetWadl, application.getResources().getBase());
-               assertEquals(1, application.getResources().getResource().size());
-               
-               Resource resource = application.getResources().getResource().get(0);
-               
-               assertEquals("/mine", resource.getPath());
-               assertEquals(2, resource.getMethodOrResource().size());
-               assertEquals(0, resource.getDoc().size());
-               assertEquals(0, resource.getOtherAttributes().size());
-               assertEquals(0, resource.getParam().size());
-               assertEquals(0, resource.getType().size());
-               
-               for (Object obj : resource.getMethodOrResource())
-               {
-                  if (obj instanceof Method)
-                  {
-                     Method method = (Method)obj;
-                     assertEquals("OPTIONS", method.getName());
-                  }
-                  else if (obj instanceof Resource)
-                  {
-                     Resource res = (Resource)obj;
-                     
-                     assertEquals("/mine/helloworld/{name}", res.getPath());
-                     assertEquals(1, res.getMethodOrResource().size());
-                     assertTrue(res.getMethodOrResource().get(0) instanceof Method);
-                     
-                     Method method = (Method)res.getMethodOrResource().get(0);
-                     
-                     assertEquals("GET", method.getName());
-                  }
-                  else
-                  {
-                     fail("Must receive Method or Resource, but received something else");
-                     finishTest();
-                  }
-               }
-               
+               fail(event.getError().getMessage());
                finishTest();
             }
-            else
-            {
-               fail(event.getException().getMessage());
-               finishTest();
-            }
+
          }
       });
+
+      vfsWebDav.saveContent(file, null, new FileContentSaveCallback(eventbus)
+      {
+         
+         public void onResponseReceived(Request request, Response response)
+         {
+            assertNotNull(this.getFile());
+            assertEquals(this.getFile().getContent(), groovyFileContent);
+            groovyService.deploy(this.getFile().getHref(), new GroovyDeployUndeployCallback()
+            {
+               
+               public void onResponseReceived(Request request, Response response)
+               {
+                  assertEquals(file.getHref(), this.getHref());
+                  wadlService.getWadl(testUrlGetWadl + "/mine", new WadlCallback(eventbus)
+                  {
+                     
+                     @Override
+                     public void onResponseReceived(Request request, Response response)
+                     {
+                        checkWadl(this.getApplication());
+                     }
+                     
+                     @Override
+                     public void fireErrorEvent(Throwable exception)
+                     {
+                        fail();
+                        finishTest();
+                     }
+                  });
+               }
+               
+               @Override
+               public void fireErrorEvent(Throwable exception)
+               {
+                  fail(exception.getMessage());
+                  finishTest();                  
+               }
+            });
+         }
+      });
+      delayTestFinish(DELAY_TEST);
+   }
+   
+   private void checkWadl(WadlApplication application)
+   {
+      assertEquals(testUrlGetWadl, application.getResources().getBase());
+      assertEquals(1, application.getResources().getResource().size());
       
-      getWadl();
+      Resource resource = application.getResources().getResource().get(0);
+      
+      assertEquals("/mine", resource.getPath());
+      assertEquals(2, resource.getMethodOrResource().size());
+      assertEquals(0, resource.getDoc().size());
+      assertEquals(0, resource.getOtherAttributes().size());
+      assertEquals(0, resource.getParam().size());
+      assertEquals(0, resource.getType().size());
+      
+      for (Object obj : resource.getMethodOrResource())
+      {
+         if (obj instanceof Method)
+         {
+            Method method = (Method)obj;
+            assertEquals("OPTIONS", method.getName());
+         }
+         else if (obj instanceof Resource)
+         {
+            Resource res = (Resource)obj;
+            
+            assertEquals("/mine/helloworld/{name}", res.getPath());
+            assertEquals(1, res.getMethodOrResource().size());
+            assertTrue(res.getMethodOrResource().get(0) instanceof Method);
+            
+            Method method = (Method)res.getMethodOrResource().get(0);
+            
+            assertEquals("GET", method.getName());
+         }
+         else
+         {
+            fail("Must receive Method or Resource, but received something else");
+            finishTest();
+         }
+      }
+      
+      finishTest();
    }
    
    public void testGetWadlFail()
    {
-      eventbus.addHandler(WadlServiceOutputReceivedEvent.TYPE, new WadlServiceOutputReceiveHandler()
-      {
-         public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
-         {
-            if (event.getException() == null)
-            {
-               fail("Check is URL for this test is incorrect");
-               finishTest();
-            }
-            else
-            {
-               finishTest();
-            }
-         }
-      });
-      
       eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
          public void onError(ExceptionThrownEvent event)
@@ -224,90 +247,45 @@ public class GwtTestWadlService extends AbstractGwtTest
          }
       });
       
-      getWadlOnIncorrectUrl();
-   }
-   
-   private void getWadlOnIncorrectUrl()
-   {
-      eventbus.addHandler(GroovyDeployResultReceivedEvent.TYPE, new GroovyDeployResultReceivedHandler()
+      vfsWebDav.saveContent(file, null, new FileContentSaveCallback(eventbus)
       {
-         public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
+         
+         public void onResponseReceived(Request request, Response response)
          {
-            if (event.getException() == null)
+            assertNotNull(this.getFile());
+            assertEquals(this.getFile().getContent(), groovyFileContent);
+            groovyService.deploy(this.getFile().getHref(), new GroovyDeployUndeployCallback()
             {
-               assertEquals(file.getHref(), event.getPath());
-               wadlService.getWadl(testUrlGetWadl + "/not-mine");
-            }
-            else
-            {
-               fail(event.getException().getMessage());
-               finishTest();
-            }
+               
+               public void onResponseReceived(Request request, Response response)
+               {
+                  assertEquals(file.getHref(), this.getHref());
+                  wadlService.getWadl(testUrlGetWadl + "/not-mine", new WadlCallback(eventbus)
+                  {
+                     @Override
+                     public void onResponseReceived(Request request, Response response)
+                     {
+                        fail("Check is URL for this test is incorrect");
+                        finishTest();
+                     }
+                     
+                     @Override
+                     public void fireErrorEvent(Throwable exception)
+                     {
+                        finishTest();
+                     }
+                  });
+               }
+               
+               @Override
+               public void fireErrorEvent(Throwable exception)
+               {
+                  fail(exception.getMessage());
+                  finishTest();
+               }
+            });
          }
       });
-      
-      eventbus.addHandler(FileContentSavedEvent.TYPE, new FileContentSavedHandler()
-      {
-         public void onFileContentSaved(FileContentSavedEvent event)
-         {
-            assertNotNull(event.getFile());
-            assertEquals(event.getFile().getContent(), groovyFileContent);
-            groovyService.deploy(event.getFile().getHref());
-         }
-      });
-
-      vfsWebDav.saveContent(file, null);
-      delayTestFinish(DELAY_TEST);
-   }
-   
-   private void getWadl()
-   {
-      eventbus.addHandler(GroovyDeployResultReceivedEvent.TYPE, new GroovyDeployResultReceivedHandler()
-      {
-         public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
-         {
-            if (event.getException() == null)
-            {
-               assertEquals(file.getHref(), event.getPath());
-               wadlService.getWadl(testUrlGetWadl + "/mine");
-            }
-            else
-            {
-               fail(event.getException().getMessage());
-               finishTest();
-            }
-         }
-      });
-      
-      deployGroovyScript();
-   }
-   
-   private void deployGroovyScript()
-   {
-      eventbus.addHandler(FileContentSavedEvent.TYPE, new FileContentSavedHandler()
-      {
-         public void onFileContentSaved(FileContentSavedEvent event)
-         {
-            assertNotNull(event.getFile());
-            assertEquals(event.getFile().getContent(), groovyFileContent);
-            groovyService.deploy(event.getFile().getHref());
-         }
-      });
-
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
-         public void onError(ExceptionThrownEvent event)
-         {
-            if (event.getError() != null && event.getError().getMessage() != null)
-            {
-               fail(event.getError().getMessage());
-               finishTest();
-            }
-
-         }
-      });
-
-      vfsWebDav.saveContent(file, null);
       delayTestFinish(DELAY_TEST);
    }
    

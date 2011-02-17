@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.extension.gadget.client.service.marshal;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
-
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
 
 /**
  * Created by The eXo Platform SAS.
@@ -36,7 +35,7 @@ public class TokenResponseUnmarshal implements Unmarshallable
 {
    private TokenResponse tokenResponse;
 
-   public TokenResponseUnmarshal(HandlerManager eventBus, TokenResponse tokenResponse)
+   public TokenResponseUnmarshal(TokenResponse tokenResponse)
    {
       this.tokenResponse = tokenResponse;
    }

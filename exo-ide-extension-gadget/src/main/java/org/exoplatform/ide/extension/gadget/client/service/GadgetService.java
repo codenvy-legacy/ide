@@ -40,13 +40,13 @@ public abstract class GadgetService
       instance = this;
    }
 
-   public abstract void getGadgetMetadata(TokenResponse tokenResponse);
+   public abstract void getGadgetMetadata(TokenResponse tokenResponse, GadgetMetadataCallback gadgetCallback);
    
-   public abstract void getSecurityToken(TokenRequest request);
+   public abstract void getSecurityToken(TokenRequest request, SecurityTokenCallback securityTokenCallback);
    
-   public abstract void deployGadget(String href);
+   public abstract void deployGadget(String href, DeployUndeployGadgetCallback gadgetCallback);
    
-   public abstract void undeployGadget(String href);
+   public abstract void undeployGadget(String href, DeployUndeployGadgetCallback gadgetCallback);
    
    
 

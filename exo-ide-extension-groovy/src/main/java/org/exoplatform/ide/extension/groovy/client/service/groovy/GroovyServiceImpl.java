@@ -29,11 +29,6 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.ClassPathLocationReceivedEvent;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyDeployResultReceivedEvent;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyUndeployResultReceivedEvent;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyValidateResultReceivedEvent;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPath;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPathUnmarshaller;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.RestServiceOutputUnmarshaller;
@@ -82,24 +77,29 @@ public class GroovyServiceImpl extends GroovyService
     * {@inheritDoc}
     */
    @Override
-   public void deploy(String href)
+   public void deploy(String href, GroovyDeployUndeployCallback groovyCallback)
    {
       String deployUrl = restServiceContext + SERVICE_PATH + DEPLOY;
-      deploy(href, deployUrl);
+      deploy(href, deployUrl, groovyCallback);
    }
    
    @Override
-   public void deploySandbox(String href)
+   public void deploySandbox(String href, GroovyDeployUndeployCallback groovyCallback)
    {
-      String deployUrl = restServiceContext + SERVICE_PATH + DEPLOY_SANDBOX;
-      deploy(href, deployUrl);
+      final String deployUrl = restServiceContext + SERVICE_PATH + DEPLOY_SANDBOX;
+      deploy(href, deployUrl, groovyCallback);
    }
    
  
-   private void deploy(String href, String deployUrl)
+   /**
+    * @param href - href of source to deploy
+    * @param deployUrl - url to deploy (production or sandbox)
+    * @param groovyCallback - the callback code which the user has to implement
+    */
+   private void deploy(String href, String deployUrl, GroovyDeployUndeployCallback groovyCallback)
    {
-      GroovyDeployResultReceivedEvent event = new GroovyDeployResultReceivedEvent(href);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
+      groovyCallback.setHref(href);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, groovyCallback);
       AsyncRequest.build(RequestBuilder.POST, deployUrl, loader).header(HTTPHeader.LOCATION, href).send(callback);
    }
    
@@ -107,36 +107,47 @@ public class GroovyServiceImpl extends GroovyService
     * {@inheritDoc}
     */
    @Override
-   public void undeploy(String href)
+   public void undeploy(String href, GroovyDeployUndeployCallback groovyCallback)
    {
-      String udeployUrl = restServiceContext + SERVICE_PATH + UNDEPLOY;
-      undeploy(href, udeployUrl);
+      final String udeployUrl = restServiceContext + SERVICE_PATH + UNDEPLOY;
+      undeploy(href, udeployUrl, groovyCallback);
    }
    
+   /**
+    * @see org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService#undeploySandbox(java.lang.String, org.exoplatform.ide.client.module.groovy.service.groovy.GroovyDeployUndeployCallback)
+    */
    @Override
-   public void undeploySandbox(String href)
+   public void undeploySandbox(String href, GroovyDeployUndeployCallback groovyCallback)
    {
-      String udeployUrl = restServiceContext + SERVICE_PATH + UNDEPLOY_SANDBOX;
-      undeploy(href, udeployUrl);
+      final String udeployUrl = restServiceContext + SERVICE_PATH + UNDEPLOY_SANDBOX;
+      undeploy(href, udeployUrl, groovyCallback);
    }
    
-   
-   public void undeploy(String href, String udeployUrl)
+   /**
+    * Undeploy rest service.
+    * 
+    * @param href - href of source.
+    * @param undeployUrl - undeploy url 
+    * @param groovyCallback - the callback code which the user has to implement
+    */
+   private void undeploy(String href, String undeployUrl, GroovyDeployUndeployCallback groovyCallback)
    {
-      GroovyUndeployResultReceivedEvent event = new GroovyUndeployResultReceivedEvent(href);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
-      AsyncRequest.build(RequestBuilder.POST, udeployUrl, loader).header(HTTPHeader.LOCATION, href).send(callback);
+      groovyCallback.setHref(href);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, groovyCallback);
+      AsyncRequest.build(RequestBuilder.POST, undeployUrl, loader).header(HTTPHeader.LOCATION, href).send(callback);
    }
  
    /**
-    * {@inheritDoc}
+    * @see org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService#validate(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.client.module.groovy.service.groovy.GroovyValidateCallback)
     */
    @Override
-   public void validate(String fileName, String fileHref, String fileContent)
+   public void validate(String fileName, String fileHref, String fileContent, GroovyValidateCallback groovyCallback)
    {
       String url = restServiceContext + SERVICE_PATH + VALIDATE;
-      GroovyValidateResultReceivedEvent event = new GroovyValidateResultReceivedEvent(fileName, fileHref);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, event);
+      groovyCallback.setFileName(fileName);
+      groovyCallback.setFileHref(fileHref);
+      
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, groovyCallback);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, "script/groovy").header(
          HTTPHeader.LOCATION, fileHref).data(fileContent).send(callback);
@@ -144,11 +155,11 @@ public class GroovyServiceImpl extends GroovyService
    
 
    /**
-    * {@inheritDoc}
+    * @see org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService#getOutput(java.lang.String, java.lang.String, java.util.List, java.util.List, java.lang.String, org.exoplatform.ide.client.module.groovy.service.groovy.GroovyOutputCallback)
     */
    @Override
    public void getOutput(String url, String method, List<SimpleParameterEntry> headers,
-      List<SimpleParameterEntry> params, String body)
+      List<SimpleParameterEntry> params, String body, GroovyOutputCallback groovyCallback)
    {
       RestServiceOutput output = new RestServiceOutput(url, method);
 
@@ -181,10 +192,10 @@ public class GroovyServiceImpl extends GroovyService
          headers.add(new SimpleParameterEntry(HTTPHeader.X_HTTP_METHOD_OVERRIDE, method));  // add X_HTTP_METHOD_OVERRIDE header for the methods like OPTION, PUT, DELETE and others. 
       }
       
-      RestServiceOutputReceivedEvent event = new RestServiceOutputReceivedEvent(output);
+      groovyCallback.setOutput(output);
       RestServiceOutputUnmarshaller unmarshaller = new RestServiceOutputUnmarshaller(output);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, groovyCallback);
       AsyncRequest request = AsyncRequest.build(httpMethod, url, loader);
       if (headers != null)
       {
@@ -206,16 +217,16 @@ public class GroovyServiceImpl extends GroovyService
 
 
    /**
-    * @see org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService#getClassPathLocation(java.lang.String)
+    * @see org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService#getClassPathLocation(java.lang.String, org.exoplatform.ide.client.module.groovy.service.groovy.ClasspathCallback)
     */
-   @Override
-   public void getClassPathLocation(String href)
+   public void getClassPathLocation(String href, ClasspathCallback classpathCallback)
    {
       String url = restServiceContext + SERVICE_PATH + CLASSPATH_LOCATION;
       ClassPath classPath = new ClassPath();
-      ClassPathLocationReceivedEvent event = new ClassPathLocationReceivedEvent(classPath);
+      classpathCallback.setClassPath(classPath);
       ClassPathUnmarshaller unmarshaller = new ClassPathUnmarshaller(classPath);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
+      
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, classpathCallback);
 
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(
          HTTPHeader.LOCATION, href).send(callback);

@@ -1,0 +1,91 @@
+/*
+ * Copyright (C) 2011 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.client.framework.vfs.callback;
+
+import com.google.gwt.http.client.Request;
+
+import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.LockToken;
+
+/**
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: ItemLockCallback.java Feb 16, 2011 10:40:22 AM vereshchaka $
+ *
+ */
+public abstract class ItemLockCallback extends ClientRequestCallback
+{
+   
+   private Item item;
+   
+   private LockToken lockToken;
+   
+   /**
+    * @return the lockToken
+    */
+   public LockToken getLockToken()
+   {
+      return lockToken;
+   }
+   
+   /**
+    * @param lockToken the lockToken to set
+    */
+   public void setLockToken(LockToken lockToken)
+   {
+      this.lockToken = lockToken;
+   }
+   
+   /**
+    * @return the item
+    */
+   public Item getItem()
+   {
+      return item;
+   }
+   
+   /**
+    * @param item the item to set
+    */
+   public void setItem(Item item)
+   {
+      this.item = item;
+   }
+
+   /**
+    * @see com.google.gwt.http.client.RequestCallback#onError(com.google.gwt.http.client.Request, java.lang.Throwable)
+    */
+   @Override
+   public void onError(Request request, Throwable exception)
+   {
+      fireErrorEvent(exception);
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.ClientRequestCallback#onUnsuccess(java.lang.Throwable)
+    */
+   @Override
+   public void onUnsuccess(Throwable exception)
+   {
+      fireErrorEvent(exception);
+   }
+   
+   public abstract void fireErrorEvent(Throwable exc);
+
+}

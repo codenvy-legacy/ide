@@ -23,9 +23,13 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.wadl.Method;
@@ -35,7 +39,9 @@ import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
+import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyOutputCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
+import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -136,8 +142,6 @@ public class GroovyServiceOutputPreviewPresenter
 
    private String currentResponseMediaType;
 
-   private String currentPath;
-   
    private boolean undeployOnCancel;
 
    public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, WadlApplication wadlApplication, boolean undeloyOnCansel)
@@ -261,13 +265,11 @@ public class GroovyServiceOutputPreviewPresenter
       display.setPaths(pathArr);
       if (pathArr.length > 1)
       {
-         currentPath = pathArr[1];
          display.setPathFieldValue(pathArr[1]);
          onPathFieldChanged(pathArr[1]);
       }
       else
       {
-         currentPath = pathArr[0];
          display.setPathFieldValue(pathArr[0]);
          onPathFieldChanged(pathArr[0]);
       }
@@ -287,7 +289,6 @@ public class GroovyServiceOutputPreviewPresenter
             String oldMethodName = currentMethod == null ? null : currentMethod.getName();
 
             resource = findResource(path, display.getMethodField().getValue());
-            currentPath = resource.getPath();
 
             listMethods = findMethod(resource, display.getMethodField().getValue());
 
@@ -450,7 +451,32 @@ public class GroovyServiceOutputPreviewPresenter
          display.closeForm();
 
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers, queryParams,
-            display.getRequestBody().getValue());
+            display.getRequestBody().getValue(), new GroovyOutputCallback()
+            {
+
+               @Override
+               public void onResponseReceived(Request request, Response response)
+               {
+                  eventBus.fireEvent(new RestServiceOutputReceivedEvent(this.getOutput()));
+               }
+
+               @Override
+               public void fireErrorEvent(Throwable exception)
+               {
+                  if (exception instanceof ServerException)
+                  {
+                     RestServiceOutputReceivedEvent event = new RestServiceOutputReceivedEvent(this.getOutput());
+                     event.setException(exception);
+                     eventBus.fireEvent(event);
+                  }
+                  else
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+
+               }
+
+            });
       }
       catch (IllegalArgumentException e)
       {

@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -28,11 +33,9 @@ import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptEvent
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxHandler;
+import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyDeployUndeployCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyDeployResultReceivedEvent;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyDeployResultReceivedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
@@ -43,7 +46,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, DeployGroovyScriptSandboxHandler,
-   EditorActiveFileChangedHandler, GroovyDeployResultReceivedHandler
+   EditorActiveFileChangedHandler//, GroovyDeployResultReceivedHandler
 {
 
    private HandlerManager eventBus;
@@ -57,7 +60,6 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(DeployGroovyScriptEvent.TYPE, this);
       eventBus.addHandler(DeployGroovyScriptSandboxEvent.TYPE, this);
-      eventBus.addHandler(GroovyDeployResultReceivedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -70,46 +72,72 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
     */
    public void onDeployGroovyScript(DeployGroovyScriptEvent event)
    {
-      GroovyService.getInstance().deploy(activeFile.getHref());
+      GroovyService.getInstance().deploy(activeFile.getHref(), new GroovyDeployUndeployCallback()
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            deploySuccess(this.getHref());
+         }
+         
+         @Override
+         public void fireErrorEvent(Throwable exception)
+         {
+            deployFailure(this.getHref(), exception);
+         }
+      });
    }
+   
+   private void deploySuccess(String href)
+   {
+      String outputContent = "<b>" + href + "</b> deployed successfully.";
+      eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+      eventBus.fireEvent(new GroovyDeployResultReceivedEvent(href));
+   }
+   
+   private void deployFailure(String href, Throwable exception)
+   {
+      if (exception instanceof ServerException)
+      {
+         ServerException serverException = (ServerException)exception;
 
+         String outputContent = "<b>" + href + "</b> deploy failed.&nbsp;";
+         outputContent +=
+            "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText() + "</i>)";
+         if (!serverException.getMessage().equals(""))
+         {
+            outputContent += "<br />" + serverException.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+         }
+
+         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+      }
+      else
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(exception));
+      }
+      GroovyDeployResultReceivedEvent event = new GroovyDeployResultReceivedEvent(href);
+      event.setException(exception);
+      eventBus.fireEvent(event);
+   }
+   
    /**
     * {@inheritDoc}
     */
    public void onDeployGroovyScriptSandbox(DeployGroovyScriptSandboxEvent event)
    {
-      GroovyService.getInstance().deploySandbox(activeFile.getHref());
-   }
-
-   /**
-    * @see org.exoplatform.ide.groovy.event.GroovyDeployResultReceivedHandler#onGroovyDeployResultReceived(org.exoplatform.ide.groovy.event.GroovyDeployResultReceivedEvent)
-    */
-   public void onGroovyDeployResultReceived(GroovyDeployResultReceivedEvent event)
-   {
-      if (event.getException() == null)
+      GroovyService.getInstance().deploySandbox(activeFile.getHref(), new GroovyDeployUndeployCallback()
       {
-         /*
-          * Deploying successfully
-          */
-         String outputContent = "<b>" + event.getPath() + "</b> deployed successfully.";
-         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-      }
-      else
-      {
-         /*
-          * Deploying failed
-          */
-         ServerException exception = (ServerException)event.getException();
-
-         String outputContent = "<b>" + event.getPath() + "</b> deploy failed.&nbsp;";
-         outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
-         if (!exception.getMessage().equals(""))
+         public void onResponseReceived(Request request, Response response)
          {
-            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+            deploySuccess(this.getHref());
          }
-
-         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
-      }
+         
+         public void fireErrorEvent(Throwable exception)
+         {
+            deployFailure(this.getHref(), exception);
+         }
+      });
    }
 
 }

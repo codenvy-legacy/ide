@@ -18,14 +18,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -36,16 +30,18 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
+import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
 import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateHandler;
 import org.exoplatform.ide.client.template.CreateFileFromTemplateForm;
 import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -61,13 +57,10 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class CreateFileFromTemplateCommandHandler implements CreateFileFromTemplateHandler,
-   TemplateListReceivedHandler, ExceptionThrownHandler, ItemsSelectedHandler, EditorFileOpenedHandler, 
-   EditorFileClosedHandler
+   ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler
 {
 
    private HandlerManager eventBus;
-
-   private Handlers handlers;
 
    private List<Item> selectedItems = new ArrayList<Item>();
    
@@ -76,7 +69,6 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
    public CreateFileFromTemplateCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
 
       eventBus.addHandler(CreateFileFromTemplateEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
@@ -86,9 +78,20 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
 
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
    {
-      handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      TemplateService.getInstance().getTemplates();
+      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+      {
+         
+         @Override
+         public void onTemplateListReceived()
+         {
+            TemplateList templateList = this.getTemplateList();
+            CreateFileFromTemplatePresenter createFilePresenter =
+               new CreateFileFromTemplatePresenter(eventBus, selectedItems, templateList.getTemplates(), openedFiles);
+            CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
+               new CreateFileFromTemplateForm(eventBus, templateList.getTemplates(), createFilePresenter);
+            createFilePresenter.bindDisplay(createFileDisplay);            
+         }
+      });
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -96,23 +99,6 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
       selectedItems = event.getSelectedItems();
    }
 
-   public void onTemplateListReceived(TemplateListReceivedEvent event)
-   {
-      handlers.removeHandlers();
-
-      TemplateList templateList = event.getTemplateList();
-      CreateFileFromTemplatePresenter createFilePresenter =
-         new CreateFileFromTemplatePresenter(eventBus, selectedItems, templateList.getTemplates(), openedFiles);
-      CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
-         new CreateFileFromTemplateForm(eventBus, templateList.getTemplates(), createFilePresenter);
-      createFilePresenter.bindDisplay(createFileDisplay);
-   }
-
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandlers();
-   }
-   
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
     */

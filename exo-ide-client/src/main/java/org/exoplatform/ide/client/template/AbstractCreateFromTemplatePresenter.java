@@ -18,19 +18,6 @@
  */
 package org.exoplatform.ide.client.template;
 
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -40,15 +27,30 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateDeletedCallback;
+import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
+import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
+import org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version @version $Id: $
+ * @version $Id: $
  */
 
-public abstract class AbstractCreateFromTemplatePresenter<T extends Template> implements TemplateDeletedHandler, TemplateListReceivedHandler
+public abstract class AbstractCreateFromTemplatePresenter<T extends Template> implements TemplateDeletedHandler 
 {
 
    protected HandlerManager eventBus;
@@ -191,7 +193,20 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
    
    protected void deleteOneTemplate(T template)
    {
-      TemplateService.getInstance().deleteTemplate(template);
+      deleteTemplate(template);
+   }
+   
+   protected void deleteTemplate(T template)
+   {
+      TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback(eventBus)
+      {
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            selectedTemplates.remove(this.getTemplate());
+            deleteNextTemplate();
+         }
+      });
    }
    
    protected void templatesSelected()
@@ -250,24 +265,21 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
     */
    private void refreshTemplateList()
    {
-      handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
-      TemplateService.getInstance().getTemplates();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent)
-    */
-   public void onTemplateListReceived(TemplateListReceivedEvent event)
-   {
-      handlers.removeHandler(TemplateListReceivedEvent.TYPE);
-      
-      updateTemplateList(event.getTemplateList().getTemplates());
-      
-      display.getTemplateListGrid().setValue(templateList);
-      if (templateList.size() > 0)
+      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
       {
-         display.selectLastTemplate();
-      }
+         
+         @Override
+         public void onTemplateListReceived()
+         {
+            updateTemplateList(this.getTemplateList().getTemplates());
+            
+            display.getTemplateListGrid().setValue(templateList);
+            if (templateList.size() > 0)
+            {
+               display.selectLastTemplate();
+            }
+         }
+      });
    }
    
    abstract void setNewInstanceName();

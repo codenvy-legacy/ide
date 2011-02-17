@@ -18,15 +18,14 @@
  */
 package org.exoplatform.ide.extension.gadget.client.service.marshal;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
-
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 
 /**
  * Created by The eXo Platform SAS.
@@ -38,7 +37,7 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
 
    private GadgetMetadata metadata;
 
-   public GadgetMetadataUnmarshaler(HandlerManager eventBus, GadgetMetadata gadgetMetadata)
+   public GadgetMetadataUnmarshaler(GadgetMetadata gadgetMetadata)
    {
       this.metadata = gadgetMetadata;
    }

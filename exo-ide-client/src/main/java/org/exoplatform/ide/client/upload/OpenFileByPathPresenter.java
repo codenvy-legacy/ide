@@ -18,34 +18,34 @@
  */
 package org.exoplatform.ide.client.upload;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
-
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileCallback;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-public class OpenFileByPathPresenter implements ItemPropertiesReceivedHandler,
-ExceptionThrownHandler
+public class OpenFileByPathPresenter
 {
 
    interface Display
@@ -71,12 +71,9 @@ ExceptionThrownHandler
 
    private Display display;
 
-   private Handlers handlers;
-
    public OpenFileByPathPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
    }
 
    void bindDisplay(Display d)
@@ -146,32 +143,38 @@ ExceptionThrownHandler
          return;
       }
       
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-
       File file = new File(filePath);
-      VirtualFileSystem.getInstance().getProperties(file); 
+      VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
+      {
+         
+         public void onResponseReceived(Request request, Response response)
+         {
+            eventBus.fireEvent(new OpenFileEvent((File) this.getItem()));  
+            getFileContent((File) this.getItem());
+          
+            display.closeDisplay();
+         }
+         
+         public void fireErrorEvent()
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
+            
+            display.getFilePathFieldOrigin().focusInItem();
+         }
+      }); 
    }
-
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   
+   private void getFileContent(File file)
    {
-      stopHandling();
-     
-      VirtualFileSystem.getInstance().getContent((File) event.getItem());
-      eventBus.fireEvent(new OpenFileEvent((File) event.getItem()));  
-    
-      display.closeDisplay();
+      VirtualFileSystem.getInstance().getContent(file, new FileCallback(eventBus)
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            eventBus.fireEvent(new FileContentReceivedEvent(this.getFile()));
+         }
+      });
    }
-
-   public void onError(ExceptionThrownEvent event)
-   {
-      stopHandling();
-      display.getFilePathFieldOrigin().focusInItem();
-   }
-
-   private void stopHandling()
-   {
-      handlers.removeHandlers();
-   }   
    
 }

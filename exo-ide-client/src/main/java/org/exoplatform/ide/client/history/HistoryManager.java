@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.client.history;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.History;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -26,15 +33,12 @@ import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
-
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.History;
 
 /**
  * Created by The eXo Platform SAS .
@@ -118,7 +122,15 @@ public class HistoryManager implements EditorActiveFileChangedHandler,
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       stopHandling();
-      VirtualFileSystem.getInstance().getContent((File)event.getItem());
+      VirtualFileSystem.getInstance().getContent((File)event.getItem(), new FileCallback(eventBus)
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            eventBus.fireEvent(new FileContentReceivedEvent(this.getFile()));
+         }
+      });
    }
 
 //   public void onInitializeApplication(InitializeApplicationEvent event)

@@ -24,26 +24,25 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
+import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:   $
  *
  */
-public class SaveAsTemplatePresenter implements TemplateCreatedHandler, TemplateListReceivedHandler
+public class SaveAsTemplatePresenter
 {
    public interface Display
    {
@@ -73,10 +72,13 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler, Template
    private File file;
    
    private Template templateToCreate;
+   
+   private HandlerManager eventBus;
 
    public SaveAsTemplatePresenter(HandlerManager eventBus, File file)
    {
       this.file = file;
+      this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
    }
 
@@ -89,8 +91,6 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler, Template
    {
       display = d;
 
-      handlers.addHandler(TemplateCreatedEvent.TYPE, this);
-      
       display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          public void onValueChange(ValueChangeEvent<String> event)
@@ -130,15 +130,6 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler, Template
 
    }
 
-   /**
-    * @see org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler#onTemplateCreated(org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent)
-    */
-   public void onTemplateCreated(TemplateCreatedEvent event)
-   {
-      display.closeForm();
-      Dialogs.getInstance().showInfo("Template created successfully!");
-   }
-
    void createTemplate()
    {
       String name = display.getNameField().getValue().trim();
@@ -156,27 +147,31 @@ public class SaveAsTemplatePresenter implements TemplateCreatedHandler, Template
       
       templateToCreate = new FileTemplate(file.getContentType(), name, description, file.getContent(), null);
       
-      handlers.addHandler(TemplateListReceivedEvent.TYPE, this);
-      TemplateServiceImpl.getInstance().getTemplates();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler#onTemplateListReceived(org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent)
-    */
-   public void onTemplateListReceived(TemplateListReceivedEvent event)
-   {
-      handlers.removeHandler(TemplateListReceivedEvent.TYPE);
-      handlers.removeHandler(ExceptionThrownEvent.TYPE);
-      
-      for (Template template : event.getTemplateList().getTemplates())
+      TemplateServiceImpl.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
       {
-         if (template instanceof FileTemplate && templateToCreate.getName().equals(template.getName()))
+         @Override
+         public void onTemplateListReceived()
          {
-            Dialogs.getInstance().showError("Template with such name already exists!");
-            return;
+            for (Template template : this.getTemplateList().getTemplates())
+            {
+               if (template instanceof FileTemplate && templateToCreate.getName().equals(template.getName()))
+               {
+                  Dialogs.getInstance().showError("Template with such name already exists!");
+                  return;
+               }
+            }
+            TemplateServiceImpl.getInstance().createTemplate(templateToCreate, new TemplateCreatedCallback(eventBus)
+            {
+               
+               @Override
+               public void onResponseReceived(Request request, Response response)
+               {
+                  display.closeForm();
+                  Dialogs.getInstance().showInfo("Template created successfully!");
+               }
+            });
          }
-      }
-      TemplateServiceImpl.getInstance().createTemplate(templateToCreate);
+      });
    }
 
 }

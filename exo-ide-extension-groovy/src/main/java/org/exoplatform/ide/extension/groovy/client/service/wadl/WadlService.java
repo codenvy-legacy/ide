@@ -39,10 +39,11 @@ public abstract class WadlService
    }
 
    /**
-    * Get Wadl output
+    * Get Wadl output.
     * 
-    * @param url
+    * @param url - the url
+    * @param wadlCallback - callback which client has to implement
     */
-   public abstract void getWadl(String url);
+   public abstract void getWadl(String url, WadlCallback wadlCallback);
 
 }

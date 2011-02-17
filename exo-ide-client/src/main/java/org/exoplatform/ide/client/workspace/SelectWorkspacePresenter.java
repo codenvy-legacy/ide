@@ -18,9 +18,16 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
@@ -37,27 +44,21 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSa
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.model.discovery.Scheme;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class SelectWorkspacePresenter implements FileContentSavedHandler, ApplicationSettingsSavedHandler
+public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
 {
 
    public interface Display
@@ -113,7 +114,6 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
    public void bindDisplay(Display d)
    {
       display = d;
-      handlers.addHandler(FileContentSavedEvent.TYPE, SelectWorkspacePresenter.this);
 
       display.disableOkButton();
 
@@ -256,7 +256,15 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
                   }
                   else
                   {
-                     VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()));
+                     VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()),
+                        new FileContentSaveCallback(eventBus)
+                        {
+                           public void onResponseReceived(Request request, Response response)
+                           {
+                              eventBus.fireEvent(new EditorCloseFileEvent(this.getFile(), true));
+                              closeNextFile();
+                           }
+                        });
                   }
                }
                else
@@ -274,12 +282,6 @@ public class SelectWorkspacePresenter implements FileContentSavedHandler, Applic
          eventBus.fireEvent(new EditorCloseFileEvent(file, true));
          closeNextFile();
       }
-   }
-
-   public void onFileContentSaved(FileContentSavedEvent event)
-   {
-      eventBus.fireEvent(new EditorCloseFileEvent(event.getFile(), true));
-      closeNextFile();
    }
 
    private void swichEntryPoint()

@@ -66,7 +66,6 @@ public class IDEForm extends Layout implements IDEPresenter.Display
       
       draw();
 
-      new ClearFocusForm(eventBus);
       new DownloadForm(eventBus);
       new ViewHighlightManager(eventBus);
 

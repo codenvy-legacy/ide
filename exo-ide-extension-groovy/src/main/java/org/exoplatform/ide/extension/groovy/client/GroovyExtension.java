@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.webdav.Property;
@@ -41,8 +43,10 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter;
 import org.exoplatform.ide.extension.groovy.client.codeassistant.AssistImportDeclarationManager;
 import org.exoplatform.ide.extension.groovy.client.codeassistant.autocompletion.GroovyTokenCollector;
@@ -68,14 +72,14 @@ import org.exoplatform.ide.extension.groovy.client.service.codeassistant.CodeAss
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedHandler;
+import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlCallback;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.event.WadlServiceOutputReceiveHandler;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.event.WadlServiceOutputReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ide.extension.groovy.client.util.GroovyPropertyUtil;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -84,8 +88,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class GroovyExtension extends Extension implements RestServiceOutputReceivedHandler, SetAutoloadHandler,
-   PreviewWadlOutputHandler, WadlServiceOutputReceiveHandler, InitializeServicesHandler,
-   ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler
+   PreviewWadlOutputHandler, InitializeServicesHandler, ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler
 {
 
    private HandlerManager eventBus;
@@ -211,7 +214,22 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
          GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
       autoloadProperty.setValue("" + event.isAutoload());
 
-      VirtualFileSystem.getInstance().saveProperties(activeFile, lockTokens.get(activeFile.getHref()));
+      VirtualFileSystem.getInstance().saveProperties(activeFile, lockTokens.get(activeFile.getHref()),
+         new ItemPropertiesCallback()
+         {
+
+            @Override
+            public void onResponseReceived(Request request, Response response)
+            {
+               eventBus.fireEvent(new ItemPropertiesSavedEvent(this.getItem()));
+            }
+
+            @Override
+            public void fireErrorEvent()
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+            }
+         });
    }
 
    /**
@@ -230,17 +248,14 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       }
 
       String url = configuration.getContext() + path;
-      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
-      WadlService.getInstance().getWadl(url);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
-   {
-      handlers.removeHandler(WadlServiceOutputReceivedEvent.TYPE);
-      new GroovyServiceOutputPreviewForm(eventBus, event.getApplication(), undeployOnCancel);
+      WadlService.getInstance().getWadl(url, new WadlCallback(eventBus)
+      {
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            new GroovyServiceOutputPreviewForm(eventBus, this.getApplication(), undeployOnCancel);
+         }
+      });
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

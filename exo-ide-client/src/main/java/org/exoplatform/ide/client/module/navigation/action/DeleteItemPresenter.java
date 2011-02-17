@@ -18,31 +18,31 @@
  */
 package org.exoplatform.ide.client.module.navigation.action;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemUnlockCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -51,7 +51,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownHandler, ItemUnlockedHandler
+public class DeleteItemPresenter
 {
 
    public interface Display
@@ -113,8 +113,6 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
          }
       });
 
-      handlers.addHandler(ItemDeletedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
    }
 
 
@@ -183,13 +181,87 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
       }
       if (lockTokens.containsKey(item.getHref()))
       {
-         handlers.addHandler(ItemUnlockedEvent.TYPE, this);
-         VirtualFileSystem.getInstance().unlock(item, lockTokens.get(item.getHref()));
+         VirtualFileSystem.getInstance().unlock(item, lockTokens.get(item.getHref()), new ItemUnlockCallback()
+         {
+            
+            public void onResponseReceived(Request request, Response response)
+            {
+               eventBus.fireEvent(new ItemUnlockedEvent(this.getItem()));
+               deleteItem(this.getItem());
+            }
+            
+            @Override
+            public void fireErrorEvent()
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+            }
+         });
       }
       else
       {
-         VirtualFileSystem.getInstance().deleteItem(item);
+         deleteItem(item);
       }
+   }
+   
+   /**
+    * Delete item.
+    * 
+    * @param item
+    */
+   private void deleteItem(final Item item)
+   {
+      VirtualFileSystem.getInstance().deleteItem(item, new ClientRequestCallback()
+      {
+
+         public void onResponseReceived(Request request, Response response)
+         {
+            selectedItems.remove(item);
+
+            if (item instanceof File)
+            {
+               if (openedFiles.get(item.getHref()) != null)
+               {
+                  eventBus.fireEvent(new EditorCloseFileEvent((File)item, true));
+               }
+            }
+            else
+            {
+               //find out opened files are been in the removed folder
+               final String href = item.getHref();
+
+               HashMap<String, File> copy = new HashMap<String, File>();
+               for (String key : openedFiles.keySet())
+               {
+                  File file = openedFiles.get(key);
+                  copy.put(key, file);
+               }
+
+               for (File file : copy.values())
+               {
+                  if (file.getHref().startsWith(href) && !file.isNewFile())
+                  {
+                     lockTokens.remove(file.getHref());
+                     eventBus.fireEvent(new EditorCloseFileEvent(file, true));
+                  }
+               }
+            }
+            lastDeletedItem = item;
+            deleteNextItem();
+         }
+
+         public void onError(Request request, Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+            display.closeForm();
+         }
+
+         @Override
+         public void onUnsuccess(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+            display.closeForm();
+         }
+      });
    }
 
    private void showDialog(final Item item, String msg)
@@ -200,7 +272,7 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
          {
             if (value)
             {
-               VirtualFileSystem.getInstance().deleteItem(item);
+               deleteItem(item);
             }
             else
             {
@@ -210,57 +282,6 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
          }
 
       });
-   }
-
-   public void onItemDeleted(ItemDeletedEvent event)
-   {
-      Item item = event.getItem();
-      
-      selectedItems.remove(item);
-      //items.remove(0);
-
-      if (item instanceof File)
-      {
-         if (openedFiles.get(item.getHref()) != null)
-         {
-            eventBus.fireEvent(new EditorCloseFileEvent((File)item, true));
-         }
-      }
-      else
-      {
-         //find out the files are been in the removed folder
-
-         String href = event.getItem().getHref();
-
-         HashMap<String, File> copy = new HashMap<String, File>();
-         for (String key : openedFiles.keySet())
-         {
-            File file = openedFiles.get(key);
-            copy.put(key, file);
-         }
-
-         for (File file : copy.values())
-         {
-            if (file.getHref().startsWith(href) && !file.isNewFile())
-            {
-               lockTokens.remove(file.getHref());
-               eventBus.fireEvent(new EditorCloseFileEvent(file, true));
-            }
-
-            //            if (Utils.match(file.getHref(), "^" + href + ".*", ""))
-            //            {
-            //               eventBus.fireEvent(new EditorCloseFileEvent(file, true));
-            //            }
-         }
-      }
-      lastDeletedItem = item;
-      deleteNextItem();
-   }
-
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandlers();
-      display.closeForm();
    }
 
    private void deleteItemsComplete()
@@ -288,14 +309,5 @@ public class DeleteItemPresenter implements ItemDeletedHandler, ExceptionThrownH
 
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
       eventBus.fireEvent(new SelectItemEvent(folder.getHref()));
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent)
-    */
-   public void onItemUnlocked(ItemUnlockedEvent event)
-   {
-      handlers.removeHandler(ItemUnlockedEvent.TYPE);
-      VirtualFileSystem.getInstance().deleteItem(event.getItem());
    }
 }

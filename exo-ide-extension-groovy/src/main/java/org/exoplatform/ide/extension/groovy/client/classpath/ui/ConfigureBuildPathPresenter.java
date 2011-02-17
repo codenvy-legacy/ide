@@ -24,9 +24,11 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
@@ -38,23 +40,19 @@ import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileCallback;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathEvent;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathHandler;
 import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathEvent;
 import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathHandler;
+import org.exoplatform.ide.extension.groovy.client.service.groovy.ClasspathCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.ClassPathLocationReceivedEvent;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.event.ClassPathLocationReceivedHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,8 +66,7 @@ import java.util.Map;
  *
  */
 public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, AddSourceToBuildPathHandler,
-   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, ClassPathLocationReceivedHandler,
-   FileContentReceivedHandler, ItemPropertiesReceivedHandler, FileContentSavedHandler, EditorFileOpenedHandler,
+   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
    EntryPointChangedHandler
 {
    public interface Display
@@ -133,11 +130,6 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    private HandlerManager eventBus;
 
    /**
-    * Handlers.
-    */
-   private Handlers handlers;
-
-   /**
     * Classpath file.
     */
    private File classPathFile;
@@ -168,12 +160,12 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    public ConfigureBuildPathPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
       eventBus.addHandler(ConfigureBuildPathEvent.TYPE, this);
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(AddSourceToBuildPathEvent.TYPE, this);
    }
 
    /**
@@ -263,15 +255,75 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    {
       if (projectLocation != null)
       {
-         handlers.addHandler(ClassPathLocationReceivedEvent.TYPE, this);
-         GroovyService.getInstance().getClassPathLocation(projectLocation);
+         GroovyService.getInstance().getClassPathLocation(projectLocation, new ClasspathCallback(eventBus)
+         {
+            @Override
+            protected void onClasspathReceived()
+            {
+               Display display = new ConfigureBuildPathForm(eventBus);
+               bindDisplay(display);
+               display.setCurrentRepository(getRepositoryFromEntryPoint(currentEntryPoint));
+               display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());
+
+               File file = new File(this.getClassPath().getLocation());
+               getFileProperties(file);
+            }
+
+            @Override
+            protected void onErrorReceived()
+            {
+               Dialogs.getInstance().showError("Classpath settings not found.<br> Probably you are not in project.");
+            }
+            
+         });
          return;
       }
 
       if (selectedItem == null)
          return;
-      handlers.addHandler(ClassPathLocationReceivedEvent.TYPE, this);
-      GroovyService.getInstance().getClassPathLocation(selectedItem.getHref());
+      getClassPathLocation(selectedItem.getHref());
+   }
+   
+   private void getFileProperties(File file)
+   {
+      VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
+      {
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            if (!(this.getItem() instanceof File))
+               return;
+
+            getFileContent((File)this.getItem());
+         }
+
+         @Override
+         public void fireErrorEvent()
+         {
+            String errorMessage = "Service is not deployed.<br>Resource not found.";
+            ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
+            eventBus.fireEvent(errorEvent);
+         }
+      });
+   }
+   
+   private void getFileContent(File file)
+   {
+      VirtualFileSystem.getInstance().getContent(file, new FileCallback(eventBus)
+      {
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            classPathFile = this.getFile();
+            if (classPathFile != null && !classPathFile.getContent().isEmpty())
+            {
+               List<GroovyClassPathEntry> groovyClassPathEntries =
+                  GroovyClassPathUtil.getClassPathEntries(classPathFile.getContent());
+               display.getClassPathEntryListGrid().setValue(groovyClassPathEntries);
+               checkRemoveButtonState();
+            }
+         }
+      });
    }
 
    /**
@@ -282,8 +334,21 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
       List<GroovyClassPathEntry> groovyClassPathEntries = display.getClassPathEntryListGrid().getValue();
       String content = GroovyClassPathUtil.getClassPathJSON(groovyClassPathEntries);
       classPathFile.setContent(content);
-      handlers.addHandler(FileContentSavedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().saveContent(classPathFile, null);
+      VirtualFileSystem.getInstance().saveContent(classPathFile, null, new FileContentSaveCallback(eventBus)
+      {
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            if (classPathFile.getHref().equals(this.getFile().getHref()))
+            {
+               display.closeView();
+               if (openedFiles != null && openedFiles.containsKey(classPathFile.getHref()))
+               {
+                  eventBus.fireEvent(new EditorReplaceFileEvent(openedFiles.get(classPathFile.getHref()), classPathFile));
+               }
+            }
+         }
+      });
    }
 
    /**
@@ -291,7 +356,7 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
     */
    private void doAddPath()
    {
-      handlers.addHandler(AddSourceToBuildPathEvent.TYPE, this);
+//      handlers.addHandler(AddSourceToBuildPathEvent.TYPE, this);
       new ChooseSourcePathPresenter(eventBus, restContext);
    }
 
@@ -300,7 +365,7 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
     */
    public void onAddSourceToBuildPath(AddSourceToBuildPathEvent event)
    {
-      handlers.removeHandler(AddSourceToBuildPathEvent.TYPE);
+//      handlers.removeHandler(AddSourceToBuildPathEvent.TYPE);
       List<GroovyClassPathEntry> oldClassPathEntries = display.getClassPathEntryListGrid().getValue();
 
       for (GroovyClassPathEntry classPathEntry : event.getClassPathEntries())
@@ -342,27 +407,6 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.groovy.service.groovy.event.ClassPathLocationReceivedHandler#onClassPathLocationReceived(org.exoplatform.ide.client.module.groovy.service.groovy.event.ClassPathLocationReceivedEvent)
-    */
-   public void onClassPathLocationReceived(ClassPathLocationReceivedEvent event)
-   {
-      handlers.removeHandler(ClassPathLocationReceivedEvent.TYPE);
-      if (event.getException() != null)
-      {
-         Dialogs.getInstance().showError("Classpath settings not found.<br> Probably you are not in project.");
-         return;
-      }
-      Display display = new ConfigureBuildPathForm(eventBus);
-      bindDisplay(display);
-      display.setCurrentRepository(getRepositoryFromEntryPoint(currentEntryPoint));
-      display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());
-
-      File file = new File(event.getClassPath().getLocation());
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getProperties(file);
-   }
-
-   /**
     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
     */
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -370,51 +414,6 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
       if (event.getSelectedItems() != null && event.getSelectedItems().size() == 1)
       {
          selectedItem = event.getSelectedItems().get(0);
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler#onFileContentReceived(org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent)
-    */
-   public void onFileContentReceived(FileContentReceivedEvent event)
-   {
-      handlers.removeHandler(FileContentReceivedEvent.TYPE);
-      classPathFile = event.getFile();
-      if (classPathFile != null && !classPathFile.getContent().isEmpty())
-      {
-         List<GroovyClassPathEntry> groovyClassPathEntries =
-            GroovyClassPathUtil.getClassPathEntries(classPathFile.getContent());
-         display.getClassPathEntryListGrid().setValue(groovyClassPathEntries);
-         checkRemoveButtonState();
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent)
-    */
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   {
-      handlers.removeHandler(ItemPropertiesReceivedEvent.TYPE);
-      if (!(event.getItem() instanceof File))
-         return;
-
-      handlers.addHandler(FileContentReceivedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getContent((File)event.getItem());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent)
-    */
-   public void onFileContentSaved(FileContentSavedEvent event)
-   {
-      handlers.removeHandler(FileContentSavedEvent.TYPE);
-      if (classPathFile.getHref().equals(event.getFile().getHref()))
-      {
-         display.closeView();
-         if (openedFiles != null && openedFiles.containsKey(classPathFile.getHref()))
-         {
-            eventBus.fireEvent(new EditorReplaceFileEvent(openedFiles.get(classPathFile.getHref()), classPathFile));
-         }
       }
    }
 

@@ -18,40 +18,36 @@
  */
 package org.exoplatform.ide.client.module.vfs.webdav;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
 import org.exoplatform.gwtframework.commons.xml.QName;
+import org.exoplatform.ide.client.framework.vfs.CopyCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.FolderCreateCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.LockToken;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteEvent;
-import org.exoplatform.ide.client.framework.vfs.event.CopyCompleteHandler;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FolderCreatedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
-import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler;
+import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback;
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.LockItemUnmarshaller;
 import org.exoplatform.ide.testframework.http.MockResponse;
 import org.junit.Before;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.Window;
+import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by The eXo Platform SAS.
@@ -100,15 +96,15 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
 
       final String newFolderHref = testUrl + "test";
       Folder newFolder = new Folder(newFolderHref);
-      eventbus.addHandler(FolderCreatedEvent.TYPE, new FolderCreatedHandler()
-      {
-         public void onFolderCreated(FolderCreatedEvent event)
-         {
-            assertNotNull(event.getFolder());
-            assertEquals(newFolderHref, event.getFolder().getHref());
-            finishTest();
-         }
-      });
+//      eventbus.addHandler(FolderCreatedEvent.TYPE, new FolderCreatedHandler()
+//      {
+//         public void onFolderCreated(FolderCreatedEvent event)
+//         {
+//            assertNotNull(event.getFolder());
+//            assertEquals(newFolderHref, event.getFolder().getHref());
+//            finishTest();
+//         }
+//      });
       eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
          public void onError(ExceptionThrownEvent event)
@@ -119,7 +115,16 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             fail();
          }
       });
-      vfsWebDav.createFolder(newFolder);
+      vfsWebDav.createFolder(newFolder, new FolderCreateCallback(eventbus)
+      {
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            assertNotNull(this.getFolder());
+            assertEquals(newFolderHref, this.getFolder().getHref());
+            finishTest();
+         }
+      });
       delayTestFinish(DELAY_TEST);
    }
 
@@ -133,13 +138,19 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
          public void onError(ExceptionThrownEvent event)
          {
             assertNotNull(event.getError());
-            System.out
-               .println(event.getError().getMessage());
+            System.out.println(event.getError().getMessage());
             finishTest();
          }
       });
       WebDavVirtualFileSystem w = new WebDavVirtualFileSystem(eventbus, new EmptyLoader(), images, "/rest");
-      w.createFolder(newFolder);
+      w.createFolder(newFolder, new FolderCreateCallback(eventbus)
+      {
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            fail("Url was wrong. Can't create folder.");
+         }
+      });
       delayTestFinish(DELAY_TEST);
    }
 
@@ -147,15 +158,27 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    {
       String newFolderHref = testUrl + "proba";
       Folder newFolder = new Folder(newFolderHref);
-      eventbus.addHandler(ItemDeletedEvent.TYPE, new ItemDeletedHandler()
+      eventbus.addHandler(ExceptionThrownEvent.TYPE, new MockExceptionThrownHandler());
+      vfsWebDav.deleteItem(newFolder, new ClientRequestCallback()
       {
-         public void onItemDeleted(ItemDeletedEvent event)
+         @Override
+         public void onResponseReceived(Request request, Response response)
          {
             finishTest();
          }
+         
+         @Override
+         public void onError(Request request, Throwable exception)
+         {
+            fail();
+         }
+         
+         @Override
+         public void onUnsuccess(Throwable exception)
+         {
+            fail();
+         }
       });
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new MockExceptionThrownHandler());
-      vfsWebDav.deleteItem(newFolder);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -163,15 +186,27 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    {
       String newFolderHref = testUrl + "proba-not-found";
       Folder newFolder = new Folder(newFolderHref);
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      vfsWebDav.deleteItem(newFolder, new ClientRequestCallback()
       {
-         public void onError(ExceptionThrownEvent event)
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
          {
-            assertNotNull(event.getError());
+            fail();
+         }
+         
+         @Override
+         public void onError(Request request, Throwable exception)
+         {
             finishTest();
          }
+         
+         @Override
+         public void onUnsuccess(Throwable exception)
+         {
+            fail();
+         }
       });
-      vfsWebDav.deleteItem(newFolder);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -246,16 +281,17 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       file.setNewFile(true);
       file.setContent(fileContent);
       file.setContentChanged(true);
-      eventbus.addHandler(FileContentSavedEvent.TYPE, new FileContentSavedHandler()
+      vfsWebDav.saveContent(file, null, new FileContentSaveCallback(eventbus)
       {
-         public void onFileContentSaved(FileContentSavedEvent event)
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
          {
-            assertNotNull(event.getFile());
-            assertEquals(event.getFile().getContent(), fileContent);
+            assertNotNull(this.getFile());
+            assertEquals(this.getFile().getContent(), fileContent);
             finishTest();
          }
       });
-      vfsWebDav.saveContent(file, null);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -267,16 +303,17 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    {
       final String newLocation = String.valueOf(System.currentTimeMillis());
       Folder folder = new Folder(testUrl + "movetest");
-      eventbus.addHandler(MoveCompleteEvent.TYPE, new MoveCompleteHandler()
+      vfsWebDav.move(folder, testUrl + newLocation, null, new MoveItemCallback(eventbus)
       {
-         public void onMoveComplete(MoveCompleteEvent event)
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
          {
-            assertNotNull(event.getItem());
-            assertEquals(event.getItem().getHref(), testUrl + newLocation);
+            assertNotNull(this.getItem());
+            assertEquals(this.getItem().getHref(), testUrl + newLocation);
             finishTest();
          }
       });
-      vfsWebDav.move(folder, testUrl + newLocation, null);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -295,7 +332,15 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             finishTest();
          }
       });
-      vfsWebDav.move(folder, testUrl + "new-movedtest", null);
+      vfsWebDav.move(folder, testUrl + "new-movedtest", null, new MoveItemCallback(eventbus)
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            fail();
+         }
+      });
       delayTestFinish(DELAY_TEST);
    }
 
@@ -309,16 +354,6 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    {
       final String copyLocation = String.valueOf(System.currentTimeMillis());
       Folder folder = new Folder(testUrl + "copytest");
-      eventbus.addHandler(CopyCompleteEvent.TYPE, new CopyCompleteHandler()
-      {
-         public void onCopyComplete(CopyCompleteEvent event)
-         {
-            assertNotNull(event.getDestination());
-            assertNotNull(event.getCopiedItem());
-            assertEquals(event.getDestination(), testUrl + copyLocation);
-            finishTest();
-         }
-      });
       eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
          public void onError(ExceptionThrownEvent event)
@@ -326,7 +361,18 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             event.getError().printStackTrace();
          }
       });
-      vfsWebDav.copy(folder, testUrl + copyLocation);
+      vfsWebDav.copy(folder, testUrl + copyLocation, new CopyCallback(eventbus)
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            assertNotNull(this.getDestination());
+            assertNotNull(this.getItem());
+            assertEquals(this.getDestination(), testUrl + copyLocation);
+            finishTest();
+         }
+      });
       delayTestFinish(DELAY_TEST);
    }
 
@@ -348,7 +394,15 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             finishTest();
          }
       });
-      vfsWebDav.copy(folder, testUrl + copyLocation);
+      vfsWebDav.copy(folder, testUrl + copyLocation, new CopyCallback(eventbus)
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            fail();
+         }
+      });
       delayTestFinish(DELAY_TEST);
    }
 
@@ -399,20 +453,30 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       file.setContent(fileContent);
       file.setContentChanged(true);
             
-
-      eventbus.addHandler(ItemPropertiesReceivedEvent.TYPE, new ItemPropertiesReceivedHandler()
+      vfsWebDav.saveContent(file, null, new FileContentSaveCallback(eventbus)
       {
-         public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+         @Override
+         public void onResponseReceived(Request request, Response response)
          {
-            Item item = event.getItem();
-            
-            System.out.println(item.getProperty(ItemProperty.ACL.ACL));
          }
       });
-      
-      vfsWebDav.saveContent(file, null);
    
-      vfsWebDav.getProperties(file, Arrays.asList(new QName[]{ItemProperty.ACL.ACL}));
+      vfsWebDav.getPropertiesCallback(file, Arrays.asList(new QName[]{ItemProperty.ACL.ACL}), new ItemPropertiesCallback()
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            Item item = this.getItem();
+            System.out.println(item.getProperty(ItemProperty.ACL.ACL));
+         }
+         
+         @Override
+         public void fireErrorEvent()
+         {
+            fail();
+         }
+      });
       
    }
    

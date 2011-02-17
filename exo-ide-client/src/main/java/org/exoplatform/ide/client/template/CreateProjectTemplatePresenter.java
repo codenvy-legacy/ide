@@ -30,6 +30,8 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -40,9 +42,8 @@ import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
 import org.exoplatform.ide.client.module.navigation.action.AbstractCreateFolderForm;
 import org.exoplatform.ide.client.module.navigation.action.CreateFolderDisplay;
 
@@ -54,7 +55,7 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
+public class CreateProjectTemplatePresenter
 {
 
    public interface Display
@@ -131,8 +132,6 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
    public void bindDisplay(Display d)
    {
       display = d;
-
-      handlers.addHandler(TemplateCreatedEvent.TYPE, this);
 
       display.getNameField().addValueChangeHandler(valueChangeHandler);
 
@@ -431,7 +430,14 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
             return;
          }
       }
-      TemplateServiceImpl.getInstance().createTemplate(templateToCreate);
+      TemplateServiceImpl.getInstance().createTemplate(templateToCreate, new TemplateCreatedCallback(eventBus)
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            display.closeForm();
+            Dialogs.getInstance().showInfo("Template created successfully!");
+         }
+      });
    }
 
    public void destroy()
@@ -439,14 +445,14 @@ public class CreateProjectTemplatePresenter implements TemplateCreatedHandler
       handlers.removeHandlers();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler#onTemplateCreated(org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent)
-    */
-   public void onTemplateCreated(TemplateCreatedEvent event)
-   {
-      display.closeForm();
-      Dialogs.getInstance().showInfo("Template created successfully!");
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler#onTemplateCreated(org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent)
+//    */
+//   public void onTemplateCreated(TemplateCreatedEvent event)
+//   {
+//      display.closeForm();
+//      Dialogs.getInstance().showInfo("Template created successfully!");
+//   }
 
    private void addFileToProjectTemplate(FileTemplate fileTemplate)
    {

@@ -18,18 +18,16 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.wadl;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.event.WadlServiceOutputReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.marshal.WadlServiceOutputUnmarshaller;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
 
 /**
  * Created by The eXo Platform SAS.
@@ -48,22 +46,22 @@ public class WadlServiceImpl extends WadlService
       this.loader = loader;
    }
 
-   @Override
-   public void getWadl(String url)
+   /**
+    * @see org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService#getWadl(java.lang.String, org.exoplatform.ide.extension.groovy.client.service.wadl.WadlCallback)
+    */
+   public void getWadl(String url, WadlCallback wadlCallback)
    {
       WadlApplication application = new WadlApplication();
-      WadlServiceOutputUnmarshaller unmarshaller = new WadlServiceOutputUnmarshaller(eventBus, application);
-      WadlServiceOutputReceivedEvent event = new WadlServiceOutputReceivedEvent(application);
       
-      String errorMessage = "Service is not deployed.";
-      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      WadlServiceOutputUnmarshaller unmarshaller = new WadlServiceOutputUnmarshaller(eventBus, application);
+      wadlCallback.setApplication(application);
+      
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, wadlCallback);
 
       AsyncRequest request = AsyncRequest.build(RequestBuilder.POST, url, loader);
 
       request.header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.OPTIONS);
-      request.send(callback);
+      request.send(callback);      
    }
 
 }

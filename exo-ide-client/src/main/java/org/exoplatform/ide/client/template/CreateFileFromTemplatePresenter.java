@@ -227,7 +227,8 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       
       if (usedProjectTemplates.size() == 0)
       {
-         TemplateService.getInstance().deleteTemplate(fileTemplate);
+//         TemplateService.getInstance().deleteTemplate(fileTemplate);
+         deleteTemplate(fileTemplate);
          return;
       }
       
@@ -253,7 +254,8 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
             }
             if (value)
             {
-               TemplateService.getInstance().deleteTemplate(fileTemplate);
+//               TemplateService.getInstance().deleteTemplate(fileTemplate);
+               deleteTemplate(fileTemplate);
             }
             else
             {

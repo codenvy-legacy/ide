@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -28,11 +33,10 @@ import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptEve
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSandboxHandler;
+import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyDeployUndeployCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyUndeployResultReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyUndeployResultReceivedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
@@ -64,7 +68,52 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
     */
    public void onUndeployGroovyScript(UndeployGroovyScriptEvent event)
    {
-      GroovyService.getInstance().undeploy(activeFile.getHref());
+      GroovyService.getInstance().undeploy(activeFile.getHref(), new GroovyDeployUndeployCallback()
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            undeploySuccess(this.getHref());
+         }
+         
+         @Override
+         public void fireErrorEvent(Throwable exception)
+         {
+            undeployFail(exception, this.getHref());
+         }
+      });
+   }
+   
+   private void undeploySuccess(String href)
+   {
+      
+      String outputContent = "<b>" + href + "</b> undeployed successfully.";
+      eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+      eventBus.fireEvent(new GroovyUndeployResultReceivedEvent(href));
+   }
+   
+   private void undeployFail(Throwable exc, String href)
+   {
+      if (exc instanceof ServerException)
+      {
+         ServerException exception = (ServerException)exc;
+
+         String outputContent = "<b>" + href + "</b> undeploy failed.&nbsp;";
+         outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
+         if (!exception.getMessage().equals(""))
+         {
+            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+         }
+         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+      }
+      else
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(exc));
+      }
+      GroovyUndeployResultReceivedEvent event = new GroovyUndeployResultReceivedEvent(href);
+      event.setException(exc);
+      eventBus.fireEvent(event);
    }
 
    /**
@@ -72,7 +121,21 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
     */
    public void onUndeployGroovyScriptSandbox(UndeployGroovyScriptSandboxEvent event)
    {
-      GroovyService.getInstance().undeploySandbox(activeFile.getHref());
+      GroovyService.getInstance().undeploySandbox(activeFile.getHref(), new GroovyDeployUndeployCallback()
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            undeploySuccess(this.getHref());
+         }
+         
+         @Override
+         public void fireErrorEvent(Throwable exception)
+         {
+            undeployFail(exception, this.getHref());
+         }
+      });
    }
 
    /**

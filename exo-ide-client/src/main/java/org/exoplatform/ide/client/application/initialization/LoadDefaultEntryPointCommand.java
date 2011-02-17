@@ -18,18 +18,19 @@
  */
 package org.exoplatform.ide.client.application.initialization;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Command;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.application.phases.CheckEntryPointPhase;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.discovery.DefaultEntryPointCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
-import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent;
-import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Command;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,7 +39,7 @@ import com.google.gwt.user.client.Command;
  * @version $
  */
 
-public class LoadDefaultEntryPointCommand implements Command, ApplicationSettingsReceivedHandler, DefaultEntryPointReceivedHandler
+public class LoadDefaultEntryPointCommand implements Command, ApplicationSettingsReceivedHandler
 {
 
    private HandlerManager eventBus;
@@ -56,7 +57,6 @@ public class LoadDefaultEntryPointCommand implements Command, ApplicationSetting
 
       handlers = new Handlers(eventBus);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handlers.addHandler(DefaultEntryPointReceivedEvent.TYPE, this);
    }
 
    @Override
@@ -65,16 +65,15 @@ public class LoadDefaultEntryPointCommand implements Command, ApplicationSetting
       /*
        * get default entry point
        */
-      DiscoveryService.getInstance().getDefaultEntryPoint();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedHandler#onDefaultEntryPointReceived(org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent)
-    */
-   public void onDefaultEntryPointReceived(DefaultEntryPointReceivedEvent event)
-   {
-      applicationConfiguration.setDefaultEntryPoint(event.getDefaultEntryPoint());
-      new CheckEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
+      DiscoveryService.getInstance().getDefaultEntryPoint(new DefaultEntryPointCallback(eventBus)
+      {
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            applicationConfiguration.setDefaultEntryPoint(this.getDefaultEntryPoint());
+            new CheckEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
+         }
+      });
    }
 
    @Override

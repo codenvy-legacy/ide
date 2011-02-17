@@ -28,6 +28,8 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -36,17 +38,15 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileCallback;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
-import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 
 import java.util.ArrayList;
@@ -61,8 +61,7 @@ import java.util.Map;
  * @version @version $Id: $
  */
 
-public class RenameItemPresenter implements MoveCompleteHandler, ItemPropertiesReceivedHandler, FileContentReceivedHandler,
-ExceptionThrownHandler, FileContentSavedHandler
+public class RenameItemPresenter implements FileContentReceivedHandler, ExceptionThrownHandler
 {
 
    /**
@@ -273,9 +272,6 @@ ExceptionThrownHandler, FileContentSavedHandler
 
    protected void rename()
    {
-      handlers.addHandler(MoveCompleteEvent.TYPE, this);
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-
       final Item item = selectedItems.get(0);
 
       final String destination = getDestination(item);
@@ -289,15 +285,23 @@ ExceptionThrownHandler, FileContentSavedHandler
             file.setContentType(newMimeType);
             handlers.addHandler(FileContentReceivedEvent.TYPE, this);
             handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-            VirtualFileSystem.getInstance().getContent(file);
+            VirtualFileSystem.getInstance().getContent(file, new FileCallback(eventBus)
+            {
+               
+               @Override
+               public void onResponseReceived(Request request, Response response)
+               {
+                  eventBus.fireEvent(new FileContentReceivedEvent(this.getFile()));
+               }
+            });
             return;
          }
-         VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()));
+         moveItem(item, destination);
       }
 
-      VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()));
+      moveItem(item, destination);
    }
-
+   
    private String getDestination(Item item)
    {
       String href = display.getItemNameField().getValue();
@@ -338,46 +342,6 @@ ExceptionThrownHandler, FileContentSavedHandler
 
    private String sourceHref;
 
-   //
-   public void onMoveComplete(MoveCompleteEvent event)
-   {
-      renamedItem = event.getItem();
-      sourceHref = event.getSourceHref();
-
-      if (event.getItem() instanceof File)
-      {
-         File file = (File)event.getItem();
-
-         if (openedFiles.containsKey(event.getSourceHref()))
-         {
-            File openedFile = openedFiles.get(event.getSourceHref());
-            openedFile.setHref(file.getHref());
-            openedFiles.remove(event.getSourceHref());
-            openedFiles.put(openedFile.getHref(), openedFile);
-
-            eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
-         }
-
-         VirtualFileSystem.getInstance().getProperties(event.getItem());
-      }
-      else
-      {
-         updateOpenedFiles(event.getItem().getHref(), event.getSourceHref());
-         completeMove();
-      }
-
-   }
-
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   {
-      if (event.getItem().getHref().equals(renamedItem.getHref()) && openedFiles.get(renamedItem.getHref()) != null)
-      {
-         openedFiles.get(renamedItem.getHref()).getProperties().clear();
-         openedFiles.get(renamedItem.getHref()).getProperties().addAll(event.getItem().getProperties());
-      }
-      completeMove();
-   }
-
    private void completeMove()
    {
       String href = sourceHref;
@@ -401,9 +365,93 @@ ExceptionThrownHandler, FileContentSavedHandler
    {
       handlers.removeHandlers();
       File file = event.getFile();
-      handlers.addHandler(FileContentSavedEvent.TYPE, this);
       handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()));
+      VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback(eventBus)
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            final Item item = selectedItems.get(0);
+
+            final String destination = getDestination(item);
+            
+            if (!item.getHref().equals(destination))
+            {
+               moveItem(item, destination);
+            }
+            else
+            {
+               String href = item.getHref();
+               if (href.endsWith("/"))
+               {
+                  href = href.substring(0, href.length() - 1);
+               }
+
+               href = href.substring(0, href.lastIndexOf("/") + 1);
+               eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), item));
+
+               handlers.removeHandlers();
+               display.closeForm();
+            }
+         }
+      });
+   }
+   
+   private void moveItem(Item item, String destination)
+   {
+      VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), new MoveItemCallback(eventBus)
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            itemMoved(this.getItem(), this.getSourceHref());
+         }
+      });
+   }
+   
+   private void itemMoved(Item item, String oldItemHref)
+   {
+      renamedItem = item;
+      sourceHref = oldItemHref;
+
+      if (item instanceof File)
+      {
+         File file = (File)item;
+
+         if (openedFiles.containsKey(oldItemHref))
+         {
+            File openedFile = openedFiles.get(oldItemHref);
+            openedFile.setHref(file.getHref());
+            openedFiles.remove(oldItemHref);
+            openedFiles.put(openedFile.getHref(), openedFile);
+
+            eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
+         }
+
+         VirtualFileSystem.getInstance().getPropertiesCallback(item, new ItemPropertiesCallback()
+         {
+            
+            public void onResponseReceived(Request request, Response response)
+            {
+               if (this.getItem().getHref().equals(renamedItem.getHref()) && openedFiles.get(renamedItem.getHref()) != null)
+               {
+                  openedFiles.get(renamedItem.getHref()).getProperties().clear();
+                  openedFiles.get(renamedItem.getHref()).getProperties().addAll(this.getItem().getProperties());
+               }
+               completeMove();
+            }
+            
+            @Override
+            public void fireErrorEvent()
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+               handlers.removeHandlers();
+            }
+         });
+      }
+      else
+      {
+         updateOpenedFiles(item.getHref(), oldItemHref);
+         completeMove();
+      }
    }
 
    /**
@@ -412,40 +460,6 @@ ExceptionThrownHandler, FileContentSavedHandler
    public void onError(ExceptionThrownEvent event)
    {
       handlers.removeHandlers();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent)
-    */
-   public void onFileContentSaved(FileContentSavedEvent event)
-   {
-      handlers.removeHandlers();
-      
-      final Item item = selectedItems.get(0);
-
-      final String destination = getDestination(item);
-      
-      if (!item.getHref().equals(destination))
-      {
-         handlers.addHandler(MoveCompleteEvent.TYPE, this);
-         handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-         VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()));
-      }
-      else
-      {
-         String href = item.getHref();
-         if (href.endsWith("/"))
-         {
-            href = href.substring(0, href.length() - 1);
-         }
-
-         href = href.substring(0, href.lastIndexOf("/") + 1);
-         eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), item));
-
-         handlers.removeHandlers();
-         display.closeForm();
-      }
-      
    }
 
 }

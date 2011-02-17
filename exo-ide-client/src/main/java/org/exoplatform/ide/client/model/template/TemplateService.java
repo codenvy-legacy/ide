@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.model.template;
 
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -40,10 +41,10 @@ public abstract class TemplateService
       instance = this;
    }
 
-   public abstract void getTemplates();
+   public abstract void getTemplates(TemplateListReceivedCallback callback);
 
-   public abstract void createTemplate(Template template);
+   public abstract void createTemplate(Template template, TemplateCreatedCallback callback);
 
-   public abstract void deleteTemplate(Template template);
+   public abstract void deleteTemplate(Template template, TemplateDeletedCallback callback);
 
 }

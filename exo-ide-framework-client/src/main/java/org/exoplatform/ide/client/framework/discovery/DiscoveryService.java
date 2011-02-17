@@ -37,17 +37,17 @@ public abstract class DiscoveryService
       instance = this;
    }
 
-   public abstract void getEntryPoints();
+   public abstract void getEntryPoints(DiscoveryCallback discoveryCallback);
 
-   public abstract void getEntryPoints(String url);
+   public abstract void getEntryPoints(String url, DiscoveryCallback discoveryCallback);
    
-   public abstract void getDefaultEntryPoint();
+   public abstract void getDefaultEntryPoint(DefaultEntryPointCallback entryPointCallback);
    
    /**
     * Get list of all deployed REST Services 
     */
-   public abstract void getRestServices();
+   public abstract void getRestServices(RestServicesCallback restServicesCallback);
    
-   public abstract void getIsDiscoverable();
+   public abstract void getIsDiscoverable(DiscoverableCallback discoverableCallback);
 
 }

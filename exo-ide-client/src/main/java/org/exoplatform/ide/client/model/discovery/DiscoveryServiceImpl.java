@@ -18,28 +18,28 @@
  */
 package org.exoplatform.ide.client.model.discovery;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.discovery.DefaultEntryPointCallback;
+import org.exoplatform.ide.client.framework.discovery.DiscoverableCallback;
+import org.exoplatform.ide.client.framework.discovery.DiscoveryCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.discovery.RestService;
-import org.exoplatform.ide.client.framework.discovery.event.DefaultEntryPointReceivedEvent;
-import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedEvent;
-import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
-import org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedEvent;
+import org.exoplatform.ide.client.framework.discovery.RestServicesCallback;
 import org.exoplatform.ide.client.model.discovery.marshal.DefaultEntryPointUnmarshaller;
 import org.exoplatform.ide.client.model.discovery.marshal.DiscoveryServiceDiscoverableUnmarshaller;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPointListUnmarshaller;
 import org.exoplatform.ide.client.model.discovery.marshal.RestServicesUnmarshaller;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -65,22 +65,20 @@ public class DiscoveryServiceImpl extends DiscoveryService
    }
 
    @Override
-   public void getEntryPoints()
+   public void getEntryPoints(DiscoveryCallback discoveryCallback)
    {
       String url = restServiceContext + DISCOVERY_SERVICE_CONTEXT;
-      getEntryPoints(url);
+      getEntryPoints(url, discoveryCallback);
    }
 
    @Override
-   public void getEntryPoints(String url)
+   public void getEntryPoints(String url, DiscoveryCallback discoveryCallback)
    {
-      EntryPointsReceivedEvent event = new EntryPointsReceivedEvent();
-      EntryPointListUnmarshaller unmarshaller = new EntryPointListUnmarshaller(event);
+      List<EntryPoint> entryPointList = new ArrayList<EntryPoint>();
+      discoveryCallback.setEntryPointList(entryPointList);
+      EntryPointListUnmarshaller unmarshaller = new EntryPointListUnmarshaller(entryPointList);
 
-      String errorMessage = "Service is not deployed.";
-      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, discoveryCallback);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
@@ -88,17 +86,13 @@ public class DiscoveryServiceImpl extends DiscoveryService
     * @see org.exoplatform.ide.client.framework.discovery.DiscoveryService#getDefaultEntryPoint()
     */
    @Override
-   public void getDefaultEntryPoint()
+   public void getDefaultEntryPoint(DefaultEntryPointCallback entryPointCallback)
    {
       String url = restServiceContext + "/ide/discovery/defaultEntrypoint";
 
-      DefaultEntryPointReceivedEvent event = new DefaultEntryPointReceivedEvent();
-      DefaultEntryPointUnmarshaller unmarshaller = new DefaultEntryPointUnmarshaller(event);
+      DefaultEntryPointUnmarshaller unmarshaller = new DefaultEntryPointUnmarshaller(entryPointCallback);
 
-      String errorMessage = "Service is not deployed.";
-      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, entryPointCallback);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
@@ -106,7 +100,7 @@ public class DiscoveryServiceImpl extends DiscoveryService
     * @see org.exoplatform.ide.client.framework.discovery.DiscoveryService#getRestServices()
     */
    @Override
-   public void getRestServices()
+   public void getRestServices(RestServicesCallback restServicesCallback)
    {
       String url = restServiceContext;
       if (!url.endsWith("/"))
@@ -114,27 +108,24 @@ public class DiscoveryServiceImpl extends DiscoveryService
          url += "/";
       }
       List<RestService> services = new ArrayList<RestService>();
-      RestServicesReceivedEvent event = new RestServicesReceivedEvent(services);
+      restServicesCallback.setServices(services);
+//      RestServicesReceivedEvent event = new RestServicesReceivedEvent(services);
       RestServicesUnmarshaller unmarshaller = new RestServicesUnmarshaller(services);
-      String errorMessage = "Service is not deployed.";
-      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, restServicesCallback);
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
    }
 
    @Override
-   public void getIsDiscoverable()
+   public void getIsDiscoverable(DiscoverableCallback discoverableCallback)
    {
       String url = restServiceContext + "/ide/discovery/isdiscoverable";
 
-      IsDiscoverableResultReceivedEvent event = new IsDiscoverableResultReceivedEvent();
-      DiscoveryServiceDiscoverableUnmarshaller unmarshaller = new DiscoveryServiceDiscoverableUnmarshaller(event);
-      String errorMessage = "Service is not deployed.";
-      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
+//      IsDiscoverableResultReceivedEvent event = new IsDiscoverableResultReceivedEvent();
+      DiscoveryServiceDiscoverableUnmarshaller unmarshaller = new DiscoveryServiceDiscoverableUnmarshaller(discoverableCallback);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, discoverableCallback);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 

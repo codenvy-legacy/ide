@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.extension.netvibes.client.service.deploy;
 
-import com.google.gwt.http.client.RequestBuilder;
-
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -28,8 +27,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.netvibes.client.model.Categories;
 import org.exoplatform.ide.extension.netvibes.client.model.DeployResult;
 import org.exoplatform.ide.extension.netvibes.client.model.DeployWidget;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.event.WidgetCategoriesReceivedEvent;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.event.WidgetDeployResultReceivedEvent;
+import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetCategoryCallback;
+import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetDeployCallback;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller.CategoriesUnmarshaller;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller.DeployResultUnmarshaller;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller.DeployWidgetMarshaller;
@@ -96,36 +95,39 @@ public class DeployWidgetServiceImpl extends DeployWidgetService
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.netvibes.service.deploy.DeployWidgetService#getCategories()
+    * @see org.exoplatform.ide.client.module.netvibes.service.deploy.DeployWidgetService#getCategories(org.exoplatform.ide.client.module.netvibes.service.deploy.callback.WidgetCategoryCallback)
     */
    @Override
-   public void getCategories()
+   public void getCategories(WidgetCategoryCallback widgetCallback)
    {
       Categories categories = new Categories();
+      widgetCallback.setCategories(categories);
       CategoriesUnmarshaller unmarshaller = new CategoriesUnmarshaller(categories);
-      WidgetCategoriesReceivedEvent event = new WidgetCategoriesReceivedEvent(categories);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, widgetCallback);
 
       AsyncRequest.build(RequestBuilder.GET, CATEGORIES_URL, loader).send(callback);
    }
-
+   
    /**
-    * @see org.exoplatform.ide.client.module.netvibes.service.deploy.DeployWidgetService#deploy(org.exoplatform.ide.client.module.netvibes.model.DeployWidget, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.client.module.netvibes.service.deploy.DeployWidgetService#deploy(org.exoplatform.ide.client.module.netvibes.model.DeployWidget, java.lang.String, java.lang.String, org.exoplatform.ide.client.module.netvibes.service.deploy.callback.WidgetDeployCallback)
     */
    @Override
-   public void deploy(DeployWidget deployWidget, String login, String password)
+   public void deploy(DeployWidget deployWidget, String login, String password, WidgetDeployCallback widgetCallback)
    {
       String url = restContext + SERVICE_PATH + DEPLOY;
       String params = PASSWORD + "=" + password + "&";
       params += LOGIN + "=" + login+"&";
       params += APIKEY + "=" + deployWidget.getApiKey()+"&";
       params += SECRET_KEY + "=" + deployWidget.getSecretKey();
+      
       DeployResult deployResult = new DeployResult();
-      WidgetDeployResultReceivedEvent event = new WidgetDeployResultReceivedEvent(deployWidget, deployResult);
+      widgetCallback.setDeployResult(deployResult);
+      widgetCallback.setDeployWidget(deployWidget);
+      
       DeployWidgetMarshaller marshaller = new DeployWidgetMarshaller(deployWidget);
       DeployResultUnmarshaller unmarshaller = new DeployResultUnmarshaller(deployResult);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, widgetCallback);
       AsyncRequest.build(RequestBuilder.POST, url+"?"+params, loader).header(LOGIN, login).header(PASSWORD, password).data(marshaller).send(callback);
    }
 

@@ -21,9 +21,9 @@ package org.exoplatform.ide.extension.chromattic.client.model.service;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
-import org.exoplatform.ide.extension.chromattic.client.model.service.event.CompileGroovyResultReceivedEvent;
-import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeCreationResultReceivedEvent;
-import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
+import org.exoplatform.ide.extension.chromattic.client.model.service.callback.CompileGroovyCallback;
+import org.exoplatform.ide.extension.chromattic.client.model.service.callback.CreateNodeTypeCallback;
+import org.exoplatform.ide.extension.chromattic.client.model.service.callback.NodeTypeGenerationCallback;
 
 /**
  * Service is used to do actions with chromattic application and data objects.
@@ -57,32 +57,29 @@ public abstract class ChrommaticService
 
    /**
     * Compile groovy file.
-    * When compilation response is received, the 
-    * {@link CompileGroovyResultReceivedEvent} is fired.
-    * 
     * @param file
+    * @param groovyCallback - callback to handler result from server
     */
-   public abstract void compile(File file);
+   public abstract void compile(File file, CompileGroovyCallback groovyCallback);
    
    /**
     * Generate the node type XML representation.
-    * {@link NodeTypeGenerationResultReceivedEvent} is fired, when 
-    * node type generation result is received.
     * 
     * @param location location of groovy file with node type definition
     * @param nodeTypeFormat node type format
+    * @param nodeTypeCallback - callback to handler result from server
     */
-   public abstract void generateNodeType(String location, EnumNodeTypeFormat nodeTypeFormat);
+   public abstract void generateNodeType(String location, EnumNodeTypeFormat nodeTypeFormat, NodeTypeGenerationCallback nodeTypeCallback);
    
    /**
     * Create (deploy) new node type.
-    * {@link NodeTypeCreationResultReceivedEvent} event is fired, when 
-    * the result of the deploy operation is received.
     * 
     * @param nodeType XML node type definition
     * @param nodeTypeFormat node type format
     * @param alreadyExistsBehaviour the behavior if node type already exists
+    * @param nodeTypeCallback - callback to handler result from server
     */
-   public abstract void createNodeType(String nodeType, EnumNodeTypeFormat nodeTypeFormat, EnumAlreadyExistsBehaviour alreadyExistsBehaviour);
+   public abstract void createNodeType(String nodeType, EnumNodeTypeFormat nodeTypeFormat, EnumAlreadyExistsBehaviour alreadyExistsBehaviour,
+      CreateNodeTypeCallback nodeTypeCallback);
 
 }

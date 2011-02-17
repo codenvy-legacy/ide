@@ -19,6 +19,8 @@
 package org.exoplatform.ide.client.template;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Window;
 
@@ -29,14 +31,11 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
+import org.exoplatform.ide.client.model.template.TemplateDeletedCallback;
+import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler;
-import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -85,16 +84,6 @@ public class GwtTestTemplateService extends GWTTestCase
    {
       new TemplateServiceImpl(eventBus, loader, url);
 
-      eventBus.addHandler(TemplateListReceivedEvent.TYPE, new TemplateListReceivedHandler()
-      {
-         public void onTemplateListReceived(TemplateListReceivedEvent event)
-         {
-            //Six base templates.
-            assertEquals(6, event.getTemplateList().getTemplates().size());
-            finishTest();
-         }
-      });
-
       eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
 
@@ -105,7 +94,16 @@ public class GwtTestTemplateService extends GWTTestCase
 
       });
 
-      TemplateService.getInstance().getTemplates();
+      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+      {
+         @Override
+         public void onTemplateListReceived()
+         {
+            //Six base templates.
+            assertEquals(6, this.getTemplateList().getTemplates().size());
+            finishTest();
+         }
+      });
       delayTestFinish(DELAY_TEST);
    }
 
@@ -122,26 +120,39 @@ public class GwtTestTemplateService extends GWTTestCase
       String description = "This is text js hello template.";
       Template template = new FileTemplate(contentType, name, description, content, null);
 
-      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
+//      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
+//      {
+//
+//         public void onTemplateCreated(TemplateCreatedEvent event)
+//         {
+//            TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+//            {
+//               @Override
+//               public void onTemplateListReceived()
+//               {
+//                  assertEquals(7, this.getTemplateList().getTemplates().size());
+//                  finishTest();
+//               }
+//            });
+//         }
+//
+//      });
+
+      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback(eventBus)
       {
-
-         public void onTemplateCreated(TemplateCreatedEvent event)
+         public void onResponseReceived(Request request, Response response)
          {
-            TemplateService.getInstance().getTemplates();
-         }
-
-      });
-
-      eventBus.addHandler(TemplateListReceivedEvent.TYPE, new TemplateListReceivedHandler()
-      {
-         public void onTemplateListReceived(TemplateListReceivedEvent event)
-         {
-            assertEquals(7, event.getTemplateList().getTemplates().size());
-            finishTest();
+            TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+            {
+               @Override
+               public void onTemplateListReceived()
+               {
+                  assertEquals(7, this.getTemplateList().getTemplates().size());
+                  finishTest();
+               }
+            });
          }
       });
-
-      TemplateService.getInstance().createTemplate(template);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -158,17 +169,17 @@ public class GwtTestTemplateService extends GWTTestCase
       String description = "This is text file template.";
       final Template template = new FileTemplate(contentType, name, description, content, null);
 
-      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
-      {
-         public void onTemplateCreated(TemplateCreatedEvent event)
-         {
-            assertEquals(event.getTemplate().getName(), template.getName());
-            assertEquals(((FileTemplate)event.getTemplate()).getContent(), ((FileTemplate)template).getContent());
-            assertEquals(event.getTemplate().getDescription(), template.getDescription());
-            assertEquals(((FileTemplate)event.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
-            finishTest();
-         }
-      });
+//      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
+//      {
+//         public void onTemplateCreated(TemplateCreatedEvent event)
+//         {
+//            assertEquals(event.getTemplate().getName(), template.getName());
+//            assertEquals(((FileTemplate)event.getTemplate()).getContent(), ((FileTemplate)template).getContent());
+//            assertEquals(event.getTemplate().getDescription(), template.getDescription());
+//            assertEquals(((FileTemplate)event.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
+//            finishTest();
+//         }
+//      });
 
       eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
@@ -178,7 +189,17 @@ public class GwtTestTemplateService extends GWTTestCase
          }
       });
 
-      TemplateService.getInstance().createTemplate(template);
+      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback(eventBus)
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            assertEquals(this.getTemplate().getName(), template.getName());
+            assertEquals(((FileTemplate)this.getTemplate()).getContent(), ((FileTemplate)template).getContent());
+            assertEquals(this.getTemplate().getDescription(), template.getDescription());
+            assertEquals(((FileTemplate)this.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
+            finishTest();
+         }
+      });
       delayTestFinish(DELAY_TEST);
    }
 
@@ -194,17 +215,17 @@ public class GwtTestTemplateService extends GWTTestCase
       String description = "New test file.";
 
       final Template template = new FileTemplate(contentType, name, description, content, null);
-      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
-      {
-         public void onTemplateCreated(TemplateCreatedEvent event)
-         {
-            assertEquals(event.getTemplate().getName(), template.getName());
-            assertEquals(((FileTemplate)event.getTemplate()).getContent(), ((FileTemplate)template).getContent());
-            assertEquals(event.getTemplate().getDescription(), template.getDescription());
-            assertEquals(((FileTemplate)event.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
-            finishTest();
-         }
-      });
+//      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
+//      {
+//         public void onTemplateCreated(TemplateCreatedEvent event)
+//         {
+//            assertEquals(event.getTemplate().getName(), template.getName());
+//            assertEquals(((FileTemplate)event.getTemplate()).getContent(), ((FileTemplate)template).getContent());
+//            assertEquals(event.getTemplate().getDescription(), template.getDescription());
+//            assertEquals(((FileTemplate)event.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
+//            finishTest();
+//         }
+//      });
 
       eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
@@ -214,7 +235,18 @@ public class GwtTestTemplateService extends GWTTestCase
          }
       });
 
-      TemplateService.getInstance().createTemplate(template);
+      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback(eventBus)
+      {
+         
+         public void onResponseReceived(Request request, Response response)
+         {
+            assertEquals(this.getTemplate().getName(), template.getName());
+            assertEquals(((FileTemplate)this.getTemplate()).getContent(), ((FileTemplate)template).getContent());
+            assertEquals(this.getTemplate().getDescription(), template.getDescription());
+            assertEquals(((FileTemplate)this.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
+            finishTest();
+         }
+      });
       delayTestFinish(DELAY_TEST);
    }
 
@@ -239,7 +271,13 @@ public class GwtTestTemplateService extends GWTTestCase
             finishTest();
          }
       });
-      TemplateService.getInstance().createTemplate(template);
+      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback(eventBus)
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            fail("Wrong template was created");
+         }
+      });
       delayTestFinish(DELAY_TEST);
    }
 
@@ -254,27 +292,24 @@ public class GwtTestTemplateService extends GWTTestCase
       String contentType = MimeType.TEXT_PLAIN;
       String name = "templateForDelete";
       String description = "This is text file template.";
-      final Template template = new FileTemplate(contentType, name, description, content, null);
+      final Template templateToDelete = new FileTemplate(contentType, name, description, content, null);
 
-      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
-      {
-         public void onTemplateCreated(TemplateCreatedEvent event)
-         {
-            TemplateService.getInstance().getTemplates();
-         }
-      });
-
-      eventBus.addHandler(TemplateListReceivedEvent.TYPE, new TemplateListReceivedHandler()
-      {
-
-         public void onTemplateListReceived(TemplateListReceivedEvent event)
-         {
-            int templateListSize = event.getTemplateList().getTemplates().size();
-            Template template = event.getTemplateList().getTemplates().get(templateListSize - 1);
-            TemplateService.getInstance().deleteTemplate(template);
-         }
-
-      });
+//      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
+//      {
+//         public void onTemplateCreated(TemplateCreatedEvent event)
+//         {
+//            TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+//            {
+//               @Override
+//               public void onTemplateListReceived()
+//               {
+//                  int templateListSize = this.getTemplateList().getTemplates().size();
+//                  Template template = this.getTemplateList().getTemplates().get(templateListSize - 1);
+//                  TemplateService.getInstance().deleteTemplate(template);
+//               }
+//            });
+//         }
+//      });
 
       eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
       {
@@ -284,16 +319,38 @@ public class GwtTestTemplateService extends GWTTestCase
          }
       });
 
-      eventBus.addHandler(TemplateDeletedEvent.TYPE, new TemplateDeletedHandler()
+//      eventBus.addHandler(TemplateDeletedEvent.TYPE, new TemplateDeletedHandler()
+//      {
+//         public void onTemplateDeleted(TemplateDeletedEvent event)
+//         {
+//            assertEquals(template.getName(), event.getTemplate().getName());
+//            finishTest();
+//         }
+//      });
+
+      TemplateService.getInstance().createTemplate(templateToDelete, new TemplateCreatedCallback(eventBus)
       {
-         public void onTemplateDeleted(TemplateDeletedEvent event)
+         public void onResponseReceived(Request request, Response response)
          {
-            assertEquals(template.getName(), event.getTemplate().getName());
-            finishTest();
+            TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+            {
+               @Override
+               public void onTemplateListReceived()
+               {
+                  int templateListSize = this.getTemplateList().getTemplates().size();
+                  Template template = this.getTemplateList().getTemplates().get(templateListSize - 1);
+                  TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback(eventBus)
+                  {
+                     public void onResponseReceived(Request request, Response response)
+                     {
+                        assertEquals(templateToDelete.getName(), this.getTemplate().getName());
+                        finishTest();
+                     }
+                  });
+               }
+            });
          }
       });
-
-      TemplateService.getInstance().createTemplate(template);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -318,7 +375,14 @@ public class GwtTestTemplateService extends GWTTestCase
          }
       });
       
-      TemplateService.getInstance().deleteTemplate(template);
+      TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback(eventBus)
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            fail("Can't delete not existing template");
+         }
+         
+      });
       delayTestFinish(DELAY_TEST);
    }
 }

@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.client.module.preferences;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.command.Control;
@@ -33,9 +32,8 @@ import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.discovery.DiscoveryCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
-import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedEvent;
-import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -65,7 +63,10 @@ import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarEvent;
 import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarHandler;
 import org.exoplatform.ide.client.workspace.SelectWorkspaceForm;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -74,7 +75,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class PreferencesModule implements InitializeServicesHandler, ApplicationSettingsReceivedHandler,
-   ControlsUpdatedHandler, EntryPointsReceivedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+   ControlsUpdatedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    SelectWorkspaceHandler, CustomizeToolbarHandler, CustomizeHotKeysHandler, ShowAboutDialogHandler
 {
 
@@ -153,14 +154,13 @@ public class PreferencesModule implements InitializeServicesHandler, Application
 
    public void onSelectWorkspace(SelectWorkspaceEvent event)
    {
-      handlers.addHandler(EntryPointsReceivedEvent.TYPE, this);
-      DiscoveryService.getInstance().getEntryPoints();
-   }
-
-   public void onEntryPointsReceived(EntryPointsReceivedEvent event)
-   {
-      handlers.removeHandler(EntryPointsReceivedEvent.TYPE);
-      new SelectWorkspaceForm(eventBus, applicationSettings, event.getEntryPointList(), openedFiles, lockTokens);
+      DiscoveryService.getInstance().getEntryPoints(new DiscoveryCallback(eventBus)
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            new SelectWorkspaceForm(eventBus, applicationSettings, this.getEntryPointList(), openedFiles, lockTokens);
+         }
+      });
    }
 
    public void onCustomizeToolBar(CustomizeToolbarEvent event)

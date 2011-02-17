@@ -26,19 +26,19 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.framework.discovery.DiscoveryCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
-import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedEvent;
-import org.exoplatform.ide.client.framework.discovery.event.EntryPointsReceivedHandler;
+import org.exoplatform.ide.client.framework.vfs.ChildrenReceivedCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedHandler;
 import org.exoplatform.ide.extension.groovy.client.Images;
 import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
@@ -56,7 +56,7 @@ import java.util.List;
  * @version $Id: Jan 10, 2011 $
  *
  */
-public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, ChildrenReceivedHandler
+public class ChooseSourcePathPresenter
 {
    public interface Display
    {
@@ -112,11 +112,6 @@ public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, Ch
    private HandlerManager eventBus;
 
    /**
-    * Handler.
-    */
-   private Handlers handlers;
-
-   /**
     * The REST context.
     */
    private String restContext;
@@ -129,8 +124,6 @@ public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, Ch
    {
       this.eventBus = eventBus;
       this.restContext = restContext;
-
-      handlers = new Handlers(eventBus);
 
       Display display = new ChooseSourcePathForm(eventBus);
       bindDisplay(display);
@@ -216,8 +209,20 @@ public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, Ch
     */
    private void getFolderContent(Folder folder)
    {
-      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-      VirtualFileSystem.getInstance().getChildren(folder);
+      VirtualFileSystem.getInstance().getChildren(folder, new ChildrenReceivedCallback()
+      {
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            display.getItemsTree().setValue(this.getFolder());
+         }
+
+         @Override
+         public void fireErrorEvent()
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
+         }
+      });
    }
 
    /**
@@ -225,8 +230,22 @@ public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, Ch
     */
    private void getWorkspaces()
    {
-      handlers.addHandler(EntryPointsReceivedEvent.TYPE, this);
-      DiscoveryService.getInstance().getEntryPoints();
+      DiscoveryService.getInstance().getEntryPoints(new DiscoveryCallback(eventBus)
+      {
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            Folder root = new Folder(null);
+            root.setChildren(new ArrayList<Item>());
+            for (EntryPoint entryPoint : this.getEntryPointList())
+            {
+               Workspace workspace = new Workspace(entryPoint.getHref());
+               workspace.setIcon(Images.ClassPath.WORKSPACE);
+               root.getChildren().add(workspace);
+            }
+            display.getItemsTree().setValue(root);
+         }
+      });
    }
 
    /**
@@ -247,29 +266,4 @@ public class ChooseSourcePathPresenter implements EntryPointsReceivedHandler, Ch
       display.closeView();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedHandler#onEntryPointsReceived(org.exoplatform.ide.client.model.discovery.event.EntryPointsReceivedEvent)
-    */
-   public void onEntryPointsReceived(EntryPointsReceivedEvent event)
-   {
-      handlers.removeHandler(EntryPointsReceivedEvent.TYPE);
-      Folder root = new Folder(null);
-      root.setChildren(new ArrayList<Item>());
-      for (EntryPoint entryPoint : event.getEntryPointList())
-      {
-         Workspace workspace = new Workspace(entryPoint.getHref());
-         workspace.setIcon(Images.ClassPath.WORKSPACE);
-         root.getChildren().add(workspace);
-      }
-      display.getItemsTree().setValue(root);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedHandler#onChildrenReceived(org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedEvent)
-    */
-   public void onChildrenReceived(ChildrenReceivedEvent event)
-   {
-      handlers.removeHandler(ChildrenReceivedEvent.TYPE);
-      display.getItemsTree().setValue(event.getFolder());
-   }
 }

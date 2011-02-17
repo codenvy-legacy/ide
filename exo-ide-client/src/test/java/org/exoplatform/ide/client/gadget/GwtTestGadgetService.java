@@ -18,34 +18,29 @@
  */
 package org.exoplatform.ide.client.gadget;
 
-import java.util.HashMap;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Window;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.AbstractGwtTest;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
+import org.exoplatform.ide.extension.gadget.client.service.DeployUndeployGadgetCallback;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetServiceImpl;
+import org.exoplatform.ide.extension.gadget.client.service.SecurityTokenCallback;
 import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
 import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetDeployResultEvent;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetDeployResultHandler;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetUndeployResultEvent;
-import org.exoplatform.ide.extension.gadget.client.service.event.GadgetUndeployResultHandler;
-import org.exoplatform.ide.extension.gadget.client.service.event.SecurityTokenRecievedEvent;
-import org.exoplatform.ide.extension.gadget.client.service.event.SecurityTokenRecievedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Window;
+import java.util.HashMap;
 
 /**
  * Created by The eXo Platform SAS.
@@ -97,39 +92,35 @@ public class GwtTestGadgetService extends AbstractGwtTest
 
       final File gadget = createGadget();
 
-      eventBus.addHandler(FileContentSavedEvent.TYPE, new FileContentSavedHandler()
+      VirtualFileSystem.getInstance().saveContent(gadget, null, new FileContentSaveCallback(eventBus)
       {
-         public void onFileContentSaved(FileContentSavedEvent event)
+         public void onResponseReceived(Request request, Response response)
          {
-            assertNotNull(event.getFile());
-            assertEquals(event.getFile().getContent(), gadget.getContent());
-            String href = event.getFile().getHref();
+            assertNotNull(this.getFile());
+            assertEquals(this.getFile().getContent(), gadget.getContent());
+            String href = this.getFile().getHref();
             TokenRequest tokenRequest = new TokenRequest(URL.encode(href), owner, viewer, moduleId, container, domain);
-            GadgetService.getInstance().getSecurityToken(tokenRequest);
+            GadgetService.getInstance().getSecurityToken(tokenRequest, new SecurityTokenCallback()
+            {
+               
+               @Override
+               public void onResponseReceived(Request request, Response response)
+               {
+                  TokenResponse tokenResponse = this.getTokenResponse();
+                  assertEquals(moduleId, tokenResponse.getModuleId());
+                  assertEquals(gadget.getHref(), tokenResponse.getGadgetURL());
+                  assertNotNull(tokenResponse.getSecurityToken());
+                  finishTest();
+               }
+               
+               @Override
+               public void handleError(Throwable exc)
+               {
+                  fail(exc.getMessage());
+               }
+            });
          }
       });
-
-      eventBus.addHandler(SecurityTokenRecievedEvent.TYPE, new SecurityTokenRecievedHandler()
-      {
-         public void onSecurityTokenRecieved(SecurityTokenRecievedEvent securityTokenRecievedEvent)
-         {
-            TokenResponse tokenResponse = securityTokenRecievedEvent.getTokenResponse();
-            assertEquals(moduleId, tokenResponse.getModuleId());
-            assertEquals(gadget.getHref(), tokenResponse.getGadgetURL());
-            assertNotNull(tokenResponse.getSecurityToken());
-            finishTest();
-         }
-
-      });
-
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
-         public void onError(ExceptionThrownEvent event)
-         {
-            fail(event.getErrorMessage());
-         }
-      });
-      VirtualFileSystem.getInstance().saveContent(gadget, null);
 
       delayTestFinish(DELAY_TEST);
    }
@@ -196,32 +187,29 @@ public class GwtTestGadgetService extends AbstractGwtTest
    {
       final File gadget = createGadget();
 
-      eventBus.addHandler(FileContentSavedEvent.TYPE, new FileContentSavedHandler()
+      VirtualFileSystem.getInstance().saveContent(gadget, null, new FileContentSaveCallback(eventBus)
       {
-         public void onFileContentSaved(FileContentSavedEvent event)
+         
+         public void onResponseReceived(Request request, Response response)
          {
-            String href = event.getFile().getHref();
-            GadgetService.getInstance().deployGadget(href);
+            String href = this.getFile().getHref();
+            GadgetService.getInstance().deployGadget(href, new DeployUndeployGadgetCallback()
+            {
+               
+               @Override
+               public void onResponseReceived(Request request, Response response)
+               {
+                  finishTest();
+               }
+               
+               @Override
+               public void handleError(Throwable exc)
+               {
+                  fail(exc.getMessage());
+               }
+            });
          }
       });
-
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
-         public void onError(ExceptionThrownEvent event)
-         {
-            fail(event.getErrorMessage());
-         }
-      });
-
-      eventBus.addHandler(GadgetDeployResultEvent.TYPE, new GadgetDeployResultHandler()
-      {
-         public void onGadgetDeployResultReceived(GadgetDeployResultEvent event)
-         {
-            finishTest();
-         }
-      });
-
-      VirtualFileSystem.getInstance().saveContent(gadget, null);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -232,40 +220,43 @@ public class GwtTestGadgetService extends AbstractGwtTest
    {
       final File gadget = createGadget();
 
-      eventBus.addHandler(FileContentSavedEvent.TYPE, new FileContentSavedHandler()
+      VirtualFileSystem.getInstance().saveContent(gadget, null, new FileContentSaveCallback(eventBus)
       {
-         public void onFileContentSaved(FileContentSavedEvent event)
+         
+         public void onResponseReceived(Request request, Response response)
          {
-            String href = event.getFile().getHref();
-            GadgetService.getInstance().deployGadget(href);
+            String href = this.getFile().getHref();
+            GadgetService.getInstance().deployGadget(href, new DeployUndeployGadgetCallback()
+            {
+               
+               @Override
+               public void onResponseReceived(Request request, Response response)
+               {
+                  GadgetService.getInstance().undeployGadget(gadget.getContent(), new DeployUndeployGadgetCallback()
+                  {
+                     
+                     @Override
+                     public void onResponseReceived(Request request, Response response)
+                     {
+                        finishTest();
+                     }
+                     
+                     @Override
+                     public void handleError(Throwable exc)
+                     {
+                        fail(exc.getMessage());
+                     }
+                  });
+               }
+               
+               @Override
+               public void handleError(Throwable exc)
+               {
+                  fail();
+               }
+            });
          }
       });
-
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
-         public void onError(ExceptionThrownEvent event)
-         {
-            fail(event.getErrorMessage());
-         }
-      });
-
-      eventBus.addHandler(GadgetDeployResultEvent.TYPE, new GadgetDeployResultHandler()
-      {
-         public void onGadgetDeployResultReceived(GadgetDeployResultEvent event)
-         {
-            GadgetService.getInstance().undeployGadget(gadget.getContent());
-         }
-      });
-
-      eventBus.addHandler(GadgetUndeployResultEvent.TYPE, new GadgetUndeployResultHandler()
-      {
-         public void onGadgetUndeployResultReceived(GadgetUndeployResultEvent event)
-         {
-            finishTest();
-         }
-      });
-
-      VirtualFileSystem.getInstance().saveContent(gadget, null);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -276,24 +267,35 @@ public class GwtTestGadgetService extends AbstractGwtTest
    {
       String href = fileURL + "nogadget";
 
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      GadgetService.getInstance().deployGadget(href, new DeployUndeployGadgetCallback()
       {
-         public void onError(ExceptionThrownEvent event)
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
          {
-            fail(event.getErrorMessage());
+            fail();
+            
          }
-      });
-
-      eventBus.addHandler(GadgetDeployResultEvent.TYPE, new GadgetDeployResultHandler()
-      {
-         public void onGadgetDeployResultReceived(GadgetDeployResultEvent event)
+         
+         @Override
+         public void onError(Request request, Throwable exception)
          {
-            assertNotNull(event.getException());
+            fail(exception.getMessage());
+         }
+         
+         @Override
+         public void onUnsuccess(Throwable exception)
+         {
+            assertNotNull(exception);
+            finishTest();
+         }
+         
+         @Override
+         public void handleError(Throwable exc)
+         {
             finishTest();
          }
       });
-
-      GadgetService.getInstance().deployGadget(href);
       delayTestFinish(DELAY_TEST);
    }
 
@@ -303,24 +305,34 @@ public class GwtTestGadgetService extends AbstractGwtTest
    public void testUndeployNotExitedGadget()
    {
       String href = fileURL + "nogadget";
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
-         public void onError(ExceptionThrownEvent event)
-         {
-            fail(event.getErrorMessage());
-         }
-      });
 
-      eventBus.addHandler(GadgetUndeployResultEvent.TYPE, new GadgetUndeployResultHandler()
+      GadgetService.getInstance().undeployGadget(href, new DeployUndeployGadgetCallback()
       {
-         public void onGadgetUndeployResultReceived(GadgetUndeployResultEvent event)
+         @Override
+         public void onResponseReceived(Request request, Response response)
          {
-            assertNotNull(event.getException());
+            fail();
+         }
+         
+         @Override
+         public void onError(Request request, Throwable exception)
+         {
+            fail(exception.getMessage());
+         }
+         
+         @Override
+         public void onUnsuccess(Throwable exception)
+         {
+            assertNotNull(exception);
+            finishTest();
+         }
+         
+         @Override
+         public void handleError(Throwable exc)
+         {
             finishTest();
          }
       });
-
-      GadgetService.getInstance().undeployGadget(href);
       delayTestFinish(DELAY_TEST);
    }
 

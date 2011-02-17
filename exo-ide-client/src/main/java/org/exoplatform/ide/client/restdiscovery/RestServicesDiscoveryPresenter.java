@@ -18,30 +18,6 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.wadl.Method;
-import org.exoplatform.gwtframework.commons.wadl.Param;
-import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
-import org.exoplatform.ide.client.framework.discovery.RestService;
-import org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedEvent;
-import org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedHandler;
-import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryEvent;
-import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryHandler;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.event.WadlServiceOutputReceiveHandler;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.event.WadlServiceOutputReceivedEvent;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -50,7 +26,29 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
+
+import org.exoplatform.gwtframework.commons.wadl.Method;
+import org.exoplatform.gwtframework.commons.wadl.Param;
+import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
+import org.exoplatform.ide.client.framework.discovery.RestService;
+import org.exoplatform.ide.client.framework.discovery.RestServicesCallback;
+import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryEvent;
+import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryHandler;
+import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlCallback;
+import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by The eXo Platform SAS.
@@ -59,8 +57,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id: Dec 22, 2010 9:39:28 AM evgen $
  *
  */
-public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscoveryHandler, RestServicesReceivedHandler,
-   ExceptionThrownHandler, WadlServiceOutputReceiveHandler, InitializeServicesHandler
+public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscoveryHandler, InitializeServicesHandler
 {
 
    public interface Display
@@ -96,8 +93,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private Display dispaly;
 
    private RestService currentRestService;
@@ -109,7 +104,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    public RestServicesDiscoveryPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
 
       eventBus.addHandler(ShowRestServicesDiscoveryEvent.TYPE, this);
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
@@ -129,10 +123,15 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
       bindDisplay(d);
 
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      handlers.addHandler(RestServicesReceivedEvent.TYPE, this);
-
-      DiscoveryService.getInstance().getRestServices();
+      DiscoveryService.getInstance().getRestServices(new RestServicesCallback(eventBus)
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            restServicesReceived(this.getServices());
+         }
+      });
    }
 
    /**
@@ -268,20 +267,25 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       {
          url += "/" + target.getFullPath();
       }
-      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
-
-      WadlService.getInstance().getWadl(url);
+      
+      WadlService.getInstance().getWadl(url, new WadlCallback(eventBus)
+      {
+         public void onResponseReceived(Request request, Response response)
+         {
+            WadlApplication a = this.getApplication();
+            dispaly.getTreeGrid().setPaths(currentRestService,
+               a.getResources().getResource().get(0).getMethodOrResource());
+         }
+      });
    }
 
    /**
     * @see org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedHandler#onRestServicesReceived(org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedEvent)
     */
-   public void onRestServicesReceived(RestServicesReceivedEvent event)
+   private void restServicesReceived(List<RestService> restServices)
    {
-      handlers.removeHandlers();
-
       services.clear();
-      for (RestService rs : event.getRestServices())
+      for (RestService rs : restServices)
       {
          if (!rs.getPath().endsWith("/"))
             rs.setPath(rs.getPath() + "/");
@@ -361,28 +365,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          }
       }
       return ser;
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
-    */
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandlers();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceiveHandler#onWadlServiceOutputReceived(org.exoplatform.ide.client.module.groovy.service.wadl.event.WadlServiceOutputReceivedEvent)
-    */
-   public void onWadlServiceOutputReceived(WadlServiceOutputReceivedEvent event)
-   {
-      handlers.removeHandlers();
-      if (event.getException() == null)
-      {
-         WadlApplication a = event.getApplication();
-         dispaly.getTreeGrid()
-            .setPaths(currentRestService, a.getResources().getResource().get(0).getMethodOrResource());
-      }
    }
 
    /**

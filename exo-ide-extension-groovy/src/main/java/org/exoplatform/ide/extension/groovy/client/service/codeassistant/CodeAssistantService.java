@@ -52,7 +52,7 @@ public abstract class CodeAssistantService
     * @param className
     * @param fileHref for who autocompletion called (Need for find classpath)
     */
-   public abstract void findClass(String className, String fileHref);
+   public abstract void findClass(String className, String fileHref, TokensCallback tokensCallback);
    
    /**
     * Get Class description (methods, fields etc.) by class FQN
@@ -60,22 +60,24 @@ public abstract class CodeAssistantService
     * @param fqn
     * @param fileHref for who autocompletion called (Need for find classpath)
     */
-   public abstract void getClassDescription(String fqn, String fileHref);
+   public abstract void getClassDescription(String fqn, String fileHref, ClassInfoCallback classInfoCallback);
    
    
    /**
     * Find classes by prefix
     * @param prefix the first letters of class name
     * @param fileHref for who autocompletion called (Need for find classpath)
+    * @param tokensCallback - the callback which client has to implement
     */
-   public abstract void findClassesByPrefix(String prefix, String fileHref);
+   public abstract void findClassesByPrefix(String prefix, String fileHref, TokensCallback tokensCallback);
    
    /**
     * Find all classes or annotations or interfaces
     * 
     * @param type class type
     * @param prefix the prefix with type name starts (can be null)
+    * @param tokensCallback - the callback which client has to implement
     */
-   public abstract void fintType(Types type, String prefix);
+   public abstract void fintType(Types type, String prefix, TokensCallback tokensCallback);
    
 }

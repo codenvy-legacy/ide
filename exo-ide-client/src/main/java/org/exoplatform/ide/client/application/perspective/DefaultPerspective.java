@@ -18,6 +18,16 @@
  */
 package org.exoplatform.ide.client.application.perspective;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.widgets.events.MouseDownEvent;
+import com.smartgwt.client.widgets.events.MouseDownHandler;
+import com.smartgwt.client.widgets.events.MouseUpEvent;
+import com.smartgwt.client.widgets.events.MouseUpHandler;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarBuilder;
@@ -46,7 +56,7 @@ import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
+import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedHandler;
@@ -56,16 +66,6 @@ import org.exoplatform.ide.client.navigation.NavigationForm;
 import org.exoplatform.ide.client.operation.OperationForm;
 import org.exoplatform.ide.client.outline.CodeHelperForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.events.MouseDownEvent;
-import com.smartgwt.client.widgets.events.MouseDownHandler;
-import com.smartgwt.client.widgets.events.MouseUpEvent;
-import com.smartgwt.client.widgets.events.MouseUpHandler;
-import com.smartgwt.client.widgets.events.ResizedEvent;
-import com.smartgwt.client.widgets.events.ResizedHandler;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * Created by The eXo Platform SAS .
@@ -386,7 +386,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       statusBar.hide();
 
-      eventBus.fireEvent(new ClearFocusEvent());
+//      eventBus.fireEvent(new ClearFocusEvent());
+      ClearFocusForm.getInstance().clearFocus();
 
       operationPanelMaximized = true;
    }
@@ -515,7 +516,8 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       statusBar.hide();
 
-      eventBus.fireEvent(new ClearFocusEvent());
+//      eventBus.fireEvent(new ClearFocusEvent());
+      ClearFocusForm.getInstance().clearFocus();
 
       codeHelperPanelMaximized = true;
    }

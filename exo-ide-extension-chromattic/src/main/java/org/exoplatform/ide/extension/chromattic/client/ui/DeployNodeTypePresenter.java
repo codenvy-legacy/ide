@@ -20,12 +20,12 @@ package org.exoplatform.ide.extension.chromattic.client.ui;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -38,14 +38,11 @@ import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeHandl
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
-import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeCreationResultReceivedEvent;
-import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeCreationResultReceivedHandler;
+import org.exoplatform.ide.extension.chromattic.client.model.service.callback.CreateNodeTypeCallback;
+import org.exoplatform.ide.extension.chromattic.client.model.service.callback.NodeTypeGenerationCallback;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
-import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedHandler;
 
 import java.util.LinkedHashMap;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * Presenter for deploy node type view.
@@ -54,8 +51,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
  * @version $Id: Dec 9, 2010 $
  *
  */
-public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeCreationResultReceivedHandler,
-   NodeTypeGenerationResultReceivedHandler, EditorActiveFileChangedHandler
+public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorActiveFileChangedHandler
 {
    interface Display
    {
@@ -119,11 +115,6 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeC
    private HandlerManager eventBus;
 
    /**
-    * List of handlers for this presenter.
-    */
-   private Handlers handlers;
-
-   /**
     * Active file at the moment.
     */
    private File activeFile;
@@ -131,7 +122,6 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeC
    public DeployNodeTypePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
 
       eventBus.addHandler(DeployNodeTypeEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -169,26 +159,6 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeC
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeCreationResultReceivedHandler#onNodeTypeCreationResultReceived(org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeCreationResultReceivedEvent)
-    */
-   @Override
-   public void onNodeTypeCreationResultReceived(NodeTypeCreationResultReceivedEvent event)
-   {
-      handlers.removeHandler(NodeTypeCreationResultReceivedEvent.TYPE);
-      display.closeView();
-      if (event.getException() != null)
-      {
-         Dialogs.getInstance().showError(getErrorMessage(event.getException()));
-         return;
-      }
-      else
-      {
-         Dialogs.getInstance().showInfo("Node type successfully deployed.");
-      }
-
-   }
-
-   /**
     * @see org.exoplatform.ide.client.module.chromattic.event.DeployNodeTypeHandler#onDeployNodeType(org.exoplatform.ide.client.module.chromattic.event.DeployNodeTypeEvent)
     */
    @Override
@@ -218,11 +188,27 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeC
     */
    private void doDeploy(String generatedNodeType)
    {
-      handlers.addHandler(NodeTypeCreationResultReceivedEvent.TYPE, this);
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
       EnumAlreadyExistsBehaviour alreadyExistsBehaviour =
          EnumAlreadyExistsBehaviour.fromCode(Integer.valueOf(display.getActionIfExist().getValue()));
-      ChrommaticService.getInstance().createNodeType(generatedNodeType, nodeTypeFormat, alreadyExistsBehaviour);
+      ChrommaticService.getInstance().createNodeType(generatedNodeType, nodeTypeFormat, alreadyExistsBehaviour,
+         new CreateNodeTypeCallback()
+         {
+
+            @Override
+            public void onResponseReceived(Request request, Response response)
+            {
+               display.closeView();
+               Dialogs.getInstance().showInfo("Node type successfully deployed.");
+            }
+
+            @Override
+            public void handleError(Throwable exception)
+            {
+               display.closeView();
+               Dialogs.getInstance().showError(getErrorMessage(exception));
+            }
+         });
    }
 
    /**
@@ -232,35 +218,36 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, NodeTypeC
    {
       if (activeFile == null)
          return;
-      handlers.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this);
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), nodeTypeFormat);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeGenerationResultReceivedHandler#onNodeTypeGenerationResultReceived(org.exoplatform.ide.client.module.chromattic.model.service.event.NodeTypeGenerationResultReceivedEvent)
-    */
-   @Override
-   public void onNodeTypeGenerationResultReceived(NodeTypeGenerationResultReceivedEvent event)
-   {
-      handlers.removeHandler(NodeTypeGenerationResultReceivedEvent.TYPE);
-      if (event.getException() != null)
-      {
-         if (event.getException().getMessage() != null
-            && event.getException().getMessage().startsWith("startup failed"))
+      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), nodeTypeFormat,
+         new NodeTypeGenerationCallback()
          {
-            showErrorInOutput(event.getException().getMessage());
-            return;
-         }
-         else
-         {
-            Dialogs.getInstance().showError(getErrorMessage(event.getException()));
-            return;
-         }
-      }
+            @Override
+            public void onResponseReceived(Request request, Response response)
+            {
+               eventBus.fireEvent(new NodeTypeGenerationResultReceivedEvent(this.getGenerateNodeTypeResult()));
+               String generatedNodeType = this.getGenerateNodeTypeResult().getNodeTypeDefinition();
+               doDeploy(generatedNodeType);
+            }
 
-      String generatedNodeType = event.getGenerateNodeTypeResult().getNodeTypeDefinition();
-      doDeploy(generatedNodeType);
+            @Override
+            public void handleError(Throwable exception)
+            {
+               NodeTypeGenerationResultReceivedEvent event = new NodeTypeGenerationResultReceivedEvent(this.getGenerateNodeTypeResult());
+               event.setException(exception);
+               eventBus.fireEvent(event);
+               if (exception.getMessage() != null && exception.getMessage().startsWith("startup failed"))
+               {
+                  showErrorInOutput(exception.getMessage());
+                  return;
+               }
+               else
+               {
+                  Dialogs.getInstance().showError(getErrorMessage(exception));
+                  return;
+               }
+            }
+         });
    }
 
    /**

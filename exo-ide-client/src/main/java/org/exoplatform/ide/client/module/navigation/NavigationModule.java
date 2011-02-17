@@ -52,7 +52,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
+import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.ApplicationContext;
@@ -128,6 +128,7 @@ import org.exoplatform.ide.client.module.navigation.handler.SaveAllFilesCommandH
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.ShowVersionListCommandHandler;
+import org.exoplatform.ide.client.module.navigation.handler.TemplateCommandHandler;
 import org.exoplatform.ide.client.module.navigation.handler.VersionHistoryCommandHandler;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 import org.exoplatform.ide.client.search.file.SearchForm;
@@ -253,8 +254,7 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
       //      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
 
       new CreateFileCommandHandler(eventBus);
-      new CreateFileFromTemplateCommandHandler(eventBus);
-      new CreateProjectFromTemplateCommandHandler(eventBus);
+      new TemplateCommandHandler(eventBus);
       new OpenFileCommandHandler(eventBus);
       new SaveFileCommandHandler(eventBus);
       new SaveFileAsCommandHandler(eventBus);
@@ -265,7 +265,6 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
       new ShowVersionListCommandHandler(eventBus);
       new VersionHistoryCommandHandler(eventBus);
       new RestoreToVersionCommandHandler(eventBus);
-      new CreateProjectTemplateCommandHandler(eventBus);
       
    }
 
@@ -316,7 +315,8 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
             path = path.substring(path.lastIndexOf("/"));
          }
       }
-      eventBus.fireEvent(new ClearFocusEvent());
+//      eventBus.fireEvent(new ClearFocusEvent());
+      ClearFocusForm.getInstance().clearFocus();
       if (UploadFileEvent.UploadType.OPEN_FILE.equals(event.getUploadType()))
       {
          new OpenLocalFileForm(eventBus, selectedItems, path, applicationConfiguration);

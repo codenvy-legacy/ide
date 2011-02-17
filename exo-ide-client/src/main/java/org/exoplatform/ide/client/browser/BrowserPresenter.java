@@ -30,11 +30,12 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
@@ -51,17 +52,15 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.event.SelectViewEvent;
+import org.exoplatform.ide.client.framework.vfs.ChildrenReceivedCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ChildrenReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.module.navigation.event.DeleteItemEvent;
@@ -88,9 +87,11 @@ import java.util.Map;
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceivedHandler, SwitchEntryPointHandler,
-   SelectItemHandler, ExceptionThrownHandler, PanelSelectedHandler, EntryPointChangedHandler, ItemUnlockedHandler,
-   ItemLockResultReceivedHandler, ItemPropertiesReceivedHandler, ApplicationSettingsReceivedHandler
+public class BrowserPresenter implements RefreshBrowserHandler, SwitchEntryPointHandler,
+   SelectItemHandler, //ExceptionThrownHandler, 
+   PanelSelectedHandler, EntryPointChangedHandler, ItemUnlockedHandler,
+   ItemLockResultReceivedHandler, //ItemPropertiesReceivedHandler, 
+   ApplicationSettingsReceivedHandler
 {
 
    interface Display
@@ -151,8 +152,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private String entryPoint;
-
-   private boolean changingEntryPoint = false;
 
    public BrowserPresenter(HandlerManager eventBus)
    {
@@ -343,48 +342,49 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
          return;
       }
 
-      handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-
-      VirtualFileSystem.getInstance().getChildren(foldersToRefresh.get(0));
-   }
-
-   /**
-    * Handling folder content receiving.
-    * Browser subtree should be refreshed and browser panel should be selected.
-    * 
-    */
-   public void onChildrenReceived(ChildrenReceivedEvent event)
-   {
-      handlers.removeHandler(ChildrenReceivedEvent.TYPE);
-      handlers.removeHandler(ExceptionThrownEvent.TYPE);
-      foldersToRefresh.remove(event.getFolder());
-      //TODO if will be some value - display system items or not, then add check here:
-      removeSystemItemsFromView(event.getFolder().getChildren());
-      Collections.sort(event.getFolder().getChildren(), comparator);
-      
-      display.getBrowserTree().setValue(event.getFolder());
-
-      //      if (switchingWorkspace)
-      //      {
-      //         eventBus.fireEvent(new EntryPointChangedEvent(event.getFolder().getHref()));
-      //         switchingWorkspace = false;
-      //      }
-
-      eventBus.fireEvent(new RestorePerspectiveEvent());
-      eventBus.fireEvent(new SelectViewEvent(BrowserPanel.ID));
-
-      if (itemToSelect != null)
+      VirtualFileSystem.getInstance().getChildren(foldersToRefresh.get(0), new ChildrenReceivedCallback()
       {
-         display.selectItem(itemToSelect);
-         itemToSelect = null;
-      }
+         public void onResponseReceived(Request request, Response response)
+         {
+            final Folder folder = this.getFolder();
+            foldersToRefresh.remove(folder);
+            //TODO if will be some value - display system items or not, then add check here:
+            removeSystemItemsFromView(folder.getChildren());
+            Collections.sort(folder.getChildren(), comparator);
+            
+            display.getBrowserTree().setValue(folder);
 
-      if (foldersToRefresh.size() > 0)
-      {
-         refreshNextFolder();
-      }
+            //      if (switchingWorkspace)
+            //      {
+            //         eventBus.fireEvent(new EntryPointChangedEvent(event.getFolder().getHref()));
+            //         switchingWorkspace = false;
+            //      }
 
+            eventBus.fireEvent(new RestorePerspectiveEvent());
+            eventBus.fireEvent(new SelectViewEvent(BrowserPanel.ID));
+
+            if (itemToSelect != null)
+            {
+               display.selectItem(itemToSelect);
+               itemToSelect = null;
+            }
+
+            if (foldersToRefresh.size() > 0)
+            {
+               refreshNextFolder();
+            }
+         }
+
+         @Override
+         public void fireErrorEvent()
+         {
+            itemToSelect = null;
+            foldersToRefresh.clear();
+            
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
+            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+         }
+      });
    }
    
    /**
@@ -473,18 +473,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       entryPoint = event.getEntryPoint();
    }
 
-   //   /**
-   //    * @see org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedHandler#onItemPropertiesReceived(org.exoplatform.ide.client.framework.module.vfs.api.event.ItemPropertiesReceivedEvent)
-   //    */
-   //   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   //   {
-   //      Item item = event.getItem();
-   //      if (item instanceof File)
-   //      {
-   //         display.updateItemState((File)item);
-   //      }
-   //   }
-
    /**
     * @see org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent)
     */
@@ -548,64 +536,49 @@ public class BrowserPresenter implements RefreshBrowserHandler, ChildrenReceived
       selectedItems.clear();
       eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));
 
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
-      changingEntryPoint = true;
-
       // TODO [IDE-307] check appConfig["entryPoint"] property
-      Folder rootFolder = new Folder(event.getEntryPoint());
-      VirtualFileSystem.getInstance().getProperties(rootFolder);
-   }
-
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   {
-      changingEntryPoint = false;
-
-      handlers.removeHandler(ItemPropertiesReceivedEvent.TYPE);
-      handlers.removeHandler(ItemPropertiesReceivedEvent.TYPE);
-      handlers.removeHandler(ExceptionThrownEvent.TYPE);
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-
-      entryPoint = event.getItem().getHref();
-
-      eventBus.fireEvent(new EntryPointChangedEvent(event.getItem().getHref()));
-
-      eventBus.fireEvent(new SelectViewEvent(BrowserForm.ID));
-      eventBus.fireEvent(new PanelSelectedEvent(BrowserForm.ID));
-
-      display.getBrowserTree().setValue(event.getItem());
-      display.selectItem(event.getItem().getHref());
-      selectedItems = display.getSelectedItems();
-
-      try
+      final Folder rootFolder = new Folder(event.getEntryPoint());
+      VirtualFileSystem.getInstance().getPropertiesCallback(rootFolder, new ItemPropertiesCallback()
       {
-         onRefreshBrowser(new RefreshBrowserEvent());
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
+         public void onResponseReceived(Request request, Response response)
+         {
+            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
 
-   }
+            entryPoint = this.getItem().getHref();
 
-   public void onError(ExceptionThrownEvent event)
-   {
-      itemToSelect = null;
-      foldersToRefresh.clear();
+            eventBus.fireEvent(new EntryPointChangedEvent(this.getItem().getHref()));
 
-      handlers.removeHandler(ItemPropertiesReceivedEvent.TYPE);
-      handlers.removeHandler(ChildrenReceivedEvent.TYPE);
-      handlers.removeHandler(ExceptionThrownEvent.TYPE);
+            eventBus.fireEvent(new SelectViewEvent(BrowserForm.ID));
+            eventBus.fireEvent(new PanelSelectedEvent(BrowserForm.ID));
 
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+            display.getBrowserTree().setValue(this.getItem());
+            display.selectItem(this.getItem().getHref());
+            selectedItems = display.getSelectedItems();
 
-      if (changingEntryPoint)
-      {
-         changingEntryPoint = false;
-         eventBus.fireEvent(new EntryPointChangedEvent(null));
-      }
+            try
+            {
+               onRefreshBrowser(new RefreshBrowserEvent());
+            }
+            catch (Exception e)
+            {
+               e.printStackTrace();
+            }
+         }
+
+         @Override
+         public void fireErrorEvent()
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
+            
+            itemToSelect = null;
+            foldersToRefresh.clear();
+
+            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+            eventBus.fireEvent(new EntryPointChangedEvent(null));
+         }
+      });
    }
 
    /**

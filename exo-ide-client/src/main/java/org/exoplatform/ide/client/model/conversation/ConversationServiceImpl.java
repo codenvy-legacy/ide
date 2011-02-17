@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.client.model.conversation;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.Response;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -26,9 +31,6 @@ import org.exoplatform.ide.client.framework.userinfo.event.GetUserInfoEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.GetUserInfoHandler;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.model.conversation.marshal.UserInfoUnmarshaller;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
 
 /**
  * Created by The eXo Platform SAS .
@@ -59,21 +61,38 @@ public class ConversationServiceImpl implements ConversationService, GetUserInfo
       eventBus.addHandler(GetUserInfoEvent.TYPE, this);
    }
 
-   public void getUserInfo()
+   public void getUserInfo(UserInfoCallback userInfoCallback)
    {
       String url = restServiceContext + CONVERSATION_SERVICE_CONTEXT + WHOAMI;
 
       UserInfo userInfo = new UserInfo(UserInfo.DEFAULT_USER_NAME);
       UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller(userInfo);
-      UserInfoReceivedEvent event = new UserInfoReceivedEvent(userInfo);
+      userInfoCallback.setUserInfo(userInfo);
+//      UserInfoReceivedEvent event = new UserInfoReceivedEvent(userInfo);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, event);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, userInfoCallback);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
    public void onGetUserInfo(GetUserInfoEvent event)
    {
-      getUserInfo();
+      getUserInfo(new UserInfoCallback()
+      {
+         
+         @Override
+         public void onResponseReceived(Request request, Response response)
+         {
+            eventBus.fireEvent(new UserInfoReceivedEvent(this.getUserInfo()));
+         }
+         
+         @Override
+         public void handleError(Throwable exc)
+         {
+            UserInfoReceivedEvent event = new UserInfoReceivedEvent(this.getUserInfo());
+            event.setException(exc);
+            eventBus.fireEvent(event);
+         }
+      });
    }
 
 }

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
-import org.exoplatform.ide.client.framework.ui.event.ClearFocusEvent;
-
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.Window;
 
@@ -38,7 +36,7 @@ public class DialogWindow extends Window
    public DialogWindow(HandlerManager eventBus, int width, int height, String id)
    {
       this.eventBus = eventBus;
-      eventBus.fireEvent(new ClearFocusEvent());
+      ClearFocusForm.getInstance().clearFocus();
 
       setID(id);
       setShowShadow(true);

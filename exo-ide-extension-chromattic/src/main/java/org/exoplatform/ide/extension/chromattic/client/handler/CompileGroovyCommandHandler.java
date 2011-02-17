@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.handler;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -25,24 +30,21 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.event.CompileGroovyEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.CompileGroovyHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
-import org.exoplatform.ide.extension.chromattic.client.model.service.event.CompileGroovyResultReceivedEvent;
-import org.exoplatform.ide.extension.chromattic.client.model.service.event.CompileGroovyResultReceivedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.extension.chromattic.client.model.service.callback.CompileGroovyCallback;
 
 /**
  * 
- * Created by The eXo Platform SAS .
+ * Handler for compile groovy command.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class CompileGroovyCommandHandler implements CompileGroovyHandler, CompileGroovyResultReceivedHandler
+public class CompileGroovyCommandHandler implements CompileGroovyHandler
 {
 
    /**
-    * Event Bus
+    * Event Bus.
     */
    private HandlerManager eventBus;
 
@@ -54,7 +56,6 @@ public class CompileGroovyCommandHandler implements CompileGroovyHandler, Compil
       this.eventBus = eventBus;
 
       eventBus.addHandler(CompileGroovyEvent.TYPE, this);
-      eventBus.addHandler(CompileGroovyResultReceivedEvent.TYPE, this);
    }
 
    /**
@@ -63,38 +64,36 @@ public class CompileGroovyCommandHandler implements CompileGroovyHandler, Compil
    public void onCompileGroovy(CompileGroovyEvent event)
    {
       File file = event.getFile();
-      ChrommaticService.getInstance().compile(file);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.chromattic.model.service.event.CompileGroovyResultReceivedHandler#onCompileGroovyResultReceived(org.exoplatform.ide.client.module.chromattic.model.service.event.CompileGroovyResultReceivedEvent)
-    */
-   public void onCompileGroovyResultReceived(CompileGroovyResultReceivedEvent event)
-   {
-      if (event.getException() == null)
+      ChrommaticService.getInstance().compile(file, new CompileGroovyCallback()
       {
-         /*
-          * Deploying successfully
-          */
-         String outputContent = "<b>" + event.getUrl() + "</b> compiled successfully.";
-         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-      }
-      else
-      {
-         /*
-          * Deploying failed
-          */
-         ServerException exception = (ServerException)event.getException();
-
-         String outputContent = "<b>" + event.getUrl() + "</b> deploy failed.&nbsp;";
-         outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
-         if (!exception.getMessage().equals(""))
+         @Override
+         public void onResponseReceived(Request request, Response response)
          {
-            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+            String outputContent = "<b>" + this.getFileHref() + "</b> compiled successfully.";
+            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
          }
 
-         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
-      }
+         @Override
+         public void onError(Request request, Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));
+         }
+
+         @Override
+         public void onUnsuccess(Throwable exception)
+         {
+            ServerException serverException = (ServerException)exception;
+
+            String outputContent = "<b>" + this.getFileHref() + "</b> deploy failed.&nbsp;";
+            outputContent += "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText() + "</i>)";
+            if (!serverException.getMessage().equals(""))
+            {
+               outputContent += "<br />" + serverException.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+            }
+
+            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+         }
+      });
    }
 
 }
