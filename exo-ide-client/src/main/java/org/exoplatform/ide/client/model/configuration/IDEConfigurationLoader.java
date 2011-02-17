@@ -18,23 +18,21 @@
  */
 package org.exoplatform.ide.client.model.configuration;
 
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.Window.Location;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationConfiguration;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationConfigurationCallback;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
-import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedFailedEvent;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.Window.Location;
 
 /**
  * Created by The eXo Platform SAS        .
@@ -82,7 +80,7 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
    {
       this.configuration = configuration;
       configuration.setRegistryURL(getRegistryURL());
-      ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION_NAME, loader);
+      final ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION_NAME, loader);
       applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME, new ApplicationConfigurationCallback()
       {
 
@@ -95,7 +93,7 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
          @Override
          public void handleError(Throwable exc)
          {
-            eventBus.fireEvent(new ApplicationConfigurationReceivedFailedEvent());
+            applicationInitializer.getConfigurationFromRegistry();
          }
          
       });
