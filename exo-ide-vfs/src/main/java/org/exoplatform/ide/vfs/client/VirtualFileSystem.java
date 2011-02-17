@@ -18,23 +18,23 @@
  */
 package org.exoplatform.ide.vfs.client;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.vfs.client.event.ChildrenReceivedEvent;
-import org.exoplatform.ide.vfs.client.event.FileContentReceivedEvent;
-import org.exoplatform.ide.vfs.client.event.FolderCreatedEvent;
-import org.exoplatform.ide.vfs.client.event.VirtualFileSystemInfoReceivedEvent;
+import org.exoplatform.ide.vfs.client.callback.ChildrenReceivedCallback;
+import org.exoplatform.ide.vfs.client.callback.FileContentCallback;
+import org.exoplatform.ide.vfs.client.callback.FolderCreatedCallback;
+import org.exoplatform.ide.vfs.client.callback.VfsInfoCallback;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
 
 public class VirtualFileSystem
 {
@@ -93,19 +93,19 @@ public class VirtualFileSystem
       this.workspace = workspace;
    }
 
-   public void getVFSInfo()
+   public void getVFSInfo(VfsInfoCallback vfsInfoCallback)
    {
       String url = encodeURI(workspace + "/");
 
       VirtualFileSystemInfo virtualFileSystemInfo = new VirtualFileSystemInfo();
 
       VFSInfoUnmarshaller unmarshaller = new VFSInfoUnmarshaller(virtualFileSystemInfo);
-      VirtualFileSystemInfoReceivedEvent event = new VirtualFileSystemInfoReceivedEvent(virtualFileSystemInfo);
+      vfsInfoCallback.setVirtualFileSystemInfo(virtualFileSystemInfo);
 
-      String errorMessage = " Service is not deployed.<br>Resource not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+//      String errorMessage = " Service is not deployed.<br>Resource not found.";
+//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, vfsInfoCallback);
 
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
@@ -115,19 +115,19 @@ public class VirtualFileSystem
     * 
     * @param path
     */
-   public void getChildren(String id)
+   public void getChildren(String id, ChildrenReceivedCallback childrenCallback)
    {
       String url = encodeURI(workspace + "/children/" + id);
 
       ItemList<Item> items = new ItemList<Item>();
-      ChildrenReceivedEvent event = new ChildrenReceivedEvent(items);
+      childrenCallback.setItems(items);
       ChildrenUnmarshaller unmarshaller = new ChildrenUnmarshaller(id, items);
 
-      String errorMessage = "Service is not deployed.<br>Parent folder not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+//      String errorMessage = "Service is not deployed.<br>Parent folder not found.";
+//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
 
       loader.setMessage(Messages.GET_FOLDER_CONTENT);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, childrenCallback);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
 
    }
@@ -137,7 +137,7 @@ public class VirtualFileSystem
     * 
     * @param path
     */
-   public void createFolder(String parentId, String name)
+   public void createFolder(String parentId, String name, FolderCreatedCallback folderCallback)
    {
       String url = workspace + "/folder" + parentId;
       if (url.endsWith("/"))
@@ -153,13 +153,13 @@ public class VirtualFileSystem
          newFolderID += "/";
       newFolderID += name;
 
-      FolderCreatedEvent event = new FolderCreatedEvent(newFolderID);
+      folderCallback.setFolderId(newFolderID);
 
-      String errorMessage = "Service is not deployed.<br>Resource already exist.<br>Parent folder not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+//      String errorMessage = "Service is not deployed.<br>Resource already exist.<br>Parent folder not found.";
+//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
 
       loader.setMessage(Messages.COPY_FOLDER);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, folderCallback);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
@@ -168,19 +168,17 @@ public class VirtualFileSystem
     * 
     * @param file
     */
-   public void getFileContent(String id)
+   public void getFileContent(String id, FileContentCallback fileContentCallback)
    {
       String url = workspace + "/content" + id;
       
-      FileContentReceivedEvent event = new FileContentReceivedEvent();
+      FileContentUnmarshaller unmarshaller = new FileContentUnmarshaller(fileContentCallback);
       
-      FileContentUnmarshaller unmarshaller = new FileContentUnmarshaller(event);
-      
-      String errorMessage = " Service is not deployed.<br>Resource not found.";
-      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+//      String errorMessage = " Service is not deployed.<br>Resource not found.";
+//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
 
       loader.setMessage(Messages.GET_FILE_CONTENT);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, event, errorEvent);
+      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, fileContentCallback);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
       
    }

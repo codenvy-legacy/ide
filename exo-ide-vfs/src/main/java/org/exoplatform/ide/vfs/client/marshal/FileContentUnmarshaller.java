@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.vfs.client.marshal;
 
+import com.google.gwt.http.client.Response;
+
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.vfs.client.event.FileContentReceivedEvent;
-
-import com.google.gwt.http.client.Response;
+import org.exoplatform.ide.vfs.client.callback.FileContentCallback;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -32,15 +32,15 @@ import com.google.gwt.http.client.Response;
 public class FileContentUnmarshaller implements Unmarshallable
 {
 
-   private FileContentReceivedEvent event;
+   private FileContentCallback fileContentCallback;
 
    /**
     * @param event
     */
-   public FileContentUnmarshaller(FileContentReceivedEvent event)
+   public FileContentUnmarshaller(FileContentCallback fileContentCallback)
    {
       super();
-      this.event = event;
+      this.fileContentCallback = fileContentCallback;
    }
 
    /**
@@ -49,7 +49,7 @@ public class FileContentUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      event.setFileContent(response.getText());
+      fileContentCallback.setFileContent(response.getText());
    }
 
 }
