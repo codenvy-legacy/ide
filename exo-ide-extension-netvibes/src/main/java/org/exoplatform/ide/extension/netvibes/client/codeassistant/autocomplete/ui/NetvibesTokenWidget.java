@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtProperties;
 import org.exoplatform.ide.client.framework.codeassistant.TokenExtType;
 import org.exoplatform.ide.client.framework.codeassistant.TokenWidget;
-import org.exoplatform.ide.extension.netvibes.client.codeassistant.autocomplete.JsAutocompleteImageBundle;
+import org.exoplatform.ide.extension.netvibes.client.NetvibesClientBundle;
 
 /**
  * Widget for netvibes tokens for autocomplete form.
@@ -49,7 +49,7 @@ public class NetvibesTokenWidget extends TokenWidget<TokenExt>
    {
       super(token);
       grid = new Grid(1, 3);
-      grid.setStyleName(JsAutocompleteImageBundle.INSTANCE.css().item());
+      grid.setStyleName(NetvibesClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
 
       Image i = getImage();
@@ -75,7 +75,7 @@ public class NetvibesTokenWidget extends TokenWidget<TokenExt>
          pack = token.getProperty(TokenExtProperties.SHORT_HINT);
       }
       Label l = new Label(pack, false);
-      l.setStyleName(JsAutocompleteImageBundle.INSTANCE.css().fqnStyle());
+      l.setStyleName(NetvibesClientBundle.INSTANCE.css().fqnStyle());
       grid.setWidget(0, 2, l);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
@@ -98,21 +98,21 @@ public class NetvibesTokenWidget extends TokenWidget<TokenExt>
       switch (token.getType())
       {
          case METHOD :
-            return new Image(JsAutocompleteImageBundle.INSTANCE.methodItem());
+            return new Image(NetvibesClientBundle.INSTANCE.methodItem());
          case VARIABLE :
-            return new Image(JsAutocompleteImageBundle.INSTANCE.varItem());
+            return new Image(NetvibesClientBundle.INSTANCE.varItem());
          case PROPERTY :
-            return new Image(JsAutocompleteImageBundle.INSTANCE.propertyItem());
+            return new Image(NetvibesClientBundle.INSTANCE.propertyItem());
          case FUNCTION :
-            return new Image(JsAutocompleteImageBundle.INSTANCE.functionItem());
+            return new Image(NetvibesClientBundle.INSTANCE.functionItem());
          case KEYWORD :
-            return new Image(JsAutocompleteImageBundle.INSTANCE.keyword());
+            return new Image(NetvibesClientBundle.INSTANCE.keyword());
          case TEMPLATE :
-            return new Image(JsAutocompleteImageBundle.INSTANCE.template());
+            return new Image(NetvibesClientBundle.INSTANCE.template());
          case CLASS :
-            return new Image(JsAutocompleteImageBundle.INSTANCE.classItem());
+            return new Image(NetvibesClientBundle.INSTANCE.classItem());
          default :
-            return new Image(JsAutocompleteImageBundle.INSTANCE.template());
+            return new Image(NetvibesClientBundle.INSTANCE.template());
 
       }
 
@@ -158,7 +158,7 @@ public class NetvibesTokenWidget extends TokenWidget<TokenExt>
    @Override
    public void setSelectedStyle()
    {
-      setStyleName(JsAutocompleteImageBundle.INSTANCE.css().selectedItem());
+      setStyleName(NetvibesClientBundle.INSTANCE.css().selectedItem());
    }
 
    /**
@@ -167,7 +167,7 @@ public class NetvibesTokenWidget extends TokenWidget<TokenExt>
    @Override
    public void setOveredStyle()
    {
-      setStyleName(JsAutocompleteImageBundle.INSTANCE.css().overedItem());
+      setStyleName(NetvibesClientBundle.INSTANCE.css().overedItem());
    }
 
    /**
@@ -176,7 +176,7 @@ public class NetvibesTokenWidget extends TokenWidget<TokenExt>
    @Override
    public void setDefaultStyle()
    {
-      setStyleName(JsAutocompleteImageBundle.INSTANCE.css().item());
+      setStyleName(NetvibesClientBundle.INSTANCE.css().item());
    }
 
 }

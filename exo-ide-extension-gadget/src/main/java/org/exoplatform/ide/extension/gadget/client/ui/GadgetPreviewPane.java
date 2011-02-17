@@ -23,25 +23,13 @@ import org.exoplatform.ide.client.framework.ui.LockableView;
 import org.exoplatform.ide.client.framework.ui.PreviewFrame;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
-import com.google.gwt.event.dom.client.HasLoadHandlers;
-import com.google.gwt.event.dom.client.HasMouseDownHandlers;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
-import com.google.gwt.user.client.ui.Frame;
 
 /**
  * Created by The eXo Platform SAS.
@@ -54,7 +42,7 @@ public class GadgetPreviewPane extends LockableView
    /**
     * 
     */
-   public static final String TITLE = "Gadget Preview";
+   public static final String TITLE = "Preview";
 
    private String meta;
 

@@ -23,11 +23,11 @@ import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredEvent;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.LockableView;
+import org.exoplatform.ide.client.framework.ui.PreviewForm;
 import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.operation.output.OutputForm;
-import org.exoplatform.ide.client.operation.preview.PreviewForm;
 import org.exoplatform.ide.client.operation.properties.PropertiesForm;
 import org.exoplatform.ide.client.panel.Panel;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
@@ -82,6 +82,7 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
       propertiesForm = new PropertiesForm(eventBus);
       outputForm = new OutputForm(eventBus);
       previewForm = new PreviewForm(eventBus);
+      previewForm.setImage(new Image(IDEImageBundle.INSTANCE.preview()));
 
       openView(outputForm, outputForm.getTitle(), outputForm.getImage(), false);
 
@@ -131,15 +132,6 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
          previewForm.showPreview(file.getHref());
       }
 
-      Tab gadgetPreviewTab = getTab(GadgetPreviewPane.ID);
-      if (gadgetPreviewTab != null)
-      {
-         removeTab(GadgetPreviewPane.ID);
-      }
-   }
-
-   public void closeGadgetPreviewTab()
-   {
       Tab gadgetPreviewTab = getTab(GadgetPreviewPane.ID);
       if (gadgetPreviewTab != null)
       {
@@ -234,28 +226,6 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
       }
    }
 
-   public void showGadget(GadgetMetadata metadata, IDEConfiguration applicationConfiguration)
-   {
-//      show();
-//      gadgetPreviewPane = new GadgetPreviewPane(eventBus, applicationConfiguration, metadata);
-//      // if preview already opened
-//      Tab gadgetPreviewTab = getTab(gadgetPreviewPane.getViewId());
-//      if (gadgetPreviewTab == null)
-//      {
-//         openView(gadgetPreviewPane, gadgetPreviewPane.getTitle(), new Image(IDEImageBundle.INSTANCE.preview()), true);
-//      }
-//      DeferredCommand.addCommand(new Command()
-//      {
-//         public void execute()
-//         {
-//            selectTab(gadgetPreviewPane.getViewId());
-//            eventBus.fireEvent(new ViewOpenedEvent(gadgetPreviewPane.getViewId()));
-//            gadgetPreviewPane.onOpenTab();
-//         }
-//      });
-      
-      
-   }
 
    public void onOperationPanelRestored(OperationPanelRestoredEvent event)
    {

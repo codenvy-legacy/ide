@@ -47,6 +47,7 @@ public interface GadgetClientBundle extends ClientBundle
    
    @Source("bundled/preview.png")
    ImageResource preview();
+   
    @Source("bundled/preview_Disabled.png")
    ImageResource previewDisabled();
    

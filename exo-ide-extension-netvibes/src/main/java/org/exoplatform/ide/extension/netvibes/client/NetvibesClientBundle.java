@@ -16,13 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.netvibes.client.codeassistant.autocomplete;
+package org.exoplatform.ide.extension.netvibes.client;
 
-import org.exoplatform.ide.extension.netvibes.client.NetvibesCss;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
  * Image bundle with resources for autocomplete form 
@@ -32,10 +32,10 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $Id: JsAutocompleteImageBundle.java Jan 24, 2011 10:37:28 AM vereshchaka $
  *
  */
-public interface JsAutocompleteImageBundle extends ClientBundle
+public interface NetvibesClientBundle extends ClientBundle
 {
 
-   public static final JsAutocompleteImageBundle INSTANCE = GWT.create(JsAutocompleteImageBundle.class);
+   public static final NetvibesClientBundle INSTANCE = GWT.create(NetvibesClientBundle.class);
 
    @Source("org/exoplatform/ide/extension/netvibes/bundle/netvibes.css")
    public NetvibesCss css();
@@ -60,5 +60,11 @@ public interface JsAutocompleteImageBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/extension/netvibes/bundle/autocomplete-images/class.gif")
    ImageResource classItem();
+   
+   @Source("org/exoplatform/ide/extension/netvibes/bundle/preview.png")
+   ImageResource preview();
+   
+   @Source("org/exoplatform/ide/extension/netvibes/bundle/preview_Disabled.png")
+   ImageResource previewDisabled();
    
 }

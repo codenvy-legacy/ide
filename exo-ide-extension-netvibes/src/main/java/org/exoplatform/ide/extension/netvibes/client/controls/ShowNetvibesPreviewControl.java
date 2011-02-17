@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.client.controls;
+package org.exoplatform.ide.extension.netvibes.client.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -24,8 +24,8 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.extension.gadget.client.GadgetClientBundle;
-import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent;
+import org.exoplatform.ide.extension.netvibes.client.NetvibesClientBundle;
+import org.exoplatform.ide.extension.netvibes.client.event.PreviewNetvibesEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -36,20 +36,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class ShowGadgetPreviewControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class ShowNetvibesPreviewControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "Run/Show Netvibes Preview";
+   public static final String ID = "Run/Show Gadget Preview";
 
-   public static final String TITLE = "Show Netvibes Preview";
+   public static final String TITLE = "Show Gadget Preview";
 
-   public ShowGadgetPreviewControl()
+   public ShowNetvibesPreviewControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(GadgetClientBundle.INSTANCE.preview(), GadgetClientBundle.INSTANCE.previewDisabled());
-      setEvent(new PreviewGadgetEvent());
+      setImages(NetvibesClientBundle.INSTANCE.preview(), NetvibesClientBundle.INSTANCE.previewDisabled());
+      setEvent(new PreviewNetvibesEvent());
    }
 
    /**
@@ -69,7 +69,7 @@ public class ShowGadgetPreviewControl extends SimpleControl implements IDEContro
          return;
       }
 
-      if (MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))
+      if (MimeType.UWA_WIDGET.equals(event.getFile().getContentType()))
       {
          setVisible(true);
          if (event.getFile().isNewFile())

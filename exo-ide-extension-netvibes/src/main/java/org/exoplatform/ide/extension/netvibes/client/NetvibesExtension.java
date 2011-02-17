@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.netvibes.client;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -29,11 +30,22 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.extension.netvibes.client.codeassistant.autocomplete.JsAutocompleteImageBundle;
+import org.exoplatform.ide.client.framework.ui.PreviewForm;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.netvibes.client.codeassistant.autocomplete.NetvibesTokenCollector;
 import org.exoplatform.ide.extension.netvibes.client.codeassistant.autocomplete.NetvibesTokenWidgetFactory;
 import org.exoplatform.ide.extension.netvibes.client.controls.DeployUwaWidgetControl;
+import org.exoplatform.ide.extension.netvibes.client.controls.ShowNetvibesPreviewControl;
+import org.exoplatform.ide.extension.netvibes.client.event.PreviewNetvibesEvent;
+import org.exoplatform.ide.extension.netvibes.client.event.PreviewNetvibesHandler;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.DeployWidgetServiceImpl;
 import org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetPresenter;
 
@@ -43,7 +55,7 @@ import org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetPresenter
  * @version $Id: $
  */
 
-public class NetvibesExtension extends Extension implements InitializeServicesHandler
+public class NetvibesExtension extends Extension implements InitializeServicesHandler, PreviewNetvibesHandler, EditorActiveFileChangedHandler, ViewClosedHandler
 {
    private HandlerManager eventBus;
 
@@ -51,6 +63,13 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
     * IDE application configuration.
     */
    private IDEConfiguration configuration;
+   
+   /**
+    * Current opened file in editor
+    */
+   private File activeFile;
+   
+   private boolean previewOpened = false;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
@@ -63,12 +82,16 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget",
          "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET)));
       eventBus.fireEvent(new RegisterControlEvent(new DeployUwaWidgetControl(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowNetvibesPreviewControl(), DockTarget.TOOLBAR, true));
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      eventBus.addHandler(PreviewNetvibesEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
 
       new DeployUwaWidgetPresenter(eventBus);
 
-      JsAutocompleteImageBundle.INSTANCE.css().ensureInjected();
+      NetvibesClientBundle.INSTANCE.css().ensureInjected();
 
       eventBus.fireEvent(new RegisterDocumentationEvent(MimeType.UWA_WIDGET,
          "http://dev.netvibes.com/doc/uwa/documentation"));
@@ -86,6 +109,59 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
       NetvibesTokenWidgetFactory factory = new NetvibesTokenWidgetFactory();
       NetvibesTokenCollector collector = new NetvibesTokenCollector(eventBus);
       eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.UWA_WIDGET, factory, collector));
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.netvibes.client.event.PreviewNetvibesHandler#onPreviewNetvibes(org.exoplatform.ide.extension.netvibes.client.event.PreviewNetvibesEvent)
+    */
+   @Override
+   public void onPreviewNetvibes(PreviewNetvibesEvent event)
+   {
+      if(activeFile == null)
+         return;
+      
+      if(previewOpened)
+      {
+         eventBus.fireEvent(new CloseViewEvent(PreviewForm.ID));
+         previewOpened = false;
+      }
+      
+      String href = activeFile.getHref();
+      href = href.replace("jcr", "ide/netvibes");
+      
+      PreviewForm form = new PreviewForm(eventBus);
+      form.setType(ViewType.PREVIEW);
+      form.setImage(new Image(NetvibesClientBundle.INSTANCE.preview()));
+      form.showPreview(href);
+      
+      eventBus.fireEvent(new OpenViewEvent(form));
+      previewOpened = true;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
+      if(previewOpened)
+      {
+         eventBus.fireEvent(new CloseViewEvent(PreviewForm.ID));
+         previewOpened = false;
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if(PreviewForm.ID.equals(event.getViewId()))
+      {
+         previewOpened = false;
+      }
    }
 
 }

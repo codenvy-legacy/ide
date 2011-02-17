@@ -31,6 +31,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetHadndler;
@@ -58,8 +60,7 @@ import com.google.gwt.user.client.ui.Image;
  *
  */
 public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployGadgetHandler,
-   EditorActiveFileChangedHandler, PreviewGadgetHandler,
-   ConfigurationReceivedSuccessfullyHandler
+   EditorActiveFileChangedHandler, PreviewGadgetHandler, ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler
 {
 
    private HandlerManager eventBus;
@@ -68,8 +69,8 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
 
    private File activeFile;
 
-   private IDEConfiguration  applicationConfiguration;
-   
+   private IDEConfiguration applicationConfiguration;
+
    private boolean previewOpened = false;
 
    public GadgetPluginEventHandler(HandlerManager eventBus)
@@ -83,6 +84,7 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
       handlers.addHandler(UndeployGadgetEvent.TYPE, this);
       handlers.addHandler(PreviewGadgetEvent.TYPE, this);
       handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      handlers.addHandler(ViewClosedEvent.TYPE, this);
 
    }
 
@@ -93,14 +95,14 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    {
       GadgetService.getInstance().deployGadget(activeFile.getHref(), new DeployUndeployGadgetCallback()
       {
-         
+
          @Override
          public void onResponseReceived(Request request, Response response)
          {
             String outputContent = "<b>" + this.getUrl() + "</b> deployed successfully.";
             eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
          }
-         
+
          @Override
          public void handleError(Throwable exc)
          {
@@ -125,14 +127,14 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    {
       GadgetService.getInstance().undeployGadget(activeFile.getHref(), new DeployUndeployGadgetCallback()
       {
-         
+
          @Override
          public void onResponseReceived(Request request, Response response)
          {
             String outputContent = "<b>" + this.getUrl() + "</b> undeployed successfully.";
-            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));            
+            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
          }
-         
+
          @Override
          public void handleError(Throwable exc)
          {
@@ -146,7 +148,7 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
             {
                eventBus.fireEvent(new ExceptionThrownEvent(exc));
             }
-            
+
          }
       });
    }
@@ -168,6 +170,11 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       this.activeFile = event.getFile();
+      if(previewOpened)
+      {
+         eventBus.fireEvent(new CloseViewEvent(GadgetPreviewPane.ID));
+         previewOpened = false;
+      }
    }
 
    /**
@@ -176,7 +183,7 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    @Override
    public void onPreviewGadget(PreviewGadgetEvent event)
    {
-      if(previewOpened)
+      if (previewOpened)
       {
          eventBus.fireEvent(new CloseViewEvent(GadgetPreviewPane.ID));
          previewOpened = false;
@@ -193,14 +200,14 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
       TokenRequest tokenRequest = new TokenRequest(URL.encode(href), owner, viewer, moduleId, container, domain);
       GadgetService.getInstance().getSecurityToken(tokenRequest, new SecurityTokenCallback()
       {
-         
+
          @Override
          public void onResponseReceived(Request request, Response response)
          {
             TokenResponse tokenResponse = this.getTokenResponse();
             getGadgetMetadata(tokenResponse);
          }
-         
+
          @Override
          public void handleError(Throwable exc)
          {
@@ -208,7 +215,7 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
          }
       });
    }
-   
+
    /**
     * @param tokenResponse
     */
@@ -216,25 +223,23 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    {
       GadgetService.getInstance().getGadgetMetadata(tokenResponse, new GadgetMetadataCallback()
       {
-         
+
          public void onResponseReceived(Request request, Response response)
          {
-            GadgetPreviewPane gadgetPreviewPane = new GadgetPreviewPane(eventBus, applicationConfiguration, this.getMetadata());
+            GadgetPreviewPane gadgetPreviewPane =
+               new GadgetPreviewPane(eventBus, applicationConfiguration, this.getMetadata());
             gadgetPreviewPane.setType(ViewType.PREVIEW);
             gadgetPreviewPane.setImage(new Image(GadgetClientBundle.INSTANCE.preview()));
             eventBus.fireEvent(new OpenViewEvent(gadgetPreviewPane));
             previewOpened = true;
          }
-         
+
          public void handleError(Throwable exc)
          {
             eventBus.fireEvent(new ExceptionThrownEvent(exc));
          }
       });
    }
-
-   
-
 
    /**
     * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)
@@ -245,5 +250,16 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
       applicationConfiguration = event.getConfiguration();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if(GadgetPreviewPane.ID.equals(event.getViewId()))
+      {
+         previewOpened = false;
+      }
+   }
 
 }

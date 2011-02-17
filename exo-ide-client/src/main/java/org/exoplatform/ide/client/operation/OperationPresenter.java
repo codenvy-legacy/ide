@@ -76,10 +76,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       void closePropertiesTab();
 
       void changeActiveFile(File file);
-
-      void showGadget(GadgetMetadata metadata, IDEConfiguration applicationConfiguration);
-
-      void closeGadgetPreviewTab();
       
       List<String> getViewTypes();
 
@@ -131,7 +127,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       activeFile = event.getFile();
 
       display.closePreviewTab();
-      display.closeGadgetPreviewTab();
 
       if (event.getFile() == null)
       {
@@ -152,7 +147,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
    public void onPreviewFile(PreviewFileEvent event)
    {
       display.closePreviewTab();
-      display.closeGadgetPreviewTab();
 
       if (activeFile.isNewFile())
       {
@@ -162,11 +156,8 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
 
       eventBus.fireEvent(new RestorePerspectiveEvent());
 
-      if (MimeType.GOOGLE_GADGET.equals(activeFile.getContentType()))
-      {
-         previewGadget();
-      }
-      else if (MimeType.UWA_WIDGET.equals(activeFile.getContentType()))
+
+     if(MimeType.UWA_WIDGET.equals(activeFile.getContentType()))
       {
          previewUWAWidget(activeFile);
       }
@@ -190,22 +181,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
    private void previewGroovyTemplate(File file)
    {
       display.showPreview(applicationConfiguration.getContext() + "/ide/gtmpl/render?url=" + file.getHref());
-   }
-
-   private void previewGadget()
-   {
-    
-   }
-   
-   private void getGadgetMetadata(TokenResponse tokenResponse)
-   {
-//      TokenResponse tokenResponse = securityTokenRecievedEvent.getTokenResponse();
-//      GadgetService.getInstance().getGadgetMetadata(tokenResponse);
-   }
-
-   public void onMetadataRecieved(GadgetMetadaRecievedEvent event)
-   {
-//      display.showGadget(event.getMetadata(), applicationConfiguration);
    }
 
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
