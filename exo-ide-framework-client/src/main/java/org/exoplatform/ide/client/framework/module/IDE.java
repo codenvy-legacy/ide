@@ -21,6 +21,14 @@ package org.exoplatform.ide.client.framework.module;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.ui.client.command.Control;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.editor.api.EditorProducer;
+
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: IDE Feb 4, 2011 11:01:38 AM evgen $
@@ -28,12 +36,54 @@ import java.util.List;
  */
 public abstract class IDE
 {
+   public static HandlerManager EVENT_BUS = new HandlerManager(null);
 
    protected static List<Extension> extensions = new ArrayList<Extension>();
+
+   private static IDE instance;
+
+   protected IDE()
+   {
+      instance = this;
+   }
+
+   /**
+    * @return the instance
+    */
+   public static IDE getInstance()
+   {
+      return instance;
+   }
 
    public static void registerExtension(Extension extension)
    {
       extensions.add(extension);
    }
+
+   /**
+    * Add control to main menu/tool bar or status bar
+    * @param control
+    * @param dockTarget where control dock(toolbar/statusbar) 
+    * @param rightDocking control pleased right on toolbar
+    */
+   public abstract void addControl(Control<?> control, DockTarget dockTarget, boolean rightDocking);
+
+   /**
+    * Open {@link View}
+    * @param view to open
+    */
+   public abstract void openView(View view);
+
+   /**
+    * Close view
+    * @param viewId ID of view
+    */
+   public abstract void closeView(String viewId);
+
+   /**
+    * Add new editor extension
+    * @param editorProducer
+    */
+   public abstract void addEditor(EditorProducer editorProducer);
 
 }

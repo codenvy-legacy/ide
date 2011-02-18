@@ -18,10 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.ui.Image;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -33,11 +31,11 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
@@ -88,8 +86,10 @@ import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ide.extension.groovy.client.util.GroovyPropertyUtil;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS.
@@ -115,39 +115,41 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    //need for http://jira.exoplatform.org/browse/IDE-347
    //undeploy service on cancel 
    private boolean undeployOnCancel = false;
-   
+
    private boolean previewOpened = false;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      this.eventBus = eventBus;
+      this.eventBus = IDE.EVENT_BUS;
       handlers = new Handlers(eventBus);
       handlers.addHandler(InitializeServicesEvent.TYPE, this);
 
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New REST Service", "REST Service",
-         "Create REST Service", Images.FileType.REST_SERVICE, MimeType.GROOVY_SERVICE)));
+      IDE.getInstance().addControl(
+         new NewItemControl("File/New/New REST Service", "REST Service", "Create REST Service",
+            Images.FileType.REST_SERVICE, MimeType.GROOVY_SERVICE), DockTarget.NONE, false);
 
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New POGO", "POGO", "Create POGO",
-         Images.FileType.GROOVY, MimeType.APPLICATION_GROOVY)));
+      IDE.getInstance().addControl(
+         new NewItemControl("File/New/New POGO", "POGO", "Create POGO", Images.FileType.GROOVY,
+            MimeType.APPLICATION_GROOVY), DockTarget.NONE, false);
 
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Template", "Template",
-         "Create Template", Images.FileType.GROOVY_TEMPLATE, MimeType.GROOVY_TEMPLATE)));
+      IDE.getInstance().addControl(
+         new NewItemControl("File/New/New Template", "Template", "Create Template", Images.FileType.GROOVY_TEMPLATE,
+            MimeType.GROOVY_TEMPLATE), DockTarget.NONE, false);
 
-      eventBus.fireEvent(new RegisterControlEvent(new SetAutoloadCommand(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ConfigureBuildPathCommand(), DockTarget.NONE));
-      eventBus.fireEvent(new RegisterControlEvent(new ValidateGroovyCommand(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovyCommand(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new UndeployGroovyCommand(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new RunGroovyServiceCommand(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new DeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true));
-      eventBus
-         .fireEvent(new RegisterControlEvent(new UndeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new PreviewWadlOutputCommand(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ShowGroovyTemplatePreviewControl(), DockTarget.TOOLBAR, true));
+      IDE.getInstance().addControl(new SetAutoloadCommand(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new ConfigureBuildPathCommand(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ValidateGroovyCommand(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new DeployGroovyCommand(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new UndeployGroovyCommand(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new RunGroovyServiceCommand(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new DeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new UndeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new PreviewWadlOutputCommand(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new ShowGroovyTemplatePreviewControl(), DockTarget.TOOLBAR, true);
 
       handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(SetAutoloadEvent.TYPE, this);
@@ -298,7 +300,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if(PreviewForm.ID.equals(event.getViewId()))
+      if (PreviewForm.ID.equals(event.getViewId()))
       {
          previewOpened = false;
       }
@@ -310,17 +312,17 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    @Override
    public void onShowGroovyTemplatePreview(ShowGroovyTemplatePreviewEvent event)
    {
-      if(previewOpened)
+      if (previewOpened)
       {
          eventBus.fireEvent(new CloseViewEvent(PreviewForm.ID));
          previewOpened = false;
       }
-      
+
       PreviewForm form = new PreviewForm(eventBus);
       form.setType(ViewType.PREVIEW);
       form.setImage(new Image(GroovyClientBundle.INSTANCE.preview()));
       form.showPreview(configuration.getContext() + "/ide/gtmpl/render?url=" + activeFile.getHref());
-      
+
       eventBus.fireEvent(new OpenViewEvent(form));
       previewOpened = true;
    }

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client;
 
+import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.smartgwt.SmartGWTDialogs;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
@@ -27,15 +28,15 @@ import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManager;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManagerExt;
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.development.DevelopmentModule;
 import org.exoplatform.ide.client.module.edit.TextEditModule;
 import org.exoplatform.ide.client.module.navigation.NavigationModule;
 import org.exoplatform.ide.client.module.preferences.PreferencesModule;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import org.exoplatform.ide.editor.api.EditorProducer;
 
 /**
  * Created by The eXo Platform SAS .
@@ -45,48 +46,48 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 {
 
+   private ControlsRegistration controlsRegistration;
+   
    public IDE()
    {
 
       new SmartGWTDialogs();
 
-      HandlerManager eventBus =new IDEHandlerManager();
       //HandlerManager eventBus = new HandlerManager(null);
       ApplicationContext context = new ApplicationContext();
 
-      new ExceptionThrownEventHandler(eventBus);
+      new ExceptionThrownEventHandler(EVENT_BUS);
 
       //new CookieManager(eventBus);
 
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 
-      ControlsRegistration controlsRegistration = new ControlsRegistration(eventBus);
+      controlsRegistration = new ControlsRegistration(EVENT_BUS);
 
-      eventBus.fireEvent(new AddControlsFormatterEvent(new MainMenuControlsFormatter()));
-      eventBus.fireEvent(new AddControlsFormatterEvent(new NewItemControlsFormatter()));
-      new IDEForm(eventBus, context, controlsRegistration);
+      EVENT_BUS.fireEvent(new AddControlsFormatterEvent(new MainMenuControlsFormatter()));
+      EVENT_BUS.fireEvent(new AddControlsFormatterEvent(new NewItemControlsFormatter()));
+      new IDEForm(EVENT_BUS, context, controlsRegistration);
 
-      new AutoCompletionManager(eventBus);
+      new AutoCompletionManager(EVENT_BUS);
 
-      new AutoCompletionManagerExt(eventBus);
+      new AutoCompletionManagerExt(EVENT_BUS);
 
-      new ApplicationStateSnapshotListener(eventBus);
+      new ApplicationStateSnapshotListener(EVENT_BUS);
 
       /*
        * MODULES INITIALIZATION
        */
-      new NavigationModule(eventBus, context);
-      new TextEditModule(eventBus);
-      new DevelopmentModule(eventBus);
-      new PreferencesModule(eventBus);
+      new NavigationModule(EVENT_BUS, context);
+      new TextEditModule(EVENT_BUS);
+      new DevelopmentModule(EVENT_BUS);
+      new PreferencesModule(EVENT_BUS);
 
       //initialize module
       for (Extension ext : extensions)
       {
-         ext.initialize(eventBus);
+         ext.initialize();
       }
 
-      
       //      new GadgetModule(eventBus);
       //      new GroovyModule(eventBus);
       //      new ChromatticModule(eventBus);
@@ -94,6 +95,42 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       controlsRegistration.formatControls();
       //new TestIFrame();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#addControl(org.exoplatform.gwtframework.ui.client.command.Control, org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget, boolean)
+    */
+   @Override
+   public void addControl(Control<?> control, DockTarget dockTarget, boolean rightDocking)
+   {
+      controlsRegistration.addControl(control, dockTarget, rightDocking);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#openView(org.exoplatform.ide.client.framework.ui.View)
+    */
+   @Override
+   public void openView(View view)
+   {
+
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#closeView(java.lang.String)
+    */
+   @Override
+   public void closeView(String viewId)
+   {
+
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#addEditor(org.exoplatform.ide.editor.api.EditorProducer)
+    */
+   @Override
+   public void addEditor(EditorProducer editorProducer)
+   {
+
    }
 
 }

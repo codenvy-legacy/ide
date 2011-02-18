@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterHa
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlHandler;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -102,6 +103,30 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       else if (event.getDockTarget() == RegisterControlEvent.DockTarget.STATUSBAR)
       {
          addControl(event.getControl(), statusBarControls, event.isRightDocking());
+      }
+   }
+   
+   public void addControl(Control<?> control, DockTarget dockTarget, boolean  rightDocking)
+   {
+      if (!(control instanceof IDEControl))
+      {
+         Dialogs.getInstance().showError("Only IDE controls can be registered! " + control.getClass());
+         return;
+      }
+      
+      registeredControls.add(control);
+      
+      switch (dockTarget)
+      {
+         case TOOLBAR :
+            addControl(control, toolbarDefaultControls, rightDocking);
+            break;
+            
+          case STATUSBAR:
+             addControl(control, statusBarControls, rightDocking);
+             break;
+         default :
+            break;
       }
    }
 

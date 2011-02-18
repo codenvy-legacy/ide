@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.client.framework.module;
 
+import org.exoplatform.gwtframework.ui.client.command.Control;
+
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -39,6 +40,12 @@ public abstract class Extension implements EntryPoint
       IDE.registerExtension(this);
    }
 
-   public abstract void initialize(HandlerManager eventBus);
+   /**
+    * This method called after IDE initialized.
+    * In this method you can add controls and views.<br>
+    * To add {@link Control} call {@link IDE#addControl(Control, org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget, boolean)}<br>
+    * To add Editor call {@link IDE#addEditor(org.exoplatform.ide.editor.api.EditorProducer)}
+    */
+   public abstract void initialize();
 
 }

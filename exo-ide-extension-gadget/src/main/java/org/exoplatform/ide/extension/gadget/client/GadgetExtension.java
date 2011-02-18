@@ -22,9 +22,9 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.gadget.client.controls.DeployGadgetCommand;
 import org.exoplatform.ide.extension.gadget.client.controls.ShowGadgetPreviewControl;
 import org.exoplatform.ide.extension.gadget.client.controls.UndeployGadgetCommand;
@@ -46,16 +46,17 @@ public class GadgetExtension extends Extension implements InitializeServicesHand
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      this.eventBus = eventBus;
+      this.eventBus = IDE.EVENT_BUS;
 
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Google Gadget", "Google Gadget",
-         "Create New Google Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setDelimiterBefore(true)));
+      IDE.getInstance().addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget",
+         "Create New Google Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setDelimiterBefore(true), DockTarget.NONE, false);
 
-      eventBus.fireEvent(new RegisterControlEvent(new DeployGadgetCommand(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new UndeployGadgetCommand(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ShowGadgetPreviewControl(), DockTarget.TOOLBAR,true));
+      IDE.getInstance().addControl(new DeployGadgetCommand(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new UndeployGadgetCommand(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new ShowGadgetPreviewControl(), DockTarget.TOOLBAR,true);
+
       
       //      addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google 4Gadget",
       //         Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET));

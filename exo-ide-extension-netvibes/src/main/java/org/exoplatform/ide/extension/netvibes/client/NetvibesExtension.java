@@ -18,21 +18,18 @@
  */
 package org.exoplatform.ide.extension.netvibes.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
 import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
@@ -48,6 +45,9 @@ import org.exoplatform.ide.extension.netvibes.client.event.PreviewNetvibesEvent;
 import org.exoplatform.ide.extension.netvibes.client.event.PreviewNetvibesHandler;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.DeployWidgetServiceImpl;
 import org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetPresenter;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS.
@@ -75,14 +75,14 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      this.eventBus = eventBus;
+      this.eventBus = IDE.EVENT_BUS;
 
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget",
-         "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET)));
-      eventBus.fireEvent(new RegisterControlEvent(new DeployUwaWidgetControl(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ShowNetvibesPreviewControl(), DockTarget.TOOLBAR, true));
+      IDE.getInstance().addControl(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget",
+         "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET),DockTarget.NONE,false);
+      IDE.getInstance().addControl(new DeployUwaWidgetControl(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new ShowNetvibesPreviewControl(), DockTarget.TOOLBAR, true);
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       eventBus.addHandler(PreviewNetvibesEvent.TYPE, this);

@@ -23,9 +23,9 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteEvent;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.chromattic.client.controls.DeployNodeTypeControl;
 import org.exoplatform.ide.extension.chromattic.client.controls.GenerateNodeTypeControl;
 import org.exoplatform.ide.extension.chromattic.client.handler.CompileGroovyCommandHandler;
@@ -58,15 +58,16 @@ public class ChromatticExtension extends Extension implements InitializeServices
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      this.eventBus = eventBus;
+      this.eventBus = IDE.EVENT_BUS;
 
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Data Object", "Data Object",
-         "Create Data Object", Images.FileType.CHROMATTIC, MimeType.CHROMATTIC_DATA_OBJECT)));
+      IDE.getInstance().addControl(
+         new NewItemControl("File/New/New Data Object", "Data Object", "Create Data Object",
+            Images.FileType.CHROMATTIC, MimeType.CHROMATTIC_DATA_OBJECT), DockTarget.NONE, false);
 
-      eventBus.fireEvent(new RegisterControlEvent(new GenerateNodeTypeControl(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new DeployNodeTypeControl(), DockTarget.TOOLBAR, true));
+      IDE.getInstance().addControl(new GenerateNodeTypeControl(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new DeployNodeTypeControl(), DockTarget.TOOLBAR, true);
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       new GenerateNodeTypePresenter(eventBus);
