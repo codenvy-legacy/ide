@@ -176,6 +176,12 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-chromattic</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -590,7 +596,10 @@
 
       <module>exo-ide-vfs</module>
       <module>exo-ide-vfs-jcr</module>
+      
       <module>exo-ide-codeassistant-framework</module>
+      
+      <module>exo-ide-editor</module>
 	
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>
