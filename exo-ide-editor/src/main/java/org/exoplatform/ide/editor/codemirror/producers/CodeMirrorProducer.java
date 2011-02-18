@@ -21,7 +21,6 @@ package org.exoplatform.ide.editor.codemirror.producers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
@@ -62,10 +61,10 @@ public class CodeMirrorProducer extends EditorProducer
     * @see org.exoplatform.ide.editor.api.EditorProducer#createEditor(org.exoplatform.ide.client.framework.vfs.File, com.google.gwt.event.shared.HandlerManager, java.util.HashMap)
     */
    @Override
-   public Editor createEditor(File file, HandlerManager eventBus, HashMap<String, Object> params)
+   public Editor createEditor(String content, HandlerManager eventBus, HashMap<String, Object> params)
    {
       params.putAll(this.params);
-      return new CodeMirror(file, params, eventBus);
+      return new CodeMirror(content, params, eventBus);
    }
    
 

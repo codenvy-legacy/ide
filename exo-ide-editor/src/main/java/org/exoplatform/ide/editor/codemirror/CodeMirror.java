@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.Parser;
@@ -85,9 +84,9 @@ public class CodeMirror extends Editor
     * @param params
     * @param eventBus
     */
-   public CodeMirror(File file, HashMap<String, Object> params, HandlerManager eventBus)
+   public CodeMirror(String content, HashMap<String, Object> params, HandlerManager eventBus)
    {
-      super(file, params, eventBus);
+      super(content, params, eventBus);
       this.editorId = "CodeMirror - " + String.valueOf(this.hashCode());
 
       textArea = new TextArea();
@@ -212,7 +211,7 @@ public class CodeMirror extends Editor
       this.needRevalidateCode = true;
       //      eventBus.fireEvent(new EditorInitializedEvent(editorId));
       //       turn on code validation timer
-      setText(file.getContent());
+      setText(content);
       if (configuration.canBeValidated())
       {
          this.codeValidateTimer.scheduleRepeating(2000);

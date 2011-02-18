@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.codemirror;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,8 +32,6 @@ import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 import org.exoplatform.ide.editor.codemirror.producers.CodeMirrorProducer;
-
-import com.google.gwt.dev.util.collect.HashSet;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

@@ -21,15 +21,12 @@ package org.exoplatform.ide.editor.codemirror;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.exoplatform.gwtframework.editor.codemirror.CodemirrorProducer;
 import org.exoplatform.ide.editor.api.DefaultParser;
 import org.exoplatform.ide.editor.api.Parser;
 import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper;
 import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.DefaultAutocompleteHelper;
 import org.exoplatform.ide.editor.api.codeassitant.codevalidator.CodeValidator;
 import org.exoplatform.ide.editor.api.codeassitant.codevalidator.DefaultCodeValidator;
-import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 
 import com.google.gwt.core.client.GWT;
 
@@ -46,7 +43,7 @@ public class CodeMirrorConfiguration
 
    public final static String PATH = GWT.getModuleBaseURL() + "codemirror/";
 
-   private final String jsDirectory = CodemirrorProducer.PATH + "js/";
+   private final String jsDirectory = CodeMirrorConfiguration.PATH + "js/";
 
    private String codeParsers;
 

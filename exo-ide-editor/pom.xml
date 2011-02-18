@@ -27,10 +27,6 @@
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-framework-client</artifactId>
-      </dependency>
-      <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
       </dependency>

@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
 
@@ -48,13 +47,13 @@ public abstract class Editor extends AbsolutePanel
 
    protected HandlerManager eventBus;
 
-   protected File file;
+   protected String content;
 
    protected Map<String, Object> params;
 
-   public Editor(File file, HashMap<String, Object> params, HandlerManager eventBus)
+   public Editor(String content, HashMap<String, Object> params, HandlerManager eventBus)
    {
-      this.file = file;
+      this.content = content;
       this.eventBus = eventBus;
       this.params = params;
    }

@@ -20,8 +20,6 @@ package org.exoplatform.ide.editor.api;
 
 import java.util.HashMap;
 
-import org.exoplatform.ide.client.framework.vfs.File;
-
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -65,6 +63,6 @@ public abstract class EditorProducer
       return isDefault;
    }
 
-   public abstract Editor createEditor(File file, HandlerManager eventBus, HashMap<String, Object> params);
+   public abstract Editor createEditor(String content, HandlerManager eventBus, HashMap<String, Object> params);
 
 }
