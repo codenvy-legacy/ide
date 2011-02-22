@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManager;
 import org.exoplatform.ide.client.autocompletion.AutoCompletionManagerExt;
+import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -132,7 +133,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    @Override
    public void addEditor(EditorProducer editorProducer)
    {
-
+      EditorFactory.addEditor(editorProducer);
    }
 
 }
