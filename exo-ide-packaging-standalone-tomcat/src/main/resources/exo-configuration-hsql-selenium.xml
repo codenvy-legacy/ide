@@ -438,7 +438,7 @@
          <init-params>
             <value-param>
                <name>method.developer.access.filter</name>
-               <value>org.exoplatform.ide.groovy.DevelopmentResourceMethodFilter</value>
+               <value>org.exoplatform.ide.extension.groovy.server.DevelopmentResourceMethodFilter</value>
             </value-param>
          </init-params>
       </component-plugin>
