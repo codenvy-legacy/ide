@@ -88,6 +88,11 @@
       	<artifactId>exo-ide-vfs</artifactId>
       </dependency>
       
+       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor</artifactId>
+      </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-testframework</artifactId>
