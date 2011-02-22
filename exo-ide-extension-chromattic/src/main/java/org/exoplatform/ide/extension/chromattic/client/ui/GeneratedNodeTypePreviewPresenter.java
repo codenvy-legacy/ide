@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import com.google.gwt.user.client.Command;
-
-import com.google.gwt.user.client.DeferredCommand;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -30,11 +26,10 @@ import org.exoplatform.gwtframework.editor.event.EditorInitializedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorInitializedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
-import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
@@ -45,6 +40,8 @@ import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeT
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 
 /**
  * Presenter for the preview of the generated node type definition.
@@ -153,7 +150,7 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      eventBus.fireEvent(new CloseViewEvent(GeneratedNodeTypePreviewForm.ID));
+      IDE.getInstance().closeView(GeneratedNodeTypePreviewForm.ID);
    }
 
    /**
@@ -208,7 +205,7 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
 
          final Display view = new GeneratedNodeTypePreviewForm(eventBus);
          bindDisplay(view);
-         eventBus.fireEvent(new OpenViewEvent((View)view));
+         IDE.getInstance().openView((View)view);
       }
    }
 

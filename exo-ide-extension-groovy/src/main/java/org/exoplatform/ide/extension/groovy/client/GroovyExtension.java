@@ -43,10 +43,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
 import org.exoplatform.ide.client.framework.ui.ViewType;
-import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
-import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
@@ -99,7 +96,7 @@ import com.google.gwt.user.client.ui.Image;
 
 public class GroovyExtension extends Extension implements RestServiceOutputReceivedHandler, SetAutoloadHandler,
    PreviewWadlOutputHandler, InitializeServicesHandler, ApplicationSettingsReceivedHandler,
-   EditorActiveFileChangedHandler, ViewClosedHandler, ShowGroovyTemplatePreviewHandler
+   EditorActiveFileChangedHandler, ShowGroovyTemplatePreviewHandler
 {
 
    private HandlerManager eventBus;
@@ -157,7 +154,6 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       //      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handlers.addHandler(ViewClosedEvent.TYPE, this);
       handlers.addHandler(ShowGroovyTemplatePreviewEvent.TYPE, this);
 
       new RunGroovyServiceCommandHandler(eventBus);
@@ -279,6 +275,11 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+      if(previewOpened)
+      {
+         IDE.getInstance().closeView(PreviewForm.ID);
+         previewOpened = false;
+      }
    }
 
    /**
@@ -294,17 +295,6 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (PreviewForm.ID.equals(event.getViewId()))
-      {
-         previewOpened = false;
-      }
-   }
 
    /**
     * @see org.exoplatform.ide.extension.groovy.client.event.ShowGroovyTemplatePreviewHandler#onShowGroovyTemplatePreview(org.exoplatform.ide.extension.groovy.client.event.ShowGroovyTemplatePreviewEvent)
@@ -312,18 +302,13 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    @Override
    public void onShowGroovyTemplatePreview(ShowGroovyTemplatePreviewEvent event)
    {
-      if (previewOpened)
-      {
-         eventBus.fireEvent(new CloseViewEvent(PreviewForm.ID));
-         previewOpened = false;
-      }
 
       PreviewForm form = new PreviewForm(eventBus);
       form.setType(ViewType.PREVIEW);
       form.setImage(new Image(GroovyClientBundle.INSTANCE.preview()));
       form.showPreview(configuration.getContext() + "/ide/gtmpl/render?url=" + activeFile.getHref());
 
-      eventBus.fireEvent(new OpenViewEvent(form));
+      IDE.getInstance().openView(form);
       previewOpened = true;
    }
 

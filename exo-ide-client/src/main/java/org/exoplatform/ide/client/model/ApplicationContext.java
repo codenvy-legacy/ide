@@ -19,10 +19,9 @@
 package org.exoplatform.ide.client.model;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.application.perspective.Perspective;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
 /**
@@ -35,6 +34,7 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 public class ApplicationContext
 {
 
+   private Perspective currentPerspective;
 
    /**
     * Uses for storing items to need copy
@@ -54,6 +54,22 @@ public class ApplicationContext
    public List<Item> getItemsToCut()
    {
       return itemsToCut;
+   }
+
+   /**
+    * @return the currentPerspective
+    */
+   public Perspective getCurrentPerspective()
+   {
+      return currentPerspective;
+   }
+
+   /**
+    * @param currentPerspective the currentPerspective to set
+    */
+   public void setCurrentPerspective(Perspective currentPerspective)
+   {
+      this.currentPerspective = currentPerspective;
    }
 
 }

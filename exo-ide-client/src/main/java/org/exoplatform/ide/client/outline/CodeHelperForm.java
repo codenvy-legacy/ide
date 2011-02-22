@@ -58,10 +58,6 @@ public class CodeHelperForm extends Panel implements CodeHelperPresenter.Display
 
       this.eventBus = eventBus;
       new Handlers(eventBus);
-
-      getViewTypes().add(ViewType.OUTLINE);
-      getViewTypes().add(ViewType.VERSIONS);
-      getViewTypes().add(ViewType.DOCUMENTATION);
       
       createControlButtons();
 

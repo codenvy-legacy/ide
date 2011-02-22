@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,27 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.ui.event;
+package org.exoplatform.ide.client.application.perspective;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.client.framework.ui.View;
 
 /**
- * Handler for {@link CloseViewEvent} event.
- * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: Perspective Feb 21, 2011 2:35:34 PM evgen $
+ *
  */
-
-public interface CloseViewHandler extends EventHandler
+public interface Perspective
 {
 
-   /**
-    * Perform actions on closing view.
-    * 
-    * @param event
-    */
-   void onCloseView(CloseViewEvent event);
+   void openView(View view);
+
+   void closeView(String viewId);
 
 }

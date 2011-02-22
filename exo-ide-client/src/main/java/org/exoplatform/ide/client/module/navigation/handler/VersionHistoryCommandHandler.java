@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -31,10 +28,9 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.ViewType;
-import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
-import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
@@ -56,8 +52,11 @@ import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersion
 import org.exoplatform.ide.client.versioning.VersionContentForm;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -108,7 +107,7 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
       {
          if (event.getVersion() == null)
          {
-            eventBus.fireEvent(new CloseViewEvent(VersionContentForm.ID));
+            IDE.getInstance().closeView((VersionContentForm.ID));
          }
          else
          {
@@ -173,7 +172,7 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      eventBus.fireEvent(new CloseViewEvent(VersionContentForm.ID));
+      IDE.getInstance().closeView(VersionContentForm.ID);
    }
 
    /**
@@ -251,7 +250,7 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
          view.setImage(new Image(IDEImageBundle.INSTANCE.viewVersions()));
          view.setTitle("Version");
          view.setType(ViewType.VERSIONS);
-         eventBus.fireEvent(new OpenViewEvent(view));
+         IDE.getInstance().openView(view);
          Timer timer = new Timer()
          {
             @Override

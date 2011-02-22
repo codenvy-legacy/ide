@@ -90,7 +90,9 @@ public class IDEForm extends Layout implements IDEPresenter.Display
 
    public void showDefaultPerspective()
    {
-      addMember(new DefaultPerspective(eventBus, context));         
+      DefaultPerspective defaultPerspective = new DefaultPerspective(eventBus, context);
+      context.setCurrentPerspective(defaultPerspective);
+      addMember(defaultPerspective);         
    }
 
 }

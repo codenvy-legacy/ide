@@ -23,7 +23,6 @@ import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredEvent;
 import org.exoplatform.ide.client.event.perspective.OperationPanelRestoredHandler;
 import org.exoplatform.ide.client.framework.ui.LockableView;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
-import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.operation.output.OutputForm;
@@ -70,9 +69,6 @@ public class OperationForm extends Panel implements OperationPresenter.Display, 
 
       createButtons();
       setCanFocus(Boolean.TRUE);
-      getViewTypes().add(ViewType.PREVIEW);
-      getViewTypes().add(ViewType.PROPERTIES);
-      getViewTypes().add(ViewType.OUTPUT);
 
       propertiesForm = new PropertiesForm(eventBus);
       outputForm = new OutputForm(eventBus);

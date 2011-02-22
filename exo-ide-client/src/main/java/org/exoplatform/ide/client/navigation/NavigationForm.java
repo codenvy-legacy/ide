@@ -18,56 +18,50 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import com.google.gwt.user.client.Command;
-
-import com.google.gwt.user.client.DeferredCommand;
-
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserForm;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.panel.Panel;
 import org.exoplatform.ide.client.search.file.SearchResultPanel;
 import org.exoplatform.ide.client.search.file.SearchResultsForm;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.widgets.layout.Layout;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class NavigationForm extends Layout implements NavigationPresenter.Display
+public class NavigationForm extends Panel implements NavigationPresenter.Display
 {
 
    private HandlerManager eventBus;
 
    private ApplicationContext context;
-
-   private Panel tabContainer;
    
    private final String ID = "ideNavigationPanel";
    
-   private final String TABSET_ID = "ideNavigationTabSet";
+   private final static String TABSET_ID = "ideNavigationTabSet";
 
    /**
     * @param eventBus
     */
    public NavigationForm(HandlerManager eventBus, ApplicationContext context)
    {
+      super(eventBus, TABSET_ID);
       this.eventBus = eventBus;
       this.context = context;
       
-      setID(ID);
 
       setHeight100();
       setWidth100();
-      tabContainer = new Panel(eventBus, TABSET_ID);
+
       showBrowser();
 
-      addMember(tabContainer);
 
       NavigationPresenter presenter = new NavigationPresenter(eventBus);
       presenter.bindDisplay(this);
@@ -75,11 +69,11 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
 
    protected void showBrowser()
    {
-      if (!tabContainer.isViewIsOpened(BrowserForm.ID))
+      if (!isViewIsOpened(BrowserForm.ID))
       {
          BrowserForm navigatorForm = new BrowserForm(eventBus, context);
          Image tabIcon = new Image(IDEImageBundle.INSTANCE.workspace());
-         tabContainer.openView(navigatorForm, BrowserForm.TITLE, tabIcon, false);
+         openView(navigatorForm, BrowserForm.TITLE, tabIcon, false);
       }
       
 //      if (!tabContainer.isTabPanelExist(BrowserFormNew.ID))
@@ -94,25 +88,24 @@ public class NavigationForm extends Layout implements NavigationPresenter.Displa
     */
    public void showSearchResult(Folder folder)
    {
-      tabContainer.closeView(SearchResultPanel.ID);
+      closeView(SearchResultPanel.ID);
 
       SearchResultsForm searchResultForm = new SearchResultsForm(eventBus, context, folder);
       Image tabIcon = new Image(IDEImageBundle.INSTANCE.search());
-      tabContainer.openView(searchResultForm, SearchResultsForm.TITLE, tabIcon, true);
+      openView(searchResultForm, SearchResultsForm.TITLE, tabIcon, true);
       DeferredCommand.addCommand(new Command()
       {
          public void execute()
          {
-            tabContainer.selectTabPanel(SearchResultsForm.ID);
+            selectTabPanel(SearchResultsForm.ID);
          }
       });
    }
 
    public void selectBrowserPanel()
    {
-      //tabContainer.selectTabPanel(BrowserFormNew.ID);
       
-      tabContainer.selectTabPanel(BrowserForm.ID);
+      selectTabPanel(BrowserForm.ID);
    }
 
 }

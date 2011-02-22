@@ -78,6 +78,8 @@ public class View extends Layout implements ActivateViewHandler
     */
    private String type;
 
+   private boolean canClose = true;
+
    private HandlerRegistration mouseDownHandler;
 
    /**
@@ -262,4 +264,21 @@ public class View extends Layout implements ActivateViewHandler
    {
       this.title = title;
    }
+
+   /**
+    * @return the canClose
+    */
+   public boolean isCanClose()
+   {
+      return canClose;
+   }
+
+   /**
+    * @param canClose the canClose to set
+    */
+   public void setCanClose(boolean canClose)
+   {
+      this.canClose = canClose;
+   }
+
 }

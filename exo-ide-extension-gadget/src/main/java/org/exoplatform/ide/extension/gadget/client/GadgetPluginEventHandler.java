@@ -26,13 +26,10 @@ import org.exoplatform.ide.client.framework.configuration.event.ConfigurationRec
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.ViewType;
-import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
-import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetHadndler;
@@ -60,7 +57,7 @@ import com.google.gwt.user.client.ui.Image;
  *
  */
 public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployGadgetHandler,
-   EditorActiveFileChangedHandler, PreviewGadgetHandler, ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler
+   EditorActiveFileChangedHandler, PreviewGadgetHandler, ConfigurationReceivedSuccessfullyHandler
 {
 
    private HandlerManager eventBus;
@@ -84,7 +81,6 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
       handlers.addHandler(UndeployGadgetEvent.TYPE, this);
       handlers.addHandler(PreviewGadgetEvent.TYPE, this);
       handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      handlers.addHandler(ViewClosedEvent.TYPE, this);
 
    }
 
@@ -170,11 +166,12 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       this.activeFile = event.getFile();
-      if(previewOpened)
+      if (previewOpened)
       {
-         eventBus.fireEvent(new CloseViewEvent(GadgetPreviewPane.ID));
+         IDE.getInstance().closeView(GadgetPreviewPane.ID);
          previewOpened = false;
       }
+      
    }
 
    /**
@@ -183,11 +180,6 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    @Override
    public void onPreviewGadget(PreviewGadgetEvent event)
    {
-      if (previewOpened)
-      {
-         eventBus.fireEvent(new CloseViewEvent(GadgetPreviewPane.ID));
-         previewOpened = false;
-      }
       String owner = "root";
       String viewer = "root";
       Long moduleId = 0L;
@@ -230,7 +222,8 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
                new GadgetPreviewPane(eventBus, applicationConfiguration, this.getMetadata());
             gadgetPreviewPane.setType(ViewType.PREVIEW);
             gadgetPreviewPane.setImage(new Image(GadgetClientBundle.INSTANCE.preview()));
-            eventBus.fireEvent(new OpenViewEvent(gadgetPreviewPane));
+            IDE.getInstance().openView(gadgetPreviewPane);
+            //            eventBus.fireEvent(new OpenViewEvent(gadgetPreviewPane));
             previewOpened = true;
          }
 
@@ -248,18 +241,6 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
       applicationConfiguration = event.getConfiguration();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if(GadgetPreviewPane.ID.equals(event.getViewId()))
-      {
-         previewOpened = false;
-      }
    }
 
 }

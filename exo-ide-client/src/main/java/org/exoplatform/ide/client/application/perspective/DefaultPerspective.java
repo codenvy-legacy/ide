@@ -18,15 +18,8 @@
  */
 package org.exoplatform.ide.client.application.perspective;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.events.MouseDownEvent;
-import com.smartgwt.client.widgets.events.MouseDownHandler;
-import com.smartgwt.client.widgets.events.MouseUpEvent;
-import com.smartgwt.client.widgets.events.MouseUpHandler;
-import com.smartgwt.client.widgets.events.ResizedEvent;
-import com.smartgwt.client.widgets.events.ResizedHandler;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
@@ -57,6 +50,10 @@ import org.exoplatform.ide.client.event.perspective.RestorePerspectiveHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
+import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedHandler;
@@ -66,6 +63,17 @@ import org.exoplatform.ide.client.navigation.NavigationForm;
 import org.exoplatform.ide.client.operation.OperationForm;
 import org.exoplatform.ide.client.outline.CodeHelperForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
+import org.exoplatform.ide.client.panel.Panel;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.widgets.events.MouseDownEvent;
+import com.smartgwt.client.widgets.events.MouseDownHandler;
+import com.smartgwt.client.widgets.events.MouseUpEvent;
+import com.smartgwt.client.widgets.events.MouseUpHandler;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * Created by The eXo Platform SAS .
@@ -74,10 +82,10 @@ import org.exoplatform.ide.client.outline.OutlineTreeGrid;
  * @version $
  */
 
-public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHandler, RestoreEditorPanelHandler,
-   MaximizeOperationPanelHandler, RestoreOperationPanelHandler, EditorActiveFileChangedHandler,
-   RestorePerspectiveHandler, MaximizeCodeHelperPanelHandler, RestoreCodeHelperPanelHandler,
-   SearchResultReceivedHandler
+public class DefaultPerspective extends VLayout implements Perspective, MaximizeEditorPanelHandler,
+   RestoreEditorPanelHandler, MaximizeOperationPanelHandler, RestoreOperationPanelHandler,
+   EditorActiveFileChangedHandler, RestorePerspectiveHandler, MaximizeCodeHelperPanelHandler,
+   RestoreCodeHelperPanelHandler, SearchResultReceivedHandler, ViewClosedHandler
 {
 
    private static final int MARGIN = 3;
@@ -157,6 +165,10 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
    //private ApplicationSettings applicationSettings;
 
+   private Map<String, Panel> panelSettings = new HashMap<String, Panel>();
+
+   private Map<String, Panel> openedView = new HashMap<String, Panel>();
+
    public DefaultPerspective(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
@@ -173,6 +185,26 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       eventBus.addHandler(MaximizeCodeHelperPanelEvent.TYPE, this);
       eventBus.addHandler(RestoreCodeHelperPanelEvent.TYPE, this);
       eventBus.addHandler(SearchResultReceivedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+
+      buildPanelSettrins();
+
+   }
+
+   /**
+    * 
+    */
+   private void buildPanelSettrins()
+   {
+      panelSettings.put(ViewType.OUTLINE, codeHelperForm);
+      panelSettings.put(ViewType.DOCUMENTATION, codeHelperForm);
+      panelSettings.put(ViewType.VERSIONS, codeHelperForm);
+
+      panelSettings.put(ViewType.NAVIGATION, navigationForm);
+
+      panelSettings.put(ViewType.OUTPUT, operationForm);
+      panelSettings.put(ViewType.PREVIEW, operationForm);
+      panelSettings.put(ViewType.PROPERTIES, operationForm);
    }
 
    private void buildPerspective()
@@ -386,7 +418,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       statusBar.hide();
 
-//      eventBus.fireEvent(new ClearFocusEvent());
+      //      eventBus.fireEvent(new ClearFocusEvent());
       ClearFocusForm.getInstance().clearFocus();
 
       operationPanelMaximized = true;
@@ -516,7 +548,7 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
 
       statusBar.hide();
 
-//      eventBus.fireEvent(new ClearFocusEvent());
+      //      eventBus.fireEvent(new ClearFocusEvent());
       ClearFocusForm.getInstance().clearFocus();
 
       codeHelperPanelMaximized = true;
@@ -554,5 +586,43 @@ public class DefaultPerspective extends VLayout implements MaximizeEditorPanelHa
       {
          restorePerspective();
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.application.perspective.Perspective#openView(org.exoplatform.ide.client.framework.ui.View)
+    */
+   @Override
+   public void openView(View view)
+   {
+      Panel panel = panelSettings.get(view.getType());
+      if (panel != null)
+      {
+         panel.openView(view, view.getTitle(), view.getImage(), view.isCanClose());
+         openedView.put(view.getViewId(), panel);
+      }
+      else
+      {
+         operationForm.openView(view, view.getTitle(), view.getImage(), true);
+         openedView.put(view.getViewId(), operationForm);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.application.perspective.Perspective#closeView(java.lang.String)
+    */
+   @Override
+   public void closeView(String viewId)
+   {
+      if (openedView.containsKey(viewId))
+         openedView.get(viewId).closeView(viewId);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      openedView.remove(event.getViewId());
    }
 }

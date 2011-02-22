@@ -30,14 +30,13 @@ import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationE
 import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
-import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
-import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
@@ -131,7 +130,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
       {
          display.removeHandlers();
          isClosedByUser = false;
-         eventBus.fireEvent(new CloseViewEvent(DocumentationForm.ID));
+         IDE.getInstance().closeView(DocumentationForm.ID);
       }
 
    }
@@ -145,7 +144,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
       display = view;
       view.onOpenTab();
       display.setDocumentationURL(docs.get(activeFile.getContentType()));
-      eventBus.fireEvent(new OpenViewEvent(view));
+      IDE.getInstance().openView(view);
    }
 
    /**
@@ -163,7 +162,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
       else
       {
          display.removeHandlers();
-         eventBus.fireEvent(new CloseViewEvent(DocumentationForm.ID));
+         IDE.getInstance().closeView(DocumentationForm.ID);
       }
    }
 

@@ -38,4 +38,6 @@ public interface ViewType
    public static final String VERSIONS = "versions";
    
    public static final String DOCUMENTATION = "documentation";
+   
+   String NAVIGATION  = "navigation";
 }

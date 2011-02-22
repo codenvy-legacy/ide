@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
@@ -29,8 +30,6 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.framework.ui.event.CloseViewEvent;
-import org.exoplatform.ide.client.framework.ui.event.OpenViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -92,11 +91,11 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       if (event.isShow())
       {
          View view = new OutlineForm(eventBus, activeTextEditor, activeFile);
-         eventBus.fireEvent(new OpenViewEvent(view));
+         IDE.getInstance().openView(view);
       }
       else
       {
-         eventBus.fireEvent(new CloseViewEvent(OutlineForm.ID));
+         IDE.getInstance().closeView(OutlineForm.ID);
       }
    }
 
@@ -129,7 +128,7 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       if (openOutline && !wasOutlineOpened)
       {
          view = new OutlineForm(eventBus, activeTextEditor, activeFile);
-         eventBus.fireEvent(new OpenViewEvent(view));
+         IDE.getInstance().openView(view);
          if (isNeedRunTimer)
          {
             //run timer on load IDE
@@ -143,7 +142,7 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       if (!openOutline && wasOutlineOpened)
       {
          isClosedByUser = false;
-         eventBus.fireEvent(new CloseViewEvent(OutlineForm.ID));
+         IDE.getInstance().closeView(OutlineForm.ID);
       }
 
       //      if (activeFile == null || activeFile.getContentType() == null)

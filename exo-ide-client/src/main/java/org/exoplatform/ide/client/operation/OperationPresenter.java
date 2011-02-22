@@ -18,13 +18,9 @@
  */
 package org.exoplatform.ide.client.operation;
 
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -47,7 +43,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class OperationPresenter implements ShowItemPropertiesHandler, EditorActiveFileChangedHandler, OutputHandler,
-   PreviewFileHandler, ConfigurationReceivedSuccessfullyHandler
+   PreviewFileHandler
 {
 
    public interface Display
@@ -64,9 +60,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       void closePropertiesTab();
 
       void changeActiveFile(File file);
-      
-      List<String> getViewTypes();
-
    }
 
    private Display display;
@@ -77,13 +70,10 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
 
    private File activeFile;
 
-   private IDEConfiguration applicationConfiguration;
-
    public OperationPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
-      handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
 
    public void destroy()
@@ -147,11 +137,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
 
          display.showPreview(activeFile.getHref());
       
-   }
-
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      applicationConfiguration = event.getConfiguration();
    }
 
 }

@@ -47,14 +47,16 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 {
 
    private ControlsRegistration controlsRegistration;
-   
+
+   private ApplicationContext context;
+
    public IDE()
    {
 
       new SmartGWTDialogs();
 
       //HandlerManager eventBus = new HandlerManager(null);
-      ApplicationContext context = new ApplicationContext();
+      context = new ApplicationContext();
 
       new ExceptionThrownEventHandler(EVENT_BUS);
 
@@ -112,7 +114,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    @Override
    public void openView(View view)
    {
-
+      context.getCurrentPerspective().openView(view);
    }
 
    /**
@@ -121,7 +123,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    @Override
    public void closeView(String viewId)
    {
-
+      context.getCurrentPerspective().closeView(viewId);
    }
 
    /**
