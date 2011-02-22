@@ -88,6 +88,7 @@ CreateProjectTemplateHandler
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
