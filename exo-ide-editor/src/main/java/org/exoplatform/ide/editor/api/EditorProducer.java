@@ -41,6 +41,7 @@ public abstract class EditorProducer
    {
       this.description = description;
       this.mimeType = mimeType;
+      this.isDefault = isDefault;
    }
 
    public String getMimeType()

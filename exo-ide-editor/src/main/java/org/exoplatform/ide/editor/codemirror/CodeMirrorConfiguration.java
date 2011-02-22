@@ -23,10 +23,15 @@ import java.util.Set;
 
 import org.exoplatform.ide.editor.api.DefaultParser;
 import org.exoplatform.ide.editor.api.Parser;
+import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper;
 import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.DefaultAutocompleteHelper;
 import org.exoplatform.ide.editor.api.codeassitant.codevalidator.CodeValidator;
 import org.exoplatform.ide.editor.api.codeassitant.codevalidator.DefaultCodeValidator;
+import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
+import org.exoplatform.ide.editor.codemirror.codeassistant.DefaultCodeAssistant;
+import org.exoplatform.ide.editor.codemirror.codeassistant.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 
 import com.google.gwt.core.client.GWT;
 
@@ -61,6 +66,8 @@ public class CodeMirrorConfiguration
 
    private AutoCompleteHelper autocompleteHelper;
 
+   private CodeAssistant codeAssistant;
+
    private Set<String> compositeMimeTypes;
 
    public CodeMirrorConfiguration()
@@ -70,27 +77,54 @@ public class CodeMirrorConfiguration
 
    public CodeMirrorConfiguration(String codeParsers, String codeStyles)
    {
-      this(codeParsers, codeStyles, false, false, new DefaultParser(), new DefaultAutocompleteHelper(), false,
-         new DefaultCodeValidator(), new HashSet<String>());
+      this(codeParsers, codeStyles, false, false);
+   }
+
+   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
+      boolean canBeAutocompleted)
+   {
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, new DefaultParser(),
+         new DefaultAutocompleteHelper());
    }
 
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
       boolean canBeAutocompleted, Parser parser)
    {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, new DefaultAutocompleteHelper(), false,
-         new DefaultCodeValidator(), new HashSet<String>());
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, new DefaultAutocompleteHelper());
    }
 
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
       boolean canBeAutocompleted, Parser parser, AutoCompleteHelper autocompleteHelper)
    {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, false,
-         new DefaultCodeValidator(), new HashSet<String>());
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, false);
+   }
+
+   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
+      boolean canBeAutocompleted, Parser parser, AutoCompleteHelper autocompleteHelper, boolean canBeValidated)
+   {
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
+         new DefaultCodeValidator());
    }
 
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
       boolean canBeAutocompleted, Parser parser, AutoCompleteHelper autocompleteHelper, boolean canBeValidated,
-      CodeValidator codeValidator, Set<String> compositeMimeType)
+      CodeValidator codeValidator)
+   {
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
+         codeValidator, new DefaultCodeAssistant());
+   }
+
+   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
+      boolean canBeAutocompleted, Parser parser, AutoCompleteHelper autocompleteHelper, boolean canBeValidated,
+      CodeValidator codeValidator, CodeAssistant codeAssistant)
+   {
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
+         codeValidator, codeAssistant, new HashSet<String>());
+   }
+
+   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
+      boolean canBeAutocompleted, Parser parser, AutoCompleteHelper autocompleteHelper, boolean canBeValidated,
+      CodeValidator codeValidator, CodeAssistant codeAssistant, Set<String> compositeMimeType)
    {
       this.codeParsers = codeParsers;
       this.codeStyles = codeStyles;
@@ -101,14 +135,41 @@ public class CodeMirrorConfiguration
       this.canBeValidated = canBeValidated;
       this.codeValidator = codeValidator;
       this.compositeMimeTypes = compositeMimeType;
+      this.codeAssistant = codeAssistant;
    }
 
+   /**
+    * @param string
+    * @param string2
+    * @param b
+    * @param c
+    * @param cssParser
+    * @param cssCodeAssistant
+    */
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser, AutoCompleteHelper autocompleteHelper, Set<String> comTypes)
+      boolean canBeAutocompleted, Parser parser, CodeAssistant codeAssistant)
    {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, false,
-         new DefaultCodeValidator(), comTypes);
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, new DefaultAutocompleteHelper(),
+         canBeAutocompleted, new DefaultCodeValidator(), codeAssistant);
    }
+
+   /**
+    * @param string
+    * @param string2
+    * @param b
+    * @param c
+    * @param htmlParser
+    * @param htmlAutocompleteHelper
+    * @param htmlCodeAssistant
+    * @param comTypes
+    */
+   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
+      boolean canBeAutocompleted, Parser parser, AutoCompleteHelper helper, CodeAssistant codeAssistant, Set<String> types)
+   {
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, helper,
+         canBeAutocompleted, new DefaultCodeValidator(), codeAssistant, types);
+   }
+
 
    public String getCodeParsers()
    {
@@ -177,6 +238,14 @@ public class CodeMirrorConfiguration
    public String getJsDirectory()
    {
       return jsDirectory;
+   }
+
+   /**
+    * @return the codeAssistant
+    */
+   public CodeAssistant getCodeAssistant()
+   {
+      return codeAssistant;
    }
 
 }
