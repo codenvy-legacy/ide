@@ -67,4 +67,11 @@ public interface TokenProperties
     * Also, can be shown in javadoc window.
     */
    public static String FULL_TEXT =  "FULL-TEXT";
+   
+   
+   /**
+    * Used for sub token list property.
+    * Contains {@link ArrayProperty} 
+    */
+   public static String CHILD_TOKEN_LIST =  "CHILD-TOKEN-LIST";
 }

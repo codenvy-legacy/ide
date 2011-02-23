@@ -995,7 +995,7 @@ public class CodeMirror extends Editor
    @Override
    public native void replaceTextAtCurrentLine(String line, int cursorPosition) /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-		if (editor != null && newText) {
+		if (editor != null && line) {
 			var currentLine = editor.cursorPosition(true).line;
 			editor.setLineContent(currentLine, line);
 

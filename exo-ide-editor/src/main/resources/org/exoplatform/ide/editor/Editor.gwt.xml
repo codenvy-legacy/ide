@@ -28,6 +28,7 @@
       <inherits name='com.google.gwt.json.JSON' />
    
       <inherits name='org.exoplatform.gwtframework.commons.Commons' />
+      <inherits name='org.exoplatform.gwtframework.ui.UI' />
       
        
       <source path="api" />
@@ -35,5 +36,8 @@
       
       <stylesheet src='codemirror/css/editor.css' />
       <script src='codemirror/js/codemirror.js' />
+      
+      <!-- Tokens  -->
+      <script src="token/css_tokens.js" />
       
 </module>

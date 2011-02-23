@@ -23,16 +23,39 @@ import java.util.List;
 import org.exoplatform.ide.editor.api.Editor;
 
 /**
+ * Callback interface for codeaasistant feature.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeAssistant Feb 22, 2011 12:43:13 PM evgen $
  *
  */
 public interface CodeAssistant
 {
-  
-   void errorMarckClicked(Editor editor, List<CodeError> codeErrorList, int markOffsetX, int markOffsetY, String fileMimeType);
-  
-  void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
-     String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType, Token currentToken);
-  
+
+   /**
+    * 
+    * @param editor
+    * @param codeErrorList
+    * @param markOffsetX
+    * @param markOffsetY
+    * @param fileMimeType
+    */
+   void errorMarckClicked(Editor editor, List<CodeError> codeErrorList, int markOffsetX, int markOffsetY,
+      String fileMimeType);
+
+   /**
+    * If editor support autocompletion, he calls this method.  
+    * @param editor
+    * @param mimeType
+    * @param cursorOffsetX
+    * @param cursorOffsetY
+    * @param lineContent
+    * @param cursorPositionX
+    * @param cursorPositionY
+    * @param tokenList
+    * @param lineMimeType
+    * @param currentToken
+    */
+   void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY, String lineContent,
+      int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType, Token currentToken);
+
 }

@@ -26,12 +26,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.codemirror.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.codeassistant.CssCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.codeassistant.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.codemirror.codeassistant.css.CssCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
@@ -104,7 +106,7 @@ public class EditorFactory
             false, // can be outlined
             true, // can be autocompleted
             new CssParser() // exoplatform code parser 
-            , new CssCodeAssistant())));
+            , new CssCodeAssistant(IDE.EVENT_BUS))));
 
       Set<String> comTypes = new HashSet<String>();
       comTypes.add(MimeType.TEXT_HTML);
@@ -119,6 +121,8 @@ public class EditorFactory
             new HtmlParser(), // exoplatform code parser
             new HtmlAutocompleteHelper(), // autocomplete helper
             new HtmlCodeAssistant(), comTypes)));
+      //To initialize client bundle 
+      CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
    }
 
    public static void addEditor(EditorProducer producer)
