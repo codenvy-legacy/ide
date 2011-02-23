@@ -28,12 +28,12 @@ import java.util.List;
 public class ArrayProperty extends TokenProperty
 {
 
-   private List<Token> value;
+   private List<? extends Token> value;
 
    /**
     * @param value
     */
-   public ArrayProperty(List<Token> value)
+   public ArrayProperty(List<? extends Token> value)
    {
       super();
       this.value = value;
@@ -51,7 +51,7 @@ public class ArrayProperty extends TokenProperty
    /**
     * @return value of this property
     */
-   public List<Token> arrayValue()
+   public List<? extends Token> arrayValue()
    {
       return value;
    }

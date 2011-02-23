@@ -173,7 +173,7 @@ public abstract class Editor extends AbsolutePanel
     * this method return {@link List} of {@link Token} parsed from current file
     * @return {@link List} of {@link Token}
     */
-   public abstract List<Token> getTokenList();
+   public abstract List<? extends Token> getTokenList();
 
    /**
     * Replaces current line content and set, in this line, cursor position

@@ -74,4 +74,28 @@ public interface TokenProperties
     * Contains {@link ArrayProperty} 
     */
    public static String CHILD_TOKEN_LIST =  "CHILD-TOKEN-LIST";
+   
+   
+   public static String LINE_NUMBER = "lineNumber";
+   
+   public static String MIME_TYPE = "mimeType";
+   
+   public static String SHORT_DESCRIPTION = "shortDescription";
+   
+   public static String FULL_DESCRIPTION = "fullDescription";
+   
+   public static String SUB_TOKEN_LIST = "subTokenList";
+   
+   public static String ELEMENT_TYPE = "elementType";
+   
+   public static String LAST_LINE_NUMBER = "lastLineNumber";
+   
+   public static String ANNOTATIONS = "annotations";
+   
+   public static String PARENT_TOKEN = "parentToken";
+
+   public static String PARAMETERS = "parameters";
+   
+   public static String INITIALIZATION_STATEMENT = "initializationStatement"; 
+  
 }

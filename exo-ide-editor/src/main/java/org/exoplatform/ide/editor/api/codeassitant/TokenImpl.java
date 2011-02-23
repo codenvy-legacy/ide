@@ -38,6 +38,11 @@ public class TokenImpl implements Token
    private String name;
 
    private TokenType type;
+   
+   public TokenImpl()
+   {
+   }
+  
 
    /**
     * @param name
@@ -52,25 +57,33 @@ public class TokenImpl implements Token
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.Token#getName()
     */
-   @Override
    public String getName()
    {
       return name;
    }
 
+   public void setName(String name)
+   {
+      this.name = name;      
+   }
+   
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.Token#getType()
     */
-   @Override
    public TokenType getType()
    {
       return type;
    }
 
+   public void setType(TokenType type)
+   {
+      this.type = type;
+   }
+
+   
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.Token#getPropertiesKeys()
     */
-   @Override
    public Set<String> getPropertiesNames()
    {
       return properties.keySet();
@@ -79,7 +92,7 @@ public class TokenImpl implements Token
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.Token#getProperties()
     */
-   @Override
+
    public Collection<TokenProperty> getProperties()
    {
       return properties.values();
@@ -88,7 +101,7 @@ public class TokenImpl implements Token
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.Token#getProperty(java.lang.String)
     */
-   @Override
+
    public TokenProperty getProperty(String key)
    {
       return properties.get(key);
@@ -97,7 +110,7 @@ public class TokenImpl implements Token
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.Token#setProperty(java.lang.String, org.exoplatform.ide.editor.api.codeassitant.TokenProperty)
     */
-   @Override
+
    public void setProperty(String key, TokenProperty property)
    {
       properties.put(key, property);
@@ -106,7 +119,7 @@ public class TokenImpl implements Token
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.Token#hasProperty(java.lang.String)
     */
-   @Override
+
    public boolean hasProperty(String name)
    {
       return properties.containsKey(name);

@@ -37,7 +37,7 @@ public class DefaultCodeValidator extends CodeValidator
     * @see org.exoplatform.ide.editor.api.codeassitant.codevalidator.CodeValidator#validateCode(java.util.List, org.exoplatform.ide.editor.api.Editor)
     */
    @Override
-   public void validateCode(List<Token> tokenList, Editor editor)
+   public void validateCode(List<? extends Token> tokenList, Editor editor)
    {
    }
 

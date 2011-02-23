@@ -38,6 +38,8 @@ public enum TokenType {
    /**
     * HTML or XML attribute; 
     */
-   ATTRIBUTE;
-   ;
+   ATTRIBUTE,
+
+   /** Property type for JavaScript */
+   BLOCK;
 }

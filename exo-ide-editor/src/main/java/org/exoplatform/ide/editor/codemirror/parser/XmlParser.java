@@ -20,8 +20,7 @@ package org.exoplatform.ide.editor.codemirror.parser;
 
 import java.util.List;
 
-import org.exoplatform.ide.editor.api.Parser;
-import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -30,14 +29,14 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id: XmlParser Feb 11, 2011 2:44:02 PM evgen $
  *
  */
-public class XmlParser extends Parser
+public class XmlParser extends CodeMirrorParser
 {
 
    /**
     * @see org.exoplatform.ide.editor.api.Parser#getTokenList(com.google.gwt.core.client.JavaScriptObject)
     */
    @Override
-   public List<Token> getTokenList(JavaScriptObject editor)
+   public List<CodeMirrorTokenImpl> getTokenList(JavaScriptObject editor)
    {
       // TODO Auto-generated method stub
       return null;

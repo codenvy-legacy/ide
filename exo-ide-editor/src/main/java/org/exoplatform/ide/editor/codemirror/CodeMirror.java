@@ -25,13 +25,13 @@ import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
-import org.exoplatform.ide.editor.api.Parser;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
+import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -68,7 +68,7 @@ public class CodeMirror extends Editor
 
    private boolean showLineNumbers = true;
 
-   private List<Token> tokenList;
+   private List<CodeMirrorTokenImpl> tokenList;
 
    private int lineHeight = 16; // size of line in the CodeMirror in px
 
@@ -495,7 +495,7 @@ public class CodeMirror extends Editor
       String genericMimeType = (String)params.get(CodeMirrorParams.MIME_TYPE);
       if (configuration.canHaveSeveralMimeTypes(genericMimeType))
       {
-         String mimeType = Parser.getLineMimeType(getCursorRow(), getTokenList());
+         String mimeType = CodeMirrorParser.getLineMimeType(getCursorRow(), (List<CodeMirrorTokenImpl>) getTokenList());
 
          if (mimeType != null)
          {
@@ -519,7 +519,7 @@ public class CodeMirror extends Editor
       {
          validateCode(); // to update token's FQNs        
          return configuration.getAutocompleteHelper().getTokenBeforeCursor(node, lineNumber, cursorPosition,
-            getTokenList());
+            (List<Token>) getTokenList());
       }
 
       return null;
@@ -570,7 +570,7 @@ public class CodeMirror extends Editor
          if (needUpdateTokenList)
          {
             needUpdateTokenList = false;
-            tokenList = configuration.getParser().getTokenList(editorObject);
+            tokenList = (List<CodeMirrorTokenImpl>) configuration.getParser().getTokenList(editorObject);
          }
 
          configuration.getCodeValidator().validateCode(tokenList, this);
@@ -978,12 +978,12 @@ public class CodeMirror extends Editor
     * @see org.exoplatform.ide.editor.api.Editor#getTokenList()
     */
    @Override
-   public List<Token> getTokenList()
+   public List<? extends Token> getTokenList()
    {
       if (needUpdateTokenList)
       {
          needUpdateTokenList = false;
-         tokenList = configuration.getParser().getTokenList(editorObject);
+         tokenList = (List<CodeMirrorTokenImpl>) configuration.getParser().getTokenList(editorObject);
       }
 
       return tokenList;

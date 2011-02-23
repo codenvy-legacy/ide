@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,29 +18,26 @@
  */
 package org.exoplatform.ide.editor.codemirror.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ide.editor.api.Parser;
-import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
+
+
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: CssParser Feb 11, 2011 2:24:21 PM evgen $
+ * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
+ * @version $Id: $
  *
  */
-public class CssParser extends Parser
+public class CssParser extends CodeMirrorParser
 {
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Parser#getTokenList(com.google.gwt.core.client.JavaScriptObject)
-    */
    @Override
-   public List<Token> getTokenList(JavaScriptObject editor)
+   public List<CodeMirrorTokenImpl> getTokenList(JavaScriptObject editor)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return new ArrayList<CodeMirrorTokenImpl>();
    }
-
+   
 }

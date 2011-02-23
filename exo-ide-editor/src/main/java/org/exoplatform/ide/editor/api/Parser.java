@@ -30,62 +30,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  *
  */
 public abstract class Parser
-{
-   private static String possibleMimeType;
-
-   private static int nearestTokenLineNumber;
+{   
+   public abstract List<? extends Token> getTokenList(JavaScriptObject editor);
    
-   public abstract List<Token> getTokenList(JavaScriptObject editor);
-   
-   /**
-    * Recognize mimeType of line with lineNumber.  
-    * @param targetLineNumber
-    * @param tokenList
-    * @return Returns mimeType of closes token.START_DELIMITER with token.lineNumber <= lineNumber. If there is no such START_DELIMITER in the tokenList, then returns mimeType of last token.FINISH_DELIMITER with token.lineNumber > lineNumber, or MimeType of firstToken, or null if TokenList is empty.
-    */
-   public static String getLineMimeType(int targetLineNumber, List<Token> tokenList)
-   {
-//      if (tokenList == null || tokenList.size() == 0)
-//         return null;
-//
-//      possibleMimeType = tokenList.get(0).getMimeType();
-//      nearestTokenLineNumber = tokenList.get(0).getLineNumber();
-//
-//      for (Token token : tokenList)
-//      {
-//         if (token.getLineNumber() > targetLineNumber)
-//            break;
-//
-//         searchLineMimeType(targetLineNumber, token);
-//      }
-//
-//      return possibleMimeType;
-      //TODO
-      return null;
-   }
-
-//   private static void searchLineMimeType(int targetLineNumber, Token currentToken)
-//   {
-//      // search appropriate token among the sub token
-//      List<Token> subTokenList = currentToken.getSubTokenList();
-//
-//      if (subTokenList != null && subTokenList.size() != 0)
-//      {
-//         for (Token token : subTokenList)
-//         {
-//            if (token.getLineNumber() > targetLineNumber)
-//               break;
-//
-//            searchLineMimeType(targetLineNumber, token);
-//         }
-//      }
-//
-//      int currentTokenLineNumber = currentToken.getLineNumber();
-//      if ((currentTokenLineNumber <= targetLineNumber) && (currentTokenLineNumber >= nearestTokenLineNumber) // taking in mind the last token among them in the line
-//      )
-//      {
-//         nearestTokenLineNumber = currentTokenLineNumber;
-//         possibleMimeType = currentToken.getMimeType();
-//      }
-//   }
 }

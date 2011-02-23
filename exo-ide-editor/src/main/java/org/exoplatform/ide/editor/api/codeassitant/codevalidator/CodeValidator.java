@@ -32,7 +32,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 public abstract class CodeValidator
 {
    
-   public abstract void validateCode(List<Token> tokenList, Editor editor);
+   public abstract void validateCode(List<? extends Token> tokenList, Editor editor);
    
    public abstract boolean isExistedCodeError(int lineNumber);
    
