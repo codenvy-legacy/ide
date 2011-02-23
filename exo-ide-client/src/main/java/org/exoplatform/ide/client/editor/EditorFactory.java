@@ -32,8 +32,8 @@ import org.exoplatform.ide.editor.codemirror.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.codeassistant.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.codeassistant.css.CssCodeAssistant;
+import org.exoplatform.ide.editor.codemirror.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
@@ -120,7 +120,7 @@ public class EditorFactory
             true, // can be autocompleted
             new HtmlParser(), // exoplatform code parser
             new HtmlAutocompleteHelper(), // autocomplete helper
-            new HtmlCodeAssistant(), comTypes)));
+            new HtmlCodeAssistant(IDE.EVENT_BUS), comTypes)));
       //To initialize client bundle 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
    }

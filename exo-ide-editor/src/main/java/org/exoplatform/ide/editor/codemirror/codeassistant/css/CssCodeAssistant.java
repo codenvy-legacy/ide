@@ -24,9 +24,6 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.CodeError;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.codeassitant.ui.AutocompletionForm;
-import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
-import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.codemirror.codeassistant.util.JSONTokenParser;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -38,28 +35,17 @@ import com.google.gwt.json.client.JSONArray;
  * @version $Id: CssCodeAssistant Feb 22, 2011 2:15:17 PM evgen $
  *
  */
-public class CssCodeAssistant implements CodeAssistant, TokenSelectedHandler
+public class CssCodeAssistant extends CodeAssistant
 {
 
    private static List<Token> cssProperty;
-
-   private HandlerManager evenBus;
-
-   private Editor editor;
-
-   private String beforeToken;
-
-   private String tokenToComplete;
-
-   private String afterToken;
 
    /**
     * @param evenBus
     */
    public CssCodeAssistant(HandlerManager evenBus)
    {
-      super();
-      this.evenBus = evenBus;
+      super(evenBus);
    }
 
    private native JavaScriptObject getTokens() /*-{
@@ -69,7 +55,6 @@ public class CssCodeAssistant implements CodeAssistant, TokenSelectedHandler
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
     */
-   @Override
    public void errorMarckClicked(Editor editor, List<CodeError> codeErrorList, int markOffsetX, int markOffsetY,
       String fileMimeType)
    {
@@ -78,7 +63,6 @@ public class CssCodeAssistant implements CodeAssistant, TokenSelectedHandler
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
-   @Override
    public void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
       String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
       Token currentToken)
@@ -109,43 +93,12 @@ public class CssCodeAssistant implements CodeAssistant, TokenSelectedHandler
          beforeToken = subToken.substring(0, subToken.lastIndexOf(token));
          tokenToComplete = token;
 
-         int x = cursorOffsetX - tokenToComplete.length() * 8 + 8;
-         int y = cursorOffsetY + 4;
-
-         new AutocompletionForm(evenBus, x, y, tokenToComplete, cssProperty, new CssTokenWidgetFactory(), this);
+         openForm(cursorOffsetX, cursorOffsetY, cssProperty, new CssTokenWidgetFactory(), this);
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler#onStringSelected(java.lang.String)
-    */
-   @Override
-   public void onStringSelected(String value)
-   {
-      editor.replaceTextAtCurrentLine(beforeToken + value + afterToken, beforeToken.length() + value.length());
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler#onTokenSelected(org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget)
-    */
-   @Override
-   public void onTokenSelected(TokenWidget value)
-   {
-      editor.replaceTextAtCurrentLine(beforeToken + value.getTokenValue() + afterToken, beforeToken.length()
-         + value.getTokenValue().length());
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler#onCancelAutoComplete()
-    */
-   @Override
-   public void onCancelAutoComplete()
-   {
-      editor.setFocus();
    }
 
 }

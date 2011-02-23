@@ -39,5 +39,6 @@
       
       <!-- Tokens  -->
       <script src="token/css_tokens.js" />
+      <script src="token/html_tokens.js" />
       
 </module>

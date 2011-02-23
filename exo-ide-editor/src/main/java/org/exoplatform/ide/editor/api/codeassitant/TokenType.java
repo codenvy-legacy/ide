@@ -28,5 +28,16 @@ package org.exoplatform.ide.editor.api.codeassitant;
 public enum TokenType {
    CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION, 
    /** Property type for JSON */
-   PROPERTY;
+   PROPERTY,
+   
+   /**
+    * HTML or XML tag.
+    */
+   TAG,
+   
+   /**
+    * HTML or XML attribute; 
+    */
+   ATTRIBUTE;
+   ;
 }

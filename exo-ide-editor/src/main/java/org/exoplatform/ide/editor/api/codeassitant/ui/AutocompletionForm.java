@@ -295,12 +295,12 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
       }
       else
       {
-         selectWidget(widgets.size()-1);
+         selectWidget(widgets.size() - 1);
       }
    }
 
    private native void scroll(Element scroll, int pos)/*-{
-      scroll.scrollTop =  scroll.scrollTop + pos;
+		scroll.scrollTop = scroll.scrollTop + pos;
    }-*/;
 
    private void selectWidget(int i)
@@ -308,11 +308,11 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
 
       Element scroll = scrollPanel.getElement();
       Element item = widgets.get(i).getElement();
-      if(i == 0)
+      if (i == 0)
       {
          scroll(scroll, -scroll.getScrollTop());
-      }else
-      if (item.getAbsoluteTop() < scroll.getAbsoluteTop())
+      }
+      else if (item.getAbsoluteTop() < scroll.getAbsoluteTop())
       {
          scroll(scroll, -item.getOffsetHeight());
       }
@@ -375,32 +375,24 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
          }
          if (selectedWidget != null)
          {
-//            if (selectedWidget instanceof NetvibesTokenWidget)
-//            {
-//               if (selectedWidget.getTokenDecription() == null)
-//               {
-//                  return;
-//               }
-//               descriptionPanel = new SimplePanel();
-//               descriptionPanel.getElement().setInnerHTML(selectedWidget.getTokenDecription());
-//            }
-//            else
-//            {
-//               descriptionPanel = new Frame(selectedWidget.getTokenDecription());
-//            }
-//
-//            int width = 300;
-//            descriptionPanel.setWidth(width + "px");
-//            descriptionPanel.setHeight("" + (panel.getOffsetHeight() - 2));
-//
-//            descriptionPanel.setStyleName(Style.AUTO_DESCRIPTION_PANEL);
-//            int clientWidth = Window.getClientWidth();
-//
-//            if (clientWidth < panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3 + width)
-//               lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() - width - 4, panel.getAbsoluteTop());
-//            else
-//               lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3,
-//                  panel.getAbsoluteTop());
+            descriptionPanel = selectedWidget.getTokenDecription();
+            if (descriptionPanel == null)
+            {
+               return;
+            }
+
+            int width = 300;
+            descriptionPanel.setWidth(width + "px");
+            descriptionPanel.setHeight("" + (panel.getOffsetHeight() - 2));
+
+            descriptionPanel.setStyleName(Style.AUTO_DESCRIPTION_PANEL);
+            int clientWidth = Window.getClientWidth();
+
+            if (clientWidth < panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3 + width)
+               lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() - width - 4, panel.getAbsoluteTop());
+            else
+               lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3,
+                  panel.getAbsoluteTop());
          }
       }
    };

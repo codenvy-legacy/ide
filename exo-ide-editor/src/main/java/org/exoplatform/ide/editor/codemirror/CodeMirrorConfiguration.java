@@ -28,10 +28,7 @@ import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoComple
 import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.DefaultAutocompleteHelper;
 import org.exoplatform.ide.editor.api.codeassitant.codevalidator.CodeValidator;
 import org.exoplatform.ide.editor.api.codeassitant.codevalidator.DefaultCodeValidator;
-import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.codeassistant.DefaultCodeAssistant;
-import org.exoplatform.ide.editor.codemirror.codeassistant.HtmlCodeAssistant;
-import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 
 import com.google.gwt.core.client.GWT;
 
@@ -111,7 +108,7 @@ public class CodeMirrorConfiguration
       CodeValidator codeValidator)
    {
       this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
-         codeValidator, new DefaultCodeAssistant());
+         codeValidator, new DefaultCodeAssistant(null));
    }
 
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,

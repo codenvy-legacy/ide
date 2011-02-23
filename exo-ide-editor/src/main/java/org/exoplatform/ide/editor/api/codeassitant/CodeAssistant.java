@@ -21,6 +21,12 @@ package org.exoplatform.ide.editor.api.codeassitant;
 import java.util.List;
 
 import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.codeassitant.ui.AutocompletionForm;
+import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
+import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
+import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Callback interface for codeaasistant feature.
@@ -28,8 +34,27 @@ import org.exoplatform.ide.editor.api.Editor;
  * @version $Id: CodeAssistant Feb 22, 2011 12:43:13 PM evgen $
  *
  */
-public interface CodeAssistant
+public abstract class CodeAssistant implements TokenSelectedHandler
 {
+
+   protected HandlerManager eventBus;
+   
+   protected String beforeToken;
+
+   protected String tokenToComplete;
+
+   protected String afterToken;
+   
+   protected Editor editor;
+
+   /**
+    * @param eventBys
+    */
+   public CodeAssistant(HandlerManager eventBus)
+   {
+      super();
+      this.eventBus = eventBus;
+   }
 
    /**
     * 
@@ -39,8 +64,8 @@ public interface CodeAssistant
     * @param markOffsetY
     * @param fileMimeType
     */
-   void errorMarckClicked(Editor editor, List<CodeError> codeErrorList, int markOffsetX, int markOffsetY,
-      String fileMimeType);
+   public abstract void errorMarckClicked(Editor editor, List<CodeError> codeErrorList, int markOffsetX,
+      int markOffsetY, String fileMimeType);
 
    /**
     * If editor support autocompletion, he calls this method.  
@@ -55,7 +80,69 @@ public interface CodeAssistant
     * @param lineMimeType
     * @param currentToken
     */
-   void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY, String lineContent,
-      int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType, Token currentToken);
+   public abstract void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
+      String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
+      Token currentToken);
+   
+   protected void openForm(int x, int y, List<Token> tokens, TokenWidgetFactory factory, TokenSelectedHandler handler)
+   {
+       x = x - tokenToComplete.length() * 8 + 8;
+       y = y+ 4;
+      new AutocompletionForm(eventBus, x, y, tokenToComplete, tokens, factory, handler);
+   }
+   
+   /**
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler#onStringSelected(java.lang.String)
+    */
+   @Override
+   public void onStringSelected(String value)
+   {
+      editor.replaceTextAtCurrentLine(beforeToken + value + afterToken, beforeToken.length() + value.length());
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler#onTokenSelected(org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget)
+    */
+   @Override
+   public void onTokenSelected(TokenWidget value)
+   {
+      String tokenValue = value.getTokenValue() ;
+      String tokenToPaste = "";
+      int newCursorPos = 1;
+      switch (value.getToken().getType())
+      {
+         case ATTRIBUTE :
+            if (!beforeToken.endsWith(" "))
+               beforeToken += " ";
+            tokenToPaste = beforeToken +tokenValue + afterToken;
+            newCursorPos = (beforeToken + tokenValue).lastIndexOf("\"") ;
+            break;
+            
+         case TAG :
+            if (beforeToken.endsWith("<") || beforeToken.endsWith(" "))
+               beforeToken = beforeToken.substring(0, beforeToken.length() - 1);
+            tokenToPaste = beforeToken + tokenValue+ afterToken;
+            if (tokenValue.contains("/"))
+               newCursorPos = (beforeToken + tokenValue).indexOf("/", beforeToken.length()) - 1 ;
+            else
+               newCursorPos = (beforeToken + tokenValue).length() + 1;
+            break;
+            
+          default :
+              tokenToPaste = beforeToken + tokenValue+ afterToken;
+              newCursorPos = beforeToken.length() + tokenValue.length();
+             break;
+      }
+      editor.replaceTextAtCurrentLine(tokenToPaste, newCursorPos);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler#onCancelAutoComplete()
+    */
+   @Override
+   public void onCancelAutoComplete()
+   {
+      editor.setFocus();
+   }
 
 }

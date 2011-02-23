@@ -16,10 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror.codeassistant.css;
+package org.exoplatform.ide.editor.codemirror.codeassistant.html;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.codemirror.CodeAssistantClientBundle;
 
@@ -32,45 +33,41 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: CssTokenWidget Feb 22, 2011 5:01:38 PM evgen $
+ * @version $Id: HtmlTokenWidget Feb 23, 2011 1:12:49 PM evgen $
  *
  */
-public class CssTokenWidget extends TokenWidget
+public class HtmlTokenWidget extends TokenWidget
 {
-
+   
    private Grid grid;
-
    /**
     * @param token
     */
-   public CssTokenWidget(Token token)
+   public HtmlTokenWidget(Token token)
    {
       super(token);
       grid = new Grid(1, 3);
       grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
 
-      Image i = new Image(CodeAssistantClientBundle.INSTANCE.property());
+      Image i = getImage();
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
       String name = token.getName();
+      if (token.hasProperty(TokenProperties.SHORT_HINT)  && token.getType()!= TokenType.TEMPLATE)
+      {
+         name += token.getProperty(TokenProperties.SHORT_HINT).isStringProperty().stringValue();
+      }
 
       Label nameLabel = new Label(name, false);
 
       grid.setWidget(0, 1, nameLabel);
-      String pack = "";
-      //      if (token.getProperty(TokenExtProperties.FQN) != null)
-      //      {
-      //         pack = "-" + token.getProperty(TokenExtProperties.FQN);
-      //      }
-      //      if (token.getType() == TokenExtType.TEMPLATE)
-      //      {
-      //         pack = token.getProperty(TokenExtProperties.SHORT_HINT);
-      //      }
-      Label l = new Label(pack, false);
-      l.setStyleName(CodeAssistantClientBundle.INSTANCE.css().fqnStyle());
-      grid.setWidget(0, 2, l);
+      
+//      String pack = "";
+//      Label l = new Label(pack, false);
+//      l.setStyleName(CodeAssistantClientBundle.INSTANCE.css().fqnStyle());
+//      grid.setWidget(0, 2, l);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
@@ -80,6 +77,19 @@ public class CssTokenWidget extends TokenWidget
 
       initWidget(grid);
       setWidth("100%");
+   }
+
+   /**
+    * @return
+    */
+   private Image getImage()
+   {
+      if(token.getType() == TokenType.ATTRIBUTE)
+         return new Image(CodeAssistantClientBundle.INSTANCE.attribute());
+      else if(token.getType() == TokenType.TAG)
+         return new Image(CodeAssistantClientBundle.INSTANCE.tag());
+      
+      return new Image(CodeAssistantClientBundle.INSTANCE.property());
    }
 
    /**

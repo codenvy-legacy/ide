@@ -77,9 +77,9 @@ public abstract class TokenWidget extends Composite implements HasClickHandlers,
    /**
     * Get token description.
     * It's may be javadoc, template content etc. 
-    * @return {@link String} description 
+    * @return {@link Widget} with description 
     */
-   public abstract String getTokenDecription();
+   public abstract Widget getTokenDecription();
    
    /**
     *  Calls when user select this {@link Widget} 

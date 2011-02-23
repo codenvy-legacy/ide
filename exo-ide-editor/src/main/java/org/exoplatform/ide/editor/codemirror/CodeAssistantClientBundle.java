@@ -37,4 +37,11 @@ public interface CodeAssistantClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/public/bundle/images/property-item.png")
    ImageResource property();
    
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/images/tag.png")
+   ImageResource tag();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/images/attribute.png")
+   ImageResource attribute();
+   
 }
