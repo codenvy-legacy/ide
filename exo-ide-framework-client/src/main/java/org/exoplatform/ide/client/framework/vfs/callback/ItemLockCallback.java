@@ -18,74 +18,45 @@
  */
 package org.exoplatform.ide.client.framework.vfs.callback;
 
-import com.google.gwt.http.client.Request;
-
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.LockToken;
+import org.exoplatform.ide.client.framework.vfs.callback.ItemLockCallback.ItemLockData;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ItemLockCallback.java Feb 16, 2011 10:40:22 AM vereshchaka $
  *
  */
-public abstract class ItemLockCallback extends ClientRequestCallback
+public abstract class ItemLockCallback extends AsyncRequestCallback<ItemLockData>
 {
-   
-   private Item item;
-   
-   private LockToken lockToken;
-   
-   /**
-    * @return the lockToken
-    */
-   public LockToken getLockToken()
+   public class ItemLockData
    {
-      return lockToken;
+      private Item item;
+      
+      private LockToken lockToken;
+      
+      public ItemLockData(Item item, LockToken lockToken)
+      {
+         this.item = item;
+         this.lockToken = lockToken;
+      }
+      
+      /**
+       * @return the lockToken
+       */
+      public LockToken getLockToken()
+      {
+         return lockToken;
+      }
+      
+      /**
+       * @return the item
+       */
+      public Item getItem()
+      {
+         return item;
+      }
    }
    
-   /**
-    * @param lockToken the lockToken to set
-    */
-   public void setLockToken(LockToken lockToken)
-   {
-      this.lockToken = lockToken;
-   }
-   
-   /**
-    * @return the item
-    */
-   public Item getItem()
-   {
-      return item;
-   }
-   
-   /**
-    * @param item the item to set
-    */
-   public void setItem(Item item)
-   {
-      this.item = item;
-   }
-
-   /**
-    * @see com.google.gwt.http.client.RequestCallback#onError(com.google.gwt.http.client.Request, java.lang.Throwable)
-    */
-   @Override
-   public void onError(Request request, Throwable exception)
-   {
-      fireErrorEvent(exception);
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.ClientRequestCallback#onUnsuccess(java.lang.Throwable)
-    */
-   @Override
-   public void onUnsuccess(Throwable exception)
-   {
-      fireErrorEvent(exception);
-   }
-   
-   public abstract void fireErrorEvent(Throwable exc);
-
 }

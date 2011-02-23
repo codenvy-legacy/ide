@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.client.framework.vfs;
 
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
 import org.exoplatform.ide.client.framework.vfs.callback.ItemLockCallback;
 import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback;
+
+import java.util.List;
 
 
 public abstract class VirtualFileSystem
@@ -46,43 +46,42 @@ public abstract class VirtualFileSystem
     * Get folder content
     * 
     * @param folder - folder which children will be received.
-    * 
-    * @param childrenReceivedCallback - the callback which the client has to implement
+    * @param callback - the callback which the client has to implement
     */
-   public abstract void getChildren(Folder folder, ChildrenReceivedCallback childrenReceivedCallback);
+   public abstract void getChildren(Folder folder, AsyncRequestCallback<Folder> callback);
 
    /**
     * Create new folder
     * 
     * @param folder - the folder to create
-    * @param folderCallback - the callback which the client has to implement
+    * @param callback - the callback which the client has to implement
     */
-   public abstract void createFolder(Folder folder, FolderCreateCallback folderCallback);
+   public abstract void createFolder(Folder folder, FolderCreateCallback callback);
 
    /**
     * Get content of the file.
     * 
     * @param file - the file
-    * @param fileCallback - the callback which the client has to implement
+    * @param callback - the callback which the client has to implement
     */
-   public abstract void getContent(File file, FileCallback fileCallback);
+   public abstract void getContent(File file, FileCallback callback);
    
    /**
     * Save locked file content
     * 
     * @param file - the file to save
     * @param lockToken - lock token
-    * @param fileCallback - the callback which the client has to implement
+    * @param callback - the callback which the client has to implement
     */
-   public abstract void saveContent(File file, String lockToken, FileContentSaveCallback fileCallback);
+   public abstract void saveContent(File file, String lockToken, FileContentSaveCallback callback);
 
    /**
     * Delete file or folder
     * 
     * @param item - the item to delete
-    * @param itemCallback - the callback which the client has to implement
+    * @param callback - the callback which the client has to implement
     */
-   public abstract void deleteItem(Item item, ClientRequestCallback itemCallback);
+   public abstract void deleteItem(Item item, AsyncRequestCallback<Item> callback);
    
    /**
     * Move existed item to another location as path
@@ -90,18 +89,18 @@ public abstract class VirtualFileSystem
     * @param item - item to move
     * @param destination - new item location
     * @param lockToken - lock token
-    * @param moveCallback - the callback which the client has to implement
+    * @param callback - the callback which the client has to implement
     */
-   public abstract void move(Item item, String destination, String lockToken, MoveItemCallback moveCallback);
+   public abstract void move(Item item, String destination, String lockToken, MoveItemCallback callback);
 
    /**
     * Copy item to another locations as path
     * 
     * @param item
-    * @param destination   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-
+    * @param destination
+    * @param callback
     */
-   public abstract void copy(Item item, String destination, CopyCallback copyCallback);
+   public abstract void copy(Item item, String destination, CopyCallback callback);
    
    /**
     * Get all live properties and such properties:
@@ -110,27 +109,27 @@ public abstract class VirtualFileSystem
     * <p>D:isversioned</p>
     * 
     * @param item - item to get properties.
-    * @param itemCallback - the callback which the client has to implement
+    * @param callback - the callback which the client has to implement
     */
-   public abstract void getPropertiesCallback(Item item, ItemPropertiesCallback itemCallback);
+   public abstract void getPropertiesCallback(Item item, ItemPropertiesCallback callback);
    
    /**
     * Get properties of file or folder
     * 
     * @param item - the item to get properties.
     * @param properties - the list of properties to get
-    * @param itemCallback - the callback which the client has to implement
+    * @param callback - the callback which the client has to implement
     */
-   public abstract void getPropertiesCallback(Item item, List<QName> properties, ItemPropertiesCallback itemCallback);
+   public abstract void getPropertiesCallback(Item item, List<QName> properties, ItemPropertiesCallback callback);
 
    /**
     * Save properties of file or folder
     * 
     * @param item - the item
     * @param lockToken - the lock token
-    * @param itemCallback - the callback which the client has to implement
+    * @param callback - the callback which the client has to implement
     */
-   public abstract void saveProperties(Item item, String lockToken, ItemPropertiesCallback itemCallback);
+   public abstract void saveProperties(Item item, String lockToken, ItemPropertiesCallback callback);
 
    /**
     * Search files.
@@ -139,9 +138,9 @@ public abstract class VirtualFileSystem
     * @param text - text in file
     * @param mimeType - proposed mime type of file
     * @param path - path
-    * @param searchCallback - the callback which the client has to implement
+    * @param callback - the callback which the client has to implement
     */
-   public abstract void search(Folder folder, String text, String mimeType, String path, ClientRequestCallback searchCallback);
+   public abstract void search(Folder folder, String text, String mimeType, String path, AsyncRequestCallback<Folder> callback);
    
 
    /**
@@ -150,24 +149,24 @@ public abstract class VirtualFileSystem
     * @param item - item to lock
     * @param timeout - the timeout
     * @param userName - user name
-    * @param itemCallback - the callback which the client has to implement
+    * @param callback - the callback which the client has to implement
     */
-   public abstract void lock(Item item, int timeout, String userName, ItemLockCallback itemCallback);
+   public abstract void lock(Item item, int timeout, String userName, ItemLockCallback callback);
    
    /**
     * Unlock item
     * 
     * @param item
     * @param lockToken
-    * @param itemCallback
+    * @param callback
     */
-   public abstract void unlock(Item item, String lockToken, ItemUnlockCallback itemCallback);
+   public abstract void unlock(Item item, String lockToken, AsyncRequestCallback<Item> callback);
    
    /**
     * Get item's versions history
     * 
     * @param item
-    * @param versionsCallback
+    * @param callback
     */
    public abstract void getVersions(Item item, VersionsCallback versionsCallback);
 
@@ -178,8 +177,8 @@ public abstract class VirtualFileSystem
     * @param item
     * @param acl
     * @param lockToken
-    * @param aclCallback
+    * @param callback
     */
-   public abstract void setACL(Item item, AccessControlList acl, String lockToken, ClientRequestCallback aclCallback);
+   public abstract void setACL(Item item, AccessControlList acl, String lockToken, AsyncRequestCallback<Item> callback);
    
 }

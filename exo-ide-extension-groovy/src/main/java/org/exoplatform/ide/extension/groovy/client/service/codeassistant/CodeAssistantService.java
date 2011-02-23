@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.codeassistant;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
+import org.exoplatform.ide.extension.groovy.client.codeassistant.autocompletion.GroovyClass;
+
+import java.util.List;
+
 /**
  * This service for auto-complete feature.
  * Service need for retrieve information about Groovy classes.      
@@ -51,33 +57,35 @@ public abstract class CodeAssistantService
     *   
     * @param className
     * @param fileHref for who autocompletion called (Need for find classpath)
+    * @param callback - the callback which client has to implement
     */
-   public abstract void findClass(String className, String fileHref, TokensCallback tokensCallback);
+   public abstract void findClass(String className, String fileHref, AsyncRequestCallback<List<TokenExt>> callback);
    
    /**
     * Get Class description (methods, fields etc.) by class FQN
     * 
     * @param fqn
     * @param fileHref for who autocompletion called (Need for find classpath)
+    * @param callback - the callback which client has to implement
     */
-   public abstract void getClassDescription(String fqn, String fileHref, ClassInfoCallback classInfoCallback);
+   public abstract void getClassDescription(String fqn, String fileHref, AsyncRequestCallback<GroovyClass> callback);
    
    
    /**
     * Find classes by prefix
     * @param prefix the first letters of class name
     * @param fileHref for who autocompletion called (Need for find classpath)
-    * @param tokensCallback - the callback which client has to implement
+    * @param callback - the callback which client has to implement
     */
-   public abstract void findClassesByPrefix(String prefix, String fileHref, TokensCallback tokensCallback);
+   public abstract void findClassesByPrefix(String prefix, String fileHref, AsyncRequestCallback<List<TokenExt>> callback);
    
    /**
     * Find all classes or annotations or interfaces
     * 
     * @param type class type
     * @param prefix the prefix with type name starts (can be null)
-    * @param tokensCallback - the callback which client has to implement
+    * @param callback - the callback which client has to implement
     */
-   public abstract void fintType(Types type, String prefix, TokensCallback tokensCallback);
+   public abstract void fintType(Types type, String prefix, AsyncRequestCallback<List<TokenExt>> callback);
    
 }

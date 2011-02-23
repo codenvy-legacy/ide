@@ -19,11 +19,10 @@
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -33,7 +32,6 @@ import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptEvent
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxHandler;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyDeployUndeployCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyDeployResultReceivedEvent;
 
@@ -72,19 +70,19 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
     */
    public void onDeployGroovyScript(DeployGroovyScriptEvent event)
    {
-      GroovyService.getInstance().deploy(activeFile.getHref(), new GroovyDeployUndeployCallback()
+      GroovyService.getInstance().deploy(activeFile.getHref(), new AsyncRequestCallback<String>()
       {
          
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(String result)
          {
-            deploySuccess(this.getHref());
+            deploySuccess(result);
          }
          
          @Override
-         public void fireErrorEvent(Throwable exception)
+         protected void onFailure(Throwable exception)
          {
-            deployFailure(this.getHref(), exception);
+            deployFailure(this.getResult(), exception);
          }
       });
    }
@@ -126,16 +124,19 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
     */
    public void onDeployGroovyScriptSandbox(DeployGroovyScriptSandboxEvent event)
    {
-      GroovyService.getInstance().deploySandbox(activeFile.getHref(), new GroovyDeployUndeployCallback()
+      GroovyService.getInstance().deploySandbox(activeFile.getHref(), new AsyncRequestCallback<String>()
       {
-         public void onResponseReceived(Request request, Response response)
+         
+         @Override
+         protected void onSuccess(String result)
          {
-            deploySuccess(this.getHref());
+            deploySuccess(result);            
          }
          
-         public void fireErrorEvent(Throwable exception)
+         @Override
+         protected void onFailure(Throwable exception)
          {
-            deployFailure(this.getHref(), exception);
+            deployFailure(this.getResult(), exception);
          }
       });
    }

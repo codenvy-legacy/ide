@@ -18,87 +18,70 @@
  */
 package org.exoplatform.ide.client.framework.vfs;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import com.google.gwt.http.client.Request;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback.FileData;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FolderCreateCallback.java Feb 9, 2011 11:25:55 AM vereshchaka $
  *
  */
-public abstract class FileContentSaveCallback extends ClientRequestCallback
+public abstract class FileContentSaveCallback extends AsyncRequestCallback<FileData>
 {
-   
-   private HandlerManager eventBus;
-   
-   private File file;
-   
-   private boolean isNew;
-   
-   public FileContentSaveCallback(HandlerManager eventBus)
+   public class FileData
    {
-      this.eventBus = eventBus;
+      private File file;
+      
+      private boolean isNew;
+      
+      public FileData(File file, boolean isNew)
+      {
+         this.file = file;
+         this.isNew = isNew;
+      }
+      
+      /**
+       * @return the file
+       */
+      public File getFile()
+      {
+         return file;
+      }
+      
+      /**
+       * @param file the file to set
+       */
+      public void setFile(File file)
+      {
+         this.file = file;
+      }
+      
+      /**
+       * @return the isNew
+       */
+      public boolean isNew()
+      {
+         return isNew;
+      }
+      
+      /**
+       * @param isNew the isNew to set
+       */
+      public void setNew(boolean isNew)
+      {
+         this.isNew = isNew;
+      }
+      
    }
    
    /**
-    * @return the file
-    */
-   public File getFile()
-   {
-      return file;
-   }
-   
-   /**
-    * @param file the file to set
-    */
-   public void setFile(File file)
-   {
-      this.file = file;
-   }
-   
-   /**
-    * @return the isNew
-    */
-   public boolean isNew()
-   {
-      return isNew;
-   }
-   
-   /**
-    * @param isNew the isNew to set
-    */
-   public void setNew(boolean isNew)
-   {
-      this.isNew = isNew;
-   }
-
-   /**
-    * @see com.google.gwt.http.client.RequestCallback#onError(com.google.gwt.http.client.Request, java.lang.Throwable)
-    */
-   @Override
-   public void onError(Request request, Throwable exception)
-   {
-      fireErrorEvent();
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.ClientRequestCallback#onUnsuccess(java.lang.Throwable)
+    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
-   public void onUnsuccess(Throwable exception)
+   protected void onFailure(Throwable exception)
    {
-      fireErrorEvent();
-   }
-   
-   private void fireErrorEvent()
-   {
-      String errorMessage = "Service is not deployed.<br>Resource not found.";
-      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-      eventBus.fireEvent(errorEvent);
+      fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
    }
 
 }

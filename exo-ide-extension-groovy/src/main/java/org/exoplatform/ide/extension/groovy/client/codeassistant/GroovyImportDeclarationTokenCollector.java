@@ -19,11 +19,11 @@
 package org.exoplatform.ide.extension.groovy.client.codeassistant;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.codeassistant.TokenExt;
 import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollector;
 import org.exoplatform.ide.client.framework.codeassistant.api.ImportDeclarationTokenCollectorCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -32,7 +32,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.groovy.client.service.codeassistant.CodeAssistantService;
-import org.exoplatform.ide.extension.groovy.client.service.codeassistant.TokensCallback;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -64,17 +65,17 @@ public class GroovyImportDeclarationTokenCollector implements ImportDeclarationT
    public void collectImportDeclarationTokens(String className, final ImportDeclarationTokenCollectorCallback tokenCallback)
    {
       this.callback = tokenCallback;
-      CodeAssistantService.getInstance().findClass(className, activeFile.getHref(), new TokensCallback()
+      CodeAssistantService.getInstance().findClass(className, activeFile.getHref(), new AsyncRequestCallback<List<TokenExt>>()
       {
          
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(List<TokenExt> result)
          {
-            callback.tokensCollected(this.getTokens());
+            callback.tokensCollected(result);
          }
          
          @Override
-         public void handleError(Throwable exc)
+         protected void onFailure(Throwable exc)
          {
             if (exc instanceof ServerException)
             {

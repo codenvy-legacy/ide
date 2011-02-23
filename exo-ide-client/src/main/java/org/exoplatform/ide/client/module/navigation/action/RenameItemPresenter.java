@@ -28,13 +28,8 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -45,8 +40,6 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 
 import java.util.ArrayList;
@@ -61,7 +54,7 @@ import java.util.Map;
  * @version @version $Id: $
  */
 
-public class RenameItemPresenter implements FileContentReceivedHandler, ExceptionThrownHandler
+public class RenameItemPresenter
 {
 
    /**
@@ -102,10 +95,6 @@ public class RenameItemPresenter implements FileContentReceivedHandler, Exceptio
 
    private Display display;
 
-   private Handlers handlers;
-
-   //private ApplicationContext context;
-
    private String itemBaseHref;
 
    private List<Item> selectedItems;
@@ -121,7 +110,6 @@ public class RenameItemPresenter implements FileContentReceivedHandler, Exceptio
       this.selectedItems = selectedItems;
       this.openedFiles = openedFiles;
       this.lockTokens = lockTokens;
-      handlers = new Handlers(eventBus);
    }
 
    public void bindDisplay(Display d)
@@ -267,7 +255,6 @@ public class RenameItemPresenter implements FileContentReceivedHandler, Exceptio
 
    public void destroy()
    {
-      handlers.removeHandlers();
    }
 
    protected void rename()
@@ -283,15 +270,12 @@ public class RenameItemPresenter implements FileContentReceivedHandler, Exceptio
          if (newMimeType != null && newMimeType.length() > 0)
          {
             file.setContentType(newMimeType);
-            handlers.addHandler(FileContentReceivedEvent.TYPE, this);
-            handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-            VirtualFileSystem.getInstance().getContent(file, new FileCallback(eventBus)
+            VirtualFileSystem.getInstance().getContent(file, new FileCallback()
             {
-               
                @Override
-               public void onResponseReceived(Request request, Response response)
+               protected void onSuccess(File result)
                {
-                  eventBus.fireEvent(new FileContentReceivedEvent(this.getFile()));
+                  fileContentReceived(result);
                }
             });
             return;
@@ -353,7 +337,6 @@ public class RenameItemPresenter implements FileContentReceivedHandler, Exceptio
       href = href.substring(0, href.lastIndexOf("/") + 1);
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), renamedItem));
 
-      handlers.removeHandlers();
       display.closeForm();
    }
 
@@ -361,14 +344,12 @@ public class RenameItemPresenter implements FileContentReceivedHandler, Exceptio
    /**
     * @see org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler#onFileContentReceived(org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent)
     */
-   public void onFileContentReceived(FileContentReceivedEvent event)
+   public void fileContentReceived(File file)
    {
-      handlers.removeHandlers();
-      File file = event.getFile();
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback(eventBus)
+      VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(FileData result)
          {
             final Item item = selectedItems.get(0);
 
@@ -388,8 +369,6 @@ public class RenameItemPresenter implements FileContentReceivedHandler, Exceptio
 
                href = href.substring(0, href.lastIndexOf("/") + 1);
                eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), item));
-
-               handlers.removeHandlers();
                display.closeForm();
             }
          }
@@ -398,11 +377,12 @@ public class RenameItemPresenter implements FileContentReceivedHandler, Exceptio
    
    private void moveItem(Item item, String destination)
    {
-      VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), new MoveItemCallback(eventBus)
+      VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), new MoveItemCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(MoveItemData result)
          {
-            itemMoved(this.getItem(), this.getSourceHref());
+            itemMoved(result.getItem(), result.getOldHref());
          }
       });
    }
@@ -428,22 +408,15 @@ public class RenameItemPresenter implements FileContentReceivedHandler, Exceptio
 
          VirtualFileSystem.getInstance().getPropertiesCallback(item, new ItemPropertiesCallback()
          {
-            
-            public void onResponseReceived(Request request, Response response)
+            @Override
+            protected void onSuccess(Item result)
             {
-               if (this.getItem().getHref().equals(renamedItem.getHref()) && openedFiles.get(renamedItem.getHref()) != null)
+               if (result.getHref().equals(renamedItem.getHref()) && openedFiles.get(renamedItem.getHref()) != null)
                {
                   openedFiles.get(renamedItem.getHref()).getProperties().clear();
-                  openedFiles.get(renamedItem.getHref()).getProperties().addAll(this.getItem().getProperties());
+                  openedFiles.get(renamedItem.getHref()).getProperties().addAll(result.getProperties());
                }
                completeMove();
-            }
-            
-            @Override
-            public void fireErrorEvent()
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
-               handlers.removeHandlers();
             }
          });
       }
@@ -452,14 +425,6 @@ public class RenameItemPresenter implements FileContentReceivedHandler, Exceptio
          updateOpenedFiles(item.getHref(), oldItemHref);
          completeMove();
       }
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
-    */
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandlers();
    }
 
 }

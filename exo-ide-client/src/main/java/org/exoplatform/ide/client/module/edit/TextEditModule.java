@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.client.module.edit;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
@@ -48,8 +49,6 @@ import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.search.text.FindTextForm;
 import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

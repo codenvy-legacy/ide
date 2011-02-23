@@ -18,54 +18,25 @@
  */
 package org.exoplatform.ide.client.framework.vfs;
 
-import com.google.gwt.http.client.Request;
-
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 
 /**
+ * Callback to get or save item properties.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FolderCreateCallback.java Feb 9, 2011 11:25:55 AM vereshchaka $
  *
  */
-public abstract class ItemPropertiesCallback extends ClientRequestCallback
+public abstract class ItemPropertiesCallback extends AsyncRequestCallback<Item>
 {
-   
-   private Item item;
-   
    /**
-    * @return the item
-    */
-   public Item getItem()
-   {
-      return item;
-   }
-   
-   /**
-    * @param item the item to set
-    */
-   public void setItem(Item item)
-   {
-      this.item = item;
-   }
-
-   /**
-    * @see com.google.gwt.http.client.RequestCallback#onError(com.google.gwt.http.client.Request, java.lang.Throwable)
+    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
-   public void onError(Request request, Throwable exception)
+   protected void onFailure(Throwable exception)
    {
-      fireErrorEvent();
+      fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
    }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.ClientRequestCallback#onUnsuccess(java.lang.Throwable)
-    */
-   @Override
-   public void onUnsuccess(Throwable exception)
-   {
-      fireErrorEvent();
-   }
-   
-   public abstract void fireErrorEvent();
 
 }

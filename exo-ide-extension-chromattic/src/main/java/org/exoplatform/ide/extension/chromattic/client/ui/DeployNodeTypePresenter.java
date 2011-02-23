@@ -22,12 +22,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -37,9 +36,8 @@ import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeEvent
 import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
+import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
-import org.exoplatform.ide.extension.chromattic.client.model.service.callback.CreateNodeTypeCallback;
-import org.exoplatform.ide.extension.chromattic.client.model.service.callback.NodeTypeGenerationCallback;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
 
 import java.util.LinkedHashMap;
@@ -192,21 +190,21 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
       EnumAlreadyExistsBehaviour alreadyExistsBehaviour =
          EnumAlreadyExistsBehaviour.fromCode(Integer.valueOf(display.getActionIfExist().getValue()));
       ChrommaticService.getInstance().createNodeType(generatedNodeType, nodeTypeFormat, alreadyExistsBehaviour,
-         new CreateNodeTypeCallback()
+         new AsyncRequestCallback<String>()
          {
-
+            
             @Override
-            public void onResponseReceived(Request request, Response response)
+            protected void onSuccess(String result)
             {
                display.closeView();
-               Dialogs.getInstance().showInfo("Node type successfully deployed.");
+               Dialogs.getInstance().showInfo("Node type successfully deployed.");               
             }
-
+            
             @Override
-            public void handleError(Throwable exception)
+            protected void onFailure(Throwable exception)
             {
                display.closeView();
-               Dialogs.getInstance().showError(getErrorMessage(exception));
+               Dialogs.getInstance().showError(getErrorMessage(exception));               
             }
          });
    }
@@ -220,20 +218,21 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
          return;
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
       ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), nodeTypeFormat,
-         new NodeTypeGenerationCallback()
+         new AsyncRequestCallback<GenerateNodeTypeResult>()
          {
             @Override
-            public void onResponseReceived(Request request, Response response)
+            protected void onSuccess(GenerateNodeTypeResult result)
             {
-               eventBus.fireEvent(new NodeTypeGenerationResultReceivedEvent(this.getGenerateNodeTypeResult()));
-               String generatedNodeType = this.getGenerateNodeTypeResult().getNodeTypeDefinition();
+               eventBus.fireEvent(new NodeTypeGenerationResultReceivedEvent(result));
+               String generatedNodeType = result.getNodeTypeDefinition();
                doDeploy(generatedNodeType);
             }
 
             @Override
-            public void handleError(Throwable exception)
+            protected void onFailure(Throwable exception)
             {
-               NodeTypeGenerationResultReceivedEvent event = new NodeTypeGenerationResultReceivedEvent(this.getGenerateNodeTypeResult());
+               NodeTypeGenerationResultReceivedEvent event =
+                  new NodeTypeGenerationResultReceivedEvent(this.getResult());
                event.setException(exception);
                eventBus.fireEvent(event);
                if (exception.getMessage() != null && exception.getMessage().startsWith("startup failed"))

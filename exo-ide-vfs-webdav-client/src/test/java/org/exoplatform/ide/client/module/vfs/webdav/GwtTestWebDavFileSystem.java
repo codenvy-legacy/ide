@@ -19,8 +19,6 @@
 package org.exoplatform.ide.client.module.vfs.webdav;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Window;
 
@@ -28,7 +26,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.vfs.CopyCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -96,34 +94,22 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
 
       final String newFolderHref = testUrl + "test";
       Folder newFolder = new Folder(newFolderHref);
-//      eventbus.addHandler(FolderCreatedEvent.TYPE, new FolderCreatedHandler()
-//      {
-//         public void onFolderCreated(FolderCreatedEvent event)
-//         {
-//            assertNotNull(event.getFolder());
-//            assertEquals(newFolderHref, event.getFolder().getHref());
-//            finishTest();
-//         }
-//      });
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
-         public void onError(ExceptionThrownEvent event)
-         {
-            assertNotNull(event.getError());
-            System.out
-               .println(event.getError().getMessage());
-            fail();
-         }
-      });
-      vfsWebDav.createFolder(newFolder, new FolderCreateCallback(eventbus)
+      vfsWebDav.createFolder(newFolder, new FolderCreateCallback()
       {
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(Folder result)
          {
-            assertNotNull(this.getFolder());
-            assertEquals(newFolderHref, this.getFolder().getHref());
+            assertNotNull(result);
+            assertEquals(newFolderHref, result.getHref());
             finishTest();
          }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            fail();
+         }
+         
       });
       delayTestFinish(DELAY_TEST);
    }
@@ -133,23 +119,22 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
 
       String newFolderHref = testUrlWrongWs + "test";
       Folder newFolder = new Folder(newFolderHref);
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
-         public void onError(ExceptionThrownEvent event)
-         {
-            assertNotNull(event.getError());
-            System.out.println(event.getError().getMessage());
-            finishTest();
-         }
-      });
       WebDavVirtualFileSystem w = new WebDavVirtualFileSystem(eventbus, new EmptyLoader(), images, "/rest");
-      w.createFolder(newFolder, new FolderCreateCallback(eventbus)
+      w.createFolder(newFolder, new FolderCreateCallback()
       {
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(Folder result)
          {
             fail("Url was wrong. Can't create folder.");
          }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            assertNotNull(exception);
+            finishTest();
+         }
+         
       });
       delayTestFinish(DELAY_TEST);
    }
@@ -159,25 +144,20 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       String newFolderHref = testUrl + "proba";
       Folder newFolder = new Folder(newFolderHref);
       eventbus.addHandler(ExceptionThrownEvent.TYPE, new MockExceptionThrownHandler());
-      vfsWebDav.deleteItem(newFolder, new ClientRequestCallback()
+      vfsWebDav.deleteItem(newFolder, new AsyncRequestCallback<Item>()
       {
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(Item result)
          {
             finishTest();
          }
-         
+
          @Override
-         public void onError(Request request, Throwable exception)
+         protected void onFailure(Throwable exception)
          {
             fail();
          }
-         
-         @Override
-         public void onUnsuccess(Throwable exception)
-         {
-            fail();
-         }
+
       });
       delayTestFinish(DELAY_TEST);
    }
@@ -186,26 +166,20 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    {
       String newFolderHref = testUrl + "proba-not-found";
       Folder newFolder = new Folder(newFolderHref);
-      vfsWebDav.deleteItem(newFolder, new ClientRequestCallback()
+      vfsWebDav.deleteItem(newFolder, new AsyncRequestCallback<Item>()
       {
-         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(Item result)
          {
             fail();
          }
-         
+
          @Override
-         public void onError(Request request, Throwable exception)
+         protected void onFailure(Throwable exception)
          {
             finishTest();
          }
-         
-         @Override
-         public void onUnsuccess(Throwable exception)
-         {
-            fail();
-         }
+
       });
       delayTestFinish(DELAY_TEST);
    }
@@ -281,15 +255,20 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       file.setNewFile(true);
       file.setContent(fileContent);
       file.setContentChanged(true);
-      vfsWebDav.saveContent(file, null, new FileContentSaveCallback(eventbus)
+      vfsWebDav.saveContent(file, null, new FileContentSaveCallback()
       {
+         @Override
+         protected void onSuccess(FileData result)
+         {
+            assertNotNull(result.getFile());
+            assertEquals(result.getFile().getContent(), fileContent);
+            finishTest();
+         }
          
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onFailure(Throwable exception)
          {
-            assertNotNull(this.getFile());
-            assertEquals(this.getFile().getContent(), fileContent);
-            finishTest();
+            fail();
          }
       });
       delayTestFinish(DELAY_TEST);
@@ -303,15 +282,21 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    {
       final String newLocation = String.valueOf(System.currentTimeMillis());
       Folder folder = new Folder(testUrl + "movetest");
-      vfsWebDav.move(folder, testUrl + newLocation, null, new MoveItemCallback(eventbus)
+      vfsWebDav.move(folder, testUrl + newLocation, null, new MoveItemCallback()
       {
+         @Override
+         protected void onSuccess(MoveItemData result)
+         {
+            assertNotNull(result.getItem());
+            assertEquals(result.getItem().getHref(), testUrl + newLocation);
+            finishTest();
+
+         }
          
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onFailure(Throwable exception)
          {
-            assertNotNull(this.getItem());
-            assertEquals(this.getItem().getHref(), testUrl + newLocation);
-            finishTest();
+            fail();
          }
       });
       delayTestFinish(DELAY_TEST);
@@ -324,21 +309,18 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
    public void testMoveFail()
    {
       Folder folder = new Folder(testUrl + "movetest-not-found");
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      vfsWebDav.move(folder, testUrl + "new-movedtest", null, new MoveItemCallback()
       {
-         public void onError(ExceptionThrownEvent event)
-         {
-            assertNotNull(event.getError());
-            finishTest();
-         }
-      });
-      vfsWebDav.move(folder, testUrl + "new-movedtest", null, new MoveItemCallback(eventbus)
-      {
-         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(MoveItemData result)
          {
             fail();
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            finishTest();
          }
       });
       delayTestFinish(DELAY_TEST);
@@ -361,16 +343,21 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             event.getError().printStackTrace();
          }
       });
-      vfsWebDav.copy(folder, testUrl + copyLocation, new CopyCallback(eventbus)
+      vfsWebDav.copy(folder, testUrl + copyLocation, new CopyCallback()
       {
+         @Override
+         protected void onSuccess(CopyItemData result)
+         {
+            assertNotNull(result.getDestination());
+            assertNotNull(result.getItem());
+            assertEquals(result.getDestination(), testUrl + copyLocation);
+            finishTest();
+         }
          
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onFailure(Throwable exception)
          {
-            assertNotNull(this.getDestination());
-            assertNotNull(this.getItem());
-            assertEquals(this.getDestination(), testUrl + copyLocation);
-            finishTest();
+            fail();
          }
       });
       delayTestFinish(DELAY_TEST);
@@ -394,13 +381,18 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
             finishTest();
          }
       });
-      vfsWebDav.copy(folder, testUrl + copyLocation, new CopyCallback(eventbus)
+      vfsWebDav.copy(folder, testUrl + copyLocation, new CopyCallback()
       {
-         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(CopyItemData result)
          {
             fail();
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            finishTest();
          }
       });
       delayTestFinish(DELAY_TEST);
@@ -443,7 +435,6 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
 //
    public void testGetACL()
    {
-      System.out.println("GwtTestWebDavFileSystem.testGetACL()");
       final String fileContent = System.currentTimeMillis() + "";
       File file = new File(testUrl + "versionFile");
       file.setContentType("text/plain");
@@ -453,31 +444,36 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       file.setContent(fileContent);
       file.setContentChanged(true);
             
-      vfsWebDav.saveContent(file, null, new FileContentSaveCallback(eventbus)
+      vfsWebDav.saveContent(file, null, new FileContentSaveCallback()
       {
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(FileData result)
          {
+            vfsWebDav.getPropertiesCallback(result.getFile(), Arrays.asList(new QName[]{ItemProperty.ACL.ACL}),
+               new ItemPropertiesCallback()
+               {
+
+                  @Override
+                  protected void onSuccess(Item result)
+                  {
+                     finishTest();
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     fail();
+                  }
+
+               });
          }
-      });
-   
-      vfsWebDav.getPropertiesCallback(file, Arrays.asList(new QName[]{ItemProperty.ACL.ACL}), new ItemPropertiesCallback()
-      {
-         
+
          @Override
-         public void onResponseReceived(Request request, Response response)
-         {
-            Item item = this.getItem();
-            System.out.println(item.getProperty(ItemProperty.ACL.ACL));
-         }
-         
-         @Override
-         public void fireErrorEvent()
+         protected void onFailure(Throwable exception)
          {
             fail();
          }
       });
-      
    }
    
    public void testLockUnmarshaller()

@@ -20,6 +20,8 @@ package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -32,7 +34,7 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
-import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
+import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateHandler;
@@ -125,16 +127,23 @@ CreateProjectTemplateHandler
     */
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
    {
-      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
+         
          @Override
-         public void onTemplateListReceived()
+         protected void onSuccess(TemplateList result)
          {
             CreateFileFromTemplatePresenter createFilePresenter =
-               new CreateFileFromTemplatePresenter(eventBus, selectedItems, this.getTemplateList().getTemplates(), openedFiles);
+               new CreateFileFromTemplatePresenter(eventBus, selectedItems, result.getTemplates(), openedFiles);
             CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
-               new CreateFileFromTemplateForm(eventBus, this.getTemplateList().getTemplates(), createFilePresenter);
+               new CreateFileFromTemplateForm(eventBus, result.getTemplates(), createFilePresenter);
             createFilePresenter.bindDisplay(createFileDisplay);
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }
@@ -145,16 +154,22 @@ CreateProjectTemplateHandler
     */
    public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
    {
-      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
          @Override
-         public void onTemplateListReceived()
+         protected void onSuccess(TemplateList result)
          {
             CreateProjectFromTemplatePresenter createProjectPresenter =
-               new CreateProjectFromTemplatePresenter(eventBus, selectedItems, this.getTemplateList().getTemplates(), restContext);
+               new CreateProjectFromTemplatePresenter(eventBus, selectedItems, result.getTemplates(), restContext);
             CreateFromTemplateDisplay<ProjectTemplate> createProjectDisplay =
-               new CreateProjectFromTemplateForm(eventBus, this.getTemplateList().getTemplates(), createProjectPresenter);
+               new CreateProjectFromTemplateForm(eventBus, result.getTemplates(), createProjectPresenter);
             createProjectPresenter.bindDisplay(createProjectDisplay);
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }
@@ -164,12 +179,18 @@ CreateProjectTemplateHandler
     */
    public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
    {
-      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
          @Override
-         public void onTemplateListReceived()
+         protected void onSuccess(TemplateList result)
          {
-            new CreateProjectTemplateForm(eventBus, this.getTemplateList().getTemplates());
+            new CreateProjectTemplateForm(eventBus, result.getTemplates());
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }

@@ -18,68 +18,24 @@
  */
 package org.exoplatform.ide.client.model.template;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplateListReceivedCallback.java Feb 7, 2011 12:56:15 PM vereshchaka $
  *
  */
-public abstract class TemplateCreatedCallback extends ClientRequestCallback
+public abstract class TemplateCreatedCallback extends AsyncRequestCallback<Template>
 {
-   
-   private HandlerManager eventBus;
-   
-   Template template;
-   
-   public TemplateCreatedCallback(HandlerManager eventBus)
-   {
-      this.eventBus = eventBus;
-   }
-   
-   public Template getTemplate()
-   {
-      return template;
-   }
-   
-   public void setTemplate(Template template)
-   {
-      this.template = template;
-   }
-   
-   /**
-    * @see com.google.gwt.http.client.RequestCallback#onError(com.google.gwt.http.client.Request, java.lang.Throwable)
-    */
-   public void onError(Request request, Throwable exception)
-   {
-      if (exception != null)
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(exception));
-      }
-      else
-      {
-         fireException();
-      }
-   }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.ClientRequestCallback#onUnsuccess(com.google.gwt.http.client.Request)
+    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
-   public void onUnsuccess(Throwable exception)
+   protected void onFailure(Throwable exception)
    {
-      fireException();
-   }
-   
-   private void fireException()
-   {
-      String errorMessage = "Registry service is not deployed.<br>Template already exist.";
-      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-      eventBus.fireEvent(errorEvent);
+      fireEvent(new ExceptionThrownEvent("Registry service is not deployed.<br>Template already exist."));
    }
 
 }

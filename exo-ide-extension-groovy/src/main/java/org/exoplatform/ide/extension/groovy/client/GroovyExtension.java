@@ -18,13 +18,15 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -43,8 +45,8 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
 import org.exoplatform.ide.client.framework.ui.ViewType;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
@@ -77,16 +79,13 @@ import org.exoplatform.ide.extension.groovy.client.service.codeassistant.CodeAss
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedHandler;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlCallback;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ide.extension.groovy.client.util.GroovyPropertyUtil;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.ui.Image;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -231,17 +230,10 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       VirtualFileSystem.getInstance().saveProperties(activeFile, lockTokens.get(activeFile.getHref()),
          new ItemPropertiesCallback()
          {
-
             @Override
-            public void onResponseReceived(Request request, Response response)
+            protected void onSuccess(Item result)
             {
-               eventBus.fireEvent(new ItemPropertiesSavedEvent(this.getItem()));
-            }
-
-            @Override
-            public void fireErrorEvent()
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+               eventBus.fireEvent(new ItemPropertiesSavedEvent(result));
             }
          });
    }
@@ -262,12 +254,19 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       }
 
       String url = configuration.getContext() + path;
-      WadlService.getInstance().getWadl(url, new WadlCallback(eventBus)
+      WadlService.getInstance().getWadl(url, new AsyncRequestCallback<WadlApplication>()
       {
+         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(WadlApplication result)
          {
-            new GroovyServiceOutputPreviewForm(eventBus, this.getApplication(), undeployOnCancel);
+            new GroovyServiceOutputPreviewForm(eventBus, result, undeployOnCancel);
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
          }
       });
    }

@@ -23,19 +23,17 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
@@ -147,32 +145,32 @@ public class OpenFileByPathPresenter
       VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
       {
          
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(Item result)
          {
-            eventBus.fireEvent(new OpenFileEvent((File) this.getItem()));  
-            getFileContent((File) this.getItem());
-          
+            eventBus.fireEvent(new OpenFileEvent((File)result));
+            getFileContent((File)result);
+
             display.closeDisplay();
          }
          
-         public void fireErrorEvent()
+         @Override
+         protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
-            
+            super.onFailure(exception);
             display.getFilePathFieldOrigin().focusInItem();
          }
-      }); 
+      });
    }
    
    private void getFileContent(File file)
    {
-      VirtualFileSystem.getInstance().getContent(file, new FileCallback(eventBus)
+      VirtualFileSystem.getInstance().getContent(file, new FileCallback()
       {
-         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(File result)
          {
-            eventBus.fireEvent(new FileContentReceivedEvent(this.getFile()));
+            eventBus.fireEvent(new FileContentReceivedEvent(result));
          }
       });
    }

@@ -26,10 +26,10 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
@@ -38,10 +38,8 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.RestService;
-import org.exoplatform.ide.client.framework.discovery.RestServicesCallback;
 import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryEvent;
 import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryHandler;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlCallback;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 
 import java.util.ArrayList;
@@ -123,13 +121,19 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
       bindDisplay(d);
 
-      DiscoveryService.getInstance().getRestServices(new RestServicesCallback(eventBus)
+      DiscoveryService.getInstance().getRestServices(new AsyncRequestCallback<List<RestService>>()
       {
          
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(List<RestService> result)
          {
-            restServicesReceived(this.getServices());
+            restServicesReceived(result);
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
          }
       });
    }
@@ -268,13 +272,19 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          url += "/" + target.getFullPath();
       }
       
-      WadlService.getInstance().getWadl(url, new WadlCallback(eventBus)
+      WadlService.getInstance().getWadl(url, new AsyncRequestCallback<WadlApplication>()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(WadlApplication result)
          {
-            WadlApplication a = this.getApplication();
             dispaly.getTreeGrid().setPaths(currentRestService,
-               a.getResources().getResource().get(0).getMethodOrResource());
+               result.getResources().getResource().get(0).getMethodOrResource());
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
          }
       });
    }

@@ -18,29 +18,6 @@
  */
 package org.exoplatform.ide.client.editor.custom;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.editor.api.Editor;
-import org.exoplatform.gwtframework.editor.api.EditorFactory;
-import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -51,12 +28,35 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.editor.api.Editor;
+import org.exoplatform.gwtframework.editor.api.EditorFactory;
+import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
+import org.exoplatform.ide.client.framework.vfs.File;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileWithPresenter implements FileContentReceivedHandler, ApplicationSettingsSavedHandler
+public class OpenFileWithPresenter implements EditorFileOpenedHandler, ApplicationSettingsSavedHandler
 {
 
    public interface Display
@@ -98,6 +98,7 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       this.openedFiles = openedFiles;
       this.applicationSettings = applicationSettings;
       handlers = new Handlers(eventBus);
+      this.eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
    }
 
    public void destroy()
@@ -107,7 +108,6 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
 
    public void bindDisplay(Display d)
    {
-      handlers.addHandler(FileContentReceivedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
 
       display = d;
@@ -268,15 +268,20 @@ public class OpenFileWithPresenter implements FileContentReceivedHandler, Applic
       openFile();
    }
 
-   public void onFileContentReceived(FileContentReceivedEvent event)
-   {
-      display.closeForm();
-   }
-
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
+      System.out.println("OpenFileWithPresenter.onApplicationSettingsSaved()");
       display.closeForm();
       eventBus.fireEvent(new OpenFileEvent(selectedFile));
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
+    */
+   @Override
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      display.closeForm();
    }
 
 }

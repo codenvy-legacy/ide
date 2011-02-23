@@ -19,9 +19,7 @@
 package org.exoplatform.ide.client.model.settings;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
@@ -31,7 +29,6 @@ import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -111,26 +108,18 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
     */
    public void onGetApplicationSettings(GetApplicationSettingsEvent event)
    {
-      getApplicationSettings(applicationSettings, new ClientRequestCallback()
+      getApplicationSettings(applicationSettings, new AsyncRequestCallback<ApplicationSettings>()
       {
          
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(ApplicationSettings result)
          {
             ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
             eventBus.fireEvent(event);
          }
          
          @Override
-         public void onError(Request request, Throwable exception)
-         {
-            ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
-            event.setException(exception);
-            eventBus.fireEvent(event);
-         }
-         
-         @Override
-         public void onUnsuccess(Throwable exception)
+         protected void onFailure(Throwable exception)
          {
             ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
             event.setException(exception);
@@ -139,7 +128,7 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
       });
    }
 
-   private void getApplicationSettings(ApplicationSettings applicationSettings, ClientRequestCallback appCallback)
+   private void getApplicationSettings(ApplicationSettings applicationSettings, AsyncRequestCallback<ApplicationSettings> callback)
    {
       restoreFromCookies(applicationSettings);
 
@@ -147,7 +136,9 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
 
       ApplicationSettingsUnmarshaller unmarshaller = new ApplicationSettingsUnmarshaller(applicationSettings);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, appCallback);
+      callback.setResult(applicationSettings);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
@@ -173,39 +164,34 @@ public class SettingsService implements SaveApplicationSettingsHandler, GetAppli
          storeCookies(event.getApplicationSettings());
       }
 
-      saveSettingsToRegistry(event.getApplicationSettings(), event.getSaveType(), new ClientRequestCallback()
-      {
-         
-         @Override
-         public void onResponseReceived(Request request, Response response)
+      saveSettingsToRegistry(event.getApplicationSettings(), event.getSaveType(),
+         new AsyncRequestCallback<ApplicationSettings>()
          {
-            ApplicationSettingsSavedEvent settingsEvent = new ApplicationSettingsSavedEvent(
-               event.getApplicationSettings(), event.getSaveType());
-            eventBus.fireEvent(settingsEvent);
-         }
-         
-         @Override
-         public void onError(Request request, Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent("Registry service is not deployed."));
-         }
-         
-         @Override
-         public void onUnsuccess(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent("Registry service is not deployed."));
-         }
-      });
+            @Override
+            protected void onSuccess(ApplicationSettings result)
+            {
+               ApplicationSettingsSavedEvent settingsEvent =
+                  new ApplicationSettingsSavedEvent(event.getApplicationSettings(), event.getSaveType());
+               eventBus.fireEvent(settingsEvent);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent("Registry service is not deployed."));
+            }
+         });
    }
 
    private void saveSettingsToRegistry(ApplicationSettings applicationSettings, SaveType saveType, 
-      ClientRequestCallback settingsCallback)
+      AsyncRequestCallback<ApplicationSettings> callback)
    {
       String url = getURL() + "/?createIfNotExist=true";
 
       ApplicationSettingsMarshaller marshaller = new ApplicationSettingsMarshaller(applicationSettings);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, settingsCallback);
+      callback.setResult(applicationSettings);
+      callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
 

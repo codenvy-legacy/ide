@@ -18,83 +18,59 @@
  */
 package org.exoplatform.ide.client.framework.vfs;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.vfs.CopyCallback.CopyItemData;
+
 
 /**
+ * Callback the client has to implement to copy item.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CopyCallback.java Feb 16, 2011 3:58:02 PM vereshchaka $
  *
  */
-public abstract class CopyCallback extends ClientRequestCallback
+public abstract class CopyCallback extends AsyncRequestCallback<CopyItemData>
 {
-   private Item item;
    
-   private String destination;
-   
-   private HandlerManager eventuBus;
-   
-   public CopyCallback(HandlerManager eventBus)
+   public class CopyItemData
    {
-      this.eventuBus = eventBus;
+      private Item item;
+      
+      private String destination;
+      
+      public CopyItemData(Item item, String destination)
+      {
+         this.item = item;
+         this.destination = destination;
+      }
+      
+      /**
+       * @return the item
+       */
+      public Item getItem()
+      {
+         return item;
+      }
+      
+      /**
+       * @return the destination
+       */
+      public String getDestination()
+      {
+         return destination;
+      }
    }
    
    /**
-    * @return the item
-    */
-   public Item getItem()
-   {
-      return item;
-   }
-   
-   /**
-    * @param item the item to set
-    */
-   public void setItem(Item item)
-   {
-      this.item = item;
-   }
-   
-   /**
-    * @return the destination
-    */
-   public String getDestination()
-   {
-      return destination;
-   }
-   
-   /**
-    * @param destination the destination to set
-    */
-   public void setDestination(String destination)
-   {
-      this.destination = destination;
-   }
-
-   /**
-    * @see com.google.gwt.http.client.RequestCallback#onError(com.google.gwt.http.client.Request, java.lang.Throwable)
+    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
-   public void onError(Request request, Throwable exception)
+   protected void onFailure(Throwable exception)
    {
-      fireError();
+      fireEvent(new ExceptionThrownEvent(
+         "Service is not deployed.<br>Destination path does not exist.<br>Folder already has item with same name."));
    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.ClientRequestCallback#onUnsuccess(java.lang.Throwable)
-    */
-   @Override
-   public void onUnsuccess(Throwable exception)
-   {
-      fireError();
-   }
-   
-   private void fireError()
-   {
-      eventuBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Destination path does not exist.<br>Folder already has item with same name."));
-   }
 
 }

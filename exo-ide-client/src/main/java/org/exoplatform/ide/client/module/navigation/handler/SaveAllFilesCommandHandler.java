@@ -19,12 +19,7 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -37,6 +32,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 
@@ -51,11 +47,9 @@ import java.util.Map;
  * @version $
  */
 
-public class SaveAllFilesCommandHandler implements ExceptionThrownHandler, SaveAllFilesHandler, EditorFileOpenedHandler, 
+public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFileOpenedHandler, 
 EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
-
-   private Handlers handlers;
 
    private HandlerManager eventBus;
 
@@ -67,7 +61,6 @@ EditorFileClosedHandler, ApplicationSettingsReceivedHandler
    {
       this.eventBus = eventBus;
 
-      handlers = new Handlers(eventBus);
       this.eventBus.addHandler(SaveAllFilesEvent.TYPE, this);
       this.eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       this.eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
@@ -76,8 +69,6 @@ EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 
    public void onSaveAllFiles(SaveAllFilesEvent event)
    {
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-
       saveNextUnsavedFile();
    }
 
@@ -87,19 +78,20 @@ EditorFileClosedHandler, ApplicationSettingsReceivedHandler
       {
          if (!file.isNewFile() && file.isContentChanged())
          {
-            VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback(eventBus)
+            VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback()
             {
-               
-               public void onResponseReceived(Request request, Response response)
+
+               @Override
+               protected void onSuccess(FileData result)
                {
-                  if (this.getFile().isPropertiesChanged())
+                  if (result.getFile().isPropertiesChanged())
                   {
-                     String lockToken = lockTokens.get(this.getFile().getHref());
-                     saveFileProperties(this.getFile(), lockToken);
+                     String lockToken = lockTokens.get(result.getFile().getHref());
+                     saveFileProperties(result.getFile(), lockToken);
                   }
                   else
                   {
-                     eventBus.fireEvent(new FileSavedEvent(this.getFile(), null));
+                     eventBus.fireEvent(new FileSavedEvent(result.getFile(), null));
                      saveNextUnsavedFile();
                   }
                }
@@ -108,31 +100,19 @@ EditorFileClosedHandler, ApplicationSettingsReceivedHandler
          }
       }
 
-      handlers.removeHandlers();
    }
    
    private void saveFileProperties(File file, String lockToken)
    {
       VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
       {
-         
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(Item result)
          {
-            eventBus.fireEvent(new FileSavedEvent((File)this.getItem(), null));
+            eventBus.fireEvent(new FileSavedEvent((File)result, null));
             saveNextUnsavedFile();
          }
-         
-         @Override
-         public void fireErrorEvent()
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
-         }
       });
-   }
-
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandlers();
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)

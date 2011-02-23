@@ -19,8 +19,6 @@
 package org.exoplatform.ide.client.template;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -234,11 +232,12 @@ public class CreateProjectFromTemplatePresenter extends AbstractCreateFromTempla
    
    private void createFolder(Folder folder)
    {
-      VirtualFileSystem.getInstance().createFolder(folder, new FolderCreateCallback(eventBus)
+      VirtualFileSystem.getInstance().createFolder(folder, new FolderCreateCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(Folder result)
          {
-            onFolderCreated(this.getFolder());
+            onFolderCreated(result);
          }
       });
    }
@@ -263,9 +262,10 @@ public class CreateProjectFromTemplatePresenter extends AbstractCreateFromTempla
    
    private void saveFileContent(File file)
    {
-      VirtualFileSystem.getInstance().saveContent(file, null, new FileContentSaveCallback(eventBus)
+      VirtualFileSystem.getInstance().saveContent(file, null, new FileContentSaveCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(FileData result)
          {
             if (itemsCreated < fileList.size())
             {
@@ -273,7 +273,7 @@ public class CreateProjectFromTemplatePresenter extends AbstractCreateFromTempla
                itemsCreated++;
                return;
             }
-            finishProjectCreation();
+            finishProjectCreation();            
          }
       });
    }

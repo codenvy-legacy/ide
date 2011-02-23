@@ -21,8 +21,6 @@ package org.exoplatform.ide.client.history;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.History;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -122,13 +120,13 @@ public class HistoryManager implements EditorActiveFileChangedHandler,
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       stopHandling();
-      VirtualFileSystem.getInstance().getContent((File)event.getItem(), new FileCallback(eventBus)
+      VirtualFileSystem.getInstance().getContent((File)event.getItem(), new FileCallback()
       {
          
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(File result)
          {
-            eventBus.fireEvent(new FileContentReceivedEvent(this.getFile()));
+            eventBus.fireEvent(new FileContentReceivedEvent(result));            
          }
       });
    }

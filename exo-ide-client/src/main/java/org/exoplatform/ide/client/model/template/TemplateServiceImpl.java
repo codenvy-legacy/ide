@@ -18,23 +18,20 @@
  */
 package org.exoplatform.ide.client.model.template;
 
-import java.util.ArrayList;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.user.client.Random;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateListReceivedEvent;
 import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshaller;
 import org.exoplatform.ide.client.model.template.marshal.TemplateMarshaller;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.user.client.Random;
+import java.util.ArrayList;
 
 /**
  * Created by The eXo Platform SAS .
@@ -89,32 +86,31 @@ public class TemplateServiceImpl extends TemplateService
    }
 
    @Override
-   public void createTemplate(Template template, TemplateCreatedCallback templateCallback)
+   public void createTemplate(Template template, TemplateCreatedCallback callback)
    {
       String url = restContext + CONTEXT + "/" + TEMPLATE + System.currentTimeMillis() + "/?createIfNotExist=true";
       TemplateMarshaller marshaller = new TemplateMarshaller(template);
       
-      templateCallback.setTemplate(template);
-      
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, templateCallback);
+      callback.setResult(template);
+      callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
    }
 
    @Override
-   public void deleteTemplate(Template template, TemplateDeletedCallback templateCallback)
+   public void deleteTemplate(Template template, TemplateDeletedCallback callback)
    {
       String url = restContext + CONTEXT + "/" + template.getNodeName();
 
-      templateCallback.setTemplate(template);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, templateCallback);
+      callback.setResult(template);
+      callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "DELETE")
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).send(callback);
 
    }
 
    @Override
-   public void getTemplates(TemplateListReceivedCallback templateCallback)
+   public void getTemplates(AsyncRequestCallback<TemplateList> callback)
    {
       String url = restContext + CONTEXT + "/?noCache=" + Random.nextInt();
       TemplateList templateList = new TemplateList();
@@ -171,9 +167,12 @@ public class TemplateServiceImpl extends TemplateService
       templateList.getTemplates().add(getSampleProject());
 
       TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
-      templateCallback.setTemplateList(templateList);
+      int[] acceptStatus = new int[]{HTTPStatus.OK, HTTPStatus.NOT_FOUND};
       
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, templateCallback);
+      callback.setResult(templateList);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
+      callback.setSuccessCodes(acceptStatus);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 

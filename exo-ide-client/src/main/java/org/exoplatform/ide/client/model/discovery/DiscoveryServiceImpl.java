@@ -27,12 +27,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.discovery.DefaultEntryPointCallback;
-import org.exoplatform.ide.client.framework.discovery.DiscoverableCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.discovery.RestService;
-import org.exoplatform.ide.client.framework.discovery.RestServicesCallback;
 import org.exoplatform.ide.client.model.discovery.marshal.DefaultEntryPointUnmarshaller;
 import org.exoplatform.ide.client.model.discovery.marshal.DiscoveryServiceDiscoverableUnmarshaller;
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPointListUnmarshaller;
@@ -72,13 +70,14 @@ public class DiscoveryServiceImpl extends DiscoveryService
    }
 
    @Override
-   public void getEntryPoints(String url, DiscoveryCallback discoveryCallback)
+   public void getEntryPoints(String url, DiscoveryCallback callback)
    {
       List<EntryPoint> entryPointList = new ArrayList<EntryPoint>();
-      discoveryCallback.setEntryPointList(entryPointList);
+      callback.setResult(entryPointList);
       EntryPointListUnmarshaller unmarshaller = new EntryPointListUnmarshaller(entryPointList);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, discoveryCallback);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
@@ -86,13 +85,14 @@ public class DiscoveryServiceImpl extends DiscoveryService
     * @see org.exoplatform.ide.client.framework.discovery.DiscoveryService#getDefaultEntryPoint()
     */
    @Override
-   public void getDefaultEntryPoint(DefaultEntryPointCallback entryPointCallback)
+   public void getDefaultEntryPoint(DefaultEntryPointCallback callback)
    {
       String url = restServiceContext + "/ide/discovery/defaultEntrypoint";
 
-      DefaultEntryPointUnmarshaller unmarshaller = new DefaultEntryPointUnmarshaller(entryPointCallback);
+      DefaultEntryPointUnmarshaller unmarshaller = new DefaultEntryPointUnmarshaller(callback);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, entryPointCallback);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
@@ -100,7 +100,7 @@ public class DiscoveryServiceImpl extends DiscoveryService
     * @see org.exoplatform.ide.client.framework.discovery.DiscoveryService#getRestServices()
     */
    @Override
-   public void getRestServices(RestServicesCallback restServicesCallback)
+   public void getRestServices(AsyncRequestCallback<List<RestService>> callback)
    {
       String url = restServiceContext;
       if (!url.endsWith("/"))
@@ -108,24 +108,24 @@ public class DiscoveryServiceImpl extends DiscoveryService
          url += "/";
       }
       List<RestService> services = new ArrayList<RestService>();
-      restServicesCallback.setServices(services);
-//      RestServicesReceivedEvent event = new RestServicesReceivedEvent(services);
+      callback.setResult(services);
       RestServicesUnmarshaller unmarshaller = new RestServicesUnmarshaller(services);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, restServicesCallback);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
    }
 
    @Override
-   public void getIsDiscoverable(DiscoverableCallback discoverableCallback)
+   public void getIsDiscoverable(AsyncRequestCallback<Boolean> callback)
    {
       String url = restServiceContext + "/ide/discovery/isdiscoverable";
 
-//      IsDiscoverableResultReceivedEvent event = new IsDiscoverableResultReceivedEvent();
-      DiscoveryServiceDiscoverableUnmarshaller unmarshaller = new DiscoveryServiceDiscoverableUnmarshaller(discoverableCallback);
+      DiscoveryServiceDiscoverableUnmarshaller unmarshaller = new DiscoveryServiceDiscoverableUnmarshaller(callback);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, discoverableCallback);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 

@@ -19,13 +19,10 @@
 package org.exoplatform.ide.extension.groovy.client.codeassistant.autocompletion;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.Modifier;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
@@ -40,9 +37,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.extension.groovy.client.service.codeassistant.ClassInfoCallback;
 import org.exoplatform.ide.extension.groovy.client.service.codeassistant.CodeAssistantService;
-import org.exoplatform.ide.extension.groovy.client.service.codeassistant.TokensCallback;
 import org.exoplatform.ide.extension.groovy.client.service.codeassistant.Types;
 
 import java.util.ArrayList;
@@ -165,8 +160,6 @@ public class GroovyTokenCollector implements TokenCollectorExt, Comparator<Token
 
    //   private static Map<String, GroovyClass> classes = new HashMap<String, GroovyClass>();
 
-   private Handlers handlers;
-
    private TokensCollectedCallback<TokenExt> callback;
 
    private String beforeToken;
@@ -190,7 +183,6 @@ public class GroovyTokenCollector implements TokenCollectorExt, Comparator<Token
    public GroovyTokenCollector(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
@@ -259,21 +251,23 @@ public class GroovyTokenCollector implements TokenCollectorExt, Comparator<Token
             callback.onTokensCollected(new ArrayList<TokenExt>(), beforeToken, tokenToComplete, afterToken);
             return;
          }
-         CodeAssistantService.getInstance().getClassDescription(curentFqn, activeFile.getHref(), new ClassInfoCallback()
-         {
-            
-            @Override
-            public void onResponseReceived(Request request, Response response)
+         
+         CodeAssistantService.getInstance().getClassDescription(curentFqn, activeFile.getHref(),
+            new AsyncRequestCallback<GroovyClass>()
             {
-               classDescriptionReceived(this.getClassInfo());
-            }
-            
-            @Override
-            public void handleError(Throwable exc)
-            {
-               handleClassDescriptionException(exc);
-            }
-         });
+
+               @Override
+               protected void onSuccess(GroovyClass result)
+               {
+                  classDescriptionReceived(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleClassDescriptionException(exception);
+               }
+            });
       }
       else
       {
@@ -296,37 +290,39 @@ public class GroovyTokenCollector implements TokenCollectorExt, Comparator<Token
             action = Action.ANNOTATION;
             beforeToken += "@";
             tokenToComplete = tokenToComplete.substring(1);
-            CodeAssistantService.getInstance().fintType(Types.ANNOTATION, tokenToComplete, new TokensCallback()
-            {
-               @Override
-               public void onResponseReceived(Request request, Response response)
+            CodeAssistantService.getInstance().fintType(Types.ANNOTATION, tokenToComplete,
+               new AsyncRequestCallback<List<TokenExt>>()
                {
-                  filterTokens(this.getTokens());
-               }
 
-               @Override
-               public void handleError(Throwable exc)
-               {
-                  handlerClassesReceivedError(exc);
-               }
-            });
+                  @Override
+                  protected void onSuccess(List<TokenExt> result)
+                  {
+                     filterTokens(result);
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     handlerClassesReceivedError(exception);
+                  }
+               });
             return;
          }
 
          CodeAssistantService.getInstance().findClassesByPrefix(tokenToComplete, activeFile.getHref(),
-            new TokensCallback()
+            new AsyncRequestCallback<List<TokenExt>>()
             {
 
                @Override
-               public void onResponseReceived(Request request, Response response)
+               protected void onSuccess(List<TokenExt> result)
                {
-                  filterTokens(this.getTokens());
+                  filterTokens(result);
                }
 
                @Override
-               public void handleError(Throwable exc)
+               protected void onFailure(Throwable exception)
                {
-                  handlerClassesReceivedError(exc);
+                  handlerClassesReceivedError(exception);
                }
             });
       }

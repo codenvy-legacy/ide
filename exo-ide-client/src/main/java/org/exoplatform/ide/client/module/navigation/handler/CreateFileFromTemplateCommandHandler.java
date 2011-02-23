@@ -20,6 +20,8 @@ package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -30,7 +32,6 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateHandler;
@@ -78,18 +79,22 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
 
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
    {
-      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
+         @Override
+         protected void onSuccess(TemplateList result)
+         {
+            CreateFileFromTemplatePresenter createFilePresenter =
+               new CreateFileFromTemplatePresenter(eventBus, selectedItems, result.getTemplates(), openedFiles);
+            CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
+               new CreateFileFromTemplateForm(eventBus, result.getTemplates(), createFilePresenter);
+            createFilePresenter.bindDisplay(createFileDisplay);            
+         }
          
          @Override
-         public void onTemplateListReceived()
+         protected void onFailure(Throwable exception)
          {
-            TemplateList templateList = this.getTemplateList();
-            CreateFileFromTemplatePresenter createFilePresenter =
-               new CreateFileFromTemplatePresenter(eventBus, selectedItems, templateList.getTemplates(), openedFiles);
-            CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
-               new CreateFileFromTemplateForm(eventBus, templateList.getTemplates(), createFilePresenter);
-            createFilePresenter.bindDisplay(createFileDisplay);            
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }

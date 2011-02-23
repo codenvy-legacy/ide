@@ -19,13 +19,12 @@
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -40,7 +39,6 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptEvent;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyValidateCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyValidateResultReceivedEvent;
 
 import java.util.HashMap;
@@ -154,54 +152,53 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
 
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
-      GroovyService.getInstance().validate(activeFile.getName(), activeFile.getHref(), activeFile.getContent(),
-         new GroovyValidateCallback()
+      GroovyService.getInstance().validate(activeFile, new AsyncRequestCallback<File>()
+      {
+         
+         @Override
+         protected void onSuccess(File result)
          {
-
-            @Override
-            public void onResponseReceived(Request request, Response response)
+            String outputContent = "<b>" + result.getName() + "</b> validated successfully.";
+            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+            eventBus.fireEvent(new GroovyValidateResultReceivedEvent(result.getName(), result.getHref()));
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            if (exception instanceof ServerException)
             {
-               String outputContent = "<b>" + this.getFileName() + "</b> validated successfully.";
-               eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-               eventBus.fireEvent(new GroovyValidateResultReceivedEvent(this.getFileName(), this.getFileHref()));
-            }
+               ServerException serverException = (ServerException)exception;
 
-            @Override
-            public void fireErrorEvent(Throwable exception)
+               String outputContent = "<b>" + this.getResult().getName() + "</b> validation failed.&nbsp;";
+               outputContent +=
+                  "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText()
+                     + "</i>)";
+
+               if (!serverException.getMessage().equals(""))
+               {
+                  outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+               }
+
+               findLineNumberAndColNumberOfError(exception.getMessage());
+
+               outputContent =
+                  "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction("
+                     + String.valueOf(errLineNumber) + "," + String.valueOf(errColumnNumber) + ", '"
+                     + this.getResult().getHref() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
+
+               eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+            }
+            else
             {
-               if (exception instanceof ServerException)
-               {
-                  ServerException serverException = (ServerException)exception;
-
-                  String outputContent = "<b>" + this.getFileName() + "</b> validation failed.&nbsp;";
-                  outputContent +=
-                     "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText()
-                        + "</i>)";
-
-                  if (!serverException.getMessage().equals(""))
-                  {
-                     outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
-                  }
-
-                  findLineNumberAndColNumberOfError(exception.getMessage());
-
-                  outputContent =
-                     "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction("
-                        + String.valueOf(errLineNumber) + "," + String.valueOf(errColumnNumber) + ", '"
-                        + this.getFileHref() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
-
-                  eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
-               }
-               else
-               {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-               }
-               GroovyValidateResultReceivedEvent event =
-                  new GroovyValidateResultReceivedEvent(this.getFileName(), this.getFileHref());
-               event.setException(exception);
-               eventBus.fireEvent(event);
+               eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
-         });
+            GroovyValidateResultReceivedEvent event =
+               new GroovyValidateResultReceivedEvent(this.getResult().getName(), this.getResult().getHref());
+            event.setException(exception);
+            eventBus.fireEvent(event);
+         }
+      });
    }
 
    private native void initGoToErrorFunction() /*-{

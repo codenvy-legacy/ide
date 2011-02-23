@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.model.template;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+
 
 /**
  * Created by The eXo Platform SAS .
@@ -41,10 +43,21 @@ public abstract class TemplateService
       instance = this;
    }
 
-   public abstract void getTemplates(TemplateListReceivedCallback callback);
+   /**
+    * @param callback
+    */
+   public abstract void getTemplates(AsyncRequestCallback<TemplateList> callback);
 
+   /**
+    * @param template
+    * @param callback
+    */
    public abstract void createTemplate(Template template, TemplateCreatedCallback callback);
 
+   /**
+    * @param template
+    * @param callback
+    */
    public abstract void deleteTemplate(Template template, TemplateDeletedCallback callback);
 
 }

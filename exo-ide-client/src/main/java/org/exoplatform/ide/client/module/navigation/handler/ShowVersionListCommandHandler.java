@@ -19,8 +19,6 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -61,26 +59,27 @@ public class ShowVersionListCommandHandler implements ShowVersionListHandler, Ed
    {
       if (activeFile != null && !(activeFile instanceof Version))
       {
-         VirtualFileSystem.getInstance().getVersions(activeFile, new VersionsCallback(eventBus)
+         VirtualFileSystem.getInstance().getVersions(activeFile, new VersionsCallback()
          {
-            public void onResponseReceived(Request request, Response response)
+            @Override
+            protected void onSuccess(VersionsData result)
             {
-               if (this.getVersions() != null && this.getVersions().size() > 0)
+               if (result.getVersions() != null && result.getVersions().size() > 0)
                {
-                  new ViewVersionsForm(eventBus, this.getItem(), this.getVersions());
+                  new ViewVersionsForm(eventBus, result.getItem(), result.getVersions());
                }
                else
                {
-                  Dialogs.getInstance().showInfo("Item \"" + this.getItem().getName() + "\" has no versions.");
+                  Dialogs.getInstance().showInfo("Item \"" + result.getItem().getName() + "\" has no versions.");
                }
             }
 
             @Override
-            public void fireErrorEvent()
+            protected void onFailure(Throwable exception)
             {
                String errorMessage = "Versions were not received.";
                eventBus.fireEvent(new ExceptionThrownEvent(errorMessage));
-               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));               
             }
          });
       }

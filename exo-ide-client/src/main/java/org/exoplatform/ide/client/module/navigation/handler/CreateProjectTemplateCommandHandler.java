@@ -20,8 +20,9 @@ package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateHandler;
@@ -48,13 +49,19 @@ public class CreateProjectTemplateCommandHandler implements CreateProjectTemplat
     */
    public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
    {
-      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
+         
          @Override
-         public void onTemplateListReceived()
+         protected void onSuccess(TemplateList result)
          {
-            TemplateList templateList = this.getTemplateList();
-            new CreateProjectTemplateForm(eventBus, templateList.getTemplates());
+            new CreateProjectTemplateForm(eventBus, result.getTemplates());
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));            
          }
       });
    }

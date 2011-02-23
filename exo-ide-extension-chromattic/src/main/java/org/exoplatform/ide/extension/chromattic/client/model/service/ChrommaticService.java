@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.model.service;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
-import org.exoplatform.ide.extension.chromattic.client.model.service.callback.CompileGroovyCallback;
-import org.exoplatform.ide.extension.chromattic.client.model.service.callback.CreateNodeTypeCallback;
-import org.exoplatform.ide.extension.chromattic.client.model.service.callback.NodeTypeGenerationCallback;
+import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 
 /**
  * Service is used to do actions with chromattic application and data objects.
@@ -58,18 +57,18 @@ public abstract class ChrommaticService
    /**
     * Compile groovy file.
     * @param file
-    * @param groovyCallback - callback to handler result from server
+    * @param callback - callback to handler result from server
     */
-   public abstract void compile(File file, CompileGroovyCallback groovyCallback);
+   public abstract void compile(File file, AsyncRequestCallback<String> callback);
    
    /**
     * Generate the node type XML representation.
     * 
     * @param location location of groovy file with node type definition
     * @param nodeTypeFormat node type format
-    * @param nodeTypeCallback - callback to handler result from server
+    * @param callback - callback to handler result from server
     */
-   public abstract void generateNodeType(String location, EnumNodeTypeFormat nodeTypeFormat, NodeTypeGenerationCallback nodeTypeCallback);
+   public abstract void generateNodeType(String location, EnumNodeTypeFormat nodeTypeFormat, AsyncRequestCallback<GenerateNodeTypeResult> callback);
    
    /**
     * Create (deploy) new node type.
@@ -77,9 +76,9 @@ public abstract class ChrommaticService
     * @param nodeType XML node type definition
     * @param nodeTypeFormat node type format
     * @param alreadyExistsBehaviour the behavior if node type already exists
-    * @param nodeTypeCallback - callback to handler result from server
+    * @param callback - callback to handler result from server
     */
    public abstract void createNodeType(String nodeType, EnumNodeTypeFormat nodeTypeFormat, EnumAlreadyExistsBehaviour alreadyExistsBehaviour,
-      CreateNodeTypeCallback nodeTypeCallback);
+      AsyncRequestCallback<String> callback);
 
 }

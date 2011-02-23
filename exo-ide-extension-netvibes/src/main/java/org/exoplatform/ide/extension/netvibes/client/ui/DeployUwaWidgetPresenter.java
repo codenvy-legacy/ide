@@ -24,13 +24,12 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -41,7 +40,6 @@ import org.exoplatform.ide.extension.netvibes.client.model.DeployWidget;
 import org.exoplatform.ide.extension.netvibes.client.model.Languages;
 import org.exoplatform.ide.extension.netvibes.client.model.Regions;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.DeployWidgetService;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetCategoryCallback;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetDeployCallback;
 
 import java.util.LinkedHashMap;
@@ -508,18 +506,16 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
    {
       if (categories == null || categories.getCategoryMap().size() < 0)
       {
-         DeployWidgetService.getInstance().getCategories(new WidgetCategoryCallback()
+         DeployWidgetService.getInstance().getCategories(new AsyncRequestCallback<Categories>()
          {
-            
             @Override
-            public void onResponseReceived(Request request, Response response)
+            protected void onSuccess(Categories result)
             {
-               categories = this.getCategories();
-               display.setCategoryValueMap(categories.getCategoryMap());
+               display.setCategoryValueMap(categories.getCategoryMap());               
             }
             
             @Override
-            public void handleError(Throwable exception)
+            protected void onFailure(Throwable exception)
             {
                String message = "Can not get widget's categories.";
                message += (exception == null) ? "" : "Possible reason: <br>" + exception.getMessage();
@@ -560,21 +556,22 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
       DeployWidgetService.getInstance().deploy(widget, display.getLogin().getValue(), display.getPassword().getValue(),
          new WidgetDeployCallback()
          {
+
             @Override
-            public void onResponseReceived(Request request, Response response)
+            protected void onSuccess(WidgetDeployData result)
             {
                display.closeForm();
 
                OutputMessage.Type responseType =
-                  this.getDeployResult().isSuccess() ? OutputMessage.Type.INFO : OutputMessage.Type.ERROR;
+                  result.getDeployResult().isSuccess() ? OutputMessage.Type.INFO : OutputMessage.Type.ERROR;
                String message =
-                  this.getDeployResult().isSuccess() ? "<b>" + this.getDeployWidget().getUrl() + "</b>"
-                     + " deployed successfully." : this.getDeployResult().getMessage();
+                  result.getDeployResult().isSuccess() ? "<b>" + result.getDeployWidget().getUrl() + "</b>"
+                     + " deployed successfully." : result.getDeployResult().getMessage();
                eventBus.fireEvent(new OutputEvent(message, responseType));
             }
-            
+
             @Override
-            public void handleError(Throwable exception)
+            protected void onFailure(Throwable exception)
             {
                eventBus.fireEvent(new ExceptionThrownEvent("Can't deploye widget"));
             }

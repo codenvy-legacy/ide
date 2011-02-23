@@ -18,85 +18,59 @@
  */
 package org.exoplatform.ide.client.framework.vfs.callback;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback.MoveItemData;
 
 /**
+ * Callback the client has to implement to move item.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: MoveItemCallback.java Feb 16, 2011 10:03:42 AM vereshchaka $
  *
  */
-public abstract class MoveItemCallback extends ClientRequestCallback
+public abstract class MoveItemCallback extends AsyncRequestCallback<MoveItemData>
 {
 
-   private HandlerManager eventBus;
-   
-   private Item item;
-   
-   private String sourceHref;
-   
-   public MoveItemCallback(HandlerManager eventBus)
+   public class MoveItemData
    {
-      this.eventBus = eventBus;
+      private Item item;
+      
+      private String oldHref;
+      
+      public MoveItemData(Item item, String href)
+      {
+         this.item = item;
+         this.oldHref = href;
+      }
+      
+      /**
+       * @return the item
+       */
+      public Item getItem()
+      {
+         return item;
+      }
+      
+      /**
+       * @return the oldHref
+       */
+      public String getOldHref()
+      {
+         return oldHref;
+      }
+      
    }
    
-   /**
-    * @return the item
-    */
-   public Item getItem()
-   {
-      return item;
-   }
    
    /**
-    * @param item the item to set
-    */
-   public void setItem(Item item)
-   {
-      this.item = item;
-   }
-   
-   /**
-    * @return the sourceHref
-    */
-   public String getSourceHref()
-   {
-      return sourceHref;
-   }
-   
-   /**
-    * @param sourceHref the sourceHref to set
-    */
-   public void setSourceHref(String sourceHref)
-   {
-      this.sourceHref = sourceHref;
-   }
-   
-   /**
-    * @see com.google.gwt.http.client.RequestCallback#onError(com.google.gwt.http.client.Request, java.lang.Throwable)
+    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
-   public void onError(Request request, Throwable exception)
+   protected void onFailure(Throwable exception)
    {
-      fireErrorEvent();
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.ClientRequestCallback#onUnsuccess(java.lang.Throwable)
-    */
-   @Override
-   public void onUnsuccess(Throwable exception)
-   {
-      fireErrorEvent();
-   }
-   
-   private void fireErrorEvent()
-   {
-      eventBus.fireEvent(new ExceptionThrownEvent(
+      fireEvent(new ExceptionThrownEvent(
          "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
    }
 

@@ -27,16 +27,16 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateDeletedCallback;
-import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
+import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
 import org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler;
@@ -198,12 +198,12 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
    
    protected void deleteTemplate(T template)
    {
-      TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback(eventBus)
+      TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback()
       {
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(Template result)
          {
-            selectedTemplates.remove(this.getTemplate());
+            selectedTemplates.remove(result);
             deleteNextTemplate();
          }
       });
@@ -265,19 +265,25 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
     */
    private void refreshTemplateList()
    {
-      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
          
          @Override
-         public void onTemplateListReceived()
+         protected void onSuccess(TemplateList result)
          {
-            updateTemplateList(this.getTemplateList().getTemplates());
+            updateTemplateList(result.getTemplates());
             
             display.getTemplateListGrid().setValue(templateList);
             if (templateList.size() > 0)
             {
                display.selectLastTemplate();
             }
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }

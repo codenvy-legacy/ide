@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.groovy;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
+import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPath;
 
 import java.util.List;
 
@@ -47,44 +51,43 @@ public abstract class GroovyService
    /**
     * Validate Groovy script.
     * 
-    * @param fileName - file name
-    * @param fileHref - file location
+    * @param file - the file to validate
     * @param fileContent - file content
     * @param groovyCallback - callback to handler response from server
     */
-   public abstract void validate(String fileName, String fileHref, String fileContent, GroovyValidateCallback groovyCallback);
+   public abstract void validate(File file, AsyncRequestCallback<File> callback);
    
    /**
     * Deploy Groovy script.
     * 
     * @param href - href of source to deploy
-    * @param groovyCallback - the callback code which the user has to implement
+    * @param callback - the callback code which the user has to implement
     */
-   public abstract void deploy(String href, GroovyDeployUndeployCallback groovyCallback);
+   public abstract void deploy(String href, AsyncRequestCallback<String> callback);
    
    /**
     * Deploy Groovy script.
     * 
     * @param href - href of source to deploy
-    * @param groovyCallback - the callback code which the user has to implement
+    * @param callback - the callback code which the user has to implement
     */
-   public abstract void deploySandbox(String href, GroovyDeployUndeployCallback groovyCallback);
+   public abstract void deploySandbox(String href, AsyncRequestCallback<String> callback);
    
    /**
     * Undeploy deployed Groovy script.
     * 
     * @param href - href of source to undeploy
-    * @param groovyCallback - the callback code which the user has to implement
+    * @param callback - the callback code which the user has to implement
     */
-   public abstract void undeploySandbox(String href, GroovyDeployUndeployCallback groovyCallback);
+   public abstract void undeploySandbox(String href, AsyncRequestCallback<String> callback);
    
    /**
     * Undeploy deployed Groovy script.
     * 
     * @param href - href of source to undeploy
-    * @param groovyCallback - the callback code which the user has to implement
+    * @param callback - the callback code which the user has to implement
     */
-   public abstract void undeploy(String href, GroovyDeployUndeployCallback groovyCallback);
+   public abstract void undeploy(String href, AsyncRequestCallback<String> callback);
    
 
    /**
@@ -96,9 +99,9 @@ public abstract class GroovyService
     * 
     * @param href location of the item, 
     * with respect to which the classpath location must be found (file or folder).
-    * @param classpathCallback - handle the results when they are returned from the server
+    * @param callback - handle the results when they are returned from the server
     */
-   public abstract void getClassPathLocation(String href, ClasspathCallback classpathCallback);
+   public abstract void getClassPathLocation(String href, AsyncRequestCallback<ClassPath> callback);
    
    /**
     * Get Groovy script output.
@@ -108,9 +111,9 @@ public abstract class GroovyService
     * @param headers - the headers of request
     * @param params - the params of request
     * @param body - the body of request
-    * @param classpathCallback - handle the results when they are returned from the server
+    * @param callback - handle the results when they are returned from the server
     */
    public abstract void getOutput(String url, String method, List<SimpleParameterEntry> headers,
-      List<SimpleParameterEntry> params, String body, GroovyOutputCallback groovyCallback);
+      List<SimpleParameterEntry> params, String body, AsyncRequestCallback<RestServiceOutput> callback);
 
 }

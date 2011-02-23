@@ -19,12 +19,11 @@
 package org.exoplatform.ide.client.application.phases;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.discovery.DefaultEntryPointCallback;
-import org.exoplatform.ide.client.framework.discovery.DiscoverableCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 
@@ -58,21 +57,26 @@ public class LoadDefaultEntryPointPhase extends Phase
       /*
        * get default entry point
        */
-      DiscoveryService.getInstance().getDefaultEntryPoint(new DefaultEntryPointCallback(eventBus)
+      DiscoveryService.getInstance().getDefaultEntryPoint(new DefaultEntryPointCallback()
       {
-         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(String result)
          {
-            applicationConfiguration.setDefaultEntryPoint(this.getDefaultEntryPoint());
-            
-            DiscoveryService.getInstance().getIsDiscoverable(new DiscoverableCallback(eventBus)
+            applicationConfiguration.setDefaultEntryPoint(result);
+
+            DiscoveryService.getInstance().getIsDiscoverable(new AsyncRequestCallback<Boolean>()
             {
-               
+
                @Override
-               public void onResponseReceived(Request request, Response response)
+               protected void onSuccess(Boolean result)
                {
                   new CheckEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
                }
             });
          }

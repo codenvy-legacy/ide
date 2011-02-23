@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.extension.netvibes.client.service.deploy;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.extension.netvibes.client.model.Categories;
 import org.exoplatform.ide.extension.netvibes.client.model.DeployWidget;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetCategoryCallback;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetDeployCallback;
 
 /**
@@ -56,9 +57,9 @@ public abstract class DeployWidgetService
     * Gets the list of available widget's categories.
     * The location of the categories must be pointed in the service implementation.
     * 
-    * @param widgetCallback - the callback code which the user has to implement
+    * @param callback - the callback code which the user has to implement
     */
-   public abstract void getCategories(WidgetCategoryCallback widgetCallback);
+   public abstract void getCategories(AsyncRequestCallback<Categories> callback);
 
    /**
     * Deploys widget to Netvibes Ecosystem.
@@ -66,7 +67,7 @@ public abstract class DeployWidgetService
     * @param deployWidget deploy data used for deploy
     * @param login user's login in Netvibes Ecosystem
     * @param password user's pasword in Netvibes Ecosystem
-    * @param widgetCallback - the callback code which the user has to implement
+    * @param callback - the callback code which the user has to implement
     */
-   public abstract void deploy(DeployWidget deployWidget, String login, String password, WidgetDeployCallback widgetCallback);
+   public abstract void deploy(DeployWidget deployWidget, String login, String password, WidgetDeployCallback callback);
 }

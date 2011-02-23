@@ -19,8 +19,6 @@
 package org.exoplatform.ide.client.application.phases;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -37,6 +35,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 
@@ -104,53 +103,40 @@ EditorFileOpenedHandler
       preloadNextFile();
    }
 
-   protected void preloadNextFile()
+   private void preloadNextFile()
    {
-      try
+      if (filesToLoad.size() == 0)
       {
-         if (filesToLoad.size() == 0)
+         fileToLoad = null;
+         handlers.removeHandlers();
+         eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+         openFilesInEditor();
+         return;
+      }
+
+      String href = filesToLoad.get(0);
+
+      fileToLoad = new File(href);
+      filesToLoad.remove(0);
+
+      VirtualFileSystem.getInstance().getPropertiesCallback(fileToLoad, new ItemPropertiesCallback()
+      {
+         @Override
+         protected void onSuccess(Item result)
          {
-            fileToLoad = null;
-            handlers.removeHandlers();
-            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-            openFilesInEditor();
-            return;
-         }
-
-         String href = filesToLoad.get(0);
-
-         fileToLoad = new File(href);
-         filesToLoad.remove(0);
-
-         VirtualFileSystem.getInstance().getPropertiesCallback(fileToLoad, new ItemPropertiesCallback()
-         {
-            public void onResponseReceived(Request request, Response response)
+            fileToLoad.setNewFile(false);
+            fileToLoad.setContentChanged(false);
+            VirtualFileSystem.getInstance().getContent(fileToLoad, new FileCallback()
             {
-               fileToLoad.setNewFile(false);
-               fileToLoad.setContentChanged(false);
-               VirtualFileSystem.getInstance().getContent(fileToLoad, new FileCallback(eventBus)
+               @Override
+               protected void onSuccess(File result)
                {
-                  
-                  @Override
-                  public void onResponseReceived(Request request, Response response)
-                  {
-                     openedFiles.put(fileToLoad.getHref(), fileToLoad);
-                     preloadNextFile();
-                  }
-               });
-            }
-            
-            @Override
-            public void fireErrorEvent()
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
-            }
-         });
-      }
-      catch (Exception exc)
-      {
-         exc.printStackTrace();
-      }
+                  openedFiles.put(fileToLoad.getHref(), fileToLoad);
+                  preloadNextFile();
+               }
+            });
+         }
+      });
    }
 
    public void onError(ExceptionThrownEvent event)

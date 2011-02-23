@@ -18,18 +18,19 @@
  */
 package org.exoplatform.ide.extension.groovy.client.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Vector;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.wadl.Method;
@@ -38,18 +39,16 @@ import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSandboxEvent;
+import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyOutputCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * Created by The eXo Platform SAS.
@@ -451,21 +450,21 @@ public class GroovyServiceOutputPreviewPresenter
          display.closeForm();
 
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers, queryParams,
-            display.getRequestBody().getValue(), new GroovyOutputCallback()
+            display.getRequestBody().getValue(), new AsyncRequestCallback<RestServiceOutput>()
             {
 
                @Override
-               public void onResponseReceived(Request request, Response response)
+               protected void onSuccess(RestServiceOutput result)
                {
-                  eventBus.fireEvent(new RestServiceOutputReceivedEvent(this.getOutput()));
+                  eventBus.fireEvent(new RestServiceOutputReceivedEvent(result));
                }
 
                @Override
-               public void fireErrorEvent(Throwable exception)
+               protected void onFailure(Throwable exception)
                {
                   if (exception instanceof ServerException)
                   {
-                     RestServiceOutputReceivedEvent event = new RestServiceOutputReceivedEvent(this.getOutput());
+                     RestServiceOutputReceivedEvent event = new RestServiceOutputReceivedEvent(this.getResult());
                      event.setException(exception);
                      eventBus.fireEvent(event);
                   }
@@ -473,9 +472,7 @@ public class GroovyServiceOutputPreviewPresenter
                   {
                      eventBus.fireEvent(new ExceptionThrownEvent(exception));
                   }
-
                }
-
             });
       }
       catch (IllegalArgumentException e)

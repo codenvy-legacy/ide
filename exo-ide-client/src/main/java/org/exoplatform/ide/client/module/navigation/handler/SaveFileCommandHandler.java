@@ -19,8 +19,6 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -36,6 +34,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 
@@ -88,11 +87,12 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
 
       if (file.isContentChanged())
       {
-         VirtualFileSystem.getInstance().saveContent(file, lockToken, new FileContentSaveCallback(eventBus)
+         VirtualFileSystem.getInstance().saveContent(file, lockToken, new FileContentSaveCallback()
          {
-            public void onResponseReceived(Request request, Response response)
+            @Override
+            protected void onSuccess(FileData result)
             {
-               getProperties(this.getFile());
+               getProperties(result.getFile());
             }
          });
          return;
@@ -103,17 +103,10 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
          {
             VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
             {
-               
-               public void onResponseReceived(Request request, Response response)
-               {
-                  handlers.removeHandlers();
-                  eventBus.fireEvent(new FileSavedEvent((File)this.getItem(), null));
-               }
-               
                @Override
-               public void fireErrorEvent()
+               protected void onSuccess(Item result)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+                  eventBus.fireEvent(new FileSavedEvent((File)result, null));
                }
             });
             return;
@@ -127,18 +120,10 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
    {
       VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
       {
-         
-         public void onResponseReceived(Request request, Response response)
-         {
-            handlers.removeHandlers();
-            eventBus.fireEvent(new FileSavedEvent((File)this.getItem(), null));
-         }
-         
          @Override
-         public void fireErrorEvent()
+         protected void onSuccess(Item result)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
-            handlers.removeHandlers();
+            eventBus.fireEvent(new FileSavedEvent((File)result, null));
          }
       });
    }

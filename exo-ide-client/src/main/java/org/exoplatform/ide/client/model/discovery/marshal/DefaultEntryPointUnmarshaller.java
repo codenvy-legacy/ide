@@ -43,7 +43,7 @@ public class DefaultEntryPointUnmarshaller implements Unmarshallable
 
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      entryPointCallback.setDefaultEntryPoint(response.getText());
+      entryPointCallback.setResult(response.getText());
    }
 
 }

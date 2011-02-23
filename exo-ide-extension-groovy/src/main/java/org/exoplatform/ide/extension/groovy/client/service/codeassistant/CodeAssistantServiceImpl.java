@@ -70,15 +70,17 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
     * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService#findClass(java.lang.String)
     */
    @Override
-   public void findClass(String className, String fileHref, TokensCallback tokensCallback)
+   public void findClass(String className, String fileHref, AsyncRequestCallback<List<TokenExt>> callback)
    {
       String url = restServiceContext + FIND_URL + className;
       
       List<TokenExt> tokens = new ArrayList<TokenExt>();
-      tokensCallback.setTokens(tokens);
+      callback.setResult(tokens);
+      
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
       
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, tokensCallback);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
    }
 
@@ -86,14 +88,16 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
     * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService#getClassDescription(java.lang.String)
     */
    @Override
-   public void getClassDescription(String fqn, String fileHref, ClassInfoCallback classInfoCallback)
+   public void getClassDescription(String fqn, String fileHref, AsyncRequestCallback<GroovyClass> callback)
    {
       String url = restServiceContext + GET_CLASS_URL + fqn;
       
       GroovyClass classInfo = new GroovyClass();
-      classInfoCallback.setClassInfo(classInfo);
+      callback.setResult(classInfo);
       ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller(classInfo);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, classInfoCallback);
+      
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
    }
 
@@ -101,15 +105,16 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
     * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService#findClassesByPrefix(java.lang.String)
     */
    @Override
-   public void findClassesByPrefix(String prefix, String fileHref, TokensCallback tokensCallback)
+   public void findClassesByPrefix(String prefix, String fileHref, AsyncRequestCallback<List<TokenExt>> callback)
    {
       String url = restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className";
       
       List<TokenExt> tokens = new ArrayList<TokenExt>();
-      tokensCallback.setTokens(tokens);
+      callback.setResult(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
       
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, tokensCallback);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
    }
 
@@ -117,7 +122,7 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
     * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService#fintType(org.exoplatform.ide.client.module.groovy.service.codeassistant.Types)
     */
    @Override
-   public void fintType(Types type, String prefix, TokensCallback tokensCallback)
+   public void fintType(Types type, String prefix, AsyncRequestCallback<List<TokenExt>> callback)
    {
       String url = restServiceContext + FIND_TYPE + type.toString();
       if(prefix != null && !prefix.isEmpty())
@@ -125,10 +130,11 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
        url += "?prefix=" + prefix;
       }
       List<TokenExt> tokens = new ArrayList<TokenExt>();
-      tokensCallback.setTokens(tokens);
+      callback.setResult(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
       
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus,unmarshaller, tokensCallback);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 

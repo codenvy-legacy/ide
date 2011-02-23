@@ -18,9 +18,14 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
@@ -37,19 +42,11 @@ import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetHandler;
 import org.exoplatform.ide.extension.gadget.client.event.UndeployGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.UndeployGadgetHandler;
-import org.exoplatform.ide.extension.gadget.client.service.DeployUndeployGadgetCallback;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadataCallback;
+import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
-import org.exoplatform.ide.extension.gadget.client.service.SecurityTokenCallback;
 import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
 import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
 import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -89,29 +86,29 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
     */
    public void onDeployGadget(DeployGadgetEvent event)
    {
-      GadgetService.getInstance().deployGadget(activeFile.getHref(), new DeployUndeployGadgetCallback()
+      GadgetService.getInstance().deployGadget(activeFile.getHref(), new AsyncRequestCallback<String>()
       {
-
+         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(String result)
          {
-            String outputContent = "<b>" + this.getUrl() + "</b> deployed successfully.";
-            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+            String outputContent = "<b>" + result + "</b> deployed successfully.";
+            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));      
          }
-
+         
          @Override
-         public void handleError(Throwable exc)
+         protected void onFailure(Throwable exc)
          {
             if (exc instanceof ServerException)
             {
                ServerException exception = (ServerException)exc;
-               String outputContent = "<b>" + this.getUrl() + "</b> deploy failed.&nbsp;";
+               String outputContent = "<b>" + this.getResult() + "</b> deploy failed.&nbsp;";
                sendExceptionEvent(exception, outputContent);
             }
             else
             {
                eventBus.fireEvent(new ExceptionThrownEvent(exc));
-            }
+            }  
          }
       });
    }
@@ -121,32 +118,31 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
     */
    public void onUndeployGadget(UndeployGadgetEvent event)
    {
-      GadgetService.getInstance().undeployGadget(activeFile.getHref(), new DeployUndeployGadgetCallback()
+      GadgetService.getInstance().undeployGadget(activeFile.getHref(), new AsyncRequestCallback<String>()
       {
-
+         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(String result)
          {
-            String outputContent = "<b>" + this.getUrl() + "</b> undeployed successfully.";
+            String outputContent = "<b>" + result + "</b> undeployed successfully.";
             eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
          }
-
+         
          @Override
-         public void handleError(Throwable exc)
+         protected void onFailure(Throwable exc)
          {
             if (exc instanceof ServerException)
             {
                ServerException exception = (ServerException)exc;
-               String outputContent = "<b>" + this.getUrl() + "</b> undeploy failed.&nbsp;";
+               String outputContent = "<b>" + this.getResult() + "</b> undeploy failed.&nbsp;";
                sendExceptionEvent(exception, outputContent);
             }
             else
             {
                eventBus.fireEvent(new ExceptionThrownEvent(exc));
             }
-
          }
-      });
+      }); 
    }
 
    /**
@@ -190,20 +186,19 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
       href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
 
       TokenRequest tokenRequest = new TokenRequest(URL.encode(href), owner, viewer, moduleId, container, domain);
-      GadgetService.getInstance().getSecurityToken(tokenRequest, new SecurityTokenCallback()
+      GadgetService.getInstance().getSecurityToken(tokenRequest, new AsyncRequestCallback<TokenResponse>()
       {
 
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(TokenResponse result)
          {
-            TokenResponse tokenResponse = this.getTokenResponse();
-            getGadgetMetadata(tokenResponse);
+            getGadgetMetadata(result);
          }
 
          @Override
-         public void handleError(Throwable exc)
+         protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(exc));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }
@@ -213,13 +208,13 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
     */
    private void getGadgetMetadata(TokenResponse tokenResponse)
    {
-      GadgetService.getInstance().getGadgetMetadata(tokenResponse, new GadgetMetadataCallback()
+      GadgetService.getInstance().getGadgetMetadata(tokenResponse, new AsyncRequestCallback<GadgetMetadata>()
       {
 
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(GadgetMetadata result)
          {
-            GadgetPreviewPane gadgetPreviewPane =
-               new GadgetPreviewPane(eventBus, applicationConfiguration, this.getMetadata());
+            GadgetPreviewPane gadgetPreviewPane = new GadgetPreviewPane(eventBus, applicationConfiguration, result);
             gadgetPreviewPane.setType(ViewType.PREVIEW);
             gadgetPreviewPane.setImage(new Image(GadgetClientBundle.INSTANCE.preview()));
             IDE.getInstance().openView(gadgetPreviewPane);
@@ -227,9 +222,10 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
             previewOpened = true;
          }
 
-         public void handleError(Throwable exc)
+         @Override
+         protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(exc));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }

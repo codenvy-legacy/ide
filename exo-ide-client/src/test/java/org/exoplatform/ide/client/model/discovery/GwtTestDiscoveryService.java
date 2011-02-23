@@ -19,12 +19,8 @@
 package org.exoplatform.ide.client.model.discovery;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.ide.client.AbstractGwtTest;
 import org.exoplatform.ide.client.Const;
@@ -77,26 +73,17 @@ public class GwtTestDiscoveryService extends AbstractGwtTest
 
    public void testGetEntryPoints()
    {
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
-      
-         public void onError(ExceptionThrownEvent event)
-         {
-            fail(event.getErrorMessage());
-            finishTest();
-         }
-      });
-      
-      discovertyService.getEntryPoints(testUrl, new DiscoveryCallback(eventbus)
+      discovertyService.getEntryPoints(testUrl, new DiscoveryCallback()
       {
          
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(List<EntryPoint> result)
          {
             final String entryPoint1 = "http://" + Window.Location.getHost() + "/ideall/rest/private/jcr/repository/production/";
             
             final String entryPoint2 = "http://" + Window.Location.getHost() + "/ideall/rest/private/jcr/repository/dev-monit/";
             
-            List<EntryPoint> entryPoints = this.getEntryPointList();
+            List<EntryPoint> entryPoints = result;
             
             assertEquals(2, entryPoints.size());
             for (EntryPoint entryPoint : entryPoints)
@@ -113,28 +100,30 @@ public class GwtTestDiscoveryService extends AbstractGwtTest
             }
             finishTest();
          }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            fail();
+         }
       });
       delayTestFinish(DELAY_TEST);
    }
    
    public void testGetEntryPointsFail()
    {
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      discovertyService.getEntryPoints(testUrlWrong, new DiscoveryCallback()
       {
-      
-         public void onError(ExceptionThrownEvent event)
-         {
-            assertNotNull(event.getError());
-            assertNotNull(event.getErrorMessage());
-            finishTest();
-         }
-      });
-      
-      discovertyService.getEntryPoints(testUrlWrong, new DiscoveryCallback(eventbus)
-      {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(List<EntryPoint> result)
          {
             fail("EntryPointsReceivedHandler handles EntryPointsReceivedEvent with incorrect URL");
+            finishTest();
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
             finishTest();
          }
       });

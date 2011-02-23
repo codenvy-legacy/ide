@@ -30,8 +30,6 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -106,8 +104,6 @@ public class CreateProjectTemplatePresenter
 
       String getTemplateLocationInProject(Template template);
    }
-   
-   private final String CLASSPATH_FILENAME = ".groovyclasspath";
    
    private HandlerManager eventBus;
 
@@ -430,12 +426,13 @@ public class CreateProjectTemplatePresenter
             return;
          }
       }
-      TemplateServiceImpl.getInstance().createTemplate(templateToCreate, new TemplateCreatedCallback(eventBus)
+      TemplateServiceImpl.getInstance().createTemplate(templateToCreate, new TemplateCreatedCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(Template result)
          {
             display.closeForm();
-            Dialogs.getInstance().showInfo("Template created successfully!");
+            Dialogs.getInstance().showInfo("Template created successfully!");            
          }
       });
    }

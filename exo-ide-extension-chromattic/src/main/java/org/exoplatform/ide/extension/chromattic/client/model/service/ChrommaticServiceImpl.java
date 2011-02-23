@@ -29,9 +29,6 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
-import org.exoplatform.ide.extension.chromattic.client.model.service.callback.CompileGroovyCallback;
-import org.exoplatform.ide.extension.chromattic.client.model.service.callback.CreateNodeTypeCallback;
-import org.exoplatform.ide.extension.chromattic.client.model.service.callback.NodeTypeGenerationCallback;
 import org.exoplatform.ide.extension.chromattic.client.model.service.marshaller.GenerateNodeTypeResultUnmarshaller;
 
 /**
@@ -80,33 +77,35 @@ public class ChrommaticServiceImpl extends ChrommaticService
     * @see org.exoplatform.ide.client.module.chromattic.model.service.ChrommaticService#compile(org.exoplatform.ide.client.framework.vfs.File)
     */
    @Override
-   public void compile(File file, CompileGroovyCallback groovyCallback)
+   public void compile(File file, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + COMPILE_METHOD_CONTEXT;
 
-      groovyCallback.setFileHref(file.getHref());
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, groovyCallback);
+      callback.setResult(file.getHref());
+      callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.LOCATION, file.getHref()).send(callback);
    }
 
    
    @Override
-   public void generateNodeType(String location, EnumNodeTypeFormat nodeTypeFormat, NodeTypeGenerationCallback nodeTypeCallback)
+   public void generateNodeType(String location, EnumNodeTypeFormat nodeTypeFormat, AsyncRequestCallback<GenerateNodeTypeResult> callback)
    {
       String url = restServiceContext + GENERATE_NODE_TYPE_METHOD_CONTEXT;
       GenerateNodeTypeResult result = new GenerateNodeTypeResult();
-      nodeTypeCallback.setResult(result);
+      callback.setResult(result);
+      
       GenerateNodeTypeResultUnmarshaller unmarshaller = new GenerateNodeTypeResultUnmarshaller(result);
       String params = "do-location=" + location + "&";
       params += "nodeTypeFormat=" + nodeTypeFormat.value();
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, nodeTypeCallback);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).send(callback);
    }
 
    @Override
    public void createNodeType(String nodeType, EnumNodeTypeFormat nodeTypeFormat, EnumAlreadyExistsBehaviour alreadyExistsBehaviour,
-      CreateNodeTypeCallback nodeTypeCallback)
+      AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + DEPLOY_NODE_TYPE_METHOD_CONTEXT;
       String path = (nodeTypeFormat == null) ? EnumNodeTypeFormat.EXO.value() : nodeTypeFormat.value();
@@ -115,7 +114,7 @@ public class ChrommaticServiceImpl extends ChrommaticService
          (alreadyExistsBehaviour == null) ? EnumAlreadyExistsBehaviour.FAIL_IF_EXISTS.getCode()
             : alreadyExistsBehaviour.getCode();
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, nodeTypeCallback);
+         callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url + path, loader).data(nodeType).send(callback);      
    }
 

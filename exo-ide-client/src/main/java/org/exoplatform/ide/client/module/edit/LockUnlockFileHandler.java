@@ -19,11 +19,10 @@
 package org.exoplatform.ide.client.module.edit;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -34,7 +33,7 @@ import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.ItemUnlockCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.callback.ItemLockCallback;
 import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
@@ -91,18 +90,19 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
       
       if (lockToken != null)
       {
-         VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new ItemUnlockCallback()
+         VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new AsyncRequestCallback<Item>()
          {
             
-            public void onResponseReceived(Request request, Response response)
+            @Override
+            protected void onSuccess(Item result)
             {
-               eventBus.fireEvent(new ItemUnlockedEvent(this.getItem()));
+               eventBus.fireEvent(new ItemUnlockedEvent(result)); 
             }
             
             @Override
-            public void fireErrorEvent()
+            protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));               
             }
          });
       }
@@ -128,44 +128,43 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
    {
       if (event.isLockFile())
       {
-         VirtualFileSystem.getInstance().lock(activeFile, 600, userInfo.getName(), 
-            new ItemLockCallback()
+         VirtualFileSystem.getInstance().lock(activeFile, 600, userInfo.getName(), new ItemLockCallback()
+         {
+            @Override
+            protected void onSuccess(ItemLockData result)
             {
-               @Override
-               public void onResponseReceived(Request request, Response response)
-               {
-                  eventBus.fireEvent(new ItemLockResultReceivedEvent(this.getItem(), this.getLockToken(), null));
-               }
-               
-               @Override
-               public void fireErrorEvent(Throwable exc)
-               {
-                  ItemLockResultReceivedEvent event = new ItemLockResultReceivedEvent(this.getItem(), this.getLockToken(), 
+               eventBus.fireEvent(new ItemLockResultReceivedEvent(result.getItem(), result.getLockToken(), null));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               ItemLockResultReceivedEvent event =
+                  new ItemLockResultReceivedEvent(this.getResult().getItem(), this.getResult().getLockToken(),
                      "Service is not deployed.<br />Lock was not enforceable on this resource.");
-                  event.setException(exc);
-                  eventBus.fireEvent(event);
-               }
-            });
-         
+               event.setException(exception);
+               eventBus.fireEvent(event);
+            }
+         });
       }
       else
       {
          String lockToken = lockTokens.get(activeFile.getHref());
          if (lockToken != null)
          {
-            VirtualFileSystem.getInstance().unlock(activeFile, lockToken, new ItemUnlockCallback()
+            VirtualFileSystem.getInstance().unlock(activeFile, lockToken, new AsyncRequestCallback<Item>()
             {
                
                @Override
-               public void onResponseReceived(Request request, Response response)
+               protected void onSuccess(Item result)
                {
-                  eventBus.fireEvent(new ItemUnlockedEvent(this.getItem()));
+                  eventBus.fireEvent(new ItemUnlockedEvent(result));
                }
                
                @Override
-               public void fireErrorEvent()
+               protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+                  eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));                  
                }
             });
          }

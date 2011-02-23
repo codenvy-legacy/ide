@@ -19,8 +19,6 @@
 package org.exoplatform.ide.client.module.preferences;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.command.Control;
@@ -34,6 +32,7 @@ import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedHandler
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -154,11 +153,12 @@ public class PreferencesModule implements InitializeServicesHandler, Application
 
    public void onSelectWorkspace(SelectWorkspaceEvent event)
    {
-      DiscoveryService.getInstance().getEntryPoints(new DiscoveryCallback(eventBus)
+      DiscoveryService.getInstance().getEntryPoints(new DiscoveryCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(List<EntryPoint> result)
          {
-            new SelectWorkspaceForm(eventBus, applicationSettings, this.getEntryPointList(), openedFiles, lockTokens);
+            new SelectWorkspaceForm(eventBus, applicationSettings, result, openedFiles, lockTokens);
          }
       });
    }

@@ -20,8 +20,6 @@ package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -195,11 +193,12 @@ public class SaveFileAsCommandHandler implements ExceptionThrownHandler, SaveFil
 
       newFile.setIcon(file.getIcon());
 
-      VirtualFileSystem.getInstance().saveContent(newFile, null, new FileContentSaveCallback(eventBus)
+      VirtualFileSystem.getInstance().saveContent(newFile, null, new FileContentSaveCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(FileData result)
          {
-            File file = this.getFile();
+            File file = result.getFile();
             
             if (file.isPropertiesChanged())
             {
@@ -208,7 +207,7 @@ public class SaveFileAsCommandHandler implements ExceptionThrownHandler, SaveFil
             else
             {
                getProperties(file);
-            }
+            }            
          }
       });
    }
@@ -217,17 +216,10 @@ public class SaveFileAsCommandHandler implements ExceptionThrownHandler, SaveFil
    {
       VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
       {
-         
-         public void onResponseReceived(Request request, Response response)
-         {
-            getProperties(this.getItem());
-         }
-         
          @Override
-         public void fireErrorEvent()
+         protected void onSuccess(Item result)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
-            handlers.removeHandlers();
+            getProperties(result);
          }
       });
    }
@@ -246,19 +238,11 @@ public class SaveFileAsCommandHandler implements ExceptionThrownHandler, SaveFil
    {
       VirtualFileSystem.getInstance().getPropertiesCallback(item, new ItemPropertiesCallback()
       {
-         
-         public void onResponseReceived(Request request, Response response)
-         {
-            handlers.removeHandlers();
-            eventBus.fireEvent(new FileSavedEvent((File)this.getItem(), sourceHref));
-            refreshBrowser(this.getItem().getHref());
-         }
-         
          @Override
-         public void fireErrorEvent()
+         protected void onSuccess(Item result)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
-            handlers.removeHandlers();
+            eventBus.fireEvent(new FileSavedEvent((File)result, sourceHref));
+            refreshBrowser(result.getHref());
          }
       });
    }

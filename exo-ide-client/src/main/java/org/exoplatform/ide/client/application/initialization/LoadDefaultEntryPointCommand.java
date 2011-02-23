@@ -19,8 +19,6 @@
 package org.exoplatform.ide.client.application.initialization;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Command;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -65,12 +63,12 @@ public class LoadDefaultEntryPointCommand implements Command, ApplicationSetting
       /*
        * get default entry point
        */
-      DiscoveryService.getInstance().getDefaultEntryPoint(new DefaultEntryPointCallback(eventBus)
+      DiscoveryService.getInstance().getDefaultEntryPoint(new DefaultEntryPointCallback()
       {
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(String result)
          {
-            applicationConfiguration.setDefaultEntryPoint(this.getDefaultEntryPoint());
+            applicationConfiguration.setDefaultEntryPoint(result);
             new CheckEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
          }
       });

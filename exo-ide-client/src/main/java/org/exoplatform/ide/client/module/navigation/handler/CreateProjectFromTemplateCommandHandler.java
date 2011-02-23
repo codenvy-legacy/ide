@@ -20,6 +20,8 @@ package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -27,7 +29,6 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateHandler;
@@ -74,20 +75,23 @@ ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
     */
    public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
    {
-      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
          
          @Override
-         public void onTemplateListReceived()
+         protected void onSuccess(TemplateList result)
          {
-            TemplateList templateList = this.getTemplateList();
-
             CreateProjectFromTemplatePresenter createProjectPresenter =
-               new CreateProjectFromTemplatePresenter(eventBus, selectedItems, templateList.getTemplates(), restContext);
+               new CreateProjectFromTemplatePresenter(eventBus, selectedItems, result.getTemplates(), restContext);
             CreateFromTemplateDisplay<ProjectTemplate> createProjectDisplay =
-               new CreateProjectFromTemplateForm(eventBus, templateList.getTemplates(), createProjectPresenter);
+               new CreateProjectFromTemplateForm(eventBus, result.getTemplates(), createProjectPresenter);
             createProjectPresenter.bindDisplay(createProjectDisplay);
-
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }

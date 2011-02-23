@@ -27,7 +27,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.netvibes.client.model.Categories;
 import org.exoplatform.ide.extension.netvibes.client.model.DeployResult;
 import org.exoplatform.ide.extension.netvibes.client.model.DeployWidget;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetCategoryCallback;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetDeployCallback;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller.CategoriesUnmarshaller;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller.DeployResultUnmarshaller;
@@ -98,13 +97,14 @@ public class DeployWidgetServiceImpl extends DeployWidgetService
     * @see org.exoplatform.ide.client.module.netvibes.service.deploy.DeployWidgetService#getCategories(org.exoplatform.ide.client.module.netvibes.service.deploy.callback.WidgetCategoryCallback)
     */
    @Override
-   public void getCategories(WidgetCategoryCallback widgetCallback)
+   public void getCategories(AsyncRequestCallback<Categories> callback)
    {
       Categories categories = new Categories();
-      widgetCallback.setCategories(categories);
+      callback.setResult(categories);
       CategoriesUnmarshaller unmarshaller = new CategoriesUnmarshaller(categories);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, widgetCallback);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
 
       AsyncRequest.build(RequestBuilder.GET, CATEGORIES_URL, loader).send(callback);
    }
@@ -113,7 +113,7 @@ public class DeployWidgetServiceImpl extends DeployWidgetService
     * @see org.exoplatform.ide.client.module.netvibes.service.deploy.DeployWidgetService#deploy(org.exoplatform.ide.client.module.netvibes.model.DeployWidget, java.lang.String, java.lang.String, org.exoplatform.ide.client.module.netvibes.service.deploy.callback.WidgetDeployCallback)
     */
    @Override
-   public void deploy(DeployWidget deployWidget, String login, String password, WidgetDeployCallback widgetCallback)
+   public void deploy(DeployWidget deployWidget, String login, String password, WidgetDeployCallback callback)
    {
       String url = restContext + SERVICE_PATH + DEPLOY;
       String params = PASSWORD + "=" + password + "&";
@@ -122,12 +122,12 @@ public class DeployWidgetServiceImpl extends DeployWidgetService
       params += SECRET_KEY + "=" + deployWidget.getSecretKey();
       
       DeployResult deployResult = new DeployResult();
-      widgetCallback.setDeployResult(deployResult);
-      widgetCallback.setDeployWidget(deployWidget);
+      callback.setResult(callback.new WidgetDeployData(deployWidget, deployResult));
       
       DeployWidgetMarshaller marshaller = new DeployWidgetMarshaller(deployWidget);
       DeployResultUnmarshaller unmarshaller = new DeployResultUnmarshaller(deployResult);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, widgetCallback);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.POST, url+"?"+params, loader).header(LOGIN, login).header(PASSWORD, password).data(marshaller).send(callback);
    }
 

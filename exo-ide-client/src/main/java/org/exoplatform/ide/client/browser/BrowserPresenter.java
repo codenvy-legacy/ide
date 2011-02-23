@@ -30,12 +30,11 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
@@ -52,7 +51,6 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.event.SelectViewEvent;
-import org.exoplatform.ide.client.framework.vfs.ChildrenReceivedCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -88,10 +86,8 @@ import java.util.Map;
  * @version $Id: $
 */
 public class BrowserPresenter implements RefreshBrowserHandler, SwitchEntryPointHandler,
-   SelectItemHandler, //ExceptionThrownHandler, 
-   PanelSelectedHandler, EntryPointChangedHandler, ItemUnlockedHandler,
-   ItemLockResultReceivedHandler, //ItemPropertiesReceivedHandler, 
-   ApplicationSettingsReceivedHandler
+   SelectItemHandler, PanelSelectedHandler, EntryPointChangedHandler, ItemUnlockedHandler,
+   ItemLockResultReceivedHandler, ApplicationSettingsReceivedHandler
 {
 
    interface Display
@@ -159,7 +155,6 @@ public class BrowserPresenter implements RefreshBrowserHandler, SwitchEntryPoint
       handlers = new Handlers(eventBus);
       handlers.addHandler(RefreshBrowserEvent.TYPE, this);
       handlers.addHandler(EntryPointChangedEvent.TYPE, this);
-      //handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       handlers.addHandler(ItemUnlockedEvent.TYPE, this);
       handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
       handlers.addHandler(SwitchEntryPointEvent.TYPE, this);
@@ -342,23 +337,19 @@ public class BrowserPresenter implements RefreshBrowserHandler, SwitchEntryPoint
          return;
       }
 
-      VirtualFileSystem.getInstance().getChildren(foldersToRefresh.get(0), new ChildrenReceivedCallback()
+      VirtualFileSystem.getInstance().getChildren(foldersToRefresh.get(0), new AsyncRequestCallback<Folder>()
       {
-         public void onResponseReceived(Request request, Response response)
+         
+         @Override
+         protected void onSuccess(Folder result)
          {
-            final Folder folder = this.getFolder();
+            final Folder folder = result;
             foldersToRefresh.remove(folder);
             //TODO if will be some value - display system items or not, then add check here:
             removeSystemItemsFromView(folder.getChildren());
             Collections.sort(folder.getChildren(), comparator);
             
             display.getBrowserTree().setValue(folder);
-
-            //      if (switchingWorkspace)
-            //      {
-            //         eventBus.fireEvent(new EntryPointChangedEvent(event.getFolder().getHref()));
-            //         switchingWorkspace = false;
-            //      }
 
             eventBus.fireEvent(new RestorePerspectiveEvent());
             eventBus.fireEvent(new SelectViewEvent(BrowserPanel.ID));
@@ -374,9 +365,9 @@ public class BrowserPresenter implements RefreshBrowserHandler, SwitchEntryPoint
                refreshNextFolder();
             }
          }
-
+         
          @Override
-         public void fireErrorEvent()
+         protected void onFailure(Throwable exception)
          {
             itemToSelect = null;
             foldersToRefresh.clear();
@@ -542,19 +533,20 @@ public class BrowserPresenter implements RefreshBrowserHandler, SwitchEntryPoint
       final Folder rootFolder = new Folder(event.getEntryPoint());
       VirtualFileSystem.getInstance().getPropertiesCallback(rootFolder, new ItemPropertiesCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(Item result)
          {
             eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
 
-            entryPoint = this.getItem().getHref();
+            entryPoint = result.getHref();
 
-            eventBus.fireEvent(new EntryPointChangedEvent(this.getItem().getHref()));
+            eventBus.fireEvent(new EntryPointChangedEvent(result.getHref()));
 
             eventBus.fireEvent(new SelectViewEvent(BrowserForm.ID));
             eventBus.fireEvent(new PanelSelectedEvent(BrowserForm.ID));
 
-            display.getBrowserTree().setValue(this.getItem());
-            display.selectItem(this.getItem().getHref());
+            display.getBrowserTree().setValue(result);
+            display.selectItem(result.getHref());
             selectedItems = display.getSelectedItems();
 
             try
@@ -568,9 +560,9 @@ public class BrowserPresenter implements RefreshBrowserHandler, SwitchEntryPoint
          }
 
          @Override
-         public void fireErrorEvent()
+         protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
+            super.onFailure(exception);
             
             itemToSelect = null;
             foldersToRefresh.clear();
@@ -578,6 +570,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, SwitchEntryPoint
             eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
             eventBus.fireEvent(new EntryPointChangedEvent(null));
          }
+
       });
    }
 

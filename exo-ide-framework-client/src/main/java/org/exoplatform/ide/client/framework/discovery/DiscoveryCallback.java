@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.discovery;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 
 import java.util.List;
 
@@ -31,57 +28,15 @@ import java.util.List;
  * @version $Id: DiscoveryCallback.java Feb 10, 2011 3:33:23 PM vereshchaka $
  *
  */
-public abstract class DiscoveryCallback extends ClientRequestCallback
+public abstract class DiscoveryCallback extends AsyncRequestCallback<List<EntryPoint>>
 {
-   
-   private HandlerManager eventBus;
-   
-   private List<EntryPoint> entryPointList;
-   
-   public DiscoveryCallback(HandlerManager eventBus)
-   {
-      this.eventBus = eventBus;
-   }
-   
    /**
-    * @return the entryPointList
-    */
-   public List<EntryPoint> getEntryPointList()
-   {
-      return entryPointList;
-   }
-   
-   /**
-    * @param entryPointList the entryPointList to set
-    */
-   public void setEntryPointList(List<EntryPoint> entryPointList)
-   {
-      this.entryPointList = entryPointList;
-   }
-
-   /**
-    * @see com.google.gwt.http.client.RequestCallback#onError(com.google.gwt.http.client.Request, java.lang.Throwable)
+    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
-   public void onError(Request request, Throwable exception)
+   protected void onFailure(Throwable exception)
    {
-      fireErrorEvent();
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.ClientRequestCallback#onUnsuccess(java.lang.Throwable)
-    */
-   @Override
-   public void onUnsuccess(Throwable exception)
-   {
-      fireErrorEvent();
-   }
-   
-   private void fireErrorEvent()
-   {
-      final String errorMessage = "Service is not deployed.";
-      ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-      eventBus.fireEvent(errorEvent);
+      fireEvent(new ExceptionThrownEvent("Service is not deployed."));
    }
 
 }

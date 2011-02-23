@@ -19,9 +19,7 @@
 package org.exoplatform.ide.client.model.conversation;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -61,35 +59,35 @@ public class ConversationServiceImpl implements ConversationService, GetUserInfo
       eventBus.addHandler(GetUserInfoEvent.TYPE, this);
    }
 
-   public void getUserInfo(UserInfoCallback userInfoCallback)
+   public void getUserInfo(AsyncRequestCallback<UserInfo> callback)
    {
       String url = restServiceContext + CONVERSATION_SERVICE_CONTEXT + WHOAMI;
 
       UserInfo userInfo = new UserInfo(UserInfo.DEFAULT_USER_NAME);
       UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller(userInfo);
-      userInfoCallback.setUserInfo(userInfo);
-//      UserInfoReceivedEvent event = new UserInfoReceivedEvent(userInfo);
+      callback.setResult(userInfo);
 
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, userInfoCallback);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
    public void onGetUserInfo(GetUserInfoEvent event)
    {
-      getUserInfo(new UserInfoCallback()
+      getUserInfo(new AsyncRequestCallback<UserInfo>()
       {
          
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(UserInfo result)
          {
-            eventBus.fireEvent(new UserInfoReceivedEvent(this.getUserInfo()));
+            eventBus.fireEvent(new UserInfoReceivedEvent(result));
          }
          
          @Override
-         public void handleError(Throwable exc)
+         protected void onFailure(Throwable exception)
          {
-            UserInfoReceivedEvent event = new UserInfoReceivedEvent(this.getUserInfo());
-            event.setException(exc);
+            UserInfoReceivedEvent event = new UserInfoReceivedEvent(this.getResult());
+            event.setException(exception);
             eventBus.fireEvent(event);
          }
       });

@@ -25,14 +25,12 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
@@ -190,25 +188,20 @@ public class PermissionsManagerPresenter
    private void saveACL()
    {
       acl.removeEmptyPermissions();
-      VirtualFileSystem.getInstance().setACL(item, acl, lockTokens.get(item.getHref()), new ClientRequestCallback()
+      VirtualFileSystem.getInstance().setACL(item, acl, lockTokens.get(item.getHref()), new AsyncRequestCallback<Item>()
       {
          
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(Item result)
          {
-            dispaly.closeForm();
-         }
-         
-         public void onError(Request request, Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found.<br /> Resource locked."));
             dispaly.closeForm();
          }
          
          @Override
-         public void onUnsuccess(Throwable exception)
+         protected void onFailure(Throwable exception)
          {
             eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found.<br /> Resource locked."));
-            dispaly.closeForm();
+            dispaly.closeForm();            
          }
       });
    }

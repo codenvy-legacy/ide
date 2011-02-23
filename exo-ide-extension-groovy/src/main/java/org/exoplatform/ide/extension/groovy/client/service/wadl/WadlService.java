@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.wadl;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -42,8 +45,8 @@ public abstract class WadlService
     * Get Wadl output.
     * 
     * @param url - the url
-    * @param wadlCallback - callback which client has to implement
+    * @param callback - callback which client has to implement
     */
-   public abstract void getWadl(String url, WadlCallback wadlCallback);
+   public abstract void getWadl(String url, AsyncRequestCallback<WadlApplication> callback);
 
 }

@@ -26,15 +26,13 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
-import org.exoplatform.ide.client.framework.vfs.ChildrenReceivedCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -209,16 +207,17 @@ public class ChooseSourcePathPresenter
     */
    private void getFolderContent(Folder folder)
    {
-      VirtualFileSystem.getInstance().getChildren(folder, new ChildrenReceivedCallback()
+      VirtualFileSystem.getInstance().getChildren(folder, new AsyncRequestCallback<Folder>()
       {
+         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(Folder result)
          {
-            display.getItemsTree().setValue(this.getFolder());
+            display.getItemsTree().setValue(result);
          }
-
+         
          @Override
-         public void fireErrorEvent()
+         protected void onFailure(Throwable exception)
          {
             eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
          }
@@ -230,14 +229,14 @@ public class ChooseSourcePathPresenter
     */
    private void getWorkspaces()
    {
-      DiscoveryService.getInstance().getEntryPoints(new DiscoveryCallback(eventBus)
+      DiscoveryService.getInstance().getEntryPoints(new DiscoveryCallback()
       {
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(List<EntryPoint> result)
          {
             Folder root = new Folder(null);
             root.setChildren(new ArrayList<Item>());
-            for (EntryPoint entryPoint : this.getEntryPointList())
+            for (EntryPoint entryPoint : result)
             {
                Workspace workspace = new Workspace(entryPoint.getHref());
                workspace.setIcon(Images.ClassPath.WORKSPACE);

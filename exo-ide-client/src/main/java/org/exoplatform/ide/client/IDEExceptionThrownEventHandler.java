@@ -42,8 +42,10 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
       {
          ServerException serverException = (ServerException)error;
 
+         System.out.println("IDEExceptionThrownEventHandler.handlerEvent() server exc");
          if (serverException.isErrorMessageProvided())
          {
+            System.out.println(">>> err msg prov");
             String html =
                "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText() + "<br><br><hr><br>"
                   + serverException.getMessage();
@@ -51,6 +53,7 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
          }
          else
          {
+            System.out.println(">>> err msg doesn't prov");
             String html = "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
 
             if (event.getErrorMessage() != null)
@@ -62,6 +65,7 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
       }
       else
       {
+         System.out.println("IDEExceptionThrownEventHandler.handlerEvent() not server exc");
          Dialogs.getInstance().showError(error.getMessage());
       }
    }

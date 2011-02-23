@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.model.conversation;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.userinfo.UserInfo;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -28,6 +31,6 @@ package org.exoplatform.ide.client.model.conversation;
 public interface ConversationService
 {
 
-   void getUserInfo(UserInfoCallback userInfoCallback);
+   void getUserInfo(AsyncRequestCallback<UserInfo> callback);
 
 }

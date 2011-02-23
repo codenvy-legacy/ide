@@ -24,10 +24,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
@@ -51,8 +48,6 @@ public class CreateFolderPresenter //implements FolderCreatedHandler
 
    private String href;
 
-   private Handlers handlers;
-
    private Item selectedItem;
 
    public CreateFolderPresenter(HandlerManager eventBus, Item selectedItem, String href)
@@ -60,7 +55,6 @@ public class CreateFolderPresenter //implements FolderCreatedHandler
       this.eventBus = eventBus;
       this.selectedItem = selectedItem;
       this.href = href;
-      handlers = new Handlers(eventBus);
    }
 
    public void bindDisplay(CreateFolderDisplay d)
@@ -96,51 +90,30 @@ public class CreateFolderPresenter //implements FolderCreatedHandler
          }
       });
 
-//      handlers.addHandler(FolderCreatedEvent.TYPE, this);
    }
 
    public void destroy()
    {
-      handlers.removeHandlers();
    }
 
    protected void createFolder()
    {
       String newFolderHref = href + display.getFolderNameField().getValue() + "/";
       Folder newFolder = new Folder(newFolderHref);
-      VirtualFileSystem.getInstance().createFolder(newFolder, new FolderCreateCallback(eventBus)
+      VirtualFileSystem.getInstance().createFolder(newFolder, new FolderCreateCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(Folder result)
          {
             String folder = selectedItem.getHref();
             if (selectedItem instanceof File)
             {
                folder = folder.substring(0, folder.lastIndexOf("/") + 1);
             }
-            eventBus.fireEvent(new RefreshBrowserEvent(new Folder(folder), this.getFolder()));
+            eventBus.fireEvent(new RefreshBrowserEvent(new Folder(folder), result));
             display.closeForm();
          }
       });
    }
-
-//   public void onFolderCreated(FolderCreatedEvent event)
-//   {
-//      //Item item = selectedItem; context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-//      String folder = selectedItem.getHref();
-//      if (selectedItem instanceof File)
-//      {
-//         folder = folder.substring(0, folder.lastIndexOf("/") + 1);
-//      }
-//      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(folder), event.getFolder()));
-//      display.closeForm();
-//   }
-   //   
-   //   public void onItemsSelected(ItemsSelectedEvent event)
-   //   {
-   //      if(event.getSelectedItems().size() != 0)
-   //      {
-   //         selectedItem = event.getSelectedItems().get(0);
-   //      }
-   //   }   
 
 }

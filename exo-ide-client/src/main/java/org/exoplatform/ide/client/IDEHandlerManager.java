@@ -47,18 +47,18 @@ public class IDEHandlerManager extends HandlerManager
    @Override
    public void fireEvent(GwtEvent<?> event)
    {
-//            String name = event.getClass().getName();
-//            if (name.indexOf(".") >= 0)
-//            {
-//               name = name.substring(name.lastIndexOf(".") + 1, name.length());
-//            }
-//      
-//            refreshTab();
-//      
-//            System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - event");
-//            logEventParams(event);
-//            depthIndex++;
-//            refreshTab();
+            String name = event.getClass().getName();
+            if (name.indexOf(".") >= 0)
+            {
+               name = name.substring(name.lastIndexOf(".") + 1, name.length());
+            }
+      
+            refreshTab();
+      
+            System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - event");
+            logEventParams(event);
+            depthIndex++;
+            refreshTab();
 
       try
       {
@@ -70,12 +70,12 @@ public class IDEHandlerManager extends HandlerManager
          e.printStackTrace();
       }
 
-//            depthIndex--;
-//            refreshTab();
-//            System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - done");
-//      
-//            printSpacesTimer.cancel();
-//            printSpacesTimer.schedule(3000);
+            depthIndex--;
+            refreshTab();
+            System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - done");
+      
+            printSpacesTimer.cancel();
+            printSpacesTimer.schedule(3000);
    }
 
    private void refreshTab()

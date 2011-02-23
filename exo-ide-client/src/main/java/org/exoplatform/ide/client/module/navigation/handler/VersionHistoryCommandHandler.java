@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -52,11 +53,8 @@ import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersion
 import org.exoplatform.ide.client.versioning.VersionContentForm;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -122,33 +120,34 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
       if (activeFile != null)
       {
          versionHistory.clear();
-         VirtualFileSystem.getInstance().getVersions(activeFile, new VersionsCallback(eventBus)
+         VirtualFileSystem.getInstance().getVersions(activeFile, new VersionsCallback()
          {
-            public void onResponseReceived(Request request, Response response)
+            @Override
+            protected void onSuccess(VersionsData result)
             {
-               if (this.getVersions() != null && this.getVersions().size() > 0)
+               if (result.getVersions() != null && result.getVersions().size() > 0)
                {
-                  versionHistory = this.getVersions();
+                  versionHistory = result.getVersions();
                   int index = 0;
                   if (version != null)
                   {
                      index = getVersionIndexInList(version.getHref());
                      index = (index > 0) ? index : 0;
                   }
-                  openVersion(this.getVersions().get(index));
+                  openVersion(result.getVersions().get(index));
                }
                else
                {
-                  Dialogs.getInstance().showInfo("Item \"" + this.getItem().getName() + "\" has no versions.");
+                  Dialogs.getInstance().showInfo("Item \"" + result.getItem().getName() + "\" has no versions.");
                }
             }
-            
+
             @Override
-            public void fireErrorEvent()
+            protected void onFailure(Throwable exception)
             {
                String errorMessage = "Versions were not received.";
                eventBus.fireEvent(new ExceptionThrownEvent(errorMessage));
-               
+
                if (versionToOpenOnError != null && ignoreErrorCount > 0)
                {
                   ignoreErrorCount--;
@@ -214,20 +213,12 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
       ignoreErrorCount = 3;
       versionToOpenOnError = version;
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-      VirtualFileSystem.getInstance().getContent(version, new FileCallback(eventBus)
+      VirtualFileSystem.getInstance().getContent(version, new FileCallback()
       {
-         public void onResponseReceived(Request request, Response response)
-         {
-            if (this.getFile() instanceof Version)
-            {
-               showVersion((Version)this.getFile());
-            }
-         }
-
          @Override
-         public void fireErrorEvent()
+         protected void onFailure(Throwable exception)
          {
-            super.fireErrorEvent();
+            super.onFailure(exception);
 
             if (versionToOpenOnError != null && ignoreErrorCount > 0)
             {
@@ -237,6 +228,15 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
             }
 
             eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+         }
+
+         @Override
+         protected void onSuccess(File result)
+         {
+            if (result instanceof Version)
+            {
+               showVersion((Version)result);
+            }
          }
       });
    }

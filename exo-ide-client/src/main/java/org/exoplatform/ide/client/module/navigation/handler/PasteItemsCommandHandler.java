@@ -19,14 +19,9 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -49,7 +44,6 @@ import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
-import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
 import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsHandler;
@@ -65,15 +59,12 @@ import java.util.Map;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class PasteItemsCommandHandler implements PasteItemsHandler, MoveCompleteHandler,
-   ExceptionThrownHandler, ItemDeletedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
-   EditorFileClosedHandler, ApplicationSettingsReceivedHandler
+public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedHandler, 
+ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
 
    private ApplicationContext context;
-
-   private Handlers handlers;
 
    private String folderFromPaste;
 
@@ -91,7 +82,6 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, MoveComplete
    {
       this.eventBus = eventBus;
       this.context = context;
-      handlers = new Handlers(eventBus);
 
       eventBus.addHandler(PasteItemsEvent.TYPE, this);
       eventBus.addHandler(ItemDeletedEvent.TYPE, this);
@@ -101,11 +91,13 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, MoveComplete
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
+   /****************************************************************************************************
+    * PASTE
+    ****************************************************************************************************/
    public void onPasteItems(PasteItemsEvent event)
    {
       if (context.getItemsToCopy().size() != 0)
       {
-         handlers.addHandler(ExceptionThrownEvent.TYPE, this);
          folderToPaste = getPathToPaste();
          folderFromPaste = getPahtFromPaste(context.getItemsToCopy().get(0));
          copyNextItem();
@@ -115,8 +107,6 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, MoveComplete
 
       if (context.getItemsToCut().size() != 0)
       {
-         handlers.addHandler(MoveCompleteEvent.TYPE, this);
-         handlers.addHandler(ExceptionThrownEvent.TYPE, this);
          folderToPaste = getPathToPaste();
          folderFromPaste = getPahtFromPaste(context.getItemsToCut().get(0));
          numItemToCut = context.getItemsToCut().size();
@@ -164,38 +154,27 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, MoveComplete
       {
          String message = "Can't copy items in the same directory!";
          Dialogs.getInstance().showError(message);
-         handlers.removeHandlers();
          return;
       }
 
       String destination = folderToPaste + item.getName();
-      VirtualFileSystem.getInstance().copy(item, destination, new CopyCallback(eventBus)
+      VirtualFileSystem.getInstance().copy(item, destination, new CopyCallback()
       {
-         
+
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(CopyItemData result)
          {
             if (context.getItemsToCopy().size() != 0)
             {
-               context.getItemsToCopy().remove(this.getItem());
+               context.getItemsToCopy().remove(result);
                copyNextItem();
             }
          }
       });
    }
 
-//   public void onCopyComplete(CopyCompleteEvent event)
-//   {
-//      if (context.getItemsToCopy().size() != 0)
-//      {
-//         context.getItemsToCopy().remove(event.getCopiedItem());
-//         copyNextItem();
-//      }
-//   }
-
    private void copyComlited()
    {
-      handlers.removeHandlers();
       eventBus.fireEvent(new PasteItemsCompleteEvent());
 
       Folder folder = new Folder(folderToPaste);
@@ -204,7 +183,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, MoveComplete
    }
 
    /****************************************************************************************************
-    * PASTE
+    * CUT
     ****************************************************************************************************/
 
    private void cutNextItem()
@@ -232,18 +211,15 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, MoveComplete
                      {
                         if (value != null && value == true)
                         {
-                           VirtualFileSystem.getInstance()
-                              .saveContent(openedFile, lockTokens.get(openedFile.getHref()), new FileContentSaveCallback(eventBus)
+                           VirtualFileSystem.getInstance().saveContent(openedFile,
+                              lockTokens.get(openedFile.getHref()), new FileContentSaveCallback()
                               {
-                                 public void onResponseReceived(Request request, Response response)
+                                 @Override
+                                 protected void onSuccess(FileData result)
                                  {
                                     cutNextItem();
                                  }
                               });
-                        }
-                        else
-                        {
-                           handlers.removeHandlers();
                         }
                      }
                   });
@@ -255,27 +231,33 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, MoveComplete
 
       if (folderFromPaste.equals(folderToPaste) || folderToPaste.equals(item.getHref()))
       {
-         String message = "Can't move items in the same directory!";
-         Dialogs.getInstance().showError(message);
-         handlers.removeHandlers();
+         Dialogs.getInstance().showError("Can't move items in the same directory!");
          return;
       }
 
       String destination = folderToPaste + item.getName();
 
       
-      VirtualFileSystem.getInstance().move(item, destination,lockTokens.get(item.getHref()), new MoveItemCallback(eventBus)
+      VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), new MoveItemCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(MoveItemData result)
          {
-            eventBus.fireEvent(new MoveCompleteEvent(this.getItem(), this.getSourceHref()));
+            moveComplete(result.getItem(), result.getOldHref());
+            eventBus.fireEvent(new MoveCompleteEvent(result.getItem(), result.getOldHref()));
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            super.onFailure(exception);
+            handleError();
          }
       });
    }
 
    private void cutCompleted()
    {
-      handlers.removeHandlers();
       eventBus.fireEvent(new PasteItemsCompleteEvent());
 
       List<Folder> folders = new ArrayList<Folder>();
@@ -292,10 +274,8 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, MoveComplete
     * FINALIZE
     ****************************************************************************************************/
 
-   //TODO: move code to callback
-   public void onError(ExceptionThrownEvent event)
+   private void handleError()
    {
-      handlers.removeHandlers();
       if (numItemToCut > 0)
       {
          List<Folder> folders = new ArrayList<Folder>();
@@ -336,18 +316,18 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, MoveComplete
       }
    }
 
-   public void onMoveComplete(MoveCompleteEvent event)
+   public void moveComplete(Item item, String oldSourceHref)
    {
       numItemToCut--;
-      if (event.getItem() instanceof File)
+      if (item instanceof File)
       {
-         File file = (File)event.getItem();
+         File file = (File)item;
 
-         if (openedFiles.containsKey(event.getSourceHref()))
+         if (openedFiles.containsKey(oldSourceHref))
          {
-            File openedFle = openedFiles.get(event.getSourceHref());
+            File openedFle = openedFiles.get(oldSourceHref);
             openedFle.setHref(file.getHref());
-            openedFiles.remove(event.getSourceHref());
+            openedFiles.remove(oldSourceHref);
             openedFiles.put(openedFle.getHref(), openedFle);
 
             eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
@@ -355,11 +335,11 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, MoveComplete
       }
       else
       {
-         updateOpenedFiles(event.getItem().getHref(), event.getSourceHref());
+         updateOpenedFiles(item.getHref(), oldSourceHref);
       }
       if (context.getItemsToCut().size() != 0)
       {
-         context.getItemsToCut().remove(event.getItem());
+         context.getItemsToCut().remove(item);
          cutNextItem();
       }
 

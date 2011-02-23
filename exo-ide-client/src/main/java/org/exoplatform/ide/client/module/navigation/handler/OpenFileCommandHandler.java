@@ -36,13 +36,8 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorUtil;
@@ -59,6 +54,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 
@@ -71,14 +67,10 @@ import java.util.Map;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileCommandHandler implements OpenFileHandler, ExceptionThrownHandler,
-   //ItemPropertiesReceivedHandler, 
-   EditorFileOpenedHandler, EditorFileClosedHandler,
+public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
-
-   private Handlers handlers;
 
    private String selectedEditor;
 
@@ -100,13 +92,10 @@ public class OpenFileCommandHandler implements OpenFileHandler, ExceptionThrownH
    {
       this.eventBus = eventBus;
 
-      handlers = new Handlers(eventBus);
-
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       eventBus.addHandler(OpenFileEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-//      eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
    }
 
    public void onOpenFile(OpenFileEvent event)
@@ -135,77 +124,55 @@ public class OpenFileCommandHandler implements OpenFileHandler, ExceptionThrownH
          file = new File(event.getHref());
       }
 
-      //TODO: remove handler
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-
       VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
       {
-         public void onResponseReceived(Request request, Response response)
-         {
-            handlers.removeHandlers();
-            File file = (File)this.getItem();
-//          if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
-//             getFileContent(file);
-          
-          if (file.getContent() != null)
-          {
-             openFile(file);
-             return;
-          }
-          getFileContent(file);
-         }
-         
          @Override
-         public void fireErrorEvent()
+         protected void onSuccess(Item result)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
-            
+            File file = (File)result;
+
+            if (file.getContent() != null)
+            {
+               openFile(file);
+               return;
+            }
+            getFileContent(file);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            super.onFailure(exception);
             if (fileToOpenOnError != null && ignoreErrorsCount > 0)
             {
                ignoreErrorsCount--;
                getFileContent(fileToOpenOnError);
                return;
             }
-            
-            handlers.removeHandlers();
+
             eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
          }
       });
    }
 
-//   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-//   {
-//      File file = (File)event.getItem();
-////      if (file.getProperty(ItemProperty.LOCKDISCOVERY) != null)
-////         getFileContent(file);
-//      
-//      if (file.getContent() != null)
-//      {
-//         openFile(file);
-//         return;
-//      }
-//      getFileContent(file);
-//   }
-
    private void getFileContent(File file)
    {
       fileToOpenOnError = file;
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-      VirtualFileSystem.getInstance().getContent(file, new FileCallback(eventBus)
+      VirtualFileSystem.getInstance().getContent(file, new FileCallback()
       {
+
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(File result)
          {
             eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-            openFile(this.getFile());
+            openFile(result);
          }
       });
    }
 
    private void openFile(File file)
    {
-      handlers.removeHandlers();
-
       try
       {
          if (selectedEditor == null)
@@ -224,19 +191,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, ExceptionThrownH
       {
          Dialogs.getInstance().showError("Can't find editor for type <b>" + file.getContentType() + "</b>");
       }
-   }
-
-   public void onError(ExceptionThrownEvent event)
-   {
-      if (fileToOpenOnError != null && ignoreErrorsCount > 0)
-      {
-         ignoreErrorsCount--;
-         getFileContent(fileToOpenOnError);
-         return;
-      }
-      
-      handlers.removeHandlers();
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
    }
 
    /**

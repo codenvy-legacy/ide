@@ -19,21 +19,18 @@
 package org.exoplatform.ide.client.template;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Window;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
 import org.exoplatform.ide.client.model.template.TemplateDeletedCallback;
-import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
+import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 
@@ -84,24 +81,21 @@ public class GwtTestTemplateService extends GWTTestCase
    {
       new TemplateServiceImpl(eventBus, loader, url);
 
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
-
-         public void onError(ExceptionThrownEvent event)
-         {
-            fail(event.getErrorMessage());
-         }
-
-      });
-
-      TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
-      {
+         
          @Override
-         public void onTemplateListReceived()
+         protected void onSuccess(TemplateList result)
          {
             //Six base templates.
-            assertEquals(6, this.getTemplateList().getTemplates().size());
-            finishTest();
+            assertEquals(6, result.getTemplates().size());
+            finishTest();            
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            fail();
          }
       });
       delayTestFinish(DELAY_TEST);
@@ -120,35 +114,25 @@ public class GwtTestTemplateService extends GWTTestCase
       String description = "This is text js hello template.";
       Template template = new FileTemplate(contentType, name, description, content, null);
 
-//      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
-//      {
-//
-//         public void onTemplateCreated(TemplateCreatedEvent event)
-//         {
-//            TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
-//            {
-//               @Override
-//               public void onTemplateListReceived()
-//               {
-//                  assertEquals(7, this.getTemplateList().getTemplates().size());
-//                  finishTest();
-//               }
-//            });
-//         }
-//
-//      });
-
-      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback(eventBus)
+      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(Template result)
          {
-            TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+            TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
             {
+               
                @Override
-               public void onTemplateListReceived()
+               protected void onSuccess(TemplateList result)
                {
-                  assertEquals(7, this.getTemplateList().getTemplates().size());
+                  assertEquals(7, result.getTemplates().size());
                   finishTest();
+               }
+               
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  fail();
                }
             });
          }
@@ -169,35 +153,22 @@ public class GwtTestTemplateService extends GWTTestCase
       String description = "This is text file template.";
       final Template template = new FileTemplate(contentType, name, description, content, null);
 
-//      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
-//      {
-//         public void onTemplateCreated(TemplateCreatedEvent event)
-//         {
-//            assertEquals(event.getTemplate().getName(), template.getName());
-//            assertEquals(((FileTemplate)event.getTemplate()).getContent(), ((FileTemplate)template).getContent());
-//            assertEquals(event.getTemplate().getDescription(), template.getDescription());
-//            assertEquals(((FileTemplate)event.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
-//            finishTest();
-//         }
-//      });
-
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback()
       {
-         public void onError(ExceptionThrownEvent event)
+         @Override
+         protected void onSuccess(Template result)
          {
-            fail(event.getErrorMessage());
-         }
-      });
-
-      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback(eventBus)
-      {
-         public void onResponseReceived(Request request, Response response)
-         {
-            assertEquals(this.getTemplate().getName(), template.getName());
-            assertEquals(((FileTemplate)this.getTemplate()).getContent(), ((FileTemplate)template).getContent());
-            assertEquals(this.getTemplate().getDescription(), template.getDescription());
-            assertEquals(((FileTemplate)this.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
+            assertEquals(result.getName(), template.getName());
+            assertEquals(((FileTemplate)result).getContent(), ((FileTemplate)template).getContent());
+            assertEquals(result.getDescription(), template.getDescription());
+            assertEquals(((FileTemplate)result).getMimeType(), ((FileTemplate)template).getMimeType());
             finishTest();
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            fail(exception.getMessage());
          }
       });
       delayTestFinish(DELAY_TEST);
@@ -215,36 +186,22 @@ public class GwtTestTemplateService extends GWTTestCase
       String description = "New test file.";
 
       final Template template = new FileTemplate(contentType, name, description, content, null);
-//      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
-//      {
-//         public void onTemplateCreated(TemplateCreatedEvent event)
-//         {
-//            assertEquals(event.getTemplate().getName(), template.getName());
-//            assertEquals(((FileTemplate)event.getTemplate()).getContent(), ((FileTemplate)template).getContent());
-//            assertEquals(event.getTemplate().getDescription(), template.getDescription());
-//            assertEquals(((FileTemplate)event.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
-//            finishTest();
-//         }
-//      });
-
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback()
       {
-         public void onError(ExceptionThrownEvent event)
+         @Override
+         protected void onSuccess(Template result)
          {
-            fail(event.getErrorMessage());
-         }
-      });
-
-      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback(eventBus)
-      {
-         
-         public void onResponseReceived(Request request, Response response)
-         {
-            assertEquals(this.getTemplate().getName(), template.getName());
-            assertEquals(((FileTemplate)this.getTemplate()).getContent(), ((FileTemplate)template).getContent());
-            assertEquals(this.getTemplate().getDescription(), template.getDescription());
-            assertEquals(((FileTemplate)this.getTemplate()).getMimeType(), ((FileTemplate)template).getMimeType());
+            assertEquals(result.getName(), template.getName());
+            assertEquals(((FileTemplate)result).getContent(), ((FileTemplate)template).getContent());
+            assertEquals(result.getDescription(), template.getDescription());
+            assertEquals(((FileTemplate)result).getMimeType(), ((FileTemplate)template).getMimeType());
             finishTest();
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            fail(exception.getMessage());
          }
       });
       delayTestFinish(DELAY_TEST);
@@ -262,22 +219,21 @@ public class GwtTestTemplateService extends GWTTestCase
       String name = "templateCss";
       String description = "This is css file template.";
       final Template template = new FileTemplate(contentType, name, description, content, null);
-
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback()
       {
-         public void onError(ExceptionThrownEvent event)
-         {
-            assertNotNull(event.getError());
-            finishTest();
-         }
-      });
-      TemplateService.getInstance().createTemplate(template, new TemplateCreatedCallback(eventBus)
-      {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(Template result)
          {
             fail("Wrong template was created");
          }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            finishTest();
+         }
       });
+
       delayTestFinish(DELAY_TEST);
    }
 
@@ -294,61 +250,49 @@ public class GwtTestTemplateService extends GWTTestCase
       String description = "This is text file template.";
       final Template templateToDelete = new FileTemplate(contentType, name, description, content, null);
 
-//      eventBus.addHandler(TemplateCreatedEvent.TYPE, new TemplateCreatedHandler()
-//      {
-//         public void onTemplateCreated(TemplateCreatedEvent event)
-//         {
-//            TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
-//            {
-//               @Override
-//               public void onTemplateListReceived()
-//               {
-//                  int templateListSize = this.getTemplateList().getTemplates().size();
-//                  Template template = this.getTemplateList().getTemplates().get(templateListSize - 1);
-//                  TemplateService.getInstance().deleteTemplate(template);
-//               }
-//            });
-//         }
-//      });
-
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      TemplateService.getInstance().createTemplate(templateToDelete, new TemplateCreatedCallback()
       {
-         public void onError(ExceptionThrownEvent event)
+         @Override
+         protected void onSuccess(Template result)
          {
-            fail(event.getErrorMessage());
-         }
-      });
-
-//      eventBus.addHandler(TemplateDeletedEvent.TYPE, new TemplateDeletedHandler()
-//      {
-//         public void onTemplateDeleted(TemplateDeletedEvent event)
-//         {
-//            assertEquals(template.getName(), event.getTemplate().getName());
-//            finishTest();
-//         }
-//      });
-
-      TemplateService.getInstance().createTemplate(templateToDelete, new TemplateCreatedCallback(eventBus)
-      {
-         public void onResponseReceived(Request request, Response response)
-         {
-            TemplateService.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+            TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
             {
+               
                @Override
-               public void onTemplateListReceived()
+               protected void onSuccess(TemplateList result)
                {
-                  int templateListSize = this.getTemplateList().getTemplates().size();
-                  Template template = this.getTemplateList().getTemplates().get(templateListSize - 1);
-                  TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback(eventBus)
+                  int templateListSize = result.getTemplates().size();
+                  Template template = result.getTemplates().get(templateListSize - 1);
+                  TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback()
                   {
-                     public void onResponseReceived(Request request, Response response)
+                     
+                     @Override
+                     protected void onSuccess(Template result)
                      {
-                        assertEquals(templateToDelete.getName(), this.getTemplate().getName());
+                        assertEquals(templateToDelete.getName(), result.getName());
                         finishTest();
+                     }
+                     
+                     @Override
+                     protected void onFailure(Throwable exception)
+                     {
+                        fail(exception.getMessage());
                      }
                   });
                }
+               
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  fail(exception.getMessage());
+               }
             });
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            finishTest();
          }
       });
       delayTestFinish(DELAY_TEST);
@@ -366,22 +310,19 @@ public class GwtTestTemplateService extends GWTTestCase
       String description = "This is text file template.";
       final Template template = new FileTemplate(contentType, name, description, "", null);
 
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback()
       {
-         public void onError(ExceptionThrownEvent event)
-         {
-            assertNotNull(event.getError());
-            finishTest();
-         }
-      });
-      
-      TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback(eventBus)
-      {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(Template result)
          {
             fail("Can't delete not existing template");
          }
          
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            finishTest();
+         }
       });
       delayTestFinish(DELAY_TEST);
    }

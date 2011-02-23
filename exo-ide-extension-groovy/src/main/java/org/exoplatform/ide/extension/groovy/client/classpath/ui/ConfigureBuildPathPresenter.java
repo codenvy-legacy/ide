@@ -24,11 +24,9 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
@@ -51,8 +49,8 @@ import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceT
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathHandler;
 import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathEvent;
 import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathHandler;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.ClasspathCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
+import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPath;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -255,26 +253,26 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    {
       if (projectLocation != null)
       {
-         GroovyService.getInstance().getClassPathLocation(projectLocation, new ClasspathCallback(eventBus)
+         GroovyService.getInstance().getClassPathLocation(projectLocation, new AsyncRequestCallback<ClassPath>()
          {
+            
             @Override
-            protected void onClasspathReceived()
+            protected void onSuccess(ClassPath result)
             {
                Display display = new ConfigureBuildPathForm(eventBus);
                bindDisplay(display);
                display.setCurrentRepository(getRepositoryFromEntryPoint(currentEntryPoint));
                display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());
 
-               File file = new File(this.getClassPath().getLocation());
+               File file = new File(result.getLocation());
                getFileProperties(file);
             }
-
+            
             @Override
-            protected void onErrorReceived()
+            protected void onFailure(Throwable exception)
             {
                Dialogs.getInstance().showError("Classpath settings not found.<br> Probably you are not in project.");
             }
-            
          });
          return;
       }
@@ -288,33 +286,27 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    {
       VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
       {
+         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(Item result)
          {
-            if (!(this.getItem() instanceof File))
+            if (!(result instanceof File))
                return;
 
-            getFileContent((File)this.getItem());
-         }
-
-         @Override
-         public void fireErrorEvent()
-         {
-            String errorMessage = "Service is not deployed.<br>Resource not found.";
-            ExceptionThrownEvent errorEvent = new ExceptionThrownEvent(errorMessage);
-            eventBus.fireEvent(errorEvent);
+            getFileContent((File)result);
          }
       });
    }
    
    private void getFileContent(File file)
    {
-      VirtualFileSystem.getInstance().getContent(file, new FileCallback(eventBus)
+      VirtualFileSystem.getInstance().getContent(file, new FileCallback()
       {
+         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(File result)
          {
-            classPathFile = this.getFile();
+            classPathFile = result;
             if (classPathFile != null && !classPathFile.getContent().isEmpty())
             {
                List<GroovyClassPathEntry> groovyClassPathEntries =
@@ -334,19 +326,20 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
       List<GroovyClassPathEntry> groovyClassPathEntries = display.getClassPathEntryListGrid().getValue();
       String content = GroovyClassPathUtil.getClassPathJSON(groovyClassPathEntries);
       classPathFile.setContent(content);
-      VirtualFileSystem.getInstance().saveContent(classPathFile, null, new FileContentSaveCallback(eventBus)
+      VirtualFileSystem.getInstance().saveContent(classPathFile, null, new FileContentSaveCallback()
       {
+         
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(FileData result)
          {
-            if (classPathFile.getHref().equals(this.getFile().getHref()))
+            if (classPathFile.getHref().equals(result.getFile().getHref()))
             {
                display.closeView();
                if (openedFiles != null && openedFiles.containsKey(classPathFile.getHref()))
                {
                   eventBus.fireEvent(new EditorReplaceFileEvent(openedFiles.get(classPathFile.getHref()), classPathFile));
                }
-            }
+            }            
          }
       });
    }
@@ -356,7 +349,6 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
     */
    private void doAddPath()
    {
-//      handlers.addHandler(AddSourceToBuildPathEvent.TYPE, this);
       new ChooseSourcePathPresenter(eventBus, restContext);
    }
 
@@ -365,7 +357,6 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
     */
    public void onAddSourceToBuildPath(AddSourceToBuildPathEvent event)
    {
-//      handlers.removeHandler(AddSourceToBuildPathEvent.TYPE);
       List<GroovyClassPathEntry> oldClassPathEntries = display.getClassPathEntryListGrid().getValue();
 
       for (GroovyClassPathEntry classPathEntry : event.getClassPathEntries())

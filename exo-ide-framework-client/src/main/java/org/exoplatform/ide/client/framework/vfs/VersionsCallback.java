@@ -18,10 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.vfs;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.vfs.VersionsCallback.VersionsData;
 
 import java.util.List;
 
@@ -30,70 +28,36 @@ import java.util.List;
  * @version $Id: VersionsCallback.java Feb 9, 2011 12:41:17 PM vereshchaka $
  *
  */
-public abstract class VersionsCallback extends ClientRequestCallback
+public abstract class VersionsCallback extends AsyncRequestCallback<VersionsData>
 {
    
-   private HandlerManager eventBus;
-   
-   private Item item;
-   
-   private List<Version> versions;
-   
-   public VersionsCallback(HandlerManager eventBus)
+   public class VersionsData
    {
-      this.eventBus = eventBus;
+      private Item item;
+      
+      private List<Version> versions;
+      
+      public VersionsData(Item item, List<Version> versions)
+      {
+         this.item = item;
+         this.versions = versions;
+      }
+      
+      /**
+       * @return the item
+       */
+      public Item getItem()
+      {
+         return item;
+      }
+      
+      /**
+       * @return the versions
+       */
+      public List<Version> getVersions()
+      {
+         return versions;
+      }
    }
    
-   /**
-    * @return the item
-    */
-   public Item getItem()
-   {
-      return item;
-   }
-   
-   /**
-    * @param item the item to set
-    */
-   public void setItem(Item item)
-   {
-      this.item = item;
-   }
-   
-   /**
-    * @return the versions
-    */
-   public List<Version> getVersions()
-   {
-      return versions;
-   }
-   
-   /**
-    * @param versions the versions to set
-    */
-   public void setVersions(List<Version> versions)
-   {
-      this.versions = versions;
-   }
-
-   /**
-    * @see com.google.gwt.http.client.RequestCallback#onError(com.google.gwt.http.client.Request, java.lang.Throwable)
-    */
-   @Override
-   public void onError(Request request, Throwable exception)
-   {
-      fireErrorEvent();
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.ClientRequestCallback#onUnsuccess(java.lang.Throwable)
-    */
-   @Override
-   public void onUnsuccess(Throwable exception)
-   {
-      fireErrorEvent();
-   }
-   
-   public abstract void fireErrorEvent();
-
 }

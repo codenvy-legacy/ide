@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.framework.vfs;
 
 import com.google.gwt.http.client.Request;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
 
 /**
@@ -27,45 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
  * @version $Id: FolderCreateCallback.java Feb 9, 2011 11:25:55 AM vereshchaka $
  *
  */
-public abstract class ChildrenReceivedCallback extends ClientRequestCallback
+public abstract class ChildrenReceivedCallback extends AsyncRequestCallback<Folder>
 {
-   
-   private Folder folder;
-   
-   /**
-    * @return the folder
-    */
-   public Folder getFolder()
-   {
-      return folder;
-   }
-   
-   /**
-    * @param folder the folder to set
-    */
-   public void setFolder(Folder folder)
-   {
-      this.folder = folder;
-   }
-
-   /**
-    * @see com.google.gwt.http.client.RequestCallback#onError(com.google.gwt.http.client.Request, java.lang.Throwable)
-    */
-   @Override
-   public void onError(Request request, Throwable exception)
-   {
-      fireErrorEvent();
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.ClientRequestCallback#onUnsuccess(java.lang.Throwable)
-    */
-   @Override
-   public void onUnsuccess(Throwable exception)
-   {
-      fireErrorEvent();
-   }
-   
-   public abstract void fireErrorEvent();
 
 }

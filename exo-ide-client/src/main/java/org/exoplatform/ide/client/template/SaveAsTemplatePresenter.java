@@ -24,17 +24,17 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
-import org.exoplatform.ide.client.model.template.TemplateListReceivedCallback;
+import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 
 /**
@@ -147,12 +147,13 @@ public class SaveAsTemplatePresenter
       
       templateToCreate = new FileTemplate(file.getContentType(), name, description, file.getContent(), null);
       
-      TemplateServiceImpl.getInstance().getTemplates(new TemplateListReceivedCallback(eventBus)
+      TemplateServiceImpl.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
+         
          @Override
-         public void onTemplateListReceived()
+         protected void onSuccess(TemplateList result)
          {
-            for (Template template : this.getTemplateList().getTemplates())
+            for (Template template : result.getTemplates())
             {
                if (template instanceof FileTemplate && templateToCreate.getName().equals(template.getName()))
                {
@@ -160,16 +161,21 @@ public class SaveAsTemplatePresenter
                   return;
                }
             }
-            TemplateServiceImpl.getInstance().createTemplate(templateToCreate, new TemplateCreatedCallback(eventBus)
+            TemplateServiceImpl.getInstance().createTemplate(templateToCreate, new TemplateCreatedCallback()
             {
-               
                @Override
-               public void onResponseReceived(Request request, Response response)
+               protected void onSuccess(Template result)
                {
                   display.closeForm();
                   Dialogs.getInstance().showInfo("Template created successfully!");
                }
             });
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }

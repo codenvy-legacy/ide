@@ -22,12 +22,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
@@ -152,22 +150,19 @@ public class SearchPresenter
       }
 
       final Folder folder = new Folder(entryPoint);
-      VirtualFileSystem.getInstance().search(folder, content, contentType, path, new ClientRequestCallback()
+      VirtualFileSystem.getInstance().search(folder, content, contentType, path, new AsyncRequestCallback<Folder>()
       {
          
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(Folder result)
          {
             eventBus.fireEvent(new SearchResultReceivedEvent(folder));
          }
          
-         public void onError(Request request, Throwable exception)
+         @Override
+         protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Search path does not exist."));
-         }
-         
-         public void onUnsuccess(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Search path does not exist."));
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Search path does not exist."));            
          }
       });
       display.closeForm();

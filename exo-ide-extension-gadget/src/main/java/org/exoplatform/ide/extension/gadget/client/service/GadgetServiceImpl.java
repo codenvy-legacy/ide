@@ -66,7 +66,7 @@ public class GadgetServiceImpl extends GadgetService
       this.publicContext = publicContext;
    }
 
-   public void getGadgetMetadata(TokenResponse tokenResponse, GadgetMetadataCallback gadgetCallback)
+   public void getGadgetMetadata(TokenResponse tokenResponse, AsyncRequestCallback<GadgetMetadata>callback)
    {
       String data =
          "{\"context\":{\"country\":\"" + "us" + "\",\"language\":\"" + "en" + "\"},\"gadgets\":[" + "{\"moduleId\":"
@@ -75,23 +75,24 @@ public class GadgetServiceImpl extends GadgetService
       GadgetMetadata metadata = new GadgetMetadata();
       metadata.setSecurityToken(tokenResponse.getSecurityToken());
       GadgetMetadataUnmarshaler unmarshaller = new GadgetMetadataUnmarshaler(metadata);
-//      GadgetMetadaRecievedEvent event = new GadgetMetadaRecievedEvent(metadata);
-      gadgetCallback.setMetadata(metadata);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, gadgetCallback);
+      callback.setResult(metadata);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
 
       String url = gadgetServer + "metadata";
       
       AsyncRequest.build(RequestBuilder.POST, url, loader).data(data).send(callback);
    }
 
-   public void getSecurityToken(TokenRequest request, SecurityTokenCallback securityTokenCallback)
+   public void getSecurityToken(TokenRequest request, AsyncRequestCallback<TokenResponse> callback)
    {
       TokenResponse tokenResponse = new TokenResponse();
-//      SecurityTokenRecievedEvent postEvent = new SecurityTokenRecievedEvent(tokenResponse);
-      securityTokenCallback.setTokenResponse(tokenResponse);
+      callback.setResult(tokenResponse);
       TokenResponseUnmarshal unmarshal = new TokenResponseUnmarshal(tokenResponse);
       TokenRequestMarshaler marshaler = new TokenRequestMarshaler(request);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshal, securityTokenCallback);
+      
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshal);
 
       String url = restServiceContext + "/services/shindig/securitytoken/createToken";
       //String url = Configuration.getInstance().getContext() + "/services/shindig/securitytoken/createToken";
@@ -100,30 +101,28 @@ public class GadgetServiceImpl extends GadgetService
    }
 
    @Override
-   public void deployGadget(String href, DeployUndeployGadgetCallback gadgetCallback)
+   public void deployGadget(String href, AsyncRequestCallback<String> callback)
    {
       String url =
          restServiceContext +
          /*Configuration.getInstance().getContext() + */CONTEXT + DEPLOY + "?" + QueryParams.GADGET_URL + "="
             + URL.encodeComponent(href) + "&" + QueryParams.PRIVATE_CONTEXT + "=" + URL.encodeComponent(restServiceContext)
             + "&" + QueryParams.PUBLIC_CONTEXT + "=" + URL.encodeComponent(publicContext);
-//      GadgetDeployResultEvent event = new GadgetDeployResultEvent(url);
-      gadgetCallback.setUrl(url);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, gadgetCallback);
+      callback.setResult(url);
+      callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
    @Override
-   public void undeployGadget(String href, DeployUndeployGadgetCallback gadgetCallback)
+   public void undeployGadget(String href, AsyncRequestCallback<String> callback)
    {
       String url =
          restServiceContext + /*Configuration.getInstance().getContext() + */CONTEXT + UNDEPLOY + "?"
             + QueryParams.GADGET_URL + "=" + URL.encodeComponent(href) + "&" + QueryParams.PRIVATE_CONTEXT + "="
             + URL.encodeComponent(restServiceContext) + "&" + QueryParams.PUBLIC_CONTEXT + "="
             + URL.encodeComponent(publicContext);
-//      GadgetUndeployResultEvent event = new GadgetUndeployResultEvent(url);
-      gadgetCallback.setUrl(url);
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, gadgetCallback);
+      callback.setResult(url);
+      callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 

@@ -19,19 +19,16 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
-import org.exoplatform.ide.client.framework.vfs.ChildrenReceivedCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
@@ -53,8 +50,6 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private String pathToOpen;
 
    private ArrayList<String> pathes;
@@ -66,7 +61,6 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
    public GoToFolderCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
 
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -128,9 +122,11 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
        * Folder content received handler.
        * Get subfolder content here
        */
-      VirtualFileSystem.getInstance().getChildren(folderToOpen, new ChildrenReceivedCallback()
+      VirtualFileSystem.getInstance().getChildren(folderToOpen, new AsyncRequestCallback<Folder>()
       {
-         public void onResponseReceived(Request request, Response response)
+         
+         @Override
+         protected void onSuccess(Folder result)
          {
             new Timer()
             {
@@ -148,15 +144,14 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
                   else
                   {
                      // try to select file.........
-                     handlers.removeHandlers();
                      eventBus.fireEvent(new SelectItemEvent(activeFile.getHref()));
                   }
                }
             }.schedule(100);
          }
-
+         
          @Override
-         public void fireErrorEvent()
+         protected void onFailure(Throwable exception)
          {
             eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
          }

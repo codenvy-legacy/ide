@@ -21,8 +21,8 @@ package org.exoplatform.ide.client.model.discovery.marshal;
 import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.framework.discovery.DiscoverableCallback;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,9 +34,9 @@ import org.exoplatform.ide.client.framework.discovery.DiscoverableCallback;
 public class DiscoveryServiceDiscoverableUnmarshaller implements Unmarshallable
 {
 
-   private DiscoverableCallback discoverableCallback;
+   private AsyncRequestCallback<Boolean> discoverableCallback;
 
-   public DiscoveryServiceDiscoverableUnmarshaller(DiscoverableCallback discoverableCallback)
+   public DiscoveryServiceDiscoverableUnmarshaller(AsyncRequestCallback<Boolean> discoverableCallback)
    {
       this.discoverableCallback = discoverableCallback;
    }
@@ -44,7 +44,7 @@ public class DiscoveryServiceDiscoverableUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      discoverableCallback.setDiscoverable(Boolean.parseBoolean(response.getText()));
+      discoverableCallback.setResult(Boolean.parseBoolean(response.getText()));
    }
 
 }

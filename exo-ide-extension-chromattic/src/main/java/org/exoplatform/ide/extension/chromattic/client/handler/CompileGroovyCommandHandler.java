@@ -19,18 +19,16 @@
 package org.exoplatform.ide.extension.chromattic.client.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.event.CompileGroovyEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.CompileGroovyHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
-import org.exoplatform.ide.extension.chromattic.client.model.service.callback.CompileGroovyCallback;
 
 /**
  * 
@@ -64,28 +62,25 @@ public class CompileGroovyCommandHandler implements CompileGroovyHandler
    public void onCompileGroovy(CompileGroovyEvent event)
    {
       File file = event.getFile();
-      ChrommaticService.getInstance().compile(file, new CompileGroovyCallback()
+      ChrommaticService.getInstance().compile(file, new AsyncRequestCallback<String>()
       {
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(String result)
          {
-            String outputContent = "<b>" + this.getFileHref() + "</b> compiled successfully.";
+            String outputContent = "<b>" + result + "</b> compiled successfully.";
             eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
          }
 
          @Override
-         public void onError(Request request, Throwable exception)
+         protected void onFailure(Throwable exception)
          {
             eventBus.fireEvent(new ExceptionThrownEvent(exception));
-         }
 
-         @Override
-         public void onUnsuccess(Throwable exception)
-         {
             ServerException serverException = (ServerException)exception;
 
-            String outputContent = "<b>" + this.getFileHref() + "</b> deploy failed.&nbsp;";
-            outputContent += "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText() + "</i>)";
+            String outputContent = "<b>" + this.getResult() + "</b> deploy failed.&nbsp;";
+            outputContent +=
+               "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText() + "</i>)";
             if (!serverException.getMessage().equals(""))
             {
                outputContent += "<br />" + serverException.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"

@@ -19,10 +19,7 @@
 package org.exoplatform.ide.client.permissions;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -78,16 +75,10 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
       VirtualFileSystem.getInstance().getPropertiesCallback(selectedItem,
          Arrays.asList(new QName[]{ItemProperty.ACL.ACL, ItemProperty.OWNER}), new ItemPropertiesCallback()
          {
-
-            public void onResponseReceived(Request request, Response response)
-            {
-               new PermissionsManagerForm(eventBus, this.getItem(), lockTokens);
-            }
-
             @Override
-            public void fireErrorEvent()
+            protected void onSuccess(Item result)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+               new PermissionsManagerForm(eventBus, result, lockTokens);
             }
          });
    }

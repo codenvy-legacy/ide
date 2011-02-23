@@ -19,18 +19,16 @@
 package org.exoplatform.ide.client.model.configuration;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window.Location;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationConfiguration;
-import org.exoplatform.gwtframework.commons.initializer.ApplicationConfigurationCallback;
 import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
 import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 
@@ -81,22 +79,22 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
       this.configuration = configuration;
       configuration.setRegistryURL(getRegistryURL());
       final ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION_NAME, loader);
-      applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME, new ApplicationConfigurationCallback()
-      {
-
-         @Override
-         public void onResponseReceived(Request request, Response response)
+      applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME,
+         new AsyncRequestCallback<ApplicationConfiguration>()
          {
-            configurationReceived(this.getConfiguration());
-         }
 
-         @Override
-         public void handleError(Throwable exc)
-         {
-            applicationInitializer.getConfigurationFromRegistry();
-         }
-         
-      });
+            @Override
+            protected void onSuccess(ApplicationConfiguration result)
+            {
+               configurationReceived(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               applicationInitializer.getConfigurationFromRegistry();
+            }
+         });
    }
 
    private void configurationReceived(ApplicationConfiguration appConfiguration)

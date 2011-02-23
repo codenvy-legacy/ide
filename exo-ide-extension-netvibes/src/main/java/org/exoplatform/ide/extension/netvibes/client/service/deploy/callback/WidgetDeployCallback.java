@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.extension.netvibes.client.service.deploy.callback;
 
-import com.google.gwt.http.client.Request;
-
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.netvibes.client.model.DeployResult;
 import org.exoplatform.ide.extension.netvibes.client.model.DeployWidget;
+import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetDeployCallback.WidgetDeployData;
 
 /**
  * Abstract callback, which caller must impletemnt to receive response.
@@ -33,73 +32,42 @@ import org.exoplatform.ide.extension.netvibes.client.model.DeployWidget;
  * @version $Id: WidgetCategoryCallback.java Feb 11, 2011 4:50:09 PM vereshchaka $
  *
  */
-public abstract class WidgetDeployCallback extends ClientRequestCallback
+public abstract class WidgetDeployCallback extends AsyncRequestCallback<WidgetDeployData>
 {
    
-   /**
-    * Data for deploying widget.
-    */
-   private DeployWidget deployWidget;
-   
-   /**
-    * The result of the deploy.
-    */
-   private DeployResult deployResult;
-   
-   /**
-    * @return the deployWidget
-    */
-   public DeployWidget getDeployWidget()
+   public class WidgetDeployData
    {
-      return deployWidget;
+      /**
+       * Data for deploying widget.
+       */
+      private DeployWidget deployWidget;
+      
+      /**
+       * The result of the deploy.
+       */
+      private DeployResult deployResult;
+      
+      public WidgetDeployData(DeployWidget deployWidget, DeployResult deployResult)
+      {
+         this.deployWidget = deployWidget;
+         this.deployResult = deployResult;
+      }
+      
+      /**
+       * @return the deployWidget
+       */
+      public DeployWidget getDeployWidget()
+      {
+         return deployWidget;
+      }
+      
+      /**
+       * @return the deployResult
+       */
+      public DeployResult getDeployResult()
+      {
+         return deployResult;
+      }
    }
-   
-   /**
-    * @param deployWidget the deployWidget to set
-    */
-   public void setDeployWidget(DeployWidget deployWidget)
-   {
-      this.deployWidget = deployWidget;
-   }
-   
-   /**
-    * @return the deployResult
-    */
-   public DeployResult getDeployResult()
-   {
-      return deployResult;
-   }
-   
-   /**
-    * @param deployResult the deployResult to set
-    */
-   public void setDeployResult(DeployResult deployResult)
-   {
-      this.deployResult = deployResult;
-   }
-
-   /**
-    * @see com.google.gwt.http.client.RequestCallback#onError(com.google.gwt.http.client.Request, java.lang.Throwable)
-    */
-   @Override
-   public void onError(Request request, Throwable exception)
-   {
-      handleError(exception);
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.ClientRequestCallback#onUnsuccess(java.lang.Throwable)
-    */
-   @Override
-   public void onUnsuccess(Throwable exception)
-   {
-      handleError(null);
-   }
-   
-   /**
-    * Handle exception.
-    * @param exception
-    */
-   public abstract void handleError(Throwable exception);
 
 }

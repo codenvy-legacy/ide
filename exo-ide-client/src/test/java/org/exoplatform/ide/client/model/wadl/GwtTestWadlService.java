@@ -19,13 +19,10 @@
 package org.exoplatform.ide.client.model.wadl;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
@@ -37,10 +34,8 @@ import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyDeployUndeployCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyServiceImpl;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlCallback;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
 
@@ -124,43 +119,33 @@ public class GwtTestWadlService extends AbstractGwtTest
     */
    public void testGetWadl()
    {
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-      {
-         public void onError(ExceptionThrownEvent event)
-         {
-            if (event.getError() != null && event.getError().getMessage() != null)
-            {
-               fail(event.getError().getMessage());
-               finishTest();
-            }
-
-         }
-      });
-
-      vfsWebDav.saveContent(file, null, new FileContentSaveCallback(eventbus)
+      vfsWebDav.saveContent(file, null, new FileContentSaveCallback()
       {
          
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(FileData result)
          {
-            assertNotNull(this.getFile());
-            assertEquals(this.getFile().getContent(), groovyFileContent);
-            groovyService.deploy(this.getFile().getHref(), new GroovyDeployUndeployCallback()
+            assertNotNull(result.getFile());
+            assertEquals(result.getFile().getContent(), groovyFileContent);
+            groovyService.deploy(result.getFile().getHref(), new AsyncRequestCallback<String>()
             {
                
-               public void onResponseReceived(Request request, Response response)
+               @Override
+               protected void onSuccess(String result)
                {
-                  assertEquals(file.getHref(), this.getHref());
-                  wadlService.getWadl(testUrlGetWadl + "/mine", new WadlCallback(eventbus)
+                  assertEquals(file.getHref(), result);
+                  wadlService.getWadl(testUrlGetWadl + "/mine", new AsyncRequestCallback<WadlApplication>()
                   {
                      
                      @Override
-                     public void onResponseReceived(Request request, Response response)
+                     protected void onSuccess(WadlApplication result)
                      {
-                        checkWadl(this.getApplication());
+                        checkWadl(result);
+                        finishTest();
                      }
                      
                      @Override
-                     public void fireErrorEvent(Throwable exception)
+                     protected void onFailure(Throwable exception)
                      {
                         fail();
                         finishTest();
@@ -169,12 +154,18 @@ public class GwtTestWadlService extends AbstractGwtTest
                }
                
                @Override
-               public void fireErrorEvent(Throwable exception)
+               protected void onFailure(Throwable exception)
                {
                   fail(exception.getMessage());
-                  finishTest();                  
+                  finishTest();
                }
             });
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            finishTest();
          }
       });
       delayTestFinish(DELAY_TEST);
@@ -225,52 +216,48 @@ public class GwtTestWadlService extends AbstractGwtTest
    
    public void testGetWadlFail()
    {
-      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
+      vfsWebDav.saveContent(file, null, new FileContentSaveCallback()
       {
-         public void onError(ExceptionThrownEvent event)
+         @Override
+         protected void onFailure(Throwable exception)
          {
-            if (event.getError() != null && event.getError().getMessage() != null)
+            //if error occurs on get Wadl Output - all OK
+            if (WADL_ERROR_MESSAGE.equals(exception.getMessage()))
             {
-               //if error occurs on get Wadl Output - all OK
-               if (WADL_ERROR_MESSAGE.equals(event.getErrorMessage()))
-               {
-                  finishTest();
-               }
-               //if error occurs on something else - test fails
-               else
-               {
-                  fail(event.getError().getMessage());
-                  finishTest();
-               }
+               finishTest();
             }
-
+            //if error occurs on something else - test fails
+            else
+            {
+               fail(exception.getMessage());
+               finishTest();
+            }
          }
-      });
-      
-      vfsWebDav.saveContent(file, null, new FileContentSaveCallback(eventbus)
-      {
          
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(FileData result)
          {
-            assertNotNull(this.getFile());
-            assertEquals(this.getFile().getContent(), groovyFileContent);
-            groovyService.deploy(this.getFile().getHref(), new GroovyDeployUndeployCallback()
+            assertNotNull(result.getFile());
+            assertEquals(result.getFile().getContent(), groovyFileContent);
+            groovyService.deploy(result.getFile().getHref(), new AsyncRequestCallback<String>()
             {
                
-               public void onResponseReceived(Request request, Response response)
+               @Override
+               protected void onSuccess(String result)
                {
-                  assertEquals(file.getHref(), this.getHref());
-                  wadlService.getWadl(testUrlGetWadl + "/not-mine", new WadlCallback(eventbus)
+                  assertEquals(file.getHref(), result);
+                  wadlService.getWadl(testUrlGetWadl + "/not-mine", new AsyncRequestCallback<WadlApplication>()
                   {
+                     
                      @Override
-                     public void onResponseReceived(Request request, Response response)
+                     protected void onSuccess(WadlApplication result)
                      {
                         fail("Check is URL for this test is incorrect");
                         finishTest();
                      }
                      
                      @Override
-                     public void fireErrorEvent(Throwable exception)
+                     protected void onFailure(Throwable exception)
                      {
                         finishTest();
                      }
@@ -278,7 +265,7 @@ public class GwtTestWadlService extends AbstractGwtTest
                }
                
                @Override
-               public void fireErrorEvent(Throwable exception)
+               protected void onFailure(Throwable exception)
                {
                   fail(exception.getMessage());
                   finishTest();

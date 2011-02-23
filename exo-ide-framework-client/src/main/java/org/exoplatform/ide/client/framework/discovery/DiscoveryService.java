@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.client.framework.discovery;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -44,10 +48,12 @@ public abstract class DiscoveryService
    public abstract void getDefaultEntryPoint(DefaultEntryPointCallback entryPointCallback);
    
    /**
-    * Get list of all deployed REST Services 
+    * Get list of all deployed REST Services.
+    *  
+    * @param callback
     */
-   public abstract void getRestServices(RestServicesCallback restServicesCallback);
+   public abstract void getRestServices(AsyncRequestCallback<List<RestService>> callback);
    
-   public abstract void getIsDiscoverable(DiscoverableCallback discoverableCallback);
+   public abstract void getIsDiscoverable(AsyncRequestCallback<Boolean> callback);
 
 }

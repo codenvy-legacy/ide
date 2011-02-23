@@ -26,8 +26,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
@@ -257,11 +255,12 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
                   else
                   {
                      VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()),
-                        new FileContentSaveCallback(eventBus)
+                        new FileContentSaveCallback()
                         {
-                           public void onResponseReceived(Request request, Response response)
+                           @Override
+                           protected void onSuccess(FileData result)
                            {
-                              eventBus.fireEvent(new EditorCloseFileEvent(this.getFile(), true));
+                              eventBus.fireEvent(new EditorCloseFileEvent(result.getFile(), true));
                               closeNextFile();
                            }
                         });

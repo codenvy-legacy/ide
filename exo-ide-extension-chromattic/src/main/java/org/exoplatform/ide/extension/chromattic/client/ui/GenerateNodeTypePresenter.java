@@ -22,18 +22,17 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
+import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
-import org.exoplatform.ide.extension.chromattic.client.model.service.callback.NodeTypeGenerationCallback;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
 
 /**
@@ -156,22 +155,26 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
       if (activeFile == null)
          return;
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), nodeTypeFormat, new NodeTypeGenerationCallback()
-      {
-         public void onResponseReceived(Request request, Response response)
+      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), nodeTypeFormat,
+         new AsyncRequestCallback<GenerateNodeTypeResult>()
          {
-            eventBus.fireEvent(new NodeTypeGenerationResultReceivedEvent(this.getGenerateNodeTypeResult()));
-            display.closeView();
-         }
-         
-         public void handleError(Throwable exception)
-         {
-            NodeTypeGenerationResultReceivedEvent event = new NodeTypeGenerationResultReceivedEvent(this.getGenerateNodeTypeResult());
-            event.setException(exception);
-            eventBus.fireEvent(event);
-            display.closeView();
-         }
-      });
+            @Override
+            protected void onSuccess(GenerateNodeTypeResult result)
+            {
+               eventBus.fireEvent(new NodeTypeGenerationResultReceivedEvent(result));
+               display.closeView();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               NodeTypeGenerationResultReceivedEvent event =
+                  new NodeTypeGenerationResultReceivedEvent(this.getResult());
+               event.setException(exception);
+               eventBus.fireEvent(event);
+               display.closeView();
+            }
+         });
    }
 
    /**

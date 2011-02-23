@@ -22,22 +22,20 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemUnlockCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 
 import java.util.HashMap;
@@ -181,19 +179,21 @@ public class DeleteItemPresenter
       }
       if (lockTokens.containsKey(item.getHref()))
       {
-         VirtualFileSystem.getInstance().unlock(item, lockTokens.get(item.getHref()), new ItemUnlockCallback()
+         VirtualFileSystem.getInstance().unlock(item, lockTokens.get(item.getHref()), new AsyncRequestCallback<Item>()
          {
             
-            public void onResponseReceived(Request request, Response response)
+            @Override
+            protected void onSuccess(Item result)
             {
-               eventBus.fireEvent(new ItemUnlockedEvent(this.getItem()));
-               deleteItem(this.getItem());
+               eventBus.fireEvent(new ItemUnlockedEvent(result));
+               deleteItem(result);
+               
             }
             
             @Override
-            public void fireErrorEvent()
+            protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));               
             }
          });
       }
@@ -210,12 +210,14 @@ public class DeleteItemPresenter
     */
    private void deleteItem(final Item item)
    {
-      VirtualFileSystem.getInstance().deleteItem(item, new ClientRequestCallback()
+      VirtualFileSystem.getInstance().deleteItem(item, new AsyncRequestCallback<Item>()
       {
-
-         public void onResponseReceived(Request request, Response response)
+         
+         @Override
+         protected void onSuccess(Item result)
          {
             selectedItems.remove(item);
+            eventBus.fireEvent(new ItemDeletedEvent(item));
 
             if (item instanceof File)
             {
@@ -248,15 +250,9 @@ public class DeleteItemPresenter
             lastDeletedItem = item;
             deleteNextItem();
          }
-
-         public void onError(Request request, Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
-            display.closeForm();
-         }
-
+         
          @Override
-         public void onUnsuccess(Throwable exception)
+         protected void onFailure(Throwable exception)
          {
             eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
             display.closeForm();
@@ -303,9 +299,6 @@ public class DeleteItemPresenter
       selectedItemHref = selectedItemHref.substring(0, selectedItemHref.lastIndexOf("/") + 1);
 
       Folder folder = new Folder(selectedItemHref);
-
-      //      context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-      //      context.getSelectedItems(context.getSelectedNavigationPanel()).add(folder);
 
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
       eventBus.fireEvent(new SelectItemEvent(folder.getHref()));

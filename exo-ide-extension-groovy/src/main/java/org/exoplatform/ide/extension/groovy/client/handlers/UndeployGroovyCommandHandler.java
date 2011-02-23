@@ -19,11 +19,10 @@
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -33,7 +32,6 @@ import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptEve
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSandboxHandler;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyDeployUndeployCallback;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyUndeployResultReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyUndeployResultReceivedHandler;
@@ -68,19 +66,19 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
     */
    public void onUndeployGroovyScript(UndeployGroovyScriptEvent event)
    {
-      GroovyService.getInstance().undeploy(activeFile.getHref(), new GroovyDeployUndeployCallback()
+      GroovyService.getInstance().undeploy(activeFile.getHref(), new AsyncRequestCallback<String>()
       {
          
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(String result)
          {
-            undeploySuccess(this.getHref());
+            undeploySuccess(result);
          }
          
          @Override
-         public void fireErrorEvent(Throwable exception)
+         protected void onFailure(Throwable exception)
          {
-            undeployFail(exception, this.getHref());
+            undeployFail(exception, this.getResult());
          }
       });
    }
@@ -121,19 +119,19 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
     */
    public void onUndeployGroovyScriptSandbox(UndeployGroovyScriptSandboxEvent event)
    {
-      GroovyService.getInstance().undeploySandbox(activeFile.getHref(), new GroovyDeployUndeployCallback()
+      GroovyService.getInstance().undeploySandbox(activeFile.getHref(), new AsyncRequestCallback<String>()
       {
          
          @Override
-         public void onResponseReceived(Request request, Response response)
+         protected void onSuccess(String result)
          {
-            undeploySuccess(this.getHref());
+            undeploySuccess(result);
          }
          
          @Override
-         public void fireErrorEvent(Throwable exception)
+         protected void onFailure(Throwable exception)
          {
-            undeployFail(exception, this.getHref());
+            undeployFail(exception, this.getResult());
          }
       });
    }

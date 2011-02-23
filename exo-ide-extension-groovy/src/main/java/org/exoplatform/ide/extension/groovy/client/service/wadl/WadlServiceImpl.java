@@ -49,14 +49,14 @@ public class WadlServiceImpl extends WadlService
    /**
     * @see org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService#getWadl(java.lang.String, org.exoplatform.ide.extension.groovy.client.service.wadl.WadlCallback)
     */
-   public void getWadl(String url, WadlCallback wadlCallback)
+   public void getWadl(String url, AsyncRequestCallback<WadlApplication> callback)
    {
       WadlApplication application = new WadlApplication();
-      
       WadlServiceOutputUnmarshaller unmarshaller = new WadlServiceOutputUnmarshaller(eventBus, application);
-      wadlCallback.setApplication(application);
       
-      AsyncRequestCallback callback = new AsyncRequestCallback(eventBus, unmarshaller, wadlCallback);
+      callback.setEventBus(eventBus);
+      callback.setResult(application);
+      callback.setPayload(unmarshaller);
 
       AsyncRequest request = AsyncRequest.build(RequestBuilder.POST, url, loader);
 

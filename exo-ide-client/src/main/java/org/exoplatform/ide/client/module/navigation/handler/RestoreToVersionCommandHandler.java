@@ -19,18 +19,16 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
@@ -112,31 +110,28 @@ public class RestoreToVersionCommandHandler implements ShowVersionContentHandler
       File file = new File(activeVersion.getItemHref());
       VirtualFileSystem.getInstance().getPropertiesCallback(file, null, new ItemPropertiesCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+
+         @Override
+         protected void onSuccess(Item result)
          {
-            if (this.getItem() != null && this.getItem() instanceof File && activeVersion != null)
+            if (result != null && result instanceof File && activeVersion != null)
             {
-               File file = (File)this.getItem();
+               File file = (File)result;
                file.setContent(activeVersion.getContent());
                saveFileContent(file);
             }
-         }
-         
-         @Override
-         public void fireErrorEvent()
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
          }
       });
    }
    
    private void saveFileContent(File file)
    {
-      VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback(eventBus)
+      VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback()
       {
-         public void onResponseReceived(Request request, Response response)
+         @Override
+         protected void onSuccess(FileData result)
          {
-            eventBus.fireEvent(new OpenFileEvent(this.getFile()));
+            eventBus.fireEvent(new OpenFileEvent(result.getFile()));
          }
       });
    }

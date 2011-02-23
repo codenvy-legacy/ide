@@ -19,16 +19,15 @@
 package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.ItemUnlockCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 
@@ -68,18 +67,19 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
       
       if (lockToken != null)
       {
-         VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new ItemUnlockCallback()
+         VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new AsyncRequestCallback<Item>()
          {
             
-            public void onResponseReceived(Request request, Response response)
+            @Override
+            protected void onSuccess(Item result)
             {
-               eventBus.fireEvent(new ItemUnlockedEvent(this.getItem()));
+               eventBus.fireEvent(new ItemUnlockedEvent(result));               
             }
             
             @Override
-            public void fireErrorEvent()
+            protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));               
             }
          });
       }
