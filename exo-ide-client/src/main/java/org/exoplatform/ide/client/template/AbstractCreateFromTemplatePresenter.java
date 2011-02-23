@@ -28,7 +28,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -38,8 +37,6 @@ import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateDeletedCallback;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent;
-import org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler;
 
 import java.util.List;
 
@@ -50,12 +47,10 @@ import java.util.List;
  * @version $Id: $
  */
 
-public abstract class AbstractCreateFromTemplatePresenter<T extends Template> implements TemplateDeletedHandler 
+public abstract class AbstractCreateFromTemplatePresenter<T extends Template> 
 {
 
    protected HandlerManager eventBus;
-
-   protected Handlers handlers;
 
    protected CreateFromTemplateDisplay<T> display;
 
@@ -66,14 +61,10 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
    public AbstractCreateFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems)
    {
       this.eventBus = eventBus;
-      
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(TemplateDeletedEvent.TYPE, this);
    }
    
    public void destroy()
    {
-      handlers.removeHandlers();
    }
 
    public void bindDisplay(CreateFromTemplateDisplay<T> d)
@@ -251,15 +242,6 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template> im
       setNewInstanceName();
    }
    
-   /**
-    * @see org.exoplatform.ide.client.model.template.event.TemplateDeletedHandler#onTemplateDeleted(org.exoplatform.ide.client.model.template.event.TemplateDeletedEvent)
-    */
-   public void onTemplateDeleted(TemplateDeletedEvent event)
-   {
-      selectedTemplates.remove(event.getTemplate());
-      deleteNextTemplate();
-   }
-
    /**
     * Refresh List of the templates, after deleting
     */

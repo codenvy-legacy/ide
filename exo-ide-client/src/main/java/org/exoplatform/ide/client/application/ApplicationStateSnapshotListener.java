@@ -217,7 +217,6 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
     */
    public void onMoveComplete(MoveCompleteEvent event)
    {
-      System.out.println("ApplicationStateSnapshotListener.onMoveComplete()");
       if (lockTokens.containsKey(event.getSourceHref()))
       {
          String lock = lockTokens.get(event.getSourceHref());
