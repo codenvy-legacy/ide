@@ -28,6 +28,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -170,9 +171,9 @@ public class AboutForm extends DialogWindow
       infoLayout.setAutoHeight();
 
       Label infoLabel = new Label();
-      infoLabel.setAlign(Alignment.LEFT);
-      infoLabel.setCanSelectText(true);
-      infoLabel.setValue("<h3>" + NAME + "</h3>" + "<b>" + VERSION + "</b>" + "<br>" + YEAR + "&nbsp;" + COMPANY_NAME
+      infoLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+//      infoLabel.setCanSelectText(true);
+      infoLabel.getElement().setInnerHTML("<h3>" + NAME + "</h3>" + "<b>" + VERSION + "</b>" + "<br>" + YEAR + "&nbsp;" + COMPANY_NAME
          + "&nbsp;" + COPYRIGHT + "<br>" + INFO + "<br><br>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>"
          + BUILD_TIME + "</b>");
       infoLayout.addMember(infoLabel);

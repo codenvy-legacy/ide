@@ -155,8 +155,8 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    {
       findResultLabel = new Label();
       findResultLabel.setID(ID_FIND_RESULT);
-      findResultLabel.setHeight(BUTTON_HEIGHT);
-      findResultLabel.setWidth100();
+      findResultLabel.setHeight(""+BUTTON_HEIGHT);
+      findResultLabel.setWidth("319px");
       findResultLabel.setValue("");
       return findResultLabel;
    }
