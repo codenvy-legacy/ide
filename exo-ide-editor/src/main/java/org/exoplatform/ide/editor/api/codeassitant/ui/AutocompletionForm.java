@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
 import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.codemirror.CodeAssistantClientBundle;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -127,7 +128,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
       DOM.setStyleAttribute(lockLayer.getElement(), "zIndex", "" + (Integer.MAX_VALUE));
 
       blockMouseEventsPanel = new LockLayer();
-      blockMouseEventsPanel.setStyleName("exo-lockLayer");
+//      blockMouseEventsPanel.setStyleName("exo-lockLayer");
       blockMouseEventsPanel.setWidth("" + Window.getClientWidth() + "px");
       blockMouseEventsPanel.setHeight("" + Window.getClientHeight() + "px");
       lockLayer.add(blockMouseEventsPanel, 0, 0);
@@ -135,7 +136,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
       textBox = new TextBox();
       textBox.setWidth("100%");
       textBox.setText(prefix);
-      textBox.setStyleName(Style.AUTO_EDIT);
+      textBox.setStyleName(CodeAssistantClientBundle.INSTANCE.css().edit());
 
       textBox.addFocusHandler(new FocusHandler()
       {
@@ -184,7 +185,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
          top = top - 200;
       }
 
-      panel.setStyleName(Style.AUTO_PANEL);
+      panel.setStyleName(CodeAssistantClientBundle.INSTANCE.css().panelStyle());
 
       lockLayer.add(panel, left, top);
 
@@ -385,7 +386,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
             descriptionPanel.setWidth(width + "px");
             descriptionPanel.setHeight("" + (panel.getOffsetHeight() - 2));
 
-            descriptionPanel.setStyleName(Style.AUTO_DESCRIPTION_PANEL);
+            descriptionPanel.setStyleName(CodeAssistantClientBundle.INSTANCE.css().description());
             int clientWidth = Window.getClientWidth();
 
             if (clientWidth < panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3 + width)
@@ -516,7 +517,6 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
        */
       public void onClick(ClickEvent event)
       {
-         @SuppressWarnings("unchecked")
          TokenWidget t = (TokenWidget)event.getSource();
          selectToken(t);
       }

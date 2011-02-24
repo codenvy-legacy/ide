@@ -90,4 +90,81 @@
          </plugin>
       </plugins>
    </build>
+   <profiles>
+     <profile>
+         <id>editor-test</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <resources>
+               <resource>
+                  <directory>src/main/java</directory>
+               </resource>
+               <resource>
+                  <directory>src/main/resources</directory>
+               </resource>
+            </resources>   
+            <testResources>
+               <testResource>
+                  <directory>src/test/java</directory>
+               </testResource>
+               <testResource>
+                  <directory>src/test/resources</directory>
+               </testResource>
+            </testResources>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-resources-plugin</artifactId>
+                  <version>2.3</version>
+                  <executions>
+                     <execution>
+                        <id>copy-prod-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                           <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                           <outputDirectory>target/war/WEB-INF/</outputDirectory>
+                           <resources>
+                              <resource>
+                                 <directory>src/main/webapp/shell</directory>
+                                 <filtering>true</filtering>
+                              </resource>
+                           </resources>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>gwt-maven-plugin</artifactId>
+                  <version>${gwt.maven.plugin.version}</version>
+                  <configuration>
+                     <module>org.exoplatform.ide.editor.EditorTest</module>
+                     <runTarget>org.exoplatform.ide.editor.EditorTest/Editor.html</runTarget>                     
+                     <logLevel>INFO</logLevel>
+                     <!-- 
+                     
+                            <logLevel>INFO" -bindAddress "0.0.0.0</logLevel>
+                     <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel> 
+                     <logLevel>INFO" -bindAddress "0.0.0.0</logLevel>
+                     -->
+                     <!-- 
+                     <logLevel>INFO</logLevel>
+                     <bindAddress>0.0.0.0</bindAddress>
+                      -->
+                     
+                     <hostedWebapp>${basedir}/target/war</hostedWebapp>
+                     <skipTests>${gwt.test.skip}</skipTests>
+                     <port>${gwt.port}</port>
+                  </configuration>
+
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+   </profiles>
 </project>

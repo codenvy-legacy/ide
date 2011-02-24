@@ -16,86 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror.codeassistant.html;
+package org.exoplatform.ide.editor.codemirror.codeassistant.javascript.widgets;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.codemirror.CodeAssistantClientBundle;
 
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: HtmlTokenWidget Feb 23, 2011 1:12:49 PM evgen $
+ * @version $Id: JSBaseWidget Feb 24, 2011 11:56:26 AM evgen $
  *
  */
-public class HtmlTokenWidget extends TokenWidget
+public abstract class JSBaseWidget extends TokenWidget
 {
-   
-   private Grid grid;
+
+   protected Grid grid;
+
    /**
     * @param token
     */
-   public HtmlTokenWidget(Token token)
+   public JSBaseWidget(Token token)
    {
       super(token);
-      grid = new Grid(1, 3);
-      grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
-      grid.setWidth("100%");
-
-      Image i = getImage();
-      i.setHeight("16px");
-      grid.setWidget(0, 0, i);
-
-      String name = token.getName();
-      if (token.hasProperty(TokenProperties.SHORT_HINT)  && token.getType()!= TokenType.TEMPLATE)
-      {
-         name += token.getProperty(TokenProperties.SHORT_HINT).isStringProperty().stringValue();
-      }
-
-      Label nameLabel = new Label(name, false);
-
-      grid.setWidget(0, 1, nameLabel);
-
-      grid.getCellFormatter().setWidth(0, 0, "16px");
-      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setWidth(0, 2, "100%");
-
-      initWidget(grid);
-   }
-
-   /**
-    * @return
-    */
-   private Image getImage()
-   {
-      if(token.getType() == TokenType.ATTRIBUTE)
-         return new Image(CodeAssistantClientBundle.INSTANCE.attribute());
-      else if(token.getType() == TokenType.TAG)
-         return new Image(CodeAssistantClientBundle.INSTANCE.tag());
-      
-      return new Image(CodeAssistantClientBundle.INSTANCE.property());
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenValue()
-    */
-   @Override
-   public String getTokenValue()
-   {
-      if (token.hasProperty(TokenProperties.CODE))
-         return token.getProperty(TokenProperties.CODE).isStringProperty().stringValue();
-      else
-         return token.getName();
    }
 
    /**
@@ -104,7 +51,7 @@ public class HtmlTokenWidget extends TokenWidget
    @Override
    public Widget getTokenDecription()
    {
-      if(token.hasProperty(TokenProperties.FULL_TEXT))
+      if (token.hasProperty(TokenProperties.FULL_TEXT))
       {
          Widget w = new SimplePanel();
          w.getElement().setInnerHTML(token.getProperty(TokenProperties.FULL_TEXT).isStringProperty().stringValue());
@@ -147,6 +94,18 @@ public class HtmlTokenWidget extends TokenWidget
    public void setDefaultStyle()
    {
       setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenValue()
+    */
+   @Override
+   public String getTokenValue()
+   {
+      if (token.hasProperty(TokenProperties.CODE))
+         return token.getProperty(TokenProperties.CODE).isStringProperty().stringValue();
+      else
+         return token.getName();
    }
 
 }

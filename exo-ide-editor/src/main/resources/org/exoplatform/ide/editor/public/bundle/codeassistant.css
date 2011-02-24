@@ -50,9 +50,10 @@
 	cursor: default;
 	outline: none;
 }
-.exo-autocomplete-list-item-selected
+@sprite .exo-autocomplete-list-item-selected
 {
-	background-image: url("images/autoComplete/row-selected.png");
+	gwt-image: "rowSelected";
+	/** background-image: url("images/autoComplete/row-selected.png"); */
 	background-repeat: repeat-x;
 }
 
@@ -79,5 +80,14 @@
 .exo-autocomplete-keyword
 {
 	font-weight: bold;
+}
+
+.exo-autocomplete-edit
+{
+	height: 20px;
+	border-width: 1px;
+	border-style:solid;
+	
+	border-bottom: #A7ABB4 1px solid;
 }
 

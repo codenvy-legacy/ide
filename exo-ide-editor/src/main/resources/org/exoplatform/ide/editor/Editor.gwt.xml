@@ -38,7 +38,9 @@
       <script src='codemirror/js/codemirror.js' />
       
       <!-- Tokens  -->
-      <script src="token/css_tokens.js" />
-      <script src="token/html_tokens.js" />
+      <script src="tokens/css_tokens.js" />
+      <script src="tokens/html_tokens.js" />
+      <script src="tokens/javascript_tokens.js" />
+      <script src="tokens/java_script_api.js" />
       
 </module>

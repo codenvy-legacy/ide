@@ -135,13 +135,14 @@ public class CodeMirrorConfiguration
       this.codeAssistant = codeAssistant;
    }
 
+
    /**
-    * @param string
-    * @param string2
-    * @param b
-    * @param c
-    * @param cssParser
-    * @param cssCodeAssistant
+    * @param codeParsers
+    * @param codeStyles
+    * @param canBeOutlined
+    * @param canBeAutocompleted
+    * @param parser
+    * @param codeAssistant
     */
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
       boolean canBeAutocompleted, Parser parser, CodeAssistant codeAssistant)
@@ -151,22 +152,39 @@ public class CodeMirrorConfiguration
    }
 
    /**
-    * @param string
-    * @param string2
-    * @param b
-    * @param c
-    * @param htmlParser
-    * @param htmlAutocompleteHelper
-    * @param htmlCodeAssistant
-    * @param comTypes
+    * @param codeParsers
+    * @param codeStyles
+    * @param canBeOutlined
+    * @param canBeAutocompleted
+    * @param parser
+    * @param helper
+    * @param codeAssistant
+    * @param types
     */
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser, AutoCompleteHelper helper, CodeAssistant codeAssistant, Set<String> types)
+      boolean canBeAutocompleted, Parser parser, AutoCompleteHelper helper, CodeAssistant codeAssistant,
+      Set<String> types)
    {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, helper,
-         canBeAutocompleted, new DefaultCodeValidator(), codeAssistant, types);
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, helper, canBeAutocompleted,
+         new DefaultCodeValidator(), codeAssistant, types);
    }
 
+
+   /**
+    * @param codeParsers
+    * @param codeStyles
+    * @param canBeOutlined
+    * @param canBeAutocompleted
+    * @param parser
+    * @param helper
+    * @param codeAssistant
+    */
+   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
+      boolean canBeAutocompleted, Parser parser, AutoCompleteHelper helper, CodeAssistant codeAssistant)
+   {
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, helper, canBeAutocompleted,
+         new DefaultCodeValidator(), codeAssistant);
+   }
 
    public String getCodeParsers()
    {

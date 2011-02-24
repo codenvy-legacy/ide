@@ -44,4 +44,25 @@ public interface CodeAssistantClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/public/bundle/images/attribute.png")
    ImageResource attribute();
    
+   @Source("org/exoplatform/ide/editor/public/bundle/images/row-selected.png")
+   ImageResource rowSelected();
+
+
+   @Source("org/exoplatform/ide/editor/public/bundle/images/blank.png")
+   ImageResource blankImage();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/images/template.png")
+   ImageResource template();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/images/class.gif")
+   ImageResource classItem();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/images/function-item.png")
+   ImageResource functionItem();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/images/method-item.png")
+   ImageResource methodItem();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/images/var-item.png")
+   ImageResource varItem();
 }

@@ -51,5 +51,8 @@ public interface CodeAssistantCss extends CssResource
    
    @ClassName("exo-autocomplete-keyword")
    String keywordStyle();
+   
+   @ClassName("exo-autocomplete-edit")
+   String edit();
 
 }
