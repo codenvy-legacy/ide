@@ -46,8 +46,7 @@ import org.exoplatform.ide.client.model.ApplicationContext;
  */
 
 public class HistoryManager implements EditorActiveFileChangedHandler,
-   ValueChangeHandler<String>, ItemPropertiesReceivedHandler,
-   ExceptionThrownHandler
+   ValueChangeHandler<String>, ItemPropertiesReceivedHandler, ExceptionThrownHandler
 {
 
    private HandlerManager eventBus;
@@ -120,15 +119,15 @@ public class HistoryManager implements EditorActiveFileChangedHandler,
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       stopHandling();
-      VirtualFileSystem.getInstance().getContent((File)event.getItem(), new FileCallback()
-      {
-         
-         @Override
-         protected void onSuccess(File result)
-         {
-            eventBus.fireEvent(new FileContentReceivedEvent(result));            
-         }
-      });
+//      VirtualFileSystem.getInstance().getContent((File)event.getItem(), new FileCallback()
+//      {
+//         
+//         @Override
+//         protected void onSuccess(File result)
+//         {
+//            eventBus.fireEvent(new FileContentReceivedEvent(result));            
+//         }
+//      });
    }
 
 //   public void onInitializeApplication(InitializeApplicationEvent event)

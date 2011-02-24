@@ -21,6 +21,8 @@ package org.exoplatform.ide.client.framework.application.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Called when entry point was changed.
+ * 
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
