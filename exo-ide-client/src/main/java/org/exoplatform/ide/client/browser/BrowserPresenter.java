@@ -531,7 +531,7 @@ public class BrowserPresenter implements RefreshBrowserHandler, SwitchEntryPoint
 
       // TODO [IDE-307] check appConfig["entryPoint"] property
       final Folder rootFolder = new Folder(event.getEntryPoint());
-      VirtualFileSystem.getInstance().getPropertiesCallback(rootFolder, new ItemPropertiesCallback()
+      VirtualFileSystem.getInstance().getProperties(rootFolder, new ItemPropertiesCallback()
       {
          @Override
          protected void onSuccess(Item result)

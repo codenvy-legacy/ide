@@ -266,21 +266,21 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
     * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getProperties(org.exoplatform.ide.client.framework.vfs.Item, org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback)
     */
    @Override
-   public void getPropertiesCallback(Item item, ItemPropertiesCallback callback)
+   public void getProperties(Item item, ItemPropertiesCallback callback)
    {
       List<QName> propeties = new ArrayList<QName>();
       
       propeties.add(ItemProperty.LOCKDISCOVERY);
       propeties.add(ItemProperty.ISVERSIONED);
       
-      getPropertiesCallback(item, propeties, callback);
+      getProperties(item, propeties, callback);
    }
 
    /**
     * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getProperties(org.exoplatform.ide.client.framework.vfs.Item, java.util.List, org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback)
     */
    @Override
-   public void getPropertiesCallback(Item item, List<QName> properties, ItemPropertiesCallback callback)
+   public void getProperties(Item item, List<QName> properties, ItemPropertiesCallback callback)
    {
       String url = javaScriptEncodeURI(item.getHref());
 

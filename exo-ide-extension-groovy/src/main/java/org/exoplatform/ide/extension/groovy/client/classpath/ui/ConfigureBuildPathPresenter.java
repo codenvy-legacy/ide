@@ -284,7 +284,7 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    
    private void getFileProperties(File file)
    {
-      VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
+      VirtualFileSystem.getInstance().getProperties(file, new ItemPropertiesCallback()
       {
          
          @Override

@@ -124,7 +124,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
          file = new File(event.getHref());
       }
 
-      VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
+      VirtualFileSystem.getInstance().getProperties(file, new ItemPropertiesCallback()
       {
          @Override
          protected void onSuccess(Item result)

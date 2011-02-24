@@ -118,7 +118,7 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
 
    private void getProperties(File file)
    {
-      VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
+      VirtualFileSystem.getInstance().getProperties(file, new ItemPropertiesCallback()
       {
          @Override
          protected void onSuccess(Item result)

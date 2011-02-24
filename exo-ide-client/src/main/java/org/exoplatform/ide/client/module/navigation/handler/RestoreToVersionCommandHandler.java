@@ -108,7 +108,7 @@ public class RestoreToVersionCommandHandler implements ShowVersionContentHandler
    private void restoreToVersion()
    {
       File file = new File(activeVersion.getItemHref());
-      VirtualFileSystem.getInstance().getPropertiesCallback(file, null, new ItemPropertiesCallback()
+      VirtualFileSystem.getInstance().getProperties(file, null, new ItemPropertiesCallback()
       {
 
          @Override

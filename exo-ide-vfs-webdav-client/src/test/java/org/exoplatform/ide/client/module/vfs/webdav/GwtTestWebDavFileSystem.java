@@ -449,7 +449,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
          @Override
          protected void onSuccess(FileData result)
          {
-            vfsWebDav.getPropertiesCallback(result.getFile(), Arrays.asList(new QName[]{ItemProperty.ACL.ACL}),
+            vfsWebDav.getProperties(result.getFile(), Arrays.asList(new QName[]{ItemProperty.ACL.ACL}),
                new ItemPropertiesCallback()
                {
 

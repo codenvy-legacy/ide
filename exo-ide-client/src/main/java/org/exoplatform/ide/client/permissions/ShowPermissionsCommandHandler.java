@@ -72,7 +72,7 @@ public class ShowPermissionsCommandHandler implements ShowPermissionsHandler, It
       if (selectedItem == null)
          return;
 
-      VirtualFileSystem.getInstance().getPropertiesCallback(selectedItem,
+      VirtualFileSystem.getInstance().getProperties(selectedItem,
          Arrays.asList(new QName[]{ItemProperty.ACL.ACL, ItemProperty.OWNER}), new ItemPropertiesCallback()
          {
             @Override

@@ -406,7 +406,7 @@ public class RenameItemPresenter
             eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
          }
 
-         VirtualFileSystem.getInstance().getPropertiesCallback(item, new ItemPropertiesCallback()
+         VirtualFileSystem.getInstance().getProperties(item, new ItemPropertiesCallback()
          {
             @Override
             protected void onSuccess(Item result)

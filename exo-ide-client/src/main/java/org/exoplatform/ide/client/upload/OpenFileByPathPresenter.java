@@ -142,7 +142,7 @@ public class OpenFileByPathPresenter
       }
       
       File file = new File(filePath);
-      VirtualFileSystem.getInstance().getPropertiesCallback(file, new ItemPropertiesCallback()
+      VirtualFileSystem.getInstance().getProperties(file, new ItemPropertiesCallback()
       {
          
          @Override

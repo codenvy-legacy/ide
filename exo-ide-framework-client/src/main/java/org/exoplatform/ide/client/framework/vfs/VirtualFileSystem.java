@@ -111,7 +111,7 @@ public abstract class VirtualFileSystem
     * @param item - item to get properties.
     * @param callback - the callback which the client has to implement
     */
-   public abstract void getPropertiesCallback(Item item, ItemPropertiesCallback callback);
+   public abstract void getProperties(Item item, ItemPropertiesCallback callback);
    
    /**
     * Get properties of file or folder
@@ -120,7 +120,7 @@ public abstract class VirtualFileSystem
     * @param properties - the list of properties to get
     * @param callback - the callback which the client has to implement
     */
-   public abstract void getPropertiesCallback(Item item, List<QName> properties, ItemPropertiesCallback callback);
+   public abstract void getProperties(Item item, List<QName> properties, ItemPropertiesCallback callback);
 
    /**
     * Save properties of file or folder

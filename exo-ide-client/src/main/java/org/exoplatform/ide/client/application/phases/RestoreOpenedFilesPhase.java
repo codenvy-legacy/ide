@@ -119,7 +119,7 @@ EditorFileOpenedHandler
       fileToLoad = new File(href);
       filesToLoad.remove(0);
 
-      VirtualFileSystem.getInstance().getPropertiesCallback(fileToLoad, new ItemPropertiesCallback()
+      VirtualFileSystem.getInstance().getProperties(fileToLoad, new ItemPropertiesCallback()
       {
          @Override
          protected void onSuccess(Item result)
