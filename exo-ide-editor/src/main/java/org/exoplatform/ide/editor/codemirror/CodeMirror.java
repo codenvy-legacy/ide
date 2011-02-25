@@ -42,8 +42,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextArea;
 
 /**
+ * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: CodeMirror Feb 9, 2011 4:58:14 PM evgen $
+ * @version $Id: CodeMirror Feb 9, 2011 4:58:14 PM $
  *
  */
 public class CodeMirror extends Editor
@@ -92,6 +93,11 @@ public class CodeMirror extends Editor
       super(content, params, eventBus);
       this.editorId = "CodeMirror - " + String.valueOf(this.hashCode());
 
+		if (params == null)
+		{
+		   params = new HashMap<String, Object>();
+		}
+
       textArea = new TextArea();
       DOM.setElementAttribute(textArea.getElement(), "id", getEditorId());
       add(textArea);
@@ -101,7 +107,7 @@ public class CodeMirror extends Editor
       setWidgetPosition(lineHighlighter, 0, 5);
 
       if (params.get(CodeMirrorParams.CONFIGURATION) != null)
-         configuration = (CodeMirrorConfiguration)params.get(CodeMirrorParams.CONFIGURATION);
+         configuration = (CodeMirrorConfiguration) params.get(CodeMirrorParams.CONFIGURATION);
       else
          configuration = new CodeMirrorConfiguration();
    }

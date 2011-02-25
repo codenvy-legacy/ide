@@ -27,8 +27,8 @@ import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: JavaScriptAutocompleteHelper Feb 11, 2011 2:51:38 PM evgen $
+ * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
+ * @version $Id
  *
  */
 public class JavaScriptAutocompleteHelper extends CodeMirrorAutocompleteHelper

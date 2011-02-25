@@ -30,7 +30,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: HtmlAutocompleteHelper Feb 11, 2011 2:59:35 PM evgen $
+ * @version $Id
  *
  */
 public class HtmlAutocompleteHelper extends CodeMirrorAutocompleteHelper

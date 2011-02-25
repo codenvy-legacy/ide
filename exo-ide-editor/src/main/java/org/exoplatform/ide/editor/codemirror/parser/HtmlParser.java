@@ -30,8 +30,8 @@ import org.exoplatform.ide.editor.codemirror.Node;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: HtmlParser Feb 11, 2011 2:58:47 PM evgen $
+ * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
+ * @version $Id
  *
  */
 public class HtmlParser extends CodeMirrorParser
