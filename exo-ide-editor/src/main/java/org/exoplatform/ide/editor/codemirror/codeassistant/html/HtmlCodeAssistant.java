@@ -21,6 +21,7 @@ package org.exoplatform.ide.editor.codemirror.codeassistant.html;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.CodeError;
@@ -31,6 +32,8 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+import org.exoplatform.ide.editor.codemirror.codeassistant.css.CssCodeAssistant;
+import org.exoplatform.ide.editor.codemirror.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.codeassistant.util.JSONTokenParser;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -96,7 +99,6 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       noBaseEvents.add("title");
    }
 
-
    private boolean isTag = false;
 
    public HtmlCodeAssistant(HandlerManager eventBus)
@@ -133,6 +135,19 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
       Token currentToken)
    {
+      if (MimeType.TEXT_CSS.equals(lineMimeType))
+      {
+         new CssCodeAssistant(eventBus).autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
+            cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+         return;
+      }
+      if (MimeType.APPLICATION_JAVASCRIPT.equals(lineMimeType))
+      {
+         new JavaScriptCodeAssistant(eventBus).autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY,
+            lineContent, cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+         return;
+      }
+
       try
       {
          List<Token> token = new ArrayList<Token>();

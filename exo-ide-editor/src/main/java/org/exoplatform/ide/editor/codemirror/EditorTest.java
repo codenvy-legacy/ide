@@ -196,7 +196,7 @@ public class EditorTest implements EntryPoint
          {
             params.put(CodeMirrorParams.MIME_TYPE, MimeType.TEXT_HTML);
 
-            Editor editor = editors.get(MimeType.TEXT_HTML).createEditor("<html>\n<body>\n\n</body>\n</html>", eventBus, params);
+            Editor editor = editors.get(MimeType.TEXT_HTML).createEditor(ExamplesBuandle.INSTANCE.htmlExample().getText(), eventBus, params);
             panel.clear();
             panel.add(editor);
          }

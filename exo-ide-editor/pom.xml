@@ -166,5 +166,40 @@
             </plugins>
          </build>
       </profile>
+      <profile>
+         <id>test</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <resources>
+               <resource>
+                  <directory>src/main/java</directory>
+               </resource>
+            </resources>
+            <plugins>
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>gwt-maven-plugin</artifactId>
+                  <configuration>
+                     <module>org.exoplatform.ide.editor.EditorTest</module>
+                     <runTarget>org.exoplatform.ide.editor.EditorTest/Editor.html</runTarget>            
+                     <logLevel>INFO</logLevel>
+                     <hostedWebapp>${basedir}/target/war</hostedWebapp>
+                     <tomcat>${basedir}/target/tomcat</tomcat>
+                     <skipTests>false</skipTests>
+                  </configuration>
+                  <executions>
+                     <execution>
+                        <goals>
+                           <goal>compile</goal>
+                           <goal>test</goal>
+                        </goals>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
    </profiles>
 </project>

@@ -41,11 +41,11 @@ public class CssCodeAssistant extends CodeAssistant
    private static List<Token> cssProperty;
 
    /**
-    * @param evenBus
+    * @param eventBus
     */
-   public CssCodeAssistant(HandlerManager evenBus)
+   public CssCodeAssistant(HandlerManager eventBus)
    {
-      super(evenBus);
+      super(eventBus);
    }
 
    private native JavaScriptObject getTokens() /*-{
@@ -81,9 +81,9 @@ public class CssCodeAssistant extends CodeAssistant
          afterToken = lineContent.substring(cursorPositionX - 1);
 
          String token = "";
-         if (!subToken.endsWith(" ") && !subToken.endsWith(":") && !subToken.endsWith(";"))
+         if (!subToken.endsWith(" ") && !subToken.endsWith(":") && !subToken.endsWith(";") && !subToken.endsWith("}")&& !subToken.endsWith("{"))
          {
-            String[] split = subToken.split("[/()|&\",']+");
+            String[] split = subToken.split("[/()|&\",' ]+");
 
             if (split.length != 0)
             {
