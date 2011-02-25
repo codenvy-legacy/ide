@@ -18,28 +18,167 @@
  */
 package org.exoplatform.ide.editor.codemirror.parser;
 
-import java.util.List;
-
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
+import org.exoplatform.ide.editor.codemirror.Node;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: XmlParser Feb 11, 2011 2:44:02 PM evgen $
- *
+ * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
+ * @version $Id: $
  */
 public class XmlParser extends CodeMirrorParser
 {
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Parser#getTokenList(com.google.gwt.core.client.JavaScriptObject)
-    */
+   private String lastNodeContent;
+   
+   private String lastNodeType;
+   
    @Override
-   public List<CodeMirrorTokenImpl> getTokenList(JavaScriptObject editor)
+   CodeMirrorTokenImpl parseLine(JavaScriptObject node, int lineNumber, CodeMirrorTokenImpl currentToken, boolean hasParentParser)
    {
-      // TODO Auto-generated method stub
-      return null;
+      // interrupt at the end of the line or content
+      if ((node == null) || Node.getName(node).equals("BR"))
+         return currentToken;
+
+      String nodeContent = Node.getContent(node).trim(); // returns text without ended space " " in the text
+      String nodeType = Node.getType(node);
+
+      // recognize CDATA open tag "<![CDATA[" not in the CDATA section
+      if (XmlParser.isCDATAOpenNode(nodeContent))
+      {
+         CodeMirrorTokenImpl newToken = new CodeMirrorTokenImpl("CDATA", TokenType.CDATA, lineNumber, MimeType.TEXT_XML);
+         if (currentToken != null)
+         {
+            currentToken.addSubToken(newToken);
+         }
+
+         currentToken = newToken;
+      }
+
+      // recognize CDATA close tag "]]>" into the CDATA section
+      else if (XmlParser.isCDATACloseNode(nodeContent))
+      {
+         if (currentToken != null)
+         {
+            currentToken = currentToken.getParentToken();
+         }
+      }
+
+      // recognize tag node not in the CDATA section
+      if (isTagNode(nodeType))
+      {
+         // recognize open tag starting with "<"
+         if (isOpenTagNode(lastNodeType, lastNodeContent))
+         {
+            currentToken = addTag(currentToken, nodeContent, lineNumber, MimeType.TEXT_XML);
+         }
+
+         // recognize close tag starting with "</"
+         else if (isCloseStartTagNode(lastNodeType, lastNodeContent))
+         {
+            currentToken = addTagBreak(lineNumber, currentToken, MimeType.TEXT_XML);
+         }
+      }
+
+      // recognize close tag starting with "/>" out of 
+      else if (isCloseFinishTagNode(nodeType, nodeContent))
+      {
+         currentToken = addTagBreak(lineNumber, currentToken, MimeType.TEXT_XML);
+      }
+
+      lastNodeContent = nodeContent;
+      lastNodeType = nodeType;
+
+      if (hasParentParser)
+      {
+         return currentToken; // return current token to parent parser
+      }
+
+      return parseLine(Node.getNext(node), lineNumber, currentToken, false);
+   }
+ 
+   
+   /**
+    * recognize "</" node
+    * @param nodeType
+    * @param nodeContent
+    * @return
+    */
+   static boolean isCloseStartTagNode(String nodeType, String nodeContent)
+   {
+      return (nodeType != null) && (nodeContent != null) && (nodeType.equals("xml-punctuation") && nodeContent.equals("&lt;/"));
    }
 
+   /**
+    * recognize "/>" node
+    * @param nodeType
+    * @param nodeContent
+    * @return
+    */
+   static boolean isCloseFinishTagNode(String nodeType, String nodeContent)
+   {
+      return (nodeType != null) && (nodeContent != null) && (nodeType.equals("xml-punctuation") && nodeContent.equals("/&gt;"));
+   }
+   
+   /**
+    * recognize "<" node
+    * @param nodeType
+    * @param nodeContent
+    * @return
+    */
+   static boolean isOpenTagNode(String nodeType, String nodeContent)
+   {
+      return (nodeType != null) && (nodeContent != null) && nodeType.equals("xml-punctuation") && nodeContent.equals("&lt;");
+   };
+
+   /**
+    * recognize "<" node
+    * @param nodeType
+    * @return
+    */
+   static boolean isTagNode(String nodeType)
+   {
+      return (nodeType != null) && nodeType.equals("xml-tagname");
+   };
+   
+   static boolean isCDATAOpenNode(String nodeContent)
+   {
+      return nodeContent.matches("&lt;!\\[CDATA\\[.*(\\n)*.*");
+   };
+   
+   static boolean isCDATACloseNode(String nodeContent)
+   {
+      return nodeContent.matches("\\]\\]&gt;.*");
+   };   
+
+   static CodeMirrorTokenImpl addTag(CodeMirrorTokenImpl currentToken, String tagName, int lineNumber, String contentMimeType)
+   {
+      CodeMirrorTokenImpl newToken = new CodeMirrorTokenImpl(tagName, TokenType.TAG, lineNumber, contentMimeType);
+      if (currentToken != null)
+      {
+         currentToken.addSubToken(newToken);
+      }
+
+      return newToken;
+   }   
+   
+   // it is required for the correct recognizing of currentLineMimeType and selection of current token in the outline panel   
+   static CodeMirrorTokenImpl addTagBreak(int lineNumber, CodeMirrorTokenImpl currentToken, String nextContentMimeType)
+   {
+      CodeMirrorTokenImpl newToken = new CodeMirrorTokenImpl(null, TokenType.TAG_BREAK, lineNumber, nextContentMimeType);      
+
+      if (currentToken != null) 
+      {
+         currentToken.addSubToken(newToken);
+         currentToken = currentToken.getParentToken();
+      } 
+      else
+      {
+         currentToken = newToken;
+      }
+      
+      return currentToken;
+   }     
 }

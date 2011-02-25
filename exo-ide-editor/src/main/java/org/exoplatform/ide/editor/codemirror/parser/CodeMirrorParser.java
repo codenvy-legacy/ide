@@ -19,8 +19,10 @@
 package org.exoplatform.ide.editor.codemirror.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Parser;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
@@ -34,7 +36,28 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class CodeMirrorParser extends Parser
 {
+   // it is needed for complex files like HTML, GoogleGadget etc.
+   private static HashMap<String, CodeMirrorParser> factory = new HashMap<String, CodeMirrorParser>();
+   
+   static
+   {
+      factory.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptParser());
+      factory.put(MimeType.TEXT_CSS, new CssParser());
+      factory.put(MimeType.TEXT_HTML, new HtmlParser());
+      factory.put(MimeType.TEXT_XML, new XmlParser());   
+      factory.put(MimeType.APPLICATION_GROOVY, new GroovyParser());
+   }
 
+   protected static CodeMirrorParser getParser(String mimeType)
+   {
+      if (factory.containsKey(mimeType))
+      {
+         return factory.get(mimeType);
+      }
+
+      return new DefaultParser();
+   }
+   
    /** 
     * @param node
     * @param lineNumber

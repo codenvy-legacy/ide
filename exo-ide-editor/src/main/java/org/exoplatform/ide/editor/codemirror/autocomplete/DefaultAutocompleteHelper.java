@@ -16,11 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.api.codeassitant.autocompletehelper;
+package org.exoplatform.ide.editor.codemirror.autocomplete;
 
 import java.util.List;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -29,7 +30,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id: DefaultAutocomleteHelper Feb 10, 2011 9:49:35 AM evgen $
  *
  */
-public class DefaultAutocompleteHelper extends AutoCompleteHelper
+public class DefaultAutocompleteHelper extends CodeMirrorAutocompleteHelper
 {
 
    /**

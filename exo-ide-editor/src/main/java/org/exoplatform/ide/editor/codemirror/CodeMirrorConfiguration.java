@@ -25,9 +25,9 @@ import org.exoplatform.ide.editor.api.DefaultParser;
 import org.exoplatform.ide.editor.api.Parser;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper;
-import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.DefaultAutocompleteHelper;
 import org.exoplatform.ide.editor.api.codeassitant.codevalidator.CodeValidator;
 import org.exoplatform.ide.editor.api.codeassitant.codevalidator.DefaultCodeValidator;
+import org.exoplatform.ide.editor.codemirror.autocomplete.DefaultAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.codeassistant.DefaultCodeAssistant;
 
 import com.google.gwt.core.client.GWT;

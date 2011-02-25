@@ -24,7 +24,6 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper;
-import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.DefaultAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
 import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
@@ -40,12 +39,12 @@ import com.google.gwt.core.client.JavaScriptObject;
 @SuppressWarnings("serial")
 public abstract class CodeMirrorAutocompleteHelper extends AutoCompleteHelper
 {
-   private static HashMap<String, AutoCompleteHelper> factory = new HashMap<String, AutoCompleteHelper>() {{
+   private static HashMap<String, CodeMirrorAutocompleteHelper> factory = new HashMap<String, CodeMirrorAutocompleteHelper>() {{
 //      put(MimeType.APPLICATION_GROOVY, new GroovyAutocompleteHelper());
       put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptAutocompleteHelper());
    }};  
    
-   protected static AutoCompleteHelper getAutocompleteHelper(String mimeType)
+   protected static CodeMirrorAutocompleteHelper getAutocompleteHelper(String mimeType)
    {
       if (factory.containsKey(mimeType))
       {
@@ -199,5 +198,59 @@ public abstract class CodeMirrorAutocompleteHelper extends AutoCompleteHelper
       
       return null;
    } 
+   
+   /**
+    * Extract tokens with mimeType from tokenList
+    * @param tokenList
+    * @param code
+    * @param mimeType
+    * @return
+    */
+   public static List<CodeMirrorTokenImpl> extractCode(List<CodeMirrorTokenImpl> tokenList, List<CodeMirrorTokenImpl> code, String mimeType)
+   {
+      for (CodeMirrorTokenImpl token : tokenList)
+      {
+         analizeToken(token, code, mimeType);  // update groovyCode
+      }
+      
+      return code;
+   }
+
+   private static void analizeToken(CodeMirrorTokenImpl currentToken, List<CodeMirrorTokenImpl> code, String mimeType)
+   {
+      if (currentToken == null) 
+      {
+         return;
+      }
+      
+      if (currentToken.getSubTokenList() != null)
+      {
+         for (CodeMirrorTokenImpl token : currentToken.getSubTokenList())
+         {
+            analizeToken(token, code, mimeType);
+         }         
+      }
+      
+
+      if (currentToken.getSubTokenList() != null)
+      {
+         if (MimeType.APPLICATION_GROOVY.equals(mimeType))
+         {
+            if (!TokenType.GROOVY_TAG.equals(currentToken.getType()))
+            {
+               return;
+            }
+         }
+         
+         for (CodeMirrorTokenImpl subtoken : currentToken.getSubTokenList())
+         {
+            if (mimeType.equals(subtoken.getMimeType())) 
+            {
+               code.add(subtoken);
+            }
+         }
+      }   
+
+   }
      
 }
