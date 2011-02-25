@@ -39,7 +39,12 @@ public enum TokenType {
     * HTML or XML attribute; 
     */
    ATTRIBUTE,
+   TAG_BREAK,
+   CDATA,
 
    /** Property type for JavaScript */
-   BLOCK;
+   BLOCK, 
+   
+   /** Property type for Groovy code */
+   GROOVY_TAG;
 }
