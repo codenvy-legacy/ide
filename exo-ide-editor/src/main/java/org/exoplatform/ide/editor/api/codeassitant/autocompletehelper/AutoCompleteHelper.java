@@ -32,6 +32,5 @@ import com.google.gwt.core.client.JavaScriptObject;
 public abstract class AutoCompleteHelper
 {
 
-   public abstract Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
-      List<Token> tokenList);
+   public abstract Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList);
 }

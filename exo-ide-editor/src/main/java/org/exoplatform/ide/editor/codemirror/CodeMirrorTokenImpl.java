@@ -104,7 +104,9 @@ public class CodeMirrorTokenImpl extends TokenImpl
     */
    public String getShortDescription()
    {
-      return ((StringProperty) getProperty(TokenProperties.SHORT_DESCRIPTION)).stringValue();
+      return  hasProperty(TokenProperties.SHORT_DESCRIPTION)
+         ? ((StringProperty) getProperty(TokenProperties.SHORT_DESCRIPTION)).stringValue() 
+         : null;
    }
 
    /**
@@ -112,7 +114,9 @@ public class CodeMirrorTokenImpl extends TokenImpl
     */
    public String getCode()
    {
-      return ((StringProperty) getProperty(TokenProperties.CODE)).stringValue();
+      return  hasProperty(TokenProperties.CODE) 
+         ? ((StringProperty) getProperty(TokenProperties.CODE)).stringValue() 
+         : null; 
    }
 
    /**
@@ -120,12 +124,16 @@ public class CodeMirrorTokenImpl extends TokenImpl
     */
    public String getFullDescription()
    {
-      return ((StringProperty) getProperty(TokenProperties.FULL_DESCRIPTION)).stringValue();
+      return  hasProperty(TokenProperties.FULL_DESCRIPTION) 
+         ? ((StringProperty) getProperty(TokenProperties.FULL_DESCRIPTION)).stringValue() 
+         : null; 
    }
 
    public int getLineNumber()
    {
-      return ((NumericProperty) getProperty(TokenProperties.LINE_NUMBER)).numberValue().intValue();
+      return hasProperty(TokenProperties.LINE_NUMBER) 
+         ? ((NumericProperty)getProperty(TokenProperties.LINE_NUMBER)).numberValue().intValue() 
+         : null;
    }
 
    public void setLastLineNumber(int lastLineNumber)
@@ -138,17 +146,23 @@ public class CodeMirrorTokenImpl extends TokenImpl
     */
    public int getLastLineNumber()
    {
-      return ((NumericProperty) getProperty(TokenProperties.LAST_LINE_NUMBER)).numberValue().intValue();
+      return  hasProperty(TokenProperties.LAST_LINE_NUMBER) 
+         ? ((NumericProperty) getProperty(TokenProperties.LAST_LINE_NUMBER)).numberValue().intValue() 
+         : null; 
    }
    
    public List<CodeMirrorTokenImpl> getSubTokenList()
    {
-      return (List<CodeMirrorTokenImpl>)((ArrayProperty) getProperty(TokenProperties.SUB_TOKEN_LIST)).arrayValue();
+      return  hasProperty(TokenProperties.SUB_TOKEN_LIST) 
+         ? (List<CodeMirrorTokenImpl>)((ArrayProperty) getProperty(TokenProperties.SUB_TOKEN_LIST)).arrayValue() 
+         : null;
    }
 
    public String getMimeType()
    {
-      return ((StringProperty) getProperty(TokenProperties.MIME_TYPE)).stringValue();
+      return  hasProperty(TokenProperties.MIME_TYPE) 
+         ? ((StringProperty) getProperty(TokenProperties.MIME_TYPE)).stringValue() 
+         : null; 
    }
 
    /**
@@ -182,7 +196,9 @@ public class CodeMirrorTokenImpl extends TokenImpl
 
    public CodeMirrorTokenImpl getParentToken()
    {
-      return (CodeMirrorTokenImpl)((ObjectProperty) getProperty(TokenProperties.PARENT_TOKEN)).objectValue();
+      return  hasProperty(TokenProperties.PARENT_TOKEN)
+      ? (CodeMirrorTokenImpl)((ObjectProperty) getProperty(TokenProperties.PARENT_TOKEN)).objectValue() 
+      : null;
    }
 
    /**
@@ -231,7 +247,9 @@ public class CodeMirrorTokenImpl extends TokenImpl
 
    public List<Modifier> getModifiers()
    {
-      return (List<Modifier>)((ObjectProperty) getProperty(TokenProperties.MODIFIERS)).objectValue();
+      return  hasProperty(TokenProperties.MODIFIERS) 
+         ? (List<Modifier>)((ObjectProperty) getProperty(TokenProperties.MODIFIERS)).objectValue() 
+         : null; 
    }
    
    public void setModifiers(List<Modifier> modifiers) 
@@ -253,7 +271,9 @@ public class CodeMirrorTokenImpl extends TokenImpl
 
    public List<CodeMirrorTokenImpl> getAnnotations()
    {
-      return (List<CodeMirrorTokenImpl>)((ArrayProperty) getProperty(TokenProperties.ANNOTATIONS)).arrayValue();
+      return  hasProperty(TokenProperties.ANNOTATIONS) 
+         ? (List<CodeMirrorTokenImpl>)((ArrayProperty) getProperty(TokenProperties.ANNOTATIONS)).arrayValue() 
+         : null; 
    }
 
    public void setAnnotations(List<CodeMirrorTokenImpl> annotations)
@@ -275,7 +295,9 @@ public class CodeMirrorTokenImpl extends TokenImpl
 
    public List<CodeMirrorTokenImpl> getParameters()
    {
-      return (List<CodeMirrorTokenImpl>)((ArrayProperty) getProperty(TokenProperties.PARAMETERS)).arrayValue();
+      return  hasProperty(TokenProperties.PARAMETERS) 
+         ? (List<CodeMirrorTokenImpl>)((ArrayProperty) getProperty(TokenProperties.PARAMETERS)).arrayValue() 
+         : null; 
    }
 
    public void setParameters(List<CodeMirrorTokenImpl> parameters)
@@ -297,7 +319,9 @@ public class CodeMirrorTokenImpl extends TokenImpl
     */
    public String getInitializationStatement()
    {
-      return ((StringProperty) getProperty(TokenProperties.INITIALIZATION_STATEMENT)).stringValue();
+      return hasProperty(TokenProperties.INITIALIZATION_STATEMENT) 
+             ? ((StringProperty) getProperty(TokenProperties.INITIALIZATION_STATEMENT)).stringValue() 
+             : null;
    }
    
    

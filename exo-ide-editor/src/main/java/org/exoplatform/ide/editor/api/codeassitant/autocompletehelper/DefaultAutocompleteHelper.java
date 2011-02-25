@@ -36,7 +36,7 @@ public class DefaultAutocompleteHelper extends AutoCompleteHelper
     * @see org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper#getTokenBeforeCursor(com.google.gwt.core.client.JavaScriptObject, int, int, java.util.List)
     */
    @Override
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<Token> tokenList)
+   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList)
    {
       // TODO Auto-generated method stub
       return null;

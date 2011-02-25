@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,30 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror.autocomplete;
+package org.exoplatform.ide.editor.codemirror.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
+
+
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: HtmlAutocompleteHelper Feb 11, 2011 2:59:35 PM evgen $
+ * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
+ * @version $Id: $
  *
  */
-public class HtmlAutocompleteHelper extends CodeMirrorAutocompleteHelper
+public class GroovyParser extends CodeMirrorParser
 {
-
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper#getTokenBeforeCursor(com.google.gwt.core.client.JavaScriptObject, int, int, java.util.List)
-    */
    @Override
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList)
+   public List<CodeMirrorTokenImpl> getTokenList(JavaScriptObject editor)
    {
-      return null;
+      return new ArrayList<CodeMirrorTokenImpl>();
    }
 
+   public static boolean isGroovyVariable(String nodeType)
+   {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   public static boolean isPoint(String nodeType, String nodeContent)
+   {
+      // TODO Auto-generated method stub
+      return false;
+   }
+   
 }
