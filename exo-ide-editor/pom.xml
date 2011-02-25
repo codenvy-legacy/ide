@@ -88,6 +88,20 @@
                </execution>
             </executions>
          </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.3.1</version>
+            <configuration>
+              <excludes>
+                <exclude>**/example*</exclude>
+                <exclude>**/Editor.html</exclude>
+                <exclude>**/EditorTest.gwt.xml</exclude>
+                <exclude>**/EditorTest*</exclude>
+                <exclude>**/ExamplesBuandle*</exclude>
+              </excludes>
+            </configuration>
+         </plugin>
       </plugins>
    </build>
    <profiles>
