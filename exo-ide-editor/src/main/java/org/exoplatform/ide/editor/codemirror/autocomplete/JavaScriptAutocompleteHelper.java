@@ -65,9 +65,9 @@ public class JavaScriptAutocompleteHelper extends CodeMirrorAutocompleteHelper
                   tokenBeforeCursor.getType(), 
                   lineNumber, 
                   tokenBeforeCursor.getMimeType(), 
-                  tokenBeforeCursor.getElementType()
+                  tokenBeforeCursor.getElementType(),
+                  tokenBeforeCursor.getInitializationStatement()
                );               
-               newToken.setInitializationStatement(tokenBeforeCursor.getInitializationStatement());
                
                return (Token) newToken;
             }

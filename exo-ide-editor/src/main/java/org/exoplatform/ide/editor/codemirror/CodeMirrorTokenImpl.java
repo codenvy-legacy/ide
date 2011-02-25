@@ -19,19 +19,15 @@
 package org.exoplatform.ide.editor.codemirror;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.exoplatform.ide.editor.api.codeassitant.ArrayProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.NumericProperty;
 import org.exoplatform.ide.editor.api.codeassitant.ObjectProperty;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
-import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 
 /**
@@ -45,58 +41,50 @@ public class CodeMirrorTokenImpl extends TokenImpl
    public CodeMirrorTokenImpl() 
    {
    }
+
+   public CodeMirrorTokenImpl(String name, TokenType type)
+   {
+      setName(name);
+      setType(type);
+   }
+
    
    public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber)
    {
-      this(name, type, lineNumber, null, null, null, null, null, null, null, null);
+      this(name, type);
+      setLineNumber(lineNumber);
    }
 
    public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, String mimeType)
    {
-      this(name, type, lineNumber, mimeType, null, null, null, null, null, null, null);
+      this(name, type, lineNumber);
+      setMimeType(mimeType);
    }
 
    public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType)
    {
-      this(name, type, lineNumber, mimeType, null, null, null, null, elementType, null, null);
+      this(name, type, lineNumber, mimeType);
+      setElementType(elementType);
    }
 
    public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType,
-      List<Modifier> lavaModifiers)
+      List<Modifier> javaModifiers)
    {
-      this(name, type, lineNumber, mimeType, null, null, null, null, elementType, lavaModifiers, null);
+      this(name, type, lineNumber, mimeType, elementType);
+      setModifiers(javaModifiers);
    }
 
    public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType,
-      List<Modifier> lavaModifiers, String fqn)
+      List<Modifier> javaModifiers, String fqn)
    {
-      this(name, type, lineNumber, mimeType, null, null, null, null, elementType, lavaModifiers, fqn);
+      this(name, type, lineNumber, mimeType, elementType, javaModifiers);
+      setFqn(fqn);
    }
-
-   public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, List<CodeMirrorTokenImpl> subTokenList)
+   
+   public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType, String initializationStatement)
    {
-      this(name, type, lineNumber, null, null, null, null, subTokenList, null, null, null);
-   }
-
-   public CodeMirrorTokenImpl(String name, TokenType type, String shortDescription, String code, String fullDescription)
-   {
-      this(name, type, 0, null, shortDescription, code, fullDescription, null, null, null, null);
-   }
-
-   public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, String mimeType, String shortDescription, String code,
-      String fullDescription, List<CodeMirrorTokenImpl> subTokenList, String elementType, List<Modifier> modifier, String fqn)
-   {
-      setName(name);
-      setType(type);
-      setProperty(TokenProperties.LINE_NUMBER, new NumericProperty(lineNumber));
-      setProperty(TokenProperties.MIME_TYPE, new StringProperty(mimeType));
-      setProperty(TokenProperties.SHORT_DESCRIPTION, new StringProperty(shortDescription));
-      setProperty(TokenProperties.CODE, new StringProperty(code));
-      setProperty(TokenProperties.FULL_DESCRIPTION, new StringProperty(fullDescription));
-      setProperty(TokenProperties.SUB_TOKEN_LIST, new ArrayProperty(subTokenList));;
-      setProperty(TokenProperties.ELEMENT_TYPE, new StringProperty(elementType));
-      setProperty(TokenProperties.MODIFIERS, new ObjectProperty(modifier));
-      setProperty(TokenProperties.FQN, new StringProperty(fqn));
+      this(name, type, lineNumber, mimeType, elementType);
+      setInitializationStatement(initializationStatement);
    }
 
    /**
