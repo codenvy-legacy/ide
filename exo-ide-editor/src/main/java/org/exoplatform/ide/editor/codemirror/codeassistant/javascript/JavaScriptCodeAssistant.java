@@ -19,7 +19,6 @@
 package org.exoplatform.ide.editor.codemirror.codeassistant.javascript;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -103,7 +102,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       this.editor = editor;
       try
       {
-         printTokens(tokenList, 0);
+//                  printTokens(tokenList, 0);
          parseTokenLine(lineContent, cursorPositionX);
 
          if (defaultTokens == null)
@@ -164,16 +163,25 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
 
       if (beforeToken.endsWith("."))
       {
-         String fqn = beforeToken.substring(0, beforeToken.length());
-         String[] posFQN = fqn.split("[/();{}|&\",'\\\\ \\+\\-=\\*\\.]+");
-         if (posFQN.length > 0)
+         Token clazz = null;
+         System.out.println(currentToken);
+         if (currentToken != null && currentToken.getType() == TokenType.VARIABLE)
          {
-            Token clazz = tokensByFQN.get(posFQN[posFQN.length - 1]);
-
-            if (clazz != null && clazz.hasProperty(TokenProperties.CHILD_TOKEN_LIST))
+            String type = currentToken.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
+            clazz = tokensByFQN.get(type.toLowerCase());
+         }
+         else
+         {
+            String fqn = beforeToken.substring(0, beforeToken.length());
+            String[] posFQN = fqn.split("[/();{}|&\",'\\\\ \\+\\-=\\*\\.]+");
+            if (posFQN.length > 0)
             {
-               tokens.addAll(clazz.getProperty(TokenProperties.CHILD_TOKEN_LIST).isArrayProperty().arrayValue());
+               clazz = tokensByFQN.get(posFQN[posFQN.length - 1].toLowerCase());
             }
+         }
+         if (clazz != null && clazz.hasProperty(TokenProperties.CHILD_TOKEN_LIST))
+         {
+            tokens.addAll(clazz.getProperty(TokenProperties.CHILD_TOKEN_LIST).isArrayProperty().arrayValue());
          }
       }
       else
@@ -199,6 +207,10 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       Token tok = null;
       for (Token t : tokenFromParser)
       {
+         if(t.getName() == null)
+         {
+            continue;
+         }
          tokens.add(t);
          NumericProperty s = t.getProperty(TokenProperties.LINE_NUMBER).isNumericProperty();
          TokenProperty f = t.getProperty(TokenProperties.LAST_LINE_NUMBER);
@@ -224,22 +236,26 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
    private List<Token> getTokensInFunction(int lineNum, Token tok)
    {
       List<Token> tokens = new ArrayList<Token>();
-      if(tok.hasProperty(TokenProperties.SUB_TOKEN_LIST))
+      if (tok.hasProperty(TokenProperties.SUB_TOKEN_LIST))
       {
-         for(Token t : tok.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue())
+         for (Token t : tok.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue())
          {
+            if(t.getName() == null)
+            {
+               continue;
+            }
             NumericProperty s = t.getProperty(TokenProperties.LINE_NUMBER).isNumericProperty();
-            if(s.numberValue().intValue() < lineNum)
+            if (s.numberValue().intValue() < lineNum)
             {
                tokens.add(t);
-               if(t.getType() == TokenType.FUNCTION)
+               if (t.getType() == TokenType.FUNCTION)
                {
                   tokens.addAll(getTokensInFunction(lineNum, t));
-               }               
+               }
             }
          }
       }
-      
+
       return tokens;
    }
 
@@ -339,10 +355,10 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
 
       String tagName = "script";
 
-      if (!tokenFromParser.isEmpty() && !tokenFromParser.get(0).getName().equals(tagName))
-      {
-         return tokenFromParser;
-      }
+//      if (!tokenFromParser.isEmpty() && !tokenFromParser.get(0).getName().equals(tagName))
+//      {
+//         return tokenFromParser;
+//      }
 
       for (int i = 0; i < tokenFromParser.size(); i++)
       {

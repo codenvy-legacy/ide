@@ -148,7 +148,6 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       final String lineContent, final int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
       Token currentToken)
    {
-      System.out.println(lineMimeType);
       if (MimeType.TEXT_CSS.equals(lineMimeType))
       {
          new CssCodeAssistant(eventBus).autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
