@@ -220,7 +220,9 @@ public class CodeMirrorTokenImpl extends TokenImpl
 
    public String getElementType()
    {
-      return ((StringProperty) getProperty(TokenProperties.ELEMENT_TYPE)).stringValue();
+      return hasProperty(TokenProperties.ELEMENT_TYPE) 
+         ? ((StringProperty) getProperty(TokenProperties.ELEMENT_TYPE)).stringValue()
+         : null;      
    }
 
    public void setFqn(String fqn)
