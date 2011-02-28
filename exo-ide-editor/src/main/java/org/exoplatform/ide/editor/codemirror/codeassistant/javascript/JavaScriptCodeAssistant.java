@@ -36,7 +36,6 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.codeassistant.util.JSONTokenParser;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ExternalTextResource;
@@ -62,13 +61,6 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
 
    private static Map<String, Token> tokensByFQN = new HashMap<String, Token>();
 
-   /**
-    * @param eventBus
-    */
-   public JavaScriptCodeAssistant(HandlerManager eventBus)
-   {
-      super(eventBus);
-   }
 
    //   private native JavaScriptObject getTokens() /*-{
    //		return $wnd.javascript_tokens;

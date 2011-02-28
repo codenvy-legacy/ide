@@ -28,7 +28,6 @@
       <inherits name='com.google.gwt.json.JSON' />
    
       <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-      <inherits name='org.exoplatform.gwtframework.ui.UI' />
       
        
       <source path="api" />

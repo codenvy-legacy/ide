@@ -21,11 +21,8 @@ package org.exoplatform.ide.editor.api.codeassitant.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
-import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
-import org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.codemirror.CodeAssistantClientBundle;
 
@@ -41,7 +38,8 @@ import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -70,7 +68,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $Id: Nov 25, 2010 4:18:55 PM evgen $
  *
  */
-public class AutocompletionForm extends Composite implements ChangeHandler, WindowResizedHandler
+public class AutocompletionForm extends Composite implements ChangeHandler, ResizeHandler
 {
 
    private AbsolutePanel absolutePanel;
@@ -97,23 +95,22 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
 
    private VerticalPanel panel;
 
-   private Handlers handlers;
-
    private TokenSelectedHandler handler;
 
    private List<TokenWidget> widgets;
 
    private List<TokenWidget> allWidgets;
+   
+   private HandlerRegistration resizeHandler;
 
    private boolean isTextBoxHasFocus = true;
 
-   public AutocompletionForm(HandlerManager eventBus, int left, int top, String prefix, List<Token> items,
+   public AutocompletionForm(int left, int top, String prefix, List<Token> items,
       TokenWidgetFactory widgetFactory, TokenSelectedHandler handler)
    {
       this.handler = handler;
 
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(WindowResizedEvent.TYPE, this);
+      resizeHandler = Window.addResizeHandler(this);
 
       absolutePanel = new AbsolutePanel();
 
@@ -128,7 +125,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
       DOM.setStyleAttribute(lockLayer.getElement(), "zIndex", "" + (Integer.MAX_VALUE));
 
       blockMouseEventsPanel = new LockLayer();
-//      blockMouseEventsPanel.setStyleName("exo-lockLayer");
+      //      blockMouseEventsPanel.setStyleName("exo-lockLayer");
       blockMouseEventsPanel.setWidth("" + Window.getClientWidth() + "px");
       blockMouseEventsPanel.setHeight("" + Window.getClientHeight() + "px");
       lockLayer.add(blockMouseEventsPanel, 0, 0);
@@ -432,20 +429,13 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
     */
    private void removeHandlers()
    {
-      handlers.removeHandlers();
+      
       if (keyboardManagerRegistration != null)
       {
          keyboardManagerRegistration.removeHandler();
          keyboardManagerRegistration = null;
       }
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.event.WindowResizedHandler#onWindowResized(org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent)
-    */
-   public void onWindowResized(WindowResizedEvent event)
-   {
-      cancelAutocomplete();
+      resizeHandler.removeHandler();
    }
 
    protected class AutoCompleteFormKeyboardManager implements Event.NativePreviewHandler
@@ -554,6 +544,15 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Wind
          }
       }
 
+   }
+
+   /**
+    * @see com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google.gwt.event.logical.shared.ResizeEvent)
+    */
+   @Override
+   public void onResize(ResizeEvent event)
+   {
+      cancelAutocomplete();
    }
 
 }

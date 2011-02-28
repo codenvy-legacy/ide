@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<web-app atr='1'>
+  <display-name atr='2'>
+    IDEall
+  </display-name>
+  
+  <context-param>
+    <param-name>
+      portalContainerName
+    </param-name>
+    
+    <param-value>
+      portal
+    </param-value>
+  </context-param>
+  
+  <!-- comment -->
+  
+  <context-param>
+    <param-name>portalContainerName</param-name>
+    <param-value>portal</param-value>
+  </context-param>
+  
+  <![CDATA[ Hello, world!
+]]>
+  
+  <filter>
+    <filter-name />
+    <filter-class>org.exoplatform.portal.application.ResourceRequestFilter</filter-class>
+  </filter>
+  
+</web-app>

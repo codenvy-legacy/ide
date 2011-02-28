@@ -18,28 +18,24 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
+import com.google.gwt.junit.tools.GWTTestSuite;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: ExamplesBuandle Feb 25, 2011 9:37:15 AM evgen $
+ * @version $Id: GwtTestSuite Feb 28, 2011 2:21:56 PM evgen $
  *
  */
-public interface ExamplesBuandle extends ClientBundle
+public class GwtEditorTestSuite extends TestCase
 {
-   ExamplesBuandle INSTANCE = GWT.create(ExamplesBuandle.class);
-
-   @Source("org/exoplatform/ide/editor/public/example/example.html")
-   TextResource htmlExample();
-
-   @Source("org/exoplatform/ide/editor/public/example/jsTest.js")
-   TextResource jsExample();
-
-   @Source("org/exoplatform/ide/editor/public/example/googleGadget.txt")
-   TextResource ggExample();
+   public static Test suite()
+   {
+       GWTTestSuite suite = new GWTTestSuite( "eXo IDE Editor GWT Tests" );
+       suite.addTestSuite(CssGwtTestCodeAssistant.class );
+       suite.addTestSuite(HtmlGwtTestCodeAssistant.class );
+       return suite;
+   }
    
-   @Source("org/exoplatform/ide/editor/public/example/xmlEx.txt")
-   TextResource xmlExample();
 }

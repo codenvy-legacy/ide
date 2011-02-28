@@ -28,12 +28,6 @@
    <inherits name='com.google.gwt.json.JSON' />
 
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-   <inherits name='org.exoplatform.gwtframework.ui.UI' />
-   
-   <!--  Inherit the SmartGWT Toolkit library configuration. -->
-   <inherits name="com.smartgwt.SmartGwt" />
-   <inherits name='com.smartgwt.tools.SmartGwtTools' />
-
 
    <source path="api/" />
    <source path="codemirror/" />

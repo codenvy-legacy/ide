@@ -108,7 +108,7 @@ public class CodeMirrorConfiguration
       CodeValidator codeValidator)
    {
       this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
-         codeValidator, new DefaultCodeAssistant(null));
+         codeValidator, new DefaultCodeAssistant());
    }
 
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,

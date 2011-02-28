@@ -27,10 +27,6 @@
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-ui</artifactId>
-      </dependency>
-      <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
       </dependency>
@@ -67,27 +63,6 @@
          </testResource>
       </testResources>
       <plugins>
-         <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>gwt-maven-plugin</artifactId>
-            <version>${gwt.maven.plugin.version}</version>
-            <configuration>
-               <module>org.exoplatform.ide.editor.Editor</module>
-               <logLevel>ERROR</logLevel>
-               <skipTests>false</skipTests>
-               <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
-               <manualMode>${manualMode}</manualMode>
-               <productionMode>${productionMode}</productionMode>
-            </configuration>
-            <executions>
-               <execution>
-                  <goals>
-                     <goal>compile</goal>
-                     <goal>test</goal>
-                  </goals>
-               </execution>
-            </executions>
-         </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
@@ -195,13 +170,16 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
+                  <version>${gwt.maven.plugin.version}</version>
                   <configuration>
-                     <module>org.exoplatform.ide.editor.EditorTest</module>
-                     <runTarget>org.exoplatform.ide.editor.EditorTest/Editor.html</runTarget>            
-                     <logLevel>INFO</logLevel>
-                     <hostedWebapp>${basedir}/target/war</hostedWebapp>
-                     <tomcat>${basedir}/target/tomcat</tomcat>
+                     <module>org.exoplatform.ide.editor.Editor</module>
+                     <logLevel>ERROR</logLevel>
                      <skipTests>false</skipTests>
+                     <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
+                     <manualMode>true</manualMode>
+                     <productionMode>false</productionMode>
+                     <mode>htmlunit</mode>            
+                     <htmlunit>FF3</htmlunit>
                   </configuration>
                   <executions>
                      <execution>

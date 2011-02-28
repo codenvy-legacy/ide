@@ -38,7 +38,6 @@ import org.exoplatform.ide.editor.codemirror.codeassistant.util.JSONTokenParser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ExternalTextResource;
@@ -114,10 +113,6 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
    private boolean isTag = false;
 
-   public HtmlCodeAssistant(HandlerManager eventBus)
-   {
-      super(eventBus);
-   }
 
 //   private native JavaScriptObject getHtmlTagTokensJSO() /*-{
 //		return $wnd.html_tokens;
@@ -150,13 +145,13 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
    {
       if (MimeType.TEXT_CSS.equals(lineMimeType))
       {
-         new CssCodeAssistant(eventBus).autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
+         new CssCodeAssistant().autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
             cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
          return;
       }
       if (MimeType.APPLICATION_JAVASCRIPT.equals(lineMimeType))
       {
-         new JavaScriptCodeAssistant(eventBus).autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY,
+         new JavaScriptCodeAssistant().autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY,
             lineContent, cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
          return;
       }

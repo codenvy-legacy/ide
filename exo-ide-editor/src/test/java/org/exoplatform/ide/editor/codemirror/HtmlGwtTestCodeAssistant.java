@@ -24,62 +24,44 @@ import java.util.List;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
-import org.exoplatform.ide.editor.codemirror.codeassistant.css.CssCodeAssistant;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.editor.codemirror.codeassistant.html.HtmlCodeAssistant;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: GwtTestCssCodeAssistant Feb 25, 2011 10:06:40 AM evgen $
+ * @version $Id: GwtTestHtmlCodeAssistant Feb 25, 2011 10:58:45 AM evgen $
  *
  */
-public class GwtTestCssCodeAssistant extends Base
+public class HtmlGwtTestCodeAssistant extends Base
 {
+  
+   /**
+    * 
+    */
+   private static final int TagNum = 82;
 
-
-   public void testCssSimpleParse()
+   public void testHtmlParseLine()
    {
-      String line = "asd as bor";
-      paseLine(line, "asd as ", "bor", "", line.length() + 1);
+      paseLine("<bod", "<", "bod", "", 5, TagNum);
    }
-
-   public void testCssParseLineWithEndProperty()
+   
+   public void testHtmlParseLineWithAttribute()
    {
-      final String line = "border-left: 1px;";
-      paseLine(line, line, "", "", line.length() + 1);
-
+      paseLine("<body >", "<body ", "", ">", 7, 18);
    }
-
-   public void testCssParseLineWithBeginClass()
+   
+   public void testHtmlParseLineWithAndTag()
    {
-      final String line = ".button-clolapse{";
-      paseLine(line, line, "", "", line.length() + 1);
+      paseLine("<body> ", "<body> ", "", "", 8, TagNum);
    }
-
-   public void testCssParseLineWithEndClass()
-   {
-      final String line = "border:1px #ddffaa;}";
-      paseLine(line, line, "", "", line.length() + 1);
-   }
-
-   public void testCssParsePropertyName()
-   {
-      final String line = "border-bottom-color";
-      paseLine(line, "", "border-", "bottom-color", 8);
-   }
-
+   
    /**
     * @param line
     */
    private void paseLine(final String line, final String before, final String token, final String after,
-      final int curPos)
+      final int curPos, final int numToken)
    {
-      class CssAssistant extends CssCodeAssistant
+      class HtmlCodeAssist extends HtmlCodeAssistant
       {
-         public CssAssistant(HandlerManager eventBus)
-         {
-            super(eventBus);
-         }
 
          @Override
          protected void openForm(int x, int y, List<Token> tokens, TokenWidgetFactory factory,
@@ -88,12 +70,11 @@ public class GwtTestCssCodeAssistant extends Base
             assertEquals(token, tokenToComplete);
             assertEquals(before, beforeToken);
             assertEquals(after, afterToken);
-            assertEquals(102, tokens.size());
+            assertEquals(numToken, tokens.size());
          }
       }
 
-      new CssAssistant(new HandlerManager(null)).autocompleteCalled(null, "", 0, 0, line, curPos, 0,
+      new HtmlCodeAssist().autocompleteCalled(null, "", 0, 0, line, curPos, 0,
          new ArrayList<Token>(), "", null);
    }
-
 }

@@ -25,8 +25,6 @@ import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.CodeError;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: DefaultCodeAssistant Feb 22, 2011 2:13:59 PM evgen $
@@ -35,14 +33,6 @@ import com.google.gwt.event.shared.HandlerManager;
 public class DefaultCodeAssistant extends CodeAssistant
 {
 
-   
-   /**
-    * @param eventBus
-    */
-   public DefaultCodeAssistant(HandlerManager eventBus)
-   {
-      super(eventBus);
-   }
 
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)

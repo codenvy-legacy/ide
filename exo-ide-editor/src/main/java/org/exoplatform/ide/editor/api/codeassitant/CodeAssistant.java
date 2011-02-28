@@ -37,8 +37,6 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public abstract class CodeAssistant implements TokenSelectedHandler
 {
-
-   protected HandlerManager eventBus;
    
    protected String beforeToken;
 
@@ -51,10 +49,9 @@ public abstract class CodeAssistant implements TokenSelectedHandler
    /**
     * @param eventBys
     */
-   public CodeAssistant(HandlerManager eventBus)
+   public CodeAssistant()
    {
       super();
-      this.eventBus = eventBus;
    }
 
    /**
@@ -89,7 +86,7 @@ public abstract class CodeAssistant implements TokenSelectedHandler
    {
        x = x - tokenToComplete.length() * 8 + 8;
        y = y+ 4;
-      new AutocompletionForm(eventBus, x, y, tokenToComplete, tokens, factory, handler);
+      new AutocompletionForm(x, y, tokenToComplete, tokens, factory, handler);
    }
    
    /**

@@ -25,9 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.ui.client.button.IconButton;
-import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
-import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
@@ -42,8 +39,11 @@ import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 import org.exoplatform.ide.editor.codemirror.producers.CodeMirrorProducer;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -89,9 +89,8 @@ public class EditorTest implements EntryPoint
             true, // can be outlined
             true, // can be autocompleted
             new JavaScriptParser(), // exoplatform code parser
-            new JavaScriptAutocompleteHelper() ,// autocomplete helper
-            new JavaScriptCodeAssistant(eventBus)
-         )));
+            new JavaScriptAutocompleteHelper(),// autocomplete helper
+            new JavaScriptCodeAssistant())));
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_JAVASCRIPT, "CodeMirror JavaScript editor", "js", true,
          new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
@@ -100,8 +99,7 @@ public class EditorTest implements EntryPoint
             true, // can be autocompleted
             new JavaScriptParser(), // exoplatform code parser
             new JavaScriptAutocompleteHelper(), // autocomplete helper
-            new JavaScriptCodeAssistant(eventBus)
-         )));
+            new JavaScriptCodeAssistant())));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_X_JAVASCRIPT, "CodeMirror JavaScript editor", "js", true,
          new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
@@ -110,8 +108,7 @@ public class EditorTest implements EntryPoint
             true, // can be autocompleted
             new JavaScriptParser(), // exoplatform code parser
             new JavaScriptAutocompleteHelper(), // autocomplete helper
-            new JavaScriptCodeAssistant(eventBus)
-         )));
+            new JavaScriptCodeAssistant())));
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, "CodeMirror Css editor", "css", true,
          new CodeMirrorConfiguration("['parsecss.js']", // generic code parsers
@@ -119,7 +116,7 @@ public class EditorTest implements EntryPoint
             false, // can be outlined
             true, // can be autocompleted
             new CssParser() // exoplatform code parser 
-            , new CssCodeAssistant(eventBus))));
+            , new CssCodeAssistant())));
 
       Set<String> comTypes = new HashSet<String>();
       comTypes.add(MimeType.TEXT_HTML);
@@ -133,7 +130,7 @@ public class EditorTest implements EntryPoint
             true, // can be autocompleted
             new HtmlParser(), // exoplatform code parser
             new HtmlAutocompleteHelper(), // autocomplete helper
-            new HtmlCodeAssistant(eventBus), comTypes)));
+            new HtmlCodeAssistant(), comTypes)));
       //To initialize client bundle 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
    }
@@ -152,79 +149,129 @@ public class EditorTest implements EntryPoint
    @Override
    public void onModuleLoad()
    {
-      Toolbar toolbar = new Toolbar();
-      
-      final SimplePanel panel  = new  SimplePanel();
+      FlowPanel toolbar = new FlowPanel();
+      toolbar.setWidth("100%");
+      toolbar.setHeight("25px");
+
+      final SimplePanel panel = new SimplePanel();
+      panel.setStyleName("");
       panel.setWidth("100%");
       panel.setHeight("100%");
-      
+
       final HashMap<String, Object> params = new HashMap<String, Object>();
 
       params.put(CodeMirrorParams.IS_READ_ONLY, false);
       params.put(CodeMirrorParams.IS_SHOW_LINE_NUMER, true);
       params.put(CodeMirrorParams.HOT_KEY_LIST, new ArrayList<String>());
-      
+
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
-      
-      IconButton cssButton =
-         new IconButton(ImageHelper.getImageHTML(CodeAssistantClientBundle.INSTANCE.attribute()),
-            ImageHelper.getImageHTML(CodeAssistantClientBundle.INSTANCE.attribute()));
+
+      Button cssButton =
+         new Button();
       cssButton.setTitle("Create CodeMorror Editor for Css");
-      cssButton.setCommand(new Command()
-      {
-
-         @Override
-         public void execute()
-         {
-
-            params.put(CodeMirrorParams.MIME_TYPE, MimeType.TEXT_CSS);
-
-            Editor editor = editors.get(MimeType.TEXT_CSS).createEditor(".test-class{\n\n}", eventBus, params);
-            panel.clear();
-            panel.add(editor);
-         }
-      });
-
-      IconButton htmlButton = new IconButton(ImageHelper.getImageHTML(CodeAssistantClientBundle.INSTANCE.tag()),
-            ImageHelper.getImageHTML(CodeAssistantClientBundle.INSTANCE.tag()));
-      htmlButton.setTitle("Create HTML CodeMirror Editor");
-      htmlButton.setCommand(new Command()
+      cssButton.setText("CSS");
+      cssButton.addClickHandler(new ClickHandler()
       {
          
          @Override
-         public void execute()
+         public void onClick(ClickEvent event)
+         {
+            // TODO Auto-generated method stub
+            params.put(CodeMirrorParams.MIME_TYPE, MimeType.TEXT_CSS);
+            
+            Editor editor = editors.get(MimeType.TEXT_CSS).createEditor(".test-class{\n\n}", eventBus, params);
+            panel.clear();
+            panel.add(editor);
+            
+         }
+      });
+      
+      Button htmlButton =
+         new Button();
+      htmlButton.setTitle("Create HTML CodeMirror Editor");
+      htmlButton.setText("HTML");
+      htmlButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
          {
             params.put(CodeMirrorParams.MIME_TYPE, MimeType.TEXT_HTML);
 
-            Editor editor = editors.get(MimeType.TEXT_HTML).createEditor(ExamplesBuandle.INSTANCE.htmlExample().getText(), eventBus, params);
+            Editor editor =
+               editors.get(MimeType.TEXT_HTML).createEditor(ExamplesBuandle.INSTANCE.htmlExample().getText(), eventBus,
+                  params);
             panel.clear();
             panel.add(editor);
          }
       });
-      
-      IconButton jsButton = new IconButton(ImageHelper.getImageHTML(CodeAssistantClientBundle.INSTANCE.functionItem()),
-         ImageHelper.getImageHTML(CodeAssistantClientBundle.INSTANCE.tag()));
-      jsButton.setTitle("Create JavaScript CodeMirror Editor");
-      jsButton.setCommand(new Command()
-   {
-      
-      @Override
-      public void execute()
-      {
-         params.put(CodeMirrorParams.MIME_TYPE, MimeType.APPLICATION_JAVASCRIPT);
 
-         Editor editor = editors.get(MimeType.APPLICATION_JAVASCRIPT).createEditor(ExamplesBuandle.INSTANCE.jsExample().getText(), eventBus, params);
-         panel.clear();
-         panel.add(editor);
-      }
-   });    
-      
-      toolbar.addItem(cssButton);
-      toolbar.addDelimiter();
-      toolbar.addItem(htmlButton);
-      toolbar.addDelimiter();
-      toolbar.addItem(jsButton);
-      
+      Button jsButton =
+         new Button();
+      jsButton.setTitle("Create JavaScript CodeMirror Editor");
+      jsButton.setText("JS");
+      jsButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(CodeMirrorParams.MIME_TYPE, MimeType.APPLICATION_JAVASCRIPT);
+
+            Editor editor =
+               editors.get(MimeType.APPLICATION_JAVASCRIPT).createEditor(
+                  ExamplesBuandle.INSTANCE.jsExample().getText(), eventBus, params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });
+
+      Button xmlButton =
+         new Button();
+      xmlButton.setTitle("Create XML CodeMirror Editor");
+      xmlButton.setText("XML");
+      xmlButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(CodeMirrorParams.MIME_TYPE, MimeType.TEXT_XML);
+
+            Editor editor =
+               editors.get(MimeType.TEXT_XML).createEditor(ExamplesBuandle.INSTANCE.xmlExample().getText(), eventBus,
+                  params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });
+
+      Button gButton =
+         new Button();
+      gButton.setTitle("Create Google Gadget CodeMirror Editor");
+      gButton.setText("Gadget");
+      gButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(CodeMirrorParams.MIME_TYPE, MimeType.GOOGLE_GADGET);
+
+            Editor editor =
+               editors.get(MimeType.GOOGLE_GADGET).createEditor(ExamplesBuandle.INSTANCE.ggExample().getText(),
+                  eventBus, params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });
+
+      toolbar.add(cssButton);
+      toolbar.add(htmlButton);
+      toolbar.add(jsButton);
+      toolbar.add(xmlButton);
+      toolbar.add(gButton);
+
       RootPanel.get().add(toolbar);
       RootPanel.get().add(panel);
    }
