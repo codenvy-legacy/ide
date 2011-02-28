@@ -1,4 +1,4 @@
-var css_tokens = [
+[
 		{
 			"name" : "!important",
 			"type" : "PROPERTY"

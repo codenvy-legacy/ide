@@ -1,4 +1,4 @@
-var html_tokens = [
+{"tag":[
 		{
 			"name" : "!DOCTYPE",
 			"type" : "TAG",
@@ -1763,9 +1763,9 @@ var html_tokens = [
 			"type" : "TAG",
 			"code" : "<var></var>",
 			"fullDescription" : "Defines a variable part of a text"
-		} ];
+		} ],
 
-var html_attributes = [ {
+"attributes": [ {
 	"name" : "class",
 	"type" : "ATTRIBUTE",
 	"code" : "class=\"\"",
@@ -1785,9 +1785,9 @@ var html_attributes = [ {
 	"type" : "ATTRIBUTE",
 	"code" : "title=\"\"",
 	"fullDescription" : "Specifies extra information about an element"
-} ];
+} ],
 
-var html_baseEvents = [
+"baseEvents": [
 		{
 			"name" : "onkeydown",
 			"type" : "ATTRIBUTE",
@@ -1847,4 +1847,6 @@ var html_baseEvents = [
 			"type" : "ATTRIBUTE",
 			"code" : "onmouseup=\"\"",
 			"fullDescription" : "Script to be run when mouse button is released"
-		} ];
+		} 
+		]
+}

@@ -26,9 +26,14 @@ import org.exoplatform.ide.editor.api.codeassitant.CodeError;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.codemirror.codeassistant.util.JSONTokenParser;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -38,6 +43,12 @@ import com.google.gwt.json.client.JSONArray;
 public class CssCodeAssistant extends CodeAssistant
 {
 
+   public interface CssBuandle extends ClientBundle
+   {
+      @Source("org/exoplatform/ide/editor/public/tokens/css_tokens.js")
+      ExternalTextResource cssTokens();
+   }
+   
    private static List<Token> cssProperty;
 
    /**
@@ -48,9 +59,9 @@ public class CssCodeAssistant extends CodeAssistant
       super(eventBus);
    }
 
-   private native JavaScriptObject getTokens() /*-{
-		return $wnd.css_tokens;
-   }-*/;
+//   private native JavaScriptObject getTokens() /*-{
+//		return $wnd.css_tokens;
+//   }-*/;
 
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
@@ -63,8 +74,8 @@ public class CssCodeAssistant extends CodeAssistant
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
-   public void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
-      String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
+   public void autocompleteCalled(Editor editor, String mimeType, final int cursorOffsetX, final int cursorOffsetY,
+      final String lineContent, final int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
       Token currentToken)
    {
       try
@@ -72,33 +83,60 @@ public class CssCodeAssistant extends CodeAssistant
          this.editor = editor;
          if (cssProperty == null)
          {
-            JSONTokenParser parser = new JSONTokenParser();
-            JSONArray tokenArray = new JSONArray(getTokens());
-            cssProperty = parser.getTokens(tokenArray);
-         }
-
-         String subToken = lineContent.substring(0, cursorPositionX - 1);
-         afterToken = lineContent.substring(cursorPositionX - 1);
-
-         String token = "";
-         if (!subToken.endsWith(" ") && !subToken.endsWith(":") && !subToken.endsWith(";") && !subToken.endsWith("}")&& !subToken.endsWith("{"))
-         {
-            String[] split = subToken.split("[/()|&\",' ]+");
-
-            if (split.length != 0)
+            CssBuandle buandle = GWT.create(CssBuandle.class);
+            buandle.cssTokens().getText( new ResourceCallback<TextResource>()
             {
-               token = split[split.length - 1];
-            }
+               
+               @Override
+               public void onSuccess(TextResource resource)
+               {                  
+                  JSONTokenParser parser = new JSONTokenParser();
+                  JSONArray tokenArray = new JSONArray(parseJson(resource.getText()));
+                  cssProperty = parser.getTokens(tokenArray);
+                  fillTokens(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX);
+               }
+               
+               @Override
+               public void onError(ResourceException e)
+               {
+                  e.printStackTrace();
+               }
+            });
+            return;
          }
-         beforeToken = subToken.substring(0, subToken.lastIndexOf(token));
-         tokenToComplete = token;
-
-         openForm(cursorOffsetX, cursorOffsetY, cssProperty, new CssTokenWidgetFactory(), this);
+         fillTokens(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX);
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
+   }
+
+   /**
+    * @param cursorOffsetX
+    * @param cursorOffsetY
+    * @param lineContent
+    * @param cursorPositionX
+    */
+   private void fillTokens(int cursorOffsetX, int cursorOffsetY, String lineContent, int cursorPositionX)
+   {
+      String subToken = lineContent.substring(0, cursorPositionX - 1);
+      afterToken = lineContent.substring(cursorPositionX - 1);
+
+      String token = "";
+      if (!subToken.endsWith(" ") && !subToken.endsWith(":") && !subToken.endsWith(";") && !subToken.endsWith("}")&& !subToken.endsWith("{"))
+      {
+         String[] split = subToken.split("[/()|&\",' ]+");
+
+         if (split.length != 0)
+         {
+            token = split[split.length - 1];
+         }
+      }
+      beforeToken = subToken.substring(0, subToken.lastIndexOf(token));
+      tokenToComplete = token;
+
+      openForm(cursorOffsetX, cursorOffsetY, cssProperty, new CssTokenWidgetFactory(), this);
    }
 
 }

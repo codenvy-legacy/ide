@@ -36,11 +36,5 @@
       
       <stylesheet src='codemirror/css/editor.css' />
       <script src='codemirror/js/codemirror.js' />
-      
-      <!-- Tokens  -->
-      <script src="tokens/css_tokens.js" />
-      <script src="tokens/html_tokens.js" />
-      <script src="tokens/javascript_tokens.js" />
-      <script src="tokens/java_script_api.js" />
-      
+         
 </module>

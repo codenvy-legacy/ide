@@ -33,4 +33,7 @@ public interface ExamplesBuandle extends ClientBundle
   
   @Source("org/exoplatform/ide/editor/public/example/example.html")
   TextResource htmlExample();
+  
+  @Source("org/exoplatform/ide/editor/public/example/jsTest.js")
+  TextResource jsExample();
 }

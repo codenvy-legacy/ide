@@ -26,6 +26,7 @@ import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -144,5 +145,14 @@ public abstract class CodeAssistant implements TokenSelectedHandler
    {
       editor.setFocus();
    }
+   
+   /*
+    * Takes in a trusted JSON String and evals it.
+    * @param JSON String that you trust
+    * @return JavaScriptObject that you can cast to an Overlay Type
+    */
+   protected native JavaScriptObject parseJson(String json) /*-{
+     return eval('(' + json + ')'); ;
+   }-*/;
 
 }

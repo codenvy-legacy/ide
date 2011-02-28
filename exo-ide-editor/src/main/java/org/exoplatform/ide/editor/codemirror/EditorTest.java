@@ -213,7 +213,7 @@ public class EditorTest implements EntryPoint
       {
          params.put(CodeMirrorParams.MIME_TYPE, MimeType.APPLICATION_JAVASCRIPT);
 
-         Editor editor = editors.get(MimeType.APPLICATION_JAVASCRIPT).createEditor("", eventBus, params);
+         Editor editor = editors.get(MimeType.APPLICATION_JAVASCRIPT).createEditor(ExamplesBuandle.INSTANCE.jsExample().getText(), eventBus, params);
          panel.clear();
          panel.add(editor);
       }

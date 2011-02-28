@@ -36,9 +36,15 @@ import org.exoplatform.ide.editor.codemirror.codeassistant.css.CssCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.codeassistant.util.JSONTokenParser;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -48,6 +54,13 @@ import com.google.gwt.json.client.JSONArray;
 public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFactory
 {
 
+   public interface HtmlBuandle extends ClientBundle
+   {
+      
+      @Source("org/exoplatform/ide/editor/public/tokens/html_tokens.js")
+      ExternalTextResource htmlTokens();
+   }
+   
    private static List<Token> htmlTokens;
 
    private static List<Token> htmlCoreAttributes;
@@ -106,17 +119,17 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       super(eventBus);
    }
 
-   private native JavaScriptObject getHtmlTagTokensJSO() /*-{
-		return $wnd.html_tokens;
-   }-*/;
-
-   private native JavaScriptObject getHtmlCoreAttributes()/*-{
-		return $wnd.html_attributes;
-   }-*/;
-
-   private native JavaScriptObject getHtmlBaseEvents()/*-{
-		return $wnd.html_baseEvents;
-   }-*/;
+//   private native JavaScriptObject getHtmlTagTokensJSO() /*-{
+//		return $wnd.html_tokens;
+//   }-*/;
+//
+//   private native JavaScriptObject getHtmlCoreAttributes()/*-{
+//		return $wnd.html_attributes;
+//   }-*/;
+//
+//   private native JavaScriptObject getHtmlBaseEvents()/*-{
+//		return $wnd.html_baseEvents;
+//   }-*/;
 
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
@@ -131,10 +144,11 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
-   public void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
-      String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
+   public void autocompleteCalled(Editor editor, String mimeType, final int cursorOffsetX, final int cursorOffsetY,
+      final String lineContent, final int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
       Token currentToken)
    {
+      System.out.println(lineMimeType);
       if (MimeType.TEXT_CSS.equals(lineMimeType))
       {
          new CssCodeAssistant(eventBus).autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
@@ -148,74 +162,113 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
          return;
       }
 
+      this.editor = editor;
       try
       {
-         List<Token> token = new ArrayList<Token>();
-
-         this.editor = editor;
-         parseTokenLine(lineContent, cursorPositionX);
-
-         if (!isTag)
+         
+         if(htmlTokens == null)
          {
-            token.addAll(getHtmlTagTokens());
-            openForm(cursorOffsetX, cursorOffsetY, token, this, this);
+            HtmlBuandle buandle = GWT.create(HtmlBuandle.class);
+            buandle.htmlTokens().getText(new ResourceCallback<TextResource>()
+            {
+               
+               @Override
+               public void onSuccess(TextResource resource)
+               {
+                  JavaScriptObject o = parseJson(resource.getText());
+                  JSONObject obj = new JSONObject(o);
+                 JSONTokenParser parser = new JSONTokenParser();
+                 htmlTokens = parser.getTokens(obj.get("tag").isArray());
+                 htmlCoreAttributes = parser.getTokens(obj.get("attributes").isArray());
+                 htmlBaseEvents = parser.getTokens(obj.get("baseEvents").isArray());
+                 autocompletion(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX);
+               }
+               
+               @Override
+               public void onError(ResourceException e)
+               {
+                  e.printStackTrace();
+               }
+            });
             return;
          }
-
-         if (tokenToComplete.endsWith(" ") || tokenToComplete.endsWith("\""))
-         {
-            //add attributes
-            String tag = "";
-
-            tag = tokenToComplete.substring(0, tokenToComplete.indexOf(" "));
-
-            if (noEndTag.contains(tag))
-            {
-               Token t = new TokenImpl(tag, TokenType.TAG);
-               t.setProperty(TokenProperties.SHORT_HINT, new StringProperty(" close tag with '/>'"));
-               t.setProperty(TokenProperties.CODE, new StringProperty(" />"));
-
-               token.add(t);
-            }
-            else
-            {
-               Token t = new TokenImpl(tag, TokenType.TAG);
-               t.setProperty(TokenProperties.SHORT_HINT, new StringProperty(" close tag with '></" + tag + ">'"));
-               t.setProperty(TokenProperties.CODE, new StringProperty("></" + tag + ">"));
-               token.add(t);
-
-               Token t1 = new TokenImpl(tag, TokenType.TAG);
-               t.setProperty(TokenProperties.SHORT_HINT, new StringProperty(" close tag with '>'"));
-               t.setProperty(TokenProperties.CODE, new StringProperty(">"));
-               token.add(t1);
-            }
-            beforeToken += tokenToComplete;
-            tokenToComplete = "";
-            if (noCoreAttributes.contains(tag))
-            {
-               Token t = findTokenByName(tag);
-               fillAttributes(t, token);
-            }
-            else
-            {
-               fillCoreAttributes(token);
-               Token t = findTokenByName(tag);
-               fillAttributes(t, token);
-            }
-            if (!noBaseEvents.contains(tag))
-               token.addAll(getBaseEvent());
-         }
-         else
-         {
-            token.addAll(getHtmlTagTokens());
-         }
-
-         openForm(cursorOffsetX, cursorOffsetY, token, this, this);
+       
+         
+         autocompletion(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX);
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
+   }
+
+   /**
+    * @param cursorOffsetX
+    * @param cursorOffsetY
+    * @param lineContent
+    * @param cursorPositionX
+    */
+   private void autocompletion(int cursorOffsetX, int cursorOffsetY, String lineContent, int cursorPositionX)
+   {
+      List<Token> token = new ArrayList<Token>();
+      parseTokenLine(lineContent, cursorPositionX);
+
+      if (!isTag)
+      {
+         token.addAll(htmlTokens);
+         openForm(cursorOffsetX, cursorOffsetY, token, this, this);
+         return;
+      }
+
+      if (tokenToComplete.endsWith(" ") || tokenToComplete.endsWith("\""))
+      {
+         //add attributes
+         String tag = "";
+
+         tag = tokenToComplete.substring(0, tokenToComplete.indexOf(" "));
+
+         if (noEndTag.contains(tag))
+         {
+            Token t = new TokenImpl(tag, TokenType.TAG);
+            t.setProperty(TokenProperties.SHORT_HINT, new StringProperty(" close tag with '/>'"));
+            t.setProperty(TokenProperties.CODE, new StringProperty(" />"));
+
+            token.add(t);
+         }
+         else
+         {
+            Token t = new TokenImpl(tag, TokenType.TAG);
+            t.setProperty(TokenProperties.SHORT_HINT, new StringProperty(" close tag with '></" + tag + ">'"));
+            t.setProperty(TokenProperties.CODE, new StringProperty("></" + tag + ">"));
+            token.add(t);
+
+            Token t1 = new TokenImpl(tag, TokenType.TAG);
+            t.setProperty(TokenProperties.SHORT_HINT, new StringProperty(" close tag with '>'"));
+            t.setProperty(TokenProperties.CODE, new StringProperty(">"));
+            token.add(t1);
+         }
+         beforeToken += tokenToComplete;
+         tokenToComplete = "";
+         if (noCoreAttributes.contains(tag))
+         {
+            Token t = findTokenByName(tag);
+            fillAttributes(t, token);
+         }
+         else
+         {
+            token.addAll(htmlCoreAttributes);
+            Token t = findTokenByName(tag);
+            fillAttributes(t, token);
+         }
+         if (!noBaseEvents.contains(tag))
+            token.addAll(htmlBaseEvents);
+      }
+      else
+      {
+         token.addAll(htmlTokens);
+      }
+
+      openForm(cursorOffsetX, cursorOffsetY, token, this, this);
    }
 
    /**
@@ -252,7 +305,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
    private Token findTokenByName(String name)
    {
-      for (Token t : getHtmlTagTokens())
+      for (Token t : htmlTokens)
       {
          if (name.equals(t.getName()))
             return t;
@@ -268,40 +321,6 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       }
    }
 
-   private List<Token> getBaseEvent()
-   {
-      if (htmlBaseEvents == null)
-      {
-         JSONTokenParser parser = new JSONTokenParser();
-         htmlBaseEvents = parser.getTokens(new JSONArray(getHtmlBaseEvents()));
-      }
-
-      return htmlBaseEvents;
-   }
-
-   /**
-    * @param token
-    */
-   private void fillCoreAttributes(List<Token> token)
-   {
-      if (htmlCoreAttributes == null)
-      {
-         JSONTokenParser parser = new JSONTokenParser();
-         htmlCoreAttributes = parser.getTokens(new JSONArray(getHtmlCoreAttributes()));
-      }
-
-      token.addAll(htmlCoreAttributes);
-   }
-
-   private List<Token> getHtmlTagTokens()
-   {
-      if (htmlTokens == null)
-      {
-         JSONTokenParser parser = new JSONTokenParser();
-         htmlTokens = parser.getTokens(new JSONArray(getHtmlTagTokensJSO()));
-      }
-      return htmlTokens;
-   }
 
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory#buildTokenWidget(org.exoplatform.ide.editor.api.codeassitant.Token)
