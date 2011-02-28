@@ -632,13 +632,13 @@ public class JavaScriptParser extends CodeMirrorParser
          // test if this is JavaScript number
          if (isJsNumber(lastNode))
          {
-            possibleElementType = "number";
+            possibleElementType = "Number";
          }
             
          // test if this is boolean
          else if (isJsBoolean(lastNode))
          {
-            possibleElementType = "boolean";
+            possibleElementType = "Boolean";
          }            
           
          // test if this is "null" value
@@ -650,7 +650,7 @@ public class JavaScriptParser extends CodeMirrorParser
          // test if this is string value
          else if (isJsString(lastNode))
          {
-            possibleElementType = "string";
+            possibleElementType = "String";
          }
       
          // recognize variable assignment statement like "var a ="
