@@ -246,12 +246,13 @@
                <logLevel>INFO</logLevel>
                <skipTests>${gwt.test.skip}</skipTests>
             </configuration>
-            <executions>
-               <execution>
-                  <goals>
-                     <goal>compile</goal>
-                  </goals>
-               </execution>
+             <executions>                                                                                                                                                                                       
+               <execution>                                                                                                                                                                                     
+                 <phase>compile</phase>                                                                                                                                                                        
+                  <goals>                                                                                                                                                                                      
+                     <goal>compile</goal>                                                                                                                                                                      
+                  </goals>                                                                                                                                                                                     
+               </execution>                                                                                                                                                                                    
             </executions>
          </plugin>
          <plugin>

@@ -34,7 +34,6 @@ import org.exoplatform.ide.client.framework.codeassistant.TokensCollectedCallbac
 import org.exoplatform.ide.client.framework.codeassistant.api.TokenCollectorExt;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -126,7 +125,7 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       }
       catch (Exception e)
       {
-         Log.error(e.getMessage(), e);
+         e.printStackTrace();
       }
    }
 
@@ -172,7 +171,6 @@ public class AutoCompletionManagerExt implements EditorAutoCompleteCalledHandler
       catch (Exception e)
       {
          e.printStackTrace();
-         Log.error(e.getMessage(), e);
       }
 
       TokenExtType type = value.getToken().getType();

@@ -230,12 +230,13 @@
                      <tomcat>${basedir}/target/tomcat</tomcat>
                      <skipTests>false</skipTests>
                   </configuration>
-                  <executions>
-                     <execution>
-                        <goals>
-                           <goal>compile</goal>
-                        </goals>
-                     </execution>
+                  <executions>                                                                                                                                                                                       
+                     <execution>                                                                                                                                                                                     
+                       <phase>compile</phase>                                                                                                                                                                        
+                       <goals>                                                                                                                                                                                      
+                         <goal>compile</goal>                                                                                                                                                                      
+                       </goals>                                                                                                                                                                                     
+                     </execution>                                                                                                                                                                                    
                   </executions>
                </plugin>
                <!-- If you want to use the target/web.xml file mergewebxml produces, tell the war plugin to use it. Also, exclude what you want from the 

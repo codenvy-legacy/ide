@@ -28,10 +28,10 @@
       <org.exoplatform.gwtframework.version>1.2.0-SNAPSHOT</org.exoplatform.gwtframework.version>
       <org.exoplatform.gatein.version>3.1.4-PLF</org.exoplatform.gatein.version>
       <!-- Third parties -->
-      <gwt.version>2.0.4</gwt.version>
+      <gwt.version>2.2.0</gwt.version>
       <smartgwt.version>2.3-nb01</smartgwt.version>
       <shindig.version>1.0-r790473-Patch02</shindig.version>
-      <gwt.maven.plugin.version>1.2</gwt.maven.plugin.version>
+      <gwt.maven.plugin.version>2.2.0</gwt.maven.plugin.version>
       <maven.compiler.source>1.6</maven.compiler.source>
       <maven.compiler.target>1.6</maven.compiler.target>
       <org.slf4j.version>1.5.6</org.slf4j.version>
@@ -612,8 +612,8 @@
       
 
       <module>exo-ide-client-application</module>
-
-      <module>exo-ide-client-gadget</module>
+       <!-- Not build on GWT 2.2.0 -->
+      <!-- module>exo-ide-client-gadget</module -->
       <module>exo-ide-packaging-standalone-tomcat</module>
 
    </modules>

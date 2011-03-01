@@ -47,9 +47,6 @@
    <inherits name='org.exoplatform.ide.extension.gadget.GadgetExtension' />
    <inherits name='org.exoplatform.ide.extension.chromattic.ChromatticExtension' />
    
-   <inherits name="com.allen_sauer.gwt.log.gwt-log-TRACE" />
-   <inherits name="com.allen_sauer.gwt.log.gwt-log-RemoteLogger" />
-   <set-property name="log_DivLogger" value="DISABLED" />
 
    <!-- Specify the app entry point class. -->
    <entry-point class='org.exoplatform.ide.client.IDEApplication' />
