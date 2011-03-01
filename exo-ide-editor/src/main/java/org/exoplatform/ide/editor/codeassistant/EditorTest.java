@@ -30,6 +30,7 @@ import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.xml.XmlCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorParams;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
@@ -74,7 +75,8 @@ public class EditorTest implements EntryPoint
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']", // code styles
             true, // can be outlined
             true, // can be autocompleted
-            new XmlParser() // exoplatform code parser 
+            new XmlParser(), // exoplatform code parser
+            new XmlCodeAssistant()
          )));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, "CodeMirror XML editor", "xml", true,
@@ -82,7 +84,8 @@ public class EditorTest implements EntryPoint
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']", // code styles
             true, // can be outlined
             true, // can be autocompleted
-            new XmlParser() // exoplatform code parser 
+            new XmlParser(), // exoplatform code parser
+            new XmlCodeAssistant()
          )));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT, "CodeMirror JavaScript editor", "js", true,
