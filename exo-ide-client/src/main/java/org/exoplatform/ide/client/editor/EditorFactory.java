@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
@@ -106,7 +105,7 @@ public class EditorFactory
             false, // can be outlined
             true, // can be autocompleted
             new CssParser() // exoplatform code parser 
-            , new CssCodeAssistant(IDE.EVENT_BUS))));
+            , new CssCodeAssistant())));
 
       Set<String> comTypes = new HashSet<String>();
       comTypes.add(MimeType.TEXT_HTML);
@@ -120,7 +119,7 @@ public class EditorFactory
             true, // can be autocompleted
             new HtmlParser(), // exoplatform code parser
             new HtmlAutocompleteHelper(), // autocomplete helper
-            new HtmlCodeAssistant(IDE.EVENT_BUS), comTypes)));
+            new HtmlCodeAssistant(), comTypes)));
       //To initialize client bundle 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
    }
