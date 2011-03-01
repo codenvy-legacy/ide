@@ -29,7 +29,7 @@ import junit.framework.TestCase;
  * @version $Id: GwtTestSuite Feb 28, 2011 2:21:56 PM evgen $
  *
  */
-public class GwtEditorTestSuite extends TestCase
+public class GwtCodeAssistantTestSuite extends TestCase
 {
    public static Test suite()
    {
