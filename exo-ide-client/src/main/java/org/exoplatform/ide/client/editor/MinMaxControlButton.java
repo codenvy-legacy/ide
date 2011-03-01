@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ImgButton;
-import org.exoplatform.ide.client.Images;
-
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+
+import org.exoplatform.gwtframework.ui.client.component.ImgButton;
+import org.exoplatform.ide.client.Images;
 
 /**
  * Created by The eXo Platform SAS .

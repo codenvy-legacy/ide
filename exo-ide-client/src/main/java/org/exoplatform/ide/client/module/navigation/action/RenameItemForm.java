@@ -22,19 +22,17 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
-import com.smartgwt.client.widgets.layout.VLayout;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -57,24 +55,28 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
    public static final int HEIGHT = 220;
    
+   public static final int BUTTON_WIDTH = 90;
+
+   public static final int BUTTON_HEIGHT = 22;
+
    public static final int HEIGHT_SMALL = 150;
 
    private static final String ID = "ideRenameItemForm";
-   
+
    private static final String ID_DYNAMIC_FORM = "ideRenameItemFormDynamicForm";
-   
+
    private static final String ID_RENAME_BUTTON = "ideRenameItemFormRenameButton";
-   
+
    private static final String ID_CANCEL_BUTTON = "ideRenameItemFormCancelButton";
-   
+
    private static final String RENAME_FIELD = "ideRenameItemFormRenameField";
-   
+
    private static final String MIME_TYPE_FIELD = "ideRenameItemFormMimeTypeField";
 
-   private VLayout vLayout;
+   private VerticalPanel vLayout;
 
    private TextField itemNameField;
-   
+
    private ComboBoxField mimeTypesField;
 
    private IButton renameButton;
@@ -82,16 +84,19 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    private IButton cancelButton;
 
    private RenameItemPresenter presenter;
-   
+
    private StaticTextItem caption3;
 
-   public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles, Map<String, String> lockTokens)
+   public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles,
+      Map<String, String> lockTokens)
    {
       super(eventBus, WIDTH, (selectedItems.get(0) instanceof File) ? HEIGHT : HEIGHT_SMALL, ID);
-      
+
       setTitle("Rename item");
 
-      vLayout = new VLayout();
+      vLayout = new VerticalPanel();
+      vLayout.setWidth("100%");
+      vLayout.setHeight("100%");
       addItem(vLayout);
 
       createFieldForm(selectedItems.get(0) instanceof File);
@@ -116,32 +121,12 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
       DynamicForm paramsForm = new DynamicForm();
       paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setWidth(340);
-      paramsForm.setLayoutAlign(Alignment.CENTER);
       paramsForm.setPadding(1);
-      paramsForm.setAutoFocus(true);
-      
-      SpacerItem delimiter1 = new SpacerItem();
-      delimiter1.setColSpan(2);
-      delimiter1.setHeight(5);
 
-      StaticTextItem caption = new StaticTextItem();
-      caption.setDefaultValue("Rename item to:");
-      caption.setShowTitle(false);
-      caption.setColSpan(2);
-
-      SpacerItem delimiter = new SpacerItem();
-      delimiter.setColSpan(2);
-      delimiter.setHeight(5);
-
-      itemNameField = new TextField();
+      itemNameField = new TextField(RENAME_FIELD, "Rename item to:");
       itemNameField.setName(RENAME_FIELD);
-      itemNameField.setShowTitle(false);
       itemNameField.setWidth(340);
-      itemNameField.setColSpan(6);
-      
-      SpacerItem delimiter2 = new SpacerItem();
-      delimiter2.setHeight(6);
-      
+      itemNameField.setHeight(22);
       if (isFile)
       {
          StaticTextItem caption2 = new StaticTextItem();
@@ -155,53 +140,52 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
          mimeTypesField = new ComboBoxField();
          mimeTypesField.setName(MIME_TYPE_FIELD);
          mimeTypesField.setWidth(340);
-         mimeTypesField.setShowTitle(false);
          mimeTypesField.setColSpan(2);
          mimeTypesField.setCompleteOnTab(true);
          mimeTypesField.setPickListHeight(100);
-         
+
          caption3 = new StaticTextItem();
          caption3.setShowTitle(false);
          caption3.setColSpan(2);
-         
-         paramsForm.setFields(delimiter1, caption, delimiter, itemNameField, delimiter2, caption2, delimiter3, mimeTypesField, caption3);
+         //TODO fix when combobox ready:
+         //paramsForm.setFields(delimiter1, caption, delimiter, itemNameField, delimiter2, caption2, delimiter3,
+          //  mimeTypesField, caption3);
       }
       else
       {
-         paramsForm.setFields(delimiter1, caption, delimiter, itemNameField, delimiter2);
+         paramsForm.add(itemNameField);
       }
-      paramsForm.focusInItem(itemNameField);
+      itemNameField.focusInItem();
 
-      vLayout.addMember(paramsForm);
+      vLayout.add(paramsForm);
+      vLayout.setCellHorizontalAlignment(paramsForm, HorizontalPanel.ALIGN_CENTER);
+      vLayout.setCellVerticalAlignment(paramsForm, HorizontalPanel.ALIGN_MIDDLE);
    }
 
    private void createButtons()
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setPadding(1);
-      buttonsForm.setHeight(22);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight(BUTTON_HEIGHT+"px");
+      buttonsLayout.setSpacing(5);
 
       renameButton = new IButton("Rename");
       renameButton.setID(ID_RENAME_BUTTON);
-      renameButton.setWidth(90);
-      renameButton.setHeight(22);
+      renameButton.setWidth(BUTTON_WIDTH);
+      renameButton.setHeight(BUTTON_HEIGHT);
       renameButton.setIcon(Images.Buttons.OK);
 
       cancelButton = new IButton("Cancel");
       cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(90);
-      cancelButton.setHeight(22);
+      cancelButton.setWidth(BUTTON_WIDTH);
+      cancelButton.setHeight(BUTTON_HEIGHT);
       cancelButton.setIcon(Images.Buttons.NO);
 
-      ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      tbi.setButtons(renameButton, delimiter1, cancelButton);
-      buttonsForm.setFields(tbi);
+      buttonsLayout.add(renameButton);
+      buttonsLayout.add(cancelButton);
 
-      buttonsForm.setAutoWidth();
-      vLayout.addMember(buttonsForm);
+      vLayout.add(buttonsLayout);
+      vLayout.setCellHorizontalAlignment(buttonsLayout, HorizontalPanel.ALIGN_CENTER);
+      vLayout.setCellVerticalAlignment(buttonsLayout, HorizontalPanel.ALIGN_TOP);
    }
 
    @Override
@@ -235,7 +219,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    {
       return (HasKeyPressHandlers)itemNameField;
    }
-   
+
    public void setMimeTypes(String[] mimeTypes)
    {
       mimeTypesField.setValueMap(mimeTypes);
@@ -266,7 +250,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
     */
    public void enableRenameButton()
    {
-      renameButton.setDisabled(false);
+      renameButton.enable();
    }
 
    /**
@@ -274,9 +258,9 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
     */
    public void disableRenameButton()
    {
-      renameButton.setDisabled(true);
+      renameButton.disable();
    }
-   
+
    public void addLabel(String style, String text)
    {
       if (text == null)

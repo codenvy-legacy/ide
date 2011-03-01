@@ -18,23 +18,21 @@
  */
 package org.exoplatform.ide.extension.groovy.client.ui;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.ide.extension.groovy.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.SpacerItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
+
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.extension.groovy.client.Images;
 
 /**
  * Created by The eXo Platform SAS.
@@ -51,16 +49,18 @@ public class GetRestServiceURLForm extends DialogWindow
    private static final int HEIGHT = 160;
 
    private static final String TITLE = "REST Service URL";
-   
+
    private static final String ID = "ideGetRestServiceURLForm";
-   
+
    private static final String ID_OK = "ideGetRestServiceURLFormOkButton";
-   
+
    private static final String NAME_URL = "ideGetItemURLFormURLField";
 
    private TextField urlField;
 
    private IButton okButton;
+
+   private VerticalPanel mainLayout;
 
    public GetRestServiceURLForm(HandlerManager eventBus, String url)
    {
@@ -68,11 +68,16 @@ public class GetRestServiceURLForm extends DialogWindow
 
       setTitle(TITLE);
 
+      mainLayout = new VerticalPanel();
+      mainLayout.setWidth("100%");
+      mainLayout.setHeight("100%");
+      mainLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
+      
       createFieldForm(url);
       createButtons();
-      show();
 
-      //draw();
+      addItem(mainLayout);
+      show();
 
       new Timer()
       {
@@ -97,42 +102,27 @@ public class GetRestServiceURLForm extends DialogWindow
    private void createFieldForm(String url)
    {
       DynamicForm paramsForm = new DynamicForm();
-      paramsForm.setPadding(5);
       paramsForm.setWidth(450);
-      paramsForm.setLayoutAlign(Alignment.CENTER);
-      paramsForm.setPadding(15);
-      paramsForm.setAutoFocus(true);
+      paramsForm.setPadding(10);
 
-      StaticTextItem caption = new StaticTextItem();
-      caption.setDefaultValue("REST Service URL:");
-      caption.setShowTitle(false);
-      caption.setColSpan(2);
-
-      SpacerItem delimiter = new SpacerItem();
-      delimiter.setColSpan(2);
-      delimiter.setHeight(5);
-
-      urlField = new TextField();
-      urlField.setShowTitle(false);
+      urlField = new TextField(NAME_URL, "REST Service URL:");
+      urlField.setTitleOrientation(TitleOrientation.TOP);
       urlField.setWidth(450);
-      
-      urlField.setSelectOnFocus(true);
-      urlField.setName(NAME_URL);
+      urlField.setHeight(20);
 
-      paramsForm.setFields(caption, delimiter, urlField);
-      paramsForm.focusInItem(urlField);
-      
-      addItem(paramsForm);
+      paramsForm.add(urlField);
+      urlField.focusInItem();
 
+      mainLayout.add(paramsForm);
+      mainLayout.setCellVerticalAlignment(paramsForm, VerticalPanel.ALIGN_MIDDLE);
       urlField.setValue(url);
    }
 
    private void createButtons()
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setPadding(5);
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight((22 + 20) + "px");
+      buttonsLayout.setSpacing(5);
 
       okButton = new IButton("OK");
       okButton.setWidth(90);
@@ -140,19 +130,9 @@ public class GetRestServiceURLForm extends DialogWindow
       okButton.setIcon(Images.Buttons.OK);
       okButton.setID(ID_OK);
 
-      ToolbarItem tbi = new ToolbarItem();
+      buttonsLayout.add(okButton);
 
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      StatefulCanvas delimiter2 = new StatefulCanvas();
-      delimiter2.setWidth(3);
-      tbi.setButtons(delimiter1, okButton, delimiter2);
-      tbi.setWidth(90);
-
-      buttonsForm.setFields(tbi);
-
-      buttonsForm.setAutoWidth();
-      addItem(buttonsForm);
+      mainLayout.add(buttonsLayout);
 
       okButton.addClickHandler(new ClickHandler()
       {

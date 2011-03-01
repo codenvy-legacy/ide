@@ -131,6 +131,8 @@ public class RenameItemPresenter
       {
          public void onValueChange(ValueChangeEvent<String> event)
          {
+            System.out
+               .println("RenameItemPresenter.bindDisplay(...).new ValueChangeHandler<String>() {...}.onValueChange()");
             if (wasItemPropertiesChanged())
             {
                display.enableRenameButton();

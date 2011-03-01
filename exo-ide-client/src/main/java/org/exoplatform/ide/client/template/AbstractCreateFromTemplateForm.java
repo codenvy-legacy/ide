@@ -22,18 +22,16 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
@@ -133,15 +131,12 @@ implements CreateFromTemplateDisplay<T>
       HLayout actionsLayout = new HLayout();
       actionsLayout.setHeight(35);
       actionsLayout.setWidth100();
-
       DynamicForm form = new DynamicForm();
       form.setID(ID_DYNAMIC_FORM);
       nameField = new TextField("Name", getNameFieldLabel());
       nameField.setName(FILE_NAME_FIELD);
       nameField.setWidth(200);
-      nameField.setWrapTitle(false);
-      form.setColWidths("*", "195");
-      form.setItems(nameField);
+      form.add(nameField);
       actionsLayout.addMember(form);
 
       Layout l = new Layout();
@@ -158,10 +153,13 @@ implements CreateFromTemplateDisplay<T>
    
    abstract String getFormTitle();
    
-   private DynamicForm getButtonsForm()
+   private HLayout getButtonsForm()
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HLayout buttonsLayout = new HLayout();
+      buttonsLayout.setAutoWidth();
+      buttonsLayout.setHeight(22);
+      buttonsLayout.setLayoutAlign(Alignment.CENTER);
+      buttonsLayout.setMembersMargin(5);
 
       createButton = new IButton(getCreateButtonTitle());
       createButton.setID(ID_CREATE_BUTTON);
@@ -181,17 +179,11 @@ implements CreateFromTemplateDisplay<T>
       deleteButton.setHeight(22);
       deleteButton.setIcon(Images.Buttons.DELETE);
 
-      ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(2);
+     buttonsLayout.addMember(deleteButton);
+     buttonsLayout.addMember(createButton);
+     buttonsLayout.addMember(cancelButton);
 
-      StatefulCanvas delimiter2 = new StatefulCanvas();
-      delimiter2.setWidth(2);
-
-      tbi.setButtons(deleteButton, delimiter1, createButton, delimiter2, cancelButton);
-      buttonsForm.setFields(tbi);
-      buttonsForm.setAutoWidth();
-      return buttonsForm;
+      return buttonsLayout;
    }
 
    public HasClickHandlers getCancelButton()

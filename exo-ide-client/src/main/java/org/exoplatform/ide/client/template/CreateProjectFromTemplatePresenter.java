@@ -219,6 +219,7 @@ public class CreateProjectFromTemplatePresenter extends AbstractCreateFromTempla
       newFile.setIcon(ImageUtil.getIcon(contentType));
       newFile.setNewFile(true);
      
+      System.out.println("CreateProjectFromTemplatePresenter.getClasspathFile()"+restContext);
       String path = GroovyClassPathUtil.formPathFromHref(href, restContext);
       GroovyClassPathEntry projectClassPathEntry = GroovyClassPathEntry.build(EnumSourceType.DIR.getValue(), path);
       List<GroovyClassPathEntry> groovyClassPathEntries = new ArrayList<GroovyClassPathEntry>();

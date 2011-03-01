@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.groovy.client.ui;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
-
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -27,6 +25,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
 import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
+
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
 /**
  * Created by The eXo Platform SAS.

@@ -18,28 +18,29 @@
  */
 package org.exoplatform.ide.client.workspace;
 
+import com.smartgwt.client.widgets.layout.HLayout;
+
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-
-import java.util.List;
-import java.util.Map;
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.ToolbarItem;
+import com.smartgwt.client.widgets.layout.Layout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -115,10 +116,11 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
 
    private void createButtonsForm()
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setPadding(5);
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HLayout buttonsLayout = new HLayout();
+      buttonsLayout.setAutoWidth();
+      buttonsLayout.setHeight(22);
+      buttonsLayout.setLayoutAlign(Alignment.CENTER);
+      buttonsLayout.setMembersMargin(5);
 
       okButton = new IButton("OK");
       okButton.setID(ID_OK_BUTTON);
@@ -132,15 +134,10 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.CANCEL);
 
-      ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      tbi.setButtons(okButton, delimiter1, cancelButton);
-      buttonsForm.setFields(tbi);
+      buttonsLayout.addMember(okButton);
+      buttonsLayout.addMember(cancelButton);
 
-      buttonsForm.setAutoWidth();
-
-      vLayout.addMember(buttonsForm);
+      vLayout.addMember(buttonsLayout);
    }
 
    public void closeForm()

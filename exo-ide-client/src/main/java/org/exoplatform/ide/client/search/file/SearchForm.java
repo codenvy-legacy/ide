@@ -18,25 +18,23 @@
  */
 package org.exoplatform.ide.client.search.file;
 
-import java.util.List;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -60,7 +58,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    private static final String MIME_TYPE_FIELD = "ideSearchFormMimeTypeField";
 
    private static final String PATH_FIELD = "ideSearchFormPathField";
-   
+
    private static final String ID_DYNAMIC_FORM = "ideSearchFormDynamicForm";
 
    private final int BUTTON_WIDTH = 90;
@@ -114,15 +112,14 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Search");
 
-      VLayout mainLayout = new VLayout();
-      mainLayout.setHeight100();
-      mainLayout.setWidth100();
-      mainLayout.setMargin(5);
-      mainLayout.setPadding(1);
-      mainLayout.setMembersMargin(10);
+      VerticalPanel mainLayout = new VerticalPanel();
+      mainLayout.setHeight("100%");
+      mainLayout.setWidth("100%");
+      mainLayout.setSpacing(10);
+      mainLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-      mainLayout.addMember(createSearchForm());
-      mainLayout.addMember(createButtonsLayout());
+      mainLayout.add(createSearchForm());
+      mainLayout.add(createButtonsLayout());
 
       addItem(mainLayout);
 
@@ -142,17 +139,13 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       advancedSearchPresenter.bindDisplay(this);
    }
 
-   private DynamicForm createSearchForm()
+   private VerticalPanel createSearchForm()
    {
-      DynamicForm paramForm = new DynamicForm();
-      paramForm.setID(ID_DYNAMIC_FORM);
-      paramForm.setLayoutAlign(Alignment.CENTER);
-      paramForm.setWidth100();
-      paramForm.setPadding(5);
-
-      paramForm.setWidth(FORM_WIDTH);
-      paramForm.setCellSpacing(5);
-      paramForm.setLayoutAlign(Alignment.CENTER);
+      VerticalPanel paramForm = new VerticalPanel();
+      paramForm.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+      paramForm.getElement().setId(ID_DYNAMIC_FORM);
+      paramForm.setSpacing(3);
+     // paramForm.setWidth(FORM_WIDTH + "px");
 
       pathField = createValueField("Path", PATH_FIELD);
 
@@ -160,7 +153,10 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
 
       mimeTypesField = createSelectField("Mime type", MIME_TYPE_FIELD);
 
-      paramForm.setItems(pathField, contentField, mimeTypesField);
+      paramForm.add(pathField);
+      paramForm.add(contentField);
+      //TODO combobox when ready:
+      //      paramForm.add(mimeTypesField);
 
       return paramForm;
    }
@@ -172,7 +168,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       textField.setTitle("<NOBR>" + title + "</NOBR>");
       textField.setHeight(FIELD_HEIGHT);
       textField.setWidth(FIELD_WIDTH);
-      textField.setSelectOnFocus(true);
+      // textField.setSelectOnFocus(true);
       return textField;
    }
 
@@ -187,19 +183,17 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       return comboboxField;
    }
 
-   private HLayout createButtonsLayout()
+   private HorizontalPanel createButtonsLayout()
    {
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setHeight(BUTTON_HEIGHT);
-      buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setMembersMargin(10);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
+      buttonsLayout.setSpacing(5);
 
       searchButton = createButton("Search", Images.Buttons.SEARCH, ID_SEARCH_BUTTON);
       cancelButton = createButton("Cancel", Images.Buttons.CANCEL, ID_CANCEL_BUTTON);
 
-      buttonsLayout.addMember(searchButton);
-      buttonsLayout.addMember(cancelButton);
+      buttonsLayout.add(searchButton);
+      buttonsLayout.add(cancelButton);
 
       return buttonsLayout;
    }

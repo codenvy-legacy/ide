@@ -18,24 +18,25 @@
  */
 package org.exoplatform.ide.client.template;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.vfs.File;
+import com.google.gwt.user.client.DOM;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
+
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.vfs.File;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -47,22 +48,22 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
 
    private static final int WIDTH = 450;
 
-   private static final int HEIGHT = 270;
-   
+   private static final int HEIGHT = 290;
+
    private static final String ID = "ideSaveAsTemplateForm";
-   
+
    private static final String ID_SAVE_BUTTON = "ideSaveAsTemplateFormSaveButton";
-   
+
    private static final String ID_CANCEL_BUTTON = "ideSaveAsTemplateFormCancelButton";
-   
+
    private static final String NAME_FIELD = "ideSaveAsTemplateFormNameField";
-   
+
    private static final String TYPE_FIELD = "ideSaveAsTemplateFormTypeField";
-   
+
    private static final String DESCRIPTION_FIELD = "ideSaveAsTemplateFormDescriptionField";
-   
+
    private static final String ID_DYNAMIC_FORM = "ideSaveAsTemplateFormDynamicForm";
-   
+
    private static final int BUTTON_WIDTH = 90;
 
    private static final int BUTTON_HEIGHT = 22;
@@ -89,17 +90,17 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
 
    public SaveAsTemplateForm(HandlerManager eventBus, File file)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);      
+      super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
 
-      VLayout centerLayout = new VLayout();
-      centerLayout.setWidth100();
-      centerLayout.setHeight100();
-      centerLayout.setPadding(10);
-      centerLayout.setMembersMargin(20);
-
-      centerLayout.addMember(createItemsForm());
-      centerLayout.addMember(createButtonsLayout());
+      VerticalPanel centerLayout = new VerticalPanel();
+      centerLayout.setWidth("100%");
+      centerLayout.setHeight("100%");
+      centerLayout.setSpacing(10);
+      centerLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
+      
+      centerLayout.add(createItemsForm());
+      centerLayout.add(createButtonsLayout());
 
       addItem(centerLayout);
       show();
@@ -120,77 +121,42 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       });
    }
 
-   private DynamicForm createItemsForm()
+   private VerticalPanel createItemsForm()
    {
-      DynamicForm form = new DynamicForm();
-      form.setID(ID_DYNAMIC_FORM);
-      //form.setCellBorder(1);
+      VerticalPanel form = new VerticalPanel();
+      form.getElement().setId(ID_DYNAMIC_FORM);
+      form.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
+      form.setWidth(FIELDS_WIDTH+"px");
+      form.setSpacing(3);
 
-      form.setLayoutAlign(Alignment.CENTER);
-      form.setAlign(Alignment.RIGHT);
-      //form.setCellSpacing(5);
-      form.setTitleWidth(40);
-      form.setAutoWidth();
-
-      StaticTextItem typeTitle = new StaticTextItem();
-      typeTitle.setShowTitle(false);
-      typeTitle.setDefaultValue("Type:");
-      typeTitle.setColSpan(2);
-
-      typeField = new TextField();
-      typeField.setName(TYPE_FIELD);
-      typeField.setShowTitle(false);
-      typeField.setColSpan(2);
+      typeField = new TextField(TYPE_FIELD, "Type:");
+      typeField.setTitleOrientation(TitleOrientation.TOP);
       typeField.setWidth(FIELDS_WIDTH);
+      typeField.setHeight(20);
 
-      //      LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-      //
-      //      valueMap.put("application/xml", "XML");
-      //      valueMap.put("text/html", "HTML");
-      //      valueMap.put("script/groovy", "Groovy");
-      //      valueMap.put("text/css", "CSS");
-      //      valueMap.put("text/javascript", "javascript");
-      //
-      //      typeField.setValueMap(valueMap);
-      //      typeField.setDefaultToFirstOption(true);
-      //      typeField.setType("select");
-
-      StaticTextItem nameTitle = new StaticTextItem();
-      nameTitle.setShowTitle(false);
-      nameTitle.setDefaultValue("Name:");
-      nameTitle.setColSpan(2);
-
-      nameField = new TextField();
-      nameField.setName(NAME_FIELD);
-      nameField.setShowTitle(false);
-      nameField.setColSpan(2);
+      nameField = new TextField(NAME_FIELD, "Name:");
+      nameField.setTitleOrientation(TitleOrientation.TOP);
       nameField.setWidth(FIELDS_WIDTH);
+      nameField.setHeight(20);
 
-      StaticTextItem descriptionTitle = new StaticTextItem();
-      descriptionTitle.setShowTitle(false);
-      descriptionTitle.setDefaultValue("Description:");
-      descriptionTitle.setColSpan(2);
-
-      descriptionField = new TextAreaItem();
-      descriptionField.setName(DESCRIPTION_FIELD);
-      //descriptionField.setTitle(DESCRIPTION);
-      descriptionField.setShowTitle(false);
-      //descriptionField.setTitleOrientation(TitleOrientation.TOP);
-      descriptionField.setColSpan(2);
+      descriptionField = new TextAreaItem(DESCRIPTION_FIELD, "Description:");
+      descriptionField.setTitleOrientation(TitleOrientation.TOP);
       descriptionField.setHeight(60);
       descriptionField.setWidth(FIELDS_WIDTH);
-
-      form.setItems(typeTitle, typeField, nameTitle, nameField, descriptionTitle, descriptionField);
+      
+      form.add(typeField);
+      form.add(nameField);
+      form.add(descriptionField);
+      
       return form;
    }
 
-   private HLayout createButtonsLayout()
+   private HorizontalPanel createButtonsLayout()
    {
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setAutoHeight();
-      buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setMembersMargin(10);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight(BUTTON_HEIGHT + 20 +"px");
+      buttonsLayout.setSpacing(5);
+      buttonsLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
       saveButton = new IButton(SAVE);
       saveButton.setID(ID_SAVE_BUTTON);
@@ -204,8 +170,8 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       cancelButton.setHeight(BUTTON_HEIGHT);
       cancelButton.setIcon(Images.Buttons.NO);
 
-      buttonsLayout.addMember(saveButton);
-      buttonsLayout.addMember(cancelButton);
+      buttonsLayout.add(saveButton);
+      buttonsLayout.add(cancelButton);
 
       return buttonsLayout;
    }

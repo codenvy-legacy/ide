@@ -18,28 +18,27 @@
  */
 package org.exoplatform.ide.client.permissions;
 
-import java.util.Map;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
+import com.smartgwt.client.types.VerticalAlignment;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
+import com.smartgwt.client.widgets.form.fields.CanvasItem;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.Align;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.CanvasItem;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
-import com.smartgwt.client.widgets.layout.VLayout;
+import java.util.Map;
 
 /**
  *This class represent form for managing permissions.<br>
@@ -63,7 +62,7 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
 
    private static final String ID_CANCEL = "ideCancelACL";
 
-   private static int WIDTH =450;
+   private static int WIDTH = 450;
 
    private static int HEIGTH = 370;
 
@@ -96,20 +95,20 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       vLayout = new VLayout();
       vLayout.setHeight100();
       vLayout.setMargin(15);
-      vLayout.setAlign(Alignment.CENTER);
+      //vLayout.setT(Align.CENTER);
 
       addItem(vLayout);
 
       addFileInfo();
       addPermissionsListGrid();
-      
+
       addButtonForm();
       //setMargin(5);
       show();
 
       UIHelper.setAsReadOnly(itemNameField.getName());
       UIHelper.setAsReadOnly(itemOwnerField.getName());
-      
+
       presenter = new PermissionsManagerPresenter(eventBus, item, lockTokens);
       presenter.bindDisplay(this);
       addCloseClickHandler(new CloseClickHandler()
@@ -131,24 +130,24 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       itemNameField.setTitle("Name");
       itemNameField.setHeight(20);
       itemNameField.setWidth(320);
-      itemNameField.setTitleAlign(Alignment.LEFT);
+      //TODO fix form
+     // itemNameField.setTitleAlign(Alignment.LEFT);
 
       DynamicForm formName = new DynamicForm();
-      formName.setWidth100();
-      formName.setLayoutAlign(Alignment.LEFT);
-      formName.setFields(itemNameField);
+      formName.setWidth("100%");
+     // formName.setLayoutAlign(Alignment.LEFT);
+      formName.add(itemNameField);
       formName.setHeight(28);
 
       itemOwnerField = new TextField("Owner");
       itemOwnerField.setHeight(20);
       itemOwnerField.setWidth(320);
-      itemOwnerField.setTitleAlign(Alignment.LEFT);
-      
-      
+      //itemOwnerField.setTitleAlign(Alignment.LEFT);
+
       DynamicForm formOwner = new DynamicForm();
-      formOwner.setWidth100();
-      formOwner.setLayoutAlign(Alignment.LEFT);
-      formOwner.setFields(itemOwnerField);
+      formOwner.setWidth("100%");
+   //   formOwner.setLayoutAlign(Alignment.LEFT);
+      formOwner.add(itemOwnerField);
       formOwner.setHeight(28);
 
       vLayout.addMember(formName);
@@ -161,27 +160,29 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
    private void addPermissionsListGrid()
    {
       DynamicForm form = new DynamicForm();
-      form.setGroupTitle("Permissions:");
-      form.setIsGroup(true);
+      //TODO 
+     /* form.setGroupTitle("Permissions:");
+      form.setIsGroup(true);*/
       form.setWidth(392);
       form.setPadding(0);
       form.setMargin(0);
-      form.setHeight100();
-      form.setLayoutAlign(Alignment.CENTER);
-      form.setLayoutAlign(VerticalAlignment.CENTER);
-      
+      form.setHeight("100%");
+   //   form.setLayoutAlign(Alignment.CENTER);
+    //  form.setLayoutAlign(VerticalAlignment.CENTER);
+
       permissionsListGrid = new PermissionsListGrid();
       permissionsListGrid.setWidth(384);
       permissionsListGrid.setHeight(140);
-//      permissionsListGrid.setMargin(5);
+      //      permissionsListGrid.setMargin(5);
 
+      //TODO Canvas? why neccesary?
       CanvasItem cItem = new CanvasItem();
 
       cItem.setCanvas(permissionsListGrid);
       cItem.setShowTitle(false);
       cItem.setHeight(150);
       cItem.setWidth("300");
-      
+
       addEntityButton = new IButton("Add");
       addEntityButton.setWidth(90);
       addEntityButton.setHeight(22);
@@ -193,19 +194,19 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       removeButton.setHeight(22);
       removeButton.setIcon(Images.Buttons.DELETE);
 
-      ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      StatefulCanvas delimiter2 = new StatefulCanvas();
-      delimiter2.setWidth(94);
-      tbi.setButtons(delimiter2,addEntityButton, delimiter1, removeButton);
-      tbi.setAlign(Alignment.RIGHT);
-      tbi.setHeight(30);
-            
-      form.setFields( cItem, tbi);
+      HLayout buttonsLayout = new HLayout();
+      buttonsLayout.setAutoWidth();
+      buttonsLayout.setHeight(22);
+   //   buttonsLayout.setLayoutAlign(Alignment.CENTER);
+      buttonsLayout.setMembersMargin(5);
+
+      buttonsLayout.addMember(addEntityButton);
+      buttonsLayout.addMember(removeButton);
+
+    //  form.add(cItem);
 
       vLayout.addMember(form);
-
+      vLayout.addMember(buttonsLayout);
    }
 
    /**
@@ -213,11 +214,11 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
     */
    private void addButtonForm()
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setMargin(5);
-      buttonsForm.setPadding(3);
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HLayout buttonsLayout = new HLayout();
+      buttonsLayout.setAutoWidth();
+      buttonsLayout.setHeight(22);
+    //  buttonsLayout.setLayoutAlign(Alignment.CENTER);
+      buttonsLayout.setMembersMargin(5);
 
       saveACLButton = new IButton("Save");
       saveACLButton.setWidth(90);
@@ -230,16 +231,11 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);
       cancelButton.setID(ID_CANCEL);
-
-      ToolbarItem tbi = new ToolbarItem();
       
-      StatefulCanvas delimiter2 = new StatefulCanvas();
-      delimiter2.setWidth(3);
-      tbi.setButtons(saveACLButton, delimiter2, cancelButton);
-      buttonsForm.setFields(tbi);
-
-      buttonsForm.setAutoWidth();
-      vLayout.addMember(buttonsForm);
+      buttonsLayout.addMember(saveACLButton);
+      buttonsLayout.addMember(cancelButton);
+      
+      vLayout.addMember(buttonsLayout);
    }
 
    @Override

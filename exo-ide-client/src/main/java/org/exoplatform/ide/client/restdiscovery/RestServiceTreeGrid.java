@@ -18,28 +18,27 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import java.util.List;
-import java.util.Set;
-
-import org.exoplatform.gwtframework.commons.wadl.Method;
-import org.exoplatform.gwtframework.commons.wadl.Request;
-import org.exoplatform.gwtframework.commons.wadl.Resource;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.data.FolderOpenedHandlerImpl;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.data.SelectionHandlerImpl;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.event.ClickHandlerImpl;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.discovery.RestService;
-
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.smartgwt.client.types.TreeModelType;
-import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
+
+import org.exoplatform.gwtframework.commons.wadl.Method;
+import org.exoplatform.gwtframework.commons.wadl.Request;
+import org.exoplatform.gwtframework.commons.wadl.Resource;
+import org.exoplatform.gwtframework.ui.client.component.data.FolderOpenedHandlerImpl;
+import org.exoplatform.gwtframework.ui.client.component.data.SelectionHandlerImpl;
+import org.exoplatform.gwtframework.ui.client.component.event.ClickHandlerImpl;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.discovery.RestService;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.

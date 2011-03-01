@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
-import org.exoplatform.ide.client.ImageUtil;
-
 import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.GroupStartOpen;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.ImageUtil;
 
 /**
  * Created by The eXo Platform SAS .

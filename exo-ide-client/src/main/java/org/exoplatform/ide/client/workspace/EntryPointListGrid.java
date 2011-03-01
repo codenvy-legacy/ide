@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
-import org.exoplatform.ide.client.framework.discovery.EntryPoint;
-
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 
 /**
  * Created by The eXo Platform SAS.

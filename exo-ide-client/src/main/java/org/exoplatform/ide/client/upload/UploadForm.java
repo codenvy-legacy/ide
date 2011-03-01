@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.upload;
 
-import com.smartgwt.client.widgets.form.fields.FormItem;
-
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
@@ -27,21 +25,21 @@ import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
-import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CanvasItem;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -155,12 +153,12 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    private void createFileUploadForm()
    {
       DynamicForm uploadForm = new DynamicForm();
-      uploadForm.setLayoutAlign(Alignment.CENTER);
+  //TODO    uploadForm.setLayoutAlign(Alignment.CENTER);
       uploadForm.setMargin(15);
 
-      uploadForm.setItems(createUploadFormItems());
+   //TODO   uploadForm.add(createUploadFormItems());
 
-      uploadForm.setAutoWidth();
+//      uploadForm.setAutoWidth();
 
       addItem(uploadForm);
    }
@@ -199,8 +197,8 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
       DynamicForm uploadWindowButtonsForm = new DynamicForm();
       uploadWindowButtonsForm.setWidth(200);
       uploadWindowButtonsForm.setMargin(10);
-      uploadWindowButtonsForm.setLayoutAlign(VerticalAlignment.TOP);
-      uploadWindowButtonsForm.setLayoutAlign(Alignment.CENTER);
+/*TODO      uploadWindowButtonsForm.setLayoutAlign(VerticalAlignment.TOP);
+      uploadWindowButtonsForm.setLayoutAlign(Alignment.CENTER);*/
 
       uploadButton = new IButton(buttonTitle);
       uploadButton.setID(ID_UPLOAD_BUTTON);
@@ -218,7 +216,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
       ToolbarItem buttonToolbar = new ToolbarItem();
       buttonToolbar.setButtons(uploadButton, buttonSpacer, closeButton);
 
-      uploadWindowButtonsForm.setFields(buttonToolbar);
+   //TODO   uploadWindowButtonsForm.setFields(buttonToolbar);
 
       addItem(uploadWindowButtonsForm);
    }
@@ -231,13 +229,13 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
       DynamicForm textFieldForm = new DynamicForm();
       textFieldForm.setID(ID_DYNAMIC_FORM);
-      textFieldForm.setCellPadding(0);
+      //TODO textFieldForm.setCellPadding(0);
       fileNameField = new TextField();
       fileNameField.setName(FILE_NAME_FIELD);
       fileNameField.setShowTitle(false);
-      fileNameField.setColSpan(2);
+      //TODO fileNameField.setColSpan(2);
       fileNameField.setWidth("*");
-      textFieldForm.setItems(fileNameField);
+      textFieldForm.add(fileNameField);
       uploadLayout.addMember(textFieldForm);
 
       Canvas uploadButtonCanvas = new Canvas();

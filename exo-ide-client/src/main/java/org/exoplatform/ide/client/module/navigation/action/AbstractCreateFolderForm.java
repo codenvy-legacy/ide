@@ -22,18 +22,15 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.SpacerItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
-import com.smartgwt.client.widgets.layout.VLayout;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
@@ -51,34 +48,40 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
 
    public static final int HEIGHT = 160;
 
+   private static final int BUTTON_WIDTH = 90;
+
+   private static final int BUTTON_HEIGHT = 22;
+
    public static final String ID = "ideCreateFolderForm";
-   
+
    public final String ID_CREATE_BUTTON = "ideCreateFolderFormCreateButton";
-   
+
    public final String ID_CANCEL_BUTTON = "ideCreateFolderFormCancelButton";
-   
+
    public final String ID_DYNAMIC_FORM = "ideCreateFolderFormDynamicForm";
-   
+
    public final String NAME_FIELD = "ideCreateFolderFormNameField";
 
-   private VLayout vLayout;
+   private VerticalPanel vLayout;
 
    private TextField folderNameField;
 
    private IButton createButton;
 
    private IButton cancelButton;
-   
+
    private String submitButtonTitle;
 
    public AbstractCreateFolderForm(HandlerManager eventBus, String title, String submitButtonTitle)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(title);
-      
+
       this.submitButtonTitle = submitButtonTitle;
 
-      vLayout = new VLayout();
+      vLayout = new VerticalPanel();
+      vLayout.setWidth("100%");
+      vLayout.setHeight("100%");
       addItem(vLayout);
 
       createFieldForm();
@@ -93,7 +96,7 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
             destroy();
          }
       });
-      
+
    }
 
    private void createFieldForm()
@@ -102,57 +105,46 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
       paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setPadding(5);
       paramsForm.setWidth(300);
-      paramsForm.setLayoutAlign(Alignment.CENTER);
       paramsForm.setPadding(15);
-      paramsForm.setAutoFocus(true);
-
-      StaticTextItem caption = new StaticTextItem();
-      caption.setDefaultValue("Name of new folder:");
-      caption.setShowTitle(false);
-      caption.setColSpan(2);
-
-      SpacerItem delimiter = new SpacerItem();
-      delimiter.setColSpan(2);
-      delimiter.setHeight(5);
 
       folderNameField = new TextField();
+      folderNameField.setTitle("Name of new folder:");
       folderNameField.setName(NAME_FIELD);
-      folderNameField.setShowTitle(false);
+      folderNameField.setTitleOrientation(TitleOrientation.TOP);
       folderNameField.setWidth(300);
+      folderNameField.setHeight(22);
 
-      paramsForm.setFields(caption, delimiter, folderNameField);
-      paramsForm.focusInItem(folderNameField);
+      paramsForm.add(folderNameField);
+      folderNameField.focusInItem();
 
-      vLayout.addMember(paramsForm);
+      vLayout.add(paramsForm);
+      vLayout.setCellHorizontalAlignment(paramsForm, HorizontalPanel.ALIGN_CENTER);
+      vLayout.setCellVerticalAlignment(paramsForm, HorizontalPanel.ALIGN_MIDDLE);
    }
 
    private void createButtons()
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setPadding(5);
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight((BUTTON_HEIGHT + 25) + "px");
+      buttonsLayout.setSpacing(5);
 
       createButton = new IButton(submitButtonTitle);
       createButton.setID(ID_CREATE_BUTTON);
-      createButton.setWidth(90);
-      createButton.setHeight(22);
+      createButton.setWidth(BUTTON_WIDTH);
+      createButton.setHeight(BUTTON_HEIGHT);
       createButton.setIcon(Images.Buttons.OK);
 
       cancelButton = new IButton("Cancel");
       cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(90);
-      cancelButton.setHeight(22);
+      cancelButton.setWidth(BUTTON_WIDTH);
+      cancelButton.setHeight(BUTTON_HEIGHT);
       cancelButton.setIcon(Images.Buttons.NO);
 
-      ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      tbi.setButtons(createButton, delimiter1, cancelButton);
-      buttonsForm.setFields(tbi);
-
-      buttonsForm.setAutoWidth();
-      vLayout.addMember(buttonsForm);
+      buttonsLayout.add(createButton);
+      buttonsLayout.add(cancelButton);
+      vLayout.add(buttonsLayout);
+      vLayout.setCellHorizontalAlignment(buttonsLayout, HorizontalPanel.ALIGN_CENTER);
+      vLayout.setCellVerticalAlignment(buttonsLayout, HorizontalPanel.ALIGN_TOP);
    }
 
    public void closeForm()

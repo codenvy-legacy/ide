@@ -18,24 +18,21 @@
  */
 package org.exoplatform.ide.client.module.edit.action;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
+
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.SpacerItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -47,52 +44,51 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
 
    private static final int WIDTH = 400;
 
-   private static final int HEIGHT = 160;
-   
+   private static final int HEIGHT = 165;
+
    private static final String ID = "ideGoToLineForm";
-   
+
    private static final String ID_DYNAMIC_FORM = "ideGoToLineFormDynamicForm";
-   
+
    private static final String ID_GO_BUTTON = "ideGoToLineFormGoButton";
-   
+
    private static final String ID_CANCEL_BUTTON = "ideGoToLineFormCancelButton";
-   
+
    private static final String LINE_NUMBER_FIELD = "ideGoToLineFormLineNumberField";
-   
+
    private static final String RANGE_LABEL = "ideGoToLineFormLinesRangeField";
-   
+
    private GoToLinePresenter presenter;
-   
-   private VLayout vLayout;
+
+   private VerticalPanel vLayout;
 
    private TextField lineNumberField;
 
    private IButton goButton;
 
    private IButton cancelButton;
-   
-   private StaticTextItem caption;
-   
-   private DynamicForm paramsForm; 
-   
-   private DynamicForm buttonsForm;
-   
+
+   private DynamicForm paramsForm;
+
    public GoToLineForm(HandlerManager eventBus, File activeFile)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle("Go to Line");
-      
-      vLayout = new VLayout();
+
+      vLayout = new VerticalPanel();
+      vLayout.setWidth("100%");
+      vLayout.setHeight("100%");
+
       addItem(vLayout);
 
       createFieldForm();
       createButtons();
 
       show();
-      
+
       presenter = new GoToLinePresenter(eventBus, activeFile);
       presenter.bindDisplay(this);
-      
+
       addCloseClickHandler(new CloseClickHandler()
       {
          public void onCloseClick(CloseClientEvent event)
@@ -100,7 +96,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
             destroy();
          }
       });
-      
+
    }
 
    @Override
@@ -109,45 +105,31 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
       presenter.destroy();
       super.onDestroy();
    }
-   
+
    private void createFieldForm()
    {
       paramsForm = new DynamicForm();
       paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setPadding(5);
-      paramsForm.setWidth(340);
-      paramsForm.setLayoutAlign(Alignment.CENTER);
-      paramsForm.setPadding(15);
-      paramsForm.setAutoFocus(true);
+      paramsForm.setWidth(300);
 
-      caption = new StaticTextItem();
-      caption.setName(RANGE_LABEL);
-      //caption.setDefaultValue(labelCaption);
-      caption.setShowTitle(false);
-      caption.setColSpan(2);
+      lineNumberField = new TextField(LINE_NUMBER_FIELD, RANGE_LABEL);
+      lineNumberField.setWidth(300);
+      lineNumberField.setHeight(22);
+      lineNumberField.setTitleOrientation(TitleOrientation.TOP);
+      paramsForm.add(lineNumberField);
+      lineNumberField.focusInItem();
 
-      SpacerItem delimiter = new SpacerItem();
-      delimiter.setColSpan(2);
-      delimiter.setHeight(5);
-
-      lineNumberField = new TextField();
-      lineNumberField.setName(LINE_NUMBER_FIELD);
-      lineNumberField.setShowTitle(false);
-      lineNumberField.setWidth(340);
-      lineNumberField.setMask("#######");
-      lineNumberField.setMaskPromptChar("");
-      paramsForm.setFields(caption, delimiter, lineNumberField);
-      paramsForm.focusInItem(lineNumberField);
-      
-      vLayout.addMember(paramsForm);
+      vLayout.add(paramsForm);
+      vLayout.setCellHorizontalAlignment(paramsForm, HorizontalPanel.ALIGN_CENTER);
+      vLayout.setCellVerticalAlignment(paramsForm, VerticalPanel.ALIGN_MIDDLE);
    }
 
    private void createButtons()
    {
-      buttonsForm = new DynamicForm();
-      buttonsForm.setPadding(5);
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setSpacing(5);
+      buttonsLayout.setHeight((22 + 25) + "px");
 
       goButton = new IButton("Go");
       goButton.setID(ID_GO_BUTTON);
@@ -161,17 +143,14 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);
 
-      ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      tbi.setButtons(goButton, delimiter1, cancelButton);
-      buttonsForm.setFields(tbi);
+      buttonsLayout.add(goButton);
+      buttonsLayout.add(cancelButton);
 
-      buttonsForm.setAutoWidth();
-      vLayout.addMember(buttonsForm);
+      vLayout.add(buttonsLayout);
+      vLayout.setCellHorizontalAlignment(buttonsLayout, HorizontalPanel.ALIGN_CENTER);
+      vLayout.setCellVerticalAlignment(buttonsLayout, HorizontalPanel.ALIGN_MIDDLE);
    }
 
-   
    /**
     * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#closeForm()
     */
@@ -198,27 +177,11 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
    }
 
    /**
-    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#getLineNumberField()
-    */
-   public com.smartgwt.client.widgets.form.fields.events.HasKeyUpHandlers getLineNumberField()
-   {
-      return lineNumberField;
-   }
-   
-   /**
     * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#setCaptionLabel(java.lang.String)
     */
    public void setCaptionLabel(String caption)
    {
-      this.caption.setDefaultValue(caption);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#getLineNumberValue()
-    */
-   public HasValue<String> getLineNumberValue()
-   {
-      return lineNumberField;
+      lineNumberField.setTitle(caption);
    }
 
    /**
@@ -226,7 +189,16 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
     */
    public void removeFocusFromLineNumber()
    {
-      buttonsForm.focusInItem(0);
+      goButton.focus();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.module.edit.action.GoToLinePresenter.Display#getLineNumber()
+    */
+   @Override
+   public TextFieldItem getLineNumber()
+   {
+      return lineNumberField;
    }
 
 }

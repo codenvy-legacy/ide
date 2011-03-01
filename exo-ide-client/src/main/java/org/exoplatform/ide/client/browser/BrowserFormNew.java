@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.client.browser;
 
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.widgets.events.MouseDownEvent;
+import com.smartgwt.client.widgets.events.MouseDownHandler;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.events.MouseDownEvent;
-import com.smartgwt.client.widgets.events.MouseDownHandler;
+import java.util.List;
+import java.util.Map;
 
 public class BrowserFormNew extends View implements BrowserPanel, BrowserPresenter.Display
 {

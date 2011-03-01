@@ -18,25 +18,26 @@
  */
 package org.exoplatform.ide.client.search.text;
 
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.CheckboxItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.Label;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.search.Search;
+import com.google.gwt.user.client.DOM;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
+
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.search.Search;
 
 /**
  * Created by The eXo Platform SAS.
@@ -48,40 +49,40 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class FindTextForm extends DialogWindow implements FindTextPresenter.Display
 {
 
-   private static final int WIDTH = 450;
+   private static final int WIDTH = 460;
 
-   private static final int HEIGHT = 210;
+   private static final int HEIGHT = 240;
 
    private final int BUTTON_WIDTH = 90;
 
    private final int BUTTON_HEIGHT = 22;
 
-   private final int FIELD_WIDTH = 310;
+   private final int FIELD_WIDTH = 340;
 
    private final int FIELD_HEIGHT = 20;
 
    private final int BUTTONS_SPACE = 5;
-   
+
    private final String REPLACE_FIELD = "ideFindReplaceTextFormReplaceField";
-   
+
    private final String FIND_FIELD = "ideFindReplaceTextFormFindField";
-   
+
    private final String ID_FIND_RESULT = "ideFindReplaceTextFormFindResult";
-   
-   private final String  CASE_SENSITIVE_FIELD = "ideFindReplaceTextFormCaseSensitiveField";
-   
+
+   private final String CASE_SENSITIVE_FIELD = "ideFindReplaceTextFormCaseSensitiveField";
+
    private final String ID_DYNAMIC_FORM = "ideFindReplaceTextFormDynamicForm";
-   
+
    private final String ID_FIND_BUTTON = "ideFindReplaceTextFormFindButton";
-   
+
    private final String ID_REPLACE_FIND_BUTTON = "ideFindReplaceTextFormReplaceFindButton";
-   
+
    private final String ID_REPLACE_BUTTON = "ideFindReplaceTextFormReplaceButton";
-   
+
    private final String ID_REPLACE_ALL_BUTTON = "ideFindReplaceTextFormReplaceAllButton";
-   
+
    private final String ID_CANCEL_BUTTON = "ideFindReplaceTextFormCancelButton";
-   
+
    private final String TITLE = "Find/Replace";
 
    private IButton findButton;
@@ -115,23 +116,25 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
       setTitle(TITLE);
       setIsModal(false);
 
-      VLayout mainLayout = new VLayout();
-      mainLayout.setWidth100();
-      mainLayout.setHeight100();
-      mainLayout.setPadding(15);
+      VerticalPanel mainLayout = new VerticalPanel();
+      mainLayout.setWidth("100%");
+      mainLayout.setHeight("100%");
+      mainLayout.setVerticalAlignment(VerticalPanel.ALIGN_MIDDLE);
+      mainLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+      DOM.setStyleAttribute(mainLayout.getElement(), "padding", "10");
 
-      mainLayout.setMembersMargin(5);
+      VerticalPanel inputForm = createFindForm();
+      mainLayout.add(inputForm);
+      mainLayout.setCellHorizontalAlignment(inputForm, HorizontalPanel.ALIGN_CENTER);
+      mainLayout.add(createButtonsLayout());
 
-      mainLayout.addMember(createFindForm());
-      mainLayout.addMember(createButtonsLayout());
+      HorizontalPanel hLayout = new HorizontalPanel();
+      hLayout.setSpacing(BUTTONS_SPACE);
+      hLayout.setHeight(BUTTON_HEIGHT + "px");
+      hLayout.add(createFindResultLabel());
+      hLayout.add(cancelButton);
 
-      HLayout hLayout = new HLayout();
-      hLayout.setWidth100();
-      hLayout.setHeight(BUTTON_HEIGHT);
-      hLayout.addMember(createFindResultLabel());
-      hLayout.addMember(cancelButton);
-
-      mainLayout.addMember(hLayout);
+      mainLayout.add(hLayout);
 
       addItem(mainLayout);
 
@@ -155,7 +158,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    {
       findResultLabel = new Label();
       findResultLabel.setID(ID_FIND_RESULT);
-      findResultLabel.setHeight(""+BUTTON_HEIGHT);
+      findResultLabel.setHeight("" + BUTTON_HEIGHT);
       findResultLabel.setWidth("319px");
       findResultLabel.setValue("");
       return findResultLabel;
@@ -166,52 +169,49 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
     * 
     * @return {@link HLayout}
     */
-   protected VLayout createButtonsLayout()
+   protected VerticalPanel createButtonsLayout()
    {
       findButton = createButton("Find", "", ID_FIND_BUTTON);
       cancelButton = createButton("Cancel", Images.Buttons.CANCEL, ID_CANCEL_BUTTON);
-      cancelButton.setLayoutAlign(Alignment.RIGHT);
       replaceButton = createButton("Replace", "", ID_REPLACE_BUTTON);
       replaceFindButton = createButton("Replace/Find", "", ID_REPLACE_FIND_BUTTON);
       replaceAllButton = createButton("Replace All", "", ID_REPLACE_ALL_BUTTON);
 
-      VLayout buttonsLayout = new VLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setLayoutAlign(Alignment.RIGHT);
-      buttonsLayout.setMembersMargin(BUTTONS_SPACE);
+      VerticalPanel buttonsLayout = new VerticalPanel();
+      HorizontalPanel upPanel = new HorizontalPanel();
+      upPanel.setHeight(BUTTON_HEIGHT + "px");
+      upPanel.setSpacing(BUTTONS_SPACE);
+      upPanel.add(findButton);
+      upPanel.add(replaceFindButton);
 
-      HLayout vLayoutLeft = new HLayout();
-      vLayoutLeft.setHeight(BUTTON_HEIGHT);
-      vLayoutLeft.setMembersMargin(BUTTONS_SPACE);
-      vLayoutLeft.addMember(findButton);
-      vLayoutLeft.addMember(replaceFindButton);
+      HorizontalPanel downPanel = new HorizontalPanel();
+      downPanel.setHeight(BUTTON_HEIGHT + "px");
+      downPanel.setSpacing(BUTTONS_SPACE);
+      downPanel.add(replaceButton);
+      downPanel.add(replaceAllButton);
 
-      HLayout vLayoutRight = new HLayout();
-      vLayoutRight.setHeight(BUTTON_HEIGHT);
-      vLayoutRight.setMembersMargin(BUTTONS_SPACE);
-      vLayoutRight.addMember(replaceButton);
-      vLayoutRight.addMember(replaceAllButton);
-
-      buttonsLayout.addMember(vLayoutLeft);
-      buttonsLayout.addMember(vLayoutRight);
-      // buttonsLayout.addMember(cancelButton);
+      buttonsLayout.add(upPanel);
+      buttonsLayout.add(downPanel);
       return buttonsLayout;
    }
 
-   private DynamicForm createFindForm()
+   private VerticalPanel createFindForm()
    {
-      DynamicForm form = new DynamicForm();
-      form.setID(ID_DYNAMIC_FORM);
-      form.setWrapItemTitles(true);
-      //form.setTitleWidth("100%");
+      VerticalPanel form = new VerticalPanel();
+      form.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+      form.getElement().setId(ID_DYNAMIC_FORM);
+      form.setSpacing(3);
 
       findField = createTextField("Find", FIND_FIELD);
       replaceField = createTextField("Replace with", REPLACE_FIELD);
 
       caseSensitiveField = createCheckBoxItem("Case sensitive", CASE_SENSITIVE_FIELD);
-      // fromStartField = createCheckBoxItem("From start");
+      DOM.setStyleAttribute(caseSensitiveField.getElement(), "marginLeft", "76px");
 
-      form.setFields(findField, replaceField, caseSensitiveField);
+      form.add(findField);
+      form.add(replaceField);
+      form.add(caseSensitiveField);
+      form.setCellHorizontalAlignment(caseSensitiveField, HorizontalPanel.ALIGN_LEFT);
       return form;
    }
 
@@ -223,7 +223,6 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
       textField.setHeight(FIELD_HEIGHT);
       textField.setTitle(title);
       textField.setShowTitle(true);
-      textField.setTitleAlign(Alignment.LEFT);
       return textField;
    }
 
@@ -231,8 +230,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    {
       CheckboxItem checkboxItem = new CheckboxItem();
       checkboxItem.setName(id);
-      checkboxItem.setTitle(title);
-      checkboxItem.setTitleAlign(Alignment.LEFT);
+      checkboxItem.setText(title);
       return checkboxItem;
    }
 
@@ -304,15 +302,6 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
       return findField;
    }
 
-   /* *//**
-          * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getFromStartField()
-          */
-   /*
-      public HasValue<Boolean> getFromStartField()
-      {
-         return fromStartField;
-      }
-   */
    /**
     * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#getReplaceAllButton()
     */

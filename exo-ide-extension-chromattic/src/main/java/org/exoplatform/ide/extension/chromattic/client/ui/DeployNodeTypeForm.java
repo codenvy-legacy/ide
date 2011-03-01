@@ -18,18 +18,19 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
+import com.google.gwt.user.client.ui.HorizontalPanel;
+
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
+import org.exoplatform.gwtframework.ui.client.component.Align;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.extension.chromattic.client.Images;
@@ -98,14 +99,14 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
       setTitle(TITLE);
       setCanDragResize(true);
 
-      VLayout mainLayout = new VLayout();
-      mainLayout.setWidth100();
-      mainLayout.setHeight100();
-      mainLayout.setPadding(25);
-      mainLayout.setMembersMargin(25);
+      VerticalPanel mainLayout = new VerticalPanel();
+      mainLayout.setWidth("100%");
+      mainLayout.setHeight("100%");
+      mainLayout.setSpacing(25);
+      mainLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-      mainLayout.addMember(createMainForm());
-      mainLayout.addMember(createButtonLayout());
+      mainLayout.add(createMainForm());
+      mainLayout.add(createButtonLayout());
 
       addCloseClickHandler(new CloseClickHandler()
       {
@@ -120,24 +121,21 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
       show();
    }
 
- 
    /**
     * Creates main form with items.
     * 
-    * @return {@link DynamicForm} created form
+    * @return {@link VerticalPanel} created form
     */
-   private DynamicForm createMainForm()
+   private VerticalPanel createMainForm()
    {
-      DynamicForm form = new DynamicForm();
-      form.setID(ID_DYNAMIC_FORM);
-      form.setWrapItemTitles(true);
-      form.setAutoWidth();
-      form.setLayoutAlign(Alignment.CENTER);
+      VerticalPanel form = new VerticalPanel();
+      form.getElement().setId(ID_DYNAMIC_FORM);
 
       formatField = createSelectItem(ID_FORMAT_FIELD, "Node type format", 260);
       alreadyExistBehaviorField = createSelectItem(ID_ALREADY_EXIST_BEHAVIOR_FIELD, "What to do if node exists?", 260);
 
-      form.setItems(formatField, alreadyExistBehaviorField);
+      form.add(formatField);
+      form.add(alreadyExistBehaviorField);
       return form;
    }
 
@@ -152,9 +150,10 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
    private SelectItem createSelectItem(String id, String title, int width)
    {
       SelectItem selectItem = new SelectItem();
-      selectItem.setTitleAlign(Alignment.LEFT);
+      selectItem.setLabelAlign(Align.LEFT);
       selectItem.setName(id);
       selectItem.setTitle("<nobr>" + title + "</nobr>");
+      selectItem.setShowTitle(true);
       selectItem.setWidth(width);
       return selectItem;
    }
@@ -164,19 +163,17 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
     * 
     * @return {@link HLayout} layout with buttons
     */
-   private HLayout createButtonLayout()
+   private HorizontalPanel createButtonLayout()
    {
-      HLayout hLayout = new HLayout();
-      hLayout.setMembersMargin(10);
-      hLayout.setAutoWidth();
-      hLayout.setHeight(BUTTON_HEIGHT);
-      hLayout.setLayoutAlign(Alignment.CENTER);
+      HorizontalPanel hLayout = new HorizontalPanel();
+      hLayout.setSpacing(5);
+      hLayout.setHeight(BUTTON_HEIGHT + "px");
 
       deployButton = createButton(ID_DEPLOY_BUTTON, "Deploy", Images.Buttons.OK);
       cancelButton = createButton(ID_CANCEL_BUTTON, "Cancel", Images.Buttons.CANCEL);
 
-      hLayout.addMember(deployButton);
-      hLayout.addMember(cancelButton);
+      hLayout.add(deployButton);
+      hLayout.add(cancelButton);
       return hLayout;
    }
 

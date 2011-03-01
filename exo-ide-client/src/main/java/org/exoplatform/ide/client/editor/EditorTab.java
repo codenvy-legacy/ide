@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.client.editor;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.tab.Tab;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent;
-import org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler;
 import org.exoplatform.gwtframework.editor.event.EditorFocusReceivedEvent;
 import org.exoplatform.gwtframework.editor.event.EditorFocusReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
@@ -29,11 +32,6 @@ import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
 import org.exoplatform.ide.client.framework.vfs.File;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.tab.Tab;
 
 /**
  * Created by The eXo Platform SAS .

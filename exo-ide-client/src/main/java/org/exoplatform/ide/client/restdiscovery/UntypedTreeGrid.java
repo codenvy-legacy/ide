@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import java.util.List;
-import java.util.Set;
-
-import org.exoplatform.ide.client.framework.discovery.RestService;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.HasOpenHandlers;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+
+import org.exoplatform.ide.client.framework.discovery.RestService;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.

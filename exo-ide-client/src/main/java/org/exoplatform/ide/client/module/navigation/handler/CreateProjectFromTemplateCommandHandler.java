@@ -58,6 +58,7 @@ ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
    private String restContext;
    
    public CreateProjectFromTemplateCommandHandler(HandlerManager eventBus) {
+     System.out.println("CreateProjectFromTemplateCommandHandler.CreateProjectFromTemplateCommandHandler()"+eventBus);
       this.eventBus = eventBus;
       
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
@@ -101,6 +102,7 @@ ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
     */
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
+      System.out.println("CreateProjectFromTemplateCommandHandler.onConfigurationReceivedSuccessfully()");
       restContext = event.getConfiguration().getContext();
    }
 

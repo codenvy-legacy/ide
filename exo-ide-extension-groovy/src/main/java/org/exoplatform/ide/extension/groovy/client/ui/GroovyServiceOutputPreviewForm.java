@@ -18,31 +18,28 @@
  */
 package org.exoplatform.ide.extension.groovy.client.ui;
 
-import java.util.LinkedHashMap;
-
-import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
-import org.exoplatform.ide.extension.groovy.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.SpacerItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
+
+import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
+import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.extension.groovy.client.Images;
+
+import java.util.LinkedHashMap;
 
 /**
  * Created by The eXo Platform SAS.
@@ -76,17 +73,17 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private static final String ID_HEADER_TAB = "ideGroovyServiceHeaderTab";
 
    private static final String ID_QUERY_TAB = "ideGroovyServiceQueryTab";
-   
+
    private static final String ID_HEADER_TABLE = "ideGroovyServiceHeaderTable";
 
    private static final String ID_QUERY_TABLE = "ideGroovyServiceQueryTable";
 
    private static final String ID_BODY_TAB = "ideGroovyServiceBodyTab";
-   
+
    private static final String ID_TAB_SET = "ideGroovyServiceTabSet";
-   
+
    private static final String ID_BODY_FORM = "ideGroovyServiceBodyForm";
-   
+
    private static final String ID_BODY_FORM_TEXT = "ideGroovyServiceBodyFormText";
 
    private static final String TITLE = "Launch REST Service";
@@ -121,7 +118,8 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private TabSet parametersTabSet;
 
-   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, WadlApplication wadlApplication, boolean undeloyOnCansel)
+   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, WadlApplication wadlApplication,
+      boolean undeloyOnCansel)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
@@ -162,7 +160,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       parameterHeaderGrid.setHeight100();
       parameterHeaderGrid.setCanEdit(true);
       parameterHeaderGrid.setID(ID_HEADER_TABLE);
-      
+
       //parameterHeaderGrid.getFields()[0].setHidden(true);
 
       Tab headerTab = new Tab("Header Parameter");
@@ -178,26 +176,27 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       bodyTab.setID(ID_BODY_TAB);
 
       DynamicForm form = new DynamicForm();
-      form.setWidth100();
-      form.setHeight100();
-      form.setLayoutAlign(Alignment.CENTER);
-      form.setLayoutAlign(VerticalAlignment.CENTER);
+    /*  form.setWidth("100%");
+      form.setHeight("100%");*/
       form.setID(ID_BODY_FORM);
 
       requestbody = new TextAreaItem();
       requestbody.setShowTitle(false);
 
       requestbody.setWidth(465);
-      requestbody.setHeight("100%");
+      requestbody.setHeight(120);
       requestbody.setValue("");
       requestbody.setName(ID_BODY_FORM_TEXT);
 
-      form.setLayoutAlign(Alignment.CENTER);
-      form.setLayoutAlign(VerticalAlignment.CENTER);
 
-      form.setFields(requestbody);
-
-      bodyTab.setPane(form);
+      form.add(requestbody);
+      //TODO remove layout, add form directly
+      VLayout vLayout = new VLayout();
+      vLayout.setWidth100();
+      vLayout.setHeight100();
+      vLayout.addMember(form);
+      
+      bodyTab.setPane(vLayout);
 
       return bodyTab;
    }
@@ -211,7 +210,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
       Tab queryTab = new Tab("Query Parameter");
       queryTab.setID(ID_QUERY_TAB);
-      
+
       queryTab.setPane(parametersQueryGrid);
 
       return queryTab;
@@ -234,8 +233,8 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private void createParamsForm()
    {
-      DynamicForm form = new DynamicForm();
-      form.setID(ID_FORM);
+      VerticalPanel form = new VerticalPanel();
+      form.getElement().setId(ID_FORM);
 
       VLayout vLay = new VLayout();
 
@@ -243,57 +242,26 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       vLay.setWidth(480);
       vLay.setAlign(Alignment.CENTER);
 
-      StaticTextItem pathTitle = new StaticTextItem();
-      pathTitle.setColSpan(2);
-      pathTitle.setShowTitle(false);
-      pathTitle.setDefaultValue("Path:");
-
-      pathField = new SelectItem();
-      pathField.setName(NAME_PATH);
-      pathField.setShowTitle(false);
+      pathField = new SelectItem(NAME_PATH, "Path:");
       pathField.setWidth(480);
-      pathField.setColSpan(2);
-      pathField.setType("comboBox");
-      pathField.setHideEmptyPickList(true);
+      pathField.setTitleOrientation(TitleOrientation.TOP);
 
-      StaticTextItem methodTitle = new StaticTextItem();
-      methodTitle.setColSpan(2);
-      methodTitle.setShowTitle(false);
-      methodTitle.setDefaultValue("Method:");
-
-      methodField = new SelectItem();
-      methodField.setShowTitle(false);
+      methodField = new SelectItem(NAME_METHOD, "Method:");
       methodField.setWidth(480);
-      methodField.setColSpan(2);
-      methodField.setName(NAME_METHOD);
+      methodField.setTitleOrientation(TitleOrientation.TOP);
 
-      StaticTextItem requestTitle = new StaticTextItem();
-      requestTitle.setColSpan(2);
-      requestTitle.setShowTitle(false);
-      requestTitle.setDefaultValue("Request Media Type:");
-
-      requestMediaTypeField = new SelectItem();
-      requestMediaTypeField.setShowTitle(false);
-      requestMediaTypeField.setColSpan(2);
+      requestMediaTypeField = new SelectItem(NAME_REQUEST, "Request Media Type:");
       requestMediaTypeField.setWidth(480);
-      requestMediaTypeField.setName(NAME_REQUEST);
-
-      StaticTextItem responseTitle = new StaticTextItem();
-      responseTitle.setColSpan(2);
-      responseTitle.setShowTitle(false);
-      responseTitle.setDefaultValue("Response Media Type");
-
-      responseMediaTypeField = new SelectItem();
-      responseMediaTypeField.setShowTitle(false);
-      responseMediaTypeField.setColSpan(2);
+      requestMediaTypeField.setTitleOrientation(TitleOrientation.TOP);
+      
+      responseMediaTypeField = new SelectItem(NAME_RESPONSE, "Response Media Type");
       responseMediaTypeField.setWidth(480);
-      responseMediaTypeField.setName(NAME_RESPONSE);
+      responseMediaTypeField.setTitleOrientation(TitleOrientation.TOP);
 
-      SpacerItem spacer = new SpacerItem();
-      spacer.setHeight(5);
-
-      form.setItems(pathTitle, pathField, methodTitle, methodField, requestTitle, requestMediaTypeField, responseTitle,
-         responseMediaTypeField, spacer);
+      form.add(pathField);
+      form.add(methodField);
+      form.add(requestMediaTypeField);
+      form.add(responseMediaTypeField);
 
       vLay.addMember(form);
 
@@ -304,11 +272,11 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private void createButtonsForm()
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setMargin(3);
-      buttonsForm.setPadding(3);
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HLayout buttonsLayout = new HLayout();
+      buttonsLayout.setAutoWidth();
+      buttonsLayout.setHeight(22);
+      buttonsLayout.setLayoutAlign(Alignment.CENTER);
+      buttonsLayout.setMembersMargin(5);
 
       showUrlButton = new IButton("Get URL");
       showUrlButton.setWidth(90);
@@ -330,16 +298,10 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       cancelButton.setIcon(Images.Buttons.NO);
       cancelButton.setID(ID_CANCEL);
 
-      ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      StatefulCanvas delimiter2 = new StatefulCanvas();
-      delimiter2.setWidth(3);
-      tbi.setButtons(showUrlButton, delimiter1, sendRequestButton, delimiter2, cancelButton);
-      buttonsForm.setFields(tbi);
-
-      buttonsForm.setAutoWidth();
-      vLayout.addMember(buttonsForm);
+      buttonsLayout.addMember(showUrlButton);
+      buttonsLayout.addMember(sendRequestButton);
+      buttonsLayout.addMember(cancelButton);
+      vLayout.addMember(buttonsLayout);
    }
 
    public void closeForm()

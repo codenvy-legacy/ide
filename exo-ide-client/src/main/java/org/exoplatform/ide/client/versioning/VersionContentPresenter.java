@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.versioning;
 
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -27,8 +28,6 @@ import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.panel.event.ChangePanelTitleEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 

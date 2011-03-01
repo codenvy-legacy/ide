@@ -18,18 +18,18 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.HasClickHandlers;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileCallback;
@@ -60,9 +60,9 @@ public class OpenFileByPathPresenter
 
       HasKeyPressHandlers getFilePathField();
       
-      // HasValue<String> getFilePathFieldValue(); // getFilePathFieldValue().addValueChangeHandler(new ValueChangeHandler<String>() isn't called by org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField.addValueChangeHandler()
-
-      TextField getFilePathFieldOrigin(); 
+      void selectPathField();
+      
+      TextFieldItem getFilePathFieldOrigin(); 
    }
 
    private HandlerManager eventBus;
@@ -80,10 +80,13 @@ public class OpenFileByPathPresenter
 
       display.getOpenButton().addClickHandler(new ClickHandler()
       {
+
+         @Override
          public void onClick(ClickEvent event)
          {
             openFile();
          }
+         
       });
 
       display.getCancelButton().addClickHandler(new ClickHandler()
@@ -107,14 +110,14 @@ public class OpenFileByPathPresenter
          
       });
       
-      display.getFilePathFieldOrigin().addChangedHandler(new ChangedHandler()
+      display.getFilePathFieldOrigin().addValueChangeHandler(new ValueChangeHandler<String>()
       {
-
-         public void onChanged(ChangedEvent event)
+         
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
          {
             updateOpenButtonState(event.getValue());
          }
-         
       });
       
    } 
@@ -158,7 +161,7 @@ public class OpenFileByPathPresenter
          protected void onFailure(Throwable exception)
          {
             super.onFailure(exception);
-            display.getFilePathFieldOrigin().focusInItem();
+            display.selectPathField();
          }
       });
    }

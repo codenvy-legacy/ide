@@ -18,19 +18,16 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.layout.HLayout;
-
-import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.groovy.client.Images;

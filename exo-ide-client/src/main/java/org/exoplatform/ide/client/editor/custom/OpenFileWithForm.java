@@ -18,24 +18,23 @@
  */
 package org.exoplatform.ide.client.editor.custom;
 
-import java.util.Map;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.events.CloseClientEvent;
+import com.smartgwt.client.widgets.layout.HLayout;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.CheckboxItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
+import java.util.Map;
 
 public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresenter.Display
 {
@@ -102,33 +101,21 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
 
    private void createChecBoxField()
    {
-
       DynamicForm form = new DynamicForm();
-      form.setHeight(30);
-
-      //form.setMargin(5);
-      form.setLayoutAlign(Alignment.LEFT);
-
-      useAsDef = new CheckboxItem("Default", "&nbsp;Use as default editor");
-
-      useAsDef.setAlign(Alignment.LEFT);
-      //useAsDef.setShowTitle(false);
-      useAsDef.setColSpan(2);
-      //useAsDef.setHeight(40);
-      form.setItems(useAsDef);
-
-      form.setAutoWidth();
-
+      form.setHeight(30+"px");
+      form.setMargin(5);
+      useAsDef = new CheckboxItem("Default", "Use as default editor");
+      form.add(useAsDef);
       addItem(form);
    }
 
    private void createButtonsForm()
    {
-      DynamicForm buttonsForm = new DynamicForm();
-
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
-      buttonsForm.setMargin(5);
+      HLayout buttonsLayout = new HLayout();
+      buttonsLayout.setAutoWidth();
+      buttonsLayout.setHeight(22);
+      buttonsLayout.setLayoutAlign(Alignment.CENTER);
+      buttonsLayout.setMembersMargin(5);
 
       openButton = new IButton("Open");
       openButton.setID(OPEN_BUTTON_ID);
@@ -143,14 +130,9 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.CANCEL);
 
-      ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      tbi.setButtons(openButton, delimiter1, cancelButton);
-      buttonsForm.setFields(tbi);
-
-      buttonsForm.setAutoWidth();
-      addItem(buttonsForm);
+      buttonsLayout.addMember(openButton);
+      buttonsLayout.addMember(cancelButton);
+      addItem(buttonsLayout);
    }
 
    public void closeForm()

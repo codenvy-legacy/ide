@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import org.exoplatform.gwtframework.commons.wadl.Param;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
-
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.GroupStartOpen;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+
+import org.exoplatform.gwtframework.commons.wadl.Param;
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
 /**
  * Created by The eXo Platform SAS.

@@ -22,7 +22,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.KeyNames;
-import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
@@ -30,13 +29,13 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.ide.client.Images;
 
 /**
@@ -57,38 +56,38 @@ public class AskForValueDialog extends Window
    public static final int FORM_MARGINTOP = 15;
 
    public static final int FORM_MARGINSIDE = 25;
-   
+
    public static final String ID = "ideAskForValueDialog";
-   
+
    public static final String ID_OK_BUTTON = "ideAskForValueDialogOkButton";
-   
+
    public static final String ID_CANCEL_BUTTON = "ideAskForValueDialogCancelButton";
-   
+
    public static final String ID_NO_BUTTON = "ideAskForValueDialogNoButton";
-   
+
    public static final String VALUE_FIELD = "ideAskForValueDialogValueField";
 
    private ValueCallback valueCallback;
-   
+
    private ValueDiscardCallback valueDiscardCallback;
 
    protected TextItem textItem;
-   
+
    private IButton okButton;
 
    public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback)
    {
       new AskForValueDialog(title, prompt, defaultValue, dialogWidth, callback, null);
    }
-   
+
    public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback,
       ValueDiscardCallback discardCallback)
    {
       valueCallback = callback;
       valueDiscardCallback = discardCallback;
-      
+
       setID(ID);
-      
+
       setShowShadow(true);
       setTitle(title);
       setShowMinimizeButton(false);
@@ -115,7 +114,7 @@ public class AskForValueDialog extends Window
       //textItem.focusInItem();
       textItem.selectValue();
    }
-   
+
    private void createPromptForm(int dialogWidth, String prompt, String defaultValue)
    {
       DynamicForm form = new DynamicForm();
@@ -139,25 +138,26 @@ public class AskForValueDialog extends Window
       textItem.setShowTitle(false);
       textItem.setColSpan(2);
       textItem.setWidth(dialogWidth - FORM_MARGINSIDE - FORM_MARGINSIDE);
-      
-      textItem.addKeyPressHandler(new KeyPressHandler(){
+
+      textItem.addKeyPressHandler(new KeyPressHandler()
+      {
 
          public void onKeyPress(KeyPressEvent event)
          {
-            if(event.getKeyName() == null)
+            if (event.getKeyName() == null)
                return;
-            if (event.getKeyName().equals(KeyNames.ENTER)) 
+            if (event.getKeyName().equals(KeyNames.ENTER))
             {
                if (textItem.getValue() == null || textItem.getValue().toString().length() == 0)
                {
                   return;
                }
                onOk();
-            }               
+            }
          }
-         
+
       });
-      
+
       textItem.addChangeHandler(new ChangeHandler()
       {
          public void onChange(ChangeEvent event)
@@ -181,7 +181,7 @@ public class AskForValueDialog extends Window
             }
          }
       });
-      
+
       form.setItems(promptItem, spacer1, textItem);
 
       form.setAutoWidth();
@@ -191,10 +191,11 @@ public class AskForValueDialog extends Window
 
    private void createButtonsForm(String defaultValue)
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setPadding(5);
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HLayout buttonsLayout = new HLayout();
+      buttonsLayout.setAutoWidth();
+      buttonsLayout.setHeight(22);
+      buttonsLayout.setLayoutAlign(Alignment.CENTER);
+      buttonsLayout.setMembersMargin(5);
 
       okButton = new IButton("Yes");
       okButton.setID(ID_OK_BUTTON);
@@ -211,14 +212,11 @@ public class AskForValueDialog extends Window
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.CANCEL);
-      
-      ToolbarItem tbi = new ToolbarItem();
-      
+
       if (valueDiscardCallback == null)
       {
-         StatefulCanvas delimiter1 = new StatefulCanvas();
-         delimiter1.setWidth(3);
-         tbi.setButtons(okButton, delimiter1, cancelButton);
+         buttonsLayout.addMember(okButton);
+         buttonsLayout.addMember(cancelButton);
       }
       else
       {
@@ -227,7 +225,7 @@ public class AskForValueDialog extends Window
          noButton.setWidth(90);
          noButton.setHeight(22);
          noButton.setIcon(Images.Buttons.NO);
-         
+
          noButton.addClickHandler(new ClickHandler()
          {
             public void onClick(ClickEvent event)
@@ -236,19 +234,13 @@ public class AskForValueDialog extends Window
                valueDiscardCallback.discard();
             }
          });
-         
-         StatefulCanvas delimiter1 = new StatefulCanvas();
-         delimiter1.setWidth(3);
-         StatefulCanvas delimiter2 = new StatefulCanvas();
-         delimiter2.setWidth(3);
-         tbi.setButtons(okButton, delimiter1, noButton, delimiter2, cancelButton);
+
+         buttonsLayout.addMember(okButton);
+         buttonsLayout.addMember(noButton);
+         buttonsLayout.addMember(cancelButton);
       }
-      
-      buttonsForm.setFields(tbi);
 
-      buttonsForm.setAutoWidth();
-
-      addItem(buttonsForm);
+      addItem(buttonsLayout);
 
       okButton.addClickHandler(new ClickHandler()
       {

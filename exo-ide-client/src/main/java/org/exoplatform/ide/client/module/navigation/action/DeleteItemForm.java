@@ -18,28 +18,25 @@
  */
 package org.exoplatform.ide.client.module.navigation.action;
 
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
+
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -56,9 +53,9 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
    public static final int HEIGHT = 130;
 
    public static final String ID = "ideDeleteItemForm";
-   
+
    public static final String ID_OK_BUTTON = "ideDeleteItemFormOkButton";
-   
+
    public static final String ID_CANCEL_BUTTON = "ideDeleteItemFormCancelButton";
 
    private HLayout hLayout;
@@ -71,7 +68,8 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
 
    private DeleteItemPresenter presenter;
 
-   public DeleteItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles, Map<String, String> lockTokens)
+   public DeleteItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles,
+      Map<String, String> lockTokens)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
 
@@ -95,7 +93,7 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
       show();
 
       deleteButton.focus();
-      
+
       addCloseClickHandler(new CloseClickHandler()
       {
          public void onCloseClick(CloseClientEvent event)
@@ -129,17 +127,23 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
    {
       VLayout vLayout = new VLayout();
       hLayout.addMember(vLayout);
-      vLayout.setMargin(10);
+      vLayout.setMargin(15);
 
       Layout promptLayout = new Layout();
       promptLayout.setLayoutAlign(VerticalAlignment.CENTER);
       promptLayout.setContents(prompt);
       vLayout.addMember(promptLayout);
 
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setPadding(5);
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      vLayout.addMember(createButtonsLayout());
+   }
+
+   private HLayout createButtonsLayout()
+   {
+      HLayout buttonsLayout = new HLayout();
+      buttonsLayout.setAutoWidth();
+      buttonsLayout.setHeight(22);
+      buttonsLayout.setLayoutAlign(Alignment.CENTER);
+      buttonsLayout.setMembersMargin(5);
 
       deleteButton = new IButton("Yes");
       deleteButton.setID(ID_OK_BUTTON);
@@ -152,17 +156,13 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);
-
-      ToolbarItem tbi = new ToolbarItem();
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      tbi.setButtons(deleteButton, delimiter1, cancelButton);
-      buttonsForm.setFields(tbi);
-
-      buttonsForm.setAutoWidth();
-      vLayout.addMember(buttonsForm);
+      
+      buttonsLayout.addMember(deleteButton);
+      buttonsLayout.addMember(cancelButton);
+      
+      return buttonsLayout;
    }
-
+   
    @Override
    protected void onDestroy()
    {

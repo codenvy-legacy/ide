@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
+import com.smartgwt.client.types.SelectionStyle;
 
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.api.Token;
@@ -29,9 +31,7 @@ import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.SelectionStyle;
+import java.util.List;
 
 /**
  * Form for displaying code outline.

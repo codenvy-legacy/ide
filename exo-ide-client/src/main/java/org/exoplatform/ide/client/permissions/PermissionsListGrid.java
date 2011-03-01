@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.client.permissions;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid;
-import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
-import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
-
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -29,6 +25,10 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
 import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
+
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
+import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
 
 /**
  * This class extends {@link ListGrid} with {@link AccessControlEntry}.<br>

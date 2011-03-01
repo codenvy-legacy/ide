@@ -18,27 +18,27 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import org.exoplatform.gwtframework.commons.wadl.Param;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
+
+import org.exoplatform.gwtframework.commons.wadl.Param;
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -49,7 +49,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class RestServicesDiscoveryForm extends DialogWindow implements RestServicesDiscoveryPresenter.Display
 {
-   private static int WIDTH = 650;
+   private static int WIDTH = 670;
 
    private static int HEIGTH = 370;
 
@@ -68,7 +68,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
    private TextField requestType;
 
    private TextField responseType;
-   
+
    private TextField pathField;
 
    private RestServiceParameterListGrid parameters;
@@ -118,50 +118,51 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
     */
    private void createInfoForm(Layout layout)
    {
-      int width = 278;
-      
+      int width = 270;
+
       VLayout vL = new VLayout();
       vL.setMembersMargin(3);
       vL.setShowEdges(true);
       vL.setEdgeSize(1);
       vL.setOverflow(Overflow.AUTO);
-      DynamicForm form = new DynamicForm();
-      form.setID("ideRestServiceDiscoveryForm");
-      form.setAlign(Alignment.LEFT);
-      form.setWidth100();
-      form.setHeight(20);
-      form.setPadding(5);
-      form.setTitleWidth(20);
-      
-      pathField = new TextField("ideMethodPathField");
-      pathField.setTitle("<nobr>Path</nobr>");
-      pathField.setWidth(width);
-      pathField.setVisible(false);
+      VerticalPanel form = new VerticalPanel();
+      form.getElement().setAttribute("id", "ideRestServiceDiscoveryForm");
+      form.setWidth("100%");
+      form.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+      form.setSpacing(3);
 
-      requestType = new TextField();
-      requestType.setTitle("<nobr>Request media type</nobr>");
-      requestType.setName("ideRequestType");
-      requestType.setWidth(width);
-      requestType.setVisible(false);
+      pathField = createTextField("ideMethodPathField", "<nobr>Path</nobr>", width);
 
-      responseType = new TextField("ideResponseType");
-      responseType.setTitle("<nobr>Response media type<nobr>");
-      responseType.setVisible(false);
-      responseType.setWidth(width);
-      
+      requestType = createTextField("ideRequestType", "<nobr>Request media type</nobr>", width);
+
+      responseType = createTextField("ideResponseType", "<nobr>Response media type<nobr>", width);
+
       parameters = new RestServiceParameterListGrid();
       parameters.setID("ideRestServiceDiscoveryParameters");
-      parameters.setWidth(398);
+      parameters.setWidth100();
       parameters.setHeight100();
       parameters.setShowEdges(false);
       parameters.setMargin(3);
       parameters.setVisible(false);
 
-      form.setFields(pathField,requestType, responseType);
+      form.add(pathField);
+      form.add(requestType);
+      form.add(responseType);
+
       vL.addMember(form);
       vL.addMember(parameters);
       layout.addMember(vL);
 
+   }
+
+   private TextField createTextField(String name, String title, int width)
+   {
+      TextField textField = new TextField(name, title);
+      textField.setWidth(width);
+      textField.setHeight(20);
+      textField.setShowDisabled(false);
+      textField.setVisible(false);
+      return textField;
    }
 
    /**
@@ -193,11 +194,12 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
     */
    private void createButtons(Layout layout)
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setMargin(5);
-      buttonsForm.setPadding(3);
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HLayout buttonsLayout = new HLayout();
+      buttonsLayout.setAutoWidth();
+      buttonsLayout.setHeight(22);
+      buttonsLayout.setLayoutAlign(Alignment.CENTER);
+      buttonsLayout.setMembersMargin(5);
+      buttonsLayout.setMargin(10);
 
       okButton = new IButton("Ok");
       okButton.setWidth(90);
@@ -205,13 +207,9 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       okButton.setIcon(Images.Buttons.YES);
       okButton.setID(ID_OK);
 
-      ToolbarItem tbi = new ToolbarItem();
+      buttonsLayout.addMember(okButton);
 
-      tbi.setButtons(okButton);
-      buttonsForm.setFields(tbi);
-
-      buttonsForm.setAutoWidth();
-      layout.addMember(buttonsForm);
+      layout.addMember(buttonsLayout);
    }
 
    /**

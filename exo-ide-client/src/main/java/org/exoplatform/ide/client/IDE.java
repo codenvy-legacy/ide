@@ -19,7 +19,7 @@
 package org.exoplatform.ide.client;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
-import org.exoplatform.gwtframework.ui.client.smartgwt.SmartGWTDialogs;
+import org.exoplatform.gwtframework.ui.client.component.GWTDialogs;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.IDEForm;
@@ -54,7 +54,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public IDE()
    {
 
-      new SmartGWTDialogs();
+      new GWTDialogs();
 
       //HandlerManager eventBus = new HandlerManager(null);
       context = new ApplicationContext();

@@ -18,23 +18,23 @@
  */
 package org.exoplatform.ide.client.module.navigation.action;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+import com.google.gwt.user.client.ui.HorizontalPanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.SpacerItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
+
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
 /**
  * Created by The eXo Platform SAS .
@@ -48,30 +48,42 @@ public class GetItemURLForm extends DialogWindow
 
    private static final int WIDTH = 500;
 
-   private static final int HEIGHT = 160;
+   private static final int HEIGHT = 155;
    
+   private static final int BUTTON_WIDTH = 90;
+
+   private static final int BUTTON_HEIGHT = 22;
+
    public static final String ID = "ideGetItemURLForm";
-   
+
    public static final String URL_FIELD = "ideGetItemURLFormURLField";
-   
+
    public static final String ID_DYNAMIC_FORM = "ideGetItemURLFormDynamicForm";
-   
+
    public static final String ID_OK_BUTTON = "ideGetItemURLFormOkButton";
-   
+
    private static final String TITLE = "Item URL";
 
    private TextField itemURLField;
 
    private IButton okButton;
+   
+   private VerticalPanel mainPanel;
 
    public GetItemURLForm(HandlerManager eventBus, String url)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
-      
-      setTitle(TITLE);
 
+      setTitle(TITLE);
+      mainPanel = new VerticalPanel();
+      mainPanel.setWidth("100%");
+      mainPanel.setHeight("100%");
+      
       createFieldForm(url);
       createButtons();
+      
+      addItem(mainPanel);
+      
       show();
 
       //draw();
@@ -102,60 +114,33 @@ public class GetItemURLForm extends DialogWindow
       paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setPadding(5);
       paramsForm.setWidth(450);
-      paramsForm.setLayoutAlign(Alignment.CENTER);
       paramsForm.setPadding(15);
-      paramsForm.setAutoFocus(true);
 
-      StaticTextItem caption = new StaticTextItem();
-      caption.setDefaultValue("WebDav item's URL:");
-      caption.setShowTitle(false);
-      caption.setColSpan(2);
-
-      SpacerItem delimiter = new SpacerItem();
-      delimiter.setColSpan(2);
-      delimiter.setHeight(5);
-
-      itemURLField = new TextField();
-      itemURLField.setName(URL_FIELD);
-      itemURLField.setShowTitle(false);
+      itemURLField = new TextField(URL_FIELD, "WebDav item's URL:");
       itemURLField.setWidth(450);
+      itemURLField.setHeight(22);
+      itemURLField.setTitleOrientation(TitleOrientation.TOP);
+      paramsForm.add(itemURLField);
+      itemURLField.focusInItem();
       
-      itemURLField.setSelectOnFocus(true);
-
-      paramsForm.setFields(caption, delimiter, itemURLField);
-      paramsForm.focusInItem(itemURLField);
-      
-      addItem(paramsForm);
-
+      mainPanel.add(paramsForm);
+      mainPanel.setCellHorizontalAlignment(paramsForm, HorizontalPanel.ALIGN_CENTER);
+      mainPanel.setCellVerticalAlignment(paramsForm, HorizontalPanel.ALIGN_MIDDLE);
       itemURLField.setValue(url);
    }
 
    private void createButtons()
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setPadding(5);
-      buttonsForm.setHeight(24);
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight((BUTTON_HEIGHT + 20)+ "px");
 
       okButton = new IButton("OK");
       okButton.setID(ID_OK_BUTTON);
-      okButton.setWidth(90);
-      okButton.setHeight(22);
+      okButton.setWidth(BUTTON_WIDTH);
+      okButton.setHeight(BUTTON_HEIGHT);
       okButton.setIcon(Images.Buttons.OK);
 
-      ToolbarItem tbi = new ToolbarItem();
-
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(3);
-      StatefulCanvas delimiter2 = new StatefulCanvas();
-      delimiter2.setWidth(3);
-      tbi.setButtons(delimiter1, okButton, delimiter2);
-      tbi.setWidth(90);
-
-      buttonsForm.setFields(tbi);
-
-      buttonsForm.setAutoWidth();
-      addItem(buttonsForm);
+      buttonsLayout.add(okButton);
 
       okButton.addClickHandler(new ClickHandler()
       {
@@ -164,6 +149,10 @@ public class GetItemURLForm extends DialogWindow
             destroy();
          }
       });
+      
+      mainPanel.add(buttonsLayout);
+      mainPanel.setCellHorizontalAlignment(buttonsLayout, HorizontalPanel.ALIGN_CENTER);
+      mainPanel.setCellVerticalAlignment(buttonsLayout, HorizontalPanel.ALIGN_TOP);
    }
 
 }

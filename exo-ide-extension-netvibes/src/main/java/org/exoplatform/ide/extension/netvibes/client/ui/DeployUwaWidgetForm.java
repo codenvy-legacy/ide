@@ -18,39 +18,29 @@
  */
 package org.exoplatform.ide.extension.netvibes.client.ui;
 
-import com.smartgwt.client.types.FormErrorOrientation;
-
-import com.smartgwt.client.widgets.layout.HLayout;
-
-import com.smartgwt.client.widgets.layout.Layout;
-
-import com.smartgwt.client.types.VerticalAlignment;
-
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
-
-import com.smartgwt.client.types.TitleOrientation;
-
-import com.smartgwt.client.widgets.form.DynamicForm;
-
-import com.smartgwt.client.widgets.layout.VLayout;
-
+import com.smartgwt.client.types.FormErrorOrientation;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.Layout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.PasswordField;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.PasswordField;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.extension.netvibes.client.Images;
 
 import java.util.LinkedHashMap;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * View of the deploy UWA widget operation.
@@ -231,15 +221,16 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       DynamicForm form = new DynamicForm();
       form.setPadding(8);
       form.setID(ID_MAIN_DYNAMIC_FORM);
-      form.setIsGroup(true);
+      form.setWidth("100%");
+   /* TODO  form.setIsGroup(true);
       form.setGroupTitle("<b>Step 1.</b> Widget Content");
       form.setAutoHeight();
-      form.setWidth100();
+      
       form.setLayoutAlign(Alignment.CENTER);
-      form.setLayoutAlign(VerticalAlignment.CENTER);
+      form.setLayoutAlign(VerticalAlignment.CENTER);*/
 
       urlField = createTextField(ID_URL_FIELD, "Public widget URL", "http://", 390);
-      form.setFields(urlField);
+      form.add(urlField);
 
       vLayout.addMember(form);
       vLayout.hide();
@@ -260,21 +251,25 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       DynamicForm form = new DynamicForm();
       form.setPadding(8);
       form.setID(ID_PRIVACY_DYNAMIC_FORM);
-      form.setIsGroup(true);
+      form.setWidth("100%");
+    /* TODO :( form.setIsGroup(true);
       form.setGroupTitle("<b>Step 3.</b> Private Information");
       form.setAutoHeight();
       form.setWidth100();
       form.setLayoutAlign(Alignment.CENTER);
-      form.setLayoutAlign(VerticalAlignment.CENTER);
+      form.setLayoutAlign(VerticalAlignment.CENTER);*/
 
       apiKeyField = createPasswordField(ID_API_KEY_FIELD, "Enter API key", 390);
-      apiKeyField.setColSpan(2);
+    //  apiKeyField.setColSpan(2);
       secretKeyField = createPasswordField(ID_SECRET_KEY_FIELD, "Enter secrete key", 390);
-      secretKeyField.setColSpan(2);
+     // secretKeyField.setColSpan(2);
       loginField = createTextField(ID_LOGIN_FIELD, "Login", "", 195);
       passwordField = createPasswordField(ID_PASSWORD_FIELD, "Password", 195);
 
-      form.setFields(loginField, passwordField, apiKeyField, secretKeyField);
+      form.add(loginField);
+      form.add(passwordField);
+      form.add(apiKeyField);
+      form.add(secretKeyField);
 
       vLayout.addMember(form);
       vLayout.hide();
@@ -295,23 +290,24 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       detailsDynamicForm = new DynamicForm();
       detailsDynamicForm.setID(ID_DETAILS_DYNAMIC_FORM);
       detailsDynamicForm.setPadding(8);
-      detailsDynamicForm.setIsGroup(true);
+      detailsDynamicForm.setWidth("100%");
+    /*  detailsDynamicForm.setIsGroup(true);
       detailsDynamicForm.setGroupTitle("<b>Step 2.</b> Detailed Information");
       detailsDynamicForm.setAutoHeight();
       detailsDynamicForm.setWidth100();
       detailsDynamicForm.setLayoutAlign(Alignment.CENTER);
-      detailsDynamicForm.setLayoutAlign(VerticalAlignment.CENTER);
+      detailsDynamicForm.setLayoutAlign(VerticalAlignment.CENTER);*/
 
       titleField = createTextField(ID_TITLE_FIELD, "Title&#42;", "", 300);
-      titleField.setColSpan(2);
+    //TODO  titleField.setColSpan(2);
       descriptionField = createTextField(ID_DESCRIBTION_FIELD, "Description&#42;", "", 300);
       descriptionField.setHeight(50);
-      descriptionField.setColSpan(2);
+     //TODO descriptionField.setColSpan(2);
       versionField = createTextField(ID_VERSION_FIELD, "Widget version", "", 150);
       keywordsField = createTextField(ID_KEYWORDS_FIELD, "Descriptive keywords (max 6, space separated)", "", 300);
-      keywordsField.setColSpan(2);
+      //TODO keywordsField.setColSpan(2);
       thumbnailField = createTextField(ID_TUMBNAIL_FIELD, "Thumbnail URL", "", 300);
-      thumbnailField.setColSpan(2);
+      ///TODO thumbnailField.setColSpan(2);
       languageField = createCombobox(ID_LANGUAGE_FIELD, "Main language&#42;", 150);
       languageField.setValidators(new LanguageFieldValidator());
       categoryField = createCombobox(ID_CATEGORY_FIELD, "Most appropriate category&#42;", 150);
@@ -319,8 +315,14 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       regionField = createCombobox(ID_REGION_FIELD, "Most appropriate region&#42;", 150);
       regionField.setValidators(new RegionFieldValidator());
 
-      detailsDynamicForm.setFields(titleField, descriptionField, versionField, languageField, keywordsField,
-         thumbnailField, regionField, categoryField);
+      detailsDynamicForm.add(titleField);
+      detailsDynamicForm.add(descriptionField);
+      detailsDynamicForm.add(versionField);
+    //TODO  when combobox is ready detailsDynamicForm.add(languageField);
+      detailsDynamicForm.add(keywordsField);
+      detailsDynamicForm.add(thumbnailField);
+    //TODO  when combobox is ready detailsDynamicForm.add(regionField);
+    //TODO  when combobox is ready detailsDynamicForm.add(categoryField);
 
       vLayout.addMember(detailsDynamicForm);
       vLayout.hide();
@@ -418,7 +420,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       combobox.setName(id);
       combobox.setDefaultToFirstOption(true);
       combobox.setTitle(title);
-      combobox.setTitleOrientation(TitleOrientation.TOP);
+     //TODO combobox.setTitleOrientation(TitleOrientation.TOP);
       combobox.setWidth(width);
       combobox.setShowErrorStyle(false);
       combobox.setErrorOrientation(FormErrorOrientation.RIGHT);
@@ -697,7 +699,8 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
     */
    public boolean isValidDetailsFields()
    {
-      return detailsDynamicForm.validate(false);
+      //TODO !!!  detailsDynamicForm.validate(false);
+      return false;
    }
 
    /**

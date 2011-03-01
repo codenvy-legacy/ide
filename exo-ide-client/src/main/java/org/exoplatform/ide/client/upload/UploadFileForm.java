@@ -25,7 +25,7 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.vfs.Item;
 

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.search.file;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.component.ItemTreeGrid;
@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.ApplicationContext;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.

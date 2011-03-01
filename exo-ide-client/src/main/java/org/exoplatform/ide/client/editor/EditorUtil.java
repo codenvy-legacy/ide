@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import java.util.List;
-
 import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.gwtframework.editor.api.EditorFactory;
 import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.

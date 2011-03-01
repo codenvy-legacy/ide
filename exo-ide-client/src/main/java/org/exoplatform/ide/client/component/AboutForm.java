@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.client.component;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.Label;
-import org.exoplatform.ide.client.BuildNumber;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -31,10 +25,14 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Img;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
+
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
+import org.exoplatform.ide.client.BuildNumber;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
 /**
  * Created by The eXo Platform SAS.
@@ -131,7 +129,7 @@ public class AboutForm extends DialogWindow
       return logoLayout;
    }
 
-   private DynamicForm createButtonLayout()
+   private HLayout createButtonLayout()
    {
       okButton = new IButton(OK);
       okButton.setID(OK_BUTTON_ID);
@@ -149,19 +147,14 @@ public class AboutForm extends DialogWindow
 
       });
 
-      DynamicForm buttonForm = new DynamicForm();
+      HLayout hLayout = new HLayout();
+      hLayout.setLayoutTopMargin(20);
+      hLayout.setHeight(BUTTON_HEIGHT);
+      hLayout.setAutoWidth();
+      hLayout.setLayoutAlign(Alignment.CENTER);
+      hLayout.addMember(okButton);
 
-      //buttonForm.setWidth(BUTTON_WIDTH);
-      buttonForm.setMargin(10);
-      buttonForm.setLayoutAlign(Alignment.CENTER);
-
-      ToolbarItem toolbar = new ToolbarItem();
-      toolbar.setWidth(BUTTON_WIDTH);
-      toolbar.setButtons(okButton);
-      buttonForm.setFields(toolbar);
-      buttonForm.setAutoWidth();
-
-      return buttonForm;
+      return hLayout;
    }
 
    private VLayout createInfoLayout()
@@ -172,7 +165,7 @@ public class AboutForm extends DialogWindow
 
       Label infoLabel = new Label();
       infoLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-//      infoLabel.setCanSelectText(true);
+ //     infoLabel.setCanSelectText(true);
       infoLabel.getElement().setInnerHTML("<h3>" + NAME + "</h3>" + "<b>" + VERSION + "</b>" + "<br>" + YEAR + "&nbsp;" + COMPANY_NAME
          + "&nbsp;" + COPYRIGHT + "<br>" + INFO + "<br><br>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>"
          + BUILD_TIME + "</b>");

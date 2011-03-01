@@ -18,25 +18,17 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
-
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
-import com.smartgwt.client.types.Alignment;
-
-import com.smartgwt.client.widgets.layout.HLayout;
-
-import com.smartgwt.client.widgets.layout.VLayout;
-
-import com.smartgwt.client.widgets.form.DynamicForm;
-
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.SelectItem;
+import org.exoplatform.gwtframework.ui.client.component.Align;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.extension.chromattic.client.Images;
@@ -52,7 +44,7 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
 {
    public static final int WIDTH = 450;
 
-   public static final int HEIGHT = 150;
+   public static final int HEIGHT = 160;
 
    private final int BUTTON_WIDTH = 90;
 
@@ -87,14 +79,14 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
       setTitle(TITLE);
       setCanDragResize(true);
 
-      VLayout mainLayout = new VLayout();
-      mainLayout.setWidth100();
-      mainLayout.setHeight100();
-      mainLayout.setPadding(25);
-      mainLayout.setMembersMargin(25);
+      VerticalPanel mainLayout = new VerticalPanel();
+      mainLayout.setWidth("100%");
+      mainLayout.setHeight("100%");
+      mainLayout.setSpacing(25);
+      mainLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-      mainLayout.addMember(createMainForm());
-      mainLayout.addMember(createButtonLayout());
+      mainLayout.add(createMainForm());
+      mainLayout.add(createButtonLayout());
 
       addCloseClickHandler(new CloseClickHandler()
       {
@@ -109,7 +101,7 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
       addItem(mainLayout);
       show();
    }
-   
+
    /**
     * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
     */
@@ -123,43 +115,40 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
    /**
     * Creates main form.
     * 
-    * @return {@link DynamicForm}
+    * @return {@link VerticalPanel}
     */
-   private DynamicForm createMainForm()
+   private VerticalPanel createMainForm()
    {
-      DynamicForm form = new DynamicForm();
-      form.setID(ID_DYNAMIC_FORM);
-      form.setAutoWidth();
-      form.setLayoutAlign(Alignment.CENTER);
+      VerticalPanel form = new VerticalPanel();
+      form.getElement().setId(ID_DYNAMIC_FORM);
 
       formatField = new SelectItem();
       formatField.setName(ID_FORMAT_FIELD);
       formatField.setTitle("<nobr>" + "Node type format" + "</nobr>");
-      formatField.setTitleAlign(Alignment.LEFT);
+      formatField.setShowTitle(true);
+      formatField.setLabelAlign(Align.LEFT);
       formatField.setWidth(290);
 
-      form.setItems(formatField);
+      form.add(formatField);
       return form;
    }
 
    /**
     * Creates button's layout.
     * 
-    * @return {@link HLayout} layout with buttons
+    * @return {@link HorizontalPanel} layout with buttons
     */
-   private HLayout createButtonLayout()
+   private HorizontalPanel createButtonLayout()
    {
-      HLayout hLayout = new HLayout();
-      hLayout.setMembersMargin(10);
-      hLayout.setAutoWidth();
-      hLayout.setHeight(BUTTON_HEIGHT);
-      hLayout.setLayoutAlign(Alignment.CENTER);
+      HorizontalPanel hLayout = new HorizontalPanel();
+      hLayout.setSpacing(5);
+      hLayout.setHeight(BUTTON_HEIGHT + "px");
 
       generateButton = createButton(ID_GENERATE_BUTTON, "Generate", Images.Buttons.OK);
       cancelButton = createButton(ID_CANCEL_BUTTON, "Cancel", Images.Buttons.CANCEL);
 
-      hLayout.addMember(generateButton);
-      hLayout.addMember(cancelButton);
+      hLayout.add(generateButton);
+      hLayout.add(cancelButton);
       return hLayout;
    }
 

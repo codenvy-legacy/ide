@@ -23,21 +23,18 @@ import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.IButton;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextAreaItem;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
@@ -54,62 +51,61 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    public static final int WIDTH = 550;
 
    public static final int HEIGHT = 350;
-   
+
    public static final int TEXT_FIELD_WIDTH = 450;
-   
+
    private static final String ID = "ideCreateProjectTemplateForm";
-   
+
    private static final String ID_CREATE_BUTTON = "ideCreateProjectTemplateFormCreateButton";
-   
+
    private static final String ID_CANCEL_BUTTON = "ideCreateProjectTemplateFormCancelButton";
-   
+
    private static final String ID_ADD_FOLDER_BUTTON = "ideCreateProjectTemplateFormAddFolderButton";
-   
+
    private static final String ID_ADD_FILE_BUTTON = "ideCreateProjectTemplateFormAddFileButton";
-   
+
    private static final String ID_DELETE_BUTTON = "ideCreateProjectTemplateFormDeleteButton";
-   
+
    private static final String ID_NAME_FIELDS_FORM = "ideCreateProjectTemplateFormNameFieldsForm";
-   
+
    private static final String TEMPLATE_NAME_FIELD = "ideCreateProjectTemplateFormNameField";
-   
+
    private static final String DESCRIPTION_FIELD = "ideCreateProjectTemplateFormDescriptionField";
-   
+
    private static final String ADD_FOLDER_BUTTON = "Add Folder";
-   
+
    private static final String ADD_FILE_BUTTON = "Add File";
-   
+
    private static final String DELETE_BUTTON = "Delete";
-   
+
    private static final int BUTTONS_WIDTH = 120;
-   
+
    private static final int BUTTONS_HEIGHT = 22;
-   
+
    private VLayout windowLayout;
 
    private IButton createButton;
 
    private IButton cancelButton;
-   
+
    private IButton addFolderButton;
 
    private IButton addFileButton;
-   
+
    private IButton deleteButton;
 
    private TemplateTreeGrid<Template> templateTreeGrid;
 
    private TextField templateNameField;
-   
+
    private TextAreaItem templateDescriptionField;
-   
+
    private CreateProjectTemplatePresenter presenter;
-   
+
    public CreateProjectTemplateForm(HandlerManager eventBus, List<Template> templateList)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
-      
-      
+
       setTitle("Create project template");
       setCanDragResize(true);
       setShowMaximizeButton(true);
@@ -123,13 +119,13 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       Layout l = new Layout();
       l.setHeight(15);
       windowLayout.addMember(l);
-      
+
       createFileTemplateListLayout();
-      
+
       Layout l2 = new Layout();
       l2.setHeight(10);
       windowLayout.addMember(l2);
-      
+
       createButtonsForm();
 
       show();
@@ -144,9 +140,9 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
             destroy();
          }
       });
-      
+
    }
-   
+
    private void createFieldsForm()
    {
       VLayout fieldsLayout = new VLayout();
@@ -155,31 +151,31 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
 
       DynamicForm form = new DynamicForm();
       form.setID(ID_NAME_FIELDS_FORM);
-      templateNameField = new TextField("TemplateName","Name");
+      templateNameField = new TextField("TemplateName", "Name");
       templateNameField.setName(TEMPLATE_NAME_FIELD);
       templateNameField.setWidth(TEXT_FIELD_WIDTH);
-      templateNameField.setWrapTitle(false);
-      
+      //TODO templateNameField.setWrapTitle(false);
+
       templateDescriptionField = new TextAreaItem("Description");
       templateDescriptionField.setName(DESCRIPTION_FIELD);
       templateDescriptionField.setTitle("Description");
-      templateDescriptionField.setTitleOrientation(TitleOrientation.LEFT);
-      templateDescriptionField.setColSpan(2);
+      //  TODO templateDescriptionField.setTitleOrientation(TitleOrientation.LEFT);
+      // templateDescriptionField.setColSpan(2);
       templateDescriptionField.setHeight(40);
       templateDescriptionField.setWidth(TEXT_FIELD_WIDTH);
 
-      form.setColWidths("*", "" + TEXT_FIELD_WIDTH);
-      form.setItems(templateNameField, templateDescriptionField);
+    //  form.setColWidths("*", "" + TEXT_FIELD_WIDTH);
+      form.add(templateNameField);
+      form.add(templateDescriptionField);
       fieldsLayout.addMember(form);
-      
+
       windowLayout.addMember(fieldsLayout);
    }
-   
+
    private void createFileTemplateListLayout()
    {
       HLayout projectLayout = new HLayout();
-      
-      
+
       templateTreeGrid = new TemplateTreeGrid<Template>();
       templateTreeGrid.setShowHeader(false);
       templateTreeGrid.setLeaveScrollbarGap(false);
@@ -188,18 +184,18 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
 
       templateTreeGrid.setHeight100();
       templateTreeGrid.setWidth100();
-      
+
       projectLayout.addMember(templateTreeGrid);
-      
+
       Layout l = new Layout();
       l.setWidth(10);
       projectLayout.addMember(l);
-      
+
       projectLayout.addMember(getActionsButtons());
 
       windowLayout.addMember(projectLayout);
    }
-   
+
    private VLayout getActionsButtons()
    {
       VLayout buttonsLayout = new VLayout();
@@ -238,8 +234,11 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
 
    private void createButtonsForm()
    {
-      DynamicForm buttonsForm = new DynamicForm();
-      buttonsForm.setLayoutAlign(Alignment.CENTER);
+      HLayout buttonsLayout = new HLayout();
+      buttonsLayout.setAutoWidth();
+      buttonsLayout.setHeight(22);
+      buttonsLayout.setLayoutAlign(Alignment.CENTER);
+      buttonsLayout.setMembersMargin(5);
 
       createButton = new IButton("Create");
       createButton.setID(ID_CREATE_BUTTON);
@@ -253,22 +252,16 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);
 
-      ToolbarItem tbi = new ToolbarItem();
+      buttonsLayout.addMember(createButton);
+      buttonsLayout.addMember(cancelButton);
 
-      StatefulCanvas delimiter1 = new StatefulCanvas();
-      delimiter1.setWidth(2);
+      windowLayout.addMember(buttonsLayout);
 
-      tbi.setButtons(createButton, delimiter1, cancelButton);
-      buttonsForm.setFields(tbi);
-      buttonsForm.setAutoWidth();
-      
-      windowLayout.addMember(buttonsForm);
-      
       Layout buttonsBottomLayout = new Layout();
       buttonsBottomLayout.setHeight(15);
       windowLayout.addMember(buttonsBottomLayout);
    }
-   
+
    @Override
    protected void onDestroy()
    {
@@ -427,7 +420,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    {
       templateTreeGrid.selectTemplate(template);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getNameFieldKeyPressed()
     */
@@ -459,5 +452,5 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    {
       return templateTreeGrid.getTemplateLocation(template);
    }
-   
+
 }

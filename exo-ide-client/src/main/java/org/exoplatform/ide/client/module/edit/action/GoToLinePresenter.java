@@ -18,23 +18,29 @@
  */
 package org.exoplatform.ide.client.module.edit.action;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.util.BrowserResolver;
-import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
-import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+
+import com.google.gwt.user.client.Window;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.KeyNames;
-import com.smartgwt.client.widgets.form.fields.events.KeyUpEvent;
-import com.smartgwt.client.widgets.form.fields.events.KeyUpHandler;
+
+import org.exoplatform.gwtframework.commons.component.Handlers;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ide.client.framework.vfs.File;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -46,9 +52,7 @@ public class GoToLinePresenter
 
    public interface Display
    {
-      com.smartgwt.client.widgets.form.fields.events.HasKeyUpHandlers getLineNumberField();
-
-      HasValue<String> getLineNumberValue();
+      TextFieldItem getLineNumber();
 
       HasClickHandlers getGoButton();
 
@@ -57,7 +61,7 @@ public class GoToLinePresenter
       void closeForm();
 
       void setCaptionLabel(String caption);
-      
+
       void removeFocusFromLineNumber();
 
    }
@@ -73,7 +77,7 @@ public class GoToLinePresenter
    private HandlerRegistration keyUpHandler;
 
    private final Browser currentBrowser = BrowserResolver.CURRENT_BROWSER;
-   
+
    private File activeFile;
 
    public GoToLinePresenter(HandlerManager eventBus, File activeFile)
@@ -102,15 +106,23 @@ public class GoToLinePresenter
 
          public void onClick(ClickEvent event)
          {
-            if (display.getLineNumberValue().getValue() != null && !"".equals(display.getLineNumberValue().getValue()))
+            if (display.getLineNumber().getValue() != null && !"".equals(display.getLineNumber().getValue()))
             {
                goToLine();
             }
          }
       });
 
-      keyUpHandler = display.getLineNumberField().addKeyUpHandler(new KeyUPHandler());
-      
+      display.getLineNumber().addKeyUpHandler(new KeyUpHandler()
+      {
+
+         @Override
+         public void onKeyUp(KeyUpEvent event)
+         {
+            if (event.getNativeKeyCode() == 13)
+               goToLine();
+         }
+      });
 
       maxLineNumber = getLineNumber(activeFile.getContent());
       String labelCaption = "Enter line number (1.." + maxLineNumber + "):";
@@ -118,20 +130,20 @@ public class GoToLinePresenter
    }
 
    private native int getLineNumber(String content) /*-{
-     if (! content) return 1;
+      if (! content) return 1;
 
-     // test if content is not ended with line break
-     if (content.charAt(content.length - 1) !== "\n") {
+      // test if content is not ended with line break
+      if (content.charAt(content.length - 1) !== "\n") {
+         return content.split("\n").length;
+      }
+
+      // in the Internet Explorer editor.setCode("\n") is displayed as 2 lines 
+      if (this.@org.exoplatform.ide.client.module.edit.action.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
+      {          
         return content.split("\n").length;
-     }
+      }
 
-     // in the Internet Explorer editor.setCode("\n") is displayed as 2 lines 
-     if (this.@org.exoplatform.ide.client.module.edit.action.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
-     {          
-       return content.split("\n").length;
-     }
-       
-     return content.split("\n").length - 1;     
+      return content.split("\n").length - 1;
    }-*/;
 
    /**
@@ -139,7 +151,7 @@ public class GoToLinePresenter
     */
    private void goToLine()
    {
-      String lineString = display.getLineNumberValue().getValue();
+      String lineString = display.getLineNumber().getValue();
       try
       {
          int line = Integer.parseInt(lineString);
@@ -150,8 +162,8 @@ public class GoToLinePresenter
          }
          else
          {
-             display.removeFocusFromLineNumber();
-             Dialogs.getInstance().showError("Line number out of range");
+            display.removeFocusFromLineNumber();
+            Dialogs.getInstance().showError("Line number out of range");
          }
       }
       catch (NumberFormatException e)
@@ -165,22 +177,6 @@ public class GoToLinePresenter
    {
       eventBus.fireEvent(new EditorSetFocusEvent());
       handlers.removeHandlers();
-   }
-
-   private class KeyUPHandler implements KeyUpHandler
-   {
-
-      /**
-       * @see com.smartgwt.client.widgets.form.fields.events.KeyUpHandler#onKeyUp(com.smartgwt.client.widgets.form.fields.events.KeyUpEvent)
-       */
-      public void onKeyUp(KeyUpEvent event)
-      {
-         if (event.getKeyName().equals(KeyNames.ENTER))
-         {
-            goToLine();
-         }
-      }
-
    }
 
 }

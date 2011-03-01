@@ -18,20 +18,6 @@
  */
 package org.exoplatform.ide.client.operation.properties;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-
-import org.exoplatform.gwtframework.commons.webdav.Property;
-import org.exoplatform.gwtframework.commons.xml.QName;
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.CheckboxItem;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.client.framework.vfs.PropertyTitle;
-
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
 import com.smartgwt.client.types.Alignment;
@@ -41,6 +27,20 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+
+import org.exoplatform.gwtframework.commons.webdav.Property;
+import org.exoplatform.gwtframework.commons.xml.QName;
+import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
+import org.exoplatform.ide.client.framework.vfs.PropertyTitle;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by The eXo Platform SAS .
@@ -159,10 +159,9 @@ public class PropertiesForm extends View implements PropertiesPresenter.Display
    protected CheckboxItem getBooleanItem(String name, boolean value, boolean isReadOnly)
    {
       CheckboxItem booleanItem = new CheckboxItem();
-      booleanItem.setWrapTitle(false);
       booleanItem.setTitle("<b>" + name + "</b>");
       booleanItem.setValue(value);
-      booleanItem.setDisabled(isReadOnly);
+      booleanItem.setEnabled(!isReadOnly);
       booleanItem.setLabelAsTitle(true);
       return booleanItem;
    }

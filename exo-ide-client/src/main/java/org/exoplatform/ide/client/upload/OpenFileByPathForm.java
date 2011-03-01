@@ -18,23 +18,19 @@
  */
 package org.exoplatform.ide.client.upload;
 
-import org.exoplatform.gwtframework.ui.client.smartgwt.component.TextField;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.StatefulCanvas;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.events.HasClickHandlers;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.SpacerItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
+
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
 /**
  * Created by The eXo.
@@ -46,12 +42,12 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
 
    public static final int WIDTH = 500;
 
-   public static final int HEIGHT = 160;
+   public static final int HEIGHT = 150;
 
    private static final String ID = "ideOpenFileByPathWindow";
 
-   private static final String FORM_ID = "ideOpenFileByPathForm";   
-   
+   private static final String FORM_ID = "ideOpenFileByPathForm";
+
    private static final String OPEN_BUTTON_ID = "ideOpenFileByPathFormOpenButton";
 
    private static final String CANCEL_BUTTON_ID = "ideOpenFileByPathFormCancelButton";
@@ -70,6 +66,8 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
 
    private String labelTitle;
 
+   private VerticalPanel mainPanel;
+
    public OpenFileByPathForm(HandlerManager eventBus)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
@@ -78,8 +76,13 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       title = "Open file by path";
       buttonTitle = "Open";
       labelTitle = "File URL";
-
       setTitle(title);
+
+      mainPanel = new VerticalPanel();
+      mainPanel.setWidth("100%");
+      mainPanel.setHeight("100%");
+      mainPanel.setSpacing(10);
+      mainPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
       addCloseClickHandler(new CloseClickHandler()
       {
@@ -90,77 +93,55 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       });
 
       createOpenFileByPathForm();
-      
       createButtons();
 
+      addItem(mainPanel);
+
       show();
-      
+
       filePathField.focusInItem();
       disableOpenButton();
-      
+
       OpenFileByPathPresenter presenter = new OpenFileByPathPresenter(eventBus);
       presenter.bindDisplay(this);
    }
 
    private void createOpenFileByPathForm()
    {
-      DynamicForm openFileByPathForm = new DynamicForm();
-      openFileByPathForm.setLayoutAlign(Alignment.CENTER);
-      openFileByPathForm.setMargin(15);
-      openFileByPathForm.setAutoFocus(true);
-      openFileByPathForm.setID(FORM_ID);
+      VerticalPanel openFileByPathForm = new VerticalPanel();
+      openFileByPathForm.setWidth(450+"px");
+      openFileByPathForm.getElement().setId(FORM_ID);
 
-      StaticTextItem promptItem = new StaticTextItem();
-      promptItem.setWidth(250);
-      promptItem.setTitleAlign(Alignment.LEFT);
-      promptItem.setValue(this.labelTitle);
-      promptItem.setShowTitle(false);
-      promptItem.setColSpan(2);
-
-      SpacerItem spacer = new SpacerItem();
-      spacer.setHeight(2);
-      
-      this.filePathField = new TextField();
-      this.filePathField.setWidth(450);
-      this.filePathField.setTitleAlign(Alignment.LEFT);
-      this.filePathField.setShowTitle(false);
-      this.filePathField.setName(FILE_PATH_FIELD_NAME);
-      this.filePathField.setColSpan(2);
-                  
-      openFileByPathForm.setItems(promptItem, spacer, this.filePathField);
-
-      openFileByPathForm.setAutoWidth();
-
-      addItem(openFileByPathForm);
+      filePathField = new TextField(FILE_PATH_FIELD_NAME, labelTitle);
+      filePathField.setWidth(450);
+      filePathField.setHeight(20);
+      filePathField.setTitleOrientation(TitleOrientation.TOP);
+      openFileByPathForm.add(this.filePathField);
+      mainPanel.add(openFileByPathForm);
    }
 
    private void createButtons()
    {
-      DynamicForm uploadWindowButtonsForm = new DynamicForm();
-      uploadWindowButtonsForm.setWidth(200);
-      uploadWindowButtonsForm.setMargin(10);
-      uploadWindowButtonsForm.setLayoutAlign(VerticalAlignment.TOP);
-      uploadWindowButtonsForm.setLayoutAlign(Alignment.CENTER);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight(22 + 20 + "px");
+      buttonsLayout.setSpacing(5);
 
-      this.openButton = new IButton(this.buttonTitle);
-      this.openButton.setID(OPEN_BUTTON_ID);
-      this.openButton.setHeight(22);
-      this.openButton.setIcon(Images.MainMenu.File.OPEN_FILE_BY_PATH);
+      openButton = new IButton(this.buttonTitle);
+      openButton.setID(OPEN_BUTTON_ID);
+      openButton.setHeight(22);
+      openButton.setWidth(90);
+      openButton.setIcon(Images.MainMenu.File.OPEN_FILE_BY_PATH);
 
-      StatefulCanvas buttonSpacer = new StatefulCanvas();
-      buttonSpacer.setWidth(5);
+      cancelButton = new IButton("Cancel");
+      cancelButton.setID(CANCEL_BUTTON_ID);
+      cancelButton.setHeight(22);
+      cancelButton.setWidth(90);
+      cancelButton.setIcon(Images.Buttons.CANCEL);
 
-      this.cancelButton = new IButton("Cancel");
-      this.cancelButton.setID(CANCEL_BUTTON_ID);
-      this.cancelButton.setHeight(22);
-      this.cancelButton.setIcon(Images.Buttons.CANCEL);
+      buttonsLayout.add(openButton);
+      buttonsLayout.add(cancelButton);
 
-      ToolbarItem buttonToolbar = new ToolbarItem();
-      buttonToolbar.setButtons(this.openButton, buttonSpacer, this.cancelButton);
-
-      uploadWindowButtonsForm.setFields(buttonToolbar);
-
-      addItem(uploadWindowButtonsForm);
+      mainPanel.add(buttonsLayout);
    }
 
    public HasClickHandlers getCancelButton()
@@ -202,5 +183,14 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
    public TextField getFilePathFieldOrigin()
    {
       return this.filePathField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.upload.OpenFileByPathPresenter.Display#selectPathField()
+    */
+   @Override
+   public void selectPathField()
+   {
+      filePathField.selectValue();
    }
 }
