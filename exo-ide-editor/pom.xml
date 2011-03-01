@@ -182,7 +182,7 @@
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
-                  <configuration>
+                  <configuration>              
                      <module>org.exoplatform.ide.editor.EditorTest</module>
                      <logLevel>ERROR</logLevel>
                      <skipTests>false</skipTests>
@@ -191,7 +191,7 @@
                      <productionMode>true</productionMode>
                      <testTimeOut>300</testTimeOut>
                      <mode>htmlunit</mode>            
-                     <htmlunit>FF3</htmlunit>
+                     <htmlunit>FF3</htmlunit>                   
                      <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Xss30m</extraJvmArgs>
                   </configuration>
                   <executions>
@@ -202,8 +202,65 @@
                      </execution>
                   </executions>
                </plugin>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-surefire-plugin</artifactId>
+                  <configuration>
+                     <excludes>
+                       <exclude>**/GwtCodeMirror*</exclude>
+                     </excludes>  
+                  </configuration>
+               </plugin>
             </plugins>
          </build>
       </profile>
+      <profile>
+         <id>test-with-codemirror</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <resources>
+               <resource>
+                  <directory>src/main/java</directory>
+               </resource>
+               <resource>
+                  <directory>src/main/resources</directory>
+               </resource>
+            </resources>   
+            <testResources>
+               <testResource>
+                  <directory>src/test/java</directory>
+               </testResource>
+               <testResource>
+                  <directory>src/test/resources</directory>
+               </testResource>
+            </testResources>
+            <plugins>
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>gwt-maven-plugin</artifactId>
+                  <version>${gwt.maven.plugin.version}</version>
+                  <configuration>
+                     <includes>**/CodeMirror*.java</includes>                                
+                     <module>org.exoplatform.ide.editor.EditorTest</module>
+                     <logLevel>ERROR</logLevel>
+                     <skipTests>false</skipTests>
+                     <forkMode>never</forkMode>
+                     <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
+                     <productionMode>false</productionMode>
+                     <extraJvmArgs>-Xmx1048m -XX:MaxPermSize=256m -Xss30m</extraJvmArgs>
+                  </configuration>
+                  <executions>
+                     <execution>
+                        <goals>
+                           <goal>test</goal>
+                        </goals>                       
+                     </execution>
+                  </executions>
+               </plugin>              
+            </plugins>
+         </build>
+      </profile>      
    </profiles>
 </project>
