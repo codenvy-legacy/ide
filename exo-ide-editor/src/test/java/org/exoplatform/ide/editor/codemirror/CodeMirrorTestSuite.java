@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
- * @version $Id: GwtTestSuite Feb 28, 2011 2:21:56 PM evgen $
+ * @version $Id: GwtTestSuite Feb 28, 2011 2:21:56 PM $
  *
  */
 public class CodeMirrorTestSuite extends TestCase

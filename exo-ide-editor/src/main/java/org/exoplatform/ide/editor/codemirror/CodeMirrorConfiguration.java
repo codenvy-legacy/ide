@@ -65,7 +65,7 @@ public class CodeMirrorConfiguration
 
    private CodeAssistant codeAssistant;
 
-   private Set<String> compositeMimeTypes;
+   private boolean canHaveSeveralMimeTypes;
 
    public CodeMirrorConfiguration()
    {
@@ -116,12 +116,12 @@ public class CodeMirrorConfiguration
       CodeValidator codeValidator, CodeAssistant codeAssistant)
    {
       this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
-         codeValidator, codeAssistant, new HashSet<String>());
+         codeValidator, codeAssistant, false);
    }
 
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
       boolean canBeAutocompleted, Parser parser, AutoCompleteHelper autocompleteHelper, boolean canBeValidated,
-      CodeValidator codeValidator, CodeAssistant codeAssistant, Set<String> compositeMimeType)
+      CodeValidator codeValidator, CodeAssistant codeAssistant, Boolean canHaveSeveralMimeTypes)
    {
       this.codeParsers = codeParsers;
       this.codeStyles = codeStyles;
@@ -131,7 +131,7 @@ public class CodeMirrorConfiguration
       this.autocompleteHelper = autocompleteHelper;
       this.canBeValidated = canBeValidated;
       this.codeValidator = codeValidator;
-      this.compositeMimeTypes = compositeMimeType;
+      this.canHaveSeveralMimeTypes = canHaveSeveralMimeTypes;
       this.codeAssistant = codeAssistant;
    }
 
@@ -163,10 +163,10 @@ public class CodeMirrorConfiguration
     */
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
       boolean canBeAutocompleted, Parser parser, AutoCompleteHelper helper, CodeAssistant codeAssistant,
-      Set<String> types)
+      Boolean canHaveSeveralMimeTypes)
    {
       this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, helper, canBeAutocompleted,
-         new DefaultCodeValidator(), codeAssistant, types);
+         new DefaultCodeValidator(), codeAssistant, canHaveSeveralMimeTypes);
    }
 
 
@@ -226,9 +226,9 @@ public class CodeMirrorConfiguration
       return autocompleteHelper;
    }
 
-   public boolean canHaveSeveralMimeTypes(String mimeType)
+   public boolean canHaveSeveralMimeTypes()
    {
-      return compositeMimeTypes.contains(mimeType);
+      return canHaveSeveralMimeTypes;
    }
 
    /**

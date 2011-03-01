@@ -21,7 +21,6 @@ package org.exoplatform.ide.editor.codemirror.autocomplete;
 import java.util.List;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper;
 
 import com.google.gwt.core.client.JavaScriptObject;
 

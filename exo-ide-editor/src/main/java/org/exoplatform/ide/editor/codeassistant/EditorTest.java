@@ -20,9 +20,7 @@ package org.exoplatform.ide.editor.codeassistant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
@@ -33,9 +31,14 @@ import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssista
 import org.exoplatform.ide.editor.codeassistant.xml.XmlCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorParams;
+import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
+import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyTemplateAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
+import org.exoplatform.ide.editor.codemirror.parser.GoogleGadgetParser;
+import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
+import org.exoplatform.ide.editor.codemirror.parser.GroovyTemplateParser;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
@@ -123,8 +126,8 @@ public class EditorTest implements EntryPoint
             new CssParser() // exoplatform code parser 
             , new CssCodeAssistant())));
 
-      Set<String> comTypes = new HashSet<String>();
-      comTypes.add(MimeType.TEXT_HTML);
+//      Set<String> comTypes = new HashSet<String>();
+//      comTypes.add(MimeType.TEXT_HTML);
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, "CodeMirror HTML editor", "html", true,
          new CodeMirrorConfiguration(
@@ -135,7 +138,69 @@ public class EditorTest implements EntryPoint
             true, // can be autocompleted
             new HtmlParser(), // exoplatform code parser
             new HtmlAutocompleteHelper(), // autocomplete helper
-            new HtmlCodeAssistant(), comTypes)));
+            new HtmlCodeAssistant(), true)));
+      
+      addEditor(new CodeMirrorProducer(MimeType.GOOGLE_GADGET, "CodeMirror Google Gadget editor", "xml", true,
+         new CodeMirrorConfiguration(
+               "['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']",  // generic code parsers
+               "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']", // code styles
+               true, // can be outlined
+               true, // can be autocompleted
+               new GoogleGadgetParser(), // exoplatform code parser 
+               new HtmlAutocompleteHelper(), // autocomplete helper
+               new HtmlCodeAssistant(), true)));
+      
+      
+      addEditor(new CodeMirrorProducer(MimeType.UWA_WIDGET, "CodeMirror Netvibes editor", "xml", true,
+         new CodeMirrorConfiguration(
+            "['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']",  // generic code parsers
+            "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']", // code styles
+            true, // can be outlined
+            true, // can be autocompleted
+            new HtmlParser(), // exoplatform code parser 
+            new HtmlAutocompleteHelper(), // autocomplete helper
+            new HtmlCodeAssistant(), true)));
+      
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO file editor", "groovy", true,
+         new CodeMirrorConfiguration(
+            "['parsegroovy.js', 'tokenizegroovy.js']",  // generic code parsers
+            "['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
+               true, // can be outlined
+               true, // can be autocompleted
+               new GroovyParser(), // exoplatform code parser 
+               new GroovyAutocompleteHelper(), // autocomplete helper
+               new DefaultCodeAssistant())));
+
+      addEditor(new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", true,
+         new CodeMirrorConfiguration(
+            "['parsegroovy.js', 'tokenizegroovy.js']",  // generic code parsers
+            "['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
+               true, // can be outlined
+               true, // can be autocompleted
+               new GroovyParser(), // exoplatform code parser 
+               new GroovyAutocompleteHelper(), // autocomplete helper
+               new DefaultCodeAssistant())));      
+
+      addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", true,
+         new CodeMirrorConfiguration(
+            "['parsegroovy.js', 'tokenizegroovy.js']",  // generic code parsers
+            "['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
+               true, // can be outlined
+               true, // can be autocompleted
+               new GroovyParser(), // exoplatform code parser 
+               new GroovyAutocompleteHelper(), // autocomplete helper
+               new DefaultCodeAssistant())));
+      
+      addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl", true,
+         new CodeMirrorConfiguration(
+            "['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']",  // generic code parsers
+            "['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
+               true, // can be outlined
+               true, // can be autocompleted
+               new GroovyTemplateParser(), // exoplatform code parser 
+               new GroovyTemplateAutocompleteHelper(), // autocomplete helper
+               new DefaultCodeAssistant(), true)));     
+      
       //To initialize client bundle 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
    }
@@ -204,7 +269,7 @@ public class EditorTest implements EntryPoint
             params.put(CodeMirrorParams.MIME_TYPE, MimeType.TEXT_HTML);
 
             Editor editor =
-               editors.get(MimeType.TEXT_HTML).createEditor(ExamplesBuandle.INSTANCE.htmlExample().getText(), eventBus,
+               editors.get(MimeType.TEXT_HTML).createEditor(ExamplesBundle.INSTANCE.htmlExample().getText(), eventBus,
                   params);
             panel.clear();
             panel.add(editor);
@@ -225,7 +290,7 @@ public class EditorTest implements EntryPoint
 
             Editor editor =
                editors.get(MimeType.APPLICATION_JAVASCRIPT).createEditor(
-                  ExamplesBuandle.INSTANCE.jsExample().getText(), eventBus, params);
+                  ExamplesBundle.INSTANCE.jsExample().getText(), eventBus, params);
             panel.clear();
             panel.add(editor);
          }
@@ -244,18 +309,18 @@ public class EditorTest implements EntryPoint
             params.put(CodeMirrorParams.MIME_TYPE, MimeType.TEXT_XML);
 
             Editor editor =
-               editors.get(MimeType.TEXT_XML).createEditor(ExamplesBuandle.INSTANCE.xmlExample().getText(), eventBus,
+               editors.get(MimeType.TEXT_XML).createEditor(ExamplesBundle.INSTANCE.xmlExample().getText(), eventBus,
                   params);
             panel.clear();
             panel.add(editor);
          }
       });
 
-      Button gButton =
+      Button googleGadgetButton =
          new Button();
-      gButton.setTitle("Create Google Gadget CodeMirror Editor");
-      gButton.setText("Gadget");
-      gButton.addClickHandler(new ClickHandler()
+      googleGadgetButton.setTitle("Create Google Gadget CodeMirror Editor");
+      googleGadgetButton.setText("Gadget");
+      googleGadgetButton.addClickHandler(new ClickHandler()
       {
 
          @Override
@@ -264,18 +329,122 @@ public class EditorTest implements EntryPoint
             params.put(CodeMirrorParams.MIME_TYPE, MimeType.GOOGLE_GADGET);
 
             Editor editor =
-               editors.get(MimeType.GOOGLE_GADGET).createEditor(ExamplesBuandle.INSTANCE.ggExample().getText(),
+               editors.get(MimeType.GOOGLE_GADGET).createEditor(ExamplesBundle.INSTANCE.googleGadgetExample().getText(),
+                  eventBus, params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });
+      
+      Button netvibesButton =
+         new Button();
+      netvibesButton.setTitle("Create Netvibes Widget CodeMirror Editor");
+      netvibesButton.setText("Netvibes");
+      netvibesButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(CodeMirrorParams.MIME_TYPE, MimeType.UWA_WIDGET);
+
+            Editor editor =
+               editors.get(MimeType.UWA_WIDGET).createEditor(ExamplesBundle.INSTANCE.netvibesExample().getText(),
                   eventBus, params);
             panel.clear();
             panel.add(editor);
          }
       });
 
+      Button groovyButton =
+         new Button();
+      groovyButton.setTitle("Create POJO file CodeMirror Editor");
+      groovyButton.setText("POJO");
+      groovyButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(CodeMirrorParams.MIME_TYPE, MimeType.APPLICATION_GROOVY);
+
+            Editor editor =
+               editors.get(MimeType.APPLICATION_GROOVY).createEditor(ExamplesBundle.INSTANCE.groovyExample().getText(),
+                  eventBus, params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });
+      
+      Button groovyServiceButton =
+         new Button();
+      groovyServiceButton.setTitle("Create Groovy Service CodeMirror Editor");
+      groovyServiceButton.setText("GroovyService");
+      groovyServiceButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(CodeMirrorParams.MIME_TYPE, MimeType.GROOVY_SERVICE);
+
+            Editor editor =
+               editors.get(MimeType.GROOVY_SERVICE).createEditor(ExamplesBundle.INSTANCE.groovyServiceExample().getText(),
+                  eventBus, params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });
+      
+      Button dataObjectButton =
+         new Button();
+      dataObjectButton.setTitle("Create Data Object CodeMirror Editor");
+      dataObjectButton.setText("DataObject");
+      dataObjectButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(CodeMirrorParams.MIME_TYPE, MimeType.CHROMATTIC_DATA_OBJECT);
+
+            Editor editor =
+               editors.get(MimeType.CHROMATTIC_DATA_OBJECT).createEditor(ExamplesBundle.INSTANCE.dataObjectExample().getText(),
+                  eventBus, params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });
+      
+      Button groovyTemplateButton =
+         new Button();
+      groovyTemplateButton.setTitle("Create Groovy Template CodeMirror Editor");
+      groovyTemplateButton.setText("Template");
+      groovyTemplateButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(CodeMirrorParams.MIME_TYPE, MimeType.GROOVY_TEMPLATE);
+
+            Editor editor =
+               editors.get(MimeType.GROOVY_TEMPLATE).createEditor(ExamplesBundle.INSTANCE.groovyTemplateExample().getText(),
+                  eventBus, params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });
+      
       toolbar.add(cssButton);
       toolbar.add(htmlButton);
       toolbar.add(jsButton);
       toolbar.add(xmlButton);
-      toolbar.add(gButton);
+      toolbar.add(googleGadgetButton);
+      toolbar.add(netvibesButton);      
+      toolbar.add(groovyButton);      
+      toolbar.add(dataObjectButton);      
+      toolbar.add(groovyTemplateButton);      
 
       RootPanel.get().add(toolbar);
       RootPanel.get().add(panel);

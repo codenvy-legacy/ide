@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.codeassistant;
 
+import org.exoplatform.ide.editor.api.Editor;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
@@ -27,9 +29,9 @@ import com.google.gwt.resources.client.TextResource;
  * @version $Id: ExamplesBuandle Feb 25, 2011 9:37:15 AM evgen $
  *
  */
-public interface ExamplesBuandle extends ClientBundle
+public interface ExamplesBundle extends ClientBundle
 {
-   ExamplesBuandle INSTANCE = GWT.create(ExamplesBuandle.class);
+   ExamplesBundle INSTANCE = GWT.create(ExamplesBundle.class);
 
    @Source("org/exoplatform/ide/editor/public/example/example.html")
    TextResource htmlExample();
@@ -38,8 +40,24 @@ public interface ExamplesBuandle extends ClientBundle
    TextResource jsExample();
 
    @Source("org/exoplatform/ide/editor/public/example/googleGadget.txt")
-   TextResource ggExample();
+   TextResource googleGadgetExample();
    
    @Source("org/exoplatform/ide/editor/public/example/xmlEx.txt")
    TextResource xmlExample();
+   
+   @Source("org/exoplatform/ide/editor/public/example/netvibes.txt")
+   TextResource netvibesExample();
+
+   @Source("org/exoplatform/ide/editor/public/example/pojo.groovy")
+   TextResource groovyExample();
+   
+   @Source("org/exoplatform/ide/editor/public/example/service.grs")
+   TextResource groovyServiceExample();   
+   
+   @Source("org/exoplatform/ide/editor/public/example/dataObject.groovy")
+   TextResource dataObjectExample();   
+   
+   @Source("org/exoplatform/ide/editor/public/example/groovyTemplate.gtmpl")   
+   TextResource groovyTemplateExample();
+
 }

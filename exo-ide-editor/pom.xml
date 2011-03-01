@@ -192,7 +192,7 @@
                      <testTimeOut>300</testTimeOut>
                      <mode>htmlunit</mode>            
                      <htmlunit>FF3</htmlunit>                   
-                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Xss30m</extraJvmArgs>
+                     <extraJvmArgs>-Xmx1048m -XX:MaxPermSize=256m -Xss30m</extraJvmArgs>
                   </configuration>
                   <executions>
                      <execution>

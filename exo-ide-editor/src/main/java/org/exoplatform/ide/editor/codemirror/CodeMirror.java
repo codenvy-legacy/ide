@@ -499,7 +499,7 @@ public class CodeMirror extends Editor
    private String getCurrentLineMimeType()
    {
       String genericMimeType = (String)params.get(CodeMirrorParams.MIME_TYPE);
-      if (configuration.canHaveSeveralMimeTypes(genericMimeType))
+      if (configuration.canHaveSeveralMimeTypes())
       {
          String mimeType = CodeMirrorParser.getLineMimeType(getCursorRow(), (List<CodeMirrorTokenImpl>) getTokenList());
 
