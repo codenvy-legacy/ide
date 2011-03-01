@@ -33,9 +33,10 @@ public class GwtCodeAssistantTestSuite extends TestCase
 {
    public static Test suite()
    {
-       GWTTestSuite suite = new GWTTestSuite( "eXo IDE Editor GWT Tests" );
+       GWTTestSuite suite = new GWTTestSuite( "eXo IDE CodeAssistant GWT Tests" );
        suite.addTestSuite(CssGwtTestCodeAssistant.class );
        suite.addTestSuite(HtmlGwtTestCodeAssistant.class );
+       suite.addTestSuite(JavaScriptGwtTestCodeAssistant.class );
        return suite;
    }
    

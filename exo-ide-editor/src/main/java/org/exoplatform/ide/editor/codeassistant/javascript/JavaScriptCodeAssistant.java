@@ -156,7 +156,6 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       if (beforeToken.endsWith("."))
       {
          Token clazz = null;
-         System.out.println(currentToken);
          if (currentToken != null && currentToken.getType() == TokenType.VARIABLE)
          {
             String type = currentToken.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
@@ -165,7 +164,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
          else
          {
             String fqn = beforeToken.substring(0, beforeToken.length());
-            String[] posFQN = fqn.split("[/();{}|&\",'\\\\ \\+\\-=\\*\\.]+");
+            String[] posFQN =  fqn.split("[^A-Za-z0-9_]+"); 
             if (posFQN.length > 0)
             {
                clazz = tokensByFQN.get(posFQN[posFQN.length - 1].toLowerCase());
@@ -185,7 +184,8 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       Collections.sort(tokens, this);
       openForm(cursorOffsetX, cursorOffsetY, tokens, new JavaScriptTokenWidgetFactory(), this);
    }
-
+ 
+   
    /**
     * @param lineNum
     * @param tokenFromParser
