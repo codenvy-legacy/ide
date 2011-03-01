@@ -24,7 +24,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codemirror.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;

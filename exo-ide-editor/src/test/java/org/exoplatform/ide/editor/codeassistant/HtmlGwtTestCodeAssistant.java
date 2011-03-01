@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror;
+package org.exoplatform.ide.editor.codeassistant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,58 +24,52 @@ import java.util.List;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
-import org.exoplatform.ide.editor.codemirror.codeassistant.css.CssCodeAssistant;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: GwtTestCssCodeAssistant Feb 25, 2011 10:06:40 AM evgen $
+ * @version $Id: GwtTestHtmlCodeAssistant Feb 25, 2011 10:58:45 AM evgen $
  *
  */
-public class CssGwtTestCodeAssistant extends Base
+public class HtmlGwtTestCodeAssistant extends Base
 {
+  
+   /**
+    * 
+    */
+   private static final int TagNum = 82;
 
-   public void testCssSimpleParse()
+   /**
+    * @see com.google.gwt.junit.client.GWTTestCase#gwtSetUp()
+    */
+   @Override
+   protected void gwtSetUp() throws Exception
    {
-      String line = "asd as bor";
-      paseLine(line, "asd as ", "bor", "", line.length() + 1);
+      super.gwtSetUp();
    }
-
-   public void testCssParseLineWithEndProperty()
+   
+   public void testHtmlParseLine()
    {
-      System.out
-         .println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-      final String line = "border-left: 1px;";
-      paseLine(line, line, "", "", line.length() + 1);
-
+      paseLine("<bod", "<", "bod", "", 5, TagNum);
    }
-
-   public void testCssParseLineWithBeginClass()
+   
+   public void testHtmlParseLineWithAttribute()
    {
-      final String line = ".button-clolapse{";
-      paseLine(line, line, "", "", line.length() + 1);
+      paseLine("<body >", "<body ", "", ">", 7, 18);
    }
-
-   public void testCssParseLineWithEndClass()
+   
+   public void testHtmlParseLineWithAndTag()
    {
-      final String line = "border:1px #ddffaa;}";
-      paseLine(line, line, "", "", line.length() + 1);
+      paseLine("<body> ", "<body> ", "", "", 8, TagNum);
    }
-
-   public void testCssParsePropertyName()
-   {
-      final String line = "border-bottom-color";
-      paseLine(line, "", "border-", "bottom-color", 8);
-   }
-
+   
    /**
     * @param line
     */
    private void paseLine(final String line, final String before, final String token, final String after,
-      final int curPos)
+      final int curPos, final int numToken)
    {
-      class CssAssistant extends CssCodeAssistant
+      class HtmlCodeAssist extends HtmlCodeAssistant
       {
 
          @Override
@@ -85,12 +79,11 @@ public class CssGwtTestCodeAssistant extends Base
             assertEquals(token, tokenToComplete);
             assertEquals(before, beforeToken);
             assertEquals(after, afterToken);
-            assertEquals(102, tokens.size());
+            assertEquals(numToken, tokens.size());
          }
       }
 
-      new CssAssistant().autocompleteCalled(null, "", 0, 0, line, curPos, 0,
+      new HtmlCodeAssist().autocompleteCalled(null, "", 0, 0, line, curPos, 0,
          new ArrayList<Token>(), "", null);
    }
-
 }

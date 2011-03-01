@@ -28,12 +28,13 @@
    <inherits name='com.google.gwt.json.JSON' />
 
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-
-   <source path="api/" />
-   <source path="codemirror/" />
-
+   
+   <source path="api" />
+   <source path="codemirror" />
+   <source path="codeassistant" />
+   
    <stylesheet src='codemirror/css/editor.css' />
    <script src='codemirror/js/codemirror.js' />
 
-   <entry-point class="org.exoplatform.ide.editor.codemirror.EditorTest" />
+   <entry-point class="org.exoplatform.ide.editor.codeassistant.EditorTest" />
 </module>

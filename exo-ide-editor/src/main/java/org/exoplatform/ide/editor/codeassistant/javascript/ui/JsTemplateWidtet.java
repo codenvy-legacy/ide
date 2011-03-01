@@ -16,11 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror.codeassistant.javascript.widgets;
+package org.exoplatform.ide.editor.codeassistant.javascript.ui;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.codemirror.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -29,27 +30,31 @@ import com.google.gwt.user.client.ui.Label;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: JsObjectWidjet Feb 24, 2011 4:10:26 PM evgen $
+ * @version $Id: JsTemplateWidtet Feb 24, 2011 2:28:32 PM evgen $
  *
  */
-public class JsObjectWidget extends JSBaseWidget
+public class JsTemplateWidtet extends JSBaseWidget
 {
 
    /**
     * @param token
     */
-   public JsObjectWidget(Token token)
+   public JsTemplateWidtet(Token token)
    {
       super(token);
-      grid = new Grid(1, 2);
+      grid = new Grid(1, 3);
       grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
 
-      Image i = new Image(CodeAssistantClientBundle.INSTANCE.classItem());
+      Image i = new Image(CodeAssistantClientBundle.INSTANCE.template());
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
       String name = token.getName();
+      if (token.hasProperty(TokenProperties.SHORT_HINT))
+      {
+         name += " "+ token.getProperty(TokenProperties.SHORT_HINT).isStringProperty().stringValue();
+      }
 
       Label nameLabel = new Label(name, false);
 
@@ -58,8 +63,23 @@ public class JsObjectWidget extends JSBaseWidget
       grid.getCellFormatter().setWidth(0, 0, "16px");
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
+      grid.getCellFormatter().setWidth(0, 2, "100%");
 
       initWidget(grid);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenValue()
+    */
+   @Override
+   public String getTokenValue()
+   {
+      if (token.hasProperty(TokenProperties.CODE))
+         return token.getProperty(TokenProperties.CODE).isStringProperty().stringValue();
+      else
+         return token.getName();
+
    }
 
 }

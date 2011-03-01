@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror.codeassistant.html;
+package org.exoplatform.ide.editor.codeassistant.html;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +32,9 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
-import org.exoplatform.ide.editor.codemirror.codeassistant.css.CssCodeAssistant;
-import org.exoplatform.ide.editor.codemirror.codeassistant.javascript.JavaScriptCodeAssistant;
-import org.exoplatform.ide.editor.codemirror.codeassistant.util.JSONTokenParser;
+import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;

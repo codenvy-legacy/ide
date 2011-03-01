@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror;
+package org.exoplatform.ide.editor.codeassistant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,11 +27,13 @@ import java.util.Set;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorParams;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.codeassistant.css.CssCodeAssistant;
-import org.exoplatform.ide.editor.codemirror.codeassistant.html.HtmlCodeAssistant;
-import org.exoplatform.ide.editor.codemirror.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;

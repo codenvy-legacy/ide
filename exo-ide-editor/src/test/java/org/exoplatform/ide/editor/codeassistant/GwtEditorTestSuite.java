@@ -16,27 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror.codeassistant.css;
+package org.exoplatform.ide.editor.codeassistant;
 
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
-import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+
+import com.google.gwt.junit.tools.GWTTestSuite;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: CssTokenWidget Feb 22, 2011 4:59:41 PM evgen $
+ * @version $Id: GwtTestSuite Feb 28, 2011 2:21:56 PM evgen $
  *
  */
-public class CssTokenWidgetFactory implements TokenWidgetFactory
+public class GwtEditorTestSuite extends TestCase
 {
-
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory#buildTokenWidget(org.exoplatform.ide.editor.api.codeassitant.Token)
-    */
-   @Override
-   public TokenWidget buildTokenWidget(Token token)
+   public static Test suite()
    {
-      return new CssTokenWidget(token);
+       GWTTestSuite suite = new GWTTestSuite( "eXo IDE Editor GWT Tests" );
+       suite.addTestSuite(CssGwtTestCodeAssistant.class );
+       suite.addTestSuite(HtmlGwtTestCodeAssistant.class );
+       return suite;
    }
-
+   
 }

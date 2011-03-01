@@ -142,7 +142,7 @@
                      <logLevel>INFO" -bindAddress "0.0.0.0</logLevel>
                      -->
                      <!-- 
-                     <logLevel>INFO</logLevel>
+                     <logLevel>INFO</logLevel> -XX:ThreadStackSize=30720
                      <bindAddress>0.0.0.0</bindAddress>
                       -->
                      
@@ -165,21 +165,33 @@
                <resource>
                   <directory>src/main/java</directory>
                </resource>
-            </resources>
+               <resource>
+                  <directory>src/main/resources</directory>
+               </resource>
+            </resources>   
+            <testResources>
+               <testResource>
+                  <directory>src/test/java</directory>
+               </testResource>
+               <testResource>
+                  <directory>src/test/resources</directory>
+               </testResource>
+            </testResources>
             <plugins>
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
-                     <module>org.exoplatform.ide.editor.Editor</module>
+                     <module>org.exoplatform.ide.editor.EditorTest</module>
                      <logLevel>ERROR</logLevel>
                      <skipTests>false</skipTests>
+                     <forkMode>never</forkMode>
                      <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
-                     <manualMode>true</manualMode>
                      <productionMode>false</productionMode>
                      <mode>htmlunit</mode>            
                      <htmlunit>FF3</htmlunit>
+                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Xss30m</extraJvmArgs>
                   </configuration>
                   <executions>
                      <execution>

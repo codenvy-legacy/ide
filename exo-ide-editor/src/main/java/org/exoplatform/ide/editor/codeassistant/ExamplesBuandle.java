@@ -16,25 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror;
+package org.exoplatform.ide.editor.codeassistant;
 
-import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Base Feb 25, 2011 10:59:00 AM evgen $
+ * @version $Id: ExamplesBuandle Feb 25, 2011 9:37:15 AM evgen $
  *
  */
-public class Base extends GWTTestCase
+public interface ExamplesBuandle extends ClientBundle
 {
+   ExamplesBuandle INSTANCE = GWT.create(ExamplesBuandle.class);
 
-   /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
-    */
-   @Override
-   public String getModuleName()
-   {
-      return "org.exoplatform.ide.editor.EditorTest";
-   }
+   @Source("org/exoplatform/ide/editor/public/example/example.html")
+   TextResource htmlExample();
 
+   @Source("org/exoplatform/ide/editor/public/example/jsTest.js")
+   TextResource jsExample();
+
+   @Source("org/exoplatform/ide/editor/public/example/googleGadget.txt")
+   TextResource ggExample();
+   
+   @Source("org/exoplatform/ide/editor/public/example/xmlEx.txt")
+   TextResource xmlExample();
 }

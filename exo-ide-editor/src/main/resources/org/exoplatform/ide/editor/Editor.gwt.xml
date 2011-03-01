@@ -32,6 +32,7 @@
        
       <source path="api" />
       <source path="codemirror" />
+      <source path="codeassistant" />
       
       <stylesheet src='codemirror/css/editor.css' />
       <script src='codemirror/js/codemirror.js' />

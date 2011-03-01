@@ -16,43 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror;
+package org.exoplatform.ide.editor.codeassistant;
 
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Codeassistant Feb 22, 2011 5:17:02 PM evgen $
+ * @version $Id: Base Feb 25, 2011 10:59:00 AM evgen $
  *
  */
-public interface CodeAssistantCss extends CssResource
+public class Base extends GWTTestCase
 {
 
-   @ClassName("exo-autocomplete-panel")
-   String panelStyle(); 
-   
-   @ClassName("exo-autocomplete-list-item")
-   String item();
-   
-   @ClassName("exo-autocomplete-list-item-overed")
-   String overedItem();
-   
-   @ClassName("exo-autocomplete-list-item-selected")
-   String selectedItem();
-   
-   @ClassName("exo-autocomplete-description")
-   String description();
-   
-   @ClassName("exo-autocomplete-list")
-   String listStyle();
-   
-   @ClassName("exo-autocomplete-fqn")
-   String fqnStyle();
-   
-   @ClassName("exo-autocomplete-keyword")
-   String keywordStyle();
-   
-   @ClassName("exo-autocomplete-edit")
-   String edit();
+   /**
+    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
+    */
+   @Override
+   public String getModuleName()
+   {
+      return "org.exoplatform.ide.editor.EditorTest";
+   }
 
 }
