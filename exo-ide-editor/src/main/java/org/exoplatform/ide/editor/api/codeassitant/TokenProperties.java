@@ -69,13 +69,6 @@ public interface TokenProperties
    public static String FULL_TEXT =  "FULL-TEXT";
    
    
-   /**
-    * Used for sub token list property.
-    * Contains {@link ArrayProperty} 
-    */
-   public static String CHILD_TOKEN_LIST =  "CHILD-TOKEN-LIST";
-   
-   
    public static String LINE_NUMBER = "lineNumber";
    
    public static String MIME_TYPE = "mimeType";
@@ -84,6 +77,10 @@ public interface TokenProperties
    
    public static String FULL_DESCRIPTION = "fullDescription";
    
+   /**
+    * Used for sub token list property.
+    * Contains {@link ArrayProperty} 
+    */
    public static String SUB_TOKEN_LIST = "subTokenList";
    
    public static String ELEMENT_TYPE = "elementType";

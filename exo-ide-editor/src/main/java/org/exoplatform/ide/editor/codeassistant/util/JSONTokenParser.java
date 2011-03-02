@@ -66,8 +66,9 @@ public class JSONTokenParser
       for (int i = 0; i < json.size(); i++)
       {
          JSONObject jObject = json.get(i).isObject();
+         String name  = jObject.get(TokenFields.NAME).isString() == null ? null : jObject.get(TokenFields.NAME).isString().stringValue();  
          Token t =
-            new TokenImpl(jObject.get(TokenFields.NAME).isString().stringValue(), TokenType.valueOf(jObject
+            new TokenImpl(name, TokenType.valueOf(jObject
                .get(TokenFields.TYPE).isString().stringValue()));
 
          if (jObject.get(TokenFields.SHORT_DECRIPTION) != null)
@@ -94,7 +95,7 @@ public class JSONTokenParser
 
          if (jObject.get(TokenFields.SUB_TOKEN_LIST) != null)
          {
-            t.setProperty(TokenProperties.CHILD_TOKEN_LIST,
+            t.setProperty(TokenProperties.SUB_TOKEN_LIST,
                new ArrayProperty(getTokens(jObject.get(TokenFields.SUB_TOKEN_LIST).isArray())));
          }
          if (jObject.get(TokenFields.VARTYPE) != null)

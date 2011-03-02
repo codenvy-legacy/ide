@@ -1,0 +1,81 @@
+[ {
+	"name" : "web-app",
+	"type" : "TAG",
+	"subTokenList" : [ {
+		"name" : "display-name",
+		"type" : "TAG",
+		"subTokenList" : [ {
+			"name" : null,
+			"type" : "TAG_BREAK"
+		} ]
+	}, {
+		"name" : "context-param",
+		"type" : "TAG",
+		"subTokenList" : [ {
+			"name" : "param-name",
+			"type" : "TAG",
+			"subTokenList" : [ {
+				"name" : null,
+				"type" : "TAG_BREAK"
+			} ]
+		}, {
+			"name" : "param-value",
+			"type" : "TAG",
+			"subTokenList" : [ {
+				"name" : null,
+				"type" : "TAG_BREAK"
+			} ]
+		}, {
+			"name" : null,
+			"type" : "TAG_BREAK"
+		} ]
+	}, {
+		"name" : "context-param",
+		"type" : "TAG",
+		"subTokenList" : [ {
+			"name" : "param-name",
+			"type" : "TAG",
+			"subTokenList" : [ {
+				"name" : null,
+				"type" : "TAG_BREAK"
+			} ]
+		}, {
+			"name" : "param-value",
+			"type" : "TAG",
+			"subTokenList" : [ {
+				"name" : null,
+				"type" : "TAG_BREAK"
+			} ]
+		}, {
+			"name" : null,
+			"type" : "TAG_BREAK"
+		} ]
+	}, {
+		"name" : "CDATA",
+		"type" : "CDATA"
+	}, {
+		"name" : "filter",
+		"type" : "TAG",
+		"subTokenList" : [ {
+			"name" : "filter-name",
+			"type" : "TAG",
+			"subTokenList" : [ {
+				"name" : null,
+				"type" : "TAG_BREAK"
+			} ]
+		}, {
+			"name" : "filter-class",
+			"type" : "TAG",
+			"subTokenList" : [ {
+				"name" : null,
+				"type" : "TAG_BREAK"
+			} ]
+		}, {
+			"name" : null,
+			"type" : "TAG_BREAK"
+		} ]
+	}, {
+		"name" : null,
+		"type" : "TAG_BREAK"
+	} ]
+} ]

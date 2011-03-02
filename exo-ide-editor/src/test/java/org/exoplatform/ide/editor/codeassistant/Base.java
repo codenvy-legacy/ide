@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor.codeassistant;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
@@ -36,5 +37,14 @@ public class Base extends GWTTestCase
    {
       return "org.exoplatform.ide.editor.EditorTest";
    }
+   
+   /**
+    * Takes in a trusted JSON String and evals it.
+    * @param JSON String that you trust
+    * @return JavaScriptObject that you can cast to an Overlay Type
+    */
+   protected native JavaScriptObject parseJson(String json) /*-{
+     return eval('(' + json + ')'); ;
+   }-*/;
 
 }

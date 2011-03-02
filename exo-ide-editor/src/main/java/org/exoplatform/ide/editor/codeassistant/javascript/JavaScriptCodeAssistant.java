@@ -170,9 +170,9 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
                clazz = tokensByFQN.get(posFQN[posFQN.length - 1].toLowerCase());
             }
          }
-         if (clazz != null && clazz.hasProperty(TokenProperties.CHILD_TOKEN_LIST))
+         if (clazz != null && clazz.hasProperty(TokenProperties.SUB_TOKEN_LIST))
          {
-            tokens.addAll(clazz.getProperty(TokenProperties.CHILD_TOKEN_LIST).isArrayProperty().arrayValue());
+            tokens.addAll(clazz.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue());
          }
       }
       else

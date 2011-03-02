@@ -143,7 +143,7 @@ public abstract class CodeAssistant implements TokenSelectedHandler
       editor.setFocus();
    }
    
-   /*
+   /**
     * Takes in a trusted JSON String and evals it.
     * @param JSON String that you trust
     * @return JavaScriptObject that you can cast to an Overlay Type

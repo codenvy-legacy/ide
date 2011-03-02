@@ -18,27 +18,22 @@
  */
 package org.exoplatform.ide.editor.codeassistant;
 
-
-import com.google.gwt.junit.tools.GWTTestSuite;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: GwtTestSuite Feb 28, 2011 2:21:56 PM evgen $
+ * @version $Id: CodeAssistantTestBundle Mar 2, 2011 9:51:03 AM evgen $
  *
  */
-public class GwtCodeAssistantTestSuite extends TestCase
+public interface CodeAssistantTestBundle extends ClientBundle
 {
-   public static Test suite()
-   {
-       GWTTestSuite suite = new GWTTestSuite( "eXo IDE CodeAssistant GWT Tests" );
-       suite.addTestSuite(CssGwtTestCodeAssistant.class );
-       suite.addTestSuite(HtmlGwtTestCodeAssistant.class );
-       suite.addTestSuite(JavaScriptGwtTestCodeAssistant.class );
-       suite.addTestSuite(XmlGwtTestCodeAssistant.class);
-       return suite;
-   }
+
+   public static CodeAssistantTestBundle INSTANCE = GWT.create(CodeAssistantTestBundle.class);
+   
+   @Source("org/exoplatform/ide/editor/public/cssJSON.txt")
+   TextResource cssJSON();
    
 }
