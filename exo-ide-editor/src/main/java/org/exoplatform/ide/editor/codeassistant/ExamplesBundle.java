@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.editor.codeassistant;
 
-import org.exoplatform.ide.editor.api.Editor;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;

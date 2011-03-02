@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
-import org.exoplatform.ide.editor.api.codeassitant.CodeError;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
@@ -130,7 +130,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
     */
    @Override
-   public void errorMarckClicked(Editor editor, List<CodeError> codeErrorList, int markOffsetX, int markOffsetY,
+   public void errorMarckClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
       String fileMimeType)
    {
    }

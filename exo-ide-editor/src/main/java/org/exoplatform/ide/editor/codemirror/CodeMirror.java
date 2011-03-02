@@ -18,11 +18,14 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
+import org.exoplatform.ide.editor.api.CodeLine;
+import org.exoplatform.ide.editor.api.CodeValidator;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -34,7 +37,6 @@ import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
@@ -561,7 +563,9 @@ public class CodeMirror extends Editor
    {
       eventBus.fireEvent(new EditorFocusReceivedEvent(getEditorId()));
    }
-
+   
+   protected static List<CodeLine> codeErrorList = new ArrayList<CodeLine>();
+   
    /**
     * if there is line numbers left field, then validate code and mark lines with errors
     */
@@ -575,18 +579,49 @@ public class CodeMirror extends Editor
          {
             needUpdateTokenList = false;
             tokenList = (List<TokenBeenImpl>) configuration.getParser().getTokenList(editorObject);
-         }
+            
+            // Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList         
+            if (tokenList == null || tokenList.isEmpty())
+            {
+               // clear code error marks
+               for (CodeLine lastCodeError : codeErrorList)
+               {
+                  clearErrorMark(lastCodeError.getLineNumber());
+               }
+               return;
+            }
 
-         configuration.getCodeValidator().validateCode(tokenList, this);
+            List<CodeLine> newCodeErrorList = configuration.getCodeValidator().getCodeErrorList(tokenList);
+                     
+            udpateErrorMarks(newCodeErrorList);
+         }
       }
+   }
+   
+   void udpateErrorMarks(List<CodeLine> newCodeErrorList)
+   {        
+      for (CodeLine lastCodeError : codeErrorList)
+      {
+         clearErrorMark(lastCodeError.getLineNumber());
+      }
+
+      List<CodeLine> lineCodeErrorList;
+      for (CodeLine newCodeError : newCodeErrorList)
+      {
+         // TODO supress repetitevly setting error mark if there are several errors in the one line         
+         lineCodeErrorList = CodeValidator.getCodeErrorList(newCodeError.getLineNumber(), newCodeErrorList);
+         setErrorMark(newCodeError.getLineNumber(), CodeValidator.getErrorSummary(lineCodeErrorList));
+      }
+      
+      codeErrorList = newCodeErrorList;
    }
 
    private void onLineNumberClick(int lineNumber)
    {
       // test if this is line with code error
-      if (configuration.getCodeValidator().isExistedCodeError(lineNumber))
+      if (CodeValidator.isExistedCodeError(lineNumber, codeErrorList))
       {
-         codeAssistant.errorMarckClicked(this, configuration.getCodeValidator().getCodeErrorList(lineNumber),
+         codeAssistant.errorMarckClicked(this, CodeValidator.getCodeErrorList(lineNumber, codeErrorList),
             (getAbsoluteTop() + getCursorOffsetY(lineNumber)), (getAbsoluteLeft() + lineNumberFieldWidth),
             (String)params.get(CodeMirrorParams.MIME_TYPE));
       }
@@ -1013,7 +1048,7 @@ public class CodeMirror extends Editor
     * @param lineNumber starting from 1
     * @param errorSummary text summary of errors within the line
     */
-   public native void setErrorMark(int lineNumber, String errorSummary) /*-{
+   private native void setErrorMark(int lineNumber, String errorSummary) /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 		var fileConfiguration = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::configuration;
 		var codeErrorMarkStyle = fileConfiguration.@org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration::getCodeErrorMarkStyle()();
@@ -1025,7 +1060,7 @@ public class CodeMirror extends Editor
     * Clear error mark from lineNumbers field
     * @param lineNumber starting from 1
     */
-   public native void clearErrorMark(int lineNumber) /*-{
+   private native void clearErrorMark(int lineNumber) /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
 				.removeAttribute('class');
@@ -1037,7 +1072,7 @@ public class CodeMirror extends Editor
     * @param newText
     * @param lineNumber started from 1
     */
-   public native void insertIntoLine(String newText, int lineNumber) /*-{
+   private native void insertIntoLine(String newText, int lineNumber) /*-{
       var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
       if (editor != null && newText) {
          var handler = editor.nthLine(lineNumber);
@@ -1051,6 +1086,18 @@ public class CodeMirror extends Editor
       highlighter.setStyleName("CodeMirror-line-highlighter");
       return highlighter;
    }
+   
+   public void insertImportStatement(String fqn)
+   {
+      if (configuration.canBeValidated())
+      {
+         CodeLine importStatement = configuration.getCodeValidator().getImportStatement(getTokenList(), fqn);
+         if (importStatement != null)
+         {
+            insertIntoLine(importStatement.getLineContent(), importStatement.getLineNumber());
+         }
+      }
+   }  
 
    private HandlerManager getEventBus()
    {

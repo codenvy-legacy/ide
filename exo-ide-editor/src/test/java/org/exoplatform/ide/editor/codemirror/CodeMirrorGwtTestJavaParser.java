@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.codeassitant.CodeError;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
@@ -200,7 +200,7 @@ public class CodeMirrorGwtTestJavaParser extends Base
       }
 
       @Override
-      public void errorMarckClicked(Editor editor, List<CodeError> codeErrorList, int markOffsetX,
+      public void errorMarckClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX,
          int markOffsetY, String fileMimeType)
       {
          System.out.println(">>>>>>>>>>>>>>>> errorMarckClicked");

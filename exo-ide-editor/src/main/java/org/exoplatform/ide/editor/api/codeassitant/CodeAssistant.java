@@ -20,6 +20,7 @@ package org.exoplatform.ide.editor.api.codeassitant;
 
 import java.util.List;
 
+import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.ui.AutocompletionForm;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
@@ -62,7 +63,7 @@ public abstract class CodeAssistant implements TokenSelectedHandler
     * @param markOffsetY
     * @param fileMimeType
     */
-   public abstract void errorMarckClicked(Editor editor, List<CodeError> codeErrorList, int markOffsetX,
+   public abstract void errorMarckClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX,
       int markOffsetY, String fileMimeType);
 
    /**

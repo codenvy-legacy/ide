@@ -16,39 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.api.codeassitant;
+package org.exoplatform.ide.editor.api;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
  *
  */
-public class CodeError
+public class CodeLine
 {
-   CodeErrorType type; 
+   CodeType type; 
    
-   String incorrectToken; 
+   String lineContent; 
    
    int lineNumber; 
-
-//   // it is hard to get this value based on tokenList within the Parser.validateCode() method   
-//   int indexOfIncorrectToken; 
    
-   public CodeError(CodeErrorType type, String incorrectToken, int lineNumber)
+   public CodeLine(CodeType type, String lineContent, int lineNumber)
    {
       this.type = type;
-      this.incorrectToken = incorrectToken;
+      this.lineContent = lineContent;
       this.lineNumber = lineNumber;
    }
    
-   public CodeErrorType getType()
+   public CodeType getType()
    {
       return type;
    }
    
-   public String getIncorrectToken()
+   public String getLineContent()
    {
-      return incorrectToken;
+      return lineContent;
    }
    
    public int getLineNumber()
@@ -56,8 +53,8 @@ public class CodeError
       return lineNumber;
    }
    
-   public enum CodeErrorType 
+   public enum CodeType 
    {
-      TYPE_ERROR;
+      TYPE_ERROR, IMPORT_STATEMENT;
    }
 }

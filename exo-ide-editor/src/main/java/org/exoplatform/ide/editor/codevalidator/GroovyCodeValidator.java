@@ -25,12 +25,11 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.codeassitant.CodeError;
+import org.exoplatform.ide.editor.api.CodeLine;
+import org.exoplatform.ide.editor.api.CodeLine.CodeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.api.codeassitant.CodeError.CodeErrorType;
 
 
 /**
@@ -72,34 +71,28 @@ public class GroovyCodeValidator extends CodeValidatorImpl
    }
       
    /**
-    * Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList 
+    * Get list of code errors and error marks. 
     * @param tokenList 
-    * @param editor Code Editor
     */
-   public void validateCode(List<? extends Token> tokenList, Editor editor)
+   public List<CodeLine> getCodeErrorList(List<? extends Token> tokenList)
    {     
+      List<CodeLine> newCodeErrorList = new ArrayList<CodeLine>();
+      
       lastImportStatementLineNumber = 0;
       
       if (tokenList == null || tokenList.isEmpty())
       {
-         // clear code error marks
-         for (CodeError lastCodeError : codeErrorList)
-         {
-            editor.clearErrorMark(lastCodeError.getLineNumber());
-         }
-         return;
+         return new ArrayList<CodeLine>();
       }
-
-      List<CodeError> newCodeErrorList = new ArrayList<CodeError>();
       
       newCodeErrorList.addAll(verifyJavaTypes((List<TokenBeenImpl>)tokenList));
       
-      udpateErrorMarks(newCodeErrorList, editor);
+      return newCodeErrorList;
    }
 
-   private List<CodeError> verifyJavaTypes(List<TokenBeenImpl> tokenList)
+   private List<CodeLine> verifyJavaTypes(List<TokenBeenImpl> tokenList)
    {
-      List<CodeError> javaTypeErrorList = new ArrayList<CodeError>();
+      List<CodeLine> javaTypeErrorList = new ArrayList<CodeLine>();
       
       List<TokenBeenImpl> importStatementBlock = getImportStatementBlock(tokenList);
       
@@ -144,9 +137,9 @@ public class GroovyCodeValidator extends CodeValidatorImpl
     * @param importStatementBlock
     * @return
     */
-   private List<CodeError> validateTokenJavaType(TokenBeenImpl currentToken, List<TokenBeenImpl> importStatementBlock)
+   private List<CodeLine> validateTokenJavaType(TokenBeenImpl currentToken, List<TokenBeenImpl> importStatementBlock)
    {
-      List<CodeError> javaTypeErrorList = new ArrayList<CodeError>();
+      List<CodeLine> javaTypeErrorList = new ArrayList<CodeLine>();
 
       // validate annotations
       List<TokenBeenImpl> annotations = currentToken.getAnnotations();
@@ -195,7 +188,7 @@ public class GroovyCodeValidator extends CodeValidatorImpl
                   }
                   else
                   {
-                     javaTypeErrorList.add(new CodeError(CodeErrorType.TYPE_ERROR, javaType, currentToken.getLineNumber()));
+                     javaTypeErrorList.add(new CodeLine(CodeType.TYPE_ERROR, javaType, currentToken.getLineNumber()));
                   }
                }
             }
@@ -277,13 +270,15 @@ public class GroovyCodeValidator extends CodeValidatorImpl
    }
    
    @Override
-   public void insertImportStatement(List<TokenBeenImpl> tokenList, String fqn, Editor editor)
+   public CodeLine getImportStatement(List<? extends Token> tokenList, String fqn)
    {
-      if (shouldImportStatementBeInsterted(tokenList, fqn))
+      if (shouldImportStatementBeInsterted((List<TokenBeenImpl>) tokenList, fqn))
       {
-         int lineNumber = getAppropriateLineNumberToInsertImportStatement(tokenList);         
-         editor.insertIntoLine("import " + fqn + "\n", lineNumber);
+         int lineNumber = getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>)tokenList);         
+         return new CodeLine(CodeType.IMPORT_STATEMENT, "import " + fqn + "\n", lineNumber);
       }
+      
+      return null;
    }   
 
    /**

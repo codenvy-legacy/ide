@@ -21,41 +21,28 @@ package org.exoplatform.ide.editor.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ide.editor.api.codeassitant.CodeError;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a> 
  * @version $Id: DefaultCodeValidator Feb 10, 2011 9:54:23 AM evgen $
  *
  */
 public class DefaultCodeValidator extends CodeValidator
 {
 
-   /**
-    * @see org.exoplatform.ide.editor.api.CodeValidator#validateCode(java.util.List, org.exoplatform.ide.editor.api.Editor)
-    */
    @Override
-   public void validateCode(List<? extends Token> tokenList, Editor editor)
+   public List<CodeLine> getCodeErrorList(List<? extends Token> tokenList)
    {
+      return new ArrayList<CodeLine>();
    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.CodeValidator#isExistedCodeError(int)
-    */
    @Override
-   public boolean isExistedCodeError(int lineNumber)
+   public CodeLine getImportStatement(List<? extends Token> tokenList, String fqn)
    {
-      return false;
+      return null;
    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.CodeValidator#getCodeErrorList(int)
-    */
-   @Override
-   public List<CodeError> getCodeErrorList(int lineNumber)
-   {
-      return new ArrayList<CodeError>();
-   }
 
 }

@@ -20,9 +20,9 @@ package org.exoplatform.ide.editor.codeassistant;
 
 import java.util.List;
 
+import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
-import org.exoplatform.ide.editor.api.codeassitant.CodeError;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 
 /**
@@ -38,7 +38,7 @@ public class DefaultCodeAssistant extends CodeAssistant
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
     */
    @Override
-   public void errorMarckClicked(Editor editor, List<CodeError> codeErrorList, int markOffsetX, int markOffsetY,
+   public void errorMarckClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
       String fileMimeType)
    {
       

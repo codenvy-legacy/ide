@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.editor.codevalidator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,8 +25,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.CodeValidator;
 import org.exoplatform.ide.editor.api.DefaultCodeValidator;
 import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.codeassitant.CodeError;
-import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 
@@ -53,117 +50,6 @@ public abstract class CodeValidatorImpl extends CodeValidator
 
       return new DefaultCodeValidator();
    }
-
-   protected static List<CodeError> codeErrorList = new ArrayList<CodeError>();
-   
-   /**
-    * Returns list of code error in line with lineNumber
-    * @param lineNumber
-    * @return
-    */
-   public List<CodeError> getCodeErrorList(int lineNumber)
-   {
-      return  getCodeErrorList(lineNumber, codeErrorList);
-   }
-
-   /**
-    * Returns list of code error in line with lineNumber
-    * @param lineNumber
-    * @return
-    */
-   private List<CodeError> getCodeErrorList(int lineNumber, List<CodeError> codeErrors)
-   {
-      List<CodeError> lineCodeErrorList = new ArrayList<CodeError>();
-      
-      for (CodeError codeError: codeErrors)
-      {
-         if (codeError.getLineNumber() == lineNumber)
-         {            
-            lineCodeErrorList.add(codeError);
-         }
-      }
-
-      return lineCodeErrorList;
-   }
-   
-   /**
-    * Get text summary of registered errors from the lineCodeErrorList within the line 
-    * @param lineCodeErrorList
-    * @return text summary of errors within the line
-    */
-   String getErrorSummary(List<CodeError> lineCodeErrorList)
-   {
-      String errorSummary = "";
-      
-      for (CodeError codeError: lineCodeErrorList)
-      {
-         switch(codeError.getType()) {
-            case TYPE_ERROR:
-               errorSummary += "'" + codeError.getIncorrectToken() + "' cannot be resolved to a type; ";
-               break;
-               
-            default:
-         }
-      }
-      
-      return errorSummary;
-   }
-   
-   /**
-    * Update list of code errors and error marks
-    * @param tokenList 
-    * @param editor Code Editor
-    */
-   public abstract void validateCode(List<? extends Token> tokenList, Editor editor);
-
-   /**
-    * 
-    * @param lineNumber
-    * @return true if there is at list one code error in the line with lineNumber
-    */
-   public boolean isExistedCodeError(int lineNumber)
-   {
-      for (CodeError codeError: codeErrorList)
-      {
-         if (codeError.getLineNumber() == lineNumber)
-         {            
-            return true;
-         }
-      }
-
-      return false;
-   }
-   
-   void udpateErrorMarks(List<CodeError> newCodeErrorList, Editor editor)
-   {        
-      for (CodeError lastCodeError : codeErrorList)
-      {
-         editor.clearErrorMark(lastCodeError.getLineNumber());
-      }
-
-      List<CodeError> lineCodeErrorList;
-      for (CodeError newCodeError : newCodeErrorList)
-      {
-         // TODO supress repetitevly setting error mark if there are several errors in the one line         
-         lineCodeErrorList = getCodeErrorList(newCodeError.getLineNumber(), newCodeErrorList);
-         editor.setErrorMark(newCodeError.getLineNumber(), getErrorSummary(lineCodeErrorList));
-      }
-      
-//         if (newCodeErrorList != null && newCodeErrorList.size() != 0)
-//         {
-//            eventBus.fireEvent(new EditorCodeErrorFound(newCodeErrorList));
-//         }
-      
-      codeErrorList = newCodeErrorList;
-   }
-
-   /**
-    * Insert import statement "import <fqn>;" in the appropriate place of file
-    * @param tokenList
-    * @param fqn
-    * @param editor
-    */
-   public abstract void insertImportStatement(List<TokenBeenImpl> tokenList, String fqn, Editor editor);
 
    /**
     * Extract tokens with mimeType from tokenList
