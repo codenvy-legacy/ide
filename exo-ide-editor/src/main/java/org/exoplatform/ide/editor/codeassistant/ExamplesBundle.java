@@ -33,10 +33,10 @@ public interface ExamplesBundle extends ClientBundle
 {
    ExamplesBundle INSTANCE = GWT.create(ExamplesBundle.class);
 
-   @Source("org/exoplatform/ide/editor/public/example/example.html")
+   @Source("org/exoplatform/ide/editor/public/example/example.txt")
    TextResource htmlExample();
 
-   @Source("org/exoplatform/ide/editor/public/example/jsTest.js")
+   @Source("org/exoplatform/ide/editor/public/example/jsTest.txt")
    TextResource jsExample();
 
    @Source("org/exoplatform/ide/editor/public/example/googleGadget.txt")
@@ -48,16 +48,16 @@ public interface ExamplesBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/public/example/netvibes.txt")
    TextResource netvibesExample();
 
-   @Source("org/exoplatform/ide/editor/public/example/pojo.groovy")
+   @Source("org/exoplatform/ide/editor/public/example/pojo.txt")
    TextResource groovyExample();
    
-   @Source("org/exoplatform/ide/editor/public/example/service.grs")
+   @Source("org/exoplatform/ide/editor/public/example/service.txt")
    TextResource groovyServiceExample();   
    
-   @Source("org/exoplatform/ide/editor/public/example/dataObject.groovy")
+   @Source("org/exoplatform/ide/editor/public/example/dataObject.txt")
    TextResource dataObjectExample();   
    
-   @Source("org/exoplatform/ide/editor/public/example/groovyTemplate.gtmpl")   
+   @Source("org/exoplatform/ide/editor/public/example/groovyTemplate.txt")   
    TextResource groovyTemplateExample();
 
 }

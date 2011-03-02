@@ -442,6 +442,7 @@ public class EditorTest implements EntryPoint
       toolbar.add(xmlButton);
       toolbar.add(googleGadgetButton);
       toolbar.add(netvibesButton);      
+      toolbar.add(groovyServiceButton);
       toolbar.add(groovyButton);      
       toolbar.add(dataObjectButton);      
       toolbar.add(groovyTemplateButton);      
