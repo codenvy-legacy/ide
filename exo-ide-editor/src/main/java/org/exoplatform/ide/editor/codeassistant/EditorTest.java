@@ -45,6 +45,7 @@ import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 import org.exoplatform.ide.editor.codemirror.producers.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
+import org.exoplatform.ide.editor.codevalidator.GroovyTemplateCodeValidator;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -183,6 +184,8 @@ public class EditorTest implements EntryPoint
                true, // can be autocompleted
                new GroovyParser(), // exoplatform code parser 
                new GroovyAutocompleteHelper(), // autocomplete helper
+               true, // can be validated
+               new GroovyCodeValidator(),
                new DefaultCodeAssistant())));      
 
       addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", true,
@@ -193,6 +196,8 @@ public class EditorTest implements EntryPoint
                true, // can be autocompleted
                new GroovyParser(), // exoplatform code parser 
                new GroovyAutocompleteHelper(), // autocomplete helper
+               true, // can be validated
+               new GroovyCodeValidator(),
                new DefaultCodeAssistant())));
       
       addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl", true,
@@ -203,6 +208,8 @@ public class EditorTest implements EntryPoint
                true, // can be autocompleted
                new GroovyTemplateParser(), // exoplatform code parser 
                new GroovyTemplateAutocompleteHelper(), // autocomplete helper
+               true, // can be validated
+               new GroovyTemplateCodeValidator(),
                new DefaultCodeAssistant(), true)));     
       
       //To initialize client bundle 
@@ -445,9 +452,9 @@ public class EditorTest implements EntryPoint
       toolbar.add(jsButton);
       toolbar.add(xmlButton);
       toolbar.add(googleGadgetButton);
-      toolbar.add(netvibesButton);      
-      toolbar.add(groovyServiceButton);
+      toolbar.add(netvibesButton);     
       toolbar.add(groovyButton);      
+      toolbar.add(groovyServiceButton);   
       toolbar.add(dataObjectButton);      
       toolbar.add(groovyTemplateButton);      
 
