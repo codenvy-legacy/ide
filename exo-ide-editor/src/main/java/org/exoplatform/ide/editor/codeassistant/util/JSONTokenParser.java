@@ -32,7 +32,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 
 /**
- * Token parser for JSOT tokens.
+ * Token parser for JSON tokens.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JSONTokenParser.java Jan 24, 2011 10:37:59 AM vereshchaka $

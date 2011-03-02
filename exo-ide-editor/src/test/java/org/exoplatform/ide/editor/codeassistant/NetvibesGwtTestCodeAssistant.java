@@ -25,54 +25,62 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
-import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: GwtTestHtmlCodeAssistant Feb 25, 2011 10:58:45 AM evgen $
+ * @version $Id: NetvibesGwtTestCodeAssistant Mar 2, 2011 2:30:56 PM evgen $
  *
  */
-public class HtmlGwtTestCodeAssistant extends Base
+public class NetvibesGwtTestCodeAssistant extends Base
 {
-  
-   /**
-    * 
-    */
-   private static final int TagNum = 82;
+   public void testNVCodeAssistantFunction()
+   {
+      String line = "function(";
+      paseLine(line, line, "", "", line.length() + 1);
+   }
 
-   /**
-    * @see com.google.gwt.junit.client.GWTTestCase#gwtSetUp()
-    */
-   @Override
-   protected void gwtSetUp() throws Exception
+   public void testNVCodeAssistantSplit()
    {
-      super.gwtSetUp();
+      String line = "function{};";
+      paseLine(line, line, "", "", line.length() + 1);
+   }
+
+   public void testNVCodeAssistantBegin()
+   {
+      String line = "function a() {";
+      paseLine(line, line, "", "", line.length() + 1);
+   }
+
+   public void testNVCodeAssistantEnd()
+   {
+      String line = "some code; }";
+      paseLine(line, line, "", "", line.length() + 1);
    }
    
-   public void testHtmlParseLine()
+   public void testNVCodeAssistantMiddle()
    {
-      paseLine("<bod", "<", "bod", "", 5, TagNum);
+      String line = "some name";
+      paseLine(line, "some ", "na", "me", 8);
    }
    
-   public void testHtmlParseLineWithAttribute()
+   public void testNVCodeAssistantDot()
    {
-      paseLine("<body >", "<body ", "", ">", 7, 18);
-   }
-   
-   public void testHtmlParseLineWithAndTag()
-   {
-      paseLine("<body> ", "<body> ", "", "", 8, TagNum);
+      String line = "some name.split();";
+      paseLine(line, "some name.", "sp", "lit();", 13);
    }
    
    /**
     * @param line
     */
    private void paseLine(final String line, final String before, final String token, final String after,
-      final int curPos, final int numToken)
+      final int curPos)
    {
-      class HtmlCodeAssist extends HtmlCodeAssistant
+      class NVAssist extends NetvibesCodeAssistant
       {
-
+         /**
+          * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#openForm(int, int, java.util.List, org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory, org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler)
+          */
          @Override
          protected void openForm(int x, int y, List<Token> tokens, TokenWidgetFactory factory,
             TokenSelectedHandler handler)
@@ -80,11 +88,9 @@ public class HtmlGwtTestCodeAssistant extends Base
             assertEquals(token, tokenToComplete);
             assertEquals(before, beforeToken);
             assertEquals(after, afterToken);
-            assertEquals(numToken, tokens.size());
          }
       }
 
-      new HtmlCodeAssist().autocompleteCalled(null, "", 0, 0, line, curPos, 0,
-         new ArrayList<Token>(), MimeType.TEXT_HTML, null);
+    new NVAssist().autocompleteCalled(null, "", 0, 0, line, curPos, 0, new ArrayList<Token>(), MimeType.TEXT_JAVASCRIPT, null);
    }
 }

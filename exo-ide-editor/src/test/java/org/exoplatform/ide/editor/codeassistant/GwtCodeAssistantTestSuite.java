@@ -38,6 +38,7 @@ public class GwtCodeAssistantTestSuite extends TestCase
        suite.addTestSuite(HtmlGwtTestCodeAssistant.class );
        suite.addTestSuite(JavaScriptGwtTestCodeAssistant.class );
        suite.addTestSuite(XmlGwtTestCodeAssistant.class);
+       suite.addTestSuite(NetvibesGwtTestCodeAssistant.class);
        return suite;
    }
    

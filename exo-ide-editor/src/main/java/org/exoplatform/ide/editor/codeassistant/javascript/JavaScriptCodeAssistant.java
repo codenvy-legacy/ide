@@ -120,6 +120,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
                   {
                      tokensByFQN.put(t.getName().toLowerCase(), t);
                   }
+                  
                   autocompletion(cursorOffsetX, cursorOffsetY, cursorPositionY, tokenList, currentToken);
                }
 

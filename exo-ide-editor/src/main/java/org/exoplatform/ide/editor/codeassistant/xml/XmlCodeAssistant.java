@@ -19,6 +19,8 @@
 package org.exoplatform.ide.editor.codeassistant.xml;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +42,7 @@ import org.exoplatform.ide.editor.codeassistant.html.HtmlTokenWidget;
  * @version $Id: XmlCodeAssistant Mar 1, 2011 5:19:53 PM evgen $
  *
  */
-public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactory
+public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactory, Comparator<Token>
 {
 
    private Map<String, Token> tokens = new HashMap<String, Token>();
@@ -75,6 +77,7 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
          List<Token> tok = new ArrayList<Token>();
          filterTokens(tokenList);
          tok.addAll(tokens.values());
+         Collections.sort(tok, this);
          openForm(cursorOffsetX, cursorOffsetY, tok, this, this);
       }
       catch (Exception e)
@@ -161,5 +164,14 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
             printTokens(t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue(), i);
          }
       }
+   }
+
+   /**
+    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+    */
+   @Override
+   public int compare(Token t1, Token t2)
+   {
+      return t1.getName().compareToIgnoreCase(t2.getName());
    }
 }

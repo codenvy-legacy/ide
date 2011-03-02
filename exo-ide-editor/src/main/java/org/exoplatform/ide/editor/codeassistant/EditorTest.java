@@ -28,6 +28,7 @@ import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.xml.XmlCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorParams;
@@ -160,7 +161,7 @@ public class EditorTest implements EntryPoint
             true, // can be autocompleted
             new HtmlParser(), // exoplatform code parser 
             new HtmlAutocompleteHelper(), // autocomplete helper
-            new HtmlCodeAssistant(), true)));
+            new NetvibesCodeAssistant(), true)));
       
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO file editor", "groovy", true,
          new CodeMirrorConfiguration(

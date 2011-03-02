@@ -37,13 +37,13 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public abstract class CodeAssistant implements TokenSelectedHandler
 {
-   
+
    protected String beforeToken;
 
    protected String tokenToComplete;
 
    protected String afterToken;
-   
+
    protected Editor editor;
 
    /**
@@ -81,14 +81,14 @@ public abstract class CodeAssistant implements TokenSelectedHandler
    public abstract void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
       String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
       Token currentToken);
-   
+
    protected void openForm(int x, int y, List<Token> tokens, TokenWidgetFactory factory, TokenSelectedHandler handler)
    {
-       x = x - tokenToComplete.length() * 8 + 8;
-       y = y+ 4;
+      x = x - tokenToComplete.length() * 8 + 8;
+      y = y + 4;
       new AutocompletionForm(x, y, tokenToComplete, tokens, factory, handler);
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler#onStringSelected(java.lang.String)
     */
@@ -104,7 +104,7 @@ public abstract class CodeAssistant implements TokenSelectedHandler
    @Override
    public void onTokenSelected(TokenWidget value)
    {
-      String tokenValue = value.getTokenValue() ;
+      String tokenValue = value.getTokenValue();
       String tokenToPaste = "";
       int newCursorPos = 1;
       switch (value.getToken().getType())
@@ -112,24 +112,34 @@ public abstract class CodeAssistant implements TokenSelectedHandler
          case ATTRIBUTE :
             if (!beforeToken.endsWith(" "))
                beforeToken += " ";
-            tokenToPaste = beforeToken +tokenValue + afterToken;
-            newCursorPos = (beforeToken + tokenValue).lastIndexOf("\"") ;
+            tokenToPaste = beforeToken + tokenValue + afterToken;
+            newCursorPos = (beforeToken + tokenValue).lastIndexOf("\"");
             break;
-            
+
          case TAG :
             if (beforeToken.endsWith("<") || beforeToken.endsWith(" "))
                beforeToken = beforeToken.substring(0, beforeToken.length() - 1);
-            tokenToPaste = beforeToken + tokenValue+ afterToken;
+            tokenToPaste = beforeToken + tokenValue + afterToken;
             if (tokenValue.contains("/"))
-               newCursorPos = (beforeToken + tokenValue).indexOf("/", beforeToken.length()) - 1 ;
+               newCursorPos = (beforeToken + tokenValue).indexOf("/", beforeToken.length()) - 1;
             else
                newCursorPos = (beforeToken + tokenValue).length() + 1;
             break;
-            
-          default :
-              tokenToPaste = beforeToken + tokenValue+ afterToken;
-              newCursorPos = beforeToken.length() + tokenValue.length();
-             break;
+
+         case FUNCTION :
+         case METHOD :
+            newCursorPos = (beforeToken + tokenValue).length() + 1;
+            if (tokenValue.contains("("))
+            {
+               newCursorPos = (beforeToken + tokenValue).lastIndexOf('(') + 1;
+            }
+            tokenToPaste = beforeToken + tokenValue + afterToken;
+            break;
+
+         default :
+            tokenToPaste = beforeToken + tokenValue + afterToken;
+            newCursorPos = beforeToken.length() + tokenValue.length();
+            break;
       }
       editor.replaceTextAtCurrentLine(tokenToPaste, newCursorPos);
    }
@@ -142,14 +152,15 @@ public abstract class CodeAssistant implements TokenSelectedHandler
    {
       editor.setFocus();
    }
-   
+
    /**
     * Takes in a trusted JSON String and evals it.
     * @param JSON String that you trust
     * @return JavaScriptObject that you can cast to an Overlay Type
     */
    protected native JavaScriptObject parseJson(String json) /*-{
-     return eval('(' + json + ')'); ;
+		return eval('(' + json + ')');
+		;
    }-*/;
 
 }
