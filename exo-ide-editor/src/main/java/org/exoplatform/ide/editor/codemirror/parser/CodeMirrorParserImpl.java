@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Parser;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -34,10 +34,10 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id
  *
  */
-public class CodeMirrorParser extends Parser
+public class CodeMirrorParserImpl extends Parser
 {
    // it is needed for complex files like HTML, GoogleGadget etc.
-   private static HashMap<String, CodeMirrorParser> factory = new HashMap<String, CodeMirrorParser>();
+   private static HashMap<String, CodeMirrorParserImpl> factory = new HashMap<String, CodeMirrorParserImpl>();
    
    static
    {
@@ -48,7 +48,7 @@ public class CodeMirrorParser extends Parser
       factory.put(MimeType.APPLICATION_GROOVY, new GroovyParser());
    }
 
-   protected static CodeMirrorParser getParser(String mimeType)
+   protected static CodeMirrorParserImpl getParser(String mimeType)
    {
       if (factory.containsKey(mimeType))
       {
@@ -65,7 +65,7 @@ public class CodeMirrorParser extends Parser
     * @param hasParentParser indicates is parser calles by another parser, e.g. JavaScriptParser is called by HtmlParser
     * @return token list with tokens gathered from node chains from start node to <br> node
     */
-   CodeMirrorTokenImpl parseLine(JavaScriptObject node, int lineNumber, CodeMirrorTokenImpl currentToken, boolean hasParentParser)
+   TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       return currentToken;
    }
@@ -75,9 +75,9 @@ public class CodeMirrorParser extends Parser
    }
 
    @Override  
-   public List<CodeMirrorTokenImpl> getTokenList(JavaScriptObject editor)
+   public List<TokenBeenImpl> getTokenList(JavaScriptObject editor)
    {
-      List<CodeMirrorTokenImpl> emptyTokenList = new ArrayList<CodeMirrorTokenImpl>();
+      List<TokenBeenImpl> emptyTokenList = new ArrayList<TokenBeenImpl>();
 
       if (editor == null)
          return emptyTokenList;
@@ -86,8 +86,8 @@ public class CodeMirrorParser extends Parser
 
       JavaScriptObject node;
 
-      CodeMirrorTokenImpl rootToken = new CodeMirrorTokenImpl();
-      CodeMirrorTokenImpl currentToken = rootToken;
+      TokenBeenImpl rootToken = new TokenBeenImpl();
+      TokenBeenImpl currentToken = rootToken;
       currentToken.setSubTokenList(emptyTokenList);
 
       // fix error when editor.nthLine(1) = null
@@ -127,7 +127,7 @@ public class CodeMirrorParser extends Parser
     * @param tokenList
     * @return Returns mimeType of closes token.START_DELIMITER with token.lineNumber <= lineNumber. If there is no such START_DELIMITER in the tokenList, then returns mimeType of last token.FINISH_DELIMITER with token.lineNumber > lineNumber, or MimeType of firstToken, or null if TokenList is empty.
     */
-   public static String getLineMimeType(int targetLineNumber, List<CodeMirrorTokenImpl> tokenList)
+   public static String getLineMimeType(int targetLineNumber, List<TokenBeenImpl> tokenList)
    {
       if (tokenList == null || tokenList.size() == 0)
          return null;
@@ -135,7 +135,7 @@ public class CodeMirrorParser extends Parser
       possibleMimeType = tokenList.get(0).getMimeType();
       nearestTokenLineNumber = tokenList.get(0).getLineNumber();
 
-      for (CodeMirrorTokenImpl token : tokenList)
+      for (TokenBeenImpl token : tokenList)
       {
          if (token.getLineNumber() > targetLineNumber)
             break;
@@ -146,14 +146,14 @@ public class CodeMirrorParser extends Parser
       return possibleMimeType;
    }
 
-   private static void searchLineMimeType(int targetLineNumber, CodeMirrorTokenImpl currentToken)
+   private static void searchLineMimeType(int targetLineNumber, TokenBeenImpl currentToken)
    {
       // search appropriate token among the sub token
-      List<CodeMirrorTokenImpl> subTokenList = currentToken.getSubTokenList();
+      List<TokenBeenImpl> subTokenList = currentToken.getSubTokenList();
 
       if (subTokenList != null && subTokenList.size() != 0)
       {
-         for (CodeMirrorTokenImpl token : subTokenList)
+         for (TokenBeenImpl token : subTokenList)
          {
             if (token.getLineNumber() > targetLineNumber)
                break;

@@ -29,7 +29,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id: DefaultAutocomleteHelper Feb 10, 2011 9:49:35 AM evgen $
  *
  */
-public class DefaultAutocompleteHelper extends CodeMirrorAutocompleteHelper
+public class DefaultAutocompleteHelper extends AutocompleteHelper
 {
 
    /**

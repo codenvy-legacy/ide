@@ -16,72 +16,64 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror;
+package org.exoplatform.ide.editor.api.codeassitant;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ide.editor.api.codeassitant.ArrayProperty;
-import org.exoplatform.ide.editor.api.codeassitant.Modifier;
-import org.exoplatform.ide.editor.api.codeassitant.NumericProperty;
-import org.exoplatform.ide.editor.api.codeassitant.ObjectProperty;
-import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
-import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
-import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
  *
  */
-public class CodeMirrorTokenImpl extends TokenImpl
+public class TokenBeenImpl extends TokenImpl
 {
 
-   public CodeMirrorTokenImpl() 
+   public TokenBeenImpl() 
    {
    }
 
-   public CodeMirrorTokenImpl(String name, TokenType type)
+   public TokenBeenImpl(String name, TokenType type)
    {
       setName(name);
       setType(type);
    }
 
    
-   public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber)
+   public TokenBeenImpl(String name, TokenType type, int lineNumber)
    {
       this(name, type);
       setLineNumber(lineNumber);
    }
 
-   public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, String mimeType)
+   public TokenBeenImpl(String name, TokenType type, int lineNumber, String mimeType)
    {
       this(name, type, lineNumber);
       setMimeType(mimeType);
    }
 
-   public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType)
+   public TokenBeenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType)
    {
       this(name, type, lineNumber, mimeType);
       setElementType(elementType);
    }
 
-   public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType,
+   public TokenBeenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType,
       List<Modifier> javaModifiers)
    {
       this(name, type, lineNumber, mimeType, elementType);
       setModifiers(javaModifiers);
    }
 
-   public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType,
+   public TokenBeenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType,
       List<Modifier> javaModifiers, String fqn)
    {
       this(name, type, lineNumber, mimeType, elementType, javaModifiers);
       setFqn(fqn);
    }
    
-   public CodeMirrorTokenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType, String initializationStatement)
+   public TokenBeenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType, String initializationStatement)
    {
       this(name, type, lineNumber, mimeType, elementType);
       setInitializationStatement(initializationStatement);
@@ -139,10 +131,10 @@ public class CodeMirrorTokenImpl extends TokenImpl
          : null; 
    }
    
-   public List<CodeMirrorTokenImpl> getSubTokenList()
+   public List<TokenBeenImpl> getSubTokenList()
    {
       return  hasProperty(TokenProperties.SUB_TOKEN_LIST) 
-         ? (List<CodeMirrorTokenImpl>)((ArrayProperty) getProperty(TokenProperties.SUB_TOKEN_LIST)).arrayValue() 
+         ? (List<TokenBeenImpl>)((ArrayProperty) getProperty(TokenProperties.SUB_TOKEN_LIST)).arrayValue() 
          : null;
    }
 
@@ -177,15 +169,15 @@ public class CodeMirrorTokenImpl extends TokenImpl
       setProperty(TokenProperties.CODE, new StringProperty(code));
    }
 
-   public void setParentToken(CodeMirrorTokenImpl parentToken)
+   public void setParentToken(TokenBeenImpl parentToken)
    {
       setProperty(TokenProperties.PARENT_TOKEN, new ObjectProperty(parentToken));
    }
 
-   public CodeMirrorTokenImpl getParentToken()
+   public TokenBeenImpl getParentToken()
    {
       return  hasProperty(TokenProperties.PARENT_TOKEN)
-      ? (CodeMirrorTokenImpl)((ObjectProperty) getProperty(TokenProperties.PARENT_TOKEN)).objectValue() 
+      ? (TokenBeenImpl)((ObjectProperty) getProperty(TokenProperties.PARENT_TOKEN)).objectValue() 
       : null;
    }
 
@@ -200,7 +192,7 @@ public class CodeMirrorTokenImpl extends TokenImpl
    /**
     * @param subTokenList the subTokenList to set
     */
-   public void setSubTokenList(List<CodeMirrorTokenImpl> subTokenList)
+   public void setSubTokenList(List<TokenBeenImpl> subTokenList)
    {
       setProperty(TokenProperties.SUB_TOKEN_LIST, new ArrayProperty(subTokenList));
    }
@@ -247,50 +239,50 @@ public class CodeMirrorTokenImpl extends TokenImpl
       setProperty(TokenProperties.MODIFIERS, new ObjectProperty(modifiers));
    }
 
-   public void addAnnotation(CodeMirrorTokenImpl annotation)
+   public void addAnnotation(TokenBeenImpl annotation)
    {
-      List<CodeMirrorTokenImpl> annotations = getAnnotations();
+      List<TokenBeenImpl> annotations = getAnnotations();
       if (annotations == null)
       {
-         annotations = new ArrayList<CodeMirrorTokenImpl>();
+         annotations = new ArrayList<TokenBeenImpl>();
       }
 
       annotations.add(annotation);
       setAnnotations(annotations);
    }
 
-   public List<CodeMirrorTokenImpl> getAnnotations()
+   public List<TokenBeenImpl> getAnnotations()
    {
       return  hasProperty(TokenProperties.ANNOTATIONS) 
-         ? (List<CodeMirrorTokenImpl>)((ArrayProperty) getProperty(TokenProperties.ANNOTATIONS)).arrayValue() 
+         ? (List<TokenBeenImpl>)((ArrayProperty) getProperty(TokenProperties.ANNOTATIONS)).arrayValue() 
          : null; 
    }
 
-   public void setAnnotations(List<CodeMirrorTokenImpl> annotations)
+   public void setAnnotations(List<TokenBeenImpl> annotations)
    {
       setProperty(TokenProperties.ANNOTATIONS, new ArrayProperty(annotations));
    }
 
-   public void addParameter(CodeMirrorTokenImpl parameter)
+   public void addParameter(TokenBeenImpl parameter)
    {
-      List<CodeMirrorTokenImpl> parameters = getParameters();
+      List<TokenBeenImpl> parameters = getParameters();
       if (parameters == null)
       {
-         parameters = new ArrayList<CodeMirrorTokenImpl>();
+         parameters = new ArrayList<TokenBeenImpl>();
       }
 
       parameters.add(parameter);
       setParameters(parameters);
    }
 
-   public List<CodeMirrorTokenImpl> getParameters()
+   public List<TokenBeenImpl> getParameters()
    {
       return  hasProperty(TokenProperties.PARAMETERS) 
-         ? (List<CodeMirrorTokenImpl>)((ArrayProperty) getProperty(TokenProperties.PARAMETERS)).arrayValue() 
+         ? (List<TokenBeenImpl>)((ArrayProperty) getProperty(TokenProperties.PARAMETERS)).arrayValue() 
          : null; 
    }
 
-   public void setParameters(List<CodeMirrorTokenImpl> parameters)
+   public void setParameters(List<TokenBeenImpl> parameters)
    {
       setProperty(TokenProperties.PARAMETERS, new ArrayProperty(parameters));
    }
@@ -320,12 +312,12 @@ public class CodeMirrorTokenImpl extends TokenImpl
     * @param token
     * @param subToken
     */
-   public void addSubTokenToTheLastSubToken(CodeMirrorTokenImpl subToken)
+   public void addSubTokenToTheLastSubToken(TokenBeenImpl subToken)
    {
       if (getSubTokenList() == null || getSubTokenList().size() == 0)
          return;
 
-      CodeMirrorTokenImpl lastToken = getSubTokenList().get(getSubTokenList().size() - 1);
+      TokenBeenImpl lastToken = getSubTokenList().get(getSubTokenList().size() - 1);
       lastToken.addSubToken(subToken);
 
       subToken.setParentToken(lastToken);
@@ -336,7 +328,7 @@ public class CodeMirrorTokenImpl extends TokenImpl
       if (getSubTokenList() == null || getSubTokenList().size() == 0)
          return;
 
-      CodeMirrorTokenImpl lastSubToken = getSubTokenList().get(getSubTokenList().size() - 1);
+      TokenBeenImpl lastSubToken = getSubTokenList().get(getSubTokenList().size() - 1);
 
       lastSubToken.updateTypeOfLastSubToken(newType);
    }
@@ -346,7 +338,7 @@ public class CodeMirrorTokenImpl extends TokenImpl
       if (getSubTokenList() == null || getSubTokenList().size() == 0)
          return;
 
-      CodeMirrorTokenImpl lastSubToken = getSubTokenList().get(getSubTokenList().size() - 1);
+      TokenBeenImpl lastSubToken = getSubTokenList().get(getSubTokenList().size() - 1);
 
       lastSubToken.setType(newType);
    }
@@ -360,7 +352,7 @@ public class CodeMirrorTokenImpl extends TokenImpl
       if (getSubTokenList() == null || getSubTokenList().size() == 0)
          return;
 
-      CodeMirrorTokenImpl lastSubToken = getSubTokenList().get(getSubTokenList().size() - 1);
+      TokenBeenImpl lastSubToken = getSubTokenList().get(getSubTokenList().size() - 1);
 
       if (lastSubToken.getElementType() == null)
       {
@@ -372,11 +364,11 @@ public class CodeMirrorTokenImpl extends TokenImpl
       }
    }
    
-   public void addSubToken(CodeMirrorTokenImpl subToken)
+   public void addSubToken(TokenBeenImpl subToken)
    {
       if (this.getSubTokenList() == null)
       {
-         this.setSubTokenList(new ArrayList<CodeMirrorTokenImpl>());
+         this.setSubTokenList(new ArrayList<TokenBeenImpl>());
       }
 
       this.getSubTokenList().add(subToken);
@@ -396,7 +388,7 @@ public class CodeMirrorTokenImpl extends TokenImpl
 
    public void setLastSubTokenName(String name)
    {
-      CodeMirrorTokenImpl token = getLastSubToken();
+      TokenBeenImpl token = getLastSubToken();
 
       if (token != null)
       {
@@ -408,7 +400,7 @@ public class CodeMirrorTokenImpl extends TokenImpl
     * 
     * @return last subtoken or null if there is no any subtoken
     */
-   public CodeMirrorTokenImpl getLastSubToken()
+   public TokenBeenImpl getLastSubToken()
    {
       if (getSubTokenList() != null && getSubTokenList().size() != 0)
       {
@@ -421,7 +413,7 @@ public class CodeMirrorTokenImpl extends TokenImpl
    /**
     * @return last annotation token or null if there is no any annotation token
     */
-   public CodeMirrorTokenImpl getLastAnnotationToken()
+   public TokenBeenImpl getLastAnnotationToken()
    {
       if (this.getAnnotations() != null && this.getAnnotations().size() != 0)
       {

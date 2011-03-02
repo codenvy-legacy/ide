@@ -19,8 +19,8 @@
 package org.exoplatform.ide.editor.codemirror.parser;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -30,7 +30,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id: $
  *
  */
-public class GoogleGadgetParser extends CodeMirrorParser
+public class GoogleGadgetParser extends CodeMirrorParserImpl
 {
 
    String currentContentMimeType;
@@ -42,7 +42,7 @@ public class GoogleGadgetParser extends CodeMirrorParser
    }
 
    @Override
-   CodeMirrorTokenImpl parseLine(JavaScriptObject node, int lineNumber, CodeMirrorTokenImpl currentToken, boolean hasParentParser)
+   TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of the document
       if (node == null)
@@ -53,7 +53,7 @@ public class GoogleGadgetParser extends CodeMirrorParser
       // recognize CDATA open tag "<![CDATA["  within the TEXT_XML content
       if (XmlParser.isCDATAOpenNode(nodeContent) && MimeType.TEXT_XML.equals(currentContentMimeType))
       {
-         CodeMirrorTokenImpl newToken = new CodeMirrorTokenImpl("CDATA", TokenType.CDATA, lineNumber, MimeType.TEXT_HTML);
+         TokenBeenImpl newToken = new TokenBeenImpl("CDATA", TokenType.CDATA, lineNumber, MimeType.TEXT_HTML);
          if (currentToken != null)
          {
             currentToken.addSubToken(newToken);
@@ -61,7 +61,7 @@ public class GoogleGadgetParser extends CodeMirrorParser
          currentToken = newToken;
 
          currentContentMimeType = MimeType.TEXT_HTML;
-         CodeMirrorParser.getParser(currentContentMimeType).init();
+         CodeMirrorParserImpl.getParser(currentContentMimeType).init();
          node = Node.getNext(node); // pass parsed node
       }
 
@@ -71,11 +71,11 @@ public class GoogleGadgetParser extends CodeMirrorParser
          currentToken = XmlParser.addTagBreak(lineNumber, currentToken, MimeType.TEXT_XML);
 
          currentContentMimeType = MimeType.TEXT_XML;
-         CodeMirrorParser.getParser(currentContentMimeType).init();
+         CodeMirrorParserImpl.getParser(currentContentMimeType).init();
          node = Node.getNext(node); // pass parsed node
       }
 
-      currentToken = CodeMirrorParser.getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true); // call child parser
+      currentToken = CodeMirrorParserImpl.getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true); // call child parser
 
       if (node == null || Node.getName(node).equals("BR"))
       {

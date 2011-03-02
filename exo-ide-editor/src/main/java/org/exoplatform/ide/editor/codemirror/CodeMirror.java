@@ -27,11 +27,12 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
-import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParser;
+import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -60,16 +61,13 @@ public class CodeMirror extends Editor
 
    private final Browser currentBrowser = BrowserResolver.CURRENT_BROWSER;
 
-   private final String codeErrorMarkBackgroundStyle = "transparent url('" + GWT.getModuleBaseURL()
-      + "/images/editor/code-error.png') no-repeat scroll center center";
-
    private boolean needUpdateTokenList = false; // update token list only after the "initCallback" handler has been called
 
    private boolean needRevalidateCode = false; // revalidate code
 
    private boolean showLineNumbers = true;
 
-   private List<CodeMirrorTokenImpl> tokenList;
+   private List<TokenBeenImpl> tokenList;
 
    private int lineHeight = 16; // size of line in the CodeMirror in px
 
@@ -501,7 +499,7 @@ public class CodeMirror extends Editor
       String genericMimeType = (String)params.get(CodeMirrorParams.MIME_TYPE);
       if (configuration.canHaveSeveralMimeTypes())
       {
-         String mimeType = CodeMirrorParser.getLineMimeType(getCursorRow(), (List<CodeMirrorTokenImpl>) getTokenList());
+         String mimeType = CodeMirrorParserImpl.getLineMimeType(getCursorRow(), (List<TokenBeenImpl>) getTokenList());
 
          if (mimeType != null)
          {
@@ -576,7 +574,7 @@ public class CodeMirror extends Editor
          if (needUpdateTokenList)
          {
             needUpdateTokenList = false;
-            tokenList = (List<CodeMirrorTokenImpl>) configuration.getParser().getTokenList(editorObject);
+            tokenList = (List<TokenBeenImpl>) configuration.getParser().getTokenList(editorObject);
          }
 
          configuration.getCodeValidator().validateCode(tokenList, this);
@@ -989,7 +987,7 @@ public class CodeMirror extends Editor
       if (needUpdateTokenList)
       {
          needUpdateTokenList = false;
-         tokenList = (List<CodeMirrorTokenImpl>) configuration.getParser().getTokenList(editorObject);
+         tokenList = (List<TokenBeenImpl>) configuration.getParser().getTokenList(editorObject);
       }
 
       return tokenList;
@@ -1017,9 +1015,8 @@ public class CodeMirror extends Editor
     */
    public native void setErrorMark(int lineNumber, String errorSummary) /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].style.background = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::codeErrorMarkBackgroundStyle;
-		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].style.cursor = "pointer";
-		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].title = errorSummary;
+		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("class", "codeError");
+		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("title", errorSummary);
    }-*/;
 
    /**
@@ -1029,11 +1026,23 @@ public class CodeMirror extends Editor
    public native void clearErrorMark(int lineNumber) /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-				.removeAttribute('style');
+				.removeAttribute('class');
 		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
 				.removeAttribute('title');
    }-*/;
 
+   /** 
+    * @param newText
+    * @param lineNumber started from 1
+    */
+   public native void insertIntoLine(String newText, int lineNumber) /*-{
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      if (editor != null && newText) {
+         var handler = editor.nthLine(lineNumber);
+         editor.insertIntoLine(handler, 0, newText);
+      }
+   }-*/;   
+   
    private FlowPanel getLineHighlighter()
    {
       FlowPanel highlighter = new FlowPanel();

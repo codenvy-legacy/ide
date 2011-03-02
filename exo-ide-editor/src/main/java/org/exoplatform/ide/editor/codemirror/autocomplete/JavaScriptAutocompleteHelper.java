@@ -20,9 +20,9 @@ package org.exoplatform.ide.editor.codemirror.autocomplete;
 
 import java.util.List;
 
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -31,7 +31,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id
  *
  */
-public class JavaScriptAutocompleteHelper extends CodeMirrorAutocompleteHelper
+public class JavaScriptAutocompleteHelper extends AutocompleteHelper
 {
 
    /**
@@ -48,7 +48,7 @@ public class JavaScriptAutocompleteHelper extends CodeMirrorAutocompleteHelper
 
       String nodeContent = getStatementBeforePoint(node, cursorPosition);
 
-      CodeMirrorTokenImpl tokenBeforeCursor;
+      TokenBeenImpl tokenBeforeCursor;
       
       if (nodeContent != null && !nodeContent.isEmpty())
       {       
@@ -57,10 +57,10 @@ public class JavaScriptAutocompleteHelper extends CodeMirrorAutocompleteHelper
          // search token for variables like "name._" or "name.ch_"
          if (numberOfChainsBetweenPoint == 1)
          {
-            tokenBeforeCursor = getGenericToken(nodeContent, lineNumber, (List<CodeMirrorTokenImpl>) tokenList);            
+            tokenBeforeCursor = getGenericToken(nodeContent, lineNumber, (List<TokenBeenImpl>) tokenList);            
             if (tokenBeforeCursor != null) 
             {
-               CodeMirrorTokenImpl newToken = new CodeMirrorTokenImpl(
+               TokenBeenImpl newToken = new TokenBeenImpl(
                   tokenBeforeCursor.getName(), 
                   tokenBeforeCursor.getType(), 
                   lineNumber, 
@@ -78,14 +78,14 @@ public class JavaScriptAutocompleteHelper extends CodeMirrorAutocompleteHelper
    }
 
    
-   private static CodeMirrorTokenImpl getGenericToken(String nodeContent, int targetLineNumber, List<CodeMirrorTokenImpl> tokenList)
+   private static TokenBeenImpl getGenericToken(String nodeContent, int targetLineNumber, List<TokenBeenImpl> tokenList)
    {
       if (tokenList == null || tokenList.size() == 0)
          return null;
 
       nearestToken = tokenList.get(0);
       
-      for (CodeMirrorTokenImpl token : tokenList)
+      for (TokenBeenImpl token : tokenList)
       {
          if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
             break;
@@ -93,7 +93,7 @@ public class JavaScriptAutocompleteHelper extends CodeMirrorAutocompleteHelper
          searchNearestToken(targetLineNumber, token);
       }
       
-      CodeMirrorTokenImpl genericToken;
+      TokenBeenImpl genericToken;
       
       if (nearestToken != null)
       {

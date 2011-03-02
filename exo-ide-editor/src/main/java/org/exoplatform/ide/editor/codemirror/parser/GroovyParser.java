@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Stack;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -35,7 +35,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id: $
  *
  */
-public class GroovyParser extends CodeMirrorParser
+public class GroovyParser extends CodeMirrorParserImpl
 {
 
    private String lastNodeContent;
@@ -75,17 +75,17 @@ public class GroovyParser extends CodeMirrorParser
    /**
     * Possible annotations list
     */
-   private CodeMirrorTokenImpl annotationStorage;
+   private TokenBeenImpl annotationStorage;
 
    /**
     * Possible methodParameter token
     */
-   private CodeMirrorTokenImpl methodParameter;
+   private TokenBeenImpl methodParameter;
    
    /**
     * Possible parameters list
     */
-   private CodeMirrorTokenImpl parameterStorage;   
+   private TokenBeenImpl parameterStorage;   
    
    /**
     * To store java types for properties like "String a,b,c;"
@@ -104,13 +104,13 @@ public class GroovyParser extends CodeMirrorParser
       lastNodeType = lastNodeContent = null;
       enclosers.clear();
       methodParameter = null;
-      annotationStorage = parameterStorage = new CodeMirrorTokenImpl();
+      annotationStorage = parameterStorage = new TokenBeenImpl();
       currentJavaType = lastJavaType = "";
       modifiers = new LinkedList<Modifier>();  
    }
 
    @Override
-   CodeMirrorTokenImpl parseLine(JavaScriptObject node, int lineNumber, CodeMirrorTokenImpl currentToken, boolean hasParentParser)
+   TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of the line or content
       if ((node == null) || Node.getName(node).equals("BR"))
@@ -299,10 +299,10 @@ public class GroovyParser extends CodeMirrorParser
                // to recognize several annotations for one parameter like 'public java.lang.String post(@PathParam("pathParam") @DefaultValue("pathParam Default") String pathParam,' 
                if (methodParameter == null)
                {
-                  methodParameter = new CodeMirrorTokenImpl(null, TokenType.PARAMETER, 0, MimeType.APPLICATION_GROOVY, null);
+                  methodParameter = new TokenBeenImpl(null, TokenType.PARAMETER, 0, MimeType.APPLICATION_GROOVY, null);
                }
                
-               methodParameter.addAnnotation(new CodeMirrorTokenImpl(
+               methodParameter.addAnnotation(new TokenBeenImpl(
                   nodeContent, 
                   TokenType.ANNOTATION, 
                   lineNumber, 
@@ -326,7 +326,7 @@ public class GroovyParser extends CodeMirrorParser
 
                if (methodParameter == null)
                {
-                  methodParameter = new CodeMirrorTokenImpl(nodeContent, TokenType.PARAMETER, lineNumber,
+                  methodParameter = new TokenBeenImpl(nodeContent, TokenType.PARAMETER, lineNumber,
                      MimeType.APPLICATION_GROOVY, currentJavaType);
                }
                else
@@ -350,7 +350,7 @@ public class GroovyParser extends CodeMirrorParser
             // parse annotations outside the method brackets like '@Override /n get(String pathParam) {'
             if (isAnnotation(nodeType))  
             {
-               annotationStorage.addAnnotation(new CodeMirrorTokenImpl(
+               annotationStorage.addAnnotation(new TokenBeenImpl(
                   nodeContent, 
                   TokenType.ANNOTATION, 
                   lineNumber, 
@@ -371,7 +371,7 @@ public class GroovyParser extends CodeMirrorParser
                // recognize "class" or "interface" token
                if (isJavaClassNode(lastNodeType, lastNodeContent) || isJavaInterfaceNode(lastNodeType, lastNodeContent))
                {
-                  CodeMirrorTokenImpl newToken = new CodeMirrorTokenImpl(nodeContent, TokenType.valueOf(lastNodeContent.toUpperCase()), lineNumber, MimeType.APPLICATION_GROOVY, null, modifiers);
+                  TokenBeenImpl newToken = new TokenBeenImpl(nodeContent, TokenType.valueOf(lastNodeContent.toUpperCase()), lineNumber, MimeType.APPLICATION_GROOVY, null, modifiers);
    
                   // set collected earlier annotations in case of @Path("/my-service1"),  public class HelloWorld {
                   setPossibleAnnotations(newToken);
@@ -386,7 +386,7 @@ public class GroovyParser extends CodeMirrorParser
                else if (isGroovyDef(lastNodeType, lastNodeContent))
                {
                   currentToken
-                     .addSubToken(new CodeMirrorTokenImpl(nodeContent, TokenType.PROPERTY, lineNumber, MimeType.APPLICATION_GROOVY));
+                     .addSubToken(new TokenBeenImpl(nodeContent, TokenType.PROPERTY, lineNumber, MimeType.APPLICATION_GROOVY));
 
                   // set collected earlier annotations in case of '@Mandatory @MappedBy("product") def Product product'
                   setPossibleAnnotations(currentToken.getLastSubToken());                   
@@ -396,7 +396,7 @@ public class GroovyParser extends CodeMirrorParser
                else if (isGroovyVariable(lastNodeType) || isJavaType(lastNodeType))
                {
                   currentJavaType += lastNodeContent;
-                  currentToken.addSubToken(new CodeMirrorTokenImpl(
+                  currentToken.addSubToken(new TokenBeenImpl(
                      nodeContent, 
                      (inMethodBraces(currentToken) ? TokenType.VARIABLE : TokenType.PROPERTY), 
                      lineNumber,
@@ -416,7 +416,7 @@ public class GroovyParser extends CodeMirrorParser
                // recognize variables like this "String a, b, c;" 
                else if (isComma(lastNodeType, lastNodeContent))
                {
-                  currentToken.addSubToken(new CodeMirrorTokenImpl(
+                  currentToken.addSubToken(new TokenBeenImpl(
                      nodeContent, 
                      (inMethodBraces(currentToken) ? TokenType.VARIABLE : TokenType.PROPERTY), 
                      lineNumber,
@@ -474,7 +474,7 @@ public class GroovyParser extends CodeMirrorParser
     * @param nodeContent
     * @param nodeType
     */
-   private void parsePackageOrImportStatement(int lineNumber, CodeMirrorTokenImpl currentToken, String nodeContent, String nodeType)
+   private void parsePackageOrImportStatement(int lineNumber, TokenBeenImpl currentToken, String nodeContent, String nodeType)
    {
       if (isJavaPackageStatement(nodeType, nodeContent))
       {
@@ -492,7 +492,7 @@ public class GroovyParser extends CodeMirrorParser
          if ((isJavaPackageStatement(lastNodeType, lastNodeContent) || isJavaImportStatement(lastNodeType, lastNodeContent))
                && isGroovyVariable(nodeType)) 
          {
-            currentToken.addSubToken(new CodeMirrorTokenImpl(
+            currentToken.addSubToken(new TokenBeenImpl(
                null, 
                (inPackageStatement ? TokenType.PACKAGE : TokenType.IMPORT), 
                lineNumber, 
@@ -544,7 +544,7 @@ public class GroovyParser extends CodeMirrorParser
     * Transform currentToken from Property Token to Method Token
     * @param currentToken
     */
-   private void transformPropertyOnMethod(CodeMirrorTokenImpl currentToken)
+   private void transformPropertyOnMethod(TokenBeenImpl currentToken)
    {
       // replace last sub token type from variable to method
       currentToken.updateTypeOfLastSubToken(TokenType.METHOD);
@@ -557,7 +557,7 @@ public class GroovyParser extends CodeMirrorParser
     * Add collected earlier annotations from annotationStorage into token
     * @param token
     */
-   private void setPossibleAnnotations(CodeMirrorTokenImpl token)
+   private void setPossibleAnnotations(TokenBeenImpl token)
    {
       if (annotationStorage != null && token != null)
       {
@@ -565,14 +565,14 @@ public class GroovyParser extends CodeMirrorParser
       }
       
       // clear annotationStorage
-      annotationStorage = new CodeMirrorTokenImpl();
+      annotationStorage = new TokenBeenImpl();
    }
 
    /**
     * Add collected earlier parameters from parameterStorage into token
     * @param token
     */   
-   private void setPossibleParameters(CodeMirrorTokenImpl token)
+   private void setPossibleParameters(TokenBeenImpl token)
    {
       if (parameterStorage != null && token != null)
       {
@@ -580,7 +580,7 @@ public class GroovyParser extends CodeMirrorParser
       }
       
       // clear parameterStorage
-      parameterStorage = new CodeMirrorTokenImpl();
+      parameterStorage = new TokenBeenImpl();
    }   
    
    /**
@@ -756,7 +756,7 @@ public class GroovyParser extends CodeMirrorParser
    /**
     * Position within the method(){...}
     */   
-   private boolean inMethodBraces(CodeMirrorTokenImpl currentToken) 
+   private boolean inMethodBraces(TokenBeenImpl currentToken) 
    {
       return TokenType.METHOD.equals(currentToken.getType());
    }

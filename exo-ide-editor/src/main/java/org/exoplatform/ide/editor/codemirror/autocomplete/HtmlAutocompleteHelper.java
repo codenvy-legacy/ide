@@ -22,8 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
+import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -33,17 +34,17 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id
  *
  */
-public class HtmlAutocompleteHelper extends CodeMirrorAutocompleteHelper
+public class HtmlAutocompleteHelper extends AutocompleteHelper
 {
 
-   List<CodeMirrorTokenImpl> javaScriptCode;
+   List<TokenBeenImpl> javaScriptCode;
 
    @Override
    public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList)
    {          
-      javaScriptCode = CodeMirrorAutocompleteHelper.extractCode((List<CodeMirrorTokenImpl>)tokenList, new LinkedList<CodeMirrorTokenImpl>(), MimeType.APPLICATION_JAVASCRIPT);
+      javaScriptCode = CodeValidatorImpl.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVASCRIPT);
 
-      return CodeMirrorAutocompleteHelper.getAutocompleteHelper(MimeType.APPLICATION_JAVASCRIPT).getTokenBeforeCursor(node, lineNumber, cursorPosition, javaScriptCode);
+      return AutocompleteHelper.getAutocompleteHelper(MimeType.APPLICATION_JAVASCRIPT).getTokenBeforeCursor(node, lineNumber, cursorPosition, javaScriptCode);
    }
 
 }

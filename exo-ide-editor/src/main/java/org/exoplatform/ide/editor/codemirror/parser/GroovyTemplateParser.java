@@ -19,8 +19,8 @@
 package org.exoplatform.ide.editor.codemirror.parser;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -30,7 +30,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id: $
  *
  */
-public class GroovyTemplateParser extends CodeMirrorParser
+public class GroovyTemplateParser extends CodeMirrorParserImpl
 {
 
    String currentContentMimeType;
@@ -42,7 +42,7 @@ public class GroovyTemplateParser extends CodeMirrorParser
    }   
 
    @Override
-   CodeMirrorTokenImpl parseLine(JavaScriptObject node, int lineNumber, CodeMirrorTokenImpl currentToken, boolean hasParentParser)
+   TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of the document
       if (node == null)
@@ -54,7 +54,7 @@ public class GroovyTemplateParser extends CodeMirrorParser
       // recognize "<%" open tag within the TEXT_HTML content
       if (isGroovyOpenNode(nodeType, nodeContent) && MimeType.TEXT_HTML.equals(currentContentMimeType))
       {
-         CodeMirrorTokenImpl newToken = new CodeMirrorTokenImpl("groovy code", TokenType.GROOVY_TAG, lineNumber, MimeType.APPLICATION_GROOVY);
+         TokenBeenImpl newToken = new TokenBeenImpl("groovy code", TokenType.GROOVY_TAG, lineNumber, MimeType.APPLICATION_GROOVY);
          if (currentToken != null)
          {
             currentToken.addSubToken(newToken);
@@ -62,7 +62,7 @@ public class GroovyTemplateParser extends CodeMirrorParser
          currentToken = newToken;
 
          currentContentMimeType = MimeType.APPLICATION_GROOVY;
-         CodeMirrorParser.getParser(currentContentMimeType).init();
+         CodeMirrorParserImpl.getParser(currentContentMimeType).init();
          node = Node.getNext(node); // pass parsed node
       }
 
@@ -72,11 +72,11 @@ public class GroovyTemplateParser extends CodeMirrorParser
          currentToken = XmlParser.addTagBreak(lineNumber, currentToken, MimeType.TEXT_HTML);
 
          currentContentMimeType = MimeType.TEXT_HTML;
-         CodeMirrorParser.getParser(currentContentMimeType).init();
+         CodeMirrorParserImpl.getParser(currentContentMimeType).init();
          node = Node.getNext(node); // pass parsed node
       }
       
-      currentToken = CodeMirrorParser.getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true);  // call child parser
+      currentToken = CodeMirrorParserImpl.getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true);  // call child parser
       
       if (node == null || Node.getName(node).equals("BR")) 
       {

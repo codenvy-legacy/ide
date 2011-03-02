@@ -25,6 +25,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeError;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
@@ -109,7 +110,7 @@ public class CodeMirrorGwtTestJavaParser extends Base
                   System.out.println(">>>>>>>>>>>>>>>> check parsing results");               
                   
                   
-                  List<CodeMirrorTokenImpl> tokenList = (List<CodeMirrorTokenImpl>) editor.getTokenList();
+                  List<TokenBeenImpl> tokenList = (List<TokenBeenImpl>) editor.getTokenList();
 
 //                testTokenList(correctTokenList, tokenList);
                   
@@ -184,18 +185,18 @@ public class CodeMirrorGwtTestJavaParser extends Base
 //         testToken(correctToken, currentToken);
          assertEquals("a", currentToken.getName());
          assertEquals(TokenType.VARIABLE, currentToken.getType());
-         assertEquals("Number", ((CodeMirrorTokenImpl)currentToken).getElementType());            
-         assertEquals(null, ((CodeMirrorTokenImpl)currentToken).getInitializationStatement());
-         assertEquals(3, ((CodeMirrorTokenImpl)currentToken).getLineNumber());                  
+         assertEquals("Number", ((TokenBeenImpl)currentToken).getElementType());            
+         assertEquals(null, ((TokenBeenImpl)currentToken).getInitializationStatement());
+         assertEquals(3, ((TokenBeenImpl)currentToken).getLineNumber());                  
 
          // test token list
 //       testTokenList(correctTokenList, tokenList);         
          assertEquals(1, tokenList.size());
          assertEquals("a", tokenList.get(0).getName());
          assertEquals(TokenType.VARIABLE, tokenList.get(0).getType());
-         assertEquals("Number", ((CodeMirrorTokenImpl)tokenList.get(0)).getElementType());            
-         assertEquals(null, ((CodeMirrorTokenImpl)tokenList.get(0)).getInitializationStatement());
-         assertEquals(1, ((CodeMirrorTokenImpl)tokenList.get(0)).getLineNumber());                  
+         assertEquals("Number", ((TokenBeenImpl)tokenList.get(0)).getElementType());            
+         assertEquals(null, ((TokenBeenImpl)tokenList.get(0)).getInitializationStatement());
+         assertEquals(1, ((TokenBeenImpl)tokenList.get(0)).getLineNumber());                  
       }
 
       @Override

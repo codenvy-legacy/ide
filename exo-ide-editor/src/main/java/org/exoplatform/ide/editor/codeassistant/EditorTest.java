@@ -43,6 +43,7 @@ import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 import org.exoplatform.ide.editor.codemirror.producers.CodeMirrorProducer;
+import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -169,6 +170,8 @@ public class EditorTest implements EntryPoint
                true, // can be autocompleted
                new GroovyParser(), // exoplatform code parser 
                new GroovyAutocompleteHelper(), // autocomplete helper
+               true, // can be validated
+               new GroovyCodeValidator(),
                new DefaultCodeAssistant())));
 
       addEditor(new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", true,

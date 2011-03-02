@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -34,7 +34,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id
  *
  */
-public class HtmlParser extends CodeMirrorParser
+public class HtmlParser extends CodeMirrorParserImpl
 {
    private String currentContentMimeType;
    
@@ -56,7 +56,7 @@ public class HtmlParser extends CodeMirrorParser
    }
    
    @Override
-   CodeMirrorTokenImpl parseLine(JavaScriptObject node, int lineNumber, CodeMirrorTokenImpl currentToken, boolean hasParentParser)
+   TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of the document
       if (node == null) 
@@ -76,7 +76,7 @@ public class HtmlParser extends CodeMirrorParser
             {
                currentToken = XmlParser.addTag(currentToken, "script", lineNumber, MimeType.APPLICATION_JAVASCRIPT);
                currentContentMimeType = MimeType.APPLICATION_JAVASCRIPT;
-               CodeMirrorParser.getParser(currentContentMimeType).init();
+               CodeMirrorParserImpl.getParser(currentContentMimeType).init();
                // node = getNext(node);     // pass parsed node
             }
 
@@ -85,7 +85,7 @@ public class HtmlParser extends CodeMirrorParser
             {
                currentToken = XmlParser.addTag(currentToken, "style", lineNumber, MimeType.TEXT_CSS);
                currentContentMimeType = MimeType.TEXT_CSS;
-               CodeMirrorParser.getParser(currentContentMimeType).init();
+               CodeMirrorParserImpl.getParser(currentContentMimeType).init();
                // node = getNext(node);     // pass parsed node
             }            
             
@@ -131,7 +131,7 @@ public class HtmlParser extends CodeMirrorParser
       
       if (! MimeType.TEXT_HTML.equals(currentContentMimeType))
       {
-         currentToken = CodeMirrorParser.getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true);  // call child parser
+         currentToken = CodeMirrorParserImpl.getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true);  // call child parser
       }
 
       if (hasParentParser) 
@@ -142,13 +142,13 @@ public class HtmlParser extends CodeMirrorParser
       return parseLine(Node.getNext(node), lineNumber, currentToken, false);  // call itself 
    }
 
-   private boolean lastSubTokenIsAutoSelfClosersTag(CodeMirrorTokenImpl currentToken)
+   private boolean lastSubTokenIsAutoSelfClosersTag(TokenBeenImpl currentToken)
    {
-      List<CodeMirrorTokenImpl> subTokenList = currentToken.getSubTokenList();
+      List<TokenBeenImpl> subTokenList = currentToken.getSubTokenList();
       if (subTokenList == null)
          return false;
       
-      CodeMirrorTokenImpl lastSubToken = subTokenList.get(subTokenList.size() - 1);
+      TokenBeenImpl lastSubToken = subTokenList.get(subTokenList.size() - 1);
       
       return subTokenList != null 
                && lastSubToken.getType().equals(TokenType.TAG)

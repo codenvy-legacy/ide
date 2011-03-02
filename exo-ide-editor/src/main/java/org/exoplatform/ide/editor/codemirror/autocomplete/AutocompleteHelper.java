@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
 import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
@@ -37,14 +37,14 @@ import com.google.gwt.core.client.JavaScriptObject;
  *
  */
 @SuppressWarnings("serial")
-public abstract class CodeMirrorAutocompleteHelper extends AutoCompleteHelper
+public abstract class AutocompleteHelper
 {
-   private static HashMap<String, CodeMirrorAutocompleteHelper> factory = new HashMap<String, CodeMirrorAutocompleteHelper>() {{
+   private static HashMap<String, AutocompleteHelper> factory = new HashMap<String, AutocompleteHelper>() {{
 //      put(MimeType.APPLICATION_GROOVY, new GroovyAutocompleteHelper());
       put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptAutocompleteHelper());
    }};  
    
-   protected static CodeMirrorAutocompleteHelper getAutocompleteHelper(String mimeType)
+   protected static AutocompleteHelper getAutocompleteHelper(String mimeType)
    {
       if (factory.containsKey(mimeType))
       {
@@ -53,6 +53,8 @@ public abstract class CodeMirrorAutocompleteHelper extends AutoCompleteHelper
 
       return new DefaultAutocompleteHelper();
    }  
+   
+   public abstract Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList); 
    
    /**
     * 
@@ -144,9 +146,9 @@ public abstract class CodeMirrorAutocompleteHelper extends AutoCompleteHelper
    }      
 
    
-   protected static CodeMirrorTokenImpl nearestToken;
+   protected static TokenBeenImpl nearestToken;
    
-   protected static void searchNearestToken(int targetLineNumber, CodeMirrorTokenImpl currentToken)
+   protected static void searchNearestToken(int targetLineNumber, TokenBeenImpl currentToken)
    {
       // test if this is function and it ended not before target line
       if (TokenType.FUNCTION.equals(currentToken.getType()) 
@@ -156,12 +158,12 @@ public abstract class CodeMirrorAutocompleteHelper extends AutoCompleteHelper
       }
     
       // search nearest token among the sub token
-      List<CodeMirrorTokenImpl> subTokenList = currentToken.getSubTokenList();
+      List<TokenBeenImpl> subTokenList = currentToken.getSubTokenList();
 
          
       if (subTokenList != null && subTokenList.size() != 0)
       {
-         for (CodeMirrorTokenImpl token : subTokenList)
+         for (TokenBeenImpl token : subTokenList)
          {
             if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
                break;
@@ -179,9 +181,9 @@ public abstract class CodeMirrorAutocompleteHelper extends AutoCompleteHelper
       }
    }   
    
-   protected static CodeMirrorTokenImpl searchGenericTokenAmongLocalVariables(String nodeContent, CodeMirrorTokenImpl nearestToken, CodeMirrorTokenImpl methodToken)
+   protected static TokenBeenImpl searchGenericTokenAmongLocalVariables(String nodeContent, TokenBeenImpl nearestToken, TokenBeenImpl methodToken)
    {
-      for (CodeMirrorTokenImpl subtoken: methodToken.getSubTokenList())
+      for (TokenBeenImpl subtoken: methodToken.getSubTokenList())
       {
          if (TokenType.VARIABLE.equals(subtoken.getType())
                 && nodeContent.equals(subtoken.getName()))
@@ -197,60 +199,5 @@ public abstract class CodeMirrorAutocompleteHelper extends AutoCompleteHelper
       }
       
       return null;
-   } 
-   
-   /**
-    * Extract tokens with mimeType from tokenList
-    * @param tokenList
-    * @param code
-    * @param mimeType
-    * @return
-    */
-   public static List<CodeMirrorTokenImpl> extractCode(List<CodeMirrorTokenImpl> tokenList, List<CodeMirrorTokenImpl> code, String mimeType)
-   {
-      for (CodeMirrorTokenImpl token : tokenList)
-      {
-         analizeToken(token, code, mimeType);  // update groovyCode
-      }
-      
-      return code;
-   }
-
-   private static void analizeToken(CodeMirrorTokenImpl currentToken, List<CodeMirrorTokenImpl> code, String mimeType)
-   {
-      if (currentToken == null) 
-      {
-         return;
-      }
-      
-      if (currentToken.getSubTokenList() != null)
-      {
-         for (CodeMirrorTokenImpl token : currentToken.getSubTokenList())
-         {
-            analizeToken(token, code, mimeType);
-         }         
-      }
-      
-
-      if (currentToken.getSubTokenList() != null)
-      {
-         if (MimeType.APPLICATION_GROOVY.equals(mimeType))
-         {
-            if (!TokenType.GROOVY_TAG.equals(currentToken.getType()))
-            {
-               return;
-            }
-         }
-         
-         for (CodeMirrorTokenImpl subtoken : currentToken.getSubTokenList())
-         {
-            if (mimeType.equals(subtoken.getMimeType())) 
-            {
-               code.add(subtoken);
-            }
-         }
-      }   
-
-   }
-     
+   }      
 }

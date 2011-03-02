@@ -188,7 +188,7 @@
                      <skipTests>false</skipTests>
                      <forkMode>never</forkMode>
                      <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
-                     <productionMode>false</productionMode>
+                     <productionMode>true</productionMode>
                      <testTimeOut>300</testTimeOut>
                      <mode>htmlunit</mode>            
                      <htmlunit>FF3</htmlunit>                   

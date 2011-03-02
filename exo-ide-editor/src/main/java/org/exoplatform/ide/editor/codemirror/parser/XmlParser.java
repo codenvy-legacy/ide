@@ -19,8 +19,8 @@
 package org.exoplatform.ide.editor.codemirror.parser;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -29,14 +29,14 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-public class XmlParser extends CodeMirrorParser
+public class XmlParser extends CodeMirrorParserImpl
 {
    private String lastNodeContent;
    
    private String lastNodeType;
    
    @Override
-   CodeMirrorTokenImpl parseLine(JavaScriptObject node, int lineNumber, CodeMirrorTokenImpl currentToken, boolean hasParentParser)
+   TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of the line or content
       if ((node == null) || Node.getName(node).equals("BR"))
@@ -48,7 +48,7 @@ public class XmlParser extends CodeMirrorParser
       // recognize CDATA open tag "<![CDATA[" not in the CDATA section
       if (XmlParser.isCDATAOpenNode(nodeContent))
       {
-         CodeMirrorTokenImpl newToken = new CodeMirrorTokenImpl("CDATA", TokenType.CDATA, lineNumber, MimeType.TEXT_XML);
+         TokenBeenImpl newToken = new TokenBeenImpl("CDATA", TokenType.CDATA, lineNumber, MimeType.TEXT_XML);
          if (currentToken != null)
          {
             currentToken.addSubToken(newToken);
@@ -153,9 +153,9 @@ public class XmlParser extends CodeMirrorParser
       return nodeContent.matches("\\]\\]&gt;.*");
    };   
 
-   static CodeMirrorTokenImpl addTag(CodeMirrorTokenImpl currentToken, String tagName, int lineNumber, String contentMimeType)
+   static TokenBeenImpl addTag(TokenBeenImpl currentToken, String tagName, int lineNumber, String contentMimeType)
    {
-      CodeMirrorTokenImpl newToken = new CodeMirrorTokenImpl(tagName, TokenType.TAG, lineNumber, contentMimeType);
+      TokenBeenImpl newToken = new TokenBeenImpl(tagName, TokenType.TAG, lineNumber, contentMimeType);
       if (currentToken != null)
       {
          currentToken.addSubToken(newToken);
@@ -165,9 +165,9 @@ public class XmlParser extends CodeMirrorParser
    }   
    
    // it is required for the correct recognizing of currentLineMimeType and selection of current token in the outline panel   
-   static CodeMirrorTokenImpl addTagBreak(int lineNumber, CodeMirrorTokenImpl currentToken, String nextContentMimeType)
+   static TokenBeenImpl addTagBreak(int lineNumber, TokenBeenImpl currentToken, String nextContentMimeType)
    {
-      CodeMirrorTokenImpl newToken = new CodeMirrorTokenImpl(null, TokenType.TAG_BREAK, lineNumber, nextContentMimeType);      
+      TokenBeenImpl newToken = new TokenBeenImpl(null, TokenType.TAG_BREAK, lineNumber, nextContentMimeType);      
 
       if (currentToken != null) 
       {

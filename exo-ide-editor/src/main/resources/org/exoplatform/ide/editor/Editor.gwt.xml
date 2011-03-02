@@ -33,8 +33,11 @@
       <source path="api" />
       <source path="codemirror" />
       <source path="codeassistant" />
+      <source path="codevalidator" />      
       
-      <stylesheet src='codemirror/css/editor.css' />
+      <stylesheet src='editor.css' />
+      
+      <stylesheet src='codemirror/css/editor.css' />      
       <script src='codemirror/js/codemirror.js' />
          
 </module>

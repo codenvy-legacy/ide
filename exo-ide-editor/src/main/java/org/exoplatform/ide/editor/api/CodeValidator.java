@@ -16,21 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.api.codeassitant.autocompletehelper;
+package org.exoplatform.ide.editor.api;
 
 import java.util.List;
 
+import org.exoplatform.ide.editor.api.codeassitant.CodeError;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-
-import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: AutoCompleteHelper Feb 10, 2011 9:48:05 AM evgen $
+ * @version $Id: CodeValidator Feb 9, 2011 5:48:28 PM evgen $
  *
  */
-public abstract class AutoCompleteHelper
+public abstract class CodeValidator
 {
-
-   public abstract Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList);
+   
+   public abstract void validateCode(List<? extends Token> tokenList, Editor editor);
+   
+   public abstract boolean isExistedCodeError(int lineNumber);
+   
+   public abstract  List<CodeError>  getCodeErrorList(int lineNumber);
 }

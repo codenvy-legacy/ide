@@ -22,10 +22,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
+import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
 
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -35,7 +36,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id
  *
  */
-public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
+public class GroovyAutocompleteHelper extends AutocompleteHelper
 {
 
    /**
@@ -56,7 +57,7 @@ public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
 
       String nodeContent = getStatementBeforePoint(node, cursorPosition);
 
-      CodeMirrorTokenImpl tokenBeforeCursor;
+      TokenBeenImpl tokenBeforeCursor;
       
       if (nodeContent != null && !nodeContent.isEmpty())
       {       
@@ -65,10 +66,10 @@ public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
          // search token for variables like "name._" or "name.ch_"
          if (numberOfChainsBetweenPoint == 1)
          {
-            tokenBeforeCursor = getGenericToken(nodeContent, lineNumber, (List<CodeMirrorTokenImpl>) tokenList);            
+            tokenBeforeCursor = getGenericToken(nodeContent, lineNumber, (List<TokenBeenImpl>) tokenList);            
             if (tokenBeforeCursor != null) 
             {
-               return new CodeMirrorTokenImpl(
+               return new TokenBeenImpl(
                   tokenBeforeCursor.getName(), 
                   tokenBeforeCursor.getType(), 
                   lineNumber, 
@@ -81,39 +82,39 @@ public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
          }
 
          // search fqn among default packages
-//         String fqn = GroovyCodeValidator.getFqnFromDefaultPackages(nodeContent);
-//         if (fqn != null) 
-//            return new CodeMirrorTokenImpl(null, TokenType.TYPE, lineNumber, MimeType.APPLICATION_GROOVY, nodeContent, Arrays.asList(Modifier.STATIC), fqn);
-//         
-//         // search fqn among the import statements from the import block 
-//         List<CodeMirrorTokenImpl> importStatementBlock = GroovyCodeValidator.getImportStatementBlock(tokenList);
-//         for (CodeMirrorTokenImpl importStatement : importStatementBlock)
-//         {
-//            if (importStatement.getElementType().endsWith(nodeContent))
-//            {
-//               return (Token) new CodeMirrorTokenImpl(null, TokenType.TYPE, lineNumber, MimeType.APPLICATION_GROOVY, nodeContent, Arrays.asList(Modifier.STATIC), importStatement.getElementType());
-//            }
-//         }           
-//         
-//      }
-//      
-//      // if this is "name_" or " _" cases, return Token of parent element, like method or class
-//      else
-//      {
-         return (Token) getParentToken(lineNumber, (List<CodeMirrorTokenImpl>) tokenList);
+         String fqn = GroovyCodeValidator.getFqnFromDefaultPackages(nodeContent);
+         if (fqn != null) 
+            return new TokenBeenImpl(null, TokenType.TYPE, lineNumber, MimeType.APPLICATION_GROOVY, nodeContent, Arrays.asList(Modifier.STATIC), fqn);
+         
+         // search fqn among the import statements from the import block 
+         List<TokenBeenImpl> importStatementBlock = GroovyCodeValidator.getImportStatementBlock((List<TokenBeenImpl>)tokenList);
+         for (TokenBeenImpl importStatement : importStatementBlock)
+         {
+            if (importStatement.getElementType().endsWith(nodeContent))
+            {
+               return (Token) new TokenBeenImpl(null, TokenType.TYPE, lineNumber, MimeType.APPLICATION_GROOVY, nodeContent, Arrays.asList(Modifier.STATIC), importStatement.getElementType());
+            }
+         }           
+         
+      }
+      
+      // if this is "name_" or " _" cases, return Token of parent element, like method or class
+      else
+      {
+         return (Token) getParentToken(lineNumber, (List<TokenBeenImpl>) tokenList);
       }
       
       return null;
    }
    
-   private static CodeMirrorTokenImpl getGenericToken(String nodeContent, int targetLineNumber, List<CodeMirrorTokenImpl> tokenList)
+   private static TokenBeenImpl getGenericToken(String nodeContent, int targetLineNumber, List<TokenBeenImpl> tokenList)
    {
       if (tokenList == null || tokenList.size() == 0)
          return null;
 
       nearestToken = tokenList.get(0);
       
-      for (CodeMirrorTokenImpl token : tokenList)
+      for (TokenBeenImpl token : tokenList)
       {
          if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
             break;
@@ -121,7 +122,7 @@ public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
          searchNearestToken(targetLineNumber, token);
       }
       
-      CodeMirrorTokenImpl genericToken;
+      TokenBeenImpl genericToken;
       
       if (nearestToken != null)
       {
@@ -159,12 +160,12 @@ public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
       return null;
    }   
    
-   protected static CodeMirrorTokenImpl searchGenericTokenAmongParameters(String nodeContent, List<CodeMirrorTokenImpl> parameters)
+   protected static TokenBeenImpl searchGenericTokenAmongParameters(String nodeContent, List<TokenBeenImpl> parameters)
    {
       if (parameters == null)
          return null;
       
-      for (CodeMirrorTokenImpl parameter: parameters)
+      for (TokenBeenImpl parameter: parameters)
       {
          if (nodeContent.equals(parameter.getName()))
          {
@@ -175,9 +176,9 @@ public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
       return null;
    }   
 
-   protected static CodeMirrorTokenImpl searchGenericTokenAmongProperties(String nodeContent, CodeMirrorTokenImpl classToken)
+   protected static TokenBeenImpl searchGenericTokenAmongProperties(String nodeContent, TokenBeenImpl classToken)
    {
-      for (CodeMirrorTokenImpl subtoken: classToken.getSubTokenList())
+      for (TokenBeenImpl subtoken: classToken.getSubTokenList())
       {
          if (TokenType.PROPERTY.equals(subtoken.getType())
                 && nodeContent.equals(subtoken.getName()))
@@ -189,7 +190,7 @@ public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
       return null;
    } 
    
-   private static CodeMirrorTokenImpl possibleContainerToken;
+   private static TokenBeenImpl possibleContainerToken;
 
    private static int nearestTokenLineNumber;
    
@@ -199,7 +200,7 @@ public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
     * @param tokenList
     * @return container token with token.lineNumber <= targetLineNumber < token.lastLineNumber.
     */
-   public CodeMirrorTokenImpl getParentToken(int targetLineNumber, List<CodeMirrorTokenImpl> tokenList)
+   public TokenBeenImpl getParentToken(int targetLineNumber, List<TokenBeenImpl> tokenList)
    {
       if (tokenList == null || tokenList.size() == 0)
          return null;
@@ -207,7 +208,7 @@ public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
       possibleContainerToken = null;
       nearestTokenLineNumber = 0;
 
-      for (CodeMirrorTokenImpl token : tokenList)
+      for (TokenBeenImpl token : tokenList)
       {
          // break if token is started at the line after the targetLine
          if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
@@ -230,14 +231,14 @@ public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
       return possibleContainerToken;
    }
 
-   private void searchContainerToken(int targetLineNumber, CodeMirrorTokenImpl currentToken)
+   private void searchContainerToken(int targetLineNumber, TokenBeenImpl currentToken)
    {
       // search appropriate token among the sub token
-      List<CodeMirrorTokenImpl> subTokenList = currentToken.getSubTokenList();
+      List<TokenBeenImpl> subTokenList = currentToken.getSubTokenList();
 
       if (subTokenList != null && subTokenList.size() != 0)
       {
-         for (CodeMirrorTokenImpl token : subTokenList)
+         for (TokenBeenImpl token : subTokenList)
          {
             // break if token is started at the line after the targetLine
             if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
@@ -273,7 +274,7 @@ public class GroovyAutocompleteHelper extends CodeMirrorAutocompleteHelper
     * @param token
     * @return
     */
-   private boolean isPossibleContainerTokenType(CodeMirrorTokenImpl token)
+   private boolean isPossibleContainerTokenType(TokenBeenImpl token)
    {
       return TokenType.CLASS.equals(token.getType()) || TokenType.METHOD.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType());
    }   

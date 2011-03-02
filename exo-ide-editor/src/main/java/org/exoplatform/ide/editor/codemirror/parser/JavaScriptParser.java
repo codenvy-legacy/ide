@@ -21,8 +21,8 @@ package org.exoplatform.ide.editor.codemirror.parser;
 import java.util.Stack;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorTokenImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -32,7 +32,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id: $
  *
  */
-public class JavaScriptParser extends CodeMirrorParser
+public class JavaScriptParser extends CodeMirrorParserImpl
 {      
    
    private Stack<Node> nodeStack = new Stack<Node>();
@@ -51,7 +51,7 @@ public class JavaScriptParser extends CodeMirrorParser
    }
    
    @Override
-   CodeMirrorTokenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, CodeMirrorTokenImpl currentToken, boolean hasParentParser)
+   TokenBeenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of content
       if (javaScriptNode == null)
@@ -71,7 +71,7 @@ public class JavaScriptParser extends CodeMirrorParser
       }
       
       Stack<Node> cloneNodeStack = null;
-      CodeMirrorTokenImpl newToken = null;
+      TokenBeenImpl newToken = null;
      
       // recognize ended line break or ";" or "// ....." or whitespace
       if (nodeStack.size() > 1
@@ -155,7 +155,7 @@ public class JavaScriptParser extends CodeMirrorParser
          {
             enclosers.push(TokenType.FUNCTION);
 
-            newToken = new CodeMirrorTokenImpl("function()", TokenType.FUNCTION, lineNumber, MimeType.APPLICATION_JAVASCRIPT);
+            newToken = new TokenBeenImpl("function()", TokenType.FUNCTION, lineNumber, MimeType.APPLICATION_JAVASCRIPT);
             currentToken.addSubToken(newToken);
             currentToken = newToken;
             
@@ -223,7 +223,7 @@ public class JavaScriptParser extends CodeMirrorParser
     * @param currentToken
     * @param newToken
     */
-   private void addSubToken(int lineNumber, CodeMirrorTokenImpl currentToken, CodeMirrorTokenImpl newToken)
+   private void addSubToken(int lineNumber, TokenBeenImpl currentToken, TokenBeenImpl newToken)
    {
       newToken.setLineNumber(lineNumber);
       currentToken.addSubToken(newToken);
@@ -245,7 +245,7 @@ public class JavaScriptParser extends CodeMirrorParser
     * @param nodeStack
     * @return token "a" with elementType like "UWA.Data" in case like "var a = new UWA.Data()"
     */
-   private CodeMirrorTokenImpl isObjectCreation(Stack<Node> nodeStack)
+   private TokenBeenImpl isObjectCreation(Stack<Node> nodeStack)
    {     
       if (nodeStack.size() > 4)
       {
@@ -268,7 +268,7 @@ public class JavaScriptParser extends CodeMirrorParser
          }
    
          // recognize variable assignment statement like "var a = new"
-         CodeMirrorTokenImpl newToken;      
+         TokenBeenImpl newToken;      
          if (isNewKeyword(nodeStack.pop())
                   && nodeStack.size() > 2
                   && (newToken = isVariableWithAssignmentStatement(nodeStack)) != null 
@@ -396,7 +396,7 @@ public class JavaScriptParser extends CodeMirrorParser
     * @param non-safe nodeStack
     * @return token "a"
     */
-   private CodeMirrorTokenImpl isFunctionStatement(Stack<Node> nodeStack)
+   private TokenBeenImpl isFunctionStatement(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 4)
       {
@@ -427,7 +427,7 @@ public class JavaScriptParser extends CodeMirrorParser
                         && isFunctionNode(nodeStack.get(nodeStack.size() - 3))
                      )
                   {                     
-                     return new CodeMirrorTokenImpl(nodeStack.get(nodeStack.size() - 2).getContent() + "()", TokenType.FUNCTION, 0, MimeType.APPLICATION_JAVASCRIPT);
+                     return new TokenBeenImpl(nodeStack.get(nodeStack.size() - 2).getContent() + "()", TokenType.FUNCTION, 0, MimeType.APPLICATION_JAVASCRIPT);
                   }
                }
                
@@ -489,7 +489,7 @@ public class JavaScriptParser extends CodeMirrorParser
     * @param safe nodeStack
     * @return CodeMirrorTokenImpl with variable "a" in case like "var a"
     */
-   private CodeMirrorTokenImpl isVariableWithoutAssignmentStatement(Stack<Node> nodeStack)
+   private TokenBeenImpl isVariableWithoutAssignmentStatement(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 1)
       {
@@ -500,7 +500,7 @@ public class JavaScriptParser extends CodeMirrorParser
              && isVarNode(nodeStack.get(cloneNodeStack.size() - 2))
          )
          {            
-            return new CodeMirrorTokenImpl(cloneNodeStack.get(cloneNodeStack.size() - 1).getContent(), TokenType.VARIABLE, 0, MimeType.APPLICATION_JAVASCRIPT);
+            return new TokenBeenImpl(cloneNodeStack.get(cloneNodeStack.size() - 1).getContent(), TokenType.VARIABLE, 0, MimeType.APPLICATION_JAVASCRIPT);
          }
       }
       
@@ -512,7 +512,7 @@ public class JavaScriptParser extends CodeMirrorParser
     * @param safe nodeStack
     * @return variable token with variable in case like "var a = " with elementType = "Object"
     */
-   private CodeMirrorTokenImpl isVariableWithAssignmentStatement(Stack<Node> nodeStack)
+   private TokenBeenImpl isVariableWithAssignmentStatement(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 2)
       {         
@@ -523,7 +523,7 @@ public class JavaScriptParser extends CodeMirrorParser
               && isVarNode(cloneNodeStack.get(nodeStack.size() - 3))
          )
          {
-            CodeMirrorTokenImpl newToken = new CodeMirrorTokenImpl(cloneNodeStack.get(cloneNodeStack.size() - 2).getContent(), TokenType.VARIABLE, 0, MimeType.APPLICATION_JAVASCRIPT);
+            TokenBeenImpl newToken = new TokenBeenImpl(cloneNodeStack.get(cloneNodeStack.size() - 2).getContent(), TokenType.VARIABLE, 0, MimeType.APPLICATION_JAVASCRIPT);
             newToken.setElementType("Object");
             return newToken;
          }
@@ -537,7 +537,7 @@ public class JavaScriptParser extends CodeMirrorParser
     * @param non-safe nodeStack
     * @return function token with function like "a()" in case like "var a = function(...) {"
     */
-   private CodeMirrorTokenImpl isVariableWithFunctionAssignmentStatement(Stack<Node> nodeStack)
+   private TokenBeenImpl isVariableWithFunctionAssignmentStatement(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 6)
       {
@@ -548,7 +548,7 @@ public class JavaScriptParser extends CodeMirrorParser
          {
             nodeStack.setSize(indexOfFunctionNode);
             
-            CodeMirrorTokenImpl newToken;
+            TokenBeenImpl newToken;
             if ((newToken = isVariableWithAssignmentStatement(nodeStack)) != null)
             {
                newToken.setType(TokenType.FUNCTION);
@@ -567,7 +567,7 @@ public class JavaScriptParser extends CodeMirrorParser
     * @param non-safe nodeStack 
     * @return CodeMirrorTokenImpl k with initializationStatement statement like "window.document"
     */
-   private CodeMirrorTokenImpl isVariableWithReferenceValue(Stack<Node> nodeStack)
+   private TokenBeenImpl isVariableWithReferenceValue(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 3)
       {
@@ -591,7 +591,7 @@ public class JavaScriptParser extends CodeMirrorParser
          }
 
          // recognize variable assignment statement like "var a ="
-         CodeMirrorTokenImpl newToken;
+         TokenBeenImpl newToken;
          if (cloneNodeStack.size() > 2
                && (newToken = isVariableWithAssignmentStatement(cloneNodeStack)) != null 
                && isJsCorrectExpression(initializationStatement)) 
@@ -620,7 +620,7 @@ public class JavaScriptParser extends CodeMirrorParser
     * @param nodeStack 
     * @return variable token like "h" with element type from "number", "boolean", "string", "object" set
     */
-   private CodeMirrorTokenImpl isVariableWithAtomicValue(Stack<Node> nodeStack)
+   private TokenBeenImpl isVariableWithAtomicValue(Stack<Node> nodeStack)
    {
 //      nodeStack = clearStartedWhitespaces(nodeStack);
       if (nodeStack.size() > 3)
@@ -654,7 +654,7 @@ public class JavaScriptParser extends CodeMirrorParser
          }
       
          // recognize variable assignment statement like "var a ="
-         CodeMirrorTokenImpl newToken;
+         TokenBeenImpl newToken;
          if (cloneNodeStack.size() > 2
                 && (newToken = isVariableWithAssignmentStatement(cloneNodeStack)) != null 
                 && possibleElementType != null)
@@ -673,12 +673,12 @@ public class JavaScriptParser extends CodeMirrorParser
     * @param non-safe nodeStack 
     * @return node of variable with array type
     */
-   private CodeMirrorTokenImpl isVariableWithArrayValue(Stack<Node> nodeStack)
+   private TokenBeenImpl isVariableWithArrayValue(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 3)
       {
          // recognize variable assignment statement like "var a ="
-         CodeMirrorTokenImpl newToken;   
+         TokenBeenImpl newToken;   
          if (isOpenSquareBracket(nodeStack.pop())
                  && (newToken = isVariableWithAssignmentStatement(nodeStack)) != null
              )
@@ -696,12 +696,12 @@ public class JavaScriptParser extends CodeMirrorParser
     * @param non-safe nodeStack 
     * @return node of variable with array type
     */
-   private CodeMirrorTokenImpl isVariableWithObjectValue(Stack<Node> nodeStack)
+   private TokenBeenImpl isVariableWithObjectValue(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 3)
       {
          // recognize variable assignment statement like "var a ="
-         CodeMirrorTokenImpl newToken;   
+         TokenBeenImpl newToken;   
          if (isOpenBrace(nodeStack.pop())
                  && (newToken = isVariableWithAssignmentStatement(nodeStack)) != null
              )

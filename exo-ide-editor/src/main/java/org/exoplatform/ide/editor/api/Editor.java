@@ -179,4 +179,23 @@ public abstract class Editor extends AbsolutePanel
     * Replaces current line content and set, in this line, cursor position
     */
    public abstract void replaceTextAtCurrentLine(String line, int cursorPosition);
+
+   /**
+    * Clear error mark from lineNumbers field
+    * @param lineNumber starting from 1
+    */
+   public abstract void clearErrorMark(int lineNumber);
+   
+   /**
+    * Set error mark in lineNumbers field
+    * @param lineNumber starting from 1
+    * @param errorSummary text summary of errors within the line
+    */
+   public abstract void setErrorMark(int lineNumber, String errorSummary);
+
+   /** 
+    * @param newText
+    * @param lineNumber started from 1
+    */
+   public abstract void insertIntoLine(String string, int lineNumber);
 }
