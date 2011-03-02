@@ -1015,7 +1015,9 @@ public class CodeMirror extends Editor
     */
    public native void setErrorMark(int lineNumber, String errorSummary) /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("class", "codeError");
+		var fileConfiguration = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::configuration;
+		var codeErrorMarkStyle = fileConfiguration.@org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration::getCodeErrorMarkStyle()();
+		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("class", codeErrorMarkStyle);
 		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("title", errorSummary);
    }-*/;
 

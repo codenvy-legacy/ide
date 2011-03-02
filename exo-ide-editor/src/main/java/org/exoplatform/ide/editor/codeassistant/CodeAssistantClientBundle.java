@@ -47,7 +47,9 @@ public interface CodeAssistantClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/public/bundle/images/row-selected.png")
    ImageResource rowSelected();
 
-
+   @Source("org/exoplatform/ide/editor/public/bundle/images/code-error-mark.png")
+   ImageResource codeErrorMark();   
+   
    @Source("org/exoplatform/ide/editor/public/bundle/images/blank.png")
    ImageResource blankImage();
    

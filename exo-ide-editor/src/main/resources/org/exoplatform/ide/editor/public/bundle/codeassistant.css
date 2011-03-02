@@ -91,3 +91,15 @@
 	border-bottom: #A7ABB4 1px solid;
 }
 
+@sprite .exo-code-error-mark
+{
+  gwt-image: "codeErrorMark";
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: scroll;
+  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
+  cursor: pointer;
+  width: auto;
+  height: auto;
+}
+

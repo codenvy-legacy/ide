@@ -126,8 +126,8 @@ public class EditorTest implements EntryPoint
             "['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']", // code styles
             false, // can be outlined
             true, // can be autocompleted
-            new CssParser() // exoplatform code parser 
-            , new CssCodeAssistant())));
+            new CssParser(), // exoplatform code parser 
+            new CssCodeAssistant())));
 
 //      Set<String> comTypes = new HashSet<String>();
 //      comTypes.add(MimeType.TEXT_HTML);

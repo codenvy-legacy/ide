@@ -55,4 +55,6 @@ public interface CodeAssistantCss extends CssResource
    @ClassName("exo-autocomplete-edit")
    String edit();
 
+   @ClassName("exo-code-error-mark")
+   String codeErrorMarkStyle();   
 }
