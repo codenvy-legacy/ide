@@ -66,6 +66,11 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
       try
       {
          parseTokenLine(lineContent, cursorPositionX);
+         if (tokenToComplete.endsWith(" "))
+         {
+            beforeToken += tokenToComplete;
+            tokenToComplete = "";
+         }
          tokens.clear();
          List<Token> tok = new ArrayList<Token>();
          filterTokens(tokenList);

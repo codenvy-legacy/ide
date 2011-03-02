@@ -35,6 +35,7 @@ import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
+import org.exoplatform.ide.editor.codeassistant.xml.XmlCodeAssistant;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -55,11 +56,11 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
    public interface HtmlBuandle extends ClientBundle
    {
-      
+
       @Source("org/exoplatform/ide/editor/public/tokens/html_tokens.js")
       ExternalTextResource htmlTokens();
    }
-   
+
    private static List<Token> htmlTokens;
 
    private static List<Token> htmlCoreAttributes;
@@ -113,18 +114,17 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
    private boolean isTag = false;
 
-
-//   private native JavaScriptObject getHtmlTagTokensJSO() /*-{
-//		return $wnd.html_tokens;
-//   }-*/;
-//
-//   private native JavaScriptObject getHtmlCoreAttributes()/*-{
-//		return $wnd.html_attributes;
-//   }-*/;
-//
-//   private native JavaScriptObject getHtmlBaseEvents()/*-{
-//		return $wnd.html_baseEvents;
-//   }-*/;
+   //   private native JavaScriptObject getHtmlTagTokensJSO() /*-{
+   //		return $wnd.html_tokens;
+   //   }-*/;
+   //
+   //   private native JavaScriptObject getHtmlCoreAttributes()/*-{
+   //		return $wnd.html_attributes;
+   //   }-*/;
+   //
+   //   private native JavaScriptObject getHtmlBaseEvents()/*-{
+   //		return $wnd.html_baseEvents;
+   //   }-*/;
 
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
@@ -140,8 +140,8 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
     */
    @Override
    public void autocompleteCalled(Editor editor, String mimeType, final int cursorOffsetX, final int cursorOffsetY,
-      final String lineContent, final int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
-      Token currentToken)
+      final String lineContent, final int cursorPositionX, int cursorPositionY, List<Token> tokenList,
+      String lineMimeType, Token currentToken)
    {
       if (MimeType.TEXT_CSS.equals(lineMimeType))
       {
@@ -151,33 +151,39 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       }
       if (MimeType.APPLICATION_JAVASCRIPT.equals(lineMimeType))
       {
-         new JavaScriptCodeAssistant().autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY,
-            lineContent, cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+         new JavaScriptCodeAssistant().autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
+            cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+         return;
+      }
+      if (MimeType.TEXT_XML.equals(lineMimeType))
+      {
+         new XmlCodeAssistant().autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
+            cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
          return;
       }
 
       this.editor = editor;
       try
       {
-         
-         if(htmlTokens == null)
+
+         if (htmlTokens == null)
          {
             HtmlBuandle buandle = GWT.create(HtmlBuandle.class);
             buandle.htmlTokens().getText(new ResourceCallback<TextResource>()
             {
-               
+
                @Override
                public void onSuccess(TextResource resource)
                {
                   JavaScriptObject o = parseJson(resource.getText());
                   JSONObject obj = new JSONObject(o);
-                 JSONTokenParser parser = new JSONTokenParser();
-                 htmlTokens = parser.getTokens(obj.get("tag").isArray());
-                 htmlCoreAttributes = parser.getTokens(obj.get("attributes").isArray());
-                 htmlBaseEvents = parser.getTokens(obj.get("baseEvents").isArray());
-                 autocompletion(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX);
+                  JSONTokenParser parser = new JSONTokenParser();
+                  htmlTokens = parser.getTokens(obj.get("tag").isArray());
+                  htmlCoreAttributes = parser.getTokens(obj.get("attributes").isArray());
+                  htmlBaseEvents = parser.getTokens(obj.get("baseEvents").isArray());
+                  autocompletion(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX);
                }
-               
+
                @Override
                public void onError(ResourceException e)
                {
@@ -186,8 +192,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
             });
             return;
          }
-       
-         
+
          autocompletion(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX);
       }
       catch (Exception e)
@@ -314,7 +319,6 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
          tokens.addAll(token.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue());
       }
    }
-
 
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory#buildTokenWidget(org.exoplatform.ide.editor.api.codeassitant.Token)
