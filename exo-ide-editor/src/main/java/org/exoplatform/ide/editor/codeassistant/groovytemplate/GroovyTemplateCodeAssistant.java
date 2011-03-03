@@ -31,14 +31,14 @@ import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandl
  * @version $Id: GroovyTamplateCodeAssistant Mar 3, 2011 5:06:09 PM evgen $
  *
  */
-public class GroovyTamplateCodeAssistant extends JavaCodeAssistant
+public class GroovyTemplateCodeAssistant extends JavaCodeAssistant
 {
 
    /**
     * @param factory
     * @param errorHandler
     */
-   public GroovyTamplateCodeAssistant(TokenWidgetFactory factory, JavaCodeAssistantErrorHandler errorHandler)
+   public GroovyTemplateCodeAssistant(TokenWidgetFactory factory, JavaCodeAssistantErrorHandler errorHandler)
    {
       super(factory, errorHandler);
    }
