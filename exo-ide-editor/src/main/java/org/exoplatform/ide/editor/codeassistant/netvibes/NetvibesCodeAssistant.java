@@ -73,10 +73,6 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
 
    private String lineContent;
 
-   private int cursorOffsetY;
-
-   private int cursorOffsetX;
-
    private int cursorPositionX;
 
    private int cursorPositionY;
@@ -122,12 +118,12 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
       try
       {
          this.editor = editor;
+         this.posX = cursorOffsetX;
+         this.posY = cursorOffsetY;
          if (defaultTokens == null && nVApiTokens == null)
          {
             NetvibesBundle bundle = GWT.create(NetvibesBundle.class);
             this.lineContent = lineContent;
-            this.cursorOffsetY = cursorOffsetY;
-            this.cursorOffsetX = cursorOffsetX;
             this.cursorPositionX = cursorPositionX;
             this.cursorPositionY = cursorPositionX;
             this.tokenFromParser = tokenFromParser;
@@ -136,7 +132,7 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
             return;
          }
 
-         autocompletion(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX, cursorPositionY, tokenFromParser,
+         autocompletion(lineContent, cursorPositionX, cursorPositionY, tokenFromParser,
             currentToken);
       }
       catch (Exception e)
@@ -154,7 +150,7 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
     * @param tokenFromParser
     * @param currentToken
     */
-   private void autocompletion(int cursorOffsetX, int cursorOffsetY, String lineContent, int cursorPositionX,
+   private void autocompletion(String lineContent, int cursorPositionX,
       int cursorPositionY, List<Token> tokenFromParser, Token currentToken)
    {
       List<Token> tokens = new ArrayList<Token>();
@@ -190,7 +186,7 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
       tokens.addAll(filteredToken.values());
 
       Collections.sort(tokens, this);
-      openForm(cursorOffsetX, cursorOffsetY, tokens, new JavaScriptTokenWidgetFactory(), this);
+      openForm(tokens, new JavaScriptTokenWidgetFactory(), this);
    }
 
    /**
@@ -633,7 +629,7 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
          }
       }
 
-      autocompletion(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX, cursorPositionY, tokenFromParser,
+      autocompletion(lineContent, cursorPositionX, cursorPositionY, tokenFromParser,
          currentToken);
 
    }

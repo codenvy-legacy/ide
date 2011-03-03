@@ -65,6 +65,8 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
       Token currentToken)
    {
       this.editor = editor;
+      this.posX = cursorOffsetX;
+      this.posY = cursorOffsetY;
       try
       {
          parseTokenLine(lineContent, cursorPositionX);
@@ -78,7 +80,7 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
          filterTokens(tokenList);
          tok.addAll(tokens.values());
          Collections.sort(tok, this);
-         openForm(cursorOffsetX, cursorOffsetY, tok, this, this);
+         openForm(tok, this, this);
       }
       catch (Exception e)
       {

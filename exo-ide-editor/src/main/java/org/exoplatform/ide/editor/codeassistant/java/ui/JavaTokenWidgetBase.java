@@ -18,8 +18,12 @@
  */
 package org.exoplatform.ide.editor.codeassistant.java.ui;
 
+import java.util.List;
+
+import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
+import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
@@ -44,13 +48,20 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
    /**
     * @param token
     */
+   @SuppressWarnings("unchecked")
    public JavaTokenWidgetBase(Token token, String restContext)
    {
       super(token);
       this.restContext = restContext;
       if (token.hasProperty(TokenProperties.MODIFIERS))
       {
-         modifieres = token.getProperty(TokenProperties.MODIFIERS).isNumericProperty().numberValue().intValue();
+         TokenProperty mod = token.getProperty(TokenProperties.MODIFIERS);
+         if(mod.isNumericProperty() != null)
+          modifieres = mod.isNumericProperty().numberValue().intValue();
+         else
+         {
+            modifieres = getModifires((List<Modifier>)mod.isObjectProperty().objectValue());
+         }
       }
       else
          modifieres = 0;
@@ -67,6 +78,20 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
       span += (ModifierHelper.isStatic(modifieres)) ? "<font color ='#6d0000' style='float: right;'>S</font>" : "";
       span += "</span>";
       return span;
+   }
+   
+   /**
+    * @param modifiers
+    * @return
+    */
+   private int getModifires(List<Modifier> modifiers)
+   {
+      int i = 0;
+      for (Modifier m : modifiers)
+      {
+         i = i | m.value();
+      }
+      return i;
    }
 
    /**
@@ -112,7 +137,7 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
    public Widget getTokenDecription()
    {
       return new Frame(restContext + "/ide/code-assistant/class-doc?fqn="
-         + token.getProperty(TokenProperties.DECLARING_CLASS) + "." + getTokenValue());
+         + token.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue() + "." + getTokenValue());
    }
 
 }

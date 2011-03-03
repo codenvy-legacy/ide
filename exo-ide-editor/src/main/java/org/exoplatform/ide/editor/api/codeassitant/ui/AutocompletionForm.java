@@ -26,6 +26,8 @@ import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -41,9 +43,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -100,13 +100,13 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
    private List<TokenWidget> widgets;
 
    private List<TokenWidget> allWidgets;
-   
+
    private HandlerRegistration resizeHandler;
 
    private boolean isTextBoxHasFocus = true;
 
-   public AutocompletionForm(int left, int top, String prefix, List<Token> items,
-      TokenWidgetFactory widgetFactory, TokenSelectedHandler handler)
+   public AutocompletionForm(int left, int top, String prefix, List<Token> items, TokenWidgetFactory widgetFactory,
+      TokenSelectedHandler handler)
    {
       this.handler = handler;
 
@@ -202,9 +202,10 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
       }
       flowPanel.add(new Label("No Proposals"));
 
-      DeferredCommand.addCommand(new Command()
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
 
+         @Override
          public void execute()
          {
             textBox.setFocus(true);
@@ -429,7 +430,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
     */
    private void removeHandlers()
    {
-      
+
       if (keyboardManagerRegistration != null)
       {
          keyboardManagerRegistration.removeHandler();

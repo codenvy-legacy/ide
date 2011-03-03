@@ -47,6 +47,10 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
    protected String afterToken;
 
    protected Editor editor;
+   
+   protected int posX;
+   
+   protected int posY;
 
    /**
     * @param eventBys
@@ -84,11 +88,11 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
       String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
       Token currentToken);
 
-   protected void openForm(int x, int y, List<Token> tokens, TokenWidgetFactory factory, TokenSelectedHandler handler)
+   protected void openForm(List<Token> tokens, TokenWidgetFactory factory, TokenSelectedHandler handler)
    {
-      x = x - tokenToComplete.length() * 8 + 8;
-      y = y + 4;
-      new AutocompletionForm(x, y, tokenToComplete, tokens, factory, handler);
+      posX = posX - tokenToComplete.length() * 8 + 8;
+      posY = posY + 4;
+      new AutocompletionForm(posX, posY, tokenToComplete, tokens, factory, handler);
    }
 
    /**

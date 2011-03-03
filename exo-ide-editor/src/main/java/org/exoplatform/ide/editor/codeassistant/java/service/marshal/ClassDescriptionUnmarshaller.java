@@ -59,7 +59,7 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
 
    private static final String MODIFIERS = "modifiers";
 
-   private GroovyClass classInfo;
+   private JavaClass classInfo;
 
    private static String METHODS = "methods";
 
@@ -76,7 +76,7 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
    /**
     * @param classInfo
     */
-   public ClassDescriptionUnmarshaller(GroovyClass classInfo)
+   public ClassDescriptionUnmarshaller(JavaClass classInfo)
    {
       super();
       this.classInfo = classInfo;

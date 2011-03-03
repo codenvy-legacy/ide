@@ -163,6 +163,8 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       }
 
       this.editor = editor;
+      this.posX = cursorOffsetX;
+      this.posY = cursorOffsetY;
       try
       {
 
@@ -181,7 +183,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
                   htmlTokens = parser.getTokens(obj.get("tag").isArray());
                   htmlCoreAttributes = parser.getTokens(obj.get("attributes").isArray());
                   htmlBaseEvents = parser.getTokens(obj.get("baseEvents").isArray());
-                  autocompletion(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX);
+                  autocompletion(lineContent, cursorPositionX);
                }
 
                @Override
@@ -193,7 +195,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
             return;
          }
 
-         autocompletion(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX);
+         autocompletion(lineContent, cursorPositionX);
       }
       catch (Exception e)
       {
@@ -207,7 +209,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
     * @param lineContent
     * @param cursorPositionX
     */
-   private void autocompletion(int cursorOffsetX, int cursorOffsetY, String lineContent, int cursorPositionX)
+   private void autocompletion(String lineContent, int cursorPositionX)
    {
       List<Token> token = new ArrayList<Token>();
       parseTokenLine(lineContent, cursorPositionX);
@@ -215,7 +217,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       if (!isTag)
       {
          token.addAll(htmlTokens);
-         openForm(cursorOffsetX, cursorOffsetY, token, this, this);
+         openForm(token, this, this);
          return;
       }
 
@@ -267,7 +269,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
          token.addAll(htmlTokens);
       }
 
-      openForm(cursorOffsetX, cursorOffsetY, token, this, this);
+      openForm(token, this, this);
    }
 
    /**

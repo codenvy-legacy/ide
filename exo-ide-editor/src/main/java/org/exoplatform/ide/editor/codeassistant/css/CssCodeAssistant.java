@@ -73,6 +73,8 @@ public class CssCodeAssistant extends CodeAssistant
       try
       {
          this.editor = editor;
+         this.posX = cursorOffsetX;
+         this.posY = cursorOffsetY;
          if (cssProperty == null)
          {
             CssBuandle buandle = GWT.create(CssBuandle.class);
@@ -85,7 +87,7 @@ public class CssCodeAssistant extends CodeAssistant
                   JSONTokenParser parser = new JSONTokenParser();
                   JSONArray tokenArray = new JSONArray(parseJson(resource.getText()));
                   cssProperty = parser.getTokens(tokenArray);
-                  fillTokens(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX);
+                  fillTokens(lineContent, cursorPositionX);
                }
                
                @Override
@@ -96,7 +98,7 @@ public class CssCodeAssistant extends CodeAssistant
             });
             return;
          }
-         fillTokens(cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX);
+         fillTokens(lineContent, cursorPositionX);
       }
       catch (Exception e)
       {
@@ -110,7 +112,7 @@ public class CssCodeAssistant extends CodeAssistant
     * @param lineContent
     * @param cursorPositionX
     */
-   private void fillTokens(int cursorOffsetX, int cursorOffsetY, String lineContent, int cursorPositionX)
+   private void fillTokens(String lineContent, int cursorPositionX)
    {
       String subToken = lineContent.substring(0, cursorPositionX - 1);
       afterToken = lineContent.substring(cursorPositionX - 1);
@@ -128,7 +130,7 @@ public class CssCodeAssistant extends CodeAssistant
       beforeToken = subToken.substring(0, subToken.lastIndexOf(token));
       tokenToComplete = token;
 
-      openForm(cursorOffsetX, cursorOffsetY, cssProperty, new CssTokenWidgetFactory(), this);
+      openForm(cssProperty, new CssTokenWidgetFactory(), this);
    }
 
 }

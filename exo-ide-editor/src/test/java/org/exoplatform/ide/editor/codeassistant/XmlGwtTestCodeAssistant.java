@@ -48,7 +48,7 @@ public class XmlGwtTestCodeAssistant extends Base
           * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#openForm(int, int, java.util.List, org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory, org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler)
           */
          @Override
-         protected void openForm(int x, int y, List<Token> tokens, TokenWidgetFactory factory,
+         protected void openForm(List<Token> tokens, TokenWidgetFactory factory,
             TokenSelectedHandler handler)
          {
            assertEquals(8, tokens.size());

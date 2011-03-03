@@ -19,7 +19,7 @@
 package org.exoplatform.ide.editor.codeassistant.java.service;
 
 import org.exoplatform.gwtframework.commons.rest.ClientRequestCallback;
-import org.exoplatform.ide.editor.codeassistant.java.service.marshal.GroovyClass;
+import org.exoplatform.ide.editor.codeassistant.java.service.marshal.JavaClass;
 
 import com.google.gwt.http.client.Request;
 
@@ -30,12 +30,12 @@ import com.google.gwt.http.client.Request;
  */
 public abstract class ClassInfoCallback extends ClientRequestCallback
 {
-   private GroovyClass classInfo;
+   private JavaClass classInfo;
    
    /**
     * @return the classInfo
     */
-   public GroovyClass getClassInfo()
+   public JavaClass getClassInfo()
    {
       return classInfo;
    }
@@ -43,7 +43,7 @@ public abstract class ClassInfoCallback extends ClientRequestCallback
    /**
     * @param classInfo the classInfo to set
     */
-   public void setClassInfo(GroovyClass classInfo)
+   public void setClassInfo(JavaClass classInfo)
    {
       this.classInfo = classInfo;
    }

@@ -92,6 +92,8 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       String lineMimeType, final Token currentToken)
    {
       this.editor = editor;
+      this.posX = cursorOffsetX;
+      this.posY = cursorOffsetY;
       try
       {
 //                  printTokens(tokenList, 0);
@@ -121,7 +123,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
                      tokensByFQN.put(t.getName().toLowerCase(), t);
                   }
                   
-                  autocompletion(cursorOffsetX, cursorOffsetY, cursorPositionY, tokenList, currentToken);
+                  autocompletion(cursorPositionY, tokenList, currentToken);
                }
 
                @Override
@@ -134,7 +136,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
             return;
          }
 
-         autocompletion(cursorOffsetX, cursorOffsetY, cursorPositionY, tokenList, currentToken);
+         autocompletion(cursorPositionY, tokenList, currentToken);
       }
       catch (Exception e)
       {
@@ -148,7 +150,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
     * @param lineContent
     * @param cursorPositionX
     */
-   private void autocompletion(int cursorOffsetX, int cursorOffsetY, int lineNum, List<Token> tokenList,
+   private void autocompletion(int lineNum, List<Token> tokenList,
       Token currentToken)
    {
 
@@ -183,7 +185,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
          tokens.addAll(getTokensForLine(lineNum, tokenFromParser));
       }
       Collections.sort(tokens, this);
-      openForm(cursorOffsetX, cursorOffsetY, tokens, new JavaScriptTokenWidgetFactory(), this);
+      openForm(tokens, new JavaScriptTokenWidgetFactory(), this);
    }
  
    

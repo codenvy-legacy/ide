@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codeassistant.java.service.marshal.GroovyClass;
+import org.exoplatform.ide.editor.codeassistant.java.service.marshal.JavaClass;
 
 /**
  * This service for auto-complete feature.
@@ -68,7 +68,7 @@ public abstract class CodeAssistantService
     * @param fileHref for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
     */
-   public abstract void getClassDescription(String fqn, String fileHref, AsyncRequestCallback<GroovyClass> callback);
+   public abstract void getClassDescription(String fqn, String fileHref, AsyncRequestCallback<JavaClass> callback);
    
    
    /**

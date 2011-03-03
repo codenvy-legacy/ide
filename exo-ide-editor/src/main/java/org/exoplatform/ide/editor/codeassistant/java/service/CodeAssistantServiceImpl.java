@@ -28,7 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.codeassistant.java.service.marshal.ClassDescriptionUnmarshaller;
 import org.exoplatform.ide.editor.codeassistant.java.service.marshal.FindClassesUnmarshaller;
-import org.exoplatform.ide.editor.codeassistant.java.service.marshal.GroovyClass;
+import org.exoplatform.ide.editor.codeassistant.java.service.marshal.JavaClass;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
@@ -88,11 +88,11 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
     * @see org.exoplatform.ide.client.module.groovy.service.codeassistant.CodeAssistantService#getClassDescription(java.lang.String)
     */
    @Override
-   public void getClassDescription(String fqn, String fileHref, AsyncRequestCallback<GroovyClass> callback)
+   public void getClassDescription(String fqn, String fileHref, AsyncRequestCallback<JavaClass> callback)
    {
       String url = restServiceContext + GET_CLASS_URL + fqn;
       
-      GroovyClass classInfo = new GroovyClass();
+      JavaClass classInfo = new JavaClass();
       callback.setResult(classInfo);
       ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller(classInfo);
       

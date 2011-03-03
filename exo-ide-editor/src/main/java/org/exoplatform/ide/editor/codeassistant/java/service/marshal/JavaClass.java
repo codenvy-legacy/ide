@@ -30,7 +30,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
  * @version $Id: Nov 24, 2010 3:18:00 PM evgen $
  *
  */
-public class GroovyClass
+public class JavaClass
 {
  
    private List<Token> methods = new ArrayList<Token>();

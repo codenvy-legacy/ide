@@ -22,13 +22,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
+import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
+import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantServiceImpl;
 import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.xml.XmlCodeAssistant;
@@ -63,7 +67,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * @version $Id: EditorTest Feb 24, 2011 10:03:57 AM evgen $
  *
  */
-public class EditorTest implements EntryPoint
+public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
 {
 
    private static final HandlerManager eventBus = new HandlerManager(null);
@@ -72,6 +76,22 @@ public class EditorTest implements EntryPoint
 
    static
    {
+      
+      JavaCodeAssistant javaCodeAssistant = new JavaCodeAssistant(new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private"), new JavaCodeAssistantErrorHandler()
+      {
+         
+         @Override
+         public void handleError(Throwable exception)
+         {
+            if(exception instanceof ServerException)
+            {
+               ServerException s = (ServerException)exception;
+               System.out.println(s.getMessage());
+            }
+            else exception.printStackTrace();
+         }
+      });
+      javaCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, "CodeMirror text editor", "txt", true,
          new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js']", // generic code parsers
@@ -84,7 +104,7 @@ public class EditorTest implements EntryPoint
             true, // can be outlined
             true, // can be autocompleted
             new XmlParser(), // exoplatform code parser
-            new XmlCodeAssistant()
+            CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML)
          )));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, "CodeMirror XML editor", "xml", true,
@@ -93,7 +113,7 @@ public class EditorTest implements EntryPoint
             true, // can be outlined
             true, // can be autocompleted
             new XmlParser(), // exoplatform code parser
-            new XmlCodeAssistant()
+            CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML)
          )));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT, "CodeMirror JavaScript editor", "js", true,
@@ -103,7 +123,7 @@ public class EditorTest implements EntryPoint
             true, // can be autocompleted
             new JavaScriptParser(), // exoplatform code parser
             new JavaScriptAutocompleteHelper(),// autocomplete helper
-            new JavaScriptCodeAssistant())));
+            CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_JAVASCRIPT))));
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_JAVASCRIPT, "CodeMirror JavaScript editor", "js", true,
          new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
@@ -112,7 +132,7 @@ public class EditorTest implements EntryPoint
             true, // can be autocompleted
             new JavaScriptParser(), // exoplatform code parser
             new JavaScriptAutocompleteHelper(), // autocomplete helper
-            new JavaScriptCodeAssistant())));
+            CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_JAVASCRIPT))));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_X_JAVASCRIPT, "CodeMirror JavaScript editor", "js", true,
          new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
@@ -121,7 +141,7 @@ public class EditorTest implements EntryPoint
             true, // can be autocompleted
             new JavaScriptParser(), // exoplatform code parser
             new JavaScriptAutocompleteHelper(), // autocomplete helper
-            new JavaScriptCodeAssistant())));
+            CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_X_JAVASCRIPT))));
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, "CodeMirror Css editor", "css", true,
          new CodeMirrorConfiguration("['parsecss.js']", // generic code parsers
@@ -129,7 +149,7 @@ public class EditorTest implements EntryPoint
             false, // can be outlined
             true, // can be autocompleted
             new CssParser() // exoplatform code parser 
-            , new CssCodeAssistant())));
+            , CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_CSS))));
 
 //      Set<String> comTypes = new HashSet<String>();
 //      comTypes.add(MimeType.TEXT_HTML);
@@ -143,7 +163,7 @@ public class EditorTest implements EntryPoint
             true, // can be autocompleted
             new HtmlParser(), // exoplatform code parser
             new HtmlAutocompleteHelper(), // autocomplete helper
-            new HtmlCodeAssistant(), true)));
+            CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_HTML), true)));
       
       addEditor(new CodeMirrorProducer(MimeType.GOOGLE_GADGET, "CodeMirror Google Gadget editor", "xml", true,
          new CodeMirrorConfiguration(
@@ -176,7 +196,8 @@ public class EditorTest implements EntryPoint
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyCodeValidator(),
-               new JavaCodeAssistant(new JavaTokenWidgetFactory("")))));
+               javaCodeAssistant
+              )));
 
       addEditor(new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", true,
          new CodeMirrorConfiguration(
@@ -188,7 +209,7 @@ public class EditorTest implements EntryPoint
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyCodeValidator(),
-               new JavaCodeAssistant(new JavaTokenWidgetFactory("")))));      
+               javaCodeAssistant)));      
 
       addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", true,
          new CodeMirrorConfiguration(
@@ -200,7 +221,7 @@ public class EditorTest implements EntryPoint
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyCodeValidator(),
-               new JavaCodeAssistant(new JavaTokenWidgetFactory("")))));
+               javaCodeAssistant)));
       
       addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl", true,
          new CodeMirrorConfiguration(
@@ -212,7 +233,7 @@ public class EditorTest implements EntryPoint
                new GroovyTemplateAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyTemplateCodeValidator(),
-               new JavaCodeAssistant(new JavaTokenWidgetFactory("")), true)));     
+               javaCodeAssistant, true)));     
       
       //To initialize client bundle 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
@@ -232,6 +253,7 @@ public class EditorTest implements EntryPoint
    @Override
    public void onModuleLoad()
    {
+      new CodeAssistantServiceImpl(eventBus, "http://127.0.0.1:8888/rest/private", new EmptyLoader());
       FlowPanel toolbar = new FlowPanel();
       toolbar.setWidth("100%");
       toolbar.setHeight("25px");
@@ -259,7 +281,6 @@ public class EditorTest implements EntryPoint
          @Override
          public void onClick(ClickEvent event)
          {
-            // TODO Auto-generated method stub
             params.put(CodeMirrorParams.MIME_TYPE, MimeType.TEXT_CSS);
             
             Editor editor = editors.get(MimeType.TEXT_CSS).createEditor(".test-class{\n\n}", eventBus, params);
@@ -462,6 +483,16 @@ public class EditorTest implements EntryPoint
 
       RootPanel.get().add(toolbar);
       RootPanel.get().add(panel);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable)
+    */
+   @Override
+   public void handleError(Throwable exception)
+   {
+      // TODO Auto-generated method stub
+      
    }
 
 }

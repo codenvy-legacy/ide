@@ -74,7 +74,7 @@ public class CssGwtTestCodeAssistant extends Base
       {
 
          @Override
-         protected void openForm(int x, int y, List<Token> tokens, TokenWidgetFactory factory,
+         protected void openForm(List<Token> tokens, TokenWidgetFactory factory,
             TokenSelectedHandler handler)
          {
             assertEquals(token, tokenToComplete);
