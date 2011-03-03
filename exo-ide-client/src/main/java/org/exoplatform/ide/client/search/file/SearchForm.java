@@ -179,7 +179,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       comboboxField.setTitle("<NOBR>" + title + "</NOBR>");
       comboboxField.setWidth(FIELD_WIDTH);
       comboboxField.setHeight(FIELD_HEIGHT);
-      comboboxField.setColSpan(2);
+//      comboboxField.setColSpan(2);
       return comboboxField;
    }
 

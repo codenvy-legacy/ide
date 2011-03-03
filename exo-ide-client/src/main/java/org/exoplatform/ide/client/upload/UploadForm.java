@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import com.google.gwt.user.client.ui.Widget;
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
@@ -132,9 +134,9 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
       createButtons();
 
       show();
-      UIHelper.setAsReadOnly(fileNameField.getName());
+//      UIHelper.setAsReadOnly(fileNameField.getName());
       presenter = createPresenter(eventBus, selectedItems, path);
-      fileUploadInput.setFileSelectedHandler(presenter);
+//      fileUploadInput.setFileSelectedHandler(presenter);
       presenter.bindDisplay(this);
    }
    
@@ -156,7 +158,8 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
   //TODO    uploadForm.setLayoutAlign(Alignment.CENTER);
       uploadForm.setMargin(15);
 
-   //TODO   uploadForm.add(createUploadFormItems());
+   //TODO   
+//      uploadForm.add(createUploadFormItems());
 
 //      uploadForm.setAutoWidth();
 
@@ -189,7 +192,10 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
       items[2] = canvasItem;
       items[3] = spacer2;
       
+      VerticalPanel panel = new VerticalPanel();
+      
       return items;
+//      return panel;
    }
 
    private void createButtons()

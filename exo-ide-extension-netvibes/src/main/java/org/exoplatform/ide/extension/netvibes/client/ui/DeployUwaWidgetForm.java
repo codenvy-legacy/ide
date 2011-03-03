@@ -309,11 +309,12 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       thumbnailField = createTextField(ID_TUMBNAIL_FIELD, "Thumbnail URL", "", 300);
       ///TODO thumbnailField.setColSpan(2);
       languageField = createCombobox(ID_LANGUAGE_FIELD, "Main language&#42;", 150);
-      languageField.setValidators(new LanguageFieldValidator());
+      //TODO: create or replace with other methods validators
+//      languageField.setValidators(new LanguageFieldValidator());
       categoryField = createCombobox(ID_CATEGORY_FIELD, "Most appropriate category&#42;", 150);
-      categoryField.setValidators(new CategoryFieldValidator(categories));
+//      categoryField.setValidators(new CategoryFieldValidator(categories));
       regionField = createCombobox(ID_REGION_FIELD, "Most appropriate region&#42;", 150);
-      regionField.setValidators(new RegionFieldValidator());
+//      regionField.setValidators(new RegionFieldValidator());
 
       detailsDynamicForm.add(titleField);
       detailsDynamicForm.add(descriptionField);
@@ -418,12 +419,12 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    {
       ComboBoxField combobox = new ComboBoxField();
       combobox.setName(id);
-      combobox.setDefaultToFirstOption(true);
+//      combobox.setDefaultToFirstOption(true);
       combobox.setTitle(title);
-     //TODO combobox.setTitleOrientation(TitleOrientation.TOP);
+     combobox.setTitleOrientation(TitleOrientation.TOP);
       combobox.setWidth(width);
-      combobox.setShowErrorStyle(false);
-      combobox.setErrorOrientation(FormErrorOrientation.RIGHT);
+//      combobox.setShowErrorStyle(false);
+//      combobox.setErrorOrientation(FormErrorOrientation.RIGHT);
       return combobox;
    }
 
@@ -699,7 +700,8 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
     */
    public boolean isValidDetailsFields()
    {
-      //TODO !!!  detailsDynamicForm.validate(false);
+      //TODO !!!  
+      //detailsDynamicForm.validate(false);
       return false;
    }
 

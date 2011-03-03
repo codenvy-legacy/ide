@@ -140,8 +140,8 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
          mimeTypesField = new ComboBoxField();
          mimeTypesField.setName(MIME_TYPE_FIELD);
          mimeTypesField.setWidth(340);
-         mimeTypesField.setColSpan(2);
-         mimeTypesField.setCompleteOnTab(true);
+//         mimeTypesField.setColSpan(2);
+//         mimeTypesField.setCompleteOnTab(true);
          mimeTypesField.setPickListHeight(100);
 
          caption3 = new StaticTextItem();
@@ -232,17 +232,17 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
    public void disableMimeTypeSelect()
    {
-      mimeTypesField.setDisabled(true);
+      mimeTypesField.setDisabled();
    }
 
    public void enableMimeTypeSelect()
    {
-      mimeTypesField.setDisabled(false);
+      mimeTypesField.setEnabled();
    }
 
    public void setDefaultMimeType(String mimeType)
    {
-      mimeTypesField.setDefaultValue(mimeType);
+//      mimeTypesField.setDefaultValue(mimeType);
    }
 
    /**

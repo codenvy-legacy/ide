@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+import com.google.gwt.user.client.ui.Widget;
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Hidden;
@@ -97,23 +101,24 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
 
    public void disableMimeTypeSelect()
    {
-      mimeTypesField.setDisabled(true);
+      mimeTypesField.setDisabled();
    }
 
    public void enableMimeTypeSelect()
    {
-      mimeTypesField.setDisabled(false);
+      mimeTypesField.setEnabled();
    }
 
    public void setDefaultMimeType(String mimeType)
    {
-      mimeTypesField.setDefaultValue(mimeType);
+//      mimeTypesField.setDefaultValue(mimeType);
    }
    
    @Override
    protected FormItem[] createUploadFormItems()
    {
       FormItem[] formItems = super.createUploadFormItems();
+//      VerticalPanel panel = (VerticalPanel)super.createUploadFormItems();
       
       FormItem[] items = new FormItem[formItems.length + 3];
       
@@ -122,28 +127,31 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
          items[i] = formItems[i];
       }
       
-      StaticTextItem mimeTypePromptItem = new StaticTextItem();
-      mimeTypePromptItem.setValue("Mime Type:");
-      mimeTypePromptItem.setShowTitle(false);
-      mimeTypePromptItem.setColSpan(2);
-
-      SpacerItem spacer3 = new SpacerItem();
-      spacer3.setHeight(2);
+//      StaticTextItem mimeTypePromptItem = new StaticTextItem();
+//      mimeTypePromptItem.setValue("Mime Type:");
+//      mimeTypePromptItem.setShowTitle(false);
+//      mimeTypePromptItem.setColSpan(2);
+//
+//      SpacerItem spacer3 = new SpacerItem();
+//      spacer3.setHeight(2);
 
       mimeTypesField = new ComboBoxField();
       mimeTypesField.setName(MIME_TYPE_FIELD);
       mimeTypesField.setWidth(334);
-      mimeTypesField.setShowTitle(false);
-      mimeTypesField.setColSpan(2);
-      mimeTypesField.setCompleteOnTab(true);
+      mimeTypesField.setLabel("Mime Type:");
+      mimeTypesField.setShowTitle(true);
+//      mimeTypesField.setColSpan(2);
+//      mimeTypesField.setCompleteOnTab(true);
       mimeTypesField.setPickListHeight(100);
       
-      items[formItems.length] = mimeTypePromptItem;
-      items[formItems.length + 1] = spacer3;
-      items[formItems.length + 2] = mimeTypesField;
+//      items[formItems.length] = mimeTypePromptItem;
+//      items[formItems.length + 1] = spacer3;
+//      items[formItems.length + 2] = mimeTypesField;
       
             
       return items;
+//      panel.add(mimeTypesField);
+//      return panel;
    }
 
 }
