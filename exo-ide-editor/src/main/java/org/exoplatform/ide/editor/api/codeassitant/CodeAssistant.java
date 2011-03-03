@@ -22,13 +22,14 @@ import java.util.List;
 
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationForm;
+import org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.AutocompletionForm;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Callback interface for codeaasistant feature.
@@ -36,7 +37,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: CodeAssistant Feb 22, 2011 12:43:13 PM evgen $
  *
  */
-public abstract class CodeAssistant implements TokenSelectedHandler
+public abstract class CodeAssistant implements TokenSelectedHandler, AssistImportDeclarationHandler
 {
 
    protected String beforeToken;
@@ -150,6 +151,29 @@ public abstract class CodeAssistant implements TokenSelectedHandler
     */
    @Override
    public void onCancelAutoComplete()
+   {
+      editor.setFocus();
+   }
+   
+   protected void openImportForm(int left, int top, List<Token> tokens, TokenWidgetFactory factory, AssistImportDeclarationHandler handler)
+   {
+      new AssistImportDeclarationForm(left, top, tokens, factory, handler);
+   }
+   
+   /**
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationHandler#onImportTokenSelected(org.exoplatform.ide.editor.api.codeassitant.Token)
+    */
+   @Override
+   public void onImportTokenSelected(Token token)
+   {
+      editor.insertImportStatement(token.getProperty(TokenProperties.FQN).isStringProperty().stringValue());
+   }
+   
+   /**
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationHandler#onImportCancel()
+    */
+   @Override
+   public void onImportCancel()
    {
       editor.setFocus();
    }

@@ -67,4 +67,37 @@ public interface CodeAssistantClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/editor/public/bundle/images/var-item.png")
    ImageResource varItem();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/innerinterface_public.gif")
+   ImageResource intrfaceItem();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/annotation.gif")
+   ImageResource annotationItem();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/public-field.png")
+   ImageResource publicField();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/protected-field.png")
+   ImageResource protectedField();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/default-field.png")
+   ImageResource defaultField();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/private-field.png")
+   ImageResource privateField();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/private-method.png")
+   ImageResource privateMethod();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/protected-method.png")
+   ImageResource protectedMethod();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/public-method.png")
+   ImageResource publicMethod();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/default-method.png")
+   ImageResource defaultMethod();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/local.png")
+   ImageResource variable();
 }

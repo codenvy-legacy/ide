@@ -100,7 +100,7 @@ public class JSONTokenParser
          }
          if (jObject.get(TokenFields.VARTYPE) != null)
          {
-            t.setProperty(TokenProperties.TYPE, new StringProperty(jObject.get(TokenFields.VARTYPE).isString()
+            t.setProperty(TokenProperties.ELEMENT_TYPE, new StringProperty(jObject.get(TokenFields.VARTYPE).isString()
                .stringValue()));
          }
 

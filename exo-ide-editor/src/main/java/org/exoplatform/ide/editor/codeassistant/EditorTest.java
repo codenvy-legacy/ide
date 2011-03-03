@@ -27,6 +27,8 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
+import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.xml.XmlCodeAssistant;
@@ -126,8 +128,8 @@ public class EditorTest implements EntryPoint
             "['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']", // code styles
             false, // can be outlined
             true, // can be autocompleted
-            new CssParser(), // exoplatform code parser 
-            new CssCodeAssistant())));
+            new CssParser() // exoplatform code parser 
+            , new CssCodeAssistant())));
 
 //      Set<String> comTypes = new HashSet<String>();
 //      comTypes.add(MimeType.TEXT_HTML);
@@ -174,7 +176,7 @@ public class EditorTest implements EntryPoint
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyCodeValidator(),
-               new DefaultCodeAssistant())));
+               new JavaCodeAssistant(new JavaTokenWidgetFactory("")))));
 
       addEditor(new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", true,
          new CodeMirrorConfiguration(
@@ -186,7 +188,7 @@ public class EditorTest implements EntryPoint
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyCodeValidator(),
-               new DefaultCodeAssistant())));      
+               new JavaCodeAssistant(new JavaTokenWidgetFactory("")))));      
 
       addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", true,
          new CodeMirrorConfiguration(
@@ -198,7 +200,7 @@ public class EditorTest implements EntryPoint
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyCodeValidator(),
-               new DefaultCodeAssistant())));
+               new JavaCodeAssistant(new JavaTokenWidgetFactory("")))));
       
       addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl", true,
          new CodeMirrorConfiguration(
@@ -210,7 +212,7 @@ public class EditorTest implements EntryPoint
                new GroovyTemplateAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyTemplateCodeValidator(),
-               new DefaultCodeAssistant(), true)));     
+               new JavaCodeAssistant(new JavaTokenWidgetFactory("")), true)));     
       
       //To initialize client bundle 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();

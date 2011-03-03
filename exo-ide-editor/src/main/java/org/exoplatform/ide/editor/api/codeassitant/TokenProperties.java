@@ -40,8 +40,6 @@ public interface TokenProperties
 
    public static String GENERIC_PARAMETER_TYPES = "GENERICPARAMETERTYPES";
 
-   public static String TYPE = "TYPE";
-
    public static String GENERIC_RETURN_TYPE = "GENERICRETURNTYPE";
 
    public static String PARAMETER_TYPES = "PARAMETERTYPES";
