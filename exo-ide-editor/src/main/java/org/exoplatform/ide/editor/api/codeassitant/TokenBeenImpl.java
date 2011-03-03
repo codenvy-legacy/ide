@@ -113,7 +113,7 @@ public class TokenBeenImpl extends TokenImpl
    {
       return hasProperty(TokenProperties.LINE_NUMBER) 
          ? ((NumericProperty)getProperty(TokenProperties.LINE_NUMBER)).numberValue().intValue() 
-         : null;
+         : 0;
    }
 
    public void setLastLineNumber(int lastLineNumber)
@@ -128,7 +128,7 @@ public class TokenBeenImpl extends TokenImpl
    {
       return  hasProperty(TokenProperties.LAST_LINE_NUMBER) 
          ? ((NumericProperty) getProperty(TokenProperties.LAST_LINE_NUMBER)).numberValue().intValue() 
-         : null; 
+         : 0; 
    }
    
    public List<TokenBeenImpl> getSubTokenList()
