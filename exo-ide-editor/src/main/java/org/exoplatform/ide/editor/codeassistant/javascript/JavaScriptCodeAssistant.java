@@ -61,19 +61,6 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
 
    private static Map<String, Token> tokensByFQN = new HashMap<String, Token>();
 
-
-   //   private native JavaScriptObject getTokens() /*-{
-   //		return $wnd.javascript_tokens;
-   //   }-*/;
-   //
-   //   private native JavaScriptObject getJavaScriptApiTokens() /*-{
-   //		return $wnd.java_script_api;
-   //   }-*/;
-   //
-   //   private native JavaScriptObject getJavaScriptGlobalTokens() /*-{
-   //		return $wnd.java_script_grobal_var;
-   //   }-*/;
-
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
     */
@@ -96,7 +83,6 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       this.posY = cursorOffsetY;
       try
       {
-//                  printTokens(tokenList, 0);
          parseTokenLine(lineContent, cursorPositionX);
 
          if (defaultTokens == null)
@@ -350,11 +336,6 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
 
       String tagName = "script";
 
-//      if (!tokenFromParser.isEmpty() && !tokenFromParser.get(0).getName().equals(tagName))
-//      {
-//         return tokenFromParser;
-//      }
-
       for (int i = 0; i < tokenFromParser.size(); i++)
       {
          Token token = tokenFromParser.get(i);
@@ -442,34 +423,6 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       {
          return -1;
       }
-
-      //
-      //      /*
-      //       * If first and second template is not keyword
-      //       * check, if one of them is template.
-      //       * Template must be less, that all other types, except keyword.
-      //       */
-      //      if (t1.getType() == TokenType.TEMPLATE)
-      //      {
-      //         return 1;
-      //      }
-      //      if (t2.getType() == TokenType.TEMPLATE)
-      //      {
-      //         return -1;
-      //      }
-      //      
-      //      /*
-      //       * At the end of list must be keywords.
-      //       */
-      //      if (t1.getType() == TokenType.KEYWORD)
-      //      {
-      //         return 1;
-      //      }
-      //
-      //      if (t2.getType() == TokenType.KEYWORD)
-      //      {
-      //         return -1;
-      //      }
 
       return t1.getName().compareTo(t2.getName());
    }

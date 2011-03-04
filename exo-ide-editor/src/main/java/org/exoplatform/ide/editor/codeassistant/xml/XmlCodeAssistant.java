@@ -31,7 +31,6 @@ import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
@@ -146,27 +145,6 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
       return new HtmlTokenWidget(token);
    }
    
-   private void printTokens(List<? extends Token> tokens, int i)
-   {
-      String spacer = "";
-      for (int j = 0; j < i; j++)
-      {
-         spacer += "  ";
-      }
-      i++;
-      for (Token t : tokens)
-      {
-         System.out.println(spacer + t.getName() + " " + t.getType());
-         TokenProperty p = t.getProperty(TokenProperties.LAST_LINE_NUMBER);
-         if (p != null && p.isNumericProperty() != null)
-            System.out.println(spacer + p.isNumericProperty().numberValue());
-         if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
-            && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
-         {
-            printTokens(t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue(), i);
-         }
-      }
-   }
 
    /**
     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)

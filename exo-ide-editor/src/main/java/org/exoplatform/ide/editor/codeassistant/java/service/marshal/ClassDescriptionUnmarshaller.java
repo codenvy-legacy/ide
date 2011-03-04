@@ -109,12 +109,7 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
       {
          classInfo.getPublicConstructors().addAll(getPublicConstructors(jObject.get(CONSTRUCTORS)));
       }
-      //for now we use only public methods and fields
 
-      //      if (jObject.containsKey(DECLARED_CONSTRUCTORS))
-      //      {
-      //         classInfo.getPublicConstructors().addAll(getPublicConstructors(jObject.get(DECLARED_CONSTRUCTORS)));
-      //      }
       if (jObject.containsKey(FIELDS))
       {
          classInfo.getPublicFields().addAll(getPublicFields(jObject.get(FIELDS)));

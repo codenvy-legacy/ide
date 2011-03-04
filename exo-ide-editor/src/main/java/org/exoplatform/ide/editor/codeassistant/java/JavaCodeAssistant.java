@@ -182,8 +182,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       this.editor = editor;
       try
       {
-         System.out.println("JavaCodeAssistant.errorMarckClicked()");
-         System.out.println(codeErrorList.get(0).getLineContent());
          CodeAssistantService.getInstance().findClass(codeErrorList.get(0).getLineContent(), activeFileHref,
             new AsyncRequestCallback<List<Token>>()
             {

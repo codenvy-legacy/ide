@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.groovytemplate.GroovyTemplateCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
@@ -92,6 +93,22 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          }
       });
       javaCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
+      
+      GroovyTemplateCodeAssistant templateCodeAssistant = new GroovyTemplateCodeAssistant(new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private"), new JavaCodeAssistantErrorHandler()
+      {
+         
+         @Override
+         public void handleError(Throwable exception)
+         {
+            if(exception instanceof ServerException)
+            {
+               ServerException s = (ServerException)exception;
+               System.out.println(s.getMessage());
+            }
+            else exception.printStackTrace();
+         }
+      });
+      templateCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, "CodeMirror text editor", "txt", true,
          new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js']", // generic code parsers
@@ -233,7 +250,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                new GroovyTemplateAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyTemplateCodeValidator(),
-               javaCodeAssistant, true)));     
+               templateCodeAssistant, true)));     
       
       //To initialize client bundle 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();

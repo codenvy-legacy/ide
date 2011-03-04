@@ -32,7 +32,7 @@ import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * Callback interface for codeaasistant feature.
+ * Callback abstract calss for codeaasistant feature.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeAssistant Feb 22, 2011 12:43:13 PM evgen $
  *
@@ -47,9 +47,9 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
    protected String afterToken;
 
    protected Editor editor;
-   
+
    protected int posX;
-   
+
    protected int posY;
 
    /**
@@ -73,21 +73,28 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
 
    /**
     * If editor support autocompletion, he calls this method.  
-    * @param editor
-    * @param mimeType
-    * @param cursorOffsetX
-    * @param cursorOffsetY
-    * @param lineContent
-    * @param cursorPositionX
-    * @param cursorPositionY
-    * @param tokenList
-    * @param lineMimeType
-    * @param currentToken
+    * @param editor instance of editor
+    * @param mimeType file mime type
+    * @param cursorOffsetX offset x position of cursor
+    * @param cursorOffsetY offset y position of cursor
+    * @param lineContent String with current line content
+    * @param cursorPositionX  cursor position in currnt line
+    * @param cursorPositionY line number
+    * @param tokenList List of parsed tokens
+    * @param lineMimeType line mime type
+    * @param currentToken if cursor pleased before dot(i.e. autocompletion called for method or property), 
+    * contains token with information of type of variable
     */
    public abstract void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
       String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
       Token currentToken);
 
+   /**
+    * Create and show {@link AutocompletionForm}
+    * @param tokens list of tokens
+    * @param factory instance of {@link TokenWidgetFactory}
+    * @param handler callback  for autocompletion form
+    */
    protected void openForm(List<Token> tokens, TokenWidgetFactory factory, TokenSelectedHandler handler)
    {
       posX = posX - tokenToComplete.length() * 8 + 8;
@@ -158,12 +165,21 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
    {
       editor.setFocus();
    }
-   
-   protected void openImportForm(int left, int top, List<Token> tokens, TokenWidgetFactory factory, AssistImportDeclarationHandler handler)
+
+   /**
+    * Create and show {@link AssistImportDeclarationForm}
+    * @param left position
+    * @param top position
+    * @param tokens list of tokens
+    * @param factory instance of {@link TokenWidgetFactory}
+    * @param handler callback for {@link AssistImportDeclarationForm}
+    */
+   protected void openImportForm(int left, int top, List<Token> tokens, TokenWidgetFactory factory,
+      AssistImportDeclarationHandler handler)
    {
       new AssistImportDeclarationForm(left, top, tokens, factory, handler);
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationHandler#onImportTokenSelected(org.exoplatform.ide.editor.api.codeassitant.Token)
     */
@@ -172,7 +188,7 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
    {
       editor.insertImportStatement(token.getProperty(TokenProperties.FQN).isStringProperty().stringValue());
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationHandler#onImportCancel()
     */

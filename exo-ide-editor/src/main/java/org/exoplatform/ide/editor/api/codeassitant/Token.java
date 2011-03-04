@@ -23,7 +23,6 @@ import java.util.Set;
 
 /**
  * Token interface represent abstract token. 
- *  Token is part of 
  *   
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>

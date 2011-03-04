@@ -84,13 +84,11 @@ public class FindClassesUnmarshaller implements Unmarshallable
 
    private void parseClassesName(String body)
    {
-      //    JSONObject json = new JSONObject(getClasses(body));
       JSONArray jArray = new JSONArray(getClasses(body));
 
       for (int i = 0; i < jArray.size(); i++)
       {
          JSONObject jObject = jArray.get(i).isObject();
-         //     GroovyToken token = new GroovyToken(jObject.get("CLASS").isString().stringValue(), GroovyTokenType.CLASS);
 
          Token token =
             new TokenImpl(jObject.get(NAME).isString().stringValue(), TokenType.valueOf(jObject.get(TYPE)

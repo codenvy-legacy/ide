@@ -32,6 +32,7 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
 import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
@@ -114,18 +115,6 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
    private boolean isTag = false;
 
-   //   private native JavaScriptObject getHtmlTagTokensJSO() /*-{
-   //		return $wnd.html_tokens;
-   //   }-*/;
-   //
-   //   private native JavaScriptObject getHtmlCoreAttributes()/*-{
-   //		return $wnd.html_attributes;
-   //   }-*/;
-   //
-   //   private native JavaScriptObject getHtmlBaseEvents()/*-{
-   //		return $wnd.html_baseEvents;
-   //   }-*/;
-
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
     */
@@ -143,22 +132,10 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       final String lineContent, final int cursorPositionX, int cursorPositionY, List<Token> tokenList,
       String lineMimeType, Token currentToken)
    {
-      if (MimeType.TEXT_CSS.equals(lineMimeType))
+      if (!MimeType.TEXT_HTML.equals(lineMimeType))
       {
-         new CssCodeAssistant().autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
-            cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
-         return;
-      }
-      if (MimeType.APPLICATION_JAVASCRIPT.equals(lineMimeType))
-      {
-         new JavaScriptCodeAssistant().autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
-            cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
-         return;
-      }
-      if (MimeType.TEXT_XML.equals(lineMimeType))
-      {
-         new XmlCodeAssistant().autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
-            cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, mimeType, cursorOffsetX,
+            cursorOffsetY, lineContent, cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
          return;
       }
 

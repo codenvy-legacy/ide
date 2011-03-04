@@ -50,11 +50,6 @@ public class CssCodeAssistant extends CodeAssistant
    
    private static List<Token> cssProperty;
 
-
-//   private native JavaScriptObject getTokens() /*-{
-//		return $wnd.css_tokens;
-//   }-*/;
-
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
     */

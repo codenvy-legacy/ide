@@ -32,13 +32,10 @@ import org.exoplatform.ide.editor.api.codeassitant.ArrayProperty;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
 import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptTokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
-import org.exoplatform.ide.editor.codeassistant.xml.XmlCodeAssistant;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
@@ -98,22 +95,11 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
       final String lineContent, final int cursorPositionX, final int cursorPositionY,
       final List<Token> tokenFromParser, String lineMimeType, final Token currentToken)
    {
-      if (MimeType.TEXT_CSS.equals(lineMimeType))
+      if (!MimeType.APPLICATION_JAVASCRIPT.equals(lineMimeType))
       {
-         new CssCodeAssistant().autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
-            cursorPositionX, cursorPositionY, tokenFromParser, lineMimeType, currentToken);
+         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, mimeType, cursorOffsetX,
+            cursorOffsetY, lineContent, cursorPositionX, cursorPositionY, tokenFromParser, lineMimeType, currentToken);
          return;
-      }
-      if (MimeType.TEXT_XML.equals(lineMimeType))
-      {
-         new XmlCodeAssistant().autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
-            cursorPositionX, cursorPositionY, tokenFromParser, lineMimeType, currentToken);
-         return;
-      }
-      if (MimeType.TEXT_HTML.equals(lineMimeType))
-      {
-         new HtmlCodeAssistant().autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
-            cursorPositionX, cursorPositionY, tokenFromParser, lineMimeType, currentToken);
       }
       try
       {
@@ -132,8 +118,7 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
             return;
          }
 
-         autocompletion(lineContent, cursorPositionX, cursorPositionY, tokenFromParser,
-            currentToken);
+         autocompletion(lineContent, cursorPositionX, cursorPositionY, tokenFromParser, currentToken);
       }
       catch (Exception e)
       {
@@ -150,8 +135,8 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
     * @param tokenFromParser
     * @param currentToken
     */
-   private void autocompletion(String lineContent, int cursorPositionX,
-      int cursorPositionY, List<Token> tokenFromParser, Token currentToken)
+   private void autocompletion(String lineContent, int cursorPositionX, int cursorPositionY,
+      List<Token> tokenFromParser, Token currentToken)
    {
       List<Token> tokens = new ArrayList<Token>();
 
@@ -467,13 +452,6 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
 
       final String tagName = "script";
 
-      //condition for the return of the recursion:
-      //if we reach the script tag
-      //      if (!tokenFromParser.isEmpty() && !tokenFromParser.get(0).getName().equals(tagName))
-      //      {
-      //         return tokenFromParser;
-      //      }
-
       for (int i = 0; i < tokenFromParser.size(); i++)
       {
          Token token = tokenFromParser.get(i);
@@ -521,56 +499,7 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
          return -1;
       }
 
-//      /*
-//       * At the end of list must be keywords.
-//       */
-//      if (t1.getType() == TokenType.KEYWORD)
-//      {
-//         return 1;
-//      }
-//
-//      if (t2.getType() == TokenType.KEYWORD)
-//      {
-//         return -1;
-//      }
-//
-//      /*
-//       * If first and second template is not keyword
-//       * check, if one of them is template.
-//       * Template must be less, that all other types, except keyword.
-//       */
-//      if (t1.getType() == TokenType.TEMPLATE)
-//      {
-//         return 1;
-//      }
-//      if (t2.getType() == TokenType.TEMPLATE)
-//      {
-//         return -1;
-//      }
-
       return t1.getName().compareTo(t2.getName());
-   }
-
-   private void printTokens(List<? extends Token> tokens, int i)
-   {
-      String spacer = "";
-      for (int j = 0; j < i; j++)
-      {
-         spacer += " ";
-      }
-      i++;
-      for (Token t : tokens)
-      {
-         System.out.println(spacer + t.getName() + " " + t.getType());
-         TokenProperty p = t.getProperty(TokenProperties.LAST_LINE_NUMBER);
-         if (p != null && p.isNumericProperty() != null)
-            System.out.println(spacer + p.isNumericProperty().numberValue());
-         if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
-            && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
-         {
-            printTokens(t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue(), i);
-         }
-      }
    }
 
    /**
@@ -629,8 +558,7 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
          }
       }
 
-      autocompletion(lineContent, cursorPositionX, cursorPositionY, tokenFromParser,
-         currentToken);
+      autocompletion(lineContent, cursorPositionX, cursorPositionY, tokenFromParser, currentToken);
 
    }
 

@@ -20,9 +20,11 @@ package org.exoplatform.ide.editor.codeassistant.groovytemplate;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
 
@@ -42,7 +44,7 @@ public class GroovyTemplateCodeAssistant extends JavaCodeAssistant
    {
       super(factory, errorHandler);
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
@@ -52,9 +54,15 @@ public class GroovyTemplateCodeAssistant extends JavaCodeAssistant
       Token currentToken)
    {
 
-      
-      super.autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX, cursorPositionY,
-         tokenList, lineMimeType, currentToken);
+      if (MimeType.APPLICATION_GROOVY.equals(lineMimeType))
+//         super.autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX,
+//            cursorPositionY, tokenList, lineMimeType, currentToken);
+         return;
+      else
+      {
+         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, mimeType, cursorOffsetX,
+            cursorOffsetY, lineContent, cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+      }
    }
 
 }
