@@ -51,8 +51,12 @@ public class JavaFieldWidget extends JavaTokenWidgetBase
       Image i = getImage();
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
-
-      String name = token.getName() + ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
+      
+      String name = token.getName();
+      if(token.hasProperty(TokenProperties.ELEMENT_TYPE))
+      {
+         name += ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
+      }
       Label nameLabel = new Label(name, false);
       nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
       grid.setWidget(0, 1, nameLabel);

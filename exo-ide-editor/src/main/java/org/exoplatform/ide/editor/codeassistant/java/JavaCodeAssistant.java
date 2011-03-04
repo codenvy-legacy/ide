@@ -31,6 +31,7 @@ import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
+import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
@@ -170,6 +171,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       this.editor = editor;
       this.posX = cursorOffsetX;
       this.posY = cursorOffsetY;
+      printTokens(tokenList, 1);
       try
       {
          if (lineContent == null)
@@ -619,6 +621,32 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       }
 
       return tokens;
+   }
+   
+   private void printTokens(List<? extends Token> tokens, int i)
+   {
+      String spacer = "";
+      for (int j = 0; j < i; j++)
+      {
+         spacer += " ";
+      }
+      i++;
+      for (Token t : tokens)
+      {
+         if(t.getName() == null)
+            continue;
+         System.out.println(spacer + t.getName() + " " + t.getType());
+         for(String key : t.getPropertiesNames())
+         {
+            TokenProperty p = t.getProperty(key);
+            System.out.println(spacer + key + " " + p);
+         }
+         if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
+            && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
+         {
+            printTokens(t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue(), i);
+         }
+      }
    }
 
    public void setactiveFileHref(String href)
