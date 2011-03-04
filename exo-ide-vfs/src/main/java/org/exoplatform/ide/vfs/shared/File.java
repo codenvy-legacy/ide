@@ -33,7 +33,6 @@ public class File extends Item
    public static String REL_UNLOCK = "unlock";
    public static String REL_CONTENT = "content";
    public static String REL_VERSION_HISTORY = "version-history";
-   public static String REL_ACL = "acl";
    
    /** Id of version of file. */
    private String versionId;

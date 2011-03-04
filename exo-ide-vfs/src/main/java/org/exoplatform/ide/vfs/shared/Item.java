@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class Item
 {
-   
+   public static String REL_ACL = "acl";
    public static String REL_SELF = "self";
    public static String REL_CURRENT = "current";
    public static String REL_SEARCH = "search";

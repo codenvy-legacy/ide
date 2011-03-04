@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,10 +29,10 @@ public class Project extends Folder
 {
    private String projectType;
 
-   public Project(String id, String name, String iconHint, String path, long creationDate, List<Property> properties,
+   public Project(String id, String name, String mimeType, String path, long creationDate, List<Property> properties,
       Map<String, Link> links, String type)
    {
-      super(id, name, iconHint, path, creationDate, properties, links);
+      super(id, name, mimeType, path, creationDate, properties, links);
       this.projectType = type;
    }
 
@@ -39,4 +40,42 @@ public class Project extends Folder
    {
       return projectType;
    }
+   
+   public final Property getProperty(String name)
+   {
+      for(Property p : getProperties())
+         if(p.getName().equals(name))
+            return p;
+      
+      return null;
+   }
+   
+   public final boolean hasProperty(String name)
+   {
+      return getProperty(name) != null; 
+   }
+   
+   public final Object getPropertyValue(String name)
+   {
+      Property p = getProperty(name);
+      if(p != null) 
+         return p.getValue().get(0);
+      return null;
+   }
+   
+   public final List getPropertyValues(String name)
+   {
+      Property p = getProperty(name);
+      if(p != null) 
+      {
+         List values = new ArrayList(p.getValue().size());
+         for(Object v : p.getValue())
+         {
+            values.add(v);
+         }
+         return values;
+      }
+      return null;
+   }
+
 }
