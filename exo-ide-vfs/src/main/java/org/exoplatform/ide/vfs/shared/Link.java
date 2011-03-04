@@ -24,19 +24,6 @@ package org.exoplatform.ide.vfs.shared;
  */
 public class Link
 {
-   public static String REL_SELF = "self";
-   public static String REL_ACL = "acl";
-   public static String REL_CURRENT = "current";
-   public static String REL_CONTENT = "content";
-   public static String REL_VERSION_HISTORY = "version-history";
-   public static String REL_CHILDREN = "children";
-   public static String REL_SEARCH = "search";
-   public static String REL_CREATE_FILE = "create-file";
-   public static String REL_CREATE_FOLDER = "create-folder";
-   public static String REL_COPY = "copy";
-   public static String REL_MOVE = "move";
-   public static String REL_LOCK = "lock";
-   public static String REL_UNLOCK = "unlock";
 
    /**
     * URL of resource.

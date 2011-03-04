@@ -29,6 +29,11 @@ import java.util.Map;
  */
 public class Folder extends Item
 {
+   
+   public static String REL_CREATE_FILE = "create-file";
+   public static String REL_CREATE_FOLDER = "create-folder";
+   public static String REL_CHILDREN = "children";
+   
    /**
     * Instance of Folder with specified attributes.
     * 
@@ -42,10 +47,10 @@ public class Folder extends Item
     * @param properties other properties of folder
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   public Folder(String id, String name, String iconHint, String path, long creationDate, List<Property> properties,
+   public Folder(String id, String name, String mimeType, String path, long creationDate, List<Property> properties,
       Map<String, Link> links)
    {
-      super(id, name, ItemType.FOLDER, iconHint, path, creationDate, properties, links);
+      super(id, name, ItemType.FOLDER, mimeType, path, creationDate, properties, links);
    }
 
    /**

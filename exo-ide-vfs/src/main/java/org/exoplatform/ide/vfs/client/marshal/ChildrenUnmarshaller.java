@@ -188,7 +188,7 @@ public class ChildrenUnmarshaller implements Unmarshallable
                file.setVersionId(object.get(VERSION_ID).isString().stringValue());
 
             if (object.containsKey(CONTENT_TYPE))
-               file.setContentType(object.get(CONTENT_TYPE).isString().stringValue());
+               file.setMimeType(object.get(CONTENT_TYPE).isString().stringValue());
 
             if (object.containsKey(LOCKED))
                file.setLocked(object.get(LOCKED).isBoolean().booleanValue());

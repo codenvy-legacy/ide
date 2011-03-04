@@ -31,6 +31,13 @@ import java.util.Map;
  */
 public class Item
 {
+   
+   public static String REL_SELF = "self";
+   public static String REL_CURRENT = "current";
+   public static String REL_SEARCH = "search";
+   public static String REL_COPY = "copy";
+   public static String REL_MOVE = "move";
+   
    /** Id of object. */
    private String id;
 
@@ -40,8 +47,8 @@ public class Item
    /** Type of object. */
    private ItemType itemType;
 
-   /** Used for display item on client side. */
-   private String iconHint;
+   /**  */
+   private String mimeType;
 
    /** Path. */
    private String path;
@@ -63,13 +70,13 @@ public class Item
     * @param properties other properties of object
     * @param links hyper-links for retrieved or(and) manage item
     */
-   public Item(String id, String name, ItemType itemType, String iconHint, String path, long creationDate,
+   public Item(String id, String name, ItemType itemType, String mimeType, String path, long creationDate,
       List<Property> properties, Map<String, Link> links)
    {
       this.id = id;
       this.name = name;
       this.itemType = itemType;
-      this.iconHint = iconHint;
+      this.mimeType = mimeType;
       this.path = path;
       this.creationDate = creationDate;
       this.properties = properties;
@@ -128,21 +135,6 @@ public class Item
       this.itemType = type;
    }
 
-   /**
-    * @param iconHint the icon hint
-    */
-   public void setIconHint(String iconHint)
-   {
-      this.iconHint = iconHint;
-   }
-
-   /**
-    * @return the icon hint
-    */
-   public String getIconHint()
-   {
-      return iconHint;
-   }
 
    /**
     * @return path
@@ -174,6 +166,17 @@ public class Item
    public void setCreationDate(long creationDate)
    {
       this.creationDate = creationDate;
+   }
+
+   
+   public final String getMimeType()
+   {
+      return mimeType;
+   }
+
+   public final void setMimeType(String mimeType)
+   {
+      this.mimeType = mimeType;
    }
 
    /**

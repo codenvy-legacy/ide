@@ -29,11 +29,17 @@ import java.util.Map;
  */
 public class File extends Item
 {
+   public static String REL_LOCK = "lock";
+   public static String REL_UNLOCK = "unlock";
+   public static String REL_CONTENT = "content";
+   public static String REL_VERSION_HISTORY = "version-history";
+   public static String REL_ACL = "acl";
+   
    /** Id of version of file. */
    private String versionId;
 
    /** Content type. */
-   private String contentType;
+   //private String contentType;
 
    /** Content length. */
    private long length = -1;
@@ -60,14 +66,14 @@ public class File extends Item
     * @param properties other properties of file
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   public File(String id, String name, String iconHint, String path, long creationDate, long lastModificationDate, String versionId,
-      String contentType, long length, boolean locked, List<Property> properties, Map<String, Link> links)
+   public File(String id, String name, String path, long creationDate, long lastModificationDate, String versionId,
+      String mimeType, long length, boolean locked, List<Property> properties, Map<String, Link> links)
    {
-      super(id, name, ItemType.FILE, iconHint, path, creationDate, properties, links);
+      super(id, name, ItemType.FILE, mimeType, path, creationDate, properties, links);
       this.lastModificationDate = lastModificationDate;
       this.locked = locked;
       this.versionId = versionId;
-      this.contentType = contentType;
+      //this.contentType = contentType;
       this.length = length;
    }
 
@@ -95,21 +101,6 @@ public class File extends Item
       this.versionId = versionId;
    }
 
-   /**
-    * @return content type
-    */
-   public String getContentType()
-   {
-      return contentType;
-   }
-
-   /**
-    * @param contentType the content type
-    */
-   public void setContentType(String contentType)
-   {
-      this.contentType = contentType;
-   }
 
    /**
     * @return content length
