@@ -88,6 +88,8 @@ abstract class ItemData
          return new FileData(node.getParent());
       if (node.isNodeType("nt:frozenNode"))
          return new VersionData(node);
+      if (node.isNodeType("vfs:project"))
+         return new ProjectData(node);
       return new FolderData(node);
    }
 

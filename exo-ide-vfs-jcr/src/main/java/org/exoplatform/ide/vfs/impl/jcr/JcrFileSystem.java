@@ -34,9 +34,10 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
-import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
@@ -330,35 +331,35 @@ public class JcrFileSystem implements VirtualFileSystem
    private Map<String, Link> createUrlTemplates()
    {
       Map<String, Link> templates = new HashMap<String, Link>();
-      templates.put(Link.REL_CREATE_FILE, //
+      templates.put(Folder.REL_CREATE_FILE, //
          new Link(createURI("file", "[parentId]", "name", "[name]", "mediaType", "[mediaType]").toString(), //
-            Link.REL_CREATE_FILE, //
+            Folder.REL_CREATE_FILE, //
             MediaType.WILDCARD));
-      templates.put(Link.REL_CREATE_FOLDER, //
+      templates.put(Folder.REL_CREATE_FOLDER, //
          new Link(createURI("folder", "[parentId]", "name", "[name]").toString(), //
-            Link.REL_CREATE_FOLDER, //
+            Folder.REL_CREATE_FOLDER, //
             null));
-      templates.put(Link.REL_COPY, //
+      templates.put(Item.REL_COPY, //
          new Link(createURI("copy", "[id]", "parentId", "[parentId]").toString(), //
-            Link.REL_MOVE, //
+            Item.REL_MOVE, //
             null));
-      templates.put(Link.REL_MOVE, //
+      templates.put(Item.REL_MOVE, //
          new Link(createURI("move", "[id]", "parentId", "[parentId]", "lockToken", "[lockToken]").toString(), //
-            Link.REL_MOVE, //
+            Item.REL_MOVE, //
             null));
-      templates.put(Link.REL_LOCK, //
+      templates.put(File.REL_LOCK, //
          new Link(createURI("lock", "[id]").toString(), //
-            Link.REL_LOCK, //
+            File.REL_LOCK, //
             null));
-      templates.put(Link.REL_UNLOCK, //
+      templates.put(File.REL_UNLOCK, //
          new Link(createURI("unlock", "[id]", "lockToken", "[lockToken]").toString(), //
-            Link.REL_UNLOCK, //
+            File.REL_UNLOCK, //
             null));
       templates.put(
-         Link.REL_SEARCH, //
+         Item.REL_SEARCH, //
          new Link(createURI("search", null, "maxItems", "[maxItems]", "skipCount", "[skipCount]", "propertyFilter",
             "[propertyFilter]").toString(), //
-            Link.REL_SEARCH, //
+            Item.REL_SEARCH, //
             MediaType.APPLICATION_FORM_URLENCODED));
       return templates;
    }
@@ -726,6 +727,14 @@ public class JcrFileSystem implements VirtualFileSystem
             fileData.getContenType(), fileData.getContenLength(), fileData.isLocked(),
             fileData.getProperties(propertyFilter), createFileLinks(fileData));
       }
+ 
+      if(data instanceof ProjectData)
+      {
+         ProjectData projectData = (ProjectData) data;
+         return new Project(data.getId(), data.getName(), "text/vnd.ideproject+directory", data.getPath(), data.getCreationDate(),
+            data.getProperties(propertyFilter), createFolderLinks((FolderData)data), projectData.getProjectType());
+      }
+      
       return new Folder(data.getId(), data.getName(), "text/directory", data.getPath(), data.getCreationDate(),
          data.getProperties(propertyFilter), createFolderLinks((FolderData)data));
    }
@@ -735,12 +744,12 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       Map<String, Link> links = createBaseLinks(file);
       String id = file.getId();
-      links.put(Link.REL_CONTENT, //
-         new Link(createURI("content", id).toString(), Link.REL_CONTENT, file.getContenType()));
-      links.put(Link.REL_VERSION_HISTORY, //
-         new Link(createURI("version-history", id).toString(), Link.REL_VERSION_HISTORY, MediaType.APPLICATION_JSON));
-      links.put(Link.REL_CURRENT, // 
-         new Link(createURI("item", file.getCurrentVersionId()).toString(), Link.REL_CURRENT,
+      links.put(File.REL_CONTENT, //
+         new Link(createURI("content", id).toString(), File.REL_CONTENT, file.getContenType()));
+      links.put(File.REL_VERSION_HISTORY, //
+         new Link(createURI("version-history", id).toString(), File.REL_VERSION_HISTORY, MediaType.APPLICATION_JSON));
+      links.put(File.REL_CURRENT, // 
+         new Link(createURI("item", file.getCurrentVersionId()).toString(), File.REL_CURRENT,
             MediaType.APPLICATION_JSON));
       return links;
    }
@@ -749,8 +758,8 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       Map<String, Link> links = createBaseLinks(folder);
       String id = folder.getId();
-      links.put(Link.REL_CHILDREN, //
-         new Link(createURI("children", id).toString(), Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
+      links.put(Folder.REL_CHILDREN, //
+         new Link(createURI("children", id).toString(), Folder.REL_CHILDREN, MediaType.APPLICATION_JSON));
       return links;
    }
 
@@ -758,10 +767,10 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       Map<String, Link> links = new HashMap<String, Link>();
       String id = data.getId();
-      links.put(Link.REL_SELF, //
-         new Link(createURI("item", id).toString(), Link.REL_SELF, MediaType.APPLICATION_JSON));
-      links.put(Link.REL_ACL, //
-         new Link(createURI("acl", id).toString(), Link.REL_ACL, MediaType.APPLICATION_JSON));
+      links.put(Item.REL_SELF, //
+         new Link(createURI("item", id).toString(), Item.REL_SELF, MediaType.APPLICATION_JSON));
+      links.put(Item.REL_ACL, //
+         new Link(createURI("acl", id).toString(), Item.REL_ACL, MediaType.APPLICATION_JSON));
       return links;
    }
 

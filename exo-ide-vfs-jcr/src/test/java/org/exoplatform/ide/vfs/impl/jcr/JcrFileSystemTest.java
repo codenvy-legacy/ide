@@ -22,10 +22,11 @@ import junit.framework.TestCase;
 
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.core.ManageableRepository;
@@ -169,16 +170,16 @@ public abstract class JcrFileSystemTest extends TestCase
       if (links.size() == 0)
          fail("Links not found. ");
 
-      Link link = links.get(Link.REL_SELF);
+      Link link = links.get(Item.REL_SELF);
       assertNotNull("'self' link not found. ", link);
       assertEquals(MediaType.APPLICATION_JSON, link.getType());
-      assertEquals(Link.REL_SELF, link.getRel());
+      assertEquals(Item.REL_SELF, link.getRel());
       assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path(item.getId()).build().toString(), link.getHref());
 
-      link = links.get(Link.REL_ACL);
+      link = links.get(Item.REL_ACL);
       assertNotNull("'acl' link not found. ", link);
       assertEquals(MediaType.APPLICATION_JSON, link.getType());
-      assertEquals(Link.REL_ACL, link.getRel());
+      assertEquals(Item.REL_ACL, link.getRel());
       assertEquals(UriBuilder.fromPath(SERVICE_URI).path("acl").path(item.getId()).build().toString(), link.getHref());
 
       ItemType type = item.getItemType();
@@ -186,33 +187,33 @@ public abstract class JcrFileSystemTest extends TestCase
       {
          File file = (File)item;
 
-         link = links.get(Link.REL_CONTENT);
+         link = links.get(File.REL_CONTENT);
          assertNotNull("'content' link not found. ", link);
          assertEquals(file.getMimeType(), link.getType());
-         assertEquals(Link.REL_CONTENT, link.getRel());
+         assertEquals(File.REL_CONTENT, link.getRel());
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("content").path(file.getId()).build().toString(),
             link.getHref());
 
-         link = links.get(Link.REL_CURRENT);
+         link = links.get(Item.REL_CURRENT);
          assertNotNull("'current' link not found. ", link);
          assertEquals(MediaType.APPLICATION_JSON, link.getType());
-         assertEquals(Link.REL_CURRENT, link.getRel());
+         assertEquals(Item.REL_CURRENT, link.getRel());
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path(file.getId()).build().toString(),
             link.getHref());
 
-         link = links.get(Link.REL_VERSION_HISTORY);
+         link = links.get(File.REL_VERSION_HISTORY);
          assertNotNull("'version-history' link not found. ", link);
          assertEquals(MediaType.APPLICATION_JSON, link.getType());
-         assertEquals(Link.REL_VERSION_HISTORY, link.getRel());
+         assertEquals(File.REL_VERSION_HISTORY, link.getRel());
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("version-history").path(file.getId()).build().toString(),
             link.getHref());
       }
       else
       {
-         link = links.get(Link.REL_CHILDREN);
+         link = links.get(Folder.REL_CHILDREN);
          assertNotNull("'children' link not found. ", link);
          assertEquals(MediaType.APPLICATION_JSON, link.getType());
-         assertEquals(Link.REL_CHILDREN, link.getRel());
+         assertEquals(Folder.REL_CHILDREN, link.getRel());
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("children").path(item.getId()).build().toString(),
             link.getHref());
       }
