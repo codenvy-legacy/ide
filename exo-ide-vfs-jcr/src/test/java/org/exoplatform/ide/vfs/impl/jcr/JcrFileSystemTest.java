@@ -188,7 +188,7 @@ public abstract class JcrFileSystemTest extends TestCase
 
          link = links.get(Link.REL_CONTENT);
          assertNotNull("'content' link not found. ", link);
-         assertEquals(file.getContentType(), link.getType());
+         assertEquals(file.getMimeType(), link.getType());
          assertEquals(Link.REL_CONTENT, link.getRel());
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("content").path(file.getId()).build().toString(),
             link.getHref());

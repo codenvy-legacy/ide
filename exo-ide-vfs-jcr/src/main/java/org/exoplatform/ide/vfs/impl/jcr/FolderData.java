@@ -125,9 +125,9 @@ public class FolderData extends ItemData
          // vfs:blabla -> jcr:blabla
          if (properties != null && properties.size() > 0)
          {
-            Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
+            Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions(fileNode);
             for (ConvertibleProperty property : properties)
-               updateProperty(propertyDefinitions.get(property.getName()), property);
+               updateProperty(fileNode, propertyDefinitions.get(property.getName()), property);
          }
 
          Session session = node.getSession();
@@ -185,9 +185,11 @@ public class FolderData extends ItemData
          // vfs:blabla -> jcr:blabla
          if (properties != null && properties.size() > 0)
          {
-            Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
-            for (ConvertibleProperty property : properties)
-               updateProperty(propertyDefinitions.get(property.getName()), property);
+                        
+            Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions(folderNode);
+            for (ConvertibleProperty property : properties) 
+               updateProperty(folderNode, propertyDefinitions.get(property.getName()), property);
+
          }
 
          Session session = node.getSession();

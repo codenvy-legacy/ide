@@ -122,6 +122,7 @@
                <properties-param>
                   <name>namespaces</name>
                   <property name="dc" value="http://purl.org/dc/elements/1.1/" />
+                  <property name="vfs" value="http://exoplatform.org/vfs" />
                </properties-param>
             </init-params>
          </component-plugin>
@@ -133,6 +134,7 @@
                <values-param>
                   <name>autoCreatedInNewRepository</name>
                   <description>Node types configuration file</description>
+                  <value>classpath:/conf/vfs-node-types.xml</value>
                   <value>classpath:/conf/standalone/test-node-types.xml</value>
                </values-param>
             </init-params>

@@ -37,6 +37,7 @@ import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
@@ -196,17 +197,28 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createProject(java.lang.String,
     *      java.lang.String, java.lang.String, java.util.List)
     */
-   @Override
-   public Response createProject(String parentId, String name, String type, List<ConvertibleProperty> properties)
+   @Path("project/{parentId:.*}")
+   @Consumes(MediaType.APPLICATION_JSON)
+   public Response createProject(@PathParam("parentId") String parentId, @QueryParam("name") String name, 
+      @QueryParam("type") String type, List<ConvertibleProperty> properties)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       checkName(name);
       ItemData parentData = getItemData(parentId);
       if (ItemType.FOLDER != parentData.getType())
-         throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
+         throw new InvalidArgumentException("Unable to create project. Item specified as parent is not a folder. ");
+
+      if(type == null)
+         throw new InvalidArgumentException("Unable to create project. Project type missed. ");
+
+      if(properties == null)
+         properties = new ArrayList<ConvertibleProperty>(); 
+      properties.add(new ConvertibleProperty("type", type));
+      
+      
+           
       FolderData newproject =
-         ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeType(type),
-            itemType2NodeTypeResolver.getFolderMixins(type), properties);
+         ((FolderData)parentData).createFolder(name, "vfs:project", null, properties);
       return Response.created(createURI("item", newproject.getId())).build();
    }
 
@@ -709,20 +721,15 @@ public class JcrFileSystem implements VirtualFileSystem
       if (data.getType() == ItemType.FILE)
       {
          FileData fileData = (FileData)data;
-         return new File(fileData.getId(), fileData.getName(), getIconHint(fileData), fileData.getPath(),
+         return new File(fileData.getId(), fileData.getName(), fileData.getPath(),
             fileData.getCreationDate(), fileData.getLastModificationDate(), fileData.getVersionId(),
             fileData.getContenType(), fileData.getContenLength(), fileData.isLocked(),
             fileData.getProperties(propertyFilter), createFileLinks(fileData));
       }
-      return new Folder(data.getId(), data.getName(), getIconHint(data), data.getPath(), data.getCreationDate(),
+      return new Folder(data.getId(), data.getName(), "text/directory", data.getPath(), data.getCreationDate(),
          data.getProperties(propertyFilter), createFolderLinks((FolderData)data));
    }
 
-   private String getIconHint(ItemData itemData)
-   {
-      // TODO
-      return null;
-   }
 
    private Map<String, Link> createFileLinks(FileData file) throws VirtualFileSystemException
    {

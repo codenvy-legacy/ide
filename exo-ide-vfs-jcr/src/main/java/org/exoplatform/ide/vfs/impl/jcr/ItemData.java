@@ -334,106 +334,135 @@ abstract class ItemData
    void updateProperties(List<ConvertibleProperty> properties, String lockToken) throws ConstraintException,
       LockException, PermissionDeniedException, VirtualFileSystemException
    {
-      if (properties == null || properties.size() == 0)
-         return;
+      
+      updateProperties(this.node, properties, lockToken);
 
-      // TODO : property name mapping ?
-      // vfs:blabla -> jcr:blabla
-      try
-      {
-         Session session = node.getSession();
-         if (lockToken != null)
-            session.addLockToken(lockToken);
-
-         Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
-         for (ConvertibleProperty property : properties)
-            updateProperty(propertyDefinitions.get(property.getName()), property);
-
-         session.save();
-      }
-      catch (javax.jcr.lock.LockException e)
-      {
-         throw new LockException("Unable to update properties of item " + getId() + ". Item is locked. ");
-      }
-      catch (AccessDeniedException e)
-      {
-         throw new PermissionDeniedException("Unable to update properties of item " + getId()
-            + ". Operation not permitted. ");
-      }
-      catch (RepositoryException e)
-      {
-         throw new VirtualFileSystemException("Unable update properties of item " + getId() + ". " + e.getMessage(), e);
-      }
    }
 
+   
+   void updateProperties(Node node, List<ConvertibleProperty> properties, String lockToken) throws ConstraintException,
+   LockException, PermissionDeniedException, VirtualFileSystemException
+   {
+   if (properties == null || properties.size() == 0)
+      return;
+
+   // TODO : property name mapping ?
+   // vfs:blabla -> jcr:blabla
+   try
+   {
+      Session session = node.getSession();
+      if (lockToken != null)
+         session.addLockToken(lockToken);
+
+      Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
+      for (ConvertibleProperty property : properties)
+         updateProperty(node, propertyDefinitions.get(property.getName()), property);
+
+      session.save();
+   }
+   catch (javax.jcr.lock.LockException e)
+   {
+      throw new LockException("Unable to update properties of item " + getId() + ". Item is locked. ");
+   }
+   catch (AccessDeniedException e)
+   {
+      throw new PermissionDeniedException("Unable to update properties of item " + getId()
+         + ". Operation not permitted. ");
+   }
+   catch (RepositoryException e)
+   {
+      throw new VirtualFileSystemException("Unable update properties of item " + getId() + ". " + e.getMessage(), e);
+   }
+}
+
+   
    void updateProperty(PropertyDefinition pd, ConvertibleProperty property) throws ConstraintException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
-      String name = property.getName();
-      String[] value = property.getValue().toArray(new String[0]);
-      if (value == null)
-         value = new String[0];
 
-      if (pd != null)
+      updateProperty(this.node, pd, property);
+   }
+
+   
+   void updateProperty(Node node, PropertyDefinition pd, ConvertibleProperty property) throws ConstraintException, LockException,
+   PermissionDeniedException, VirtualFileSystemException
+{
+   String name = property.getName();
+   String[] value = property.getValue().toArray(new String[0]);
+   
+  
+   if (value == null)
+      value = new String[0];
+
+   if (pd != null)
+   {
+      if (pd.isProtected())
+         throw new ConstraintException("Property " + name + " is read-only. ");
+      if (pd.isMandatory() && value.length == 0)
+         throw new ConstraintException("Property " + name + " can't have null value. ");
+   }
+
+   try
+   {
+      if (value.length == 0)
       {
-         if (pd.isProtected())
-            throw new ConstraintException("Property " + name + " is read-only. ");
-         if (pd.isMandatory() && value.length == 0)
-            throw new ConstraintException("Property " + name + " can't have null value. ");
+         node.setProperty(name, (Value)null);
       }
-
-      try
+      else
       {
-         if (value.length == 0)
+         // If property definition exists then use it to determine is property
+         // multiple otherwise determine it from specified value. 
+         boolean multiple = pd != null ? pd.isMultiple() : value.length > 1;
+         if (multiple)
          {
-            node.setProperty(name, (Value)null);
+            Value[] jcrValue = new Value[value.length];
+            for (int i = 0; i < value.length; i++)
+               jcrValue[i] = new StringValue(value[i]);
+            node.setProperty(name, jcrValue);
          }
          else
          {
-            // If property definition exists then use it to determine is property
-            // multiple otherwise determine it from specified value. 
-            boolean multiple = pd != null ? pd.isMultiple() : value.length > 1;
-            if (multiple)
-            {
-               Value[] jcrValue = new Value[value.length];
-               for (int i = 0; i < value.length; i++)
-                  jcrValue[i] = new StringValue(value[i]);
-               node.setProperty(name, jcrValue);
-            }
-            else
-            {
-               node.setProperty(name, new StringValue(value[0]));
-            }
+            node.setProperty(name, new StringValue(value[0]));
          }
       }
-      catch (ValueFormatException e)
-      {
-         throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
-      }
-      catch (javax.jcr.lock.LockException e)
-      {
-         throw new LockException("Unable to update property " + name + ". Item is locked. ");
-      }
-      catch (RepositoryException e)
-      {
-         throw new VirtualFileSystemException("Unable update property " + name + ". " + e.getMessage(), e);
-      }
-      catch (IOException e)
-      {
-         throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
-      }
+   }
+   catch (ValueFormatException e)
+   {
+      throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
+   }
+   catch (javax.jcr.lock.LockException e)
+   {
+      throw new LockException("Unable to update property " + name + ". Item is locked. ");
+   }
+   catch (RepositoryException e)
+   {
+      throw new VirtualFileSystemException("Unable update property " + name + ". " + e.getMessage(), e);
+   }
+   catch (IOException e)
+   {
+      throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+   }
+}
+
+   
+   
+   Map<String, PropertyDefinition> getPropertyDefinitions() throws RepositoryException
+   {
+      
+      return getPropertyDefinitions(this.node);
    }
 
-   Map<String, PropertyDefinition> getPropertyDefinitions() throws RepositoryException
+   Map<String, PropertyDefinition> getPropertyDefinitions(Node node) throws RepositoryException
    {
       NodeType nodeType = node.getPrimaryNodeType();
       PropertyDefinition[] propertyDefinitions = nodeType.getPropertyDefinitions();
       Map<String, PropertyDefinition> cache = new HashMap<String, PropertyDefinition>(propertyDefinitions.length);
       for (int i = 0; i < propertyDefinitions.length; i++)
-         cache.put(propertyDefinitions[i].getName(), propertyDefinitions[i]);
+       cache.put(propertyDefinitions[i].getName(), propertyDefinitions[i]);
+
       return cache;
    }
-
+   
    /**
     * Check is item locked or not.
     * 
