@@ -18,18 +18,14 @@
  */
 package org.exoplatform.ide.client.upload;
 
-import com.google.gwt.user.client.ui.VerticalPanel;
-
-import com.google.gwt.user.client.ui.Widget;
-
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Hidden;
-import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.SpacerItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
@@ -115,43 +111,31 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
    }
    
    @Override
-   protected FormItem[] createUploadFormItems()
+   protected VerticalPanel createUploadFormItems()
    {
-      FormItem[] formItems = super.createUploadFormItems();
-//      VerticalPanel panel = (VerticalPanel)super.createUploadFormItems();
+      VerticalPanel panel = super.createUploadFormItems();
       
-      FormItem[] items = new FormItem[formItems.length + 3];
-      
-      for (int i = 0; i < formItems.length; i++)
-      {
-         items[i] = formItems[i];
-      }
-      
-//      StaticTextItem mimeTypePromptItem = new StaticTextItem();
-//      mimeTypePromptItem.setValue("Mime Type:");
-//      mimeTypePromptItem.setShowTitle(false);
-//      mimeTypePromptItem.setColSpan(2);
-//
-//      SpacerItem spacer3 = new SpacerItem();
-//      spacer3.setHeight(2);
+      final SelectItem dropBox = new SelectItem();
+      final String[] listTypes = {"value 1", "value 2", "value 3"};
+      dropBox.setValueMap(listTypes);
+      dropBox.setVisible(false);
+
+      panel.add(dropBox);
 
       mimeTypesField = new ComboBoxField();
       mimeTypesField.setName(MIME_TYPE_FIELD);
-      mimeTypesField.setWidth(334);
+      mimeTypesField.setWidth(330);
       mimeTypesField.setLabel("Mime Type:");
       mimeTypesField.setShowTitle(true);
-//      mimeTypesField.setColSpan(2);
-//      mimeTypesField.setCompleteOnTab(true);
+      mimeTypesField.setTitleOrientation(TitleOrientation.TOP);
+      
+      panel.setHeight("100px");
+      panel.setWidth("330px");
+      
       mimeTypesField.setPickListHeight(100);
       
-//      items[formItems.length] = mimeTypePromptItem;
-//      items[formItems.length + 1] = spacer3;
-//      items[formItems.length + 2] = mimeTypesField;
-      
-            
-      return items;
-//      panel.add(mimeTypesField);
-//      return panel;
+      panel.add(mimeTypesField);
+      return panel;
    }
 
 }

@@ -18,31 +18,24 @@
  */
 package org.exoplatform.ide.client.upload;
 
-import com.google.gwt.user.client.ui.Widget;
-
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
-import com.smartgwt.client.widgets.form.fields.CanvasItem;
-import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.SpacerItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.ToolbarItem;
-import com.smartgwt.client.widgets.layout.HLayout;
 
+import org.exoplatform.gwtframework.ui.client.GwtResources;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
@@ -92,7 +85,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
    protected String labelTitle;
 
-   protected VerticalPanel postFieldsPanel;
+   protected HorizontalPanel postFieldsPanel;
 
    protected IDEConfiguration applicationConfiguration;
    
@@ -154,48 +147,15 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
    private void createFileUploadForm()
    {
-      DynamicForm uploadForm = new DynamicForm();
-  //TODO    uploadForm.setLayoutAlign(Alignment.CENTER);
-      uploadForm.setMargin(15);
-
-   //TODO   
-//      uploadForm.add(createUploadFormItems());
-
-//      uploadForm.setAutoWidth();
-
-      addItem(uploadForm);
+      addItem(createUploadFormItems());
    }
    
-   protected FormItem[] createUploadFormItems()
+   protected VerticalPanel createUploadFormItems()
    {
-      StaticTextItem promptItem = new StaticTextItem();
-      promptItem.setWidth(250);
-      promptItem.setTitleAlign(Alignment.LEFT);
-      promptItem.setValue(labelTitle);
-      promptItem.setShowTitle(false);
-      promptItem.setColSpan(2);
-
-      SpacerItem spacer = new SpacerItem();
-      spacer.setHeight(2);
-
-      CanvasItem canvasItem = new CanvasItem();
-      canvasItem.setShowTitle(false);
-      canvasItem.setColSpan(2);
-      canvasItem.setCanvas(getUploadLayout());
-
-      SpacerItem spacer2 = new SpacerItem();
-      spacer2.setHeight(5);
-      
-      FormItem[] items = new FormItem[4];
-      items[0] = promptItem;
-      items[1] = spacer;
-      items[2] = canvasItem;
-      items[3] = spacer2;
-      
       VerticalPanel panel = new VerticalPanel();
+      panel.add(getUploadLayout());
       
-      return items;
-//      return panel;
+      return panel;
    }
 
    private void createButtons()
@@ -226,64 +186,44 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
       addItem(uploadWindowButtonsForm);
    }
-
-   private HLayout getUploadLayout()
+   
+   private HorizontalPanel getUploadLayout()
    {
-      HLayout uploadLayout = new HLayout();
-      uploadLayout.setWidth(330);
-      uploadLayout.setHeight(22);
+      HorizontalPanel uploadHPanel = new HorizontalPanel();
+      uploadHPanel.setWidth("330px");
+      uploadHPanel.setHeight("42px");
+      uploadHPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
 
-      DynamicForm textFieldForm = new DynamicForm();
-      textFieldForm.setID(ID_DYNAMIC_FORM);
-      //TODO textFieldForm.setCellPadding(0);
       fileNameField = new TextField();
       fileNameField.setName(FILE_NAME_FIELD);
-      fileNameField.setShowTitle(false);
-      //TODO fileNameField.setColSpan(2);
-      fileNameField.setWidth("*");
-      textFieldForm.add(fileNameField);
-      uploadLayout.addMember(textFieldForm);
-
-      Canvas uploadButtonCanvas = new Canvas();
-      uploadButtonCanvas.setWidth(85);
-      uploadButtonCanvas.setHeight(22);
-      uploadLayout.addMember(uploadButtonCanvas);
-      textFieldForm.setWidth("*");
-
-      Canvas uploadCanvas = new Canvas();
-      uploadCanvas.setWidth(80);
-      uploadCanvas.setHeight(22);
-      uploadCanvas.setLeft(5);
-      uploadCanvas.setOverflow(Overflow.HIDDEN);
-      uploadButtonCanvas.addChild(uploadCanvas);
-
-      IButton selectButton = new IButton("Browse...");
-      selectButton.setID(ID_BROWSE_BUTTON);
-      selectButton.setTop(0);
-      selectButton.setWidth(80);
-      uploadCanvas.addChild(selectButton);
-
-      Canvas fileUploadCanvas = new Canvas();
-      fileUploadCanvas.setWidth(80);
-      fileUploadCanvas.setHeight(22);
-      uploadCanvas.addChild(fileUploadCanvas);
-
-      fileUploadCanvas.setOpacity(0);
+      fileNameField.setShowTitle(true);
+      fileNameField.setTitle("File to upload:");
+      fileNameField.setWidth(245);
+      fileNameField.setHeight(22);
 
       // create upload form
+
+      AbsolutePanel absolutePanel = new AbsolutePanel();
+      absolutePanel.setSize("80px", "22px");
+      org.exoplatform.gwtframework.ui.client.component.IButton selectButton = new org.exoplatform.gwtframework.ui.client.component.IButton();
+      selectButton.setTitle("Browse");
+      selectButton.setWidth(80);
+      selectButton.setHeight(22);
 
       uploadForm = new FormPanel();
       uploadForm.setMethod(FormPanel.METHOD_POST);
       uploadForm.setEncoding(FormPanel.ENCODING_MULTIPART);
-      fileUploadCanvas.addChild(uploadForm);
 
       // create file upload input
 
-      postFieldsPanel = new VerticalPanel();
+      postFieldsPanel = new HorizontalPanel();
 
       fileUploadInput = new FileUploadInput();
       fileUploadInput.setWidth("80px");
       fileUploadInput.setHeight("22px");
+      fileUploadInput.setStyleName(GwtResources.INSTANCE.css().transparent(), true);
+      
+      postFieldsPanel.add(fileNameField);
       postFieldsPanel.add(fileUploadInput);
 
       //uploadForm.setEncoding(encodingType)
@@ -292,7 +232,11 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
       uploadForm.setWidget(postFieldsPanel);
 
-      return uploadLayout;
+      absolutePanel.add(selectButton, 0, 0);
+      absolutePanel.add(uploadForm, 0, 0);
+      uploadHPanel.add(fileNameField);
+      uploadHPanel.add(absolutePanel);
+      return uploadHPanel;
    }
    
    protected String buildUploadPath()
