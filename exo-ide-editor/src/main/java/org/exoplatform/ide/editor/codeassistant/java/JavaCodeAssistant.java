@@ -30,14 +30,22 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
 import org.exoplatform.ide.editor.codeassistant.java.service.Types;
 import org.exoplatform.ide.editor.codeassistant.java.service.marshal.JavaClass;
+import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -46,6 +54,12 @@ import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
  */
 public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token>
 {
+   public interface JavaBundle extends ClientBundle
+   {
+      @Source("org/exoplatform/ide/editor/public/tokens/java_keywords.js")
+      ExternalTextResource javakeyWords();
+   }
+
    private enum Action {
 
       /**
@@ -85,68 +99,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
    }
 
-   private static List<TokenImpl> keywords = new ArrayList<TokenImpl>();
-
-   static
-   {
-      keywords.add(new TokenImpl("abstract", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("as", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("assert", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("boolean", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("break", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("byte", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("case", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("catch", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("char", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("class", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("const", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("continue", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("def", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("default", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("do", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("double", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("else", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("enum", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("extends", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("false", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("final", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("finally", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("float", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("for", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("goto", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("if", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("implements", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("import", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("in", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("instanceof", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("int", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("interface", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("long", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("native", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("new", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("null", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("package", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("private", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("protected", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("public", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("return", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("short", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("static", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("strictfp", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("super", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("switch", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("synchronized", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("this", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("threadsafe", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("throw", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("throws", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("transient", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("true", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("try", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("void", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("volatile", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("while", TokenType.KEYWORD));
-   }
+   private static List<Token> keywords;
 
    private String activeFileHref;
 
@@ -462,7 +415,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
     */
    private void filterTokens(List<Token> classNames)
    {
-      List<Token> token = new ArrayList<Token>();
+      final List<Token> token = new ArrayList<Token>();
 
       if (action == Action.ANNOTATION)
       {
@@ -483,7 +436,8 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
             {
                case METHOD :
                   String param = "(";
-                  if (t.hasProperty(TokenProperties.PARAMETERS))
+                  if (t.hasProperty(TokenProperties.PARAMETERS)
+                     && t.getProperty(TokenProperties.PARAMETERS).isArrayProperty().arrayValue() != null)
                   {
                      for (Token p : t.getProperty(TokenProperties.PARAMETERS).isArrayProperty().arrayValue())
                      {
@@ -511,7 +465,41 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
          token.addAll(classNames);
          if (!tokenToComplete.isEmpty())
          {
+            if (keywords == null)
+            {
+               JavaBundle bundle = GWT.create(JavaBundle.class);
+               try
+               {
+                  bundle.javakeyWords().getText(new ResourceCallback<TextResource>()
+                  {
+
+                     @Override
+                     public void onSuccess(TextResource resource)
+                     {
+                        JSONTokenParser parser = new JSONTokenParser();
+                        keywords = parser.getTokens(new JSONArray(parseJson(resource.getText())));
+                        token.addAll(keywords);
+                        Collections.sort(token, JavaCodeAssistant.this);
+                        openForm(token, factory, JavaCodeAssistant.this);
+                     }
+
+                     @Override
+                     public void onError(ResourceException e)
+                     {
+                        errorHandler.handleError(e);
+                     }
+                  });
+
+                  return;
+               }
+               catch (ResourceException e)
+               {
+                  e.printStackTrace();
+               }
+            }
+
             token.addAll(keywords);
+
          }
       }
       Collections.sort(token, this);
@@ -614,7 +602,8 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
    private Collection<? extends Token> getTokensForCurrentMethod(Token currentMethod)
    {
       List<Token> tokens = new ArrayList<Token>();
-      if (currentMethod.hasProperty(TokenProperties.PARAMETERS))
+      if (currentMethod.hasProperty(TokenProperties.PARAMETERS)
+         && currentMethod.getProperty(TokenProperties.PARAMETERS).isArrayProperty().arrayValue() != null)
       {
          tokens.addAll(currentMethod.getProperty(TokenProperties.PARAMETERS).isArrayProperty().arrayValue());
       }
