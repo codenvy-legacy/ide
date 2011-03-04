@@ -56,8 +56,11 @@ public class JavaMethodWidget extends JavaTokenWidgetBase
       grid.setWidget(0, 0, i);
 
       String name = token.getName() + token.getProperty(TokenProperties.PARAMETER_TYPES).isStringProperty().stringValue();
-      name += ":" + token.getProperty(TokenProperties.RETURN_TYPE).isStringProperty().stringValue();
-
+      if(token.hasProperty(TokenProperties.RETURN_TYPE))
+       name += ":" + token.getProperty(TokenProperties.RETURN_TYPE).isStringProperty().stringValue();
+      else
+         name += ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
+      
       Label nameLabel = new Label(name, false);
       nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
       grid.setWidget(0, 1, nameLabel);
@@ -74,7 +77,7 @@ public class JavaMethodWidget extends JavaTokenWidgetBase
       grid.getCellFormatter().setWidth(0, 2, "100%");
 
       initWidget(grid);
-      //      setWidth("100%");
+      setWidth("100%");
    }
 
    private Image getImage()

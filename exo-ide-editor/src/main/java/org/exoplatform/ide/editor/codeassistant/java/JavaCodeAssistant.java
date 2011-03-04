@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
+import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
@@ -229,7 +230,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
             return;
          }
 
-         currentLineNumber = cursorPositionX;
+         currentLineNumber = cursorPositionY;
 
          String subToken = lineContent.substring(0, cursorPositionX - 1);
          afterToken = lineContent.substring(cursorPositionX - 1);
@@ -477,7 +478,38 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       }
       else
       {
-         token.addAll(tokenFromParser);
+         for (Token t : tokenFromParser)
+         {
+            token.add(t);
+            switch (t.getType())
+            {
+               case METHOD :
+                  String param = "(";
+                  if (t.hasProperty(TokenProperties.PARAMETERS))
+                  {
+                     for (Token p : t.getProperty(TokenProperties.PARAMETERS).isArrayProperty().arrayValue())
+                     {
+                        param += p.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue() + ", ";
+                     }
+                     if (param.endsWith(", "))
+                     {
+                        param = param.substring(0, param.lastIndexOf(", "));
+                     }
+                  }
+                  param += ")";
+                  t.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(param));
+               case PROPERTY :
+               case FIELD :
+                  t.setProperty(TokenProperties.DECLARING_CLASS, getDecalringClassName(t));
+                  break;
+               case CLASS :
+                  t.setProperty(TokenProperties.FQN, new StringProperty(t.getName()));
+                  break;
+
+            }
+
+         }
+
          token.addAll(classNames);
          if (!tokenToComplete.isEmpty())
          {
@@ -486,6 +518,17 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       }
       Collections.sort(token, this);
       openForm(token, factory, this);
+   }
+
+   private StringProperty getDecalringClassName(Token token)
+   {
+      String name = "";
+      if (token.hasProperty(TokenProperties.PARENT_TOKEN))
+      {
+         Token parent = (Token)token.getProperty(TokenProperties.PARENT_TOKEN).isObjectProperty().objectValue();
+         name = parent.getName();
+      }
+      return new StringProperty(name);
    }
 
    /**
@@ -499,6 +542,21 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
          return t1.getName().compareTo(t2.getName());
       }
 
+      if ((t1.getType() == TokenType.PARAMETER && t2.getType() == TokenType.VARIABLE)
+         || (t1.getType() == TokenType.VARIABLE && t2.getType() == TokenType.PARAMETER))
+      {
+         return t1.getName().compareTo(t2.getName());
+      }
+
+      if (t2.getType() == TokenType.PARAMETER)
+      {
+         return 1;
+      }
+      if (t1.getType() == TokenType.PARAMETER)
+      {
+         return -1;
+      }
+
       if (t2.getType() == TokenType.VARIABLE)
       {
          return 1;
@@ -507,16 +565,26 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       {
          return -1;
       }
-
-      if (t1.getType() == TokenType.METHOD || t1.getType() == TokenType.FIELD)
+      if (t1.getType() == TokenType.FIELD)
       {
          return -1;
       }
 
-      if (t2.getType() == TokenType.METHOD || t2.getType() == TokenType.FIELD)
+      if (t2.getType() == TokenType.FIELD)
       {
          return 1;
       }
+
+      if (t1.getType() == TokenType.METHOD || t1.getType() == TokenType.PROPERTY)
+      {
+         return -1;
+      }
+
+      if (t2.getType() == TokenType.METHOD || t2.getType() == TokenType.PROPERTY)
+      {
+         return 1;
+      }
+      //      
 
       return t1.getName().compareTo(t2.getName());
    }
@@ -565,7 +633,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
       return tokens;
    }
-
 
    public void setactiveFileHref(String href)
    {

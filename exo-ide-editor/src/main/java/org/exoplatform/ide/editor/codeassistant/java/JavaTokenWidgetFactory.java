@@ -28,7 +28,6 @@ import org.exoplatform.ide.editor.codeassistant.java.ui.JavaKeyWordWidget;
 import org.exoplatform.ide.editor.codeassistant.java.ui.JavaMethodWidget;
 import org.exoplatform.ide.editor.codeassistant.java.ui.JavaVariableWidget;
 
-
 /**
  * Created by The eXo Platform SAS.
  *
@@ -58,7 +57,7 @@ public class JavaTokenWidgetFactory implements TokenWidgetFactory
       switch (token.getType())
       {
          case CLASS :
-         case INTERFACE:
+         case INTERFACE :
          case ANNOTATION :
             return new JavaClassTokenWidget(token, restContext);
 
@@ -69,13 +68,16 @@ public class JavaTokenWidgetFactory implements TokenWidgetFactory
             return new JavaMethodWidget(token, restContext);
 
          case FIELD :
+         case PROPERTY :
             return new JavaFieldWidget(token, restContext);
+            
          case VARIABLE :
-             return new JavaVariableWidget(token, restContext);
-         
+         case PARAMETER :
+            return new JavaVariableWidget(token, restContext);
+
          case KEYWORD :
             return new JavaKeyWordWidget(token);
-             
+
          default :
             return new JavaClassTokenWidget(token, restContext);
 

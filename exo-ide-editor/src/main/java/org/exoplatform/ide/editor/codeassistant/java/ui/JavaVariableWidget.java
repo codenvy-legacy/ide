@@ -63,6 +63,7 @@ public class JavaVariableWidget extends JavaTokenWidgetBase
       grid.getCellFormatter().setWidth(0, 1, "100%");
 
       initWidget(grid);
+      setWidth("100%");
    }
 
    /**
