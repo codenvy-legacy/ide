@@ -25,6 +25,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.CodeLine;
+import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.CodeValidator;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
@@ -34,6 +35,7 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
 
@@ -106,8 +108,8 @@ public class CodeMirror extends Editor
       add(lineHighlighter);
       setWidgetPosition(lineHighlighter, 0, 5);
 
-      if (params.get(CodeMirrorParams.CONFIGURATION) != null)
-         configuration = (CodeMirrorConfiguration) params.get(CodeMirrorParams.CONFIGURATION);
+      if (params.get(EditorParameters.CONFIGURATION) != null)
+         configuration = (CodeMirrorConfiguration) params.get(EditorParameters.CONFIGURATION);
       else
          configuration = new CodeMirrorConfiguration();
    }
@@ -122,11 +124,11 @@ public class CodeMirror extends Editor
 
       String width = "";
       String height = "100%";
-      boolean readOnly = (Boolean)params.get(CodeMirrorParams.IS_READ_ONLY);
+      boolean readOnly = (Boolean)params.get(EditorParameters.IS_READ_ONLY);
       int continuousScanning = configuration.getContinuousScanning();
       boolean textWrapping = configuration.isTextWrapping();
 
-      showLineNumbers = (Boolean)params.get(CodeMirrorParams.IS_SHOW_LINE_NUMER);
+      showLineNumbers = (Boolean)params.get(EditorParameters.IS_SHOW_LINE_NUMER);
       String parserNames = configuration.getCodeParsers();
       String styleURLs = configuration.getCodeStyles();
 
@@ -220,7 +222,9 @@ public class CodeMirror extends Editor
    {
       this.needUpdateTokenList = true; // update token list after the document had been loaded and reindented
       this.needRevalidateCode = true;
-      //      eventBus.fireEvent(new EditorInitializedEvent(editorId));
+      
+      eventBus.fireEvent(new EditorInitializedEvent(editorId));
+      
       //       turn on code validation timer
       setText(content);
       if (configuration.canBeValidated())
@@ -389,7 +393,7 @@ public class CodeMirror extends Editor
    @SuppressWarnings("unchecked")
    private List<String> getHotKeyList()
    {
-      return (List<String>)params.get(CodeMirrorParams.HOT_KEY_LIST);
+      return (List<String>)params.get(EditorParameters.HOT_KEY_LIST);
    }
 
    /**
@@ -498,7 +502,7 @@ public class CodeMirror extends Editor
     */
    private String getCurrentLineMimeType()
    {
-      String genericMimeType = (String)params.get(CodeMirrorParams.MIME_TYPE);
+      String genericMimeType = (String)params.get(EditorParameters.MIME_TYPE);
       if (configuration.canHaveSeveralMimeTypes())
       {
          String mimeType = CodeMirrorParserImpl.getLineMimeType(getCursorRow(), (List<TokenBeenImpl>) getTokenList());
@@ -623,7 +627,7 @@ public class CodeMirror extends Editor
       {
          codeAssistant.errorMarckClicked(this, CodeValidator.getCodeErrorList(lineNumber, codeErrorList),
             (getAbsoluteTop() + getCursorOffsetY(lineNumber)), (getAbsoluteLeft() + lineNumberFieldWidth),
-            (String)params.get(CodeMirrorParams.MIME_TYPE));
+            (String)params.get(EditorParameters.MIME_TYPE));
       }
    };
 
@@ -954,7 +958,7 @@ public class CodeMirror extends Editor
    @Override
    public boolean isReadOnly()
    {
-      return (Boolean)params.get(CodeMirrorParams.IS_READ_ONLY);
+      return (Boolean)params.get(EditorParameters.IS_READ_ONLY);
    }
 
    /**
@@ -1010,7 +1014,7 @@ public class CodeMirror extends Editor
    @Override
    public void setHotKeyList(List<String> hotKeyList)
    {
-      params.put(CodeMirrorParams.HOT_KEY_LIST, hotKeyList);
+      params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
    }
 
    /**

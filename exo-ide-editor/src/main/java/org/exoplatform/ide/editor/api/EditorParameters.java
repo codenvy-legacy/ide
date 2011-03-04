@@ -16,16 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror;
+package org.exoplatform.ide.editor.api;
 
 import java.util.List;
+
+import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeMirrorParams Feb 10, 2011 9:41:09 AM evgen $
  *
  */
-public interface CodeMirrorParams
+public interface EditorParameters
 {
    /**
     * Key for {@link CodeMirrorConfiguration} object

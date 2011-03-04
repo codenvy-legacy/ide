@@ -16,16 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror.producers;
+package org.exoplatform.ide.editor.codemirror;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorProducer;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorParams;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -48,13 +46,13 @@ public class CodeMirrorProducer extends EditorProducer
    public CodeMirrorProducer(String mimeType, String description, String ext, boolean isDefault)
    {
       super(mimeType, description, ext, isDefault);
-      params.put(CodeMirrorParams.MIME_TYPE, mimeType);
+      params.put(EditorParameters.MIME_TYPE, mimeType);
    }
    
    public CodeMirrorProducer(String mimeType, String description, String ext, boolean isDefault, CodeMirrorConfiguration configuration)
    {
       this(mimeType, description, ext, isDefault);
-      params.put(CodeMirrorParams.CONFIGURATION, configuration);
+      params.put(EditorParameters.CONFIGURATION, configuration);
    }
 
    /**

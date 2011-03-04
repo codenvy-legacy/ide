@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.CodeLine;
+import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
@@ -71,11 +72,11 @@ public class CodeMirrorGwtTestJavaParser extends Base
       
       final HashMap<String, Object> params = new HashMap<String, Object>();
 
-      params.put(CodeMirrorParams.IS_READ_ONLY, false);
-      params.put(CodeMirrorParams.IS_SHOW_LINE_NUMER, true);
-      params.put(CodeMirrorParams.HOT_KEY_LIST, new ArrayList<String>());
-      params.put(CodeMirrorParams.MIME_TYPE, MimeType.APPLICATION_JAVASCRIPT);      
-      params.put(CodeMirrorParams.CONFIGURATION, new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
+      params.put(EditorParameters.IS_READ_ONLY, false);
+      params.put(EditorParameters.IS_SHOW_LINE_NUMER, true);
+      params.put(EditorParameters.HOT_KEY_LIST, new ArrayList<String>());
+      params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JAVASCRIPT);      
+      params.put(EditorParameters.CONFIGURATION, new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
          "['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']", true, true, new JavaScriptParser(), new JavaScriptAutocompleteHelper(),
          
          new MockJavaScriptCodeAssistant()  // replace on our class to intercept autocomplete calling event

@@ -31,11 +31,17 @@
    
    <source path="api" />
    <source path="codemirror" />
+   <source path="ckeditor" />   
    <source path="codeassistant" />
    <source path="codevalidator" />   
    
-   <stylesheet src='codemirror/css/editor.css' />
+   <!-- Load CodeMirror files. -->
+   <stylesheet src='codemirror/css/editor.css' />      
    <script src='codemirror/js/codemirror.js' />
+   
+   <!-- Load FCKEditor files. -->
+   <script src="ckeditor/ckeditor.js" />
+   <script src="ckeditor/config.js" />
 
    <entry-point class="org.exoplatform.ide.editor.codeassistant.EditorTest" />
 </module>

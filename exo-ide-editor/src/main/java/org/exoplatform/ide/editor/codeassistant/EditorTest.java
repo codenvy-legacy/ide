@@ -25,8 +25,11 @@ import java.util.Map;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
+import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
 import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.groovytemplate.GroovyTemplateCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
@@ -38,7 +41,7 @@ import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssista
 import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.xml.XmlCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorParams;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyTemplateAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
@@ -50,7 +53,6 @@ import org.exoplatform.ide.editor.codemirror.parser.GroovyTemplateParser;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
-import org.exoplatform.ide.editor.codemirror.producers.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
 import org.exoplatform.ide.editor.codevalidator.GroovyTemplateCodeValidator;
 
@@ -73,7 +75,9 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
 
    private static final HandlerManager eventBus = new HandlerManager(null);
 
-   private static Map<String, EditorProducer> editors = new HashMap<String, EditorProducer>();
+   private static Map<String, EditorProducer> codeEditors = new HashMap<String, EditorProducer>();
+   
+   private static Map<String, EditorProducer> WYSIWYGEditors = new HashMap<String, EditorProducer>();
 
    static
    {
@@ -251,6 +255,14 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                true, // can be validated
                new GroovyTemplateCodeValidator(),
                templateCodeAssistant, true)));     
+
+      
+      // ckeditor
+      addEditor(new CKEditorProducer(MimeType.TEXT_HTML, "CKEditor HTML editor", "html", true,
+         new CKEditorConfiguration()));   
+      
+      addEditor(new CKEditorProducer(MimeType.GOOGLE_GADGET, "CKEditor Google Gadget editor", "xml", true,
+         new CKEditorConfiguration()));  
       
       //To initialize client bundle 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
@@ -261,9 +273,17 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
     */
    private static void addEditor(CodeMirrorProducer codeMirrorProducer)
    {
-      editors.put(codeMirrorProducer.getMimeType(), codeMirrorProducer);
+      codeEditors.put(codeMirrorProducer.getMimeType(), codeMirrorProducer);
    }
 
+   /**
+    * @param CKEditorProducer
+    */
+   private static void addEditor(CKEditorProducer CKEditorProducer)
+   {
+      WYSIWYGEditors.put(CKEditorProducer.getMimeType(), CKEditorProducer);
+   }
+   
    /**
     * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
     */
@@ -282,9 +302,9 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
 
       final HashMap<String, Object> params = new HashMap<String, Object>();
 
-      params.put(CodeMirrorParams.IS_READ_ONLY, false);
-      params.put(CodeMirrorParams.IS_SHOW_LINE_NUMER, true);
-      params.put(CodeMirrorParams.HOT_KEY_LIST, new ArrayList<String>());
+      params.put(EditorParameters.IS_READ_ONLY, false);
+      params.put(EditorParameters.IS_SHOW_LINE_NUMER, true);
+      params.put(EditorParameters.HOT_KEY_LIST, new ArrayList<String>());
 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
 
@@ -298,9 +318,9 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            params.put(CodeMirrorParams.MIME_TYPE, MimeType.TEXT_CSS);
+            params.put(EditorParameters.MIME_TYPE, MimeType.TEXT_CSS);
             
-            Editor editor = editors.get(MimeType.TEXT_CSS).createEditor(".test-class{\n\n}", eventBus, params);
+            Editor editor = codeEditors.get(MimeType.TEXT_CSS).createEditor(".test-class{\n\n}", eventBus, params);
             panel.clear();
             panel.add(editor);
             
@@ -317,10 +337,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            params.put(CodeMirrorParams.MIME_TYPE, MimeType.TEXT_HTML);
+            params.put(EditorParameters.MIME_TYPE, MimeType.TEXT_HTML);
 
             Editor editor =
-               editors.get(MimeType.TEXT_HTML).createEditor(ExamplesBundle.INSTANCE.htmlExample().getText(), eventBus,
+               codeEditors.get(MimeType.TEXT_HTML).createEditor(ExamplesBundle.INSTANCE.htmlExample().getText(), eventBus,
                   params);
             panel.clear();
             panel.add(editor);
@@ -337,10 +357,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            params.put(CodeMirrorParams.MIME_TYPE, MimeType.APPLICATION_JAVASCRIPT);
+            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JAVASCRIPT);
 
             Editor editor =
-               editors.get(MimeType.APPLICATION_JAVASCRIPT).createEditor(
+               codeEditors.get(MimeType.APPLICATION_JAVASCRIPT).createEditor(
                   ExamplesBundle.INSTANCE.jsExample().getText(), eventBus, params);
             panel.clear();
             panel.add(editor);
@@ -357,10 +377,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            params.put(CodeMirrorParams.MIME_TYPE, MimeType.TEXT_XML);
+            params.put(EditorParameters.MIME_TYPE, MimeType.TEXT_XML);
 
             Editor editor =
-               editors.get(MimeType.TEXT_XML).createEditor(ExamplesBundle.INSTANCE.xmlExample().getText(), eventBus,
+               codeEditors.get(MimeType.TEXT_XML).createEditor(ExamplesBundle.INSTANCE.xmlExample().getText(), eventBus,
                   params);
             panel.clear();
             panel.add(editor);
@@ -377,10 +397,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            params.put(CodeMirrorParams.MIME_TYPE, MimeType.GOOGLE_GADGET);
+            params.put(EditorParameters.MIME_TYPE, MimeType.GOOGLE_GADGET);
 
             Editor editor =
-               editors.get(MimeType.GOOGLE_GADGET).createEditor(ExamplesBundle.INSTANCE.googleGadgetExample().getText(),
+               codeEditors.get(MimeType.GOOGLE_GADGET).createEditor(ExamplesBundle.INSTANCE.googleGadgetExample().getText(),
                   eventBus, params);
             panel.clear();
             panel.add(editor);
@@ -397,10 +417,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            params.put(CodeMirrorParams.MIME_TYPE, MimeType.UWA_WIDGET);
+            params.put(EditorParameters.MIME_TYPE, MimeType.UWA_WIDGET);
 
             Editor editor =
-               editors.get(MimeType.UWA_WIDGET).createEditor(ExamplesBundle.INSTANCE.netvibesExample().getText(),
+               codeEditors.get(MimeType.UWA_WIDGET).createEditor(ExamplesBundle.INSTANCE.netvibesExample().getText(),
                   eventBus, params);
             panel.clear();
             panel.add(editor);
@@ -417,10 +437,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            params.put(CodeMirrorParams.MIME_TYPE, MimeType.APPLICATION_GROOVY);
+            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_GROOVY);
 
             Editor editor =
-               editors.get(MimeType.APPLICATION_GROOVY).createEditor(ExamplesBundle.INSTANCE.groovyExample().getText(),
+               codeEditors.get(MimeType.APPLICATION_GROOVY).createEditor(ExamplesBundle.INSTANCE.groovyExample().getText(),
                   eventBus, params);
             panel.clear();
             panel.add(editor);
@@ -437,10 +457,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            params.put(CodeMirrorParams.MIME_TYPE, MimeType.GROOVY_SERVICE);
+            params.put(EditorParameters.MIME_TYPE, MimeType.GROOVY_SERVICE);
 
             Editor editor =
-               editors.get(MimeType.GROOVY_SERVICE).createEditor(ExamplesBundle.INSTANCE.groovyServiceExample().getText(),
+               codeEditors.get(MimeType.GROOVY_SERVICE).createEditor(ExamplesBundle.INSTANCE.groovyServiceExample().getText(),
                   eventBus, params);
             panel.clear();
             panel.add(editor);
@@ -457,10 +477,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            params.put(CodeMirrorParams.MIME_TYPE, MimeType.CHROMATTIC_DATA_OBJECT);
+            params.put(EditorParameters.MIME_TYPE, MimeType.CHROMATTIC_DATA_OBJECT);
 
             Editor editor =
-               editors.get(MimeType.CHROMATTIC_DATA_OBJECT).createEditor(ExamplesBundle.INSTANCE.dataObjectExample().getText(),
+               codeEditors.get(MimeType.CHROMATTIC_DATA_OBJECT).createEditor(ExamplesBundle.INSTANCE.dataObjectExample().getText(),
                   eventBus, params);
             panel.clear();
             panel.add(editor);
@@ -477,10 +497,49 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            params.put(CodeMirrorParams.MIME_TYPE, MimeType.GROOVY_TEMPLATE);
+            params.put(EditorParameters.MIME_TYPE, MimeType.GROOVY_TEMPLATE);
 
             Editor editor =
-               editors.get(MimeType.GROOVY_TEMPLATE).createEditor(ExamplesBundle.INSTANCE.groovyTemplateExample().getText(),
+               codeEditors.get(MimeType.GROOVY_TEMPLATE).createEditor(ExamplesBundle.INSTANCE.groovyTemplateExample().getText(),
+                  eventBus, params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });
+      
+      Button htmlCKEditorButton = new Button();
+      htmlCKEditorButton.setTitle("Create HTML CKEditor");
+      htmlCKEditorButton.setText("CKEditor HTML");
+      htmlCKEditorButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(EditorParameters.MIME_TYPE, MimeType.TEXT_HTML);
+
+            Editor editor =
+               WYSIWYGEditors.get(MimeType.TEXT_HTML).createEditor(ExamplesBundle.INSTANCE.htmlExample().getText(), eventBus,
+                  params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });      
+
+      Button googleGadgetCKEditorButton =
+         new Button();
+      googleGadgetCKEditorButton.setTitle("Create Google Gadget CKEditor");
+      googleGadgetCKEditorButton.setText("CKEditor Gadget");
+      googleGadgetCKEditorButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(EditorParameters.MIME_TYPE, MimeType.GOOGLE_GADGET);
+
+            Editor editor =
+               WYSIWYGEditors.get(MimeType.GOOGLE_GADGET).createEditor(ExamplesBundle.INSTANCE.googleGadgetExample().getText(),
                   eventBus, params);
             panel.clear();
             panel.add(editor);
@@ -496,7 +555,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       toolbar.add(groovyButton);      
       toolbar.add(groovyServiceButton);   
       toolbar.add(dataObjectButton);      
-      toolbar.add(groovyTemplateButton);      
+      toolbar.add(groovyTemplateButton);  
+      
+      toolbar.add(htmlCKEditorButton);
+      toolbar.add(googleGadgetCKEditorButton);      
 
       RootPanel.get().add(toolbar);
       RootPanel.get().add(panel);
