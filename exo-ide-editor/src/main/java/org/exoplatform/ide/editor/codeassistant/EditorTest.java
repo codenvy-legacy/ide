@@ -25,21 +25,20 @@ import java.util.Map;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledHandler;
 import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
-import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.groovytemplate.GroovyTemplateCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantServiceImpl;
-import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.xml.XmlCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
@@ -398,10 +397,28 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          public void onClick(ClickEvent event)
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.GOOGLE_GADGET);
+                      
+            eventBus.addHandler(EditorHotKeyCalledEvent.TYPE, new EditorHotKeyCalledHandler(){
 
+               public void onEditorHotKeyCalled(EditorHotKeyCalledEvent event)
+               {
+                  System.out.println(">>>>>>>>>>> onEditorHotKeyCalled = " + event.getHotKey());                  
+               }
+                            
+            });
+            
             Editor editor =
                codeEditors.get(MimeType.GOOGLE_GADGET).createEditor(ExamplesBundle.INSTANCE.googleGadgetExample().getText(),
                   eventBus, params);
+            
+            editor.setHotKeyList(new ArrayList<String>(){{
+               add("Ctrl+70"); // Ctrl+F
+               add("Ctrl+68"); // Ctrl+D
+               add("Ctrl+83"); // Ctrl+S
+               add("Alt+70");  // Alt+F             
+            }});
+
+
             panel.clear();
             panel.add(editor);
          }
@@ -538,9 +555,25 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.GOOGLE_GADGET);
 
+            eventBus.addHandler(EditorHotKeyCalledEvent.TYPE, new EditorHotKeyCalledHandler(){
+
+               public void onEditorHotKeyCalled(EditorHotKeyCalledEvent event)
+               {
+                  System.out.println(">>>>>>>>>>> onEditorHotKeyCalled = " + event.getHotKey());
+               }
+                            
+            });
+            
             Editor editor =
                WYSIWYGEditors.get(MimeType.GOOGLE_GADGET).createEditor(ExamplesBundle.INSTANCE.googleGadgetExample().getText(),
                   eventBus, params);
+            
+            editor.setHotKeyList(new ArrayList<String>(){{
+               add("Ctrl+78");  // Ctrl+N 
+               add("Ctrl+83"); // Ctrl+S               
+               add("Alt+78");    // Alt+N               
+            }});
+            
             panel.clear();
             panel.add(editor);
          }
