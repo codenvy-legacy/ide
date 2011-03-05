@@ -18,24 +18,25 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.StatefulCanvas;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.events.HasClickHandlers;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
 
 import org.exoplatform.gwtframework.ui.client.GwtResources;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
@@ -55,15 +56,13 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
    public static final int WIDTH = 450;
 
-   public static final int HEIGHT = 170;
+   public static final int HEIGHT = 190;
 
    private static final String ID = "ideUploadForm";
 
    private static final String ID_UPLOAD_BUTTON = "ideUploadFormUploadButton";
 
    private static final String ID_CLOSE_BUTTON = "ideUploadFormCloseButton";
-
-   private static final String ID_DYNAMIC_FORM = "ideUploadFormDynamicForm";
 
    private static final String FILE_NAME_FIELD = "ideUploadFormFilenameField";
 
@@ -127,7 +126,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
       createButtons();
 
       show();
-//      UIHelper.setAsReadOnly(fileNameField.getName());
+      UIHelper.setAsReadOnly(fileNameField.getName());
       presenter = createPresenter(eventBus, selectedItems, path);
 //      fileUploadInput.setFileSelectedHandler(presenter);
       presenter.bindDisplay(this);
@@ -153,6 +152,9 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    protected VerticalPanel createUploadFormItems()
    {
       VerticalPanel panel = new VerticalPanel();
+      panel.setWidth("420px");
+      panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
       panel.add(getUploadLayout());
       
       return panel;
@@ -161,28 +163,40 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    private void createButtons()
    {
       DynamicForm uploadWindowButtonsForm = new DynamicForm();
-      uploadWindowButtonsForm.setWidth(200);
-      uploadWindowButtonsForm.setMargin(10);
-/*TODO      uploadWindowButtonsForm.setLayoutAlign(VerticalAlignment.TOP);
-      uploadWindowButtonsForm.setLayoutAlign(Alignment.CENTER);*/
-
+      uploadWindowButtonsForm.setWidth(420);
+      uploadWindowButtonsForm.setHeight("50px");
+      uploadWindowButtonsForm.setMargin(1);
+      
+      //panel to set button at the center
+      HorizontalPanel hPanel = new HorizontalPanel();
+      hPanel.setWidth("420px");
+      hPanel.setHeight("50px");
+      hPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      hPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+      
+      //panel, that contains buttons to put them near each other
+      HorizontalPanel bPanel = new HorizontalPanel();
+      bPanel.setWidth("170px");
+      bPanel.setHeight("50px");
+      bPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      bPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+      
       uploadButton = new IButton(buttonTitle);
       uploadButton.setID(ID_UPLOAD_BUTTON);
+      uploadButton.setWidth(80);
       uploadButton.setHeight(22);
       uploadButton.setIcon(Images.MainMenu.File.UPLOAD);
 
-      StatefulCanvas buttonSpacer = new StatefulCanvas();
-      buttonSpacer.setWidth(5);
-
       closeButton = new IButton("Cancel");
       closeButton.setID(ID_CLOSE_BUTTON);
+      closeButton.setWidth(80);
       closeButton.setHeight(22);
       closeButton.setIcon(Images.Buttons.CANCEL);
 
-      ToolbarItem buttonToolbar = new ToolbarItem();
-      buttonToolbar.setButtons(uploadButton, buttonSpacer, closeButton);
-
-   //TODO   uploadWindowButtonsForm.setFields(buttonToolbar);
+      bPanel.add(uploadButton);
+      bPanel.add(closeButton);
+      hPanel.add(bPanel);
+      uploadWindowButtonsForm.add(hPanel);
 
       addItem(uploadWindowButtonsForm);
    }
@@ -191,30 +205,29 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    {
       HorizontalPanel uploadHPanel = new HorizontalPanel();
       uploadHPanel.setWidth("330px");
-      uploadHPanel.setHeight("42px");
+      uploadHPanel.setHeight("65px");
       uploadHPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
+      uploadHPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
       fileNameField = new TextField();
       fileNameField.setName(FILE_NAME_FIELD);
       fileNameField.setShowTitle(true);
+      fileNameField.setTitleOrientation(TitleOrientation.TOP);
       fileNameField.setTitle("File to upload:");
       fileNameField.setWidth(245);
       fileNameField.setHeight(22);
 
-      // create upload form
-
       AbsolutePanel absolutePanel = new AbsolutePanel();
       absolutePanel.setSize("80px", "22px");
-      org.exoplatform.gwtframework.ui.client.component.IButton selectButton = new org.exoplatform.gwtframework.ui.client.component.IButton();
-      selectButton.setTitle("Browse");
+      IButton selectButton = new IButton();
+      selectButton.setID(ID_BROWSE_BUTTON);
+      selectButton.setTitle("Browse...");
       selectButton.setWidth(80);
       selectButton.setHeight(22);
 
       uploadForm = new FormPanel();
       uploadForm.setMethod(FormPanel.METHOD_POST);
       uploadForm.setEncoding(FormPanel.ENCODING_MULTIPART);
-
-      // create file upload input
 
       postFieldsPanel = new HorizontalPanel();
 
@@ -247,14 +260,8 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    public void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType)
    {
       Hidden locationField = new Hidden(FormFields.LOCATION, location);
-//      Hidden mimeTypeField = new Hidden(FormFields.MIME_TYPE, mimeType);
-//      Hidden nodeTypeField = new Hidden(FormFields.NODE_TYPE, nodeType);
-//      Hidden jcrContentNodeTypeField = new Hidden(FormFields.JCR_CONTENT_NODE_TYPE, jcrContentNodeType);
 
       postFieldsPanel.add(locationField);
-//      postFieldsPanel.add(mimeTypeField);
-//      postFieldsPanel.add(nodeTypeField);
-//      postFieldsPanel.add(jcrContentNodeTypeField);
    }
 
    public FormPanel getUploadForm()

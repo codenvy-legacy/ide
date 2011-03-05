@@ -19,8 +19,11 @@
 package org.exoplatform.ide.client.upload;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
@@ -48,6 +51,7 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
    public UploadFileForm(HandlerManager eventBus, List<Item> selectedItems, String path, IDEConfiguration applicationConfiguration)
    {
       super(eventBus, selectedItems, path, applicationConfiguration, 450, 230);
+      
    }
    
    @Override
@@ -113,29 +117,35 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
    @Override
    protected VerticalPanel createUploadFormItems()
    {
-      VerticalPanel panel = super.createUploadFormItems();
-      
       final SelectItem dropBox = new SelectItem();
-      final String[] listTypes = {"value 1", "value 2", "value 3"};
-      dropBox.setValueMap(listTypes);
       dropBox.setVisible(false);
-
-      panel.add(dropBox);
 
       mimeTypesField = new ComboBoxField();
       mimeTypesField.setName(MIME_TYPE_FIELD);
+      //set width of combobox element
       mimeTypesField.setWidth(330);
+      /*
+       * set width of complex panel (with containt combobox and label)
+       * it is need for correct dislaying of elements at the center of 
+       * horizontal panel
+       */
+      mimeTypesField.setWidth("330px");
       mimeTypesField.setLabel("Mime Type:");
       mimeTypesField.setShowTitle(true);
       mimeTypesField.setTitleOrientation(TitleOrientation.TOP);
       
-      panel.setHeight("100px");
-      panel.setWidth("330px");
-      
       mimeTypesField.setPickListHeight(100);
       
-      panel.add(mimeTypesField);
-      return panel;
+      HorizontalPanel hpanel = new HorizontalPanel();
+      hpanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      hpanel.setHeight("60px");
+      hpanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+      hpanel.add(mimeTypesField);
+      
+      VerticalPanel verPanel = super.createUploadFormItems();
+      verPanel.add(dropBox);
+      verPanel.add(hpanel);
+      return verPanel;
    }
 
 }
