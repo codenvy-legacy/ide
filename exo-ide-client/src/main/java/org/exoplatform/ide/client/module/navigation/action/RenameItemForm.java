@@ -32,6 +32,7 @@ import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
@@ -122,11 +123,14 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
       paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setWidth(340);
       paramsForm.setPadding(1);
+      
+      VerticalPanel vPanel = new VerticalPanel();
 
       itemNameField = new TextField(RENAME_FIELD, "Rename item to:");
       itemNameField.setName(RENAME_FIELD);
       itemNameField.setWidth(340);
       itemNameField.setHeight(22);
+      vPanel.add(itemNameField);
       if (isFile)
       {
          StaticTextItem caption2 = new StaticTextItem();
@@ -136,27 +140,25 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
          SpacerItem delimiter3 = new SpacerItem();
          delimiter3.setHeight(2);
+         
+         final SelectItem dropBox = new SelectItem();
+         dropBox.setVisible(false);
 
          mimeTypesField = new ComboBoxField();
          mimeTypesField.setName(MIME_TYPE_FIELD);
          mimeTypesField.setWidth(340);
-//         mimeTypesField.setColSpan(2);
-//         mimeTypesField.setCompleteOnTab(true);
          mimeTypesField.setPickListHeight(100);
-
+         mimeTypesField.setEnabled();
+         vPanel.add(dropBox);
+         vPanel.add(mimeTypesField);
+         
          caption3 = new StaticTextItem();
          caption3.setShowTitle(false);
          caption3.setColSpan(2);
-         //TODO fix when combobox ready:
-         //paramsForm.setFields(delimiter1, caption, delimiter, itemNameField, delimiter2, caption2, delimiter3,
-          //  mimeTypesField, caption3);
-      }
-      else
-      {
-         paramsForm.add(itemNameField);
       }
       itemNameField.focusInItem();
 
+      paramsForm.setWidget(vPanel);
       vLayout.add(paramsForm);
       vLayout.setCellHorizontalAlignment(paramsForm, HorizontalPanel.ALIGN_CENTER);
       vLayout.setCellVerticalAlignment(paramsForm, HorizontalPanel.ALIGN_MIDDLE);
