@@ -553,8 +553,8 @@ public class CKEditor extends Editor
                keyPressed += "Alt+" + String(e.data.keyCode - $wnd.CKEDITOR.ALT);
             }              
             
-            // find similar key ammong the hotKeyList
-            var hotKeyList = configuration.@org.exoplatform.ide.editor.ckeditor.CKEditor::getHotKeyList()();                  
+            // find similar key ammong the hotKeyList 
+            var hotKeyList = instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::getHotKeyList()();                  
 
             // listen Ctrl+S key pressing if hotKeyList is null
             if (hotKeyList === null) { 
