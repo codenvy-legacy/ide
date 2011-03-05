@@ -27,6 +27,8 @@ import java.util.Map;
  */
 public class Project extends Folder
 {
+   
+   public static String PROJECT_MIME_TYPE = "text/directory";
    private String projectType;
 
    public Project(String id, String name, String mimeType, String path, long creationDate, List<Property> properties,

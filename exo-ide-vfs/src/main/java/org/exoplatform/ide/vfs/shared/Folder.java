@@ -29,6 +29,7 @@ import java.util.Map;
  */
 public class Folder extends Item
 {
+   public static String FOLDER_MIME_TYPE = "text/directory";
    
    public static String REL_CREATE_FILE = "create-file";
    public static String REL_CREATE_FOLDER = "create-folder";
