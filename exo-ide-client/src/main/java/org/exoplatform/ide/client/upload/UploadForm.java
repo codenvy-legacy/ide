@@ -28,8 +28,6 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 
 import org.exoplatform.gwtframework.ui.client.GwtResources;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
@@ -114,14 +112,6 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
       setTitle(title);
 
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-
       createFileUploadForm();
       createButtons();
 
@@ -146,7 +136,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
    private void createFileUploadForm()
    {
-      addItem(createUploadFormItems());
+      setWidget(createUploadFormItems());
    }
    
    protected VerticalPanel createUploadFormItems()
@@ -198,7 +188,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
       hPanel.add(bPanel);
       uploadWindowButtonsForm.add(hPanel);
 
-      addItem(uploadWindowButtonsForm);
+      setWidget(uploadWindowButtonsForm);
    }
    
    private HorizontalPanel getUploadLayout()

@@ -18,18 +18,14 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import com.smartgwt.client.widgets.layout.HLayout;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.StatefulCanvas;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ToolbarItem;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -64,7 +60,7 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
 
    private SelectWorkspacePresenter presenter;
 
-   private VLayout vLayout;
+   private VerticalPanel vLayout;
 
    private IButton okButton;
 
@@ -81,22 +77,18 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
 
       this.eventBus = eventBus;
 
-      vLayout = new VLayout();
-      vLayout.setMargin(10);
-      addItem(vLayout);
+      vLayout = new VerticalPanel();
+      vLayout.setWidth("100%");
+      vLayout.setHeight("100%");
+      vLayout.setSpacing(10);
+      vLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      
+      setWidget(vLayout);
 
       createSelectWorkspaceForm();
 
       createButtonsForm();
 
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-      
       show();
 
       presenter = new SelectWorkspacePresenter(eventBus, applicationSettings, entryPointList, openedFiles, lockTokens);
@@ -105,22 +97,15 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
 
    private void createSelectWorkspaceForm()
    {
-
       entryPointListGrid = new EntryPointListGrid();
-      vLayout.addMember(entryPointListGrid);
-
-      Layout l = new Layout();
-      l.setHeight(5);
-      vLayout.addMember(l);
+      vLayout.add(entryPointListGrid);
    }
 
    private void createButtonsForm()
    {
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setHeight(22);
-      buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setMembersMargin(5);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight(22 + "px");
+      buttonsLayout.setSpacing(5);
 
       okButton = new IButton("OK");
       okButton.setID(ID_OK_BUTTON);
@@ -134,10 +119,10 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.CANCEL);
 
-      buttonsLayout.addMember(okButton);
-      buttonsLayout.addMember(cancelButton);
+      buttonsLayout.add(okButton);
+      buttonsLayout.add(cancelButton);
 
-      vLayout.addMember(buttonsLayout);
+      vLayout.add(buttonsLayout);
    }
 
    public void closeForm()
@@ -146,10 +131,10 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
    }
 
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
 
    public void disableOkButton()

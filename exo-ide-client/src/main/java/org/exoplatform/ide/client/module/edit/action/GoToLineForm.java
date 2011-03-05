@@ -22,14 +22,13 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -79,7 +78,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
       vLayout.setWidth("100%");
       vLayout.setHeight("100%");
 
-      addItem(vLayout);
+      setWidget(vLayout);
 
       createFieldForm();
       createButtons();
@@ -91,7 +90,7 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
 
       addCloseClickHandler(new CloseClickHandler()
       {
-         public void onCloseClick(CloseClientEvent event)
+         public void onCloseClick()
          {
             destroy();
          }
@@ -99,13 +98,16 @@ public class GoToLineForm extends DialogWindow implements GoToLinePresenter.Disp
 
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.ui.client.window.Window#destroy()
+    */
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
-
+   
    private void createFieldForm()
    {
       paramsForm = new DynamicForm();

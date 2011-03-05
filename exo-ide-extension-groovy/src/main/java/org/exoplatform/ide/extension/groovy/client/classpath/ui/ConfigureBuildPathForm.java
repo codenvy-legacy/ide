@@ -20,10 +20,9 @@ package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -96,42 +95,33 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
 
-      VLayout mainLayout = new VLayout();
-      mainLayout.setWidth100();
-      mainLayout.setHeight100();
-      mainLayout.setMembersMargin(15);
-      mainLayout.setPadding(15);
+      VerticalPanel mainLayout = new VerticalPanel();
+      mainLayout.setWidth("100%");
+      mainLayout.setHeight("100%");
+      mainLayout.setSpacing(15);
 
-      mainLayout.addMember(createCenterLayout());
-      mainLayout.addMember(createButtonsHorizontalLayout());
+      mainLayout.add(createCenterLayout());
+      mainLayout.add(createButtonsHorizontalLayout());
 
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-
-      addItem(mainLayout);
+      add(mainLayout);
       show();
    }
 
    /**
     * Create main center layout.
     * 
-    * @return {@link HLayout} center layout
+    * @return {@link HorizontalPanel} center layout
     */
-   private HLayout createCenterLayout()
+   private HorizontalPanel createCenterLayout()
    {
-      HLayout hLayout = new HLayout();
-      hLayout.setWidth100();
-      hLayout.setMembersMargin(10);
+      HorizontalPanel hLayout = new HorizontalPanel();
+      hLayout.setWidth("100%");
+      hLayout.setSpacing(10);
 
       classPathEntryListGrid = new ClassPathEntryListGrid();
       classPathEntryListGrid.setWidth100();
-      hLayout.addMember(classPathEntryListGrid);
-      hLayout.addMember(createButtonsVerticalLayout());
+      hLayout.add(classPathEntryListGrid);
+      hLayout.add(createButtonsVerticalLayout());
       return hLayout;
    }
 
@@ -140,18 +130,17 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
     * 
     * @return {@link VLayout} layout with buttons
     */
-   private VLayout createButtonsVerticalLayout()
+   private VerticalPanel createButtonsVerticalLayout()
    {
-      VLayout vLayout = new VLayout();
-      vLayout.setHeight(BUTTON_HEIGHT *2 + 10);
-      vLayout.setLayoutAlign(VerticalAlignment.CENTER);
-      vLayout.setMembersMargin(10);
+      VerticalPanel vLayout = new VerticalPanel();
+      vLayout.setHeight((BUTTON_HEIGHT *2 + 10) + "px");
+      vLayout.setSpacing(10);
 
       addButton = createButton(ID_ADD_BUTTON, "Add...", Images.Buttons.ADD);
       removeButton = createButton(ID_REMOVE_BUTTON, "Remove", Images.Buttons.REMOVE);
 
-      vLayout.addMember(addButton);
-      vLayout.addMember(removeButton);
+      vLayout.add(addButton);
+      vLayout.add(removeButton);
 
       return vLayout;
    }

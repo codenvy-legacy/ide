@@ -23,8 +23,6 @@ import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
@@ -84,18 +82,10 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       mainPanel.setSpacing(10);
       mainPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-
       createOpenFileByPathForm();
       createButtons();
 
-      addItem(mainPanel);
+      setWidget(mainPanel);
 
       show();
 

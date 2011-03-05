@@ -24,8 +24,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -107,12 +105,13 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       super(eventBus, WIDTH, HEIGHT, ID);
 
       setTitle("Create project template");
-      setCanDragResize(true);
-      setShowMaximizeButton(true);
+      //TODO
+      //setCanDragResize(true);
+      setCanMaximize(true);
 
       windowLayout = new VLayout();
       windowLayout.setMargin(15);
-      addItem(windowLayout);
+      setWidget(windowLayout);
 
       createFieldsForm();
 
@@ -132,15 +131,6 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
 
       presenter = new CreateProjectTemplatePresenter(eventBus, templateList);
       presenter.bindDisplay(this);
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-
    }
 
    private void createFieldsForm()
@@ -263,10 +253,10 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    }
 
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
 
    /**

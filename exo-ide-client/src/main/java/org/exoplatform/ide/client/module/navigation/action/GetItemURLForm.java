@@ -82,7 +82,7 @@ public class GetItemURLForm extends DialogWindow
       createFieldForm(url);
       createButtons();
       
-      addItem(mainPanel);
+      add(mainPanel);
       
       show();
 
@@ -98,14 +98,6 @@ public class GetItemURLForm extends DialogWindow
          }
 
       }.schedule(500);
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
    }
 
    private void createFieldForm(String url)

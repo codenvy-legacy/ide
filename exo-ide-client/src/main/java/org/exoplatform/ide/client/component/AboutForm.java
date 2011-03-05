@@ -23,10 +23,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.Img;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
@@ -43,14 +42,14 @@ import org.exoplatform.ide.client.framework.ui.DialogWindow;
 public class AboutForm extends DialogWindow
 {
 
-   private static final int WINDOW_WIDTH = 300;
+   private static final int WINDOW_WIDTH = 290;
 
-   private static final int WINDOW_HEIGHT = 355;
-   
+   private static final int WINDOW_HEIGHT = 335;
+
    private static final String ID = "ideAboutForm";
-   
+
    private static final String OK_BUTTON_ID = "ideAboutFormOkButton";
-   
+
    private final int LOGO_WIDTH = 200;
 
    private final int LOGO_HEIGHT = 75;
@@ -81,55 +80,48 @@ public class AboutForm extends DialogWindow
 
    private static final String INFO = "";
 
-   //      "This program is free software; you can redistribute it and/or"
-   //                                  + "modify it under the terms of the GNU Affero General Public License"
-   //                                  + "as published by the Free Software Foundation; either version 3"
-   //                                  + "of the License, or (at your option) any later version.";  
-
    public AboutForm(HandlerManager eventBus)//, String name, String version, String year, String info, String built)
    {
       super(eventBus, WINDOW_WIDTH, WINDOW_HEIGHT, ID);
 
       BuildNumber buildNumber = GWT.create(BuildNumber.class);
-      
+
       REVISION = "Revision: " + buildNumber.buildNumber();
       VERSION = "Version: " + buildNumber.version();
       BUILD_TIME = "Build Time: " + buildNumber.buildTime();
-      setShowMinimizeButton(false);
       setTitle(ABOUT);
 
-      VLayout centerLayout = new VLayout();
-      centerLayout.setWidth100();
-      centerLayout.setHeight100();
-      centerLayout.setMargin(20);
-      centerLayout.setMembersMargin(15);
+      VerticalPanel centerLayout = new VerticalPanel();
+      centerLayout.setWidth("100%");
+      centerLayout.setHeight("100%");
+      centerLayout.setSpacing(15);
+      centerLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-      centerLayout.addMember(createLogoLayout());
-      centerLayout.addMember(createInfoLayout());
+      centerLayout.add(createLogoLayout());
+      centerLayout.add(createInfoLayout());
 
-      centerLayout.addMember(createButtonLayout());
-      addItem(centerLayout);
+      centerLayout.add(createButtonLayout());
+      add(centerLayout);
 
       show();
 
       okButton.focus();
    }
 
-   private HLayout createLogoLayout()
+   private HorizontalPanel createLogoLayout()
    {
-      HLayout logoLayout = new HLayout();
-      logoLayout.setWidth100();
-      logoLayout.setHeight(LOGO_HEIGHT);
-      logoLayout.setAlign(Alignment.CENTER);
-      Img logoImage = new Img();
-      logoImage.setSrc(Images.Logos.ABOUT_LOGO);
-      logoImage.setHeight(LOGO_HEIGHT);
-      logoImage.setWidth(LOGO_WIDTH);
-      logoLayout.addMember(logoImage);
+      HorizontalPanel logoLayout = new HorizontalPanel();
+      logoLayout.setWidth("100%");
+      logoLayout.setHeight(LOGO_HEIGHT + "px");
+      Image logoImage = new Image();
+      logoImage.setUrl(Images.Logos.ABOUT_LOGO);
+      logoImage.setHeight(LOGO_HEIGHT + "px");
+      logoImage.setWidth(LOGO_WIDTH + "px");
+      logoLayout.add(logoImage);
       return logoLayout;
    }
 
-   private HLayout createButtonLayout()
+   private HorizontalPanel createButtonLayout()
    {
       okButton = new IButton(OK);
       okButton.setID(OK_BUTTON_ID);
@@ -147,29 +139,27 @@ public class AboutForm extends DialogWindow
 
       });
 
-      HLayout hLayout = new HLayout();
-      hLayout.setLayoutTopMargin(20);
-      hLayout.setHeight(BUTTON_HEIGHT);
-      hLayout.setAutoWidth();
-      hLayout.setLayoutAlign(Alignment.CENTER);
-      hLayout.addMember(okButton);
-
+      HorizontalPanel hLayout = new HorizontalPanel();
+      hLayout.setSpacing(20);
+      hLayout.setHeight(BUTTON_HEIGHT + "px");
+      hLayout.add(okButton);
       return hLayout;
    }
 
-   private VLayout createInfoLayout()
+   private VerticalPanel createInfoLayout()
    {
-      VLayout infoLayout = new VLayout();
-      infoLayout.setWidth100();
-      infoLayout.setAutoHeight();
+      VerticalPanel infoLayout = new VerticalPanel();
+      infoLayout.setWidth("100%");
 
       Label infoLabel = new Label();
       infoLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
- //     infoLabel.setCanSelectText(true);
-      infoLabel.getElement().setInnerHTML("<h3>" + NAME + "</h3>" + "<b>" + VERSION + "</b>" + "<br>" + YEAR + "&nbsp;" + COMPANY_NAME
-         + "&nbsp;" + COPYRIGHT + "<br>" + INFO + "<br><br>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>"
-         + BUILD_TIME + "</b>");
-      infoLayout.addMember(infoLabel);
+      //     infoLabel.setCanSelectText(true);
+      infoLabel.getElement()
+         .setInnerHTML(
+            "<h3>" + NAME + "</h3>" + "<b>" + VERSION + "</b>" + "<br>" + YEAR + "&nbsp;" + COMPANY_NAME + "&nbsp;"
+               + COPYRIGHT + "<br>" + INFO + "<br><br>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>" + BUILD_TIME
+               + "</b>");
+      infoLayout.add(infoLabel);
       return infoLayout;
    }
 }

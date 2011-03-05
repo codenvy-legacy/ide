@@ -18,18 +18,18 @@
  */
 package org.exoplatform.ide.client.module.navigation.action;
 
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -58,7 +58,9 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
 
    public static final String ID_CANCEL_BUTTON = "ideDeleteItemFormCancelButton";
 
-   private HLayout hLayout;
+   private VerticalPanel mainLayout;
+   
+   private HorizontalPanel infoLayout;
 
    private String prompt;
 
@@ -83,67 +85,54 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
       }
       setTitle("Delete Item(s)");
 
-      hLayout = new HLayout();
-      addItem(hLayout);
-      //hLayout.setBackgroundColor("#FFEEAA");
+      mainLayout = new VerticalPanel();
+      mainLayout.setWidth("100%");
+      mainLayout.setHeight("100%");
+      mainLayout.setSpacing(10);
+      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
-      createImageLayout();
-      createPromptLayout();
+      setWidget(mainLayout);
+      
+      infoLayout = new HorizontalPanel();
+      infoLayout.setWidth("100%");
+      infoLayout.setHeight(32 + "px");
+      infoLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+      createImage();
+      createTextLayout(prompt);
+      
+      mainLayout.add(infoLayout);
+      mainLayout.add(createButtonsLayout());
 
       show();
 
       deleteButton.focus();
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-
       presenter = new DeleteItemPresenter(eventBus, selectedItems, openedFiles, lockTokens);
       presenter.bindDisplay(this);
    }
 
-   private void createImageLayout()
+   private void createImage()
    {
-      Layout imageLayot = new Layout();
-      imageLayot.setWidth(64);
-      hLayout.addMember(imageLayot);
-
-      Canvas imageCanvas = new Canvas();
-      imageCanvas.setLayoutAlign(Alignment.CENTER);
-      imageCanvas.setLayoutAlign(VerticalAlignment.TOP);
-      imageCanvas.setContents("<img src=\"" + Images.Dialogs.ASK + "\" />");
-      imageCanvas.setWidth(32);
-      imageCanvas.setHeight(32);
-      imageCanvas.setLeft(20);
-      imageCanvas.setTop(22);
-      imageLayot.addChild(imageCanvas);
+      Image image = new Image(Images.Dialogs.ASK);
+      image.setWidth(32 + "px");
+      image.setHeight(32 + "px");
+      infoLayout.add(image);
+      infoLayout.setCellHorizontalAlignment(image, HasHorizontalAlignment.ALIGN_CENTER);
    }
 
-   private void createPromptLayout()
+   private void createTextLayout(String text)
    {
-      VLayout vLayout = new VLayout();
-      hLayout.addMember(vLayout);
-      vLayout.setMargin(15);
-
-      Layout promptLayout = new Layout();
-      promptLayout.setLayoutAlign(VerticalAlignment.CENTER);
-      promptLayout.setContents(prompt);
-      vLayout.addMember(promptLayout);
-
-      vLayout.addMember(createButtonsLayout());
+      Label label = new Label();
+      label.getElement().setInnerHTML(text);
+      infoLayout.add(label);
+      infoLayout.setCellHorizontalAlignment(label, HasHorizontalAlignment.ALIGN_LEFT);
    }
 
-   private HLayout createButtonsLayout()
+   private HorizontalPanel createButtonsLayout()
    {
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setHeight(22);
-      buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setMembersMargin(5);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight(22 + "px");
+      buttonsLayout.setSpacing(5);
 
       deleteButton = new IButton("Yes");
       deleteButton.setID(ID_OK_BUTTON);
@@ -156,18 +145,18 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);
-      
-      buttonsLayout.addMember(deleteButton);
-      buttonsLayout.addMember(cancelButton);
-      
+
+      buttonsLayout.add(deleteButton);
+      buttonsLayout.add(cancelButton);
+
       return buttonsLayout;
    }
-   
+
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
 
    public void closeDisplay()

@@ -20,16 +20,10 @@ package org.exoplatform.ide.client.hotkeys;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.StatefulCanvas;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.layout.VLayout;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
@@ -89,11 +83,9 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
    private static final int BUTTON_HEIGHT = 22;
 
-   private static final int FORM_DELIMITER_HEIGHT = 5;
-
    private HorizontalPanel hLayout;
 
-   private VLayout vLayout;
+   private VerticalPanel vLayout;
 
    private IButton saveButton;
 
@@ -116,33 +108,30 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       super(eventBus, WIDTH, HEIGHT, ID);
 
       setTitle(TITLE);
-      setShowMaximizeButton(true);
+      setCanMaximize(true);
 
-      vLayout = new VLayout();
-      vLayout.setMargin(10);
-      vLayout.setWidth100();
-      vLayout.setAlign(VerticalAlignment.TOP);
+      vLayout = new VerticalPanel();
+      vLayout.setWidth("100%");
+      vLayout.setHeight("100%");
+      vLayout.setSpacing(10);
 
       hLayout = new HorizontalPanel();
       hLayout.setHeight((BUTTON_HEIGHT + 4)+"px");
       hLayout.setWidth("100%");
       createHotKeysListGrid();
 
-      Canvas delimiter = new StatefulCanvas();
-      delimiter.setHeight(FORM_DELIMITER_HEIGHT);
 
-      vLayout.addMember(delimiter);
 
       hLayout.add(createHotKeyForm());
       hLayout.add(createBindButtonsForm());
       HorizontalPanel buttonsPanel = createButtonsForm();
       hLayout.add(buttonsPanel);
 
-      vLayout.addMember(hLayout);
+      vLayout.add(hLayout);
 
       createErrorLabel();
 
-      addItem(vLayout);
+      setWidget(vLayout);
 
       try
       {
@@ -155,22 +144,13 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
       presenter = new CustomizeHotKeysPresenter(eventBus, applicationSettings, controls);
       presenter.bindDisplay(this);
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
    }
 
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
 
    public HotKeyItemListGrid getHotKeyItemListGrid()
@@ -182,7 +162,9 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    {
       hotKeyItemListGrid = new HotKeyItemListGrid();
       hotKeyItemListGrid.setID(LIST_GRID_ID);
-      vLayout.addMember(hotKeyItemListGrid);
+      hotKeyItemListGrid.setWidth(WIDTH - 20);
+      hotKeyItemListGrid.setHeight(HEIGHT - 40);
+      vLayout.add(hotKeyItemListGrid);
    }
 
    private DynamicForm createHotKeyForm()
@@ -259,7 +241,7 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       errorLabel.setHeight("16px");
       errorLabel.setText("");
       errorLabel.setStyleName(Style.ERROR);
-      vLayout.addMember(errorLabel);
+      vLayout.add(errorLabel);
    }
 
    public void showError(String style, String text)
@@ -287,7 +269,7 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
    public void closeForm()
    {
-      destroy();
+      hide();
    }
 
    public void disableSaveButton(boolean disabled)

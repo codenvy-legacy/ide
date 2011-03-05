@@ -21,8 +21,6 @@ package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -97,15 +95,7 @@ public class ChooseSourcePathForm extends DialogWindow implements ChooseSourcePa
       mainLayout.addMember(treeGrid);
       mainLayout.addMember(createButtonsLayout());
 
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-
-      addItem(mainLayout);
+      add(mainLayout);
       show();
    }
 

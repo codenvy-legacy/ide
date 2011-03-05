@@ -77,7 +77,7 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
-      setCanDragResize(true);
+      //TODO setCanDragResize(true);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
@@ -88,17 +88,7 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
       mainLayout.add(createMainForm());
       mainLayout.add(createButtonLayout());
 
-      addCloseClickHandler(new CloseClickHandler()
-      {
-
-         @Override
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-
-      addItem(mainLayout);
+      add(mainLayout);
       show();
    }
 
@@ -106,12 +96,12 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
     * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
     */
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       eventBus.fireEvent(new ViewClosedEvent(ID));
-      super.onDestroy();
+      super.destroy();
    }
-
+   
    /**
     * Creates main form.
     * 

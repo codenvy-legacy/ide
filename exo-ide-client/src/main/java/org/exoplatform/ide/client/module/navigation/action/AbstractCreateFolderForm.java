@@ -24,13 +24,12 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
@@ -82,7 +81,7 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
       vLayout = new VerticalPanel();
       vLayout.setWidth("100%");
       vLayout.setHeight("100%");
-      addItem(vLayout);
+      setWidget(vLayout);
 
       createFieldForm();
       createButtons();
@@ -91,7 +90,7 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
 
       addCloseClickHandler(new CloseClickHandler()
       {
-         public void onCloseClick(CloseClientEvent event)
+         public void onCloseClick()
          {
             destroy();
          }

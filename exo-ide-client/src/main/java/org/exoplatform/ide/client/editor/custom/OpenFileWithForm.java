@@ -22,13 +22,12 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
@@ -82,7 +81,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
       addCloseClickHandler(new CloseClickHandler()
       {
 
-         public void onCloseClick(CloseClientEvent event)
+         public void onCloseClick()
          {
             destroy();
          }
@@ -96,7 +95,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
       editorsListGrid.setID(EDITORS_LISTGRID_ID);
       editorsListGrid.setHeight(135);
       editorsListGrid.setMargin(10);
-      addItem(editorsListGrid);
+      add(editorsListGrid);
    }
 
    private void createChecBoxField()
@@ -106,7 +105,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
       form.setMargin(5);
       useAsDef = new CheckboxItem("Default", "Use as default editor");
       form.add(useAsDef);
-      addItem(form);
+      add(form);
    }
 
    private void createButtonsForm()
@@ -132,7 +131,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
 
       buttonsLayout.addMember(openButton);
       buttonsLayout.addMember(cancelButton);
-      addItem(buttonsLayout);
+      add(buttonsLayout);
    }
 
    public void closeForm()

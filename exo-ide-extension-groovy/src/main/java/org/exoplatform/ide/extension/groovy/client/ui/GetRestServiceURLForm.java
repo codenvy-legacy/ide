@@ -24,8 +24,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -76,7 +74,7 @@ public class GetRestServiceURLForm extends DialogWindow
       createFieldForm(url);
       createButtons();
 
-      addItem(mainLayout);
+      add(mainLayout);
       show();
 
       new Timer()
@@ -90,13 +88,6 @@ public class GetRestServiceURLForm extends DialogWindow
 
       }.schedule(500);
 
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
    }
 
    private void createFieldForm(String url)

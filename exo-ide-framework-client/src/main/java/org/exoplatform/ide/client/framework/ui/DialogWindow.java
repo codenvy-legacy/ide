@@ -19,7 +19,9 @@
 package org.exoplatform.ide.client.framework.ui;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.Window;
+
+import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
+import org.exoplatform.gwtframework.ui.client.window.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,14 +40,23 @@ public class DialogWindow extends Window
       this.eventBus = eventBus;
       ClearFocusForm.getInstance().clearFocus();
 
-      setID(id);
-      setShowShadow(true);
+      getElement().setId(id);
+     // setShowShadow(true);
       setWidth(width);
       setHeight(height);
-      centerInPage();
-      setShowMinimizeButton(false);
-      setIsModal(true);
-      setKeepInParentRect(true);
+      center();
+      //setShowMinimizeButton(false);
+      setModal(true);
+      //setKeepInParentRect(true);
+      
+      addCloseClickHandler(new CloseClickHandler()
+      {
+         @Override
+         public void onCloseClick()
+         {
+            destroy();
+         }
+      });
    }
 
 }

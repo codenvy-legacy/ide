@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.client.toolbar.customize;
 
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+
+import com.google.gwt.user.client.ui.HorizontalPanel;
+
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.command.Control;
@@ -92,9 +92,9 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
 
    private CustomizeToolbarPresenter presenter;
 
-   private VLayout vLayout;
+   private VerticalPanel vLayout;
 
-   private HLayout hLayout;
+   private HorizontalPanel hLayout;
 
    private IButton addCommandButton;
 
@@ -119,19 +119,21 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
    public CustomizeToolbarForm(HandlerManager eventBus, ApplicationSettings applicationSettings, List<Control> controls)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
-      setShowMaximizeButton(true);
+      setCanMaximize(true);
       setTitle(TITLE);
-      setCanDragResize(true);
+      //TODO setCanDragResize(true);
 
-      vLayout = new VLayout();
-      vLayout.setMargin(5);
-      addItem(vLayout);
+      vLayout = new VerticalPanel();
+      vLayout.setWidth("100%");
+      vLayout.setHeight("100%");
+      vLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      setWidget(vLayout);
 
-      hLayout = new HLayout();
-      vLayout.addMember(hLayout);
-      hLayout.setMargin(5);
-      hLayout.setWidth100();
-      //hLayout.setBackgroundColor("#FFEEAA");
+      hLayout = new HorizontalPanel();
+      vLayout.add(hLayout);
+      
+      hLayout.setWidth("100%");
+      hLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
       createCommandsListGrid();
       createActionsForm();
@@ -143,34 +145,24 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
       presenter = new CustomizeToolbarPresenter(eventBus, applicationSettings, controls);
       presenter.bindDisplay(this);
 
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-
    }
 
    private void createCommandsListGrid()
    {
       commandItemListGrid = new CommandItemExListGrid();
-      hLayout.addMember(commandItemListGrid);
+      hLayout.add(commandItemListGrid);
    }
 
    private void createActionsForm()
    {
-      VLayout buttonsLayout = new VLayout();
-      buttonsLayout.setWidth(159);
-      buttonsLayout.setHeight100();
-      //buttonsLayout.setBackgroundColor("#FFAAEE");
-      hLayout.addMember(buttonsLayout);
+      VerticalPanel buttonsLayout = new VerticalPanel();
+      buttonsLayout.setWidth(159 + "px");
+      buttonsLayout.setHeight("100%");
+      hLayout.add(buttonsLayout);
 
-      buttonsLayout.setAlign(Alignment.CENTER);
+      buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-      buttonsLayout.setMargin(17);
-      buttonsLayout.setMembersMargin(15);
+      buttonsLayout.setSpacing(15);
 
       addCommandButton = new IButton(BUTTON_ADD);
       addCommandButton.setID(ID_ADD_BUTTON);
@@ -202,31 +194,29 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
       moveDownButton.setHeight(22);
       moveDownButton.setIcon(Images.Buttons.DOWN);
 
-      buttonsLayout.addMember(addCommandButton);
-      buttonsLayout.addMember(addDelimiterButton);
-      buttonsLayout.addMember(deleteCommandButton);
+      buttonsLayout.add(addCommandButton);
+      buttonsLayout.add(addDelimiterButton);
+      buttonsLayout.add(deleteCommandButton);
 
-      Layout l = new Layout();
-      l.setHeight(20);
-      buttonsLayout.addMember(l);
+      HorizontalPanel l = new HorizontalPanel();
+      l.setHeight(20+"px");
+      buttonsLayout.add(l);
 
-      buttonsLayout.addMember(moveUpButton);
-      buttonsLayout.addMember(moveDownButton);
+      buttonsLayout.add(moveUpButton);
+      buttonsLayout.add(moveDownButton);
    }
 
    private void createToolbarItemsListGrid()
    {
       toolbarItemListGrid = new ToolbarItemListGrid();
-      hLayout.addMember(toolbarItemListGrid);
+      hLayout.add(toolbarItemListGrid);
    }
 
    private void createButtonsForm()
    {
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setHeight(22);
-      buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setMembersMargin(5);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight(22 + "px");
+      buttonsLayout.setSpacing(5);
 
       okButton = new IButton(BUTTON_OK);
       okButton.setID(ID_OK_BUTTON);
@@ -246,17 +236,17 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
       defaultsButton.setHeight(22);
       defaultsButton.setIcon(Images.Buttons.DEFAULTS);
 
-      buttonsLayout.addMember(okButton);
-      buttonsLayout.addMember(cancelButton);
-      buttonsLayout.addMember(defaultsButton);
-      vLayout.addMember(buttonsLayout);
+      buttonsLayout.add(okButton);
+      buttonsLayout.add(cancelButton);
+      buttonsLayout.add(defaultsButton);
+      vLayout.add(buttonsLayout);
    }
 
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
 
    public void closeForm()

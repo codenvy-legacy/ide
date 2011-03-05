@@ -168,7 +168,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    public DeployUwaWidgetForm(HandlerManager eventBus)
    {
       super(eventBus, WIDTH, HEIGHT, ID);
-      setCanDragResize(true);
+      //TODO setCanDragResize(true);
 
       setTitle(TITLE);
       
@@ -194,16 +194,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       //Create and layout with buttons
       mainLayout.addMember(createButtonsLayout());
 
-      addCloseClickHandler(new CloseClickHandler()
-      {
-
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-      
-      addItem(mainLayout);
+      add(mainLayout);
       show();
    }
 
@@ -429,15 +420,6 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    }
 
    /**
-    * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
-    */
-   @Override
-   protected void onDestroy()
-   {
-      super.onDestroy();
-   }
-
-   /**
     * @see org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter.Display#closeForm()
     */
    public void closeForm()
@@ -495,7 +477,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
          setWidth(460);
          setHeight(180);
          mainInfoLayout.show();
-         centerInPage();
+         center();
       }
       else
       {

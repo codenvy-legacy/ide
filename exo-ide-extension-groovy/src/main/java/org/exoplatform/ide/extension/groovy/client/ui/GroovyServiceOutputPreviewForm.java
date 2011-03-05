@@ -23,8 +23,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -133,7 +131,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
       vLayout.addMember(hLayout);
 
-      addItem(vLayout);
+      add(vLayout);
 
       createParamsForm();
       createButtonsForm();
@@ -142,15 +140,6 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
       presenter = new GroovyServiceOutputPreviewPresenter(eventBus, wadlApplication, undeloyOnCansel);
       presenter.bindDisplay(this);
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
 
    }
 
@@ -315,10 +304,10 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
     * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
     */
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
 
    public HasClickHandlers getCancelButton()

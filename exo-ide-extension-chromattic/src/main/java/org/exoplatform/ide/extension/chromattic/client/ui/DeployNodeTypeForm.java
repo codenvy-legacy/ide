@@ -18,15 +18,12 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
-
-import com.google.gwt.user.client.ui.VerticalPanel;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.smartgwt.client.widgets.layout.HLayout;
 
 import org.exoplatform.gwtframework.ui.client.component.Align;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -97,7 +94,7 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
    {
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
-      setCanDragResize(true);
+      //TODO setCanDragResize(true);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
@@ -108,16 +105,7 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
       mainLayout.add(createMainForm());
       mainLayout.add(createButtonLayout());
 
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         @Override
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-
-      addItem(mainLayout);
+      add(mainLayout);
       show();
    }
 

@@ -18,16 +18,11 @@
  */
 package org.exoplatform.ide.client.template;
 
-import com.google.gwt.user.client.DOM;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
@@ -102,7 +97,7 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       centerLayout.add(createItemsForm());
       centerLayout.add(createButtonsLayout());
 
-      addItem(centerLayout);
+      setWidget(centerLayout);
       show();
 
       presenter = new SaveAsTemplatePresenter(eventBus, file);
@@ -111,14 +106,6 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       nameField.focusInItem();
 
       UIHelper.setAsReadOnly(typeField.getName());
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
    }
 
    private VerticalPanel createItemsForm()
@@ -177,10 +164,10 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
    }
 
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
 
    public void closeForm()

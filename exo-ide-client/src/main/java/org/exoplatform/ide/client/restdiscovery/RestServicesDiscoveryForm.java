@@ -91,7 +91,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       hLayout = new HLayout();
       hLayout.setWidth100();
       hLayout.setHeight100();
-      addItem(vLayout);
+      setWidget(vLayout);
 
       vLayout.addMember(hLayout);
 
@@ -103,14 +103,6 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       UIHelper.setAsReadOnly(requestType.getName());
       UIHelper.setAsReadOnly(responseType.getName());
       UIHelper.setAsReadOnly(pathField.getName());
-      addCloseClickHandler(new CloseClickHandler()
-      {
-
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
    }
 
    /**
@@ -169,9 +161,9 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
     * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
     */
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
-      super.onDestroy();
+      super.destroy();
       eventBus.fireEvent(new ViewClosedEvent(ID));
    }
 

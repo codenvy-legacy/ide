@@ -22,8 +22,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -87,10 +85,10 @@ implements CreateFromTemplateDisplay<T>
    }
    
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
    
    private void initForm(HandlerManager eventBus)
@@ -98,12 +96,12 @@ implements CreateFromTemplateDisplay<T>
       this.eventBus = eventBus;
 
       setTitle(getFormTitle());
-      setCanDragResize(true);
-      setShowMaximizeButton(true);
+      //TODO setCanDragResize(true);
+      setCanMaximize(true);
 
       windowLayout = new VLayout();
       windowLayout.setMargin(10);
-      addItem(windowLayout);
+      setWidget(windowLayout);
 
       createTypeLayout();
 
@@ -114,14 +112,6 @@ implements CreateFromTemplateDisplay<T>
       windowLayout.addMember(getActionsForm());
 
       show();
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
    }
 
    abstract void createTypeLayout();

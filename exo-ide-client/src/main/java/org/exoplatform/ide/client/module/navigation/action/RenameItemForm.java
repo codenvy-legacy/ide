@@ -21,11 +21,10 @@ package org.exoplatform.ide.client.module.navigation.action;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 
@@ -97,8 +96,9 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
       vLayout = new VerticalPanel();
       vLayout.setWidth("100%");
+      vLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       vLayout.setHeight("100%");
-      addItem(vLayout);
+      setWidget(vLayout);
 
       createFieldForm(selectedItems.get(0) instanceof File);
       createButtons();
@@ -107,14 +107,6 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
       presenter = new RenameItemPresenter(eventBus, selectedItems, openedFiles, lockTokens);
       presenter.bindDisplay(this);
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
    }
 
    private void createFieldForm(boolean isFile)
@@ -191,10 +183,10 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    }
 
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
 
    public void closeForm()

@@ -42,11 +42,13 @@ public class CreateFolderForm extends AbstractCreateFolderForm
       presenter.bindDisplay(this);
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.ui.client.window.Window#destroy()
+    */
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
-
 }

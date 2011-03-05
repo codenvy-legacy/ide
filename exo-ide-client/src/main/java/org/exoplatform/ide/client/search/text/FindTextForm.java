@@ -49,7 +49,7 @@ import org.exoplatform.ide.client.search.Search;
 public class FindTextForm extends DialogWindow implements FindTextPresenter.Display
 {
 
-   private static final int WIDTH = 460;
+   private static final int WIDTH = 470;
 
    private static final int HEIGHT = 240;
 
@@ -114,7 +114,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    {
       super(eventBus, WIDTH, HEIGHT, Search.FORM_ID);
       setTitle(TITLE);
-      setIsModal(false);
+      setModal(false);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
@@ -136,15 +136,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
 
       mainLayout.add(hLayout);
 
-      addItem(mainLayout);
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
+      setWidget(mainLayout);
 
       show();
 
@@ -264,10 +256,10 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
     * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
     */
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
 
    /**

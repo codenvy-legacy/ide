@@ -97,7 +97,7 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       vLayout.setMargin(15);
       //vLayout.setT(Align.CENTER);
 
-      addItem(vLayout);
+      setWidget(vLayout);
 
       addFileInfo();
       addPermissionsListGrid();
@@ -111,14 +111,6 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
 
       presenter = new PermissionsManagerPresenter(eventBus, item, lockTokens);
       presenter.bindDisplay(this);
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
-
    }
 
    /**
@@ -239,10 +231,10 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
    }
 
    @Override
-   protected void onDestroy()
+   public void destroy()
    {
       presenter.destroy();
-      super.onDestroy();
+      super.destroy();
    }
 
    /**

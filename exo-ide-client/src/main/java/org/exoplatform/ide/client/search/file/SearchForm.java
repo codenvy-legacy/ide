@@ -23,8 +23,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -121,19 +119,11 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       mainLayout.add(createSearchForm());
       mainLayout.add(createButtonsLayout());
 
-      addItem(mainLayout);
+      setWidget(mainLayout);
 
       show();
 
       UIHelper.setAsReadOnly(pathField.getName());
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         public void onCloseClick(CloseClientEvent event)
-         {
-            destroy();
-         }
-      });
 
       advancedSearchPresenter = new SearchPresenter(eventBus, selectedItems, entryPoint);
       advancedSearchPresenter.bindDisplay(this);
