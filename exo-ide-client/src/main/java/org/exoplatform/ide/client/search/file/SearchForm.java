@@ -67,8 +67,6 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
 
    private static int FIELD_HEIGHT = 20;
 
-   private final int FORM_WIDTH = 430;
-
    private TextField contentField;
 
    private TextField pathField;
@@ -145,8 +143,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
 
       paramForm.add(pathField);
       paramForm.add(contentField);
-      //TODO combobox when ready:
-      //      paramForm.add(mimeTypesField);
+      paramForm.add(mimeTypesField);
 
       return paramForm;
    }
@@ -166,10 +163,10 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
    {
       ComboBoxField comboboxField = new ComboBoxField();
       comboboxField.setName(id);
-      comboboxField.setTitle("<NOBR>" + title + "</NOBR>");
+      comboboxField.setShowTitle(true);
+      comboboxField.setLabel("<NOBR>" + title + "</NOBR>");
       comboboxField.setWidth(FIELD_WIDTH);
       comboboxField.setHeight(FIELD_HEIGHT);
-//      comboboxField.setColSpan(2);
       return comboboxField;
    }
 

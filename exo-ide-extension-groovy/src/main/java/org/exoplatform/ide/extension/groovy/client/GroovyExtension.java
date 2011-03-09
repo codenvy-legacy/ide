@@ -266,7 +266,9 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+            ExceptionThrownEvent exc = new ExceptionThrownEvent("Service is not deployed.");
+            exc.setException(exception);
+            eventBus.fireEvent(exc);
          }
       });
    }

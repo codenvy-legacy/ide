@@ -29,6 +29,7 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
@@ -98,7 +99,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private VLayout vLayout;
 
-   private SelectItem pathField;
+   private ComboBoxField pathField;
 
    private SelectItem methodField;
 
@@ -231,9 +232,12 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       vLay.setWidth(480);
       vLay.setAlign(Alignment.CENTER);
 
-      pathField = new SelectItem(NAME_PATH, "Path:");
+      pathField = new ComboBoxField();
       pathField.setWidth(480);
       pathField.setTitleOrientation(TitleOrientation.TOP);
+      pathField.setShowTitle(true);
+      pathField.setLabel("Path:");
+      pathField.setName(NAME_PATH);
 
       methodField = new SelectItem(NAME_METHOD, "Method:");
       methodField.setWidth(480);
@@ -337,7 +341,6 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    public void setPaths(String[] paths)
    {
-      pathField.clearValue();
       pathField.setValueMap(paths);
    }
 
