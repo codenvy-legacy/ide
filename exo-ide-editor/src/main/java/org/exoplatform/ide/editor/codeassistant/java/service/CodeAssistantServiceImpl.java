@@ -46,21 +46,22 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
 {
 
    private static final String FIND_URL = "/ide/code-assistant/find?class=";
-   
+
    private static final String GET_CLASS_URL = "/ide/code-assistant/class-description?fqn=";
-   
+
    private static final String FIND_CLASS_BY_PREFIX = "/ide/code-assistant/find-by-prefix/";
-   
+
    private static final String FIND_TYPE = "/ide/code-assistant/find-by-type/";
 
    private HandlerManager eventBus;
 
    private Loader loader;
-   
+
    private String restServiceContext;
 
-   public CodeAssistantServiceImpl(HandlerManager eventBus, String restServiceContext,Loader loader)
+   public CodeAssistantServiceImpl(HandlerManager eventBus, String restServiceContext, Loader loader)
    {
+      super();
       this.eventBus = eventBus;
       this.loader = loader;
       this.restServiceContext = restServiceContext;
@@ -73,15 +74,22 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
    public void findClass(String className, String fileHref, AsyncRequestCallback<List<Token>> callback)
    {
       String url = restServiceContext + FIND_URL + className;
-      
+
       List<Token> tokens = new ArrayList<Token>();
       callback.setResult(tokens);
-      
+
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
-      
+
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
+      if (fileHref == null)
+      {
+         AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      }
+      else
+      {
+         AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
+      }
    }
 
    /**
@@ -91,11 +99,11 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
    public void getClassDescription(String fqn, String fileHref, AsyncRequestCallback<JavaClass> callback)
    {
       String url = restServiceContext + GET_CLASS_URL + fqn;
-      
+
       JavaClass classInfo = new JavaClass();
       callback.setResult(classInfo);
       ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller(classInfo);
-      
+
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
@@ -108,14 +116,21 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
    public void findClassesByPrefix(String prefix, String fileHref, AsyncRequestCallback<List<Token>> callback)
    {
       String url = restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className";
-      
+
       List<Token> tokens = new ArrayList<Token>();
       callback.setResult(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
-      
+
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
+      if (fileHref == null)
+      {
+         AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      }
+      else
+      {
+         AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
+      }
    }
 
    /**
@@ -125,14 +140,14 @@ public class CodeAssistantServiceImpl extends CodeAssistantService
    public void fintType(Types type, String prefix, AsyncRequestCallback<List<Token>> callback)
    {
       String url = restServiceContext + FIND_TYPE + type.toString();
-      if(prefix != null && !prefix.isEmpty())
+      if (prefix != null && !prefix.isEmpty())
       {
-       url += "?prefix=" + prefix;
+         url += "?prefix=" + prefix;
       }
       List<Token> tokens = new ArrayList<Token>();
       callback.setResult(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
-      
+
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);

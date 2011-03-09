@@ -52,10 +52,6 @@ public class XmlGwtTestCodeAssistant extends Base
             TokenSelectedHandler handler)
          {
            assertEquals(8, tokens.size());
-           for(Token t : tokens)
-           {
-              System.out.println(t.getName());
-           }
            assertEquals("context-param", tokens.get(0).getName());
            assertEquals("display-name", tokens.get(1).getName());
            assertEquals("filter", tokens.get(2).getName());

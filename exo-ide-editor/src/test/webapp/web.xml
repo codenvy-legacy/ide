@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2010 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<web-app>
+   <display-name>IDE</display-name>
+   <listener>
+      <listener-class>org.exoplatform.ws.frameworks.servlet.StandaloneContainerInitializedListener
+      </listener-class>
+   </listener>
+
+   <filter>
+      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
+      <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
+   </filter>
+   
+   <filter>
+    <filter-name>SetCurrentIdentityFilter</filter-name>
+    <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
+  </filter>
+      
+
+   <filter>
+      <filter-name>RestEncodingFilter</filter-name>
+      <filter-class>org.exoplatform.services.rest.servlet.RestEncodingFilter</filter-class>
+      <init-param>
+         <param-name>REQUEST_ENCODING</param-name>
+         <param-value>UTF-8</param-value>
+      </init-param>
+   </filter>
+
+   <filter-mapping>
+      <filter-name>RestEncodingFilter</filter-name>
+      <url-pattern>/rest/*</url-pattern>
+   </filter-mapping>
+
+   <filter-mapping>
+    <filter-name>SetCurrentIdentityFilter</filter-name>
+    <url-pattern>/rest/*</url-pattern>
+  </filter-mapping> 
+
+  
+   <filter-mapping>
+      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
+      <url-pattern>/rest/*</url-pattern>
+   </filter-mapping>
+   
+   <mime-mapping> 
+    <extension>js</extension>
+    <mime-type>application/javascript</mime-type> 
+   </mime-mapping>
+
+   <servlet>
+      <servlet-name>RestServer</servlet-name>
+      <description>eXo - Platform REST Server</description>
+      <servlet-class>org.exoplatform.services.rest.servlet.RestServlet</servlet-class>
+      <load-on-startup>4</load-on-startup>
+   </servlet>
+   
+   <servlet-mapping>
+      <servlet-name>RestServer</servlet-name>
+      <url-pattern>/rest/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>RestServer</servlet-name>
+      <url-pattern>/rest/private/*</url-pattern>
+   </servlet-mapping>
+
+</web-app>

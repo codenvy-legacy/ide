@@ -44,6 +44,7 @@
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
+
    </dependencies>
    <build>
       <resources>
@@ -68,19 +69,19 @@
             <artifactId>maven-jar-plugin</artifactId>
             <version>2.3.1</version>
             <configuration>
-              <excludes>
-                <exclude>**/example*</exclude>
-                <exclude>**/Editor.html</exclude>
-                <exclude>**/EditorTest.gwt.xml</exclude>
-                <exclude>**/EditorTest*</exclude>
-                <exclude>**/ExamplesBuandle*</exclude>
-              </excludes>
+               <excludes>
+                  <exclude>**/example*</exclude>
+                  <exclude>**/Editor.html</exclude>
+                  <exclude>**/EditorTest.gwt.xml</exclude>
+                  <exclude>**/EditorTest*</exclude>
+                  <exclude>**/ExamplesBuandle*</exclude>
+               </excludes>
             </configuration>
          </plugin>
       </plugins>
    </build>
    <profiles>
-     <profile>
+      <profile>
          <id>editor-test</id>
          <activation>
             <activeByDefault>false</activeByDefault>
@@ -93,7 +94,7 @@
                <resource>
                   <directory>src/main/resources</directory>
                </resource>
-            </resources>   
+            </resources>
             <testResources>
                <testResource>
                   <directory>src/test/java</directory>
@@ -133,19 +134,12 @@
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <module>org.exoplatform.ide.editor.EditorTest</module>
-                     <runTarget>org.exoplatform.ide.editor.EditorTest/Editor.html</runTarget>                     
+                     <runTarget>org.exoplatform.ide.editor.EditorTest/Editor.html</runTarget>
                      <logLevel>INFO</logLevel>
-                     <!-- 
-                     
-                            <logLevel>INFO" -bindAddress "0.0.0.0</logLevel>
-                     <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel> 
-                     <logLevel>INFO" -bindAddress "0.0.0.0</logLevel>
-                     -->
-                     <!-- 
-                     <logLevel>INFO</logLevel> -XX:ThreadStackSize=30720
-                     <bindAddress>0.0.0.0</bindAddress>
-                      -->
-                     
+                     <!-- <logLevel>INFO" -bindAddress "0.0.0.0</logLevel> <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel> <logLevel>INFO" 
+                        -bindAddress "0.0.0.0</logLevel> -->
+                     <!-- <logLevel>INFO</logLevel> -XX:ThreadStackSize=30720 <bindAddress>0.0.0.0</bindAddress> -->
+
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
@@ -160,6 +154,79 @@
          <activation>
             <activeByDefault>false</activeByDefault>
          </activation>
+         <dependencies>
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-groovy</artifactId>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.kernel</groupId>
+               <artifactId>exo.kernel.commons</artifactId>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.kernel</groupId>
+               <artifactId>exo.kernel.container</artifactId>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.commons</artifactId>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.frameworks.servlet</artifactId>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.ext</artifactId>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.jcr</groupId>
+               <artifactId>exo.jcr.component.ext</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <groupId>pull-parser</groupId>
+                     <artifactId>pull-parser</artifactId>
+                  </exclusion>
+               </exclusions>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.jcr</groupId>
+               <artifactId>exo.jcr.framework.web</artifactId>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform</groupId>
+               <artifactId>exo-jcr-services</artifactId>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>hsqldb</groupId>
+               <artifactId>hsqldb</artifactId>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.slf4j</groupId>
+               <artifactId>slf4j-api</artifactId>
+               <scope>runtime</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.slf4j</groupId>
+               <artifactId>slf4j-log4j12</artifactId>
+               <scope>test</scope>
+            </dependency>
+         </dependencies>
          <build>
             <resources>
                <resource>
@@ -168,7 +235,7 @@
                <resource>
                   <directory>src/main/resources</directory>
                </resource>
-            </resources>   
+            </resources>
             <testResources>
                <testResource>
                   <directory>src/test/java</directory>
@@ -179,20 +246,42 @@
             </testResources>
             <plugins>
                <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-resources-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>copy-prod-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                           <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                           <outputDirectory>target/www-test/WEB-INF/</outputDirectory>
+                           <resources>
+                              <resource>
+                                 <directory>src/test/webapp/</directory>
+                                 <filtering>true</filtering>
+                              </resource>
+                           </resources>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+               <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
-                  <configuration>              
+                  <configuration>
                      <module>org.exoplatform.ide.editor.EditorTest</module>
                      <logLevel>ERROR</logLevel>
                      <skipTests>false</skipTests>
                      <forkMode>never</forkMode>
                      <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
-                     <productionMode>true</productionMode>
-                     <testTimeOut>300</testTimeOut>
-                     <mode>htmlunit</mode>            
-                     <htmlunit>FF3</htmlunit>                   
-                     <extraJvmArgs>-Xmx1048m -XX:MaxPermSize=256m -Xss30m</extraJvmArgs>
+                     <productionMode>false</productionMode>
+                     <testTimeOut>500</testTimeOut>
+                     <mode>htmlunit</mode>
+                     <htmlunit>FF3</htmlunit>
+                     <extraJvmArgs>-Xmx1048m -XX:MaxPermSize=256m -Xss35m</extraJvmArgs>
                   </configuration>
                   <executions>
                      <execution>
@@ -207,8 +296,8 @@
                   <artifactId>maven-surefire-plugin</artifactId>
                   <configuration>
                      <excludes>
-                       <exclude>**/GwtCodeMirror*</exclude>
-                     </excludes>  
+                        <exclude>**/GwtCodeMirror*</exclude>
+                     </excludes>
                   </configuration>
                </plugin>
             </plugins>
@@ -227,7 +316,7 @@
                <resource>
                   <directory>src/main/resources</directory>
                </resource>
-            </resources>   
+            </resources>
             <testResources>
                <testResource>
                   <directory>src/test/java</directory>
@@ -242,7 +331,7 @@
                   <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
-                     <includes>**/CodeMirror*.java</includes>                                
+                     <includes>**/CodeMirror*.java</includes>
                      <module>org.exoplatform.ide.editor.EditorTest</module>
                      <logLevel>ERROR</logLevel>
                      <skipTests>false</skipTests>
@@ -255,12 +344,12 @@
                      <execution>
                         <goals>
                            <goal>test</goal>
-                        </goals>                       
+                        </goals>
                      </execution>
                   </executions>
-               </plugin>              
+               </plugin>
             </plugins>
          </build>
-      </profile>      
+      </profile>
    </profiles>
 </project>
