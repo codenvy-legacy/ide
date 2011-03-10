@@ -40,6 +40,8 @@
    <inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />
    <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
+   <!-- EDITOR EXTENSIONS -->
+   <inherits name="org.exoplatform.ide.editor.extension.gadget.GadgetEditorExtension" />
    
    <!-- EXTENSIONS -->
    <inherits name='org.exoplatform.ide.extension.netvibes.NetvibesExtension' />

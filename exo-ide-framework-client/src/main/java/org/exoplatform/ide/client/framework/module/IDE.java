@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.editor.api.EditorProducer;
@@ -36,7 +35,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public abstract class IDE
 {
-   public static HandlerManager EVENT_BUS = new HandlerManager(null);
+   public static final HandlerManager EVENT_BUS = new HandlerManager(null);
 
    protected static List<Extension> extensions = new ArrayList<Extension>();
 

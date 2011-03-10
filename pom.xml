@@ -180,6 +180,12 @@
             <version>${project.version}</version>
          </dependency>
          
+          <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-extension-gadget</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-chromattic</artifactId>
