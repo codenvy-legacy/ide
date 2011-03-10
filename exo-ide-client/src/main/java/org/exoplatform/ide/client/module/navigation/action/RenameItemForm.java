@@ -24,15 +24,15 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.form.fields.SpacerItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -51,6 +51,9 @@ import java.util.Map;
 public class RenameItemForm extends DialogWindow implements RenameItemPresenter.Display
 {
 
+   /*
+    * Form constants.
+    */
    public static final int WIDTH = 400;
 
    public static final int HEIGHT = 220;
@@ -72,7 +75,15 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    private static final String RENAME_FIELD = "ideRenameItemFormRenameField";
 
    private static final String MIME_TYPE_FIELD = "ideRenameItemFormMimeTypeField";
-
+   
+   /*
+    * Css styles.
+    */
+   private static final String WARNING_MSG_STYLE = "exo-rename-warning-msg";
+   
+   /*
+    * Variables.
+    */
    private VerticalPanel vLayout;
 
    private TextField itemNameField;
@@ -85,7 +96,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
    private RenameItemPresenter presenter;
 
-   private StaticTextItem caption3;
+   private Label warningMimeTypeLabel;
 
    public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles,
       Map<String, String> lockTokens)
@@ -125,14 +136,6 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
       vPanel.add(itemNameField);
       if (isFile)
       {
-         StaticTextItem caption2 = new StaticTextItem();
-         caption2.setDefaultValue("Select mime-type");
-         caption2.setShowTitle(false);
-         caption2.setColSpan(2);
-
-         SpacerItem delimiter3 = new SpacerItem();
-         delimiter3.setHeight(2);
-         
          final SelectItem dropBox = new SelectItem();
          dropBox.setVisible(false);
 
@@ -141,12 +144,17 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
          mimeTypesField.setWidth(340);
          mimeTypesField.setPickListHeight(100);
          mimeTypesField.setEnabled();
+         mimeTypesField.setShowTitle(true);
+         mimeTypesField.setTitle("Select mime-type");
+         mimeTypesField.setTitleOrientation(TitleOrientation.TOP);
+         
          vPanel.add(dropBox);
          vPanel.add(mimeTypesField);
          
-         caption3 = new StaticTextItem();
-         caption3.setShowTitle(false);
-         caption3.setColSpan(2);
+         warningMimeTypeLabel = new Label();
+         warningMimeTypeLabel.setHeight("0");
+         warningMimeTypeLabel.addStyleName(WARNING_MSG_STYLE);
+         vPanel.add(warningMimeTypeLabel);
       }
       itemNameField.focusInItem();
 
@@ -259,13 +267,13 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    {
       if (text == null)
       {
-         caption3.setValue("");
-         caption3.setHeight(0);
+         warningMimeTypeLabel.setText("");
+         warningMimeTypeLabel.setHeight("0px");
       }
       else
       {
-         caption3.setHeight(12);
-         caption3.setValue("<font color=\"#7d7d7d\">" + text + "</font>");
+         warningMimeTypeLabel.setHeight("12px");
+         warningMimeTypeLabel.setText(text);
       }
    }
 }
