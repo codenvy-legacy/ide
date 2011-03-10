@@ -606,6 +606,7 @@
       <module>exo-ide-codeassistant-framework</module>
       
       <module>exo-ide-editor</module>
+      <module>exo-ide-editor-extension-gadget</module>
 	
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>
