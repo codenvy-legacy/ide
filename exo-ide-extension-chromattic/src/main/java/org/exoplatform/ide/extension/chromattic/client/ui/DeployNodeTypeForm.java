@@ -138,7 +138,7 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
    private SelectItem createSelectItem(String id, String title, int width)
    {
       SelectItem selectItem = new SelectItem();
-      selectItem.setLabelAlign(Align.LEFT);
+      selectItem.setTitleAlign(Align.LEFT);
       selectItem.setName(id);
       selectItem.setTitle("<nobr>" + title + "</nobr>");
       selectItem.setShowTitle(true);

@@ -130,7 +130,7 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
        * horizontal panel
        */
       mimeTypesField.setWidth("330px");
-      mimeTypesField.setLabel("Mime Type:");
+      mimeTypesField.setTitle("Mime Type:");
       mimeTypesField.setShowTitle(true);
       mimeTypesField.setTitleOrientation(TitleOrientation.TOP);
       

@@ -116,7 +116,7 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
       formatField.setName(ID_FORMAT_FIELD);
       formatField.setTitle("<nobr>" + "Node type format" + "</nobr>");
       formatField.setShowTitle(true);
-      formatField.setLabelAlign(Align.LEFT);
+      formatField.setTitleAlign(Align.LEFT);
       formatField.setWidth(290);
 
       form.add(formatField);

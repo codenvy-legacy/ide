@@ -236,7 +236,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       pathField.setWidth(480);
       pathField.setTitleOrientation(TitleOrientation.TOP);
       pathField.setShowTitle(true);
-      pathField.setLabel("Path:");
+      pathField.setTitle("Path:");
       pathField.setName(NAME_PATH);
 
       methodField = new SelectItem(NAME_METHOD, "Method:");

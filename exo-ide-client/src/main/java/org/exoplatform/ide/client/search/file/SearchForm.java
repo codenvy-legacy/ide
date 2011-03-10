@@ -164,7 +164,7 @@ public class SearchForm extends DialogWindow implements SearchPresenter.Display
       ComboBoxField comboboxField = new ComboBoxField();
       comboboxField.setName(id);
       comboboxField.setShowTitle(true);
-      comboboxField.setLabel("<NOBR>" + title + "</NOBR>");
+      comboboxField.setTitle("<NOBR>" + title + "</NOBR>");
       comboboxField.setWidth(FIELD_WIDTH);
       comboboxField.setHeight(FIELD_HEIGHT);
       return comboboxField;
