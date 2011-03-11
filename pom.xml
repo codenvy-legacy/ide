@@ -191,6 +191,12 @@
             <artifactId>exo-ide-editor-extension-groovy</artifactId>
             <version>${project.version}</version>
          </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-extension-chromattic</artifactId>
+            <version>${project.version}</version>
+         </dependency>
          
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -622,6 +628,7 @@
       <module>exo-ide-editor-extension-gadget</module>
       <module>exo-ide-editor-extension-groovy</module>
       <module>exo-ide-editor-extension-gtmpl</module>
+      <module>exo-ide-editor-extension-chromattic</module>
 	
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>

@@ -62,10 +62,6 @@ public class ChromatticExtension extends Extension implements InitializeServices
    {
       this.eventBus = IDE.EVENT_BUS;
 
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New Data Object", "Data Object", "Create Data Object",
-            Images.FileType.CHROMATTIC, MimeType.CHROMATTIC_DATA_OBJECT), DockTarget.NONE, false);
-
       IDE.getInstance().addControl(new GenerateNodeTypeControl(), DockTarget.TOOLBAR, true);
       IDE.getInstance().addControl(new DeployNodeTypeControl(), DockTarget.TOOLBAR, true);
 
