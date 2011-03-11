@@ -77,8 +77,7 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
    {
       this.eventBus = IDE.EVENT_BUS;
 
-      IDE.getInstance().addControl(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget",
-         "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET),DockTarget.NONE,false);
+  
       IDE.getInstance().addControl(new DeployUwaWidgetControl(), DockTarget.TOOLBAR, true);
       IDE.getInstance().addControl(new ShowNetvibesPreviewControl(), DockTarget.TOOLBAR, true);
 

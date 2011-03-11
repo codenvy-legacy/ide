@@ -89,6 +89,11 @@
       
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-extension-netvibes</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-groovy</artifactId>
       </dependency>
 

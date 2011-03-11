@@ -52,6 +52,7 @@
    <inherits name="org.exoplatform.ide.editor.extension.groovy.GroovyEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.extension.gtmpl.GtmplEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.extension.chromattic.ChromatticEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.extension.netvibes.NetvibesEditorExtension" />
    
    <!-- EXTENSIONS -->
    <inherits name='org.exoplatform.ide.extension.netvibes.NetvibesExtension' />
