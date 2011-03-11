@@ -200,26 +200,23 @@ public class JcrFileSystem implements VirtualFileSystem
     */
    @Path("project/{parentId:.*}")
    @Consumes(MediaType.APPLICATION_JSON)
-   public Response createProject(@PathParam("parentId") String parentId, @QueryParam("name") String name, 
-      @QueryParam("type") String type, List<ConvertibleProperty> properties)
-      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   public Response createProject(@PathParam("parentId") String parentId, @QueryParam("name") String name,
+      @QueryParam("type") String type, List<ConvertibleProperty> properties) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       checkName(name);
       ItemData parentData = getItemData(parentId);
       if (ItemType.FOLDER != parentData.getType())
          throw new InvalidArgumentException("Unable to create project. Item specified as parent is not a folder. ");
 
-      if(type == null)
+      if (type == null)
          throw new InvalidArgumentException("Unable to create project. Project type missed. ");
 
-      if(properties == null)
-         properties = new ArrayList<ConvertibleProperty>(); 
+      if (properties == null)
+         properties = new ArrayList<ConvertibleProperty>();
       properties.add(new ConvertibleProperty("type", type));
-      
-      
-           
-      FolderData newproject =
-         ((FolderData)parentData).createFolder(name, "vfs:project", null, properties);
+
+      FolderData newproject = ((FolderData)parentData).createFolder(name, "vfs:project", null, properties);
       return Response.created(createURI("item", newproject.getId())).build();
    }
 
@@ -314,23 +311,23 @@ public class JcrFileSystem implements VirtualFileSystem
     */
    public VirtualFileSystemInfo getVfsInfo()
    {
-      
+
       if (vfsInfo == null)
       {
-         
+
          BasicPermissions[] basicPermissions = BasicPermissions.values();
          List<String> permissions = new ArrayList<String>(basicPermissions.length);
          for (BasicPermissions bp : basicPermissions)
             permissions.add(bp.value());
-         
-//         Folder root = new Folder("", "", "text/directory", "/", -1, 
-//            new ArrayList<Property> (),
-//            new HashMap<String, Link> ());
-         
+
+         //         Folder root = new Folder("", "", "text/directory", "/", -1, 
+         //            new ArrayList<Property> (),
+         //            new HashMap<String, Link> ());
+
          Folder root = null;
          try
          {
-            FolderData rootData = (FolderData)ItemData.fromNode(session.getRootNode()); 
+            FolderData rootData = (FolderData)ItemData.fromNode(session.getRootNode());
             root = (Folder)fromItemData(rootData, PropertyFilter.valueOf(PropertyFilter.ALL));
 
          }
@@ -346,13 +343,13 @@ public class JcrFileSystem implements VirtualFileSystem
             e.printStackTrace();
             throw new RuntimeException(e);
          }
-    
+
          vfsInfo =
             new VirtualFileSystemInfo(true, true, org.exoplatform.services.security.IdentityConstants.ANONIM,
                org.exoplatform.services.security.IdentityConstants.ANY, permissions, ACLCapability.MANAGE,
                QueryCapability.BOTHCOMBINED, "", "/", createUrlTemplates(), root);
       }
-      
+
       return vfsInfo;
    }
 
@@ -750,23 +747,23 @@ public class JcrFileSystem implements VirtualFileSystem
       if (data.getType() == ItemType.FILE)
       {
          FileData fileData = (FileData)data;
-         return new File(fileData.getId(), fileData.getName(), fileData.getPath(),
-            fileData.getCreationDate(), fileData.getLastModificationDate(), fileData.getVersionId(),
-            fileData.getContenType(), fileData.getContenLength(), fileData.isLocked(),
-            fileData.getProperties(propertyFilter), createFileLinks(fileData));
+         return new File(fileData.getId(), fileData.getName(), fileData.getPath(), fileData.getCreationDate(),
+            fileData.getLastModificationDate(), fileData.getVersionId(), fileData.getContenType(),
+            fileData.getContenLength(), fileData.isLocked(), fileData.getProperties(propertyFilter),
+            createFileLinks(fileData));
       }
- 
-      if(data instanceof ProjectData)
+
+      if (data instanceof ProjectData)
       {
-         ProjectData projectData = (ProjectData) data;
-         return new Project(data.getId(), data.getName(), "text/vnd.ideproject+directory", data.getPath(), data.getCreationDate(),
-            data.getProperties(propertyFilter), createFolderLinks((FolderData)data), projectData.getProjectType());
+         ProjectData projectData = (ProjectData)data;
+         return new Project(data.getId(), data.getName(), "text/vnd.ideproject+directory", data.getPath(),
+            data.getCreationDate(), data.getProperties(propertyFilter), createFolderLinks((FolderData)data),
+            projectData.getProjectType());
       }
-      
+
       return new Folder(data.getId(), data.getName(), "text/directory", data.getPath(), data.getCreationDate(),
          data.getProperties(propertyFilter), createFolderLinks((FolderData)data));
    }
-
 
    private Map<String, Link> createFileLinks(FileData file) throws VirtualFileSystemException
    {
@@ -805,10 +802,12 @@ public class JcrFileSystem implements VirtualFileSystem
    private URI createURI(String rel, String id, String... query)
    {
       UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-      List<String> matchedURIs = uriInfo.getMatchedURIs();
-      int n = matchedURIs.size();
-      for (int i = n - 1; i > 0; i--)
-         uriBuilder.path(matchedURIs.get(i));
+      /*      List<String> matchedURIs = uriInfo.getMatchedURIs();
+            int n = matchedURIs.size();
+            for (int i = n - 1; i > 0; i--)
+               uriBuilder.path(matchedURIs.get(i));
+      */
+      uriBuilder.path(JcrFileSystemFactory.class, "getVFS");
       uriBuilder.path(rel);
       if (id != null)
          uriBuilder.path(id);
@@ -821,7 +820,10 @@ public class JcrFileSystem implements VirtualFileSystem
             uriBuilder.queryParam(name, value);
          }
       }
-      URI uri = uriBuilder.build();
+      /*      URI uri = uriBuilder.build(); */
+      URI uri =
+         uriBuilder.build(((org.exoplatform.services.jcr.impl.core.RepositoryImpl)session.getRepository()).getName(),
+            session.getWorkspace().getName());
       return uri;
    }
 

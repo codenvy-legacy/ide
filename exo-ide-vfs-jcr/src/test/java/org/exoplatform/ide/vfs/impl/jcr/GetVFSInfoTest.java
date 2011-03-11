@@ -61,10 +61,10 @@ public class GetVFSInfoTest extends JcrFileSystemTest
       Collection<String> permissions = vfsInfo.getPermissions();
       assertTrue(permissions.containsAll(expectedPermissions));
       // TODO test URL templates
-      //log.info(">>>>>>>>> "+vfsInfo.getUrlTemplates());
+      //log.info(">>>>>>>>>\n"+vfsInfo.getUrlTemplates());
       assertNotNull(vfsInfo.getRoot());
       assertEquals("/", vfsInfo.getRoot().getPath());
-      //log.info(">>>>>>>>> "+vfsInfo.getRoot().getLinkByRelation(Folder.REL_CHILDREN));
+      //log.info(">>>>>>>>>\n"+vfsInfo.getRoot().getLinkByRelation(Folder.REL_CHILDREN));
       assertNotNull(vfsInfo.getRoot().getLinkByRelation(Folder.REL_CHILDREN));
    }
 }
