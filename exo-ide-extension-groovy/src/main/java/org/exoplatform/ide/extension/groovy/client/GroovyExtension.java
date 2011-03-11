@@ -124,18 +124,6 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       handlers = new Handlers(eventBus);
       handlers.addHandler(InitializeServicesEvent.TYPE, this);
 
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New REST Service", "REST Service", "Create REST Service",
-            Images.FileType.REST_SERVICE, MimeType.GROOVY_SERVICE), DockTarget.NONE, false);
-
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New POGO", "POGO", "Create POGO", Images.FileType.GROOVY,
-            MimeType.APPLICATION_GROOVY), DockTarget.NONE, false);
-
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New Template", "Template", "Create Template", Images.FileType.GROOVY_TEMPLATE,
-            MimeType.GROOVY_TEMPLATE), DockTarget.NONE, false);
-
       IDE.getInstance().addControl(new SetAutoloadCommand(), DockTarget.TOOLBAR, true);
       IDE.getInstance().addControl(new ConfigureBuildPathCommand(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ValidateGroovyCommand(), DockTarget.TOOLBAR, true);

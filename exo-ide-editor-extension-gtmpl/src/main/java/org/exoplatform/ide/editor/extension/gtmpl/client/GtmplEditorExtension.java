@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.extension.groovy.client;
+package org.exoplatform.ide.editor.extension.gtmpl.client;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -31,27 +31,27 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.groovytemplate.GroovyTemplateCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantServiceImpl;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
-import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
+import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyTemplateAutocompleteHelper;
+import org.exoplatform.ide.editor.codemirror.parser.GroovyTemplateParser;
+import org.exoplatform.ide.editor.codevalidator.GroovyTemplateCodeValidator;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyEditorExtension Mar 10, 2011 3:48:59 PM evgen $
  *
  */
-public class GroovyEditorExtension extends Extension implements InitializeServicesHandler,
+public class GtmplEditorExtension extends Extension implements InitializeServicesHandler,
    JavaCodeAssistantErrorHandler, EditorActiveFileChangedHandler
 {
 
-   private JavaCodeAssistant javaCodeAssistant;
+   private GroovyTemplateCodeAssistant templateCodeAssistant;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -60,14 +60,10 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    public void initialize()
    {
       IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-
+      
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New REST Service", "REST Service", "Create REST Service", Images.REST_SERVICE,
-            MimeType.GROOVY_SERVICE), DockTarget.NONE, false);
-
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New POGO", "POGO", "Create POGO", Images.GROOVY, MimeType.APPLICATION_GROOVY),
-         DockTarget.NONE, false);
+         new NewItemControl("File/New/New Template", "Template", "Create Template", Images.GROOVY_TEMPLATE,
+            MimeType.GROOVY_TEMPLATE), DockTarget.NONE, false);
    }
 
    /**
@@ -76,29 +72,20 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      javaCodeAssistant =
-         new JavaCodeAssistant(new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()), this);
-      IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", true,
-            new CodeMirrorConfiguration("['parsegroovy.js', 'tokenizegroovy.js']", // generic code parsers
-               "['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
+      templateCodeAssistant =
+         new GroovyTemplateCodeAssistant(new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()), this);
+      
+      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl", true,
+         new CodeMirrorConfiguration(
+            "['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']",  // generic code parsers
+            "['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
                true, // can be outlined
                true, // can be autocompleted
-               new GroovyParser(), // exoplatform code parser 
-               new GroovyAutocompleteHelper(), // autocomplete helper
+               new GroovyTemplateParser(), // exoplatform code parser 
+               new GroovyTemplateAutocompleteHelper(), // autocomplete helper
                true, // can be validated
-               new GroovyCodeValidator(), javaCodeAssistant)));
-
-      IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", true,
-            new CodeMirrorConfiguration("['parsegroovy.js', 'tokenizegroovy.js']", // generic code parsers
-               "['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
-               true, // can be outlined
-               true, // can be autocompleted
-               new GroovyParser(), // exoplatform code parser 
-               new GroovyAutocompleteHelper(), // autocomplete helper
-               true, // can be validated
-               new GroovyCodeValidator(), javaCodeAssistant)));
+               new GroovyTemplateCodeValidator(),
+               templateCodeAssistant, true)));  
 
       if (CodeAssistantService.getInstance() == null)
          new CodeAssistantServiceImpl(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
@@ -135,7 +122,7 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      javaCodeAssistant.setactiveFileHref(event.getFile().getHref());
+      templateCodeAssistant.setactiveFileHref(event.getFile().getHref());
    }
 
 }
