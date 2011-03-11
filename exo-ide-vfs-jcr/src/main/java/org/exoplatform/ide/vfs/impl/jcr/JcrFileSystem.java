@@ -832,8 +832,8 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       try
       {
-         String path = (id.charAt(0) != '/') ? ("/" + id) : id;
-         return ItemData.fromNode((Node)session.getItem(path));
+         return ItemData.fromNode(((id == null || id.length() == 0) ? session.getRootNode() : (Node)session.getItem((id
+            .charAt(0) != '/') ? ("/" + id) : id)));
       }
       catch (PathNotFoundException e)
       {
