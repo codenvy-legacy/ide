@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
+import com.google.gwt.json.client.JSONObject;
+
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +50,7 @@ public class Folder extends Item
     * @param properties other properties of folder
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   public Folder(String id, String name, String mimeType, String path, long creationDate, List<Property> properties,
+   public Folder(String id, String name, String mimeType, String path, long creationDate, List properties,
       Map<String, Link> links)
    {
       super(id, name, ItemType.FOLDER, mimeType, path, creationDate, properties, links);
@@ -61,4 +63,6 @@ public class Folder extends Item
    {
       super();
    }
+
+   
 }

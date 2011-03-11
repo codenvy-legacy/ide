@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Representation of abstract item used to interaction with client via JSON.
@@ -202,6 +203,23 @@ public class Item
       if (links == null)
          links = new HashMap<String, Link>();
       return links;
+   }
+   
+   /**
+    * @return set of relations
+    */
+   public Set<String> getLinkRelations()
+   {
+      return getLinks().keySet();
+   }
+   
+   /**
+    * @param rel relation string
+    * @return corresponding hyperlink or null if no such relation found
+    */
+   public Link getLinkByRelation(String rel)
+   {
+      return links.get(rel);
    }
 
    /**

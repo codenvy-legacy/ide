@@ -214,6 +214,8 @@ public class VirtualFileSystemInfo
    private String rootFolderId;
 
    private String rootFolderPath;
+   
+   private Folder root;
 
    /**
     * Templates of URL than can be used by client to manage virtual file system.
@@ -231,7 +233,8 @@ public class VirtualFileSystemInfo
 
    public VirtualFileSystemInfo(boolean versioningSupported, boolean lockSupported, String anonymousPrincipal,
       String anyPrincipal, Collection<String> permissions, ACLCapability aclCapability,
-      QueryCapability queryCapability, String rootFolderId, String rootFolderPath, Map<String, Link> urlTemplates)
+      QueryCapability queryCapability, String rootFolderId, String rootFolderPath, Map<String, 
+      Link> urlTemplates, Folder root)
    {
       this.versioningSupported = versioningSupported;
       this.lockSupported = lockSupported;
@@ -243,12 +246,13 @@ public class VirtualFileSystemInfo
       this.rootFolderId = rootFolderId;
       this.rootFolderPath = rootFolderPath;
       this.urlTemplates = urlTemplates;
+      this.root = root;
    }
 
    public VirtualFileSystemInfo()
    {
       this(false, false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, new ArrayList<String>(), ACLCapability.NONE,
-         QueryCapability.NONE, null, null, null);
+         QueryCapability.NONE, null, null, null, null);
    }
 
    public boolean isVersioningSupported()
@@ -349,5 +353,15 @@ public class VirtualFileSystemInfo
    public Map<String, Link> getUrlTemplates()
    {
       return urlTemplates;
+   }
+   
+   public Folder getRoot()
+   {
+      return root;
+   }
+   
+   public void setRoot(Folder root)
+   {
+      this.root = root;
    }
 }

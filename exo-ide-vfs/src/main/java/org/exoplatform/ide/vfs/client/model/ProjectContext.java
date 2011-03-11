@@ -16,29 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.client;
-
-import com.google.gwt.junit.client.GWTTestCase;
+package org.exoplatform.ide.vfs.client.model;
 
 /**
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @version $Id:$
+ *
  */
-
-public abstract class BaseTest extends GWTTestCase
+public interface ProjectContext
 {
    
-   public String getModuleName()
-   {
-      return "org.exoplatform.ide.vfs.IDEVFS";
-   }   
+   Project getProject();
    
-   @Override
-   protected void gwtSetUp() throws Exception
-   {
-      super.gwtSetUp();
-   }
-
+   void setProject(Project proj);
 }

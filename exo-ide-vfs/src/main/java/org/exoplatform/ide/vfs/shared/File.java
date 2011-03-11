@@ -66,7 +66,7 @@ public class File extends Item
     * @param links hyperlinks for retrieved or(and) manage item
     */
    public File(String id, String name, String path, long creationDate, long lastModificationDate, String versionId,
-      String mimeType, long length, boolean locked, List<Property> properties, Map<String, Link> links)
+      String mimeType, long length, boolean locked, List properties, Map<String, Link> links)
    {
       super(id, name, ItemType.FILE, mimeType, path, creationDate, properties, links);
       this.lastModificationDate = lastModificationDate;

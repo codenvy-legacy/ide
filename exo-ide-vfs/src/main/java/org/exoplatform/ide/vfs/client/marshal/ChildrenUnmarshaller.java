@@ -18,25 +18,24 @@
  */
 package org.exoplatform.ide.vfs.client.marshal;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.ItemType;
-
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.vfs.client.model.File;
+import org.exoplatform.ide.vfs.client.model.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Link;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -111,18 +110,21 @@ public class ChildrenUnmarshaller implements Unmarshallable
     */
    private static final String ID = "id";
 
-   private ItemList<Item> items;
-
-   private String id;
+//   private ItemList<Item> items;
+//
+//   private String id;
+   
+   private Folder folder;
 
    /**
     * @param items
     */
-   public ChildrenUnmarshaller(String id, ItemList<Item> items)
+   public ChildrenUnmarshaller(Folder folder)
    {
       super();
-      this.items = items;
-      this.id = id;
+      this.folder = folder;
+//      this.items = items;
+//      this.id = id;
    }
 
    /**
@@ -139,7 +141,7 @@ public class ChildrenUnmarshaller implements Unmarshallable
       {
          exc.printStackTrace();
 
-         String message = "Can't parse folder content at <b>" + id + "</b>!";
+         String message = "Can't parse folder content at <b>" + "id" + "</b>!";
          throw new UnmarshallerException(message);
       }
    }
@@ -150,8 +152,8 @@ public class ChildrenUnmarshaller implements Unmarshallable
     */
    private void parseFolderContent(String text)
    {
-      JSONValue jsonValue = JSONParser.parse(text);
-      this.items.getItems().addAll(parseItems(jsonValue.isObject().get("items").isArray()));
+      JSONValue jsonValue = JSONParser.parseLenient(text);
+      this.folder.setChildren(parseItems(jsonValue.isObject().get("items").isArray()));
 
    }
 
@@ -160,43 +162,47 @@ public class ChildrenUnmarshaller implements Unmarshallable
     * @param itemsArray JSON array
     * @return list of children items
     */
-   private List<Item> parseItems(JSONArray itemsArray)
+   private HashSet<Item> parseItems(JSONArray itemsArray)
    {
-      List<Item> items = new ArrayList<Item>();
+      HashSet<Item> items = new HashSet<Item>();
+      
+      
+      
       for (int i = 0; i < itemsArray.size(); i++)
       {
-         JSONObject object = itemsArray.get(i).isObject();
-         ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
+         JSONObject object = itemsArray.get(i).isObject();         
+         ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());         
+         
          if (type == ItemType.FOLDER)
          {
-            Folder folder = new Folder();
-            folder.setItemType(type);
-            parseBaseFields(object, folder);
-            
-            items.add(folder);
+//            Folder folder = new Folder(object);
+//            folder.setItemType(type);
+//            parseBaseFields(object, folder);
+//            
+            items.add(new Folder(object));
          }
          else
          {
-            File file = new File();
-            file.setItemType(type);
-            parseBaseFields(object, file);
+//            File file = new File();
+//            file.setItemType(type);
+//            parseBaseFields(object, file);
+//
+//            if (object.containsKey(CONTENT_LENGTH))
+//               file.setLength((long)object.get(CONTENT_LENGTH).isNumber().doubleValue());
+//
+//            if (object.containsKey(VERSION_ID))
+//               file.setVersionId(object.get(VERSION_ID).isString().stringValue());
+//
+//            if (object.containsKey(CONTENT_TYPE))
+//               file.setMimeType(object.get(CONTENT_TYPE).isString().stringValue());
+//
+//            if (object.containsKey(LOCKED))
+//               file.setLocked(object.get(LOCKED).isBoolean().booleanValue());
+//
+//            if (object.containsKey(LAST_MODIFICATION_DATE))
+//               file.setLastModificationDate((long)object.get(LAST_MODIFICATION_DATE).isNumber().doubleValue());
 
-            if (object.containsKey(CONTENT_LENGTH))
-               file.setLength((long)object.get(CONTENT_LENGTH).isNumber().doubleValue());
-
-            if (object.containsKey(VERSION_ID))
-               file.setVersionId(object.get(VERSION_ID).isString().stringValue());
-
-            if (object.containsKey(CONTENT_TYPE))
-               file.setMimeType(object.get(CONTENT_TYPE).isString().stringValue());
-
-            if (object.containsKey(LOCKED))
-               file.setLocked(object.get(LOCKED).isBoolean().booleanValue());
-
-            if (object.containsKey(LAST_MODIFICATION_DATE))
-               file.setLastModificationDate((long)object.get(LAST_MODIFICATION_DATE).isNumber().doubleValue());
-
-            items.add(file);
+            items.add(new File(object));
          }
 
       }

@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -71,40 +72,51 @@ public class VirtualFileSystem
 
    private final HandlerManager eventBus;
 
-   private String workspace;
+   private String workspaceURL;
+   
+   private VirtualFileSystemInfo info;
 
-   private Loader loader;
+   //private Loader loader;
 
    public static VirtualFileSystem getInstance()
    {
       return instance;
    }
 
-   public VirtualFileSystem(HandlerManager eventBus, Loader loader, String workspace)
+   private VirtualFileSystem(HandlerManager eventBus, String workspaceURL)
    {
       instance = this;
 
       this.eventBus = eventBus;
-      this.loader = loader;
-      this.workspace = workspace;
+      this.workspaceURL = workspaceURL;     
    }
 
-   public void getVFSInfo(AsyncRequestCallback<VirtualFileSystemInfo> callback)
+   public static void init(AsyncRequestCallback<VirtualFileSystemInfo> callback, Loader loader,
+         HandlerManager eventBus, String workspaceURL)
    {
-      String url = encodeURI(workspace + "/");
+      
+      VirtualFileSystem fs = new VirtualFileSystem(eventBus, workspaceURL);
 
-      VirtualFileSystemInfo virtualFileSystemInfo = new VirtualFileSystemInfo();
+      fs.info = new VirtualFileSystemInfo();
 
-      VFSInfoUnmarshaller unmarshaller = new VFSInfoUnmarshaller(virtualFileSystemInfo);
-      callback.setResult(virtualFileSystemInfo);
-
-//      String errorMessage = " Service is not deployed.<br>Resource not found.";
-//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
+      VFSInfoUnmarshaller unmarshaller = new VFSInfoUnmarshaller(fs.info);
+     
+      callback.setResult(fs.info);
 
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, workspaceURL, loader).send(callback);
+   }
+   
+   public VirtualFileSystemInfo getInfo()
+   {
+      return info;
+   }
+   
+   public String getURL() 
+   {
+      return workspaceURL;
    }
 
    /**
@@ -112,21 +124,26 @@ public class VirtualFileSystem
     * 
     * @param path
     */
-   public void getChildren(String id, AsyncRequestCallback<ItemList<Item>> callback)
+   public void getChildren(Folder folder, AsyncRequestCallback<ItemList<Item>> callback, Loader loader)
    {
-      String url = encodeURI(workspace + "/children/" + id);
+     // String url = encodeURI(workspace + "/children/" + id);
+      
+      //String url = encodeURI(workspaceURL + "/children/" + id);
 
       ItemList<Item> items = new ItemList<Item>();
       callback.setResult(items);
-      ChildrenUnmarshaller unmarshaller = new ChildrenUnmarshaller(id, items);
+      ChildrenUnmarshaller unmarshaller = new ChildrenUnmarshaller(folder);
 
 //      String errorMessage = "Service is not deployed.<br>Parent folder not found.";
 //      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
 
-      loader.setMessage(Messages.GET_FOLDER_CONTENT);
+//      loader.setMessage(Messages.GET_FOLDER_CONTENT);
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      
+      System.out.println("getChildren "+folder.getLinkByRelation(Folder.REL_CHILDREN).getHref());
+      
+      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Folder.REL_CHILDREN).getHref(), loader).send(callback);
 
    }
 
@@ -135,9 +152,9 @@ public class VirtualFileSystem
     * 
     * @param path
     */
-   public void createFolder(String parentId, String name, AsyncRequestCallback<String> callback)
+   public void createFolder(String parentId, String name, AsyncRequestCallback<String> callback, Loader loader)
    {
-      String url = workspace + "/folder" + parentId;
+      String url = workspaceURL + "/folder" + parentId;
       if (url.endsWith("/"))
       {
          url = url.substring(0, url.length() - 1);
@@ -166,9 +183,9 @@ public class VirtualFileSystem
     * 
     * @param file
     */
-   public void getFileContent(String id, AsyncRequestCallback<String> callback)
+   public void getFileContent(String id, AsyncRequestCallback<String> callback, Loader loader)
    {
-      String url = workspace + "/content" + id;
+      String url = workspaceURL + "/content" + id;
       
       FileContentUnmarshaller unmarshaller = new FileContentUnmarshaller(callback);
       
@@ -182,16 +199,16 @@ public class VirtualFileSystem
       
    }
 
-   public void saveFileContent(String id, String mediaType, String content, String lockToken)
+   public void saveFileContent(String id, String mediaType, String content, String lockToken, Loader loader)
    {
       
    }
 
-   public void copy(String source, String destination)
+   public void copy(String source, String destination, Loader loader)
    {
    }
 
-   public void move(String id, String parentId, String lockToken)
+   public void move(String id, String parentId, String lockToken, Loader loader)
    {
 
    }
@@ -201,16 +218,16 @@ public class VirtualFileSystem
 
    }
 
-   public void rename(String id, String mediaType, String newname, String lockToken)
+   public void rename(String id, String mediaType, String newname, String lockToken, Loader loader)
    {
 
    }
 
-   public void lock(String id)
+   public void lock(String id, Loader loader)
    {
    }
 
-   public void unlock(String id, String lockToken)
+   public void unlock(String id, String lockToken, Loader loader)
    {
 
    }

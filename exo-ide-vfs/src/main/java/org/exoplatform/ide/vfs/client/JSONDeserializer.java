@@ -27,9 +27,11 @@ import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.BooleanProperty;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.NumberProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
@@ -260,6 +262,21 @@ public abstract class JSONDeserializer<O>
             if (json == null)
                return null;
             JSONObject jsonObject = json.isObject();
+            
+            JSONObject root = jsonObject.get("root").isObject();
+            String rootId = root.get("id").isString().stringValue();
+            String rootName = root.get("name").isString().stringValue();
+            String rootMimeType = root.get("mimeType").isString().stringValue();
+            String rootPath = root.get("path").isString().stringValue();
+            long rootCreationDate = (long)root.get("creationDate").isNumber().doubleValue();     
+            List properties = JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(root.get("properties"));      
+            Map links = JSONDeserializer.LINK_DESERIALIZER.toMap(root.get("links"));
+            
+            Folder rootFolder = new Folder(rootId, rootName, rootMimeType, rootPath, rootCreationDate, 
+                  (List<Property>)properties, (Map <String, Link>)links);
+            
+            //System.out.println("ROOT folder "+rootFolder);
+            
             return new VirtualFileSystemInfo(
                BOOLEAN_DESERIALIZER.toObject(jsonObject.get("versioningSupported")), //
                BOOLEAN_DESERIALIZER.toObject(jsonObject.get("lockSupported")), //
@@ -270,7 +287,8 @@ public abstract class JSONDeserializer<O>
                QueryCapability.fromValue(STRING_DESERIALIZER.toObject(jsonObject.get("queryCapability")).toLowerCase()),
                STRING_DESERIALIZER.toObject(jsonObject.get("rootFolderId")), //
                STRING_DESERIALIZER.toObject(jsonObject.get("rootFolderPath")), //
-               LINK_DESERIALIZER.toMap(jsonObject.get("urlTemplates")) //
+               LINK_DESERIALIZER.toMap(jsonObject.get("urlTemplates")), //
+               rootFolder // 
             );
          }
 

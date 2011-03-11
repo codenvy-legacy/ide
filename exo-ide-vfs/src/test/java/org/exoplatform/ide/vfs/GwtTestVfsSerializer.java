@@ -16,12 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.client;
+package org.exoplatform.ide.vfs;
 
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
 
+import org.exoplatform.ide.vfs.client.JSONDeserializer;
+import org.exoplatform.ide.vfs.client.JSONSerializer;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.BooleanProperty;
 import org.exoplatform.ide.vfs.shared.StringProperty;

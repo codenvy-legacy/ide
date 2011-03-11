@@ -18,11 +18,22 @@
  */
 package org.exoplatform.ide.vfs.client.marshal;
 
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.vfs.client.JSONDeserializer;
+import org.exoplatform.ide.vfs.client.model.Folder;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
 
-import com.google.gwt.http.client.Response;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -31,7 +42,7 @@ import com.google.gwt.http.client.Response;
  */
 public class VFSInfoUnmarshaller implements Unmarshallable
 {
-
+ 
    private VirtualFileSystemInfo virtualFileSystemInfo;
 
    /**
@@ -47,8 +58,43 @@ public class VFSInfoUnmarshaller implements Unmarshallable
     */
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
-   {
-      System.out.println(response.getText());
+   {      
+      JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
+           
+      virtualFileSystemInfo.setVersioningSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.
+            toObject(jsonObject.get("versioningSupported"))); //
+      virtualFileSystemInfo.setLockSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.
+            toObject(jsonObject.get("lockSupported"))); //
+      virtualFileSystemInfo.setAnonymousPrincipal(JSONDeserializer.STRING_DESERIALIZER.
+            toObject(jsonObject.get("anonymousPrincipal"))); //
+      virtualFileSystemInfo.setAnyPrincipal(JSONDeserializer.STRING_DESERIALIZER.
+            toObject(jsonObject.get("anyPrincipal"))); //
+      virtualFileSystemInfo.setPermissions(JSONDeserializer.STRING_DESERIALIZER.
+            toSet(jsonObject.get("permissions"))); //
+      virtualFileSystemInfo.setAclCapability(ACLCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.
+            toObject(jsonObject.get("aclCapability")).toLowerCase())); //
+      virtualFileSystemInfo.setQueryCapability(QueryCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.
+            toObject(jsonObject.get("queryCapability")).toLowerCase()));
+      virtualFileSystemInfo.setRootFolderId(JSONDeserializer.STRING_DESERIALIZER.
+            toObject(jsonObject.get("rootFolderId"))); //
+      virtualFileSystemInfo.setRootFolderPath(JSONDeserializer.STRING_DESERIALIZER.
+            toObject(jsonObject.get("rootFolderPath"))); //
+      virtualFileSystemInfo.setUrlTemplates(JSONDeserializer.LINK_DESERIALIZER.
+            toMap(jsonObject.get("urlTemplates")));
+            
+      JSONObject root = jsonObject.get("root").isObject();
+//      String rootId = root.get("id").isString().stringValue();
+//      String rootName = root.get("name").isString().stringValue();
+//      String rootMimeType = root.get("mimeType").isString().stringValue();
+//      String rootPath = root.get("path").isString().stringValue();
+//      long rootCreationDate = (long)root.get("creationDate").isNumber().doubleValue();     
+//      List properties = JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(root.get("properties"));      
+//      Map links = JSONDeserializer.LINK_DESERIALIZER.toMap(root.get("links"));
+
+//      virtualFileSystemInfo.setRoot(new Folder(rootId, rootName, rootMimeType, rootPath, rootCreationDate, 
+//            (List<Property>)properties, (Map <String, Link>)links) );
+      
+      virtualFileSystemInfo.setRoot(new Folder(root));
    }
 
 }
