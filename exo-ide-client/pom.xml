@@ -71,6 +71,12 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-gadget</artifactId>
       </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-extension-groovy</artifactId>
+      </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-groovy</artifactId>

@@ -49,6 +49,7 @@
    
    <!-- EDITOR EXTENSIONS -->
    <inherits name="org.exoplatform.ide.editor.extension.gadget.GadgetEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.extension.groovy.GroovyEditorExtension" />
    
    <!-- EXTENSIONS -->
    <inherits name='org.exoplatform.ide.extension.netvibes.NetvibesExtension' />

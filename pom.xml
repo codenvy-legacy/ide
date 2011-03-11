@@ -185,6 +185,12 @@
             <artifactId>exo-ide-editor-extension-gadget</artifactId>
             <version>${project.version}</version>
          </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-extension-groovy</artifactId>
+            <version>${project.version}</version>
+         </dependency>
          
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -607,6 +613,7 @@
       
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-extension-gadget</module>
+      <module>exo-ide-editor-extension-groovy</module>
 	
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>
