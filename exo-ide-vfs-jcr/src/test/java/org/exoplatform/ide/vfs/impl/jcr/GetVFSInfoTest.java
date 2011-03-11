@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
@@ -40,7 +41,8 @@ public class GetVFSInfoTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       ContainerResponse response = launcher.service("GET", SERVICE_URI, BASE_URI, null, null, writer, null);
-      assertEquals(200, response.getStatus());
+      assertNotNull(response.getEntity());
+      assertEquals(response.getEntity().toString(), 200, response.getStatus());
       //log.info(new String(writer.getBody()));
       VirtualFileSystemInfo vfsInfo = (VirtualFileSystemInfo)response.getEntity();
       assertNotNull(vfsInfo);
@@ -60,5 +62,9 @@ public class GetVFSInfoTest extends JcrFileSystemTest
       assertTrue(permissions.containsAll(expectedPermissions));
       // TODO test URL templates
       //log.info(">>>>>>>>> "+vfsInfo.getUrlTemplates());
+      assertNotNull(vfsInfo.getRoot());
+      assertEquals("/", vfsInfo.getRoot().getPath());
+      //log.info(">>>>>>>>> "+vfsInfo.getRoot().getLinkByRelation(Folder.REL_CHILDREN));
+      assertNotNull(vfsInfo.getRoot().getLinkByRelation(Folder.REL_CHILDREN));
    }
 }

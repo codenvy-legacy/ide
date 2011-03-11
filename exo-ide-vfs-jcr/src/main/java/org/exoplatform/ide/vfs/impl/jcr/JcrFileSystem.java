@@ -314,17 +314,45 @@ public class JcrFileSystem implements VirtualFileSystem
     */
    public VirtualFileSystemInfo getVfsInfo()
    {
+      
       if (vfsInfo == null)
       {
+         
          BasicPermissions[] basicPermissions = BasicPermissions.values();
          List<String> permissions = new ArrayList<String>(basicPermissions.length);
          for (BasicPermissions bp : basicPermissions)
             permissions.add(bp.value());
+         
+//         Folder root = new Folder("", "", "text/directory", "/", -1, 
+//            new ArrayList<Property> (),
+//            new HashMap<String, Link> ());
+         
+         Folder root = null;
+         try
+         {
+            FolderData rootData = (FolderData)ItemData.fromNode(session.getRootNode()); 
+            root = (Folder)fromItemData(rootData, PropertyFilter.valueOf(PropertyFilter.ALL));
+
+         }
+         catch (RepositoryException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            throw new RuntimeException(e);
+         }
+         catch (VirtualFileSystemException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            throw new RuntimeException(e);
+         }
+    
          vfsInfo =
             new VirtualFileSystemInfo(true, true, org.exoplatform.services.security.IdentityConstants.ANONIM,
                org.exoplatform.services.security.IdentityConstants.ANY, permissions, ACLCapability.MANAGE,
-               QueryCapability.BOTHCOMBINED, "", "/", createUrlTemplates());
+               QueryCapability.BOTHCOMBINED, "", "/", createUrlTemplates(), root);
       }
+      
       return vfsInfo;
    }
 

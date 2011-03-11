@@ -22,8 +22,6 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -43,16 +41,32 @@ public class JcrFileSystemFactory
 {
    private final RepositoryService repositoryService;
 
-   private final ThreadLocalSessionProviderService sessionFactory;
+//   private final ThreadLocalSessionProviderService sessionFactory;
 
    private final ItemType2NodeTypeResolver itemType2NodeTypeResolver;
 
-   public JcrFileSystemFactory(RepositoryService repositoryService, ThreadLocalSessionProviderService sessionFactory,
-      ItemType2NodeTypeResolver itemType2NodeTypeResolver)
+   public JcrFileSystemFactory(RepositoryService repositoryService 
+      /*ThreadLocalSessionProviderService sessionFactory,
+      ItemType2NodeTypeResolver itemType2NodeTypeResolver*/)
    {
+            
       this.repositoryService = repositoryService;
-      this.sessionFactory = sessionFactory;
-      this.itemType2NodeTypeResolver = itemType2NodeTypeResolver;
+      
+//      try
+//      {
+//         
+//         // TODO it is just for initial testing!!!
+//         
+//         repositoryService.setCurrentRepositoryName("db1");
+//      }
+//      catch (RepositoryConfigurationException e)
+//      {
+//         e.printStackTrace();
+//         throw new RuntimeException("RepositoryConfigurationException :"+e);
+//      }
+      
+//      this.sessionFactory = sessionFactory;
+      this.itemType2NodeTypeResolver = new ItemType2NodeTypeResolver();
    }
 
    @Path("{repository}/{workspace}")
@@ -76,10 +90,16 @@ public class JcrFileSystemFactory
    protected Session getSession(String repository, String workspace) throws RepositoryException,
       RepositoryConfigurationException
    {
+      
+      // TODO close session every request
+      
       ManageableRepository manageableRepository = repositoryService.getRepository(repository);
-      SessionProvider sessionProvider = sessionFactory.getSessionProvider(null);
-      if (sessionProvider == null)
-         throw new RepositoryException("Storage provider is not configured properly. ");
-      return sessionProvider.getSession(workspace, manageableRepository);
+      
+      return manageableRepository.login(workspace);
+      
+//      SessionProvider sessionProvider = sessionFactory.getSessionProvider(null);
+//      if (sessionProvider == null)
+//         throw new RepositoryException("Storage provider is not configured properly. ");
+//      return sessionProvider.getSession(workspace, manageableRepository);
    }
 }

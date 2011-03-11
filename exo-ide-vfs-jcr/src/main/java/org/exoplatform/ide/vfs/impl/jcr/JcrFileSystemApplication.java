@@ -25,7 +25,6 @@ import org.exoplatform.ide.vfs.server.exceptions.LockExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedExceptionMapper;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -43,9 +42,9 @@ public class JcrFileSystemApplication extends Application
    private final Set<Object> singletons = new HashSet<Object>();
 
    public JcrFileSystemApplication(RepositoryService repositoryService,
-      ThreadLocalSessionProviderService sessionFactory, ItemType2NodeTypeResolver itemType2NodeTypeResolver)
+      /*ThreadLocalSessionProviderService sessionFactory,*/ ItemType2NodeTypeResolver itemType2NodeTypeResolver)
    {
-      singletons.add(new JcrFileSystemFactory(repositoryService, sessionFactory, itemType2NodeTypeResolver));
+      singletons.add(new JcrFileSystemFactory(repositoryService/*, itemType2NodeTypeResolver*/));
       singletons.add(new ConstraintExceptionMapper());
       singletons.add(new InvalidArgumentExceptionMapper());
       singletons.add(new LockExceptionMapper());
@@ -54,9 +53,10 @@ public class JcrFileSystemApplication extends Application
       singletons.add(new PermissionDeniedExceptionMapper());
    }
 
-   public JcrFileSystemApplication(RepositoryService repositoryService, ThreadLocalSessionProviderService sessionFactory)
+   public JcrFileSystemApplication(RepositoryService repositoryService
+      /*, ThreadLocalSessionProviderService sessionFactory*/)
    {
-      this(repositoryService, sessionFactory, new ItemType2NodeTypeResolver());
+      this(repositoryService, new ItemType2NodeTypeResolver());
    }
 
    /**

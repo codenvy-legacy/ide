@@ -27,10 +27,10 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.BooleanProperty;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.NumberProperty;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.StringProperty;
-import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -198,6 +198,10 @@ abstract class ItemData
     */
    List<Property> getProperties(PropertyFilter filter) throws PermissionDeniedException, VirtualFileSystemException
    {
+      
+      if(filter == null)
+         throw new NullPointerException("PropertyFilter should not be null");
+      
       // TODO : property name mapping ?
       // jcr:blabla -> vfs:blabla
       try
