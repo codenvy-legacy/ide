@@ -95,7 +95,8 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
             destroy();
          }
       });
-
+      
+      folderNameField.focusInItem();
    }
 
    private void createFieldForm()
@@ -103,8 +104,6 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
       DynamicForm paramsForm = new DynamicForm();
       paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setPadding(5);
-      paramsForm.setWidth(300);
-      paramsForm.setPadding(15);
 
       folderNameField = new TextField();
       folderNameField.setTitle("Name of new folder:");
@@ -124,7 +123,7 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
    private void createButtons()
    {
       HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight((BUTTON_HEIGHT + 25) + "px");
+      buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
 
       createButton = new IButton(submitButtonTitle);

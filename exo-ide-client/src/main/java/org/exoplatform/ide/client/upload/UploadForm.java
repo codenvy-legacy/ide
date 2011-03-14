@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import com.google.gwt.user.client.DOM;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -54,7 +56,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
    public static final int WIDTH = 450;
 
-   public static final int HEIGHT = 190;
+   public static final int HEIGHT = 150;
 
    private static final String ID = "ideUploadForm";
 
@@ -87,6 +89,8 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    protected IDEConfiguration applicationConfiguration;
    
    protected FileUploadInput fileUploadInput;
+   
+   private VerticalPanel mainLayout;
 
    public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, 
       IDEConfiguration applicationConfiguration)
@@ -108,17 +112,23 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
       this.eventBus = eventBus;
       this.applicationConfiguration = applicationConfiguration;
       
+      mainLayout = new VerticalPanel();
+      mainLayout.setHeight("100%");
+      mainLayout.setWidth("100%");
+      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+      
       initTitles();
 
       setTitle(title);
 
       createFileUploadForm();
       createButtons();
-
+      setWidget(mainLayout);
       show();
       UIHelper.setAsReadOnly(fileNameField.getName());
       presenter = createPresenter(eventBus, selectedItems, path);
-//      fileUploadInput.setFileSelectedHandler(presenter);
+      fileUploadInput.setFileSelectedHandler(presenter);
       presenter.bindDisplay(this);
    }
    
@@ -126,7 +136,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    {
       title = "Upload folder";
       buttonTitle = "Upload";
-      labelTitle = "Folder to upload (zip)";
+      labelTitle = "Folder to upload (zip):";
    }
    
    protected UploadPresenter createPresenter(HandlerManager eventBus, List<Item> selectedItems, String path)
@@ -136,7 +146,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
    private void createFileUploadForm()
    {
-      setWidget(createUploadFormItems());
+      mainLayout.add(createUploadFormItems());
    }
    
    protected VerticalPanel createUploadFormItems()
@@ -188,7 +198,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
       hPanel.add(bPanel);
       uploadWindowButtonsForm.add(hPanel);
 
-      setWidget(uploadWindowButtonsForm);
+      mainLayout.add(uploadWindowButtonsForm);
    }
    
    private HorizontalPanel getUploadLayout()
@@ -199,11 +209,8 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
       uploadHPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
       uploadHPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-      fileNameField = new TextField();
-      fileNameField.setName(FILE_NAME_FIELD);
-      fileNameField.setShowTitle(true);
+      fileNameField = new TextField(FILE_NAME_FIELD, labelTitle);
       fileNameField.setTitleOrientation(TitleOrientation.TOP);
-      fileNameField.setTitle("File to upload:");
       fileNameField.setWidth(245);
       fileNameField.setHeight(22);
 

@@ -59,7 +59,7 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
    {
       title = "File upload";
       buttonTitle = "Upload";
-      labelTitle = "File to upload";
+      labelTitle = "File to upload:";
    }
    
    @Override
@@ -111,7 +111,7 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
 
    public void setDefaultMimeType(String mimeType)
    {
-//      mimeTypesField.setDefaultValue(mimeType);
+      mimeTypesField.setValue(mimeType);
    }
    
    @Override
