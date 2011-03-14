@@ -23,8 +23,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 
 import org.exoplatform.gwtframework.ui.client.component.Align;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -114,10 +112,10 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
 
       formatField = new SelectItem();
       formatField.setName(ID_FORMAT_FIELD);
-      formatField.setTitle("<nobr>" + "Node type format" + "</nobr>");
+      formatField.setTitle("<nobr>" + "Node type format:" + "</nobr>");
       formatField.setShowTitle(true);
       formatField.setTitleAlign(Align.LEFT);
-      formatField.setWidth(290);
+      formatField.setWidth(260);
 
       form.add(formatField);
       return form;

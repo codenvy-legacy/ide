@@ -66,7 +66,7 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
    /**
     * Editor to display the content of node type definition.
     */
-   private SmartGWTTextEditor smartGWTTextEditor;
+   private SmartGWTTextEditor gwtTextEditor;
 
    /**
     * @param eventBus handler manager
@@ -114,8 +114,8 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
       configuration.setReadOnly(true);
 
       GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
-      smartGWTTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
-      addMember(smartGWTTextEditor);
+      gwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
+      addMember(gwtTextEditor);
 
       new Timer()
       {
@@ -124,7 +124,7 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
          public void run()
          {
             Element editorWraper =
-               Document.get().getElementById(smartGWTTextEditor.getTextEditor().getEditorWrapperID());
+               Document.get().getElementById(gwtTextEditor.getTextEditor().getEditorWrapperID());
 
             NodeList<Element> iframes = editorWraper.getElementsByTagName("iframe");
             if (iframes != null && iframes.getLength() > 0)
@@ -153,7 +153,7 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
    @Override
    public void setContent(String content)
    {
-      smartGWTTextEditor.setText(content);
+      gwtTextEditor.setText(content);
    }
 
    /**
@@ -162,7 +162,7 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
    @Override
    public TextEditor getEditor()
    {
-      return smartGWTTextEditor;
+      return gwtTextEditor;
    }
 
    private native void setHandler(Element e)/*-{

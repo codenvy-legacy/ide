@@ -119,8 +119,8 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
       VerticalPanel form = new VerticalPanel();
       form.getElement().setId(ID_DYNAMIC_FORM);
 
-      formatField = createSelectItem(ID_FORMAT_FIELD, "Node type format", 260);
-      alreadyExistBehaviorField = createSelectItem(ID_ALREADY_EXIST_BEHAVIOR_FIELD, "What to do if node exists?", 260);
+      formatField = createSelectItem(ID_FORMAT_FIELD, "Node type format :", 220);
+      alreadyExistBehaviorField = createSelectItem(ID_ALREADY_EXIST_BEHAVIOR_FIELD, "What to do if node exists?", 220);
 
       form.add(formatField);
       form.add(alreadyExistBehaviorField);
@@ -143,6 +143,7 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
       selectItem.setTitle("<nobr>" + title + "</nobr>");
       selectItem.setShowTitle(true);
       selectItem.setWidth(width);
+      selectItem.setTitleWidth(150);
       return selectItem;
    }
 
@@ -249,9 +250,5 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
    public void setBehaviorIfExistValues(LinkedHashMap<String, String> values)
    {
       alreadyExistBehaviorField.setValueMap(values);
-      if (values.keySet().iterator().hasNext())
-      {
-         alreadyExistBehaviorField.setValue(values.keySet().iterator().next());
-      }
    }
 }
