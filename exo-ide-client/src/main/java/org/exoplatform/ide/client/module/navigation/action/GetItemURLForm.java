@@ -18,16 +18,12 @@
  */
 package org.exoplatform.ide.client.module.navigation.action;
 
-import com.google.gwt.user.client.ui.VerticalPanel;
-
-import com.google.gwt.user.client.ui.HorizontalPanel;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -86,8 +82,6 @@ public class GetItemURLForm extends DialogWindow
       
       show();
 
-      //draw();
-
       new Timer()
       {
 
@@ -106,7 +100,6 @@ public class GetItemURLForm extends DialogWindow
       paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setPadding(5);
       paramsForm.setWidth(450);
-      paramsForm.setPadding(15);
 
       itemURLField = new TextField(URL_FIELD, "WebDav item's URL:");
       itemURLField.setWidth(450);
@@ -124,7 +117,7 @@ public class GetItemURLForm extends DialogWindow
    private void createButtons()
    {
       HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight((BUTTON_HEIGHT + 20)+ "px");
+      buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
 
       okButton = new IButton("OK");
       okButton.setID(ID_OK_BUTTON);
@@ -144,7 +137,7 @@ public class GetItemURLForm extends DialogWindow
       
       mainPanel.add(buttonsLayout);
       mainPanel.setCellHorizontalAlignment(buttonsLayout, HorizontalPanel.ALIGN_CENTER);
-      mainPanel.setCellVerticalAlignment(buttonsLayout, HorizontalPanel.ALIGN_TOP);
+      mainPanel.setCellVerticalAlignment(buttonsLayout, HorizontalPanel.ALIGN_MIDDLE);
    }
 
 }

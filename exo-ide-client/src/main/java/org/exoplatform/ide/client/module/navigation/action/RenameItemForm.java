@@ -57,7 +57,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    public static final int WIDTH = 400;
 
    public static final int HEIGHT = 220;
-   
+
    public static final int BUTTON_WIDTH = 90;
 
    public static final int BUTTON_HEIGHT = 22;
@@ -75,16 +75,16 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
    private static final String RENAME_FIELD = "ideRenameItemFormRenameField";
 
    private static final String MIME_TYPE_FIELD = "ideRenameItemFormMimeTypeField";
-   
+
    /*
     * Css styles.
     */
    private static final String WARNING_MSG_STYLE = "exo-rename-warning-msg";
-   
+
    /*
     * Variables.
     */
-   private VerticalPanel vLayout;
+   private VerticalPanel mainLayout;
 
    private TextField itemNameField;
 
@@ -105,11 +105,12 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
       setTitle("Rename item");
 
-      vLayout = new VerticalPanel();
-      vLayout.setWidth("100%");
-      vLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-      vLayout.setHeight("100%");
-      setWidget(vLayout);
+      mainLayout = new VerticalPanel();
+      mainLayout.setWidth("100%");
+      mainLayout.setHeight("100%");
+      mainLayout.setSpacing(10);
+      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      setWidget(mainLayout);
 
       createFieldForm(selectedItems.get(0) instanceof File);
       createButtons();
@@ -118,20 +119,19 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
       presenter = new RenameItemPresenter(eventBus, selectedItems, openedFiles, lockTokens);
       presenter.bindDisplay(this);
+
+      itemNameField.focusInItem();
    }
 
    private void createFieldForm(boolean isFile)
    {
-      DynamicForm paramsForm = new DynamicForm();
-      paramsForm.setID(ID_DYNAMIC_FORM);
-      paramsForm.setWidth(340);
-      paramsForm.setPadding(1);
-      
       VerticalPanel vPanel = new VerticalPanel();
+      vPanel.setSpacing(3);
 
       itemNameField = new TextField(RENAME_FIELD, "Rename item to:");
       itemNameField.setName(RENAME_FIELD);
       itemNameField.setWidth(340);
+      itemNameField.setTitleOrientation(TitleOrientation.TOP);
       itemNameField.setHeight(22);
       vPanel.add(itemNameField);
       if (isFile)
@@ -145,12 +145,12 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
          mimeTypesField.setPickListHeight(100);
          mimeTypesField.setEnabled();
          mimeTypesField.setShowTitle(true);
-         mimeTypesField.setTitle("Select mime-type");
+         mimeTypesField.setTitle("Select mime-type: ");
          mimeTypesField.setTitleOrientation(TitleOrientation.TOP);
-         
+
          vPanel.add(dropBox);
          vPanel.add(mimeTypesField);
-         
+
          warningMimeTypeLabel = new Label();
          warningMimeTypeLabel.setHeight("0");
          warningMimeTypeLabel.addStyleName(WARNING_MSG_STYLE);
@@ -158,16 +158,13 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
       }
       itemNameField.focusInItem();
 
-      paramsForm.setWidget(vPanel);
-      vLayout.add(paramsForm);
-      vLayout.setCellHorizontalAlignment(paramsForm, HorizontalPanel.ALIGN_CENTER);
-      vLayout.setCellVerticalAlignment(paramsForm, HorizontalPanel.ALIGN_MIDDLE);
+      mainLayout.add(vPanel);
    }
 
    private void createButtons()
    {
       HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTON_HEIGHT+"px");
+      buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
 
       renameButton = new IButton("Rename");
@@ -185,9 +182,8 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
       buttonsLayout.add(renameButton);
       buttonsLayout.add(cancelButton);
 
-      vLayout.add(buttonsLayout);
-      vLayout.setCellHorizontalAlignment(buttonsLayout, HorizontalPanel.ALIGN_CENTER);
-      vLayout.setCellVerticalAlignment(buttonsLayout, HorizontalPanel.ALIGN_TOP);
+      mainLayout.add(buttonsLayout);
+      mainLayout.setCellVerticalAlignment(buttonsLayout, HorizontalPanel.ALIGN_TOP);
    }
 
    @Override
@@ -244,7 +240,7 @@ public class RenameItemForm extends DialogWindow implements RenameItemPresenter.
 
    public void setDefaultMimeType(String mimeType)
    {
-//      mimeTypesField.setDefaultValue(mimeType);
+      mimeTypesField.setValue(mimeType);
    }
 
    /**

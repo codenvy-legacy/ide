@@ -110,9 +110,7 @@ public class VersionContentForm extends View implements VersionContentPresenter.
       }.schedule(1000);
    }
 
-   /**
-    * @see com.smartgwt.client.widgets.BaseWidget#onDraw()
-    */
+   
    @Override
    protected void onDraw()
    {
@@ -120,9 +118,6 @@ public class VersionContentForm extends View implements VersionContentPresenter.
       super.onDraw();
    }
 
-   /**
-    * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
-    */
    @Override
    protected void onDestroy()
    {

@@ -18,25 +18,25 @@
  */
 package org.exoplatform.ide.client.component;
 
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.KeyNames;
-import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.SpacerItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
-import com.smartgwt.client.widgets.layout.HLayout;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
 /**
  * Dialog window for asking value.
@@ -50,7 +50,7 @@ import org.exoplatform.ide.client.Images;
  * @version @version $Id: $
  */
 
-public class AskForValueDialog extends Window
+public class AskForValueDialog extends DialogWindow
 {
 
    public static final int FORM_MARGINTOP = 15;
@@ -58,6 +58,8 @@ public class AskForValueDialog extends Window
    public static final int FORM_MARGINSIDE = 25;
 
    public static final String ID = "ideAskForValueDialog";
+
+   public static final int DIALOG_HEIGHT = 160;
 
    public static final String ID_OK_BUTTON = "ideAskForValueDialogOkButton";
 
@@ -71,82 +73,66 @@ public class AskForValueDialog extends Window
 
    private ValueDiscardCallback valueDiscardCallback;
 
-   protected TextItem textItem;
+   protected TextField textItem;
 
    private IButton okButton;
-
-   public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback)
-   {
-      new AskForValueDialog(title, prompt, defaultValue, dialogWidth, callback, null);
-   }
 
    public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback,
       ValueDiscardCallback discardCallback)
    {
+      super(null, dialogWidth, DIALOG_HEIGHT, ID);
       valueCallback = callback;
       valueDiscardCallback = discardCallback;
-
-      setID(ID);
-
-      setShowShadow(true);
       setTitle(title);
-      setShowMinimizeButton(false);
 
-      setWidth(dialogWidth);
-      setHeight(160);
+      VerticalPanel mainLayout = new VerticalPanel();
+      mainLayout.setWidth("100%");
+      mainLayout.setHeight("100%");
+      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+      mainLayout.setSpacing(15);
 
-      createPromptForm(dialogWidth, prompt, defaultValue);
-      createButtonsForm(defaultValue);
+      mainLayout.add(createPromptForm(dialogWidth, prompt, defaultValue));
+      mainLayout.add(createButtonsForm(defaultValue));
+      setWidget(mainLayout);
 
-      setIsModal(true);
-      centerInPage();
       show();
 
       addCloseClickHandler(new CloseClickHandler()
       {
-         public void onCloseClick(CloseClientEvent event)
+         @Override
+         public void onCloseClick()
          {
             destroy();
             valueCallback.execute(null);
          }
       });
-
-      //textItem.focusInItem();
+      
+      textItem.focusInItem();
       textItem.selectValue();
    }
 
-   private void createPromptForm(int dialogWidth, String prompt, String defaultValue)
+   public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback)
    {
-      DynamicForm form = new DynamicForm();
-      //form.setCellBorder(1);
-      //form.setWidth(dialogWidth - FORM_MARGINSIDE - FORM_MARGINSIDE);
-      form.setLayoutAlign(Alignment.CENTER);
-      form.setMargin(FORM_MARGINTOP);
+      this(title, prompt, defaultValue, dialogWidth, callback, null);
+   }
 
-      StaticTextItem promptItem = new StaticTextItem();
-      promptItem.setDefaultValue(prompt);
-      promptItem.setShowTitle(false);
-      promptItem.setColSpan(2);
+   private VerticalPanel createPromptForm(int dialogWidth, String prompt, String defaultValue)
+   {
+      VerticalPanel form = new VerticalPanel();
 
-      SpacerItem spacer1 = new SpacerItem();
-      spacer1.setHeight(5);
-      spacer1.setColSpan(2);
-
-      textItem = new TextItem();
-      textItem.setName(VALUE_FIELD);
-      textItem.setDefaultValue(defaultValue);
-      textItem.setShowTitle(false);
-      textItem.setColSpan(2);
+      textItem = new TextField(VALUE_FIELD, prompt);
       textItem.setWidth(dialogWidth - FORM_MARGINSIDE - FORM_MARGINSIDE);
-
-      textItem.addKeyPressHandler(new KeyPressHandler()
+      textItem.setHeight(22);
+      textItem.setValue(defaultValue);
+      textItem.setTitleOrientation(TitleOrientation.TOP);
+      textItem.addKeyUpHandler(new KeyUpHandler()
       {
 
-         public void onKeyPress(KeyPressEvent event)
+         @Override
+         public void onKeyUp(KeyUpEvent event)
          {
-            if (event.getKeyName() == null)
-               return;
-            if (event.getKeyName().equals(KeyNames.ENTER))
+            if (event.getNativeKeyCode() == 13)
             {
                if (textItem.getValue() == null || textItem.getValue().toString().length() == 0)
                {
@@ -155,12 +141,12 @@ public class AskForValueDialog extends Window
                onOk();
             }
          }
-
       });
 
-      textItem.addChangeHandler(new ChangeHandler()
+      textItem.addValueChangeHandler(new ValueChangeHandler<String>()
       {
-         public void onChange(ChangeEvent event)
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
          {
             if (event.getValue() == null)
             {
@@ -182,20 +168,16 @@ public class AskForValueDialog extends Window
          }
       });
 
-      form.setItems(promptItem, spacer1, textItem);
+      form.add(textItem);
 
-      form.setAutoWidth();
-
-      addItem(form);
+      return form;
    }
 
-   private void createButtonsForm(String defaultValue)
+   private HorizontalPanel createButtonsForm(String defaultValue)
    {
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setHeight(22);
-      buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setMembersMargin(5);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight(22 + "px");
+      buttonsLayout.setSpacing(5);
 
       okButton = new IButton("Yes");
       okButton.setID(ID_OK_BUTTON);
@@ -215,8 +197,8 @@ public class AskForValueDialog extends Window
 
       if (valueDiscardCallback == null)
       {
-         buttonsLayout.addMember(okButton);
-         buttonsLayout.addMember(cancelButton);
+         buttonsLayout.add(okButton);
+         buttonsLayout.add(cancelButton);
       }
       else
       {
@@ -235,12 +217,10 @@ public class AskForValueDialog extends Window
             }
          });
 
-         buttonsLayout.addMember(okButton);
-         buttonsLayout.addMember(noButton);
-         buttonsLayout.addMember(cancelButton);
+         buttonsLayout.add(okButton);
+         buttonsLayout.add(noButton);
+         buttonsLayout.add(cancelButton);
       }
-
-      addItem(buttonsLayout);
 
       okButton.addClickHandler(new ClickHandler()
       {
@@ -259,6 +239,7 @@ public class AskForValueDialog extends Window
          }
       });
 
+      return buttonsLayout;
    }
 
    private void onOk()

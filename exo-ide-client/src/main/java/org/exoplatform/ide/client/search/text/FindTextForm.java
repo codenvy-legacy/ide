@@ -18,16 +18,12 @@
  */
 package org.exoplatform.ide.client.search.text;
 
-import com.google.gwt.user.client.DOM;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.layout.HLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
@@ -159,7 +155,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    /**
     * Create layout for buttons
     * 
-    * @return {@link HLayout}
+    * @return {@link VerticalPanel}
     */
    protected VerticalPanel createButtonsLayout()
    {
@@ -253,7 +249,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    }
 
    /**
-    * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
+    * @see org.exoplatform.gwtframework.ui.client.window.Window#destroy()
     */
    @Override
    public void destroy()
