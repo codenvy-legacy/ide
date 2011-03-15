@@ -106,12 +106,7 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-chromattic</artifactId>
       </dependency>
-      
-      <dependency>
-      	<groupId>org.exoplatform.ide</groupId>
-      	<artifactId>exo-ide-vfs</artifactId>
-      </dependency>
-      
+            
        <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
@@ -194,16 +189,10 @@
          </activation>
 
          <properties>
-         	<jre.lib>${env.JAVA_HOME}${file.separator}jre${file.separator}lib</jre.lib>
+             <jre.lib>${env.JAVA_HOME}${file.separator}jre${file.separator}lib</jre.lib>
          </properties>
          
-        <dependencies>
-			<dependency>
-				<groupId>org.exoplatform.ide</groupId>
-				<artifactId>exo-ide-vfs-jcr</artifactId>
-				<scope>runtime</scope>
-			</dependency>
-         
+        <dependencies>        
             <dependency>
                <groupId>org.exoplatform.kernel</groupId>
                <artifactId>exo.kernel.commons</artifactId>
@@ -392,7 +381,7 @@
                
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
-				  <artifactId>gwt-maven-plugin</artifactId>
+                  <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <runTarget>org.exoplatform.ide.Shell/Shell.html</runTarget>
@@ -401,7 +390,7 @@
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
-                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m</extraJvmArgs>
+                     <extraJvmArgs>-Xmx1048m -XX:MaxPermSize=256m</extraJvmArgs>
                   </configuration>
                </plugin>
                
