@@ -156,7 +156,7 @@
             <version>${project.version}</version>
          </dependency>
 
-	 <dependency>
+     <dependency>
           <groupId>org.exoplatform.ide</groupId>
           <artifactId>exo-ide-codeassistant-framework</artifactId>
           <version>${project.version}</version>
@@ -248,16 +248,6 @@
             <artifactId>exo-ide-vfs-webdav-client</artifactId>
             <version>${project.version}</version>
          </dependency>
-         <dependency>
-           <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-vfs</artifactId>
-           <version>${project.version}</version>
-         </dependency>
-         <dependency>
-           <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-vfs-jcr</artifactId>
-           <version>${project.version}</version>
-         </dependency> 
          <dependency>
             <groupId>org.exoplatform.portal</groupId>
             <artifactId>exo.portal.component.application-registry</artifactId>
@@ -491,29 +481,29 @@
             <version>${groovy.version}</version>
          </dependency>
 
-		<dependency>
-			<groupId>quartz</groupId>
-			<artifactId>quartz</artifactId>
-			<version>1.5.2</version>
-		</dependency>
-	
-		<dependency>
-			<groupId>org.jboss.cache</groupId>
-			<artifactId>jbosscache-core</artifactId>
-			<version>3.2.6.GA</version>
-			<exclusions>
-				<exclusion>
-					<groupId>jgroups</groupId>
-					<artifactId>jgroups</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	
-		<dependency>
-			<groupId>org.infinispan</groupId>
-			<artifactId>infinispan-core</artifactId>
-			<version>4.1.0.FINAL</version>
-		</dependency>      
+        <dependency>
+            <groupId>quartz</groupId>
+            <artifactId>quartz</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+    
+        <dependency>
+            <groupId>org.jboss.cache</groupId>
+            <artifactId>jbosscache-core</artifactId>
+            <version>3.2.6.GA</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jgroups</groupId>
+                    <artifactId>jgroups</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <version>4.1.0.FINAL</version>
+        </dependency>      
          
       </dependencies>
    </dependencyManagement>
@@ -623,10 +613,7 @@
       <module>exo-ide-framework-client</module>
 
       <module>exo-ide-vfs-webdav-client</module>
-
-      <module>exo-ide-vfs</module>
-      <module>exo-ide-vfs-jcr</module>
-      
+     
       <module>exo-ide-codeassistant-framework</module>
       
       <module>exo-ide-editor</module>
@@ -635,7 +622,7 @@
       <module>exo-ide-editor-extension-gtmpl</module>
       <module>exo-ide-editor-extension-chromattic</module>
       <module>exo-ide-editor-extension-netvibes</module>
-	
+    
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>
       <module>exo-ide-extension-netvibes</module>
