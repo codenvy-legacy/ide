@@ -20,20 +20,16 @@ package org.exoplatform.ide.extension.netvibes.client.ui;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.FormErrorOrientation;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.PasswordField;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
@@ -82,7 +78,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
 
    private final String ID_TITLE_FIELD = "ideDeployUwaWidgetFormTitleField";
 
-   private final String ID_DESCRIBTION_FIELD = "ideDeployUwaWidgetFormDescriptionField";
+   private final String ID_DESCRIPTION_FIELD = "ideDeployUwaWidgetFormDescriptionField";
 
    private final String ID_VERSION_FIELD = "ideDeployUwaWidgetFormVersionField";
 
@@ -122,7 +118,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
 
    // Details :
 
-   private DynamicForm detailsDynamicForm;
+   private VerticalPanel detailsDynamicForm;
 
    private TextField titleField;
 
@@ -152,16 +148,14 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
 
    //Layouts
 
-   private Layout mainInfoLayout;
+   private VerticalPanel mainInfoLayout;
 
-   private Layout detailsLayout;
+   private VerticalPanel detailsLayout;
 
-   private Layout privacyLayout;
+   private VerticalPanel privacyLayout;
 
-   
    private LinkedHashMap<String, String> categories = new LinkedHashMap<String, String>();
 
-   
    /**
     * @param eventBus 
     */
@@ -171,178 +165,169 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       //TODO setCanDragResize(true);
 
       setTitle(TITLE);
-      
+
       //Main layout of the dialog window:
-      VLayout mainLayout = new VLayout();
-      mainLayout.setWidth100();
-      mainLayout.setHeight100();
-      mainLayout.setPadding(20);
-      mainLayout.setMembersMargin(15);
+      VerticalPanel mainLayout = new VerticalPanel();
+      mainLayout.setWidth("100%");
+      mainLayout.setHeight("100%");
+      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
       //Create layout for main information
       mainInfoLayout = createMainInfoLayout();
-      mainLayout.addMember(mainInfoLayout);
-      
-     //Create layout for detailed information
-      detailsLayout = createDetailsLayout();
-      mainLayout.addMember(detailsLayout);
-      
-     //Create layout for private information
-      privacyLayout = createPrivacyLayout();
-      mainLayout.addMember(privacyLayout);
-      
-      //Create and layout with buttons
-      mainLayout.addMember(createButtonsLayout());
+      mainLayout.add(mainInfoLayout);
 
-      add(mainLayout);
+      //Create layout for detailed information
+      detailsLayout = createDetailsLayout();
+      mainLayout.add(detailsLayout);
+
+      //Create layout for private information
+      privacyLayout = createPrivacyLayout();
+      mainLayout.add(privacyLayout);
+
+      //Create and layout with buttons
+      mainLayout.add(createButtonsLayout());
+
+      setWidget(mainLayout);
       show();
+   }
+
+   protected Label createTitle(String title)
+   {
+      Label label = new Label();
+      label.getElement().setInnerHTML("<b>" + title + "</b>");
+      return label;
    }
 
    /**
     * Create layout to get main information about widget.
     * 
-    * @return {@link VLayout}
+    * @return {@link VerticalPanel}
     */
-   private Layout createMainInfoLayout()
+   private VerticalPanel createMainInfoLayout()
    {
-      Layout vLayout = new Layout();
-      vLayout.setWidth100();
-      vLayout.setHeight100();
-
-      DynamicForm form = new DynamicForm();
-      form.setPadding(8);
-      form.setID(ID_MAIN_DYNAMIC_FORM);
+      VerticalPanel form = new VerticalPanel();
       form.setWidth("100%");
-   /* TODO  form.setIsGroup(true);
-      form.setGroupTitle("<b>Step 1.</b> Widget Content");
-      form.setAutoHeight();
-      
-      form.setLayoutAlign(Alignment.CENTER);
-      form.setLayoutAlign(VerticalAlignment.CENTER);*/
+      form.setHeight("100%");
+      form.setSpacing(5);
+      form.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+      form.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+      form.getElement().setId(ID_MAIN_DYNAMIC_FORM);
+      form.add(createTitle("Step 1. Widget Content"));
 
       urlField = createTextField(ID_URL_FIELD, "Public widget URL", "http://", 390);
       form.add(urlField);
 
-      vLayout.addMember(form);
-      vLayout.hide();
-      return vLayout;
+      form.setVisible(false);
+      return form;
    }
 
    /**
     * Create layout to private information about widget's author.
     * 
-    * @return {@link VLayout}
+    * @return {@link VerticalPanel}
     */
-   private Layout createPrivacyLayout()
+   private VerticalPanel createPrivacyLayout()
    {
-      Layout vLayout = new Layout();
-      vLayout.setWidth100();
-      vLayout.setHeight100();
-
-      DynamicForm form = new DynamicForm();
-      form.setPadding(8);
-      form.setID(ID_PRIVACY_DYNAMIC_FORM);
+      VerticalPanel form = new VerticalPanel();
       form.setWidth("100%");
-    /* TODO :( form.setIsGroup(true);
-      form.setGroupTitle("<b>Step 3.</b> Private Information");
-      form.setAutoHeight();
-      form.setWidth100();
-      form.setLayoutAlign(Alignment.CENTER);
-      form.setLayoutAlign(VerticalAlignment.CENTER);*/
+      form.setHeight("100%");
+      form.setSpacing(3);
+      form.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+      form.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+
+      form.getElement().setId(ID_PRIVACY_DYNAMIC_FORM);
+      form.add(createTitle("Step 3. Private Information"));
 
       apiKeyField = createPasswordField(ID_API_KEY_FIELD, "Enter API key", 390);
-    //  apiKeyField.setColSpan(2);
       secretKeyField = createPasswordField(ID_SECRET_KEY_FIELD, "Enter secrete key", 390);
-     // secretKeyField.setColSpan(2);
       loginField = createTextField(ID_LOGIN_FIELD, "Login", "", 195);
       passwordField = createPasswordField(ID_PASSWORD_FIELD, "Password", 195);
 
-      form.add(loginField);
-      form.add(passwordField);
+      HorizontalPanel hPanel = new HorizontalPanel();
+      hPanel.setWidth("390px");
+      hPanel.setSpacing(1);
+      hPanel.add(loginField);
+      hPanel.add(passwordField);
+
+      form.add(hPanel);
       form.add(apiKeyField);
       form.add(secretKeyField);
 
-      vLayout.addMember(form);
-      vLayout.hide();
-      return vLayout;
+      form.setVisible(false);
+      return form;
    }
 
    /**
     * Create layout to get detailed information about widget.
     * 
-    * @return {@link VLayout}
+    * @return {@link VerticalPanel}
     */
-   private Layout createDetailsLayout()
+   private VerticalPanel createDetailsLayout()
    {
-      Layout vLayout = new Layout();
-      vLayout.setWidth100();
-      vLayout.setHeight100();
-
-      detailsDynamicForm = new DynamicForm();
-      detailsDynamicForm.setID(ID_DETAILS_DYNAMIC_FORM);
-      detailsDynamicForm.setPadding(8);
+      detailsDynamicForm = new VerticalPanel();
       detailsDynamicForm.setWidth("100%");
-    /*  detailsDynamicForm.setIsGroup(true);
-      detailsDynamicForm.setGroupTitle("<b>Step 2.</b> Detailed Information");
-      detailsDynamicForm.setAutoHeight();
-      detailsDynamicForm.setWidth100();
-      detailsDynamicForm.setLayoutAlign(Alignment.CENTER);
-      detailsDynamicForm.setLayoutAlign(VerticalAlignment.CENTER);*/
+      detailsDynamicForm.setHeight("100%");
+      detailsDynamicForm.setSpacing(3);
+      detailsDynamicForm.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+
+      detailsDynamicForm.getElement().setId(ID_DETAILS_DYNAMIC_FORM);
+      detailsDynamicForm.add(createTitle("Step 2. Detailed Information"));
 
       titleField = createTextField(ID_TITLE_FIELD, "Title&#42;", "", 300);
-    //TODO  titleField.setColSpan(2);
-      descriptionField = createTextField(ID_DESCRIBTION_FIELD, "Description&#42;", "", 300);
+      descriptionField = createTextField(ID_DESCRIPTION_FIELD, "Description&#42;", "", 300);
       descriptionField.setHeight(50);
-     //TODO descriptionField.setColSpan(2);
       versionField = createTextField(ID_VERSION_FIELD, "Widget version", "", 150);
       keywordsField = createTextField(ID_KEYWORDS_FIELD, "Descriptive keywords (max 6, space separated)", "", 300);
-      //TODO keywordsField.setColSpan(2);
       thumbnailField = createTextField(ID_TUMBNAIL_FIELD, "Thumbnail URL", "", 300);
-      ///TODO thumbnailField.setColSpan(2);
       languageField = createCombobox(ID_LANGUAGE_FIELD, "Main language&#42;", 150);
-      //TODO: create or replace with other methods validators
-//      languageField.setValidators(new LanguageFieldValidator());
       categoryField = createCombobox(ID_CATEGORY_FIELD, "Most appropriate category&#42;", 150);
-//      categoryField.setValidators(new CategoryFieldValidator(categories));
       regionField = createCombobox(ID_REGION_FIELD, "Most appropriate region&#42;", 150);
-//      regionField.setValidators(new RegionFieldValidator());
 
       detailsDynamicForm.add(titleField);
       detailsDynamicForm.add(descriptionField);
-      detailsDynamicForm.add(versionField);
-    //TODO  when combobox is ready detailsDynamicForm.add(languageField);
+      HorizontalPanel hPanel1 = new HorizontalPanel();
+      hPanel1.setWidth("300px");
+      hPanel1.setSpacing(1);
+      hPanel1.add(versionField);
+      hPanel1.add(languageField);
+
+      detailsDynamicForm.add(hPanel1);
       detailsDynamicForm.add(keywordsField);
       detailsDynamicForm.add(thumbnailField);
-    //TODO  when combobox is ready detailsDynamicForm.add(regionField);
-    //TODO  when combobox is ready detailsDynamicForm.add(categoryField);
 
-      vLayout.addMember(detailsDynamicForm);
-      vLayout.hide();
-      return vLayout;
+      HorizontalPanel hPanel2 = new HorizontalPanel();
+      hPanel2.setWidth("300px");
+      hPanel2.setSpacing(1);
+      hPanel2.add(regionField);
+      hPanel2.add(categoryField);
+
+      detailsDynamicForm.add(hPanel2);
+      detailsDynamicForm.setVisible(false);
+      return detailsDynamicForm;
    }
 
    /**
     * Create centered layout with buttons.
     * 
-    * @return {@link HLayout}
+    * @return {@link HorizontalPanel}
     */
-   private HLayout createButtonsLayout()
+   private HorizontalPanel createButtonsLayout()
    {
-      HLayout hLayout = new HLayout();
-      hLayout.setMembersMargin(10);
-      hLayout.setAutoWidth();
-      hLayout.setHeight(BUTTON_HEIGHT);
-      hLayout.setLayoutAlign(Alignment.CENTER);
+      HorizontalPanel hLayout = new HorizontalPanel();
+      hLayout.setSpacing(10);
+      hLayout.setHeight(BUTTON_HEIGHT + "px");
+      hLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
       deployWidgetButton = createButton(ID_DEPLOY_WIDGET_BUTTON, "Deploy", Images.Buttons.OK);
       cancelButton = createButton(ID_CANCEL_BUTTON, "Cancel", Images.Buttons.CANCEL);
       nextStepButton = createButton(ID_NEXT_STEP_BUTTON, "Next", Images.Buttons.NEXT_STEP);
       prevStepButton = createButton(ID_PREV_STEP_BUTTON, "Back", Images.Buttons.PREV_STEP);
 
-      hLayout.addMember(prevStepButton);
-      hLayout.addMember(deployWidgetButton);
-      hLayout.addMember(nextStepButton);
-      hLayout.addMember(cancelButton);
+      hLayout.add(prevStepButton);
+      hLayout.add(deployWidgetButton);
+      hLayout.add(nextStepButton);
+      hLayout.add(cancelButton);
       return hLayout;
    }
 
@@ -377,6 +362,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    {
       TextField textField = new TextField(id, title);
       textField.setWidth(width);
+      textField.setHeight(22);
       textField.setTitleOrientation(TitleOrientation.TOP);
       textField.setValue(value);
       return textField;
@@ -394,10 +380,11 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    {
       PasswordField passwordField = new PasswordField(id, title);
       passwordField.setWidth(width);
+      passwordField.setHeight(22);
       passwordField.setTitleOrientation(TitleOrientation.TOP);
       return passwordField;
    }
-   
+
    /**
     * Creates form combobox field item.
     * 
@@ -410,12 +397,9 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    {
       ComboBoxField combobox = new ComboBoxField();
       combobox.setName(id);
-//      combobox.setDefaultToFirstOption(true);
       combobox.setTitle(title);
-     combobox.setTitleOrientation(TitleOrientation.TOP);
+      combobox.setTitleOrientation(TitleOrientation.TOP);
       combobox.setWidth(width);
-//      combobox.setShowErrorStyle(false);
-//      combobox.setErrorOrientation(FormErrorOrientation.RIGHT);
       return combobox;
    }
 
@@ -476,13 +460,9 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       {
          setWidth(460);
          setHeight(180);
-         mainInfoLayout.show();
          center();
       }
-      else
-      {
-         mainInfoLayout.hide();
-      }
+      mainInfoLayout.setVisible(isShow);
    }
 
    /**
@@ -494,12 +474,8 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       {
          setHeight(410);
          setWidth(375);
-         detailsLayout.show();
       }
-      else
-      {
-         detailsLayout.hide();
-      }
+      detailsLayout.setVisible(isShow);
    }
 
    /**
@@ -511,12 +487,8 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
       {
          setWidth(460);
          setHeight(260);
-         privacyLayout.show();
       }
-      else
-      {
-         privacyLayout.hide();
-      }
+      privacyLayout.setVisible(isShow);
    }
 
    /**
@@ -675,16 +647,6 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    public void setLanguageValueMap(LinkedHashMap<String, String> values)
    {
       languageField.setValueMap(values);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter.Display#isValidDetailsFields()
-    */
-   public boolean isValidDetailsFields()
-   {
-      //TODO !!!  
-      //detailsDynamicForm.validate(false);
-      return false;
    }
 
    /**

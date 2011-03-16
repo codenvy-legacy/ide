@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
@@ -209,12 +210,6 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
        */
       void setLanguageValueMap(LinkedHashMap<String, String> values);
 
-      /**
-       * Checks whether details fields have valid values.
-       * 
-       * @return boolean valid or not
-       */
-      boolean isValidDetailsFields();
    }
 
    /**
@@ -405,8 +400,7 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
    private boolean checkRequiredDetailsFullFilled()
    {
       return (display.getWigdetTitle().getValue() != null && display.getDescription().getValue() != null
-         && display.getWigdetTitle().getValue().length() > 0 && display.getDescription().getValue().length() > 0 && display
-         .isValidDetailsFields());
+         && display.getWigdetTitle().getValue().length() > 0 && display.getDescription().getValue().length() > 0 && isValidDetailsFields());
    }
 
    /**
@@ -488,7 +482,7 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
    {
       if (url != null && url.length() > 0)
       {
-         //TODO
+         //TODO do URL validation
          return true;
       }
       return false;
@@ -511,15 +505,19 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
             @Override
             protected void onSuccess(Categories result)
             {
-               display.setCategoryValueMap(categories.getCategoryMap());               
+               categories = result;
+               display.setCategoryValueMap(result.getCategoryMap());
             }
-            
+
             @Override
             protected void onFailure(Throwable exception)
             {
+               exception.printStackTrace();
                String message = "Can not get widget's categories.";
-               message += (exception == null) ? "" : "Possible reason: <br>" + exception.getMessage();
-
+               message +=
+                  (exception == null || exception.getMessage() == null) ? "" : "Possible reason: <br>"
+                     + exception.getMessage();
+               Window.alert(message);
                Dialogs.getInstance().showError(message);
             }
          });
@@ -576,6 +574,24 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
                eventBus.fireEvent(new ExceptionThrownEvent("Can't deploye widget"));
             }
          });
+   }
+
+   /**
+    * Check region, language and category for proper values.
+    * 
+    * @return boolean the result of validation
+    */
+   public boolean isValidDetailsFields()
+   {
+      if (categories == null || display.getCategory().getValue() == null)
+         return false;
+      String language = display.getLanguage().getValue();
+      String category = display.getCategory().getValue();
+      String region = display.getRegion().getValue();
+      //Check region, language and category values are not null and exist in defined list of values:
+      return (language != null && category != null && region != null
+         && Languages.getLanguagesMap().containsKey(language) && Regions.getRegionsMap().containsKey(region) && categories
+         .getCategoryMap().containsKey(category));
    }
 
 }
