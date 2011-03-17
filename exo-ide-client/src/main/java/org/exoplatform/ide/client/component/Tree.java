@@ -27,6 +27,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
@@ -35,8 +37,15 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -49,7 +58,9 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
    protected com.google.gwt.user.client.ui.Tree tree;
 
    protected T value;
-   
+
+   private SimplePanel hiPanel;
+
    /**
     * 
     */
@@ -58,8 +69,38 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
       tree = new com.google.gwt.user.client.ui.Tree();
       initWidget(tree);
       tree.addDomHandler(this, DoubleClickEvent.getType());
+      hiPanel = new SimplePanel();
+      hiPanel.setSize("100%", "20px");
+      hiPanel.setStyleName("ide-Tree-item-selected");
+      tree.getElement().appendChild(hiPanel.getElement());
+
+      tree.addSelectionHandler(new SelectionHandler<TreeItem>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<TreeItem> event)
+         {
+            int top = getAbsoluteTop();
+            int elementTop = event.getSelectedItem().getAbsoluteTop() + 4;
+            DOM.setStyleAttribute(hiPanel.getElement(), "top", (elementTop - top) + "px");
+         }
+      });
+
+      tree.addDomHandler(new ScrollHandler()
+      {
+
+         @Override
+         public void onScroll(ScrollEvent event)
+         {
+            if (tree.getSelectedItem() == null)
+               return;
+            int top = getAbsoluteTop();
+            int elementTop = tree.getSelectedItem().getAbsoluteTop() + 4;
+            DOM.setStyleAttribute(hiPanel.getElement(), "top", (elementTop - top) + "px");
+         }
+      }, ScrollEvent.getType());
    }
-   
+
    /**
     * @see com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.google.gwt.event.dom.client.DoubleClickEvent)
     */
@@ -67,7 +108,7 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
    public void onDoubleClick(DoubleClickEvent event)
    {
       TreeItem selectedItem = tree.getSelectedItem();
-      if(selectedItem == null)
+      if (selectedItem == null)
          return;
       selectedItem.setState(!selectedItem.getState(), true);
    }
@@ -90,7 +131,7 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
       this.value = value;
       doUpdateValue();
    }
-   
+
    public abstract void doUpdateValue();
 
    /**
@@ -119,7 +160,7 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
    {
       HandlerRegistration openHandler = tree.addOpenHandler(new OpenHandler<TreeItem>()
       {
-         
+
          @Override
          public void onOpen(OpenEvent<TreeItem> event)
          {
@@ -128,9 +169,9 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
             handler.onOpen(openEvent);
          }
       });
-      
+
       return openHandler;
-    
+
    }
 
    /**
@@ -141,7 +182,7 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
    {
       HandlerRegistration closeHadler = tree.addCloseHandler(new CloseHandler<TreeItem>()
       {
-         
+
          @Override
          public void onClose(CloseEvent<TreeItem> event)
          {
@@ -161,7 +202,7 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
    {
       HandlerRegistration selectionHandler = tree.addSelectionHandler(new SelectionHandler<TreeItem>()
       {
-         
+
          @Override
          public void onSelection(SelectionEvent<TreeItem> event)
          {
@@ -199,8 +240,28 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
    {
       return tree.addKeyPressHandler(handler);
    }
-   
-   
+
+   protected Widget createItemWidget(String icon, String text)
+   {
+      Grid grid = new Grid(1, 2);
+      grid.setWidth("100%");
+
+      Image i = new Image(icon);
+      i.setHeight("16px");
+      grid.setWidget(0, 0, i);
+      Label l = new Label(text, false);
+      //      l.setStyleName(CodeAssistantClientBundle.INSTANCE.css().fqnStyle());
+      grid.setWidget(0, 1, l);
+
+      grid.getCellFormatter().setWidth(0, 0, "16px");
+      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+      //      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
+      grid.getCellFormatter().setWidth(0, 1, "100%");
+      DOM.setStyleAttribute(grid.getElement(), "display", "block");
+      return grid;
+   }
+
    private class SelectionEventImpl<E> extends SelectionEvent<E>
    {
 
@@ -211,7 +272,7 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
       {
          super(selectedItem);
       }
-      
+
    }
 
 }
