@@ -110,7 +110,6 @@ public class EditorFactory
 
    public static void addEditor(EditorProducer producer)
    {
-      System.out.println(producer.getMimeType() + " " + producer.getDescription());
       if (editors.containsKey(producer.getMimeType()))
          editors.get(producer.getMimeType()).add(producer);
       else

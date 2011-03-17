@@ -23,10 +23,6 @@
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
    <component>
-      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemApplication</type>
-   </component>
-
-   <component>
       <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
       <type>org.exoplatform.services.log.LogConfigurationInitializer</type>
       <init-params>
@@ -328,9 +324,6 @@
                               <collection type="java.util.ArrayList">
                                  <value>
                                     <string>java.lang</string>
-                                 </value>
-                                 <value>
-                                    <string>java.util</string>
                                  </value>
                               </collection>
                            </field>

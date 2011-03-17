@@ -175,13 +175,14 @@ CUSTOMIZE TOOLBAR
 }
 
 .gwt-Tree .gwt-TreeItem-selected {
-  background: #93c2f1 url(images/autoComplete/row-selected.png) repeat-x 0px -1463px;
+  background: #93c2f1 url("images/autoComplete/row-selected.png") repeat-x 0px -1463px;
 }
 .ide-Tree-item-selected{
   width: 100%;
   height: 20px;
   position: absolute; 
   left: 0px; 
-  background: #93c2f1 url(images/autoComplete/row-selected.png) repeat-x 0px -1463px;
+  background-image: url("images/autoComplete/row-selected.png");
+  background-repeat: repeat-x;
   z-index: -1;
 }

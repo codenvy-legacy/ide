@@ -30,6 +30,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Image;
+import com.smartgwt.client.types.Overflow;
 
 /**
  * Created by The eXo Platform SAS.
@@ -72,6 +73,8 @@ public class NavigationForm extends Panel implements NavigationPresenter.Display
       if (!isViewIsOpened(BrowserForm.ID))
       {
          BrowserForm navigatorForm = new BrowserForm(eventBus, context);
+         navigatorForm.setOverflow(Overflow.HIDDEN);
+         navigatorForm.setHeight100();
          Image tabIcon = new Image(IDEImageBundle.INSTANCE.workspace());
          openView(navigatorForm, BrowserForm.TITLE, tabIcon, false);
       }

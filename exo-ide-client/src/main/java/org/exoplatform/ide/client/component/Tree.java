@@ -18,10 +18,13 @@
  */
 package org.exoplatform.ide.client.component;
 
+import org.apache.poi.hssf.record.ScenarioProtectRecord;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.event.CloseEventImpl;
 import org.exoplatform.gwtframework.ui.client.component.event.OpenEventImpl;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -80,9 +83,7 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
          @Override
          public void onSelection(SelectionEvent<TreeItem> event)
          {
-            int top = getAbsoluteTop();
-            int elementTop = event.getSelectedItem().getAbsoluteTop() + 4;
-            DOM.setStyleAttribute(hiPanel.getElement(), "top", (elementTop - top) + "px");
+            moveHighlight(event.getSelectedItem());
          }
       });
 
@@ -92,13 +93,46 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
          @Override
          public void onScroll(ScrollEvent event)
          {
-            if (tree.getSelectedItem() == null)
-               return;
-            int top = getAbsoluteTop();
-            int elementTop = tree.getSelectedItem().getAbsoluteTop() + 4;
-            DOM.setStyleAttribute(hiPanel.getElement(), "top", (elementTop - top) + "px");
+            if (tree.getSelectedItem() != null)
+               moveHighlight(tree.getSelectedItem());
          }
       }, ScrollEvent.getType());
+
+      tree.addOpenHandler(new OpenHandler<TreeItem>()
+      {
+
+         @Override
+         public void onOpen(OpenEvent<TreeItem> event)
+         {
+            if (tree.getSelectedItem() != null)
+               Scheduler.get().scheduleDeferred(new ScheduledCommand()
+               {
+                  @Override
+                  public void execute()
+                  {
+                     moveHighlight(tree.getSelectedItem());
+                  }
+               });
+         }
+      });
+
+      tree.addCloseHandler(new CloseHandler<TreeItem>()
+      {
+
+         @Override
+         public void onClose(CloseEvent<TreeItem> event)
+         {
+            if (tree.getSelectedItem() != null)
+               moveHighlight(tree.getSelectedItem());
+         }
+      });
+   }
+
+   protected void moveHighlight(TreeItem currentItem)
+   {
+      int top = getAbsoluteTop();
+      int elementTop = currentItem.getAbsoluteTop() + 4;
+      DOM.setStyleAttribute(hiPanel.getElement(), "top", (elementTop - top) + "px");
    }
 
    /**
@@ -250,13 +284,11 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
       Label l = new Label(text, false);
-      //      l.setStyleName(CodeAssistantClientBundle.INSTANCE.css().fqnStyle());
       grid.setWidget(0, 1, l);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      //      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setWidth(0, 1, "100%");
       DOM.setStyleAttribute(grid.getElement(), "display", "block");
       return grid;
