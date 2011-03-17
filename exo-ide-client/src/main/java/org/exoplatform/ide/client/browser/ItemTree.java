@@ -145,13 +145,16 @@ public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
    {
       if (value == null)
       {
+         if (tree.getItemCount() > 0)
+            tree.removeItems();
          return;
       }
       if (tree.getItemCount() == 0)
       {
          TreeItem addItem = getNode(value);
          tree.addItem(addItem);
-         return;
+         if (((Folder)value).getChildren() == null)
+            return;
       }
 
       if (((Folder)value).getChildren() == null)
@@ -172,7 +175,8 @@ public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
       {
          setItems(parent, ((Folder)value).getChildren());
          //move Highlight
-         moveHighlight(tree.getSelectedItem());
+         if (tree.getSelectedItem() != null)
+            moveHighlight(tree.getSelectedItem());
       }
       catch (Exception e)
       {
@@ -210,7 +214,7 @@ public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
     */
    public void updateFileState(File file)
    {
-      
+
    }
 
    /**
@@ -231,6 +235,15 @@ public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
       {
          tree.setSelectedItem(item, false);
       }
+   }
+
+   /**
+    * 
+    */
+   public void deselectAllRecords()
+   {
+      if(tree.getSelectedItem() != null)
+         tree.getSelectedItem().setSelected(false);
    }
 
 }

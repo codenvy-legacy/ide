@@ -19,8 +19,10 @@
 package org.exoplatform.ide.client.search.file;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.browser.ItemTree;
 import org.exoplatform.ide.client.component.ItemTreeGrid;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.vfs.Folder;
@@ -41,7 +43,7 @@ public class SearchResultsForm extends View implements SearchResultPanel, Search
 
    public static final String TITLE = "Search";
 
-   private ItemTreeGrid<Item> searchItemTreeGrid;
+   private ItemTree searchItemTreeGrid;
 
    private final String FILE_NOT_FOUND_MESSAGE = "No results found!";
 
@@ -50,14 +52,18 @@ public class SearchResultsForm extends View implements SearchResultPanel, Search
    public SearchResultsForm(HandlerManager eventBus, ApplicationContext context, Folder searchResult)
    {
       super(ID, eventBus);
-      searchItemTreeGrid = new ItemTreeGrid<Item>(TREE_ID, true);
-      searchItemTreeGrid.setEmptyMessage(FILE_NOT_FOUND_MESSAGE);
-      searchItemTreeGrid.setShowHeader(false);
-      searchItemTreeGrid.setLeaveScrollbarGap(false);
-
-      searchItemTreeGrid.setHeight100();
-      searchItemTreeGrid.setWidth100();
-      addMember(searchItemTreeGrid);
+      searchItemTreeGrid = new ItemTree();
+      ScrollPanel treeWrapper = new ScrollPanel(searchItemTreeGrid);
+      treeWrapper.ensureDebugId("Tree-itemTree-Wrapper");
+      treeWrapper.setSize("100%", "100%");
+//      searchItemTreeGrid = new ItemTreeGrid<Item>(TREE_ID, true);
+//      searchItemTreeGrid.setEmptyMessage(FILE_NOT_FOUND_MESSAGE);
+//      searchItemTreeGrid.setShowHeader(false);
+//      searchItemTreeGrid.setLeaveScrollbarGap(false);
+//
+//      searchItemTreeGrid.setHeight100();
+//      searchItemTreeGrid.setWidth100();
+      addMember(treeWrapper);
 
       presenter = new SearchResultsPresenter(eventBus, context, searchResult);
       presenter.bindDsplay(this);

@@ -41,6 +41,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.TreeNode;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.TreeViewModel;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
@@ -61,8 +62,11 @@ public class BrowserForm extends View implements BrowserPanel, BrowserPresenter.
    {
       super(ID, eventBus);
       treeGrid = new ItemTree();
-      treeGrid.getElement().setAttribute("style", "overflow:auto;width:100%;height:100%");
-      addMember(treeGrid);
+      ScrollPanel treeWrapper = new ScrollPanel(treeGrid);
+      treeWrapper.ensureDebugId("Tree-itemTree-Wrapper");
+      treeWrapper.setSize("100%", "100%");
+//      treeGrid.getElement().setAttribute("style", "width:100%;height:100%");
+      addMember(treeWrapper);
       
 //      treeGrid = new ItemTreeGrid<Item>(TREE_ID);
 //      treeGrid.setShowHeader(false);

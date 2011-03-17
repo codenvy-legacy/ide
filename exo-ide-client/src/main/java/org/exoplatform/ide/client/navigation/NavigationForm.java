@@ -73,8 +73,8 @@ public class NavigationForm extends Panel implements NavigationPresenter.Display
       if (!isViewIsOpened(BrowserForm.ID))
       {
          BrowserForm navigatorForm = new BrowserForm(eventBus, context);
-         navigatorForm.setOverflow(Overflow.HIDDEN);
-         navigatorForm.setHeight100();
+//         navigatorForm.setOverflow(Overflow.AUTO);
+//         navigatorForm.setHeight100();
          Image tabIcon = new Image(IDEImageBundle.INSTANCE.workspace());
          openView(navigatorForm, BrowserForm.TITLE, tabIcon, false);
       }
