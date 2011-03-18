@@ -23,7 +23,6 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.browser.ItemTree;
-import org.exoplatform.ide.client.component.ItemTreeGrid;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;

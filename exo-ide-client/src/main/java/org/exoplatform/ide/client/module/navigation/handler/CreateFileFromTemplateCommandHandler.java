@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateHandler;
 import org.exoplatform.ide.client.template.CreateFileFromTemplateForm;
@@ -79,7 +80,14 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
 
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
    {
-      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
+      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
+      CreateFileFromTemplatePresenter createFilePresenter =
+         new CreateFileFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), openedFiles);
+      CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
+         new CreateFileFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createFilePresenter);
+      createFilePresenter.bindDisplay(createFileDisplay); 
+      //TODO removed the getting templates from registry:
+     /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
          @Override
          protected void onSuccess(TemplateList result)
@@ -96,7 +104,7 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
          {
             eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
-      });
+      });*/
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)

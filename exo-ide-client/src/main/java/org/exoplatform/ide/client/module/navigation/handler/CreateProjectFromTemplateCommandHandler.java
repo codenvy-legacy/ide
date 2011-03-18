@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateHandler;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
@@ -76,7 +77,13 @@ ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
     */
    public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
    {
-      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
+      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
+      CreateProjectFromTemplatePresenter createProjectPresenter =
+         new CreateProjectFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), restContext);
+      CreateFromTemplateDisplay<ProjectTemplate> createProjectDisplay =
+         new CreateProjectFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createProjectPresenter);
+      createProjectPresenter.bindDisplay(createProjectDisplay);
+     /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
          
          @Override
@@ -94,7 +101,7 @@ ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
          {
             eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
-      });
+      });*/
    }
 
    /**

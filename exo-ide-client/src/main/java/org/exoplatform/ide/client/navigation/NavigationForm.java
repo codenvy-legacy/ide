@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.client.navigation;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.BrowserForm;
 import org.exoplatform.ide.client.framework.vfs.Folder;
@@ -25,12 +30,6 @@ import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.panel.Panel;
 import org.exoplatform.ide.client.search.file.SearchResultPanel;
 import org.exoplatform.ide.client.search.file.SearchResultsForm;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.Overflow;
 
 /**
  * Created by The eXo Platform SAS.

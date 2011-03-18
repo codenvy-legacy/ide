@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateHandler;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateEvent;
@@ -127,7 +128,13 @@ CreateProjectTemplateHandler
     */
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
    {
-      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
+      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
+      CreateFileFromTemplatePresenter createFilePresenter =
+         new CreateFileFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), openedFiles);
+      CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
+         new CreateFileFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createFilePresenter);
+      createFilePresenter.bindDisplay(createFileDisplay);
+     /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
          
          @Override
@@ -145,7 +152,7 @@ CreateProjectTemplateHandler
          {
             eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
-      });
+      });*/
    }
 
 
@@ -154,7 +161,13 @@ CreateProjectTemplateHandler
     */
    public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
    {
-      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
+      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
+      CreateProjectFromTemplatePresenter createProjectPresenter =
+         new CreateProjectFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), restContext);
+      CreateFromTemplateDisplay<ProjectTemplate> createProjectDisplay =
+         new CreateProjectFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createProjectPresenter);
+      createProjectPresenter.bindDisplay(createProjectDisplay);
+     /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
          @Override
          protected void onSuccess(TemplateList result)
@@ -171,7 +184,7 @@ CreateProjectTemplateHandler
          {
             eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
-      });
+      });*/
    }
    
    /**

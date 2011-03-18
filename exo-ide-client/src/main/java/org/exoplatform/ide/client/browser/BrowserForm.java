@@ -18,34 +18,19 @@
  */
 package org.exoplatform.ide.client.browser;
 
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ide.client.component.ItemTreeGrid;
-import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.model.ApplicationContext;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.cellview.client.CellTree;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
-import com.google.gwt.user.cellview.client.TreeNode;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.view.client.TreeViewModel;
-import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.events.MouseDownEvent;
 import com.smartgwt.client.widgets.events.MouseDownHandler;
+
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.model.ApplicationContext;
+
+import java.util.List;
+import java.util.Map;
 
 public class BrowserForm extends View implements BrowserPanel, BrowserPresenter.Display
 {

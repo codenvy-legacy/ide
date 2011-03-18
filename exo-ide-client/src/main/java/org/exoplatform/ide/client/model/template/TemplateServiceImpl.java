@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.model.template;
 
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Random;
@@ -32,6 +33,7 @@ import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshalle
 import org.exoplatform.ide.client.model.template.marshal.TemplateMarshaller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -90,7 +92,7 @@ public class TemplateServiceImpl extends TemplateService
    {
       String url = restContext + CONTEXT + "/" + TEMPLATE + System.currentTimeMillis() + "/?createIfNotExist=true";
       TemplateMarshaller marshaller = new TemplateMarshaller(template);
-      
+
       callback.setResult(template);
       callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
@@ -113,6 +115,20 @@ public class TemplateServiceImpl extends TemplateService
    public void getTemplates(AsyncRequestCallback<TemplateList> callback)
    {
       String url = restContext + CONTEXT + "/?noCache=" + Random.nextInt();
+      TemplateList templateList = getDefaultTemplates();
+
+      TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
+      int[] acceptStatus = new int[]{HTTPStatus.OK, HTTPStatus.NOT_FOUND};
+
+      callback.setResult(templateList);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
+      callback.setSuccessCodes(acceptStatus);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   }
+
+   public static TemplateList getDefaultTemplates()
+   {
       TemplateList templateList = new TemplateList();
 
       templateList.getTemplates().add(
@@ -142,7 +158,7 @@ public class TemplateServiceImpl extends TemplateService
       templateList.getTemplates().add(
          new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget", "Netvibes Widget Skeleton", FileTemplates
             .getTemplateFor(MimeType.UWA_WIDGET), null));
-      
+
       templateList.getTemplates().add(
          new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget Flash", "Netvibes Widget Flash",
             NetvibseWidgetTemplates.FLASH, null));
@@ -165,18 +181,10 @@ public class TemplateServiceImpl extends TemplateService
       templateList.getTemplates().add(createChromatticForSampleProject());
 
       templateList.getTemplates().add(getSampleProject());
-
-      TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
-      int[] acceptStatus = new int[]{HTTPStatus.OK, HTTPStatus.NOT_FOUND};
-      
-      callback.setResult(templateList);
-      callback.setEventBus(eventBus);
-      callback.setPayload(unmarshaller);
-      callback.setSuccessCodes(acceptStatus);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      return templateList;
    }
 
-   private ProjectTemplate getSampleProject()
+   private static ProjectTemplate getSampleProject()
    {
       ProjectTemplate sampleProject = new ProjectTemplate("ide-project");
       sampleProject.setDescription("Sample project with REST script and Google Gadget");
@@ -207,7 +215,7 @@ public class TemplateServiceImpl extends TemplateService
       return sampleProject;
    }
 
-   private FileTemplate createFileTemplateForSampleProject()
+   private static FileTemplate createFileTemplateForSampleProject()
    {
       final String gadgetContent =
          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
@@ -254,7 +262,7 @@ public class TemplateServiceImpl extends TemplateService
       return gadgetFileTemplate;
    }
 
-   private FileTemplate createRestServiceForSampleProject()
+   private static FileTemplate createRestServiceForSampleProject()
    {
       String content =
          "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
@@ -271,7 +279,7 @@ public class TemplateServiceImpl extends TemplateService
       return restServiceTemplate;
    }
 
-   private FileTemplate createChromatticForSampleProject()
+   private static FileTemplate createChromatticForSampleProject()
    {
       String content =
          "package data;\n" + "@org.chromattic.api.annotations.PrimaryType(name=\"nt:unstructured\")\n"
@@ -285,7 +293,7 @@ public class TemplateServiceImpl extends TemplateService
       return template;
    }
 
-   private FileTemplate createPojoForSampleProject()
+   private static FileTemplate createPojoForSampleProject()
    {
       String content =
          "package data;\n\npublic class Pojo\n{\n" + "public static String say(String name)\n" + "{\n"

@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateHandler;
 import org.exoplatform.ide.client.template.CreateProjectTemplateForm;
@@ -49,7 +50,9 @@ public class CreateProjectTemplateCommandHandler implements CreateProjectTemplat
     */
    public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
    {
-      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
+      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
+      new CreateProjectTemplateForm(eventBus, defaultTemplates.getTemplates());
+      /*TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
          
          @Override
@@ -63,7 +66,7 @@ public class CreateProjectTemplateCommandHandler implements CreateProjectTemplat
          {
             eventBus.fireEvent(new ExceptionThrownEvent(exception));            
          }
-      });
+      });*/
    }
    
 }
