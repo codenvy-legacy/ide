@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +29,9 @@ import org.exoplatform.gwtframework.ui.client.component.Tree;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.discovery.RestService;
 
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -52,6 +55,28 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
       {
          addRestService(null, rs);
       }
+      if(tree.getItemCount() > 0)
+      {
+         tree.getItem(0).setSelected(true);
+      }
+   }
+   
+   /**
+    * @see org.exoplatform.gwtframework.ui.client.component.Tree#moveHighlight(com.google.gwt.user.client.ui.TreeItem)
+    */
+   @Override
+   protected void moveHighlight(TreeItem currentItem)
+   {
+      super.moveHighlight(currentItem);
+      if(currentItem.getElement().getFirstChildElement().getOffsetWidth() > tree.getOffsetWidth())
+      {
+         hiPanel.setWidth(currentItem.getElement().getFirstChildElement().getOffsetWidth() + 10+ "px");
+      }
+      else
+      {
+         hiPanel.setWidth("100%");
+      }
+      ((ScrollPanel)getParent()).scrollToLeft();
    }
 
    private void addRestService(TreeItem parentNode, RestService children)
