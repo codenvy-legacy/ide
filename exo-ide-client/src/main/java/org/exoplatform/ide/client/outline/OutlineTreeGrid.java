@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.types.TreeModelType;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.tree.Tree;
-import com.smartgwt.client.widgets.tree.TreeGridField;
-import com.smartgwt.client.widgets.tree.TreeNode;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
-import org.exoplatform.gwtframework.ui.client.component.TreeGrid;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -42,10 +42,8 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
+public class OutlineTreeGrid<T extends Token> extends org.exoplatform.ide.client.component.Tree<T>
 {
-
-   private static final String ICON = "icon";
 
    private static final String VAR_ICON = Images.Outline.VAR_ITEM;
 
@@ -70,114 +68,102 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    private static final String DEFAULT_FIELD_ICON = Images.Outline.DEFAULT_FIELD;
 
    private static final String PROPERTY_ICON = Images.Outline.PROPERTY_ITEM;
-   
+
    private static final String TAG_ICON = Images.Outline.TAG_ITEM;
-   
+
    private static final String CDATA_ICON = Images.Outline.CDATA_ITEM;
-   
+
    private static final String GROOVY_TAG_ICON = Images.Outline.GROOVY_TAG_ITEM;
-   
+
    private static final String CLASS_ICON = Images.Outline.CLASS_ITEM;
-   
+
    private static final String OBJECT_ICON = Images.Outline.OBJECT_ITEM;
-   
+
    private static final String ARRAY_ICON = Images.Outline.ARRAY_ITEM;
-   
+
    private static final String DATA_ICON = Images.Outline.DATA_ITEM;
-   
+
    private static final String ERROR_ICON = Images.Outline.ERROR_ITEM;
-   
+
    private static final String INTERFACE_ICON = Images.Outline.INTERFACE_ITEM;
-   
-   private static final String NAME = "name";
-
-   private Tree tree;
-
-   private TreeNode rootNode;
 
    public OutlineTreeGrid(String id)
    {
-      setID(id);
-      setSelectionType(SelectionStyle.SINGLE);
-      
-      // setCanFocus(false);  // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."
-      
-      setShowConnectors(true);
-      setCanSort(false);
-      setCanEdit(false);
-      setShowRoot(false);
-      setFixedFieldWidths(false);
-      setIconSize(16);
-      setCanFocus(true);
-      
-      tree = new Tree();
-      tree.setModelType(TreeModelType.CHILDREN);
-      rootNode = new TreeNode("root");
-      tree.setRoot(rootNode);
-      setData(tree);
-      
-      TreeGridField nameField = new TreeGridField(NAME);
-      //TODO
-      //This field need for selenium.
-      //We can't select tree node, if click on first column.
-      //If you click on second column - tree item is selected.
-      TreeGridField mockField = new TreeGridField("mock");
-      mockField.setWidth(3);
-      setFields(nameField, mockField);
+      getElement().setId(id);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.component.Tree#doUpdateValue()
+    */
    @Override
-   protected void doUpdateValue()
+   public void doUpdateValue()
    {
-      if (getValue() != null && getValue().getSubTokenList() != null 
-               && getValue().getSubTokenList().size() > 0)
+      if (value == null)
+         return;
+
+      if (value.getName() == null || value.getType() == null)
       {
-         fillTreeItems(rootNode, getValue().getSubTokenList());
+         fillTreeItems(value.getSubTokenList());
+         return;
       }
       else
       {
-         TreeNode[] oldNodes = tree.getChildren(rootNode);
-         tree.removeList(oldNodes);
+         TreeItem addItem = tree.addItem(createItemWidget(getTokenIcon(value), getTokenDisplayTitle(value)));
+         addItem.setUserObject(value);
+         fillTreeItems(addItem, getValue().getSubTokenList());
       }
-
    }
 
-   private void fillTreeItems(TreeNode parentNode, List<Token> children)
+   /**
+    * Create tree nodes of pointed parent and its child nodes.
+    * 
+    * @param parentNode
+    * @param children
+    */
+   private void fillTreeItems(TreeItem parentNode, List<Token> children)
    {
-      TreeNode[] oldNodes = tree.getChildren(parentNode);
-      tree.removeList(oldNodes);
+      if (parentNode == null || children == null)
+         return;
+      //Clear parent node children:
+      parentNode.removeItems();
       for (Token child : children)
       {
-         TreeNode newNode = null;
-         TreeNode[] nodes = tree.getChildren(parentNode);
-         for (TreeNode node : nodes)
+         if (child != null && child.getName() != null && child.getType() != null)
          {
-            if (node.getAttributeAsObject(getValuePropertyName()) == child)
-            {
-               newNode = node;
-               break;
-            }
-         }
-         
-         if (child.getName() != null)
-         {
-            if (newNode == null)
-            {
-               newNode = new TreeNode();
-               newNode.setAttribute(getValuePropertyName(), child);
-               newNode.setAttribute(ICON, getTokenItem(child));
-               newNode.setAttribute(NAME, getTokenDisplayTitle(child));
-               tree.add(newNode, parentNode);
-            }
-            
+            TreeItem node = parentNode.addItem(createItemWidget(getTokenIcon(child), getTokenDisplayTitle(child)));
+            node.setUserObject(child);
             if (child.getSubTokenList() != null && child.getSubTokenList().size() > 0)
             {
-               fillTreeItems(newNode, child.getSubTokenList());
+               fillTreeItems(node, child.getSubTokenList());
             }
          }
       }
    }
-   
+
+   /**
+    * Create tree nodes in the root of the tree.
+    * 
+    * @param children
+    */
+   private void fillTreeItems(List<Token> children)
+   {
+      if (children == null)
+         return;
+      tree.removeItems();
+      for (Token child : children)
+      {
+         if (child != null && child.getName() != null && child.getType() != null)
+         {
+            TreeItem node = tree.addItem(createItemWidget(getTokenIcon(child), getTokenDisplayTitle(child)));
+            node.setUserObject(child);
+            if (child.getSubTokenList() != null && child.getSubTokenList().size() > 0)
+            {
+               fillTreeItems(node, child.getSubTokenList());
+            }
+         }
+      }
+   }
+
    /**
     * Get the string to display token.
     * 
@@ -194,45 +180,50 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          //icon, that displays in right bottom corner, if token is CLASS, 
          //and shows access modifier
          String modfImg = "";
-         
-         if (TokenType.CLASS.equals(token.getType()) 
-                  || TokenType.INTERFACE.equals(token.getType()))
-         {            
+
+         if (TokenType.CLASS.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType()))
+         {
             if (isPrivate(token))
             {
-               modfImg = "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-private.png" + "\" />";
+               modfImg =
+                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-private.png"
+                     + "\" />";
             }
             else if (isProtected(token))
             {
-               modfImg = "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-protected.png" + "\" />";
+               modfImg =
+                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-protected.png"
+                     + "\" />";
             }
             else if (isPublic(token))
             {
             }
             else
             {
-               modfImg = "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-default.png" + "\" />";
+               modfImg =
+                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-default.png"
+                     + "\" />";
             }
-            
-            
          }
 
          String synchImg = "";
          if (isSynchronized(token))
          {
             final String marginLeft = modfImg.length() > 0 ? "-3" : "-10";
-            synchImg = "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:" + marginLeft 
-               + "px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/clock.png" + "\" />";
+            synchImg =
+               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:" + marginLeft
+                  + "px; margin-top:8px;\"  border=\"0\"" + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL()
+                  + "outline/clock.png" + "\" />";
          }
          String annotationList = getAnnotationList(token);
          String deprecateSign = (isDeprecated) ? "style='text-decoration:line-through;'" : "";
-         name = getModifiersContainer(token) + modfImg + synchImg + "<span " + deprecateSign + " title=\"" + annotationList 
-            + "\">&nbsp;&nbsp;" + name + "</span>";
-         
+         name =
+            getModifiersContainer(token) + modfImg + synchImg + "<span " + deprecateSign + " title=\"" + annotationList
+               + "\">&nbsp;&nbsp;" + name + "</span>";
+
          if (TokenType.METHOD.equals(token.getType()))
          {
             name += getParametersList(token);
@@ -240,17 +231,15 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          //Field type or method return type:
          name += "<span style='color:#644a17;' title=\"" + annotationList + "\">" + getElementType(token) + "</span>";
       }
-      
+
       // display type of javascript variables
-      else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType())
-               && token.getElementType() != null)
+      else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType()) && token.getElementType() != null)
       {
          name += "<span style='color:#644a17;'>" + getElementType(token) + "</span>";
       }
-         
       return name;
    }
-   
+
    /**
     * Checks, whether method has deprecated annotation.
     * 
@@ -259,8 +248,9 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
     */
    private boolean isDeprecated(Token token)
    {
-      if (token.getAnnotations() == null) return false;
-      
+      if (token.getAnnotations() == null)
+         return false;
+
       for (Token annotation : token.getAnnotations())
       {
          if ("@deprecated".equalsIgnoreCase(annotation.getName()))
@@ -270,17 +260,16 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       }
       return false;
    }
-   
+
    /**
     * Get icon for token.
     * 
     * @param token token
     * @return icon
     */
-   private String getTokenItem(Token token)
+   private String getTokenIcon(Token token)
    {
-      if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType())
-            && !TokenType.GROOVY_TAG.equals(token.getType()))
+      if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()) && !TokenType.GROOVY_TAG.equals(token.getType()))
       {
          return getIconForJavaFiles(token);
       }
@@ -314,33 +303,32 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             return OBJECT_ICON;
 
          case ARRAY :
-            return ARRAY_ICON;            
+            return ARRAY_ICON;
 
          case NUMBER :
          case BOOLEAN :
          case STRING :
-         case NULL :            
-            return DATA_ICON;            
+         case NULL :
+            return DATA_ICON;
 
-         case ERROR :            
+         case ERROR :
             return ERROR_ICON;
 
          case INTERFACE :
-            return INTERFACE_ICON;            
-            
+            return INTERFACE_ICON;
+
          default :
             return "";
       }
    }
-   
-   
+
    /**
     * Forms the icon for java files (groovy, POJO, etc)
     * 
     * @return {@link String} icon
     */
    private String getIconForJavaFiles(Token token)
-   {      
+   {
       switch (token.getType())
       {
          case VARIABLE :
@@ -361,7 +349,7 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             {
                return DEFAULT_METHOD_ICON;
             }
-            
+
          case PROPERTY :
             if (isPrivate(token))
             {
@@ -379,10 +367,10 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             {
                return DEFAULT_FIELD_ICON;
             }
-            
+
          case CLASS :
             return CLASS_ICON;
-            
+
          case INTERFACE :
             return INTERFACE_ICON;
 
@@ -390,19 +378,22 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             return "";
       }
    }
-   
+
    /**
     * @param token {@link Token} 
     * @return html element with modifers
     */
-   private String getModifiersContainer(Token token){
+   private String getModifiersContainer(Token token)
+   {
       //Get annotation list like string:
       String annotationList = getAnnotationList(token);
-      
+
       //Count size for better align the html elments:
-      int size = (annotationList.length() > 0) ? 28: 22;
-      
-      String span = "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: "+size+"px; height: 10px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; \">";
+      int size = (annotationList.length() > 0) ? 28 : 22;
+
+      String span =
+         "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: " + size
+            + "px; height: 10px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; \">";
       span += (annotationList.length() > 0) ? "<font color ='#000000' style='float: right;'>@</font>" : "";
       span += (isAbstract(token)) ? "<font color ='#004e00' style='float: right;'>a</font>" : "";
       span += (isFinal(token)) ? "<font color ='#174c83' style='float: right;'>f</font>" : "";
@@ -436,7 +427,7 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    private boolean isStatic(Token token)
    {
       return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.STATIC);
-   }   
+   }
 
    private boolean isProtected(Token token)
    {
@@ -452,67 +443,52 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    {
       return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.PUBLIC);
    }
-   
+
    private boolean isSynchronized(Token token)
    {
       return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.SYNCHRONIZED);
    }
-   
+
    /**
     * @param annotationList 
     * @return HTML code to display "@" sign near the groovy token if annotationList is not empty, or "" otherwise
     */
-   private static  final String getAnnotationSign(String annotationList)
+   private static final String getAnnotationSign(String annotationList)
    {
-      // font-family: Verdana,Bitstream Vera Sans,sans-serif;
-      return (! annotationList.isEmpty() ? "<span style = \"font-family: Verdana, Bitstream Vera Sans, sans-serif; color: #525252; width: 9px; height: 9 px; position: absolute; margin-top: -5px;\">@</span>&nbsp;&nbsp;&nbsp;" : "");
+      return (!annotationList.isEmpty()
+         ? "<span style = \"font-family: Verdana, Bitstream Vera Sans, sans-serif; color: #525252; width: 9px; height: 9 px; position: absolute; margin-top: -5px;\">@</span>&nbsp;&nbsp;&nbsp;"
+         : "");
    }
-   
+
+   /**
+    * Select token in the tree.
+    * 
+    * @param token
+    */
    public void selectToken(Token token)
    {
-      if (token.getName() == null) return;
-      
-      final String name = token.getName(); 
-      final int lineNumber = token.getLineNumber();
-      
-      TreeNode selectedNode = null;
-      
-      //find node and open all parents
-      for (TreeNode node : tree.getAllNodes())
+      if (token.getName() == null)
+         return;
+      TreeItem nodeToSelect = getTreeItemByToken(token);
+      if (nodeToSelect == null)
       {
-         Token nodeToken = (Token)node.getAttributeAsObject(getValuePropertyName());
-         if (nodeToken.getName().equals(name) && nodeToken.getLineNumber() == lineNumber)
-         {
-            tree.openFolder(node);
-            TreeNode parent = tree.getParent(node);
-            while (parent != null)
-            {
-               tree.openFolder(parent);
-               parent = tree.getParent(parent);
-            }
-            selectedNode = node;
-            break;
-         }
+         return;
       }
-      
-      //select opened record
-      if (selectedNode != null)
+      TreeItem parent = nodeToSelect.getParentItem();
+      while (parent != null)
       {
-         for (ListGridRecord record : getRecords())
-         {
-            if (record.getAttributeAsObject(getValuePropertyName()) instanceof Token)
-            {
-               Token  currentToken =  (Token)record.getAttributeAsObject(getValuePropertyName());
-               if (name.equals(currentToken.getName()) && lineNumber == currentToken.getLineNumber())
-               {
-                  selectSingleRecord(record);
-                  return;
-               }
-            }
-         }
+         parent.setState(true, true);
+         parent = parent.getParentItem();
       }
+      tree.setSelectedItem(nodeToSelect);
    }
-   
+
+   /**
+    * Checks if file's MIME type gives an opportunity to show outline.
+    * 
+    * @param file
+    * @return
+    */
    public static boolean haveOutline(File file)
    {
       return file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)
@@ -522,20 +498,20 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
          || file.getContentType().equals(MimeType.APPLICATION_XML) || file.getContentType().equals(MimeType.TEXT_XML)
          || file.getContentType().equals(MimeType.TEXT_HTML) || file.getContentType().equals(MimeType.GROOVY_SERVICE)
          || file.getContentType().equals(MimeType.APPLICATION_GROOVY)
-         || file.getContentType().equals(MimeType.GROOVY_TEMPLATE)
-         || file.getContentType().equals(MimeType.UWA_WIDGET)
+         || file.getContentType().equals(MimeType.GROOVY_TEMPLATE) || file.getContentType().equals(MimeType.UWA_WIDGET)
          || file.getContentType().equals(MimeType.CHROMATTIC_DATA_OBJECT);
    }
-   
+
+   /**
+    * Get the the list of selected tokens in outline tree.
+    * 
+    * @return {@link List}
+    */
    public List<Token> getSelectedTokens()
    {
       List<Token> selectedItems = new ArrayList<Token>();
-
-      for (ListGridRecord record : getSelection())
-      {
-         selectedItems.add((Token)record.getAttributeAsObject(getValuePropertyName()));
-      }
-
+      if (tree.getSelectedItem() != null)
+         selectedItems.add((Token)tree.getSelectedItem().getUserObject());
       return selectedItems;
    }
 
@@ -548,7 +524,7 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
    {
       if (token.getElementType() != null)
       {
-         return " : " + token.getElementType();                  
+         return " : " + token.getElementType();
       }
       return "";
    }
@@ -560,13 +536,13 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
     */
    private String getParametersList(Token token)
    {
-      String parametersDescription = "(";      
+      String parametersDescription = "(";
 
       if (token.getParameters() != null && token.getParameters().size() > 0)
       {
-         
+
          List<Token> parameters = token.getParameters();
-         
+
          for (int i = 0; i < parameters.size(); i++)
          {
             Token parameter = parameters.get(i);
@@ -574,15 +550,17 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
             {
                parametersDescription += ", ";
             }
-            
+
             String annotationList = getAnnotationList(parameter);
-            
-            parametersDescription += "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList) + parameter.getElementType() + "</span>";
-         } 
+
+            parametersDescription +=
+               "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList)
+                  + parameter.getElementType() + "</span>";
+         }
       }
 
       return parametersDescription + ")";
-   }   
+   }
 
    /**
     * Return formatted annotation list from token.getAnnotations()
@@ -594,17 +572,92 @@ public class OutlineTreeGrid<T extends Token> extends TreeGrid<T>
       if (token.getAnnotations() != null && token.getAnnotations().size() > 0)
       {
          String title = "";
-         
+
          for (Token annotation : token.getAnnotations())
          {
-               title += annotation.getName() + "; ";
+            title += annotation.getName() + "; ";
          }
-         
+
          // replace all '"' on HTML Entity "&#34;"
          return title.replaceAll("\"", "&#34;");
       }
-      
+
       return "";
    }
 
+   /**
+    * @see org.exoplatform.ide.client.component.Tree#createItemWidget(java.lang.String, java.lang.String)
+    */
+   @Override
+   protected Widget createItemWidget(String icon, String text)
+   {
+      Grid grid = new Grid(1, 2);
+      grid.setWidth("100%");
+
+      Image i = new Image(icon);
+      i.setHeight("16px");
+      grid.setWidget(0, 0, i);
+      Label l = new Label();
+      l.getElement().setInnerHTML(text);
+      l.setWordWrap(false);
+      grid.setWidget(0, 1, l);
+
+      grid.getCellFormatter().setWidth(0, 0, "16px");
+      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+      grid.getCellFormatter().setWidth(0, 1, "100%");
+      DOM.setStyleAttribute(grid.getElement(), "display", "block");
+      return grid;
+   }
+
+   /**
+    * Find {@link TreeItem} in the whole of the pointed token.
+    * 
+    * @param token token
+    * @return {@link TreeItem}
+    */
+   private TreeItem getTreeItemByToken(Token token)
+   {
+      for (int i = 0; i < tree.getItemCount(); i++)
+      {
+         TreeItem child = tree.getItem(i);
+         if (child.getUserObject() == null)
+            continue;
+         if (((Token)child.getUserObject()).getName().equals(token.getName())
+            && ((Token)child.getUserObject()).getLineNumber() == token.getLineNumber())
+         {
+            return child;
+         }
+         TreeItem item = getChild(child, token);
+         if (item != null)
+            return item;
+      }
+      return null;
+   }
+
+   /**
+    * Get child tree node of pointed parent, that represents the pointed token.
+    * 
+    * @param parent parent
+    * @param token token
+    * @return {@link TreeItem}
+    */
+   private TreeItem getChild(TreeItem parent, Token token)
+   {
+      for (int i = 0; i < parent.getChildCount(); i++)
+      {
+         TreeItem child = parent.getChild(i);
+         if (child.getUserObject() == null)
+            continue;
+         if (((Token)child.getUserObject()).getName().equals(token.getName())
+            && ((Token)child.getUserObject()).getLineNumber() == token.getLineNumber())
+         {
+            return child;
+         }
+         TreeItem item = getChild(child, token);
+         if (item != null)
+            return item;
+      }
+      return null;
+   }
 }

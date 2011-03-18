@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.outline;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.SelectionStyle;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.api.Token;
@@ -50,7 +50,7 @@ public class OutlineForm extends View implements OutlinePresenter.Display
    private static final String OUTLINE_TREE_GRID_ID = "ideOutlineTreeGrid";
 
    public static final String ID = "ideOutlineForm";
-   
+
    private Image OUTLINE_TAB_ICON = new Image(IDEImageBundle.INSTANCE.outline());
 
    private HandlerManager eventBus;
@@ -65,32 +65,22 @@ public class OutlineForm extends View implements OutlinePresenter.Display
       setTitle("Outline");
       setType(ViewType.OUTLINE);
       setImage(OUTLINE_TAB_ICON);
-      
-      
+
       eventBus = bus;
 
       createTreeGrid();
 
       presenter = new OutlinePresenter(eventBus, activeTextEditor, activeFile);
       presenter.bindDisplay(this);
-      
+
    }
-   
+
    private void createTreeGrid()
    {
       treeGrid = new OutlineTreeGrid<Token>(OUTLINE_TREE_GRID_ID);
-      treeGrid.setShowHeader(false);
-      treeGrid.setLeaveScrollbarGap(false);
-      treeGrid.setShowOpenIcons(true);
-      treeGrid.setEmptyMessage("");
-      treeGrid.setCanFocus(true);
-
-      treeGrid.setSelectionType(SelectionStyle.SINGLE);
-
-      treeGrid.setHeight100();
-      treeGrid.setWidth100();
-
-      addMember(treeGrid);
+      ScrollPanel treeWrapper = new ScrollPanel(treeGrid);
+      treeWrapper.setSize("100%", "100%");
+      addMember(treeWrapper);
    }
 
    public TreeGridItem<Token> getOutlineTree()
@@ -105,7 +95,7 @@ public class OutlineForm extends View implements OutlinePresenter.Display
          treeGrid.selectToken(token);
       }
    }
-   
+
    /**
     * @see com.smartgwt.client.widgets.BaseWidget#onDraw()
     */
@@ -125,7 +115,7 @@ public class OutlineForm extends View implements OutlinePresenter.Display
       presenter.destroy();
       super.onDestroy();
    }
-   
+
    public List<Token> getSelectedTokens()
    {
       return treeGrid.getSelectedTokens();
@@ -133,7 +123,6 @@ public class OutlineForm extends View implements OutlinePresenter.Display
 
    public void setFocus()
    {
-      treeGrid.focus();
+      focus();
    }
-
 }
