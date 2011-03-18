@@ -43,6 +43,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -283,13 +284,16 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
       Image i = new Image(icon);
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
-      Label l = new Label(text, false);
+//      Label l = new Label(text, false);
+      HTMLPanel l = new HTMLPanel("div", text);
+      l.setStyleName("ide-Tree-label");
       grid.setWidget(0, 1, l);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setWidth(0, 1, "100%");
+//      grid.getCellFormatter().addStyleName(0, 1, "ide-Tree-label");
       DOM.setStyleAttribute(grid.getElement(), "display", "block");
       return grid;
    }

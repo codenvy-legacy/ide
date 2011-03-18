@@ -22,12 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 
 import com.google.gwt.user.client.ui.TreeItem;
+import com.smartgwt.client.widgets.tree.TreeNode;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -36,6 +39,8 @@ import com.google.gwt.user.client.ui.TreeItem;
  */
 public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
 {
+
+   private Map<String, String> locktokens;
 
    /**
     * @param item
@@ -126,7 +131,7 @@ public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
          text = Images.FileTypes.FOLDER;
       }
 
-      TreeItem node = new TreeItem(createItemWidget(text, item.getName()));
+      TreeItem node = new TreeItem(createItemWidget(text, getTitle(item)));
 
       node.setUserObject(item);
       if (item instanceof Folder)
@@ -135,6 +140,29 @@ public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
          node.addItem("");
       }
       return node;
+   }
+
+   private String getTitle(Item item)
+   {
+      String title = "";
+
+      if (locktokens == null)
+      {
+         return item.getName();
+      }
+
+      if (item.getProperty(ItemProperty.LOCKDISCOVERY) != null)
+      {
+         if (!locktokens.containsKey(item.getHref()))
+         {
+            title +=
+               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-12px; margin-top:3px;\"  border=\"0\" suppress=\"TRUE\" src=\""
+                  + UIHelper.getGadgetImagesURL() + "navigation/lock.png" + "\" />&nbsp;&nbsp;";
+         }
+      }
+      title += item.getName();
+
+      return title;
    }
 
    /**
@@ -214,7 +242,17 @@ public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
     */
    public void updateFileState(File file)
    {
+      TreeItem fileNode = getNodeByHref(file.getHref());
+      if (fileNode == null)
+      {
+         return;
+      }
+      TreeItem parentItem = fileNode.getParentItem();
+      parentItem.removeItem(fileNode);
+      fileNode = new TreeItem(createItemWidget(file.getIcon(), getTitle(file)));
+      parentItem.addItem(fileNode);
 
+      fileNode.setState(true);
    }
 
    /**
@@ -222,7 +260,7 @@ public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
     */
    public void setLocktokens(Map<String, String> locktokens)
    {
-
+      this.locktokens = locktokens;
    }
 
    /**
@@ -242,7 +280,7 @@ public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
     */
    public void deselectAllRecords()
    {
-      if(tree.getSelectedItem() != null)
+      if (tree.getSelectedItem() != null)
          tree.getSelectedItem().setSelected(false);
    }
 
