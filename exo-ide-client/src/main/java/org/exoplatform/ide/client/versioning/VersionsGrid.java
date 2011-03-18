@@ -18,12 +18,16 @@
  */
 package org.exoplatform.ide.client.versioning;
 
+import java.util.Comparator;
+import java.util.List;
+
 import com.google.gwt.dom.client.Style.Unit;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
@@ -50,11 +54,11 @@ public class VersionsGrid extends ListGrid<Version>
       setID(ID);
 
       ListGridField fieldName = new ListGridField(NAME, NAME);
-      fieldName.setAlign(Alignment.LEFT);
+      fieldName.setAlign(Alignment.CENTER);
       fieldName.setWidth("35%");
 
       ListGridField fieldDate = new ListGridField(DATE, DATE);
-      fieldDate.setAlign(Alignment.LEFT);
+      fieldDate.setAlign(Alignment.CENTER);
       fieldDate.setWidth("40%");
 
       ListGridField fieldLenght = new ListGridField(LENGTH, LENGTH);
@@ -78,7 +82,8 @@ public class VersionsGrid extends ListGrid<Version>
          }
 
       };
-      nameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      nameColumn.setSortable(true);
+      nameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
       getCellTable().addColumn(nameColumn, NAME);
       getCellTable().setColumnWidth(nameColumn, 35, Unit.PCT);
       
@@ -93,23 +98,42 @@ public class VersionsGrid extends ListGrid<Version>
          }
 
       };
+      dateColumn.setSortable(true);
       getCellTable().addColumn(dateColumn, DATE);
       getCellTable().setColumnWidth(dateColumn, 40, Unit.PCT);
       
-      //length column
+      // content length column
       Column<Version, String> lengthColumn = new Column<Version, String>(new TextCell())
       {
 
          @Override
          public String getValue(final Version item)
          {
-            return item.getCreationDate();
+            return String.valueOf(item.getContentLength());
          }
 
       };
-      lengthColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      lengthColumn.setSortable(true);
+      lengthColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
       getCellTable().addColumn(lengthColumn, LENGTH);
       getCellTable().setColumnWidth(lengthColumn, 25, Unit.PCT);
+      
+      List<Version> versions = getCellTable().getVisibleItems();
+      
+      // Add a ColumnSortEvent.ListHandler to connect sorting to the
+      // java.util.List.
+      ListHandler<Version> columnSortHandler = new ListHandler<Version>(versions);
+      columnSortHandler.setComparator(nameColumn, new Comparator<Version>()
+      {
+         public int compare(Version item1, Version item2)
+         {
+            return item2.getName().compareTo(item1.getName());
+         }
+      });
+      getCellTable().addColumnSortHandler(columnSortHandler);
+
+      // We know that the data is sorted alphabetically by default.
+      getCellTable().getColumnSortList().push(nameColumn);
       
    }
   
