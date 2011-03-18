@@ -20,16 +20,10 @@ package org.exoplatform.ide.client.restdiscovery;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -61,9 +55,9 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
 
    private IButton okButton;
 
-   private VLayout vLayout;
+   private VerticalPanel vLayout;
 
-   private HLayout hLayout;
+   private HorizontalPanel hLayout;
 
    private TextField requestType;
 
@@ -82,18 +76,18 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
    public RestServicesDiscoveryForm(HandlerManager eventBus)
    {
       super(eventBus, WIDTH, HEIGTH, ID);
-      vLayout = new VLayout();
-      vLayout.setHeight100();
-      vLayout.setMargin(10);
-      vLayout.setAlign(Alignment.CENTER);
+      vLayout = new VerticalPanel();
+      vLayout.setHeight("100%");
+      vLayout.setSpacing(10);
+      vLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       setTitle("REST Services Discovery");
 
-      hLayout = new HLayout();
-      hLayout.setWidth100();
-      hLayout.setHeight100();
+      hLayout = new HorizontalPanel();
+      hLayout.setWidth("100%");
+      hLayout.setHeight("100%");
       setWidget(vLayout);
 
-      vLayout.addMember(hLayout);
+      vLayout.add(hLayout);
 
       createGrid(hLayout);
       createButtons(vLayout);
@@ -108,15 +102,12 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
    /**
     * @param hLayout2
     */
-   private void createInfoForm(Layout layout)
+   private void createInfoForm(HorizontalPanel layout)
    {
       int width = 270;
 
-      VLayout vL = new VLayout();
-      vL.setMembersMargin(3);
-      vL.setShowEdges(true);
-      vL.setEdgeSize(1);
-      vL.setOverflow(Overflow.AUTO);
+      VerticalPanel vL = new VerticalPanel();
+      vL.setSpacing(3);
       VerticalPanel form = new VerticalPanel();
       form.getElement().setAttribute("id", "ideRestServiceDiscoveryForm");
       form.setWidth("100%");
@@ -131,8 +122,8 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
 
       parameters = new RestServiceParameterListGrid();
       parameters.setID("ideRestServiceDiscoveryParameters");
-      parameters.setWidth100();
-      parameters.setHeight100();
+      parameters.setWidth("300px");
+      parameters.setHeight("100px");
       parameters.setShowEdges(false);
       parameters.setMargin(3);
       parameters.setVisible(false);
@@ -141,9 +132,9 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       form.add(requestType);
       form.add(responseType);
 
-      vL.addMember(form);
-      vL.addMember(parameters);
-      layout.addMember(vL);
+      vL.add(form);
+      vL.add(parameters);
+      layout.add(vL);
 
    }
 
@@ -170,28 +161,24 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
    /**
     * 
     */
-   private void createGrid(Layout layout)
+   private void createGrid(HorizontalPanel layout)
    {
       treeGrid = new RestServiceTreeGrid();
       treeGrid.setShowResizeBar(true);
-      //      treeGrid.setWidth(250);
-      treeGrid.setWidth("35%");
-      treeGrid.setHeight100();
-      layout.addMember(treeGrid);
-
+      treeGrid.setWidth(250);
+      //treeGrid.setWidth("35%");
+      //treeGrid.setHeight100();
+      layout.add(treeGrid);
    }
 
    /**
     * 
     */
-   private void createButtons(Layout layout)
+   private void createButtons(VerticalPanel layout)
    {
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setHeight(22);
-      buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setMembersMargin(5);
-      buttonsLayout.setMargin(10);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight(22 + "px");
+      buttonsLayout.setSpacing(5);
 
       okButton = new IButton("Ok");
       okButton.setWidth(90);
@@ -199,9 +186,9 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       okButton.setIcon(Images.Buttons.YES);
       okButton.setID(ID_OK);
 
-      buttonsLayout.addMember(okButton);
+      buttonsLayout.add(okButton);
 
-      layout.addMember(buttonsLayout);
+      layout.add(buttonsLayout);
    }
 
    /**
