@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.extension.groovy.client.ui;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.ListGridFieldType;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
-import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
+import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.EditTextCell;
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
@@ -33,83 +33,98 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry> implements EditCompleteHandler
+public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry>
 {
+   private static final String SEND = "Send";
 
-   private HandlerRegistration editCompleteHandler;
+   private static final String NAME = "Name";
+
+   private static final String TYPE = "Type";
+
+   private static final String DEFAULT = "By default";
+
+   private static final String VALUE = "Value";
 
    public WadlParameterEntryListGrid()
    {
-      setHeaderHeight(22);
-
-      ListGridField fieldSend = new ListGridField("send", "Send");
-      fieldSend.setAlign(Alignment.CENTER);
-      fieldSend.setType(ListGridFieldType.BOOLEAN);
-      fieldSend.setWidth(33);
-      fieldSend.setCanEdit(true);
-
-      ListGridField fieldName = new ListGridField("name", "Name");
-      fieldName.setAlign(Alignment.LEFT);
-      fieldName.setCanEdit(false);
-
-      ListGridField fieldType = new ListGridField("type", "Type");
-      fieldType.setAlign(Alignment.LEFT);
-      fieldType.setCanEdit(false);
-
-      ListGridField fieldDefault = new ListGridField("default", "By default");
-      fieldDefault.setAlign(Alignment.LEFT);
-      fieldDefault.setCanEdit(false);
-
-      ListGridField fieldValue = new ListGridField("value", "Value");
-      fieldValue.setAlign(Alignment.LEFT);
-      fieldValue.setCanEdit(true);
-
-      setData(new ListGridRecord[0]);
-      setFields(fieldSend, fieldName, fieldType, fieldDefault, fieldValue);
-
-      setShowHeader(true);
-
-      editCompleteHandler = addEditCompleteHandler(this);
+      initColumns();
    }
 
-   @Override
-   protected void setRecordFields(ListGridRecord record, WadlParameterEntry item)
+   private void initColumns()
    {
-      record.setAttribute("send", item.isSend());
-      record.setAttribute("name", item.getName());
-      record.setAttribute("type", item.getType());
-      record.setAttribute("default", item.getDefaultValue());
-      record.setAttribute("value", item.getValue());
-   }
+      //isSend column
+      Column<WadlParameterEntry, Boolean> sendColumn =
+         new Column<WadlParameterEntry, Boolean>(new CheckboxCell(true, false))
+         {
+            @Override
+            public Boolean getValue(WadlParameterEntry object)
+            {
+               return object.isSend();
+            }
+         };
 
-   public void onEditComplete(EditCompleteEvent event)
-   {
-      editCompleteHandler.removeHandler();
+      sendColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      getCellTable().addColumn(sendColumn, SEND);
+      getCellTable().setColumnWidth(sendColumn, 33, Unit.PX);
 
-      WadlParameterEntry listItem =
-         (WadlParameterEntry)event.getOldRecord().getAttributeAsObject(getValuePropertyName());
-      if (event.getNewValues().get("name") != null)
+      //name column
+      Column<WadlParameterEntry, String> nameColumn = new Column<WadlParameterEntry, String>(new TextCell())
       {
-         listItem.setName("" + event.getNewValues().get("name"));
-      }
-      if (event.getNewValues().get("value") != null)
-      {
-         listItem.setValue("" + event.getNewValues().get("value"));
-      }
-      if (event.getNewValues().get("type") != null)
-      {
-         listItem.setType("" + event.getNewValues().get("type"));
-      }
-      if (event.getNewValues().get("send") != null)
-      {
-         listItem.setSend(Boolean.parseBoolean(event.getNewValues().get("send").toString()));
-      }
-      if (event.getNewValues().get("default") != null)
-      {
-         listItem.setDefaultValue("" + event.getNewValues().get("default"));
-      }
 
-      editCompleteHandler = addEditCompleteHandler(this);
+         @Override
+         public String getValue(final WadlParameterEntry item)
+         {
+            return item.getName();
+         }
+
+      };
+      getCellTable().addColumn(nameColumn, NAME);
+
+      //type column
+      Column<WadlParameterEntry, String> typeColumn = new Column<WadlParameterEntry, String>(new TextCell())
+      {
+
+         @Override
+         public String getValue(final WadlParameterEntry item)
+         {
+            return item.getType();
+         }
+
+      };
+      getCellTable().addColumn(typeColumn, TYPE);
+
+      //default column
+      Column<WadlParameterEntry, String> defaultColumn = new Column<WadlParameterEntry, String>(new TextCell())
+      {
+         @Override
+         public String getValue(final WadlParameterEntry item)
+         {
+            return item.getDefaultValue();
+         }
+
+      };
+      getCellTable().addColumn(defaultColumn, DEFAULT);
+      
+      //value column
+      Column<WadlParameterEntry, String> valueColumn = new Column<WadlParameterEntry, String>(new EditTextCell())
+      {
+
+         @Override
+         public String getValue(final WadlParameterEntry item)
+         {
+            return item.getValue();
+         }
+
+      };
+      valueColumn.setFieldUpdater(new FieldUpdater<WadlParameterEntry, String>()
+      {
+         @Override
+         public void update(int index, WadlParameterEntry item, String value)
+         {
+            item.setValue(value);
+         }
+      });
+      getCellTable().addColumn(valueColumn, VALUE);
    }
 
 }

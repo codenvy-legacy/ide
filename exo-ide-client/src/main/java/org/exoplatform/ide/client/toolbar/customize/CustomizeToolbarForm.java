@@ -150,6 +150,7 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
    private void createCommandsListGrid()
    {
       commandItemListGrid = new CommandItemExListGrid();
+      commandItemListGrid.setHeight(240);
       hLayout.add(commandItemListGrid);
    }
 
@@ -209,6 +210,7 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
    private void createToolbarItemsListGrid()
    {
       toolbarItemListGrid = new ToolbarItemListGrid();
+      toolbarItemListGrid.setHeight(240);
       hLayout.add(toolbarItemListGrid);
    }
 

@@ -93,8 +93,8 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    {
       editorsListGrid = new EditorsListGrid();
       editorsListGrid.setID(EDITORS_LISTGRID_ID);
+      editorsListGrid.setWidth(250);
       editorsListGrid.setHeight(135);
-      editorsListGrid.setMargin(10);
       add(editorsListGrid);
    }
 

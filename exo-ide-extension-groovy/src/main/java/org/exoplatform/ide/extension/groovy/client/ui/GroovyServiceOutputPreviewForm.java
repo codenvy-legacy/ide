@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.ui;
 
+import com.smartgwt.client.widgets.Canvas;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
@@ -147,14 +149,16 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private Tab createParametersHeaderTab()
    {
       parameterHeaderGrid = new WadlParameterEntryListGrid();
-      parameterHeaderGrid.setHeight100();
-      parameterHeaderGrid.setCanEdit(true);
+//      parameterHeaderGrid.setHeight100();
+//      parameterHeaderGrid.setCanEdit(true);
       parameterHeaderGrid.setID(ID_HEADER_TABLE);
 
       //parameterHeaderGrid.getFields()[0].setHidden(true);
 
       Tab headerTab = new Tab("Header Parameter");
-      headerTab.setPane(parameterHeaderGrid);
+      Canvas canvas = new Canvas();
+      canvas.addChild(parameterHeaderGrid);
+      headerTab.setPane(canvas);
       headerTab.setID(ID_HEADER_TAB);
       return headerTab;
    }
@@ -194,14 +198,16 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private Tab createParametersQueryTab()
    {
       parametersQueryGrid = new WadlParameterEntryListGrid();
-      parametersQueryGrid.setHeight100();
-      parametersQueryGrid.setCanEdit(true);
+//      parametersQueryGrid.setHeight100();
+//      parametersQueryGrid.setCanEdit(true);
       parametersQueryGrid.setID(ID_QUERY_TABLE);
 
       Tab queryTab = new Tab("Query Parameter");
       queryTab.setID(ID_QUERY_TAB);
 
-      queryTab.setPane(parametersQueryGrid);
+      Canvas canvas = new Canvas();
+      canvas.addChild(parametersQueryGrid);
+      queryTab.setPane(canvas);
 
       return queryTab;
    }

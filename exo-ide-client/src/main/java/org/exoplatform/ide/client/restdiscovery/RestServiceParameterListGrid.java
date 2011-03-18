@@ -25,14 +25,14 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 import org.exoplatform.gwtframework.commons.wadl.Param;
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.gwtframework.ui.client.component.ListGridOld;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class RestServiceParameterListGrid extends ListGrid<Param>
+public class RestServiceParameterListGrid extends ListGridOld<Param>
 {
 
    private final static String GROUP = "Group";

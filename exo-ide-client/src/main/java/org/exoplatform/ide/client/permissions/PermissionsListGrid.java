@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.client.permissions;
 
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.ListGridEditEvent;
-import com.smartgwt.client.types.ListGridFieldType;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
-import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
+import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.EditTextCell;
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
@@ -38,7 +37,7 @@ import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
  * @version $Id: Oct 20, 2010 $
  *
  */
-public class PermissionsListGrid extends ListGrid<AccessControlEntry> implements EditCompleteHandler
+public class PermissionsListGrid extends ListGrid<AccessControlEntry>
 {
 
    private final String IDENTITY = "Identity";
@@ -49,104 +48,84 @@ public class PermissionsListGrid extends ListGrid<AccessControlEntry> implements
    
    public PermissionsListGrid()
    {
-      setCanSort(true);
-      setCanEdit(true);  
-      setEditEvent(ListGridEditEvent.CLICK);  
-      setHeaderHeight(22);
-      
-      ListGridField fieldIdentity = new ListGridField(IDENTITY, IDENTITY);
-      fieldIdentity.setAlign(Alignment.LEFT);
-      fieldIdentity.setCanEdit(true);
-      fieldIdentity.setWidth("60%");
-
-      ListGridField fieldRead = new ListGridField(READ, READ);
-      fieldRead.setAlign(Alignment.CENTER);
-      fieldRead.setCanEdit(true);
-      fieldRead.setWidth("20%");
-      fieldRead.setType(ListGridFieldType.BOOLEAN);
-      
-      ListGridField fieldWrite = new ListGridField(WRITE, WRITE);
-      fieldWrite.setAlign(Alignment.CENTER);
-      fieldWrite.setCanEdit(true);
-      fieldWrite.setWidth("20%");
-      fieldWrite.setType(ListGridFieldType.BOOLEAN);
-      
-      addEditCompleteHandler(this);
-      setData(new ListGridRecord[0]);
-      
-      setFields(fieldIdentity, fieldRead, fieldWrite);
-   }
-
-   public void selectItem(AccessControlEntry item)
-   {
-      for (ListGridRecord record : getRecords())
-      {
-         AccessControlEntry recordItem = (AccessControlEntry)record.getAttributeAsObject(getValuePropertyName());
-         if (item == recordItem)
-         {
-            selectRecord(record);
-            return;
-         }
-      }
-
-      deselectAllRecords();
+      super();
+      initColumns();
    }
    
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid#setRecordFields(com.smartgwt.client.widgets.grid.ListGridRecord, java.lang.Object)
-    */
-   @Override
-   protected void setRecordFields(ListGridRecord record, AccessControlEntry item)
+   private void initColumns()
    {
-      record.setAttribute(IDENTITY, item.getIdentity());
-      for (Permissions p : item.getPermissionsList())
+      Column<AccessControlEntry, String> identityColumn = new Column<AccessControlEntry, String>(new EditTextCell())
       {
-         switch (p)
+
+         @Override
+         public String getValue(final AccessControlEntry item)
          {
-            case WRITE :
-               record.setAttribute(WRITE, p.toString());
-               break;
-            case READ :
-               record.setAttribute(READ, p.toString());
-               break;
+            return item.getIdentity();
          }
-      }
 
-   }
-
-   /**
-    * @see com.smartgwt.client.widgets.grid.events.EditCompleteHandler#onEditComplete(com.smartgwt.client.widgets.grid.events.EditCompleteEvent)
-    */
-   public void onEditComplete(EditCompleteEvent event)
-   {
-      AccessControlEntry entry = (AccessControlEntry)event.getOldRecord().getAttributeAsObject(getValuePropertyName());
+      };
       
-      if(event.getNewValues().containsKey(READ))
+      identityColumn.setFieldUpdater(new FieldUpdater<AccessControlEntry, String>()
       {
-         if(Boolean.parseBoolean(event.getNewValues().get(READ).toString()))
+         
+         @Override
+         public void update(int index, AccessControlEntry object, String value)
          {
-            entry.addPermission(Permissions.READ);
+            object.setIdentity(value);
          }
-         else
+      });
+      
+      getCellTable().addColumn(identityColumn, IDENTITY);
+      getCellTable().setColumnWidth(identityColumn, 100, Unit.PCT);
+      
+      
+      Column<AccessControlEntry, Boolean> readColumn =
+         new Column<AccessControlEntry, Boolean>(new CheckboxCell(true, false))
          {
-            entry.removePermission(Permissions.READ);
-         }
-      }
-      if(event.getNewValues().containsKey(WRITE))
-      {
-         if(Boolean.parseBoolean(event.getNewValues().get(WRITE).toString()))
+            @Override
+            public Boolean getValue(AccessControlEntry item)
+            {
+               for (Permissions p : item.getPermissionsList())
+               {
+                  switch (p)
+                  {
+                     case WRITE :
+                        return false;
+                     case READ :
+                        return true;
+                  }
+               }
+               return false;
+            }
+         };
+
+      readColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      getCellTable().addColumn(readColumn, READ);
+      getCellTable().setColumnWidth(readColumn, 33, Unit.PX);
+      
+      Column<AccessControlEntry, Boolean> writeColumn =
+         new Column<AccessControlEntry, Boolean>(new CheckboxCell(true, false))
          {
-            entry.addPermission(Permissions.WRITE);
-         }
-         else
-         {
-            entry.removePermission(Permissions.WRITE);
-         }
-      }
-      if(event.getNewValues().containsKey(IDENTITY))
-      {
-         entry.setIdentity(event.getNewValues().get(IDENTITY).toString());
-      }
+            @Override
+            public Boolean getValue(AccessControlEntry item)
+            {
+               for (Permissions p : item.getPermissionsList())
+               {
+                  switch (p)
+                  {
+                     case WRITE :
+                        return true;
+                     case READ :
+                        return false;
+                  }
+               }
+               return false;
+            }
+         };
+
+      readColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      getCellTable().addColumn(writeColumn, WRITE);
+      getCellTable().setColumnWidth(writeColumn, 33, Unit.PX);
    }
 
 }

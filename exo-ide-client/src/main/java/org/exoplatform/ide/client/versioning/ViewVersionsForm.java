@@ -20,9 +20,9 @@ package org.exoplatform.ide.client.versioning;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -82,21 +82,16 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
       setTitle(title);
       //TODO setCanDragResize(true);
 
-      VLayout mainLayout = new VLayout();
-      mainLayout.setWidth100();
-      mainLayout.setHeight100();
-      mainLayout.setPadding(10);
-      mainLayout.setMembersMargin(15);
+      VerticalPanel vPanel = new VerticalPanel();
 
       versionsGrid = new VersionsGrid();
-      versionsGrid.setWidth100();
-      versionsGrid.setHeight100();
+      versionsGrid.setWidth(350);
+      versionsGrid.setHeight(250);
       versionsGrid.setValue(versions);
-      mainLayout.addMember(versionsGrid);
 
-      mainLayout.addMember(createButtonsLayout());
-
-      setWidget(mainLayout);
+      vPanel.add(versionsGrid);
+      vPanel.add(createButtonsLayout());
+      setWidget(vPanel);
 
       presenter = new ViewVersionsPresenter(eventBus, versions);
       presenter.bindDisplay(this);

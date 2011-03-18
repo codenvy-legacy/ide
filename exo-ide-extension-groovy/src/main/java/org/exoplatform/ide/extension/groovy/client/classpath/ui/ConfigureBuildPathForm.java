@@ -119,7 +119,6 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
       hLayout.setSpacing(10);
 
       classPathEntryListGrid = new ClassPathEntryListGrid();
-      classPathEntryListGrid.setWidth100();
       hLayout.add(classPathEntryListGrid);
       hLayout.add(createButtonsVerticalLayout());
       return hLayout;

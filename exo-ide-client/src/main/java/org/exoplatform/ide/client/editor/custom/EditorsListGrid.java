@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.client.editor.custom;
 
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.cellview.client.Column;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
@@ -34,29 +37,40 @@ public class EditorsListGrid extends ListGrid<EditorInfo>
 
    public EditorsListGrid()
    {
-      setHeaderHeight(22);
-
       ListGridField fieldName = new ListGridField("name", "Name");
       fieldName.setAlign(Alignment.LEFT);
-
-      setData(new ListGridRecord[0]);
-
-      setFields(fieldName);
-
-      setShowHeader(true);
-   }
-
-   @Override
-   protected void setRecordFields(ListGridRecord record, EditorInfo item)
-   {
-      if(item.isDefault())
+      
+      SafeHtmlCell htmlCell = new SafeHtmlCell();
+      Column<EditorInfo, SafeHtml> entryNameColumn = new Column<EditorInfo, SafeHtml>(htmlCell)
       {
-         record.setAttribute("name", item.getEditor().getDescription()+"&nbsp;[Default]");         
-      }
-      else
-      {
-         record.setAttribute("name", item.getEditor().getDescription());
-      }
-   }
 
+         @Override
+         public SafeHtml getValue(final EditorInfo item)
+         {
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  if(item.isDefault())
+                   {
+                      return item.getEditor().getDescription()+"&nbsp;[Default]";         
+                   }
+                   else
+                   {
+                      return item.getEditor().getDescription();
+                   }
+               }
+            };
+            return html;
+         }
+
+      };
+      
+      getCellTable().addColumn(entryNameColumn, "Editors");
+      getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
+
+   }
 }

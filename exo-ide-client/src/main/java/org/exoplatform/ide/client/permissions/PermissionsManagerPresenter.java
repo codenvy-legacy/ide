@@ -141,7 +141,6 @@ public class PermissionsManagerPresenter
          {
             acl.addPermission(new AccessControlEntry(""));
             dispaly.getPermissionsListGrid().setValue(acl.getPermissionsList());
-            dispaly.getPermissionsListGrid().startEditing(acl.getPermissionsList().size() - 1, 0, false);
 
          }
       });

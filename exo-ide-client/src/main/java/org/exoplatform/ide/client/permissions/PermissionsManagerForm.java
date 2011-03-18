@@ -21,14 +21,9 @@ package org.exoplatform.ide.client.permissions;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
-import com.smartgwt.client.widgets.form.fields.CanvasItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import org.exoplatform.gwtframework.ui.client.component.Align;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
@@ -165,15 +160,6 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       permissionsListGrid = new PermissionsListGrid();
       permissionsListGrid.setWidth(384);
       permissionsListGrid.setHeight(140);
-      //      permissionsListGrid.setMargin(5);
-
-      //TODO Canvas? why neccesary?
-      CanvasItem cItem = new CanvasItem();
-
-      cItem.setCanvas(permissionsListGrid);
-      cItem.setShowTitle(false);
-      cItem.setHeight(150);
-      cItem.setWidth("300");
 
       addEntityButton = new IButton("Add");
       addEntityButton.setWidth(90);
@@ -195,7 +181,7 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       buttonsLayout.addMember(addEntityButton);
       buttonsLayout.addMember(removeButton);
 
-    //  form.add(cItem);
+      form.add(permissionsListGrid);
 
       vLayout.addMember(form);
       vLayout.addMember(buttonsLayout);

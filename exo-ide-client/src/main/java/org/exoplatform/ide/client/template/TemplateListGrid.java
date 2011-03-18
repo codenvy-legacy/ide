@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.client.template;
 
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.ListGridFieldType;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.google.gwt.cell.client.ImageCell;
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.Images;
@@ -29,9 +31,6 @@ import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.util.ImageUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -46,60 +45,18 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
    
    public TemplateListGrid()
    {
+      super();
       setID(ID);
-      ListGridField iconField = new ListGridField("icon", "&nbsp;");
-      iconField.setType(ListGridFieldType.IMAGE);
-      iconField.setWidth(28);
-      iconField.setAlign(Alignment.CENTER);
-      iconField.setCanSort(false);
-
-      ListGridField fName = new ListGridField("name", "Name");
-      ListGridField fDescription = new ListGridField("description", "Description");
-
-      setFields(iconField, fName, fDescription);
-   }
-
-   @Override
-   protected String getValuePropertyName()
-   {
-      return "templateItem";
-   }
-
-   @Override
-   protected void setRecordFields(ListGridRecord record, Template item)
-   {
-      if (item.getNodeName() == null)
-      {
-         record.setAttribute("icon", getItemIcon(item));
-         record.setAttribute("name", "<span title=\"" + item.getName() + "\"><font color=\"#FF0000\">" + item.getName() + "</font></span>");
-         record.setAttribute("description", "<span title=\"" + item.getDescription() + "\"><font color=\"#FF0000\">" + item.getDescription()
-            + "</font></span>");
-         return;
-      }
-      
-      record.setAttribute("icon", getItemIcon(item));
-      record.setAttribute("name", "<span title=\"" + item.getName() + "\">" + item.getName() + "</span>");
-      record.setAttribute("description", "<span title=\"" + item.getDescription() + "\">" + item.getDescription()
-         + "</span>");
+      initColumns();
    }
    
-   /**
-    * Get selected templates.
-    * @return 
-    * 
-    * @return selected templates
-    */
-   public List<T> getSelectedItems()
+   public void selectLastItem()
    {
-      List<T> selectedItems = new ArrayList<T>();
-
-      for (ListGridRecord record : getSelection())
-      {
-         selectedItems.add((T)record.getAttributeAsObject(getValuePropertyName()));
-      }
-
-      return selectedItems;
+      T item = items.get(items.size());
+      getCellTable().getSelectionModel().setSelected(item, true);
    }
+   
+   //------- Implementation ------------------
    
    /**
     * Return URL to icon of template according to type of template:
@@ -120,6 +77,96 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
       }
       
       return null;
+   }
+   
+   /**
+    * Create columns.
+    */
+   private void initColumns()
+   {
+      //--- icon column -----
+      ImageCell iconCell = new ImageCell();
+      Column<T, String> iconColumn = new Column<T, String>(iconCell)
+      {
+
+         @Override
+         public String getValue(T item)
+         {
+            return getItemIcon(item);
+            
+         }
+
+      };
+      
+      getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
+      getCellTable().setColumnWidth(iconColumn, 28, Unit.PX);
+      
+      //--- name column -----
+      SafeHtmlCell htmlCell = new SafeHtmlCell();
+      Column<T, SafeHtml> nameColumn = new Column<T, SafeHtml>(htmlCell)
+      {
+
+         @Override
+         public SafeHtml getValue(final T item)
+         {
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  if (item.getNodeName() == null)
+                  {
+                     return "<span title=\"" + item.getName() + "\"><font color=\"#FF0000\">" + item.getName()
+                        + "</font></span>";
+                  }
+                  else
+                  {
+                     return "<span title=\"" + item.getName() + "\">" + item.getName() + "</span>";
+                  }
+               }
+            };
+            return html;
+         }
+
+      };
+      getCellTable().addColumn(nameColumn, "Name");
+      getCellTable().setColumnWidth(nameColumn, 60, Unit.PX);
+      
+      //--- description column -----
+      SafeHtmlCell descCell = new SafeHtmlCell();
+      Column<T, SafeHtml> entryNameColumn = new Column<T, SafeHtml>(descCell)
+      {
+
+         @Override
+         public SafeHtml getValue(final T item)
+         {
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  if (item.getNodeName() == null)
+                  {
+                     return "<span title=\"" + item.getDescription() + "\"><font color=\"#FF0000\">"
+                        + item.getDescription() + "</font></span>";
+                  }
+                  else
+                  {
+                     return "<span title=\"" + item.getDescription() + "\">" + item.getDescription() + "</span>";
+                  }
+               }
+            };
+            return html;
+         }
+
+      };
+      
+      getCellTable().addColumn(entryNameColumn, "Entry Point");
+      getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
    }
 
 }

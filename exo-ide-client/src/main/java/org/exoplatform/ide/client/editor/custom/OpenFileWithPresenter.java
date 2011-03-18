@@ -128,6 +128,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
          }
 
       });
+      
       display.getOkButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent arg0)
@@ -201,6 +202,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
             }
          }
 
+         System.out.println("OpenFileWithPresenter.fillEditorListGrid()");
          display.getEditorsListGrid().setValue(editorInfoItems);
       }
       catch (EditorNotFoundException e)

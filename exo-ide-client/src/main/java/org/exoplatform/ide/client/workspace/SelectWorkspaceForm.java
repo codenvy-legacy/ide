@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.client.workspace;
 
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SelectionModel;
+import com.google.gwt.view.client.SingleSelectionModel;
+
 import com.google.gwt.user.client.ui.HorizontalPanel;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -98,6 +102,8 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
    private void createSelectWorkspaceForm()
    {
       entryPointListGrid = new EntryPointListGrid();
+      entryPointListGrid.setWidth("430px");
+      entryPointListGrid.setHeight("auto");
       vLayout.add(entryPointListGrid);
    }
 

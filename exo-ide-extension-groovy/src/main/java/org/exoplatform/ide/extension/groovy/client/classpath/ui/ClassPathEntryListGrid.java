@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.groovy.client.ImageUtil;
@@ -29,9 +30,6 @@ import org.exoplatform.ide.extension.groovy.client.Images;
 import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Grid to display classpath sources.
@@ -54,58 +52,56 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
 
    public ClassPathEntryListGrid()
    {
+      super();
       setID(ID);
-      setCanSort(false);
-      setSelectionType(SelectionStyle.MULTIPLE);
-      setCanFreezeFields(false);
-      setShowHeader(false);
-      setFixedFieldWidths(false);
-      setEmptyMessage(EMPTY_MESSAGE);
-      setImageSize(16);
+      //TODO:
+      //set multi as selection type
+      //hide header and set message for empty table
+//      setSelectionType(SelectionStyle.MULTIPLE);
+//      setShowHeader(false);
+//      setEmptyMessage(EMPTY_MESSAGE);
 
-      ListGridField pathField = new ListGridField(PATH);
+      SafeHtmlCell htmlCell = new SafeHtmlCell();
+      Column<GroovyClassPathEntry, SafeHtml> pathColumn = new Column<GroovyClassPathEntry, SafeHtml>(htmlCell)
+      {
 
-      setFields(pathField);
+         @Override
+         public SafeHtml getValue(final GroovyClassPathEntry item)
+         {
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  String imageSrc = "";
+                  if (EnumSourceType.DIR.getValue().equals(item.getKind()))
+                  {
+                     imageSrc = Images.ClassPath.SOURCE_FOLDER;
+                  }
+                  else if (EnumSourceType.FILE.getValue().equals(item.getKind()))
+                  {
+                     imageSrc = Images.ClassPath.SOURCE_FILE;
+                  }
+                  Image image = new Image(imageSrc);
+                  String imageHTML = ImageUtil.getHTML(image);
+                  String path = getDisplayPath(item.getPath());
+                  return "<span>" + imageHTML + "&nbsp;&nbsp;" + path + "</span>";
+               }
+            };
+            return html;
+         }
+
+      };
+      
+      getCellTable().addColumn(pathColumn, PATH);
+      getCellTable().setColumnWidth(pathColumn, 100, Unit.PCT);
+      //TODO:
+      //add attribute to store entry, like it was in smartGWT list grid
+//    record.setAttribute(GROOVY_CLASSPATH_ENTRY, item);      
    }
 
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid#setRecordFields(com.smartgwt.client.widgets.grid.ListGridRecord, java.lang.Object)
-    */
-   @Override
-   protected void setRecordFields(ListGridRecord record, GroovyClassPathEntry item)
-   {
-      String imageSrc = "";
-
-      if (EnumSourceType.DIR.getValue().equals(item.getKind()))
-      {
-         imageSrc = Images.ClassPath.SOURCE_FOLDER;
-      }
-      else if (EnumSourceType.FILE.getValue().equals(item.getKind()))
-      {
-         imageSrc = Images.ClassPath.SOURCE_FILE;
-      }
-      Image image = new Image(imageSrc);
-      String imageHTML = ImageUtil.getHTML(image);
-      String path = getDisplayPath(item.getPath());
-      record.setAttribute(PATH, "<span>" + imageHTML + "&nbsp;&nbsp;" + path + "</span>");
-      record.setAttribute(GROOVY_CLASSPATH_ENTRY, item);
-   }
-
-   /**
-    * Get selected items in the grid.
-    * 
-    * @return {@link List}
-    */
-   public List<GroovyClassPathEntry> getSelectedItems()
-   {
-      List<GroovyClassPathEntry> selectedItems = new ArrayList<GroovyClassPathEntry>();
-      for (ListGridRecord record : getSelection())
-      {
-         selectedItems.add((GroovyClassPathEntry)record.getAttributeAsObject(GROOVY_CLASSPATH_ENTRY));
-      }
-      return selectedItems;
-   }
-   
    public void setCurrentRepository(String repository)
    {
       currentRepository = repository;

@@ -214,7 +214,7 @@ implements CreateFromTemplateDisplay<T>
     */
    public void selectLastTemplate()
    {
-      templateListGrid.selectRecord(templateListGrid.getRecords().length - 1);
+      templateListGrid.selectLastItem();
    }
 
    /**

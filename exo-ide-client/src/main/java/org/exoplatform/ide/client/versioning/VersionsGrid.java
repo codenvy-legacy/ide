@@ -18,10 +18,14 @@
  */
 package org.exoplatform.ide.client.versioning;
 
+import com.google.gwt.dom.client.Style.Unit;
+
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+
+import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.user.cellview.client.Column;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.vfs.Version;
@@ -44,12 +48,6 @@ public class VersionsGrid extends ListGrid<Version>
    public VersionsGrid()
    {
       setID(ID);
-      setCanSort(true);
-      setCanGroupBy(false);
-      setCanFocus(false);
-      setSelectionType(SelectionStyle.SINGLE);
-      setCanFreezeFields(false);
-      setCanPickFields(false);
 
       ListGridField fieldName = new ListGridField(NAME, NAME);
       fieldName.setAlign(Alignment.LEFT);
@@ -63,30 +61,58 @@ public class VersionsGrid extends ListGrid<Version>
       fieldLenght.setAlign(Alignment.CENTER);
       fieldLenght.setWidth("25%");
 
-      setFields(fieldName, fieldDate, fieldLenght);
+//      setFields(fieldName, fieldDate, fieldLenght);
+      initColumns();
    }
 
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid#getValuePropertyName()
-    */
-   @Override
-   protected String getValuePropertyName()
+   private void initColumns()
    {
-      return "version";
-   }
+      //name column
+      Column<Version, String> nameColumn = new Column<Version, String>(new TextCell())
+      {
 
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.smartgwt.component.ListGrid#setRecordFields(com.smartgwt.client.widgets.grid.ListGridRecord, java.lang.Object)
-    */
-   @Override
-   protected void setRecordFields(ListGridRecord record, Version version)
-   {
-      record.setAttribute(NAME, version.getDisplayName());
-      record.setAttribute(DATE, version.getCreationDate());
-      record.setAttribute(LENGTH, version.getContentLength());
-      record.setAttribute(getValuePropertyName(), version);
-   }
+         @Override
+         public String getValue(final Version item)
+         {
+            return item.getDisplayName();
+         }
 
+      };
+      nameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      getCellTable().addColumn(nameColumn, NAME);
+      getCellTable().setColumnWidth(nameColumn, 35, Unit.PCT);
+      
+      //date column
+      Column<Version, String> dateColumn = new Column<Version, String>(new TextCell())
+      {
+
+         @Override
+         public String getValue(final Version item)
+         {
+            return item.getCreationDate();
+         }
+
+      };
+      getCellTable().addColumn(dateColumn, DATE);
+      getCellTable().setColumnWidth(dateColumn, 40, Unit.PCT);
+      
+      //length column
+      Column<Version, String> lengthColumn = new Column<Version, String>(new TextCell())
+      {
+
+         @Override
+         public String getValue(final Version item)
+         {
+            return item.getCreationDate();
+         }
+
+      };
+      lengthColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      getCellTable().addColumn(lengthColumn, LENGTH);
+      getCellTable().setColumnWidth(lengthColumn, 25, Unit.PCT);
+      
+   }
+  
    /**
     * Returns selected version in version grid.
     * 
@@ -94,15 +120,7 @@ public class VersionsGrid extends ListGrid<Version>
     */
    public Version getSelectedVersion()
    {
-      ListGridRecord[] selectedRecords = getSelection();
-      if (selectedRecords.length > 0)
-      {
-         return (Version)selectedRecords[0].getAttributeAsObject(getValuePropertyName());
-      }
-      else
-      {
-         return null;
-      }
+      return super.getSelectedItems().get(0);
    }
 
 }

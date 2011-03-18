@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.toolbar.customize;
 
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
@@ -56,35 +56,10 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
    public ToolbarItemListGrid()
    {
       setID(ID);
-      setCanSort(false);
-      setCanGroupBy(false);
-
-      // setCanFocus(false); // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."
       
-      setSelectionType(SelectionStyle.SINGLE);
-
-      ListGridField toolBarItemsField = new ListGridField(TOOLBAR, TOOLBAR);
-      ListGridField idField = new ListGridField(COMMAND_ID, COMMAND_ID);
-      idField.setHidden(true);
-
-      setFields(toolBarItemsField, idField);
+      initColumns();
    }
-
-   public void selectItem(ToolbarItem item)
-   {
-      for (ListGridRecord record : getRecords())
-      {
-         ToolbarItem recordItem = (ToolbarItem)record.getAttributeAsObject(getValuePropertyName());
-         if (item == recordItem)
-         {
-            selectRecord(record);
-            return;
-         }
-      }
-
-      deselectAllRecords();
-   }
-
+   
    private String getDivider(String title, String style)
    {
       String divider =
@@ -94,9 +69,35 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
 
       return divider;
    }
+   
+   private void initColumns()
+   {
+      Column<ToolbarItem, SafeHtml> titleColumn = new Column<ToolbarItem, SafeHtml>(new SafeHtmlCell())
+      {
 
-   @Override
-   protected void setRecordFields(ListGridRecord record, ToolbarItem item)
+         @Override
+         public SafeHtml getValue(final ToolbarItem item)
+         {
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  return getItemTitle(item);
+               }
+            };
+            return html;
+         }
+
+      };
+      getCellTable().addColumn(titleColumn, TOOLBAR);
+      getCellTable().setColumnWidth(titleColumn, 60, Unit.PX);
+      
+   }
+
+   private String getItemTitle(ToolbarItem item)
    {
       if (item.getType() == ToolbarItem.Type.COMMAND)
       {
@@ -105,7 +106,6 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
          {
             title = title.substring(title.lastIndexOf("/") + 1);
          }
-         String id = title;
          while (title.indexOf("\\") >= 0)
          {
             title = title.replace("\\", "/");
@@ -124,23 +124,20 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
          }
          else
          {
-            title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + title + "</span>";
+            title = "<span><img src=\"" + item.getCommand().getIcon() + "\"/>&nbsp;" + title + "</span>";
          }
 
-         record.setAttribute(TOOLBAR, title);
-         record.setAttribute(COMMAND_ID, id);
+         return title;
       }
       else if (item.getType() == ToolbarItem.Type.DELIMITER)
       {
          String title = getDivider("Delimiter", Style.TOOLBAR_DELIMITER);
-         record.setAttribute(TOOLBAR, title);
-         record.setAttribute(COMMAND_ID, "Delimiter");
+         return title;
       }
       else
       {
          String title = getDivider("Spacer", Style.TOOLBAR_SPACER);
-         record.setAttribute(TOOLBAR, title);
-         record.setAttribute(COMMAND_ID, "Spacer");
+         return title;
       }
    }
 

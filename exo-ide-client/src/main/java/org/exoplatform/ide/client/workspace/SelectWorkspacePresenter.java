@@ -132,7 +132,7 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
             changeEntryPoint();
          }
       });
-
+      
       display.getEntryPoints().addDoubleClickHandler(new DoubleClickHandler()
       {
 
@@ -156,7 +156,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
       display.getEntryPoints().setValue(entryPoints);
       display.getEntryPoints().addSelectionHandler(new SelectionHandler<EntryPoint>()
       {
-
          public void onSelection(SelectionEvent<EntryPoint> event)
          {
             onEntryPointSelected(event.getSelectedItem());

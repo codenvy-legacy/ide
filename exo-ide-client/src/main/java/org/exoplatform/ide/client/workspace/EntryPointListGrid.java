@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
@@ -37,23 +37,34 @@ public class EntryPointListGrid extends ListGrid<EntryPoint>
    
    public EntryPointListGrid()
    {
+      super();
       setID(ID);
-      setHeaderHeight(22);
 
-      ListGridField entryName = new ListGridField("entryPoint", "Entry Point");
-      entryName.setAlign(Alignment.LEFT);
-      setData(new ListGridRecord[0]);
-      setFields(entryName);
-      setSelectionType(SelectionStyle.SINGLE);
-      setShowHeader(false);
+      SafeHtmlCell htmlCell = new SafeHtmlCell();
+      Column<EntryPoint, SafeHtml> entryNameColumn = new Column<EntryPoint, SafeHtml>(htmlCell)
+      {
 
-   }
+         @Override
+         public SafeHtml getValue(final EntryPoint item)
+         {
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
 
-   @Override
-   protected void setRecordFields(ListGridRecord record, EntryPoint item)
-   {
-      String text = "<span title = \"" + item.getHref() + "\">" + item.getHref() + "</span>";
-      record.setAttribute("entryPoint", text);
+               @Override
+               public String asString()
+               {
+                  return "<span title = \"" + item.getHref() + "\">" + item.getHref() + "</span>";
+               }
+            };
+            return html;
+         }
+
+      };
+      
+      getCellTable().addColumn(entryNameColumn, "Entry Point");
+      getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
+
    }
 
 }

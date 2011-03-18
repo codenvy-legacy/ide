@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.GroupStartOpen;
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.ImageUtil;
@@ -49,60 +48,89 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
 
    private final static String CONTROL = "Binding";
 
-   private final static String GROUP = "Group";
-
    public HotKeyItemListGrid()
    {
-//      setCanSort(false);
-//      setCanGroupBy(false);
-//      setCanFocus(false);
-      setSelectionType(SelectionStyle.SINGLE);
-//      setCanFreezeFields(false);
-      setGroupStartOpen(GroupStartOpen.ALL);
-      setGroupByField(GROUP);
-
-      ListGridField fieldName = new ListGridField(TITLE, TITLE);
-      fieldName.setCanHide(false);
-
-      ListGridField fieldControl = new ListGridField(CONTROL, CONTROL);
-      fieldControl.setCanHide(false);
-
-      ListGridField fieldGroup = new ListGridField(GROUP, GROUP);
-      fieldGroup.setHidden(true);
-
-      setFields(fieldName, fieldControl, fieldGroup);
+      //TODO:
+      //sort rows by menu titles.
+      initColumns();
    }
-
-   @Override
-   protected void setRecordFields(ListGridRecord record, HotKeyItem item)
+   
+   private void initColumns()
    {
-      String controlName = item.getControlId();
-
-      if (controlName.indexOf("/") >= 0)
+      Column<HotKeyItem, SafeHtml> titleColumn = new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell())
       {
-         controlName = controlName.substring(controlName.lastIndexOf("/") + 1);
-      }
 
-      while (controlName.indexOf("\\") >= 0)
-      {
-         controlName = controlName.replace("\\", "/");
-      }
+         @Override
+         public SafeHtml getValue(final HotKeyItem item)
+         {
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
 
-      String title = "";
-      if (item.getImage() != null)
-      {
-         Image image = new Image(item.getImage());
-         String imageHTML = ImageUtil.getHTML(image);
-         title = "<span>" + imageHTML + "&nbsp;" + controlName + "</span>";
-      }
-      else
-      {
-         title = "<span>" + Canvas.imgHTML(item.getIcon()) + "&nbsp;" + controlName + "</span>";
-      }
+               @Override
+               public String asString()
+               {
+                  String controlName = item.getControlId();
 
-      record.setAttribute(TITLE, title);
-      record.setAttribute(CONTROL, item.getHotKey() == null ? "" : item.getHotKey());
-      record.setAttribute(GROUP, item.getGroup());
+                  if (controlName.indexOf("/") >= 0)
+                  {
+                     controlName = controlName.substring(controlName.lastIndexOf("/") + 1);
+                  }
+
+                  while (controlName.indexOf("\\") >= 0)
+                  {
+                     controlName = controlName.replace("\\", "/");
+                  }
+                  String title = "";
+                  if (item.getImage() != null)
+                  {
+                     Image image = new Image(item.getImage());
+                     String imageHTML = ImageUtil.getHTML(image);
+                     title = "<span>" + imageHTML + "&nbsp;" + controlName + "</span>";
+                  }
+                  else
+                  {
+                     if (item.getIcon() != null)
+                     {
+                        title = "<span><img src=\"" + item.getIcon() + "\"/>&nbsp;" + controlName + "</span>";
+                     }
+                     else
+                     {
+                        title = "<span>&nbsp;" + controlName + "</span>";
+                     }
+                  }
+                  return title;
+               }
+            };
+            return html;
+         }
+
+      };
+      getCellTable().addColumn(titleColumn, TITLE);
+      getCellTable().setColumnWidth(titleColumn, 50, Unit.PCT);
+      
+      Column<HotKeyItem, SafeHtml> controlColumn = new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell())
+      {
+
+         @Override
+         public SafeHtml getValue(final HotKeyItem item)
+         {
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  return item.getHotKey() == null ? "" : item.getHotKey();
+               }
+            };
+            return html;
+         }
+
+      };
+      getCellTable().addColumn(controlColumn, CONTROL);
+      getCellTable().setColumnWidth(controlColumn, 100, Unit.PCT);
    }
 
 }

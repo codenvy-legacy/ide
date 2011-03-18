@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.toolbar.customize;
 
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
@@ -49,24 +49,39 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
 
    private final static String ID = "ideCommandItemExListGrid";
 
-   public final static String COMMAND_ID = "CommandId";
-
    public CommandItemExListGrid()
    {
+      super();
       setID(ID);
-      setCanSort(false);
-      setCanGroupBy(false);
 
-      // setCanFocus(false); // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."
-      
-      setSelectionType(SelectionStyle.SINGLE);
+      initColumns();
 
-      ListGridField fieldName = new ListGridField(TITLE, TITLE);
+   }
+   
+   private void initColumns()
+   {
+      Column<CommandItemEx, SafeHtml> titleColumn = new Column<CommandItemEx, SafeHtml>(new SafeHtmlCell())
+      {
 
-      ListGridField idField = new ListGridField(COMMAND_ID, COMMAND_ID);
-      idField.setHidden(true);
+         @Override
+         public SafeHtml getValue(final CommandItemEx item)
+         {
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
 
-      setFields(fieldName, idField);
+               @Override
+               public String asString()
+               {
+                  return getItemTitle(item);
+               }
+            };
+            return html;
+         }
+
+      };
+      getCellTable().addColumn(titleColumn, TITLE);
+      getCellTable().setColumnWidth(titleColumn, 60, Unit.PX);
    }
 
    private String getDivider(String title, String style)
@@ -78,21 +93,20 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
 
       return divider;
    }
-
-   @Override
-   protected void setRecordFields(ListGridRecord record, CommandItemEx item)
+   
+   private String getItemTitle(CommandItemEx item)
    {
       if (item.isGroup())
       {
          String title = item.getTitle();
          title = title.replace("/", "&nbsp;/&nbsp;");
          title = getDivider(title, Style.GROUP);
-         record.setAttribute(TITLE, title);
+         return title;
       }
       else
       {
+         String title = "";
          String commandName = item.getCommand().getId();
-         String commandId = item.getCommand().getId();
          if (commandName.indexOf("/") >= 0)
          {
             commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
@@ -102,52 +116,30 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
          {
             commandName = commandName.replace("\\", "/");
          }
-         commandId = commandName;
 
          if (item.getCommand() instanceof PopupMenuControl)
          {
             commandName += "&nbsp;[Popup]";
          }
 
-         String title = "";
          if (item.getCommand().getNormalImage() != null)
          {
             Image image = new Image(item.getCommand().getNormalImage());
             String imageHTML = ImageUtil.getHTML(image);
             title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
          }
-         else
-
-         //         if (item.getCommand().getNormalImage() != null) {
-         //            FlowPanel p = new FlowPanel();
-         //            DOM.setStyleAttribute(p.getElement(), "left", "-1000px");
-         //            DOM.setStyleAttribute(p.getElement(), "top", "-1000px");
-         //            DOM.setStyleAttribute(p.getElement(), "width", "16px");
-         //            DOM.setStyleAttribute(p.getElement(), "height", "16px");
-         //            DOM.setStyleAttribute(p.getElement(), "overflow", "hidden");
-         //            RootPanel.get().add(p);            
-         //            
-         //            Image image = new Image(item.getCommand().getNormalImage());
-         //            p.add(image);
-         //            String imageHTML = DOM.getInnerHTML(p.getElement());
-         //            title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
-         //         } else {
-         //            title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandName + "</span>";
-         //         }
-
-         if (item.getCommand().getIcon() != null)
+         else if (item.getCommand().getIcon() != null)
          {
-            title = "<span>" + Canvas.imgHTML(item.getCommand().getIcon()) + "&nbsp;" + commandName + "</span>";
+            System.out.println(">>> " + item.getCommand().getIcon());
+            title = "<span><img src = \"" + item.getCommand().getIcon() + "\"/>&nbsp;" + commandName + "</span>";
          }
          else
          {
             title = "<span>" + commandName + "</span>";
          }
 
-         record.setAttribute(TITLE, title);
-         record.setAttribute(COMMAND_ID, commandId);
+         return title;
       }
-
    }
 
 }
