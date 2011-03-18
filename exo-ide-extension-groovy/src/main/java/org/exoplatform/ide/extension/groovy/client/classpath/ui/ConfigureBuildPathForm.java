@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -98,7 +97,8 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
       mainLayout.setHeight("100%");
-      mainLayout.setSpacing(15);
+      mainLayout.setSpacing(10);
+      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
       mainLayout.add(createCenterLayout());
       mainLayout.add(createButtonsHorizontalLayout());
@@ -119,6 +119,9 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
       hLayout.setSpacing(10);
 
       classPathEntryListGrid = new ClassPathEntryListGrid();
+      classPathEntryListGrid.setWidth(420);
+      classPathEntryListGrid.setHeight(210);
+      
       hLayout.add(classPathEntryListGrid);
       hLayout.add(createButtonsVerticalLayout());
       return hLayout;
@@ -127,7 +130,7 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
    /**
     * Create layout with vertical buttons position.
     * 
-    * @return {@link VLayout} layout with buttons
+    * @return {@link VerticalPanel} layout with buttons
     */
    private VerticalPanel createButtonsVerticalLayout()
    {
@@ -147,22 +150,19 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
    /**
     * Create layout with horizontal buttons position.
     * 
-    * @return {@link HLayout} layout with buttons
+    * @return {@link HorizontalPanel} layout with buttons
     */
-   private HLayout createButtonsHorizontalLayout()
+   private HorizontalPanel createButtonsHorizontalLayout()
    {
-      HLayout hLayout = new HLayout();
-      hLayout.setHeight(BUTTON_HEIGHT);
-      hLayout.setAutoWidth();
-      hLayout.setLayoutAlign(Alignment.CENTER);
-      hLayout.setMembersMargin(10);
-      hLayout.setLayoutBottomMargin(10);
+      HorizontalPanel hLayout = new HorizontalPanel();
+      hLayout.setHeight(BUTTON_HEIGHT+"px");
+      hLayout.setSpacing(5);
 
       saveButton = createButton(ID_SAVE_BUTTON, "Save", Images.Buttons.OK);
       cancelButton = createButton(ID_CANCEL_BUTTON, "Cancel", Images.Buttons.NO);
 
-      hLayout.addMember(saveButton);
-      hLayout.addMember(cancelButton);
+      hLayout.add(saveButton);
+      hLayout.add(cancelButton);
 
       return hLayout;
    }

@@ -170,7 +170,7 @@ public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.u
     */
    private TreeItem getNode(Item item)
    {
-      String icon = (item instanceof Folder && item.getIcon() != null) ? Images.ClassPath.FOLDER : item.getIcon();
+      String icon = (item instanceof Folder && item.getIcon() == null) ? Images.ClassPath.FOLDER : item.getIcon();
 
       TreeItem node = new TreeItem(createItemWidget(icon, item.getName()));
       node.setUserObject(item);
