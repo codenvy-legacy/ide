@@ -20,9 +20,11 @@ package org.exoplatform.ide.client.restdiscovery;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.commons.wadl.Param;
@@ -51,7 +53,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
 
    private static String ID_OK = "ideRestServiceDiscoveryOkButton";
 
-   private RestServiceTreeGrid treeGrid;
+   private RestServiceTree treeGrid;
 
    private IButton okButton;
 
@@ -80,6 +82,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       vLayout.setHeight("100%");
       vLayout.setSpacing(10);
       vLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      
       setTitle("REST Services Discovery");
 
       hLayout = new HorizontalPanel();
@@ -163,12 +166,16 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
     */
    private void createGrid(HorizontalPanel layout)
    {
-      treeGrid = new RestServiceTreeGrid();
-      treeGrid.setShowResizeBar(true);
-      treeGrid.setWidth(250);
+      treeGrid = new RestServiceTree();
+      ScrollPanel treeWrapper = new ScrollPanel(treeGrid);
+      treeWrapper.setSize("200px", "300px");
+      DOM.setStyleAttribute(treeWrapper.getElement(), "border", "1px solid #A7ABB4") ;
+      DOM.setStyleAttribute(treeWrapper.getElement(), "zIndex", "1") ;
+//      treeGrid.setShowResizeBar(true);
+//      treeGrid.setWidth(250);
       //treeGrid.setWidth("35%");
       //treeGrid.setHeight100();
-      layout.add(treeGrid);
+      layout.add(treeWrapper);
    }
 
    /**
