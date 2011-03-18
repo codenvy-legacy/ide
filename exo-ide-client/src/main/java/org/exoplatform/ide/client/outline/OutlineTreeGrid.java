@@ -42,7 +42,7 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class OutlineTreeGrid<T extends Token> extends org.exoplatform.ide.client.component.Tree<T>
+public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframework.ui.client.component.Tree<T>
 {
 
    private static final String VAR_ICON = Images.Outline.VAR_ITEM;
@@ -93,7 +93,7 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.ide.client
    }
 
    /**
-    * @see org.exoplatform.ide.client.component.Tree#doUpdateValue()
+    * @see org.exoplatform.gwtframework.ui.client.component.Tree#doUpdateValue()
     */
    @Override
    public void doUpdateValue()
@@ -586,7 +586,7 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.ide.client
    }
 
    /**
-    * @see org.exoplatform.ide.client.component.Tree#createItemWidget(java.lang.String, java.lang.String)
+    * @see org.exoplatform.gwtframework.ui.client.component.Tree#createItemWidget(java.lang.String, java.lang.String)
     */
    @Override
    protected Widget createItemWidget(String icon, String text)

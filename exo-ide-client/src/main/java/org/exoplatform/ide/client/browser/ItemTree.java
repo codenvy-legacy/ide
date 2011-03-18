@@ -37,7 +37,7 @@ import com.smartgwt.client.widgets.tree.TreeNode;
  * @version $Id: IdeTree Mar 14, 2011 4:00:06 PM evgen $
  *
  */
-public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
+public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.Tree<Item>
 {
 
    private Map<String, String> locktokens;
@@ -166,7 +166,7 @@ public class ItemTree extends org.exoplatform.ide.client.component.Tree<Item>
    }
 
    /**
-    * @see org.exoplatform.ide.client.component.Tree#doUpdateValue()
+    * @see org.exoplatform.gwtframework.ui.client.component.Tree#doUpdateValue()
     */
    @Override
    public void doUpdateValue()
