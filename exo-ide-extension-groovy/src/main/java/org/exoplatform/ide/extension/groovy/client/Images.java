@@ -91,5 +91,7 @@ public class Images
       static final String SOURCE_FOLDER = IMAGE_URL + "module/groovy/classpath/source-folder.png";
       
       static final String WORKSPACE = IMAGE_URL + "module/groovy/classpath/workspace.png";
+      
+      static final String FOLDER = IMAGE_URL + "module/groovy/classpath/folder.png";
    }
 }

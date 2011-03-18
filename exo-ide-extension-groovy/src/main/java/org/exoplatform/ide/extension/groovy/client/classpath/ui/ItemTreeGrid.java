@@ -18,16 +18,11 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.types.TreeModelType;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.tree.Tree;
-import com.smartgwt.client.widgets.tree.TreeGridField;
-import com.smartgwt.client.widgets.tree.TreeNode;
+import com.google.gwt.user.client.ui.TreeItem;
 
-import org.exoplatform.gwtframework.ui.client.component.TreeGrid;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.extension.groovy.client.Images;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,113 +35,126 @@ import java.util.List;
  * @version @version $Id: $
  */
 
-public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
+public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.ui.client.component.Tree<T>
 {
-   private Tree tree;
-
-   private static final String NAME = "name";
-
    /**
     * @param id id of the tree
     */
    public ItemTreeGrid(String id)
    {
-      setID(id);
-      setShowRoot(false);
-
-      tree = new Tree();
-      tree.setModelType(TreeModelType.CHILDREN);
-      tree.setRoot(new TreeNode("root"));
-      setData(tree);
-
-      setFixedFieldWidths(false);
-      setSelectionType(SelectionStyle.MULTIPLE);
- 
-      setSeparateFolders(true);
-
-      setCanFocus(true);
-      setShowConnectors(true);
-      setCanSort(false);
-      
-      TreeGridField nameField = new TreeGridField(NAME);
-      //TODO
-      //This field need for selenium.
-      //We can't select tree node, if click on first column.
-      //If you click on second column - tree item is selected.
-      TreeGridField mockField = new TreeGridField("mock");
-      mockField.setWidth(3);
-      setFields(nameField, mockField);
+      getElement().setId(id);
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.ui.client.component.Tree#doUpdateValue()
+    */
    @Override
-   protected void doUpdateValue()
+   public void doUpdateValue()
    {
-      TreeNode node = findTreeNode(getValue().getHref());
+      TreeItem node = findTreeNode(getValue().getHref());
       if (node != null && getValue() instanceof Folder)
       {
          fillTreeItems(node, ((Folder)getValue()).getChildren());
-         tree.openFolder(node);
-         redraw();
+         node.setState(true, true);
       }
       else
       {
-         fillTreeItems(tree.getRoot(), ((Folder)getValue()).getChildren());
+         fillTreeItems(((Folder)getValue()).getChildren());
       }
-      
+
    }
-   
+
    /**
     * Find tree node by href.
     * 
     * @param href
-    * @return {@link TreeNode}
+    * @return {@link TreeItem}
     */
-   public TreeNode findTreeNode(String href)
+   public TreeItem findTreeNode(String href)
    {
-      TreeNode[] treeNodes = tree.getDescendants();
-      for (TreeNode node : treeNodes)
+      for (int i = 0; i < tree.getItemCount(); i++)
       {
-         Item item = ((Item)node.getAttributeAsObject(getValuePropertyName()));
-         if (href != null && href.equals(item.getHref()))
+         TreeItem child = tree.getItem(i);
+         if (child.getUserObject() == null)
+            continue;
+         if (href.equals(((Item)child.getUserObject()).getHref()))
          {
-            return node;
+            return child;
          }
+         TreeItem item = getChild(child, href);
+         if (item != null)
+            return item;
       }
       return null;
    }
-   
+
    /**
-    * Fill the tree with items.
+    * Get child tree node of pointed parent, that represents the pointed token.
+    * 
+    * @param parent parent
+    * @param token token
+    * @return {@link TreeItem}
+    */
+   private TreeItem getChild(TreeItem parent, String href)
+   {
+      for (int i = 0; i < parent.getChildCount(); i++)
+      {
+         TreeItem child = parent.getChild(i);
+         if (child.getUserObject() == null)
+            continue;
+         if (href.equals(((Item)child.getUserObject()).getHref()))
+         {
+            return child;
+         }
+         TreeItem item = getChild(child, href);
+         if (item != null)
+            return item;
+      }
+      return null;
+   }
+
+   /**
+    * Fill the pointed node with child items.
     * 
     * @param parentNode
     * @param children
     */
-   private void fillTreeItems(TreeNode parentNode, List<Item> children)
+   private void fillTreeItems(TreeItem parentNode, List<Item> children)
    {
-      TreeNode[] oldNodes = tree.getChildren(parentNode);
-      tree.removeList(oldNodes);
+      parentNode.removeItems();
       if (children == null)
       {
          return;
       }
       for (Item item : children)
       {
-         TreeNode newNode = null;
-         TreeNode[] nodes = tree.getChildren(parentNode);
-         for (TreeNode node : nodes)
+         TreeItem newNode = getNode(item);
+         newNode.setUserObject(item);
+         parentNode.addItem(newNode);
+         if (item instanceof Folder && ((Folder)item).getChildren() != null)
          {
-            if (node.getAttributeAsObject(getValuePropertyName()) == item)
-            {
-               newNode = node;
-               break;
-            }
+            fillTreeItems(newNode, ((Folder)item).getChildren());
          }
-         if (newNode == null)
-         {
-            newNode = getNode(item);
-            newNode.setAttribute(getValuePropertyName(), item);
-            tree.add(newNode, parentNode);
-         }
+      }
+   }
+
+   /**
+    * Fill root of the tree with pointed items.
+    * 
+    * @param children 
+    */
+   private void fillTreeItems(List<Item> children)
+   {
+      tree.removeItems();
+      if (children == null)
+      {
+         return;
+      }
+      for (Item item : children)
+      {
+         TreeItem newNode = getNode(item);
+         newNode.setUserObject(item);
+         tree.addItem(newNode);
          if (item instanceof Folder && ((Folder)item).getChildren() != null)
          {
             fillTreeItems(newNode, ((Folder)item).getChildren());
@@ -158,21 +166,18 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
     * Get node by pointed item.
     * 
     * @param item
-    * @return {@link TreeNode}
+    * @return {@link TreeItem}
     */
-   private TreeNode getNode(Item item)
+   private TreeItem getNode(Item item)
    {
-      TreeNode node = new TreeNode(item.getName());
-      node.setTitle(item.getName());
-      node.setAttribute(getValuePropertyName(), item);
+      String icon = (item instanceof Folder && item.getIcon() != null) ? Images.ClassPath.FOLDER : item.getIcon();
+
+      TreeItem node = new TreeItem(createItemWidget(icon, item.getName()));
+      node.setUserObject(item);
       if (item instanceof Folder)
       {
-         node.setIsFolder(true);
-      }
-
-      if (item.getIcon() != null)
-      {
-         node.setAttribute("icon", item.getIcon());
+         // TODO fix this 
+         node.addItem("");
       }
       return node;
    }
@@ -184,13 +189,9 @@ public class ItemTreeGrid<T extends Item> extends TreeGrid<T>
     */
    public List<Item> getSelectedItems()
    {
-      List<Item> selectedItems = new ArrayList<Item>();
-
-      for (ListGridRecord record : getSelection())
-      {
-         selectedItems.add((Item)record.getAttributeAsObject(getValuePropertyName()));
-      }
-
-      return selectedItems;
+      List<Item> items = new ArrayList<Item>();
+      if (tree.getSelectedItem() != null)
+         items.add((Item)tree.getSelectedItem().getUserObject());
+      return items;
    }
 }

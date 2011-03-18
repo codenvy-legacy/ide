@@ -18,11 +18,15 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
+import com.google.gwt.user.client.DOM;
+
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -84,40 +88,40 @@ public class ChooseSourcePathForm extends DialogWindow implements ChooseSourcePa
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
 
-      VLayout mainLayout = new VLayout();
-      mainLayout.setWidth100();
-      mainLayout.setHeight100();
-      mainLayout.setMembersMargin(15);
-      mainLayout.setPadding(15);
+      VerticalPanel mainLayout = new VerticalPanel();
+      mainLayout.setWidth("100%");
+      mainLayout.setHeight("100%");
+      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      mainLayout.setSpacing(15);
       treeGrid = new ItemTreeGrid<Item>(ID_TREE_GRID);
-      treeGrid.setShowHeader(false);
+      ScrollPanel treeWrapper = new ScrollPanel(treeGrid);
+      DOM.setStyleAttribute(treeWrapper.getElement(), "border", "1px solid #a7abb4");
+      treeWrapper.setSize("100%", "250px");
 
-      mainLayout.addMember(treeGrid);
-      mainLayout.addMember(createButtonsLayout());
+      mainLayout.add(treeWrapper);
+      mainLayout.setCellHorizontalAlignment(treeWrapper, HasHorizontalAlignment.ALIGN_LEFT);
+      mainLayout.add(createButtonsLayout());
 
-      add(mainLayout);
+      setWidget(mainLayout);
       show();
    }
 
    /**
     * Create layout with buttons.
     * 
-    * @return {@link HLayout} layout with buttons
+    * @return {@link HorizontalPanel} layout with buttons
     */
-   private HLayout createButtonsLayout()
+   private HorizontalPanel createButtonsLayout()
    {
-      HLayout hLayout = new HLayout();
-      hLayout.setHeight(BUTTON_HEIGHT);
-      hLayout.setAutoWidth();
-      hLayout.setLayoutAlign(Alignment.CENTER);
-      hLayout.setMembersMargin(10);
-      hLayout.setLayoutBottomMargin(5);
+      HorizontalPanel hLayout = new HorizontalPanel();
+      hLayout.setHeight(BUTTON_HEIGHT + "px");
+      hLayout.setSpacing(5);
 
       okButton = createButton(ID_OK_BUTTON, "Ok", Images.Buttons.OK);
       cancelButton = createButton(ID_CANCEL_BUTTON, "Cancel", Images.Buttons.NO);
 
-      hLayout.addMember(okButton);
-      hLayout.addMember(cancelButton);
+      hLayout.add(okButton);
+      hLayout.add(cancelButton);
 
       return hLayout;
    }
