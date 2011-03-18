@@ -127,7 +127,7 @@ public class VersionsGrid extends ListGrid<Version>
       {
          public int compare(Version item1, Version item2)
          {
-            return item2.getName().compareTo(item1.getName());
+            return item1.getName().compareTo(item2.getName());
          }
       });
       getCellTable().addColumnSortHandler(columnSortHandler);
