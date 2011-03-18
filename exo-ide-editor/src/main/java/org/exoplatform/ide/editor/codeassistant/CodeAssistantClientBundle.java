@@ -37,7 +37,6 @@ public interface CodeAssistantClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/public/bundle/images/property-item.png")
    ImageResource property();
    
-   
    @Source("org/exoplatform/ide/editor/public/bundle/images/tag.png")
    ImageResource tag();
    
@@ -45,10 +44,7 @@ public interface CodeAssistantClientBundle extends ClientBundle
    ImageResource attribute();
    
    @Source("org/exoplatform/ide/editor/public/bundle/images/row-selected.png")
-   ImageResource rowSelected();
-
-   @Source("org/exoplatform/ide/editor/public/bundle/images/code-error-mark.png")
-   ImageResource codeErrorMark();   
+   ImageResource rowSelected(); 
    
    @Source("org/exoplatform/ide/editor/public/bundle/images/blank.png")
    ImageResource blankImage();

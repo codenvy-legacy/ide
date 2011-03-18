@@ -23,7 +23,6 @@ import org.exoplatform.ide.editor.api.DefaultCodeValidator;
 import org.exoplatform.ide.editor.api.DefaultParser;
 import org.exoplatform.ide.editor.api.Parser;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.codeassistant.DefaultCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.DefaultAutocompleteHelper;
@@ -65,7 +64,8 @@ public class CodeMirrorConfiguration
 
    private boolean canHaveSeveralMimeTypes;
    
-   private String codeErrorMarkStyle = CodeAssistantClientBundle.INSTANCE.css().codeErrorMarkStyle();
+   private String codeErrorMarkStyle = CodeMirrorClientBundle.INSTANCE.css().codeErrorMarkStyle();
+//   private String codeErrorMarkStyle;
 
    public CodeMirrorConfiguration()
    {

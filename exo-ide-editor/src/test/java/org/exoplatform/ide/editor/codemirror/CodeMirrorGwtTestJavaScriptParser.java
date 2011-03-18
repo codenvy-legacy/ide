@@ -24,18 +24,19 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.CodeLine;
-import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledHandler;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -44,9 +45,9 @@ import com.google.gwt.user.client.ui.RootPanel;
  * @version $Id
  *
  */
-public class CodeMirrorGwtTestJavaParser extends Base
+public class CodeMirrorGwtTestJavaScriptParser extends Base
 {
-  
+
    CodeMirror editor;
    HandlerManager eventBus;
    
@@ -82,12 +83,30 @@ public class CodeMirrorGwtTestJavaParser extends Base
          new MockJavaScriptCodeAssistant()  // replace on our class to intercept autocomplete calling event
       ));
       
-      HandlerManager eventBus = new HandlerManager(null);      
+      HandlerManager eventBus = new HandlerManager(null);   
+      
+      eventBus.addHandler(EditorHotKeyCalledEvent.TYPE, new EditorHotKeyCalledHandler(){
+
+         public void onEditorHotKeyCalled(EditorHotKeyCalledEvent event)
+         {
+            System.out.println(">>>>>>>>>>> onCodeMirrorEditorHotKeyCalled = " + event.getHotKey());                  
+         }
+                      
+      });
+      
       editor = new CodeMirror("", params, eventBus);
+
+      editor.setHotKeyList(new ArrayList<String>(){{
+         add("Ctrl+70"); // Ctrl+F
+         add("Ctrl+68"); // Ctrl+D
+         add("Ctrl+83"); // Ctrl+S
+         add("Alt+70");  // Alt+F             
+      }});
+      
       RootPanel.get().add(editor);
    }
    
-   public void testJavaScriptParsing()
+   public void testJavaScriptVariableParsing()
    {
       new Timer()
       {
@@ -98,8 +117,15 @@ public class CodeMirrorGwtTestJavaParser extends Base
             cancel();
             System.out.println(">>>>>>>>>>>>>>>> start checking codeMirror");
             
-            editor.setText("var a = 1; \n function()\n { a. \n  }");
-            editor.goToPosition(3, 6);   // set cursor after the "a._"
+//            editor.setText("var a = 1; \n function()\n { a. \n  }");
+            editor.setText(CodeMirrorTestBundle.INSTANCE.javaScriptParserTest().getText());
+            
+//            editor.goToPosition(3, 6);   // set cursor after the "a._"
+            
+            // press Ctrl + Space
+
+            // press Ctrl + S
+            keyPress(83, true, false, false, editor.editorId);
 
             new Timer()
             {
@@ -108,8 +134,7 @@ public class CodeMirrorGwtTestJavaParser extends Base
                public void run()
                {
                   cancel();
-                  System.out.println(">>>>>>>>>>>>>>>> check parsing results");               
-                  
+                  System.out.println(">>>>>>>>>>>>>>>> check parsing results");                
                   
                   List<TokenBeenImpl> tokenList = (List<TokenBeenImpl>) editor.getTokenList();
 
@@ -126,6 +151,7 @@ public class CodeMirrorGwtTestJavaParser extends Base
                   editor.ctrlSpaceClickHandler();
                   
                   finishTest();
+                  
                }
 
 
@@ -197,7 +223,7 @@ public class CodeMirrorGwtTestJavaParser extends Base
          assertEquals(TokenType.VARIABLE, tokenList.get(0).getType());
          assertEquals("Number", ((TokenBeenImpl)tokenList.get(0)).getElementType());            
          assertEquals(null, ((TokenBeenImpl)tokenList.get(0)).getInitializationStatement());
-         assertEquals(1, ((TokenBeenImpl)tokenList.get(0)).getLineNumber());                  
+         assertEquals(1, ((TokenBeenImpl)tokenList.get(0)).getLineNumber());    
       }
 
       @Override

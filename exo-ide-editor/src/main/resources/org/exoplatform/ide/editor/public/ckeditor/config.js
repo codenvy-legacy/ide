@@ -26,6 +26,7 @@ CKEDITOR.config.baseFloatZIndex = 220000;    // to display ckeditor dialogs unde
 
 CKEDITOR.config.blockedKeystrokes[CKEDITOR.config.blockedKeystrokes.length] = CKEDITOR.CTRL + 115;   // this disables "Save As" browser dialog after clicking on "Ctrl+s"
 CKEDITOR.config.blockedKeystrokes[CKEDITOR.config.blockedKeystrokes.length] = CKEDITOR.CTRL + 83;   // this disables "Save As" browser dialog after clicking on "Ctrl+S"
+CKEDITOR.config.blockedKeystrokes[CKEDITOR.config.blockedKeystrokes.length] = CKEDITOR.CTRL + 78;   // this disables opening new window after the clicking on "Ctrl+N"
 
 CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;  // Sets the behavior for the ENTER key. It also dictates other behaviour rules in the editor, like whether the <br> element is to be used as a paragraph separator when indenting text. The allowed values are the following constants, and their relative behavior: (CKEDITOR.ENTER_P (default), CKEDITOR.ENTER_BR, CKEDITOR.ENTER_DIV)
 

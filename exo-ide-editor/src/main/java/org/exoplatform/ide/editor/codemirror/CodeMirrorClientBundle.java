@@ -18,23 +18,23 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
-import com.google.gwt.junit.tools.GWTTestSuite;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
- * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
- * @version $Id: GwtTestSuite Feb 28, 2011 2:21:56 PM $
+ * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
+ * @version $Id: 
  *
  */
-public class CodeMirrorTestSuite extends TestCase
+public interface CodeMirrorClientBundle extends ClientBundle
 {
-   public static Test suite()
-   {
-       GWTTestSuite suite = new GWTTestSuite( "eXo IDE CodeMirror package GWT Tests" );
-       suite.addTestSuite(CodeMirrorGwtTestJavaScriptParser.class );
-       return suite;
-   }
+   CodeMirrorClientBundle INSTANCE = GWT.create(CodeMirrorClientBundle.class);
+
+   @Source("org/exoplatform/ide/editor/public/bundle/codemirror.css")
+   CodeMirrorCss css();
    
+   @Source("org/exoplatform/ide/editor/public/bundle/images/code-error-mark.png")
+   ImageResource codeErrorMark();   
 }

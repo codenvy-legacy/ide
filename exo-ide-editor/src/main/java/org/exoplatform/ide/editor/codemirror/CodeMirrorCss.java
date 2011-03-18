@@ -16,42 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant;
+package org.exoplatform.ide.editor.codemirror;
 
 import com.google.gwt.resources.client.CssResource;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Codeassistant Feb 22, 2011 5:17:02 PM evgen $
+ * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
+ * @version $Id:
  *
  */
-public interface CodeAssistantCss extends CssResource
+public interface CodeMirrorCss extends CssResource
 {
-
-   @ClassName("exo-autocomplete-panel")
-   String panelStyle(); 
-   
-   @ClassName("exo-autocomplete-list-item")
-   String item();
-   
-   @ClassName("exo-autocomplete-list-item-overed")
-   String overedItem();
-   
-   @ClassName("exo-autocomplete-list-item-selected")
-   String selectedItem();
-   
-   @ClassName("exo-autocomplete-description")
-   String description();
-   
-   @ClassName("exo-autocomplete-list")
-   String listStyle();
-   
-   @ClassName("exo-autocomplete-fqn")
-   String fqnStyle();
-   
-   @ClassName("exo-autocomplete-keyword")
-   String keywordStyle();
-   
-   @ClassName("exo-autocomplete-edit")
-   String edit();  
+   @ClassName("exo-code-error-mark")
+   String codeErrorMarkStyle();   
 }

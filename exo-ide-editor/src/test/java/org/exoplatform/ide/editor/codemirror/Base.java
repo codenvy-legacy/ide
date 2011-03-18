@@ -18,7 +18,13 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
@@ -43,5 +49,30 @@ public class Base extends GWTTestCase
    static final int CODEMIRROR_LOADING_PERIOD_MILISEC = 2000;
    static final int CODEMIRROR_TEXT_PARSING_PERIOD_MILISEC = 3000;   
    static final int DELAY_TEST_FINISH_MILISEC = 30000;
+
+   /**
+    * 
+    * @param key
+    */
+//   public native void keyPress(int keyCode, boolean isCtrlKey, boolean isAltKey, boolean isShiftKey, String editorId) /*-{
+//   
+//       var editor = $doc.getElementById(editorId);
+//       if ($doc.createEventObject) {        //Internet Explorer
+//           var keyClickEvent = $doc.createEventObject();   // http://javascript.gakaa.com/document-createeventobject-4-0-5-.aspx
+//           editor.fireEvent("ondblclick", keyClickEvent);
+//       } else {
+//           // Firefox, Safari, Opera
+//           var keyboardEvent = $doc.createEvent("KeyboardEvent");   // http://help.dottoro.com/ljnxhosf.php
+//           keyboardEvent.initKeyEvent("keypress", true, true, $wnd, isCtrlKey, isAltKey, isShiftKey, keyCode);  // http://help.dottoro.com/ljtxvfef.php
+//           editor.dispatchEvent(keyboardEvent);
+//       }
+//   
+//   }-*/;
+   
+   
+   public void keyPress(int keyCode, boolean ctrlKey, boolean altKey, boolean shiftKey, String elementId)
+   {
+      Document.get().getElementById(elementId).dispatchEvent(Document.get().createKeyPressEvent(ctrlKey, altKey, shiftKey, false, keyCode, 0));
+   }
    
 }
