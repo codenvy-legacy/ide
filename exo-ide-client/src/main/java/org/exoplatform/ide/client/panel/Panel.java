@@ -18,9 +18,24 @@
  */
 package org.exoplatform.ide.client.panel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
+import com.smartgwt.client.types.TabBarControls;
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.layout.Layout;
+import com.smartgwt.client.widgets.tab.Tab;
+import com.smartgwt.client.widgets.tab.TabSet;
+import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
+import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
+import com.smartgwt.client.widgets.tab.events.TabDeselectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabDeselectedHandler;
+import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.ImageUtil;
@@ -38,23 +53,8 @@ import org.exoplatform.ide.client.panel.event.ChangePanelTitleHandler;
 import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.TabBarControls;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.tab.Tab;
-import com.smartgwt.client.widgets.tab.TabSet;
-import com.smartgwt.client.widgets.tab.events.CloseClickHandler;
-import com.smartgwt.client.widgets.tab.events.TabCloseClickEvent;
-import com.smartgwt.client.widgets.tab.events.TabDeselectedEvent;
-import com.smartgwt.client.widgets.tab.events.TabDeselectedHandler;
-import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
-import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -70,7 +70,7 @@ public class Panel extends TabSet implements SelectViewHandler, ChangePanelTitle
 
    protected Handlers handlers;
 
-   private HashMap<String, List<Canvas>> tabColtrolButtons = new HashMap<String, List<Canvas>>();
+   private HashMap<String, List<Widget>> tabColtrolButtons = new HashMap<String, List<Widget>>();
 
    protected String previousTab = null;
 
@@ -125,15 +125,15 @@ public class Panel extends TabSet implements SelectViewHandler, ChangePanelTitle
       show();
       for (String tabTitle : tabColtrolButtons.keySet())
       {
-         List<Canvas> buttons = tabColtrolButtons.get(tabTitle);
-         for (Canvas button : buttons)
+         List<Widget> buttons = tabColtrolButtons.get(tabTitle);
+         for (Widget button : buttons)
          {
-            button.hide();
+            button.setVisible(false);
          }
       }
       tabColtrolButtons.put(view.getTitle(), view.getColtrolButtons());
       int position = 0;
-      for (Canvas button : tabColtrolButtons.get(view.getTitle()))
+      for (Widget button : tabColtrolButtons.get(view.getTitle()))
       {
          tabBarColtrols.addMember(button, position);
          position++;
@@ -197,18 +197,18 @@ public class Panel extends TabSet implements SelectViewHandler, ChangePanelTitle
       {
          if (previousTab != null)
          {
-            List<Canvas> buttons = tabColtrolButtons.get(previousTab);
-            for (Canvas button : buttons)
+            List<Widget> buttons = tabColtrolButtons.get(previousTab);
+            for (Widget button : buttons)
             {
-               button.hide();
+               button.setVisible(false);
             }
          }
          int buttonsWidth = 20;
-         List<Canvas> buttonsToShow = tabColtrolButtons.get(event.getTab().getPane().getTitle());
-         for (Canvas button : buttonsToShow)
+         List<Widget> buttonsToShow = tabColtrolButtons.get(event.getTab().getPane().getTitle());
+         for (Widget button : buttonsToShow)
          {
-            button.show();
-            buttonsWidth += button.getWidth();
+            button.setVisible(true);
+            buttonsWidth += 20; //TODO check width
          }
 
          previousTab = event.getTab().getPane().getTitle();
@@ -247,10 +247,10 @@ public class Panel extends TabSet implements SelectViewHandler, ChangePanelTitle
          /*
           * delete all buttons from control bar 
           */
-         List<Canvas> buttons = tabColtrolButtons.get(event.getTab().getPane().getTitle());
-         for (Canvas button : buttons)
+         List<Widget> buttons = tabColtrolButtons.get(event.getTab().getPane().getTitle());
+         for (Widget button : buttons)
          {
-            tabBarColtrols.removeMember(button);
+            tabBarColtrols.getElement().removeChild(button.getElement());
          }
 
          View view = (View)event.getTab().getPane();

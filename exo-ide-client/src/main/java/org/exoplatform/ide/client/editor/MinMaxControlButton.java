@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.client.editor;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
+import com.google.gwt.user.client.ui.Image;
 
-import org.exoplatform.gwtframework.ui.client.component.ImgButton;
 import org.exoplatform.ide.client.Images;
 
 /**
@@ -33,7 +32,7 @@ import org.exoplatform.ide.client.Images;
  * @version $
  */
 
-public class MinMaxControlButton extends ImgButton implements ClickHandler
+public class MinMaxControlButton extends Image implements com.google.gwt.event.dom.client.ClickHandler
 {
 
    private HandlerManager eventBus;
@@ -53,9 +52,8 @@ public class MinMaxControlButton extends ImgButton implements ClickHandler
       this.maximizeEvent = maximizeEvent;
       this.minimizeEvent = minimizeEvent;
 
-      setWidth(20);
-      setHeight(18);
-      setCanFocus(false);
+      setWidth(20+"px");
+      setHeight(18+"px");
 
       updateVisualState();
       addClickHandler(this);
@@ -71,13 +69,13 @@ public class MinMaxControlButton extends ImgButton implements ClickHandler
    {
       if (maximize)
       {
-         setSrc(Images.ControlButtons.MAXIMIZE);
-         setPrompt("Maximize");
+         setUrl(Images.ControlButtons.MAXIMIZE);
+         setTitle("Maximize");
       }
       else
       {
-         setSrc(Images.ControlButtons.RESTORE);
-         setPrompt("Restore");
+         setUrl(Images.ControlButtons.RESTORE);
+         setTitle("Restore");
       }
    }
 
@@ -96,5 +94,4 @@ public class MinMaxControlButton extends ImgButton implements ClickHandler
          eventBus.fireEvent(minimizeEvent);
       }
    }
-
 }

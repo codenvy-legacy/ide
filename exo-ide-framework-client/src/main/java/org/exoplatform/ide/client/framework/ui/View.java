@@ -18,21 +18,22 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Image;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.user.client.ui.TabBar.Tab;
+import com.google.gwt.user.client.ui.Widget;
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.events.MouseDownEvent;
+import com.smartgwt.client.widgets.events.MouseDownHandler;
+import com.smartgwt.client.widgets.layout.Layout;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
 import org.exoplatform.ide.client.framework.ui.event.ActivateViewHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.events.MouseDownEvent;
-import com.smartgwt.client.widgets.events.MouseDownHandler;
-import com.smartgwt.client.widgets.layout.Layout;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is base pane of all UI components.
@@ -46,7 +47,7 @@ import com.smartgwt.client.widgets.layout.Layout;
  */
 public class View extends Layout implements ActivateViewHandler
 {
-   private ArrayList<Canvas> buttons = new ArrayList<Canvas>();
+   private ArrayList<Widget> buttons = new ArrayList<Widget>();
 
    /**
     * White border style.
@@ -187,7 +188,7 @@ public class View extends Layout implements ActivateViewHandler
    /**
     * @param button
     */
-   public void addTabButton(Canvas button)
+   public void addTabButton(Widget button)
    {
       buttons.add(button);
    }
@@ -195,7 +196,7 @@ public class View extends Layout implements ActivateViewHandler
    /**
     * @return
     */
-   public List<Canvas> getColtrolButtons()
+   public List<Widget> getColtrolButtons()
    {
       return buttons;
    }

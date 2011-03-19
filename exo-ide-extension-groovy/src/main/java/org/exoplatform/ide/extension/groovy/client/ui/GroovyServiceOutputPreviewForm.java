@@ -93,8 +93,6 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private GroovyServiceOutputPreviewPresenter presenter;
 
-   //private HorizontalPanel hLayout;
-
    private VerticalPanel vLayout;
 
    private ComboBoxField pathField;

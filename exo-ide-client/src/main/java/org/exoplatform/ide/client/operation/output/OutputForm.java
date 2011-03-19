@@ -26,7 +26,6 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import org.exoplatform.gwtframework.ui.client.component.ImgButton;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -53,7 +52,7 @@ public class OutputForm extends LockableView implements OutputPresenter.Display
 
    private VLayout outputLayout;
 
-   private ImgButton clearOutputButton;
+   private Image clearOutputButton;
 
    public OutputForm(HandlerManager eventBus)
    {
@@ -72,12 +71,10 @@ public class OutputForm extends LockableView implements OutputPresenter.Display
       outputLayout.setID(ID);
       addMember(outputLayout);
 
-      clearOutputButton = new ImgButton();
-      clearOutputButton.setSrc(Images.OutputPanel.BUTTON_CLEAR);
-      clearOutputButton.setWidth(20);
-      clearOutputButton.setHeight(18);
-      clearOutputButton.setCanFocus(false);
-      clearOutputButton.setTooltip("Clear output");
+      clearOutputButton = new Image(Images.OutputPanel.BUTTON_CLEAR);
+      clearOutputButton.setWidth(20 + "px");
+      clearOutputButton.setHeight(18 + "px");
+      clearOutputButton.setTitle("Clear output");
       //clearOutputButton1.disable();
       addTabButton(clearOutputButton);
       
