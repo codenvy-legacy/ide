@@ -125,10 +125,8 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
 
       parameters = new RestServiceParameterListGrid();
       parameters.setID("ideRestServiceDiscoveryParameters");
-      parameters.setWidth("300px");
-      parameters.setHeight("100px");
-      parameters.setShowEdges(false);
-      parameters.setMargin(3);
+      parameters.setWidth("100%");
+      parameters.setHeight("100%");
       parameters.setVisible(false);
 
       form.add(pathField);
@@ -279,10 +277,10 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
     */
    public void setParametersListGridEnabled(boolean enabled)
    {
-      if (enabled)
-         parameters.enable();
-      else
-         parameters.disable();
+//      if (enabled)
+//         parameters.enable();
+//      else
+//         parameters.disable();
    }
 
    /**

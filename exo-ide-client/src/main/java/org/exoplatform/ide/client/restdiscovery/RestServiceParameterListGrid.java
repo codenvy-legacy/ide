@@ -18,82 +18,110 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.GroupStartOpen;
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.commons.wadl.Param;
-import org.exoplatform.gwtframework.ui.client.component.ListGridOld;
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class RestServiceParameterListGrid extends ListGridOld<Param>
+public class RestServiceParameterListGrid extends ListGrid<Param>
 {
 
-   private final static String GROUP = "Group";
+   private static final String NAME = "Name";
+   
+   private static final String TYPE = "Type";
+   
+   private static final String DEFAULT = "By default";
+   
+   private static final String GROUP = "Group";
 
    public RestServiceParameterListGrid()
    {
-      setCanSort(true);
-      setCanEdit(false);
-      setSelectionType(SelectionStyle.SINGLE);
-
-      ListGridField fieldName = new ListGridField("name", "Name");
-      fieldName.setAlign(Alignment.LEFT);
-      fieldName.setCanEdit(false);
-
-      ListGridField fieldType = new ListGridField("type", "Type");
-      fieldType.setAlign(Alignment.LEFT);
-      fieldType.setCanEdit(false);
-
-      ListGridField fieldDefault = new ListGridField("default", "By default");
-      fieldDefault.setAlign(Alignment.LEFT);
-      fieldDefault.setCanEdit(false);
-
-      ListGridField fieldGroup = new ListGridField(GROUP, GROUP);
-      fieldGroup.setHidden(true);
-      setGroupStartOpen(GroupStartOpen.ALL);
-      setGroupByField(GROUP);
+//      setEmptyMessage("Method has no parameters.");
       
-      setEmptyMessage("Method has no parameters.");
-
-      setFields(fieldName, fieldType, fieldDefault, fieldGroup);
-      setData(new ListGridRecord[0]);
-      setShowHeader(true);
+      initColumns();
 
    }
-
-   @Override
-   protected void setRecordFields(ListGridRecord record, Param item)
+   
+   private void initColumns()
    {
-      record.setAttribute("name", item.getName());
-      record.setAttribute("type", item.getType().getLocalName());
-      record.setAttribute("default", item.getDefault());
-      String paramType = "";
-      switch (item.getStyle())
+      //name column
+      Column<Param, String> nameColumn = new Column<Param, String>(new TextCell())
       {
-         case HEADER :
-            paramType = "Header ";
-            break;
-         case QUERY :
-            paramType = "Query ";
-            break;
-         case PLAIN :
-             paramType = "Plain ";
-            break;
-         case TEMPLATE :
-             paramType = "Path ";
-            break;
-         case MATRIX :
-             paramType = "Matrix";
-            break;
-      }
-      record.setAttribute(GROUP, paramType + "param");
+
+         @Override
+         public String getValue(final Param item)
+         {
+            return item.getName();
+         }
+
+      };
+      getCellTable().addColumn(nameColumn, NAME);
+      
+      //type column
+      Column<Param, String> typeColumn = new Column<Param, String>(new TextCell())
+      {
+
+         @Override
+         public String getValue(final Param item)
+         {
+            return item.getType().getLocalName();
+         }
+
+      };
+      getCellTable().addColumn(typeColumn, TYPE);
+      
+      //column By default
+      Column<Param, String> defaultColumn = new Column<Param, String>(new TextCell())
+      {
+
+         @Override
+         public String getValue(final Param item)
+         {
+            return item.getDefault();
+         }
+
+      };
+      getCellTable().addColumn(defaultColumn, DEFAULT);
+      
+      //group column (will be removed)
+      //TODO: made grouping by group column
+//      Column<Param, String> groupColumn = new Column<Param, String>(new TextCell())
+//      {
+//
+//         @Override
+//         public String getValue(final Param item)
+//         {
+//            String paramType = "";
+//            switch (item.getStyle())
+//            {
+//               case HEADER :
+//                  paramType = "Header";
+//                  break;
+//               case QUERY :
+//                  paramType = "Query";
+//                  break;
+//               case PLAIN :
+//                   paramType = "Plain";
+//                  break;
+//               case TEMPLATE :
+//                   paramType = "Path";
+//                  break;
+//               case MATRIX :
+//                   paramType = "Matrix";
+//                  break;
+//            }
+//            
+//            return paramType + " param";
+//         }
+//
+//      };
+//      getCellTable().addColumn(groupColumn, GROUP);
    }
 
 }

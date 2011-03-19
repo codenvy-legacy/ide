@@ -130,7 +130,6 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
          }
          else if (item.getCommand().getIcon() != null)
          {
-            System.out.println(">>> " + item.getCommand().getIcon());
             title = "<span><img src = \"" + item.getCommand().getIcon() + "\"/>&nbsp;" + commandName + "</span>";
          }
          else
