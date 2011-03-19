@@ -18,21 +18,20 @@
  */
 package org.exoplatform.ide.client.versioning;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.google.gwt.dom.client.Style.Unit;
-
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-
-import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.grid.ListGridField;
-
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.vfs.Version;
+
+import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -49,30 +48,27 @@ public class VersionsGrid extends ListGrid<Version>
 
    private final String LENGTH = "Size";
 
+   Column<Version, String> nameColumn;
+   
+   Column<Version, String> dateColumn;
+
+   Column<Version, String> sizeColumn;
+   
+   CellTable<Version> cellTable;
+   
    public VersionsGrid()
    {
       setID(ID);
-
-      ListGridField fieldName = new ListGridField(NAME, NAME);
-      fieldName.setAlign(Alignment.CENTER);
-      fieldName.setWidth("35%");
-
-      ListGridField fieldDate = new ListGridField(DATE, DATE);
-      fieldDate.setAlign(Alignment.CENTER);
-      fieldDate.setWidth("40%");
-
-      ListGridField fieldLenght = new ListGridField(LENGTH, LENGTH);
-      fieldLenght.setAlign(Alignment.CENTER);
-      fieldLenght.setWidth("25%");
-
-//      setFields(fieldName, fieldDate, fieldLenght);
+      
+      cellTable = getCellTable();
+      
       initColumns();
    }
 
    private void initColumns()
    {
       //name column
-      Column<Version, String> nameColumn = new Column<Version, String>(new TextCell())
+      nameColumn = new Column<Version, String>(new TextCell())
       {
 
          @Override
@@ -82,13 +78,14 @@ public class VersionsGrid extends ListGrid<Version>
          }
 
       };
-      nameColumn.setSortable(true);
+      
+      nameColumn.setSortable(true);    
       nameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-      getCellTable().addColumn(nameColumn, NAME);
-      getCellTable().setColumnWidth(nameColumn, 35, Unit.PCT);
+      cellTable.addColumn(nameColumn, NAME);
+      cellTable.setColumnWidth(nameColumn, 35, Unit.PCT);
       
       //date column
-      Column<Version, String> dateColumn = new Column<Version, String>(new TextCell())
+      dateColumn = new Column<Version, String>(new TextCell())
       {
 
          @Override
@@ -99,11 +96,11 @@ public class VersionsGrid extends ListGrid<Version>
 
       };
       dateColumn.setSortable(true);
-      getCellTable().addColumn(dateColumn, DATE);
-      getCellTable().setColumnWidth(dateColumn, 40, Unit.PCT);
+      cellTable.addColumn(dateColumn, DATE);
+      cellTable.setColumnWidth(dateColumn, 40, Unit.PCT);
       
-      // content length column
-      Column<Version, String> lengthColumn = new Column<Version, String>(new TextCell())
+      // content size column
+      sizeColumn = new Column<Version, String>(new TextCell())
       {
 
          @Override
@@ -113,30 +110,60 @@ public class VersionsGrid extends ListGrid<Version>
          }
 
       };
-      lengthColumn.setSortable(true);
-      lengthColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-      getCellTable().addColumn(lengthColumn, LENGTH);
-      getCellTable().setColumnWidth(lengthColumn, 25, Unit.PCT);
-      
-      List<Version> versions = getCellTable().getVisibleItems();
+      sizeColumn.setSortable(true);
+      sizeColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+      cellTable.addColumn(sizeColumn, LENGTH);
+      cellTable.setColumnWidth(sizeColumn, 25, Unit.PCT);
+   }
+   
+   @Override
+   public void setValue(List<Version> versions)
+   {
+      super.setValue(versions);
       
       // Add a ColumnSortEvent.ListHandler to connect sorting to the
       // java.util.List.
-      ListHandler<Version> columnSortHandler = new ListHandler<Version>(versions);
+      ListHandler<Version> columnSortHandler = new ListHandler<Version>(versions){
+         @Override
+         public void onColumnSort(ColumnSortEvent event)
+         {
+            super.onColumnSort(event);
+
+            setValue(items);
+            
+            cellTable.redraw();
+
+         }
+      };
+      
+      cellTable.addColumnSortHandler(columnSortHandler);
+      
+      // Add comparators
       columnSortHandler.setComparator(nameColumn, new Comparator<Version>()
       {
          public int compare(Version item1, Version item2)
          {
-            return item1.getName().compareTo(item2.getName());
+            return item1.getDisplayName().compareTo(item2.getDisplayName());
          }
       });
-      getCellTable().addColumnSortHandler(columnSortHandler);
-
-      // We know that the data is sorted alphabetically by default.
-      getCellTable().getColumnSortList().push(nameColumn);
       
-   }
-  
+      columnSortHandler.setComparator(dateColumn, new Comparator<Version>()
+      {
+         public int compare(Version item1, Version item2)
+         {
+            return item1.getCreationDate().compareTo(item2.getCreationDate());
+         }
+      });
+      
+      columnSortHandler.setComparator(sizeColumn, new Comparator<Version>()
+         {
+            public int compare(Version item1, Version item2)
+            {
+               return (item1.getContentLength() > item1.getContentLength()) ? 1 : -1;
+            }
+         });       
+      }
+
    /**
     * Returns selected version in version grid.
     * 
@@ -146,5 +173,4 @@ public class VersionsGrid extends ListGrid<Version>
    {
       return super.getSelectedItems().get(0);
    }
-
 }
