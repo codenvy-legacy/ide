@@ -159,7 +159,7 @@ public class VersionsGrid extends ListGrid<Version>
          {
             public int compare(Version item1, Version item2)
             {
-               return (item1.getContentLength() > item1.getContentLength()) ? 1 : -1;
+               return (item1.getContentLength() > item2.getContentLength()) ? 1 : -1;     
             }
          });       
       }
