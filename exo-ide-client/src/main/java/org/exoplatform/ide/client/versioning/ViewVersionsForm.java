@@ -20,9 +20,9 @@ package org.exoplatform.ide.client.versioning;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.layout.HLayout;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -83,10 +83,14 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
       //TODO setCanDragResize(true);
 
       VerticalPanel vPanel = new VerticalPanel();
+      vPanel.setHeight("100%");
+      vPanel.setWidth("100%");
+      vPanel.setSpacing(10);
+      vPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
       versionsGrid = new VersionsGrid();
-      versionsGrid.setWidth(350);
-      versionsGrid.setHeight(250);
+      versionsGrid.setWidth(420);
+      versionsGrid.setHeight(200);
       versionsGrid.setValue(versions);
 
       vPanel.add(versionsGrid);
@@ -99,20 +103,17 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
       show();
    }
 
-   private HLayout createButtonsLayout()
+   private HorizontalPanel createButtonsLayout()
    {
-      HLayout hLayout = new HLayout();
-      hLayout.setLayoutBottomMargin(10);
-      hLayout.setAutoWidth();
-      hLayout.setLayoutAlign(Alignment.CENTER);
-      hLayout.setHeight(BUTTON_HEIGHT);
-      hLayout.setMembersMargin(10);
+      HorizontalPanel hLayout = new HorizontalPanel();
+      hLayout.setHeight(BUTTON_HEIGHT + "px");
+      hLayout.setSpacing(5);
 
       openVersionButton = createButton("Open", ID_OPEN_VERSION_BUTTON, Images.Buttons.OK);
       closeButton = createButton("Close", ID_CLOSE_BUTTON, Images.Buttons.CANCEL);
 
-      hLayout.addMember(openVersionButton);
-      hLayout.addMember(closeButton);
+      hLayout.add(openVersionButton);
+      hLayout.add(closeButton);
 
       return hLayout;
    }
