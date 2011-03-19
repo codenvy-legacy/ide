@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client;
 
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -26,20 +25,27 @@ package org.exoplatform.ide.client;
  * @version @version $Id: $
  */
 
-public class Log
+public abstract class Log
 {
 
-   private static boolean enabled = false;
+   private static Log instance;
+
+   protected Log()
+   {
+      instance = this;
+   }
+
+   public abstract void _info(String message);
 
    public static void info(String message)
    {
-      if (!enabled)
-      {
-         return;
-      }
+      System.out.println("ouuuu >> " + message);
 
-      //GWT.log(message, null);
-      System.out.println(message);
+      if (instance != null)
+      {
+
+         instance._info(message);
+      }
    }
 
 }

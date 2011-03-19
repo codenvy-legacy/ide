@@ -69,29 +69,10 @@ public class IDEPresenter implements ExceptionThrownHandler
          public void run()
          {
             //activate default view
+            
             eventBus.fireEvent(new ActivateViewEvent(BrowserPanel.ID));
+            
             new LoadRegistryConfigurationPhase(eventBus, controlsRegistration);
-
-            //            IDEConfiguration ideConfiguration = new IDEConfiguration();
-            //
-            //            CommandQueue.getInstance().addCommand(new LoadRegistryConfigurationCommand(eventBus, ideConfiguration),
-            //               ConfigurationReceivedSuccessfullyEvent.TYPE);
-            //            
-            //            CommandQueue.getInstance().addCommand(new LoadUserInfoCommand(eventBus, controlsRegistration),
-            //               UserInfoReceivedEvent.TYPE);
-            //            
-            //            CommandQueue.getInstance().addCommand(
-            //               new LoadApplicationSettingsCommand(eventBus, controlsRegistration, ideConfiguration),
-            //               ApplicationSettingsReceivedEvent.TYPE);
-            //            
-            //            CommandQueue.getInstance().addCommand(new InitializeServicesCommand(eventBus, controlsRegistration),
-            //               InitializeServicesEvent.TYPE);
-            //            
-            //            CommandQueue.getInstance().addCommand(new LoadDefaultEntryPointCommand(eventBus, ideConfiguration),
-            //               DefaultEntryPointReceivedEvent.TYPE);
-            //
-            //            CommandQueue.getInstance().run();
-
          }
       }.schedule(Phase.DELAY_BETWEEN_PHASES);
 

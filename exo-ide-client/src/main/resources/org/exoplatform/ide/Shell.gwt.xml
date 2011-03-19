@@ -62,6 +62,7 @@
    <inherits name='org.exoplatform.ide.extension.gadget.GadgetExtension' />
    <inherits name='org.exoplatform.ide.extension.chromattic.ChromatticExtension' />
 
+	<inherits name='org.exoplatform.ide.Views' />
 
    <!-- Specify the app entry point class. -->
    <entry-point class='org.exoplatform.ide.client.IDEShell' />
@@ -83,5 +84,6 @@
 
    <!-- Specify the application specific style sheet. -->
    <stylesheet src='IDE.css' />
+   
 
 </module>

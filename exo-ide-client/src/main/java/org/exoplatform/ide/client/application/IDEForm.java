@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.client.application;
 
+import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
+import org.exoplatform.ide.client.download.DownloadForm;
+import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
+import org.exoplatform.ide.client.model.ApplicationContext;
+
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -25,12 +30,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.layout.Layout;
-
-import org.exoplatform.gwtframework.ui.client.event.WindowResizedEvent;
-import org.exoplatform.ide.client.application.perspective.DefaultPerspective;
-import org.exoplatform.ide.client.download.DownloadForm;
-import org.exoplatform.ide.client.framework.ui.ViewHighlightManager;
-import org.exoplatform.ide.client.model.ApplicationContext;
 
 /**
  * Created by The eXo Platform SAS .
@@ -89,9 +88,9 @@ public class IDEForm extends Layout implements IDEPresenter.Display
 
    public void showDefaultPerspective()
    {
-      DefaultPerspective defaultPerspective = new DefaultPerspective(eventBus, context);
-      context.setCurrentPerspective(defaultPerspective);
-      addMember(defaultPerspective);         
+//      DefaultPerspective defaultPerspective = new DefaultPerspective(eventBus, context);
+//      context.setCurrentPerspective(defaultPerspective);
+//      addMember(defaultPerspective);         
    }
 
 }

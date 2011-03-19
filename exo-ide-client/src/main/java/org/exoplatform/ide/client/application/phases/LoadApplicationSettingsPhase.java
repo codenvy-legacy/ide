@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
-import org.exoplatform.gwtframework.ui.client.event.UpdateMainMenuEvent;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -34,7 +33,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
-import org.exoplatform.ide.client.menu.IDEMenu;
+import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -121,9 +120,11 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
             /*
              * Updating top menu
              */
-            eventBus.fireEvent(new UpdateMainMenuEvent(controls.getRegisteredControls()));
+//            eventBus.fireEvent(new UpdateMainMenuEvent(controls.getRegisteredControls()));
+//            IDEMenu.getInstance().refreshMenu(controls.getRegisteredControls());
             
-            IDEMenu.getInstance().refreshMenu(controls.getRegisteredControls());
+            eventBus.fireEvent(new RefreshMenuEvent());
+            
             
 //            eventBus.fireEvent(new UpdateStatusBarEvent(controls.getStatusBarControls(), controls
 //               .getRegisteredControls()));
