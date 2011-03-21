@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.app.impl.layers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.gwtframework.ui.client.window.Window;
@@ -27,7 +27,6 @@ import org.exoplatform.ide.client.app.impl.Layer;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -37,44 +36,26 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class WindowsLayer extends Layer
+public class PopupWindowsLayer extends Layer
 {
 
-   private List<WindowController> windowControllers = new ArrayList<WindowsLayer.WindowController>();
+   private Map<String, WindowController> windowControllers = new HashMap<String, PopupWindowsLayer.WindowController>();
 
-   private List<Widget> lockPanels = new ArrayList<Widget>();
+   private Map<String, ViewEx> views = new HashMap<String, ViewEx>();
 
-   private int width;
+   private Map<String, Window> windows = new HashMap<String, Window>();
 
-   private int height;
-
-   @Override
-   public void resize(int width, int height)
+   public void openView(ViewEx view)
    {
-      this.width = width;
-      this.height = height;
-      super.resize(width, height);
-
-      for (Widget p : lockPanels)
-      {
-         p.setWidth(0 + "px");
-         p.setHeight(0 + "px");
-      }
-   }
-
-   public void openWindow(ViewEx view)
-   {
-      AbsolutePanel lockPanel = new AbsolutePanel();
-      lockPanels.add(lockPanel);
-      lockPanel.setWidth(0 + "px");
-      lockPanel.setHeight(0 + "px");
-      add(lockPanel, 0, 0);
+      views.put(view.getId(), view);
 
       Window window = new Window(view.getTitle());
       window.setWidth(view.getDefaultWidth());
       window.setHeight(view.getDefaultHeight());
       window.center();
       window.show();
+
+      windows.put(view.getId(), window);
 
       int left = window.getAbsoluteLeft();
       int top = window.getAbsoluteTop();
@@ -83,38 +64,50 @@ public class WindowsLayer extends Layer
       DOM.setStyleAttribute(window.getElement(), "left", left + "px");
       DOM.setStyleAttribute(window.getElement(), "top", top + "px");
 
-      if (view instanceof Widget) {
+      if (view instanceof Widget)
+      {
          window.add((Widget)view);
       }
 
-      WindowController controller = new WindowController(window, lockPanel);
-      windowControllers.add(controller);
+      WindowController controller = new WindowController(view, window);
+      windowControllers.put(view.getId(), controller);
    }
 
    private class WindowController implements CloseClickHandler
    {
 
-      private Window window;
+      private ViewEx view;
 
-      private Widget lockPanel;
-
-      public WindowController(Window window, Widget lockPanel)
+      public WindowController(ViewEx view, Window window)
       {
-         this.window = window;
-         this.lockPanel = lockPanel;
+         this.view = view;
          window.addCloseClickHandler(this);
       }
 
       @Override
       public void onCloseClick()
       {
-         window.hide();
-         window.destroy();
-         windowControllers.remove(this);
-         lockPanels.remove(lockPanel);
-         lockPanel.removeFromParent();
+         closeView(view.getId());
       }
 
+   }
+
+   public Map<String, ViewEx> getViews()
+   {
+      return views;
+   }
+
+   public void closeView(String viewId)
+   {
+      Window window = windows.get(viewId);
+      windows.remove(viewId);
+
+      window.hide();
+      window.destroy();
+
+      windowControllers.remove(viewId);
+
+      views.remove(viewId);
    }
 
 }

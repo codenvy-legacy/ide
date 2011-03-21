@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.app.impl.layers;
 
 import org.exoplatform.ide.client.app.impl.Layer;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,8 +30,13 @@ import org.exoplatform.ide.client.app.impl.Layer;
 
 public class ModalWindowsLayer extends Layer
 {
-   
-   public ModalWindowsLayer() {
+
+   public ModalWindowsLayer()
+   {
+   }
+
+   public void openWindow(ViewEx view)
+   {
    }
 
 }

@@ -26,10 +26,11 @@ import org.exoplatform.ide.client.app.impl.PerspectiveImpl;
 import org.exoplatform.ide.client.app.impl.layers.DebugLayer;
 import org.exoplatform.ide.client.app.impl.layers.LayoutLayer;
 import org.exoplatform.ide.client.app.impl.layers.MenuLayer;
+import org.exoplatform.ide.client.app.impl.layers.ModalWindowsLayer;
 import org.exoplatform.ide.client.app.impl.layers.PanelsLayer;
+import org.exoplatform.ide.client.app.impl.layers.PopupWindowsLayer;
 import org.exoplatform.ide.client.app.impl.layers.ToolbarsLayer;
 import org.exoplatform.ide.client.app.impl.layers.ViewsLayer;
-import org.exoplatform.ide.client.app.impl.layers.WindowsLayer;
 
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -94,13 +95,16 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
       ViewsLayer viewsLayer = new ViewsLayer();
       addLayer(viewsLayer);
 
-      WindowsLayer windowsLayer = new WindowsLayer();
-      addLayer(windowsLayer);
+      PopupWindowsLayer popupWindowsLayer = new PopupWindowsLayer();
+      addLayer(popupWindowsLayer);
+
+      ModalWindowsLayer modalWindowsLayer = new ModalWindowsLayer();
+      addLayer(modalWindowsLayer);
 
       DebugLayer debugController = new DebugLayer();
       addLayer(debugController);
 
-      perspective = new PerspectiveImpl(layoutLayer, panelsLayer, viewsLayer, windowsLayer);
+      perspective = new PerspectiveImpl(layoutLayer, panelsLayer, viewsLayer, popupWindowsLayer, modalWindowsLayer);
    }
 
    @Override

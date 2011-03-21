@@ -18,12 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -47,21 +42,27 @@ import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
 import org.exoplatform.ide.client.module.navigation.event.SearchFilesEvent;
 import org.exoplatform.ide.client.module.navigation.event.SearchFilesHandler;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:   $
  *
  */
-public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, ViewClosedHandler, ItemsSelectedHandler, EntryPointChangedHandler
+public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, ViewClosedHandler, ItemsSelectedHandler,
+   EntryPointChangedHandler
 {
 
    public interface Display extends ViewDisplay
    {
-      
+
       static final String ID = "ideSearchView";
-      
+
       HasClickHandlers getSearchButton();
 
       HasClickHandlers getCancelButton();
@@ -79,9 +80,9 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
    private Display display;
 
    private List<Item> selectedItems;
-   
+
    private String entryPoint;
-   
+
    private HandlerManager eventBus;
 
    public SearchPresenter(HandlerManager eventBus, List<Item> selectedItems, String entryPoint)
@@ -89,7 +90,7 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;
       this.entryPoint = entryPoint;
-      
+
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(SearchFilesEvent.TYPE, this);
@@ -115,6 +116,11 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
          }
       });
 
+      setPath();
+      fillMimeTypes();
+   }
+   
+   private void setPath() {
       String path;
       if (selectedItems.size() == 0)
       {
@@ -133,9 +139,7 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
          path = href.substring(entryPoint.length() - 1);
       }
 
-      display.getPathItem().setValue(path);
-
-      fillMimeTypes();
+      display.getPathItem().setValue(path);      
    }
 
    private void doSearch()
@@ -143,15 +147,15 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
       String content = display.getSearchContentItem().getValue();
       String contentType = display.getMimeTypeItem().getValue();
 
-//      if (content != null)
-//      {
-//         context.setSearchContent(content);
-//      }
-//
-//      if (contentType != null)
-//      {
-//         context.setSearchContentType(contentType);
-//      }
+      //      if (content != null)
+      //      {
+      //         context.setSearchContent(content);
+      //      }
+      //
+      //      if (contentType != null)
+      //      {
+      //         context.setSearchContentType(contentType);
+      //      }
 
       Item item = selectedItems.get(0);
 
@@ -170,20 +174,20 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
       final Folder folder = new Folder(entryPoint);
       VirtualFileSystem.getInstance().search(folder, content, contentType, path, new AsyncRequestCallback<Folder>()
       {
-         
+
          @Override
          protected void onSuccess(Folder result)
          {
             eventBus.fireEvent(new SearchResultReceivedEvent(folder));
          }
-         
+
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Search path does not exist."));            
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Search path does not exist."));
          }
       });
-      
+
       IDE.getInstance().closeView(Display.ID);
    }
 
@@ -213,8 +217,9 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (Display.ID.equals(event.getViewId())) {
-         display = null;         
+      if (Display.ID.equals(event.getViewId()))
+      {
+         display = null;
       }
    }
 
@@ -227,12 +232,15 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
+      if (display != null) {
+         setPath();
+      }
    }
 
    @Override
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       entryPoint = event.getEntryPoint();
-   }   
+   }
 
 }

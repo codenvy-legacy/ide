@@ -71,10 +71,10 @@ public class Panel extends AbsolutePanel implements RequiresResize
    private ShowPanelHandler showPanelHandler;
 
    private HidePanelHandler hidePanelHandler;
-   
+
    private List<ViewOpenedHandler> viewOpenedHandlers = new ArrayList<ViewOpenedHandler>();
-   
-   private List<ViewClosedHandler> viewClosedHandlers = new ArrayList<ViewClosedHandler>();   
+
+   private List<ViewClosedHandler> viewClosedHandlers = new ArrayList<ViewClosedHandler>();
 
    public Panel(String panelId, String[] acceptableTypes)
    {
@@ -119,10 +119,11 @@ public class Panel extends AbsolutePanel implements RequiresResize
          if (currentViewId != null)
          {
             ViewEx currentView = views.get(currentViewId);
-            if (currentView instanceof Widget) {
+            if (currentView instanceof Widget)
+            {
                ((Widget)currentView).setVisible(false);
             }
-            
+
             Widget currentViewWrapper = viewWrappers.get(currentViewId);
             currentViewWrapper.setVisible(false);
          }
@@ -130,10 +131,11 @@ public class Panel extends AbsolutePanel implements RequiresResize
          currentViewId = selectedViewId;
 
          ViewEx selectedView = views.get(selectedViewId);
-         if (selectedView instanceof Widget) {
+         if (selectedView instanceof Widget)
+         {
             ((Widget)selectedView).setVisible(true);
          }
-         
+
          Widget selectedViewWrapper = viewWrappers.get(selectedViewId);
          selectedViewWrapper.setVisible(true);
          ViewController selectedViewController = viewControllers.get(selectedViewId);
@@ -141,39 +143,52 @@ public class Panel extends AbsolutePanel implements RequiresResize
       }
    };
 
+   public void closeView(String viewId)
+   {
+      tabPanel.removeTab(viewId);
+      closeViewOnly(viewId);
+   }
+
+   protected void closeViewOnly(String viewId)
+   {
+      if (viewId.equals(currentViewId))
+      {
+         currentViewId = null;
+      }
+
+      ViewEx view = views.get(viewId);
+      if (view instanceof Widget)
+      {
+         ((Widget)view).removeFromParent();
+      }
+
+      views.remove(viewId);
+
+      Widget viewWrapper = viewWrappers.get(viewId);
+      viewWrapper.removeFromParent();
+      viewWrappers.remove(viewId);
+
+      ViewController viewController = viewControllers.get(viewId);
+      viewControllers.remove(viewId);
+
+      for (ViewClosedHandler handler : viewClosedHandlers)
+      {
+         handler.onViewClosed(new ViewClosedEvent(viewId));
+      }
+
+      if (views.size() == 0 && hidePanelHandler != null)
+      {
+         hidePanelHandler.onHidePanel(panelId);
+      }
+   }
+
    private CloseTabHandler closeTabHandler = new CloseTabHandler()
    {
       @Override
       public boolean onCloseTab(String tabId)
       {
          String viewId = tabId;
-         if (viewId.equals(currentViewId))
-         {
-            currentViewId = null;
-         }
-
-         ViewEx view = views.get(viewId);
-         if (view instanceof Widget) {
-            ((Widget)view).removeFromParent();            
-         }
-         
-         views.remove(viewId);
-
-         Widget viewWrapper = viewWrappers.get(viewId);
-         viewWrapper.removeFromParent();
-         viewWrappers.remove(viewId);
-
-         ViewController viewController = viewControllers.get(viewId);
-         viewControllers.remove(viewId);
-         
-         for (ViewClosedHandler handler : viewClosedHandlers) {
-            handler.onViewClosed(new ViewClosedEvent(viewId));
-         }
-         
-         if (views.size() == 0 && hidePanelHandler != null) {
-            hidePanelHandler.onHidePanel(panelId);
-         }
-
+         closeViewOnly(viewId);
          return true;
       }
    };
@@ -223,10 +238,11 @@ public class Panel extends AbsolutePanel implements RequiresResize
    {
       final ViewController controller = new ViewController(view, viewWrapper);
 
-      if (views.size() == 0 && showPanelHandler != null) {
+      if (views.size() == 0 && showPanelHandler != null)
+      {
          showPanelHandler.onShowPanel(panelId);
       }
-      
+
       views.put(view.getId(), view);
       viewWrappers.put(view.getId(), viewWrapper);
       viewControllers.put(view.getId(), controller);
@@ -236,12 +252,12 @@ public class Panel extends AbsolutePanel implements RequiresResize
       for (ViewOpenedHandler handler : viewOpenedHandlers)
       {
          handler.onViewOpened(new ViewOpenedEvent(view.getId()));
-      }      
-      
+      }
+
       tabPanel.selectTab(view.getId());
 
       //controller.onResize();
-      
+
    }
 
    private class ViewController extends FlowPanel implements RequiresResize

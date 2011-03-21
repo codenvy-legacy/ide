@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ViewsLayer extends Layer
 {
-
+   
    public class ViewWrapper extends AbsolutePanel
    {
 
@@ -60,11 +60,11 @@ public class ViewsLayer extends Layer
 
    }
 
-   public Widget addView(ViewEx view)
+   public Widget openView(ViewEx view)
    {
       ViewWrapper wrapper = new ViewWrapper(view);
       add(wrapper);
       return wrapper;
    }
-
+   
 }
