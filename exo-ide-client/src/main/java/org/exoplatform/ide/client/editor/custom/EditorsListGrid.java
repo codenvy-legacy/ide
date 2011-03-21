@@ -67,6 +67,7 @@ public class EditorsListGrid extends ListGrid<EditorInfo>
 
       };
       
+      entryNameColumn.setSortable(true);
       getCellTable().addColumn(entryNameColumn, "Editors");
       getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
 
