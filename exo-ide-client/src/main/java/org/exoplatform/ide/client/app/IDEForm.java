@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.client.app;
 
+import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
 import org.exoplatform.ide.client.app.api.Menu;
 import org.exoplatform.ide.client.app.api.Perspective;
-import org.exoplatform.ide.client.app.api.Statusbar;
-import org.exoplatform.ide.client.app.api.Toolbar;
 import org.exoplatform.ide.client.app.impl.LayerContainer;
 import org.exoplatform.ide.client.app.impl.PerspectiveImpl;
 import org.exoplatform.ide.client.app.impl.layers.DebugLayer;
@@ -53,6 +52,8 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
 
    private Perspective perspective;
 
+   private ToolbarsLayer toolbarsLayer;
+
    public IDEForm()
    {
       AbsolutePanel ideRootPanel = new AbsolutePanel();
@@ -81,8 +82,8 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
       menu = menuLayer.getMenu();
       addLayer(menuLayer);
 
-      ToolbarsLayer toolbars = new ToolbarsLayer();
-      addLayer(toolbars);
+      toolbarsLayer = new ToolbarsLayer();
+      addLayer(toolbarsLayer);
 
       LayoutLayer layoutLayer = new LayoutLayer();
       addLayer(layoutLayer);
@@ -117,21 +118,21 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
    }
 
    @Override
-   public Toolbar getToolbar()
-   {
-      return null;
-   }
-
-   @Override
-   public Statusbar getStatusbar()
-   {
-      return null;
-   }
-
-   @Override
    public Perspective getPerspective()
    {
       return perspective;
+   }
+
+   @Override
+   public Toolbar getToolbar()
+   {
+      return toolbarsLayer.getToolbar();
+   }
+
+   @Override
+   public Toolbar getStatusbar()
+   {
+      return toolbarsLayer.getStatusbar();
    }
 
 }

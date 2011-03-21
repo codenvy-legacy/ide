@@ -62,5 +62,13 @@ public class ToolbarsLayer extends Layer
       statusbar.setWidth("" + width + "px");
       DOM.setStyleAttribute(statusbar.getElement(), "top", "" + (height - 30) + "px");
    }
+   
+   public Toolbar getToolbar() {
+      return toolbar;
+   }
+   
+   public Toolbar getStatusbar() {
+      return statusbar;
+   }
 
 }

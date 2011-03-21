@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.client.app;
 
+import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarBuilder;
+import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
 import org.exoplatform.ide.client.app.api.Menu;
 import org.exoplatform.ide.client.app.api.Perspective;
-import org.exoplatform.ide.client.app.api.Statusbar;
-import org.exoplatform.ide.client.app.api.Toolbar;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.phases.LoadRegistryConfigurationPhase;
 import org.exoplatform.ide.client.browser.BrowserPanel;
@@ -54,7 +54,7 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
 
       Toolbar getToolbar();
 
-      Statusbar getStatusbar();
+      Toolbar getStatusbar();
 
       Perspective getPerspective();
 
@@ -76,6 +76,8 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
 
       display.getPerspective().addViewOpenedHandler(this);
       display.getPerspective().addViewClosedHandler(this);
+      
+      new ToolbarBuilder(eventBus, display.getToolbar(), display.getStatusbar());
 
       new Timer()
       {
