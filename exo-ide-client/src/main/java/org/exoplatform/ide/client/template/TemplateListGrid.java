@@ -132,7 +132,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
 
       };
       getCellTable().addColumn(nameColumn, "Name");
-      getCellTable().setColumnWidth(nameColumn, 60, Unit.PX);
+      getCellTable().setColumnWidth(nameColumn, 40, Unit.PCT);
       
       //--- description column -----
       SafeHtmlCell descCell = new SafeHtmlCell();

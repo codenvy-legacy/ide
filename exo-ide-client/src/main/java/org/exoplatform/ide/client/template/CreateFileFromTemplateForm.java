@@ -48,6 +48,8 @@ public class CreateFileFromTemplateForm extends AbstractCreateFromTemplateForm<F
    void createTypeLayout()
    {
       templateListGrid = new TemplateListGrid<FileTemplate>();
+      templateListGrid.setWidth("100%");
+      templateListGrid.setHeight(HEIGHT - 30 +"px");
       // templateListGrid.setCanFocus(false);  // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."
       windowLayout.add(templateListGrid);
    }

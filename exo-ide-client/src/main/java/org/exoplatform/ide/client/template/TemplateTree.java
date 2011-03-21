@@ -183,14 +183,6 @@ public class TemplateTree extends Tree<Template>
       TreeItem item = getTreeItem(rootNode, template);
       if (item != null)
          tree.setSelectedItem(item, true);
-      //      for (ListGridRecord record : getRecords())
-      //      {
-      //         if (template == (Template)record.getAttributeAsObject(getValuePropertyName()))
-      //         {
-      //            selectSingleRecord(record);
-      //         }
-      //      }
-
    }
 
    public void setRootNodeName(String name)
@@ -211,13 +203,6 @@ public class TemplateTree extends Tree<Template>
       {
          //         item.getP
       }
-      //      for (TreeNode node : tree.getAllNodes())
-      //      {
-      //         if (((Template)node.getAttributeAsObject(getValuePropertyName())).equals(template))
-      //         {
-      //            return tree.getPath(node);
-      //         }
-      //      }
       return null;
    }
 

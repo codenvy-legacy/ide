@@ -18,24 +18,21 @@
  */
 package org.exoplatform.ide.client.template;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
 
-import java.util.List;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -50,7 +47,7 @@ implements CreateFromTemplateDisplay<T>
 
    public static final int WIDTH = 550;
 
-   public static final int HEIGHT = 350;
+   public static final int HEIGHT = 300;
    
    private static final String ID = "ideCreateFileFromTemplateForm";
    
@@ -101,6 +98,8 @@ implements CreateFromTemplateDisplay<T>
       setCanMaximize(true);
 
       windowLayout = new VerticalPanel();
+      windowLayout.setWidth("100%");
+      windowLayout.setHeight("100%");
       windowLayout.setSpacing(10);
       setWidget(windowLayout);
 
@@ -117,24 +116,23 @@ implements CreateFromTemplateDisplay<T>
 
    abstract void createTypeLayout();
 
-   private HLayout getActionsForm()
+   private HorizontalPanel getActionsForm()
    {
-      HLayout actionsLayout = new HLayout();
-      actionsLayout.setHeight(35);
-      actionsLayout.setWidth100();
-      DynamicForm form = new DynamicForm();
-      form.setID(ID_DYNAMIC_FORM);
+      HorizontalPanel actionsLayout = new HorizontalPanel();
+      actionsLayout.setHeight("35px");
+      actionsLayout.setWidth("100%");
+//      DynamicForm form = new DynamicForm();
+//      form.setID(ID_DYNAMIC_FORM);
       nameField = new TextField("Name", getNameFieldLabel());
       nameField.setName(FILE_NAME_FIELD);
       nameField.setWidth(200);
-      form.add(nameField);
-      actionsLayout.addMember(form);
+      actionsLayout.add(nameField);
 
-      Layout l = new Layout();
-      l.setWidth100();
-      actionsLayout.addMember(l);
+//      Layout l = new Layout();
+//      l.setWidth100();
+//      actionsLayout.addMember(l);
 
-      actionsLayout.addMember(getButtonsForm());
+      actionsLayout.add(getButtonsForm());
       return actionsLayout;
    }
    
@@ -144,13 +142,13 @@ implements CreateFromTemplateDisplay<T>
    
    abstract String getFormTitle();
    
-   private HLayout getButtonsForm()
+   private HorizontalPanel getButtonsForm()
    {
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setHeight(22);
-      buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setMembersMargin(5);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setWidth("100%");
+      buttonsLayout.setHeight("22px");
+      buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      buttonsLayout.setSpacing(5);
 
       createButton = new IButton(getCreateButtonTitle());
       createButton.setID(ID_CREATE_BUTTON);
@@ -170,9 +168,9 @@ implements CreateFromTemplateDisplay<T>
       deleteButton.setHeight(22);
       deleteButton.setIcon(Images.Buttons.DELETE);
 
-     buttonsLayout.addMember(deleteButton);
-     buttonsLayout.addMember(createButton);
-     buttonsLayout.addMember(cancelButton);
+     buttonsLayout.add(deleteButton);
+     buttonsLayout.add(createButton);
+     buttonsLayout.add(cancelButton);
 
       return buttonsLayout;
    }
