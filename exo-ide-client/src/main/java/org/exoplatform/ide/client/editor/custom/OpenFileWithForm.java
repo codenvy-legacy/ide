@@ -20,12 +20,12 @@ package org.exoplatform.ide.client.editor.custom;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.layout.HLayout;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
-import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.ide.client.Images;
@@ -41,7 +41,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
 
    private static final int HEIGHT = 250;
 
-   private static final String ID = "ideallOpenFileWithForm";
+   private static final String ID = "ideOpenFileWithForm";
    
    private static final String EDITORS_LISTGRID_ID = "ideOpenFileWithListGrid";
    
@@ -67,11 +67,22 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
 
       super(eventBus, WIDTH, HEIGHT, ID);
       setTitle(TITLE);
-
-      createEditorListGrid();
-      createChecBoxField();
-
-      createButtonsForm();
+      
+      VerticalPanel mainLayout = new VerticalPanel();
+      mainLayout.setWidth("100%");
+      mainLayout.setHeight("100%");
+      mainLayout.setSpacing(10);
+      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      
+      mainLayout.add(createEditorListGrid());
+      
+      useAsDef = new CheckboxItem("Default", "Use as default editor");
+      mainLayout.add(useAsDef);
+      mainLayout.setCellHorizontalAlignment(useAsDef, HasHorizontalAlignment.ALIGN_LEFT);
+      
+      mainLayout.add(createButtonsForm());
+      
+      setWidget(mainLayout);
 
       show();
 
@@ -89,32 +100,20 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
 
    }
 
-   private void createEditorListGrid()
+   private EditorsListGrid createEditorListGrid()
    {
       editorsListGrid = new EditorsListGrid();
       editorsListGrid.setID(EDITORS_LISTGRID_ID);
-      editorsListGrid.setWidth(250);
+      editorsListGrid.setWidth("100%");
       editorsListGrid.setHeight(135);
-      add(editorsListGrid);
+      return editorsListGrid;
    }
 
-   private void createChecBoxField()
+   private HorizontalPanel createButtonsForm()
    {
-      DynamicForm form = new DynamicForm();
-      form.setHeight(30+"px");
-      form.setMargin(5);
-      useAsDef = new CheckboxItem("Default", "Use as default editor");
-      form.add(useAsDef);
-      add(form);
-   }
-
-   private void createButtonsForm()
-   {
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setHeight(22);
-      buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setMembersMargin(5);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight(22+"px");
+      buttonsLayout.setSpacing(5);
 
       openButton = new IButton("Open");
       openButton.setID(OPEN_BUTTON_ID);
@@ -129,9 +128,9 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.CANCEL);
 
-      buttonsLayout.addMember(openButton);
-      buttonsLayout.addMember(cancelButton);
-      add(buttonsLayout);
+      buttonsLayout.add(openButton);
+      buttonsLayout.add(cancelButton);
+      return buttonsLayout;
    }
 
    public void closeForm()
