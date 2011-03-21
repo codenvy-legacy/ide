@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.autocompletion.AutoCompletionManagerExt;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
@@ -143,6 +144,15 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public void openView(ViewEx view)
    {
       presenter.openView(view);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#getEditor(java.lang.String)
+    */
+   @Override
+   public EditorProducer getEditor(String mimeType) throws EditorNotFoundException
+   {
+      return EditorFactory.getDefaultEditor(mimeType);
    }
 
 }

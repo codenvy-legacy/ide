@@ -37,6 +37,7 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
    public static void handlerEvent(ExceptionThrownEvent event)
    {
       Throwable error = event.getError();
+      error.printStackTrace();
 
       if (error instanceof ServerException)
       {

@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.editor.api.EditorProducer;
@@ -87,5 +88,7 @@ public abstract class IDE
     * @param editorProducer
     */
    public abstract void addEditor(EditorProducer editorProducer);
+   
+   public abstract EditorProducer getEditor(String mimeType) throws EditorNotFoundException;
 
 }
