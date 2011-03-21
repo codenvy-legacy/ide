@@ -139,8 +139,8 @@ public class VersionsGrid extends ListGrid<Version>
             {
                return (item1.getContentLength() > item2.getContentLength()) ? 1 : -1;     
             }
-         });       
-      }
+      });       
+   }
 
    /**
     * Returns selected version in version grid.

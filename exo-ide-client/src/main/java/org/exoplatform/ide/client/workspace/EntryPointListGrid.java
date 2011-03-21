@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.client.workspace;
 
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
+
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
-
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 
 /**
  * Created by The eXo Platform SAS.
@@ -38,6 +38,7 @@ public class EntryPointListGrid extends ListGrid<EntryPoint>
    public EntryPointListGrid()
    {
       super();
+      
       setID(ID);
 
       SafeHtmlCell htmlCell = new SafeHtmlCell();
@@ -65,6 +66,7 @@ public class EntryPointListGrid extends ListGrid<EntryPoint>
       getCellTable().addColumn(entryNameColumn, "Entry Point");
       getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
 
+      removeTableHeader();
    }
-
+   
 }

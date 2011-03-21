@@ -97,6 +97,9 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
       
       getCellTable().addColumn(pathColumn, PATH);
       getCellTable().setColumnWidth(pathColumn, 100, Unit.PCT);
+      
+      removeTableHeader();
+      
       //TODO:
       //add attribute to store entry, like it was in smartGWT list grid
 //    record.setAttribute(GROOVY_CLASSPATH_ENTRY, item);      
