@@ -61,6 +61,9 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
    {
       try
       {
+         if(response.getText().isEmpty())
+            return;
+         
          Document dom = XMLParser.parse(response.getText());
          Node templatesNode = dom.getElementsByTagName(TEMPLATES).item(0);
 
@@ -73,6 +76,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       }
       catch (Exception exc)
       {
+         exc.printStackTrace();
          String message = "Can't parse template!";
          throw new UnmarshallerException(message);
       }

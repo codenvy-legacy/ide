@@ -18,18 +18,9 @@
  */
 package org.exoplatform.ide.client.template;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.Layout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
@@ -37,7 +28,16 @@ import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
 
-import java.util.List;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class CreateProjectTemplateForm extends DialogWindow implements CreateProjectTemplatePresenter.Display
 {
-   public static final int WIDTH = 550;
+   public static final int WIDTH = 530;
 
    public static final int HEIGHT = 350;
 
@@ -80,7 +80,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
 
    private static final int BUTTONS_HEIGHT = 22;
 
-   private VLayout windowLayout;
+   private VerticalPanel windowLayout;
 
    private IButton createButton;
 
@@ -92,7 +92,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
 
    private IButton deleteButton;
 
-   private TemplateTreeGrid<Template> templateTreeGrid;
+   private TemplateTree templateTreeGrid;
 
    private TextField templateNameField;
 
@@ -109,21 +109,15 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       //setCanDragResize(true);
       setCanMaximize(true);
 
-      windowLayout = new VLayout();
-      windowLayout.setMargin(15);
+      windowLayout = new VerticalPanel();
+      windowLayout.setSpacing(15);
       setWidget(windowLayout);
+      windowLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
       createFieldsForm();
 
-      Layout l = new Layout();
-      l.setHeight(15);
-      windowLayout.addMember(l);
-
       createFileTemplateListLayout();
 
-      Layout l2 = new Layout();
-      l2.setHeight(10);
-      windowLayout.addMember(l2);
 
       createButtonsForm();
 
@@ -135,16 +129,16 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
 
    private void createFieldsForm()
    {
-      VLayout fieldsLayout = new VLayout();
-      fieldsLayout.setHeight(35);
-      fieldsLayout.setWidth100();
-
-      DynamicForm form = new DynamicForm();
-      form.setID(ID_NAME_FIELDS_FORM);
+      VerticalPanel fieldsLayout = new VerticalPanel();
+      fieldsLayout.setHeight("35px");
+      fieldsLayout.setWidth("100%");
+      fieldsLayout.getElement().setId(ID_NAME_FIELDS_FORM);
+      fieldsLayout.setSpacing(1);
+      
       templateNameField = new TextField("TemplateName", "Name");
       templateNameField.setName(TEMPLATE_NAME_FIELD);
       templateNameField.setWidth(TEXT_FIELD_WIDTH);
-      //TODO templateNameField.setWrapTitle(false);
+      templateNameField.setTitleWidth(63);
 
       templateDescriptionField = new TextAreaItem("Description");
       templateDescriptionField.setName(DESCRIPTION_FIELD);
@@ -154,48 +148,42 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       templateDescriptionField.setHeight(40);
       templateDescriptionField.setWidth(TEXT_FIELD_WIDTH);
 
-    //  form.setColWidths("*", "" + TEXT_FIELD_WIDTH);
-      form.add(templateNameField);
-      form.add(templateDescriptionField);
-      fieldsLayout.addMember(form);
+      //  form.setColWidths("*", "" + TEXT_FIELD_WIDTH);
+      fieldsLayout.add(templateNameField);
+      fieldsLayout.add(templateDescriptionField);
+      //      fieldsLayout.addMember(form);
 
-      windowLayout.addMember(fieldsLayout);
+      windowLayout.add(fieldsLayout);
    }
 
    private void createFileTemplateListLayout()
    {
-      HLayout projectLayout = new HLayout();
+      HorizontalPanel projectLayout = new HorizontalPanel();
+      templateTreeGrid = new TemplateTree();
+      ScrollPanel treeWrapper = new ScrollPanel(templateTreeGrid);
+      treeWrapper.setSize("360px", "150px");
+      DOM.setStyleAttribute(treeWrapper.getElement(), "zIndex", "0");
+      DOM.setStyleAttribute(treeWrapper.getElement(), "border", "1px solid #A7ABB4") ;
 
-      templateTreeGrid = new TemplateTreeGrid<Template>();
-      templateTreeGrid.setShowHeader(false);
-      templateTreeGrid.setLeaveScrollbarGap(false);
-      templateTreeGrid.setShowOpenIcons(true);
-      templateTreeGrid.setEmptyMessage("Enter name of project template!");
+      projectLayout.add(treeWrapper);
 
-      templateTreeGrid.setHeight100();
-      templateTreeGrid.setWidth100();
+      projectLayout.setSpacing(10);
 
-      projectLayout.addMember(templateTreeGrid);
+      projectLayout.add(getActionsButtons());
 
-      Layout l = new Layout();
-      l.setWidth(10);
-      projectLayout.addMember(l);
-
-      projectLayout.addMember(getActionsButtons());
-
-      windowLayout.addMember(projectLayout);
+      windowLayout.add(projectLayout);
    }
 
-   private VLayout getActionsButtons()
+   private VerticalPanel getActionsButtons()
    {
-      VLayout buttonsLayout = new VLayout();
-      buttonsLayout.setWidth(BUTTONS_WIDTH);
-      buttonsLayout.setHeight100();
+      VerticalPanel buttonsLayout = new VerticalPanel();
+      buttonsLayout.setWidth(BUTTONS_WIDTH + "px");
+      buttonsLayout.setHeight("100%");
 
-      buttonsLayout.setAlign(Alignment.CENTER);
-      buttonsLayout.setAlign(VerticalAlignment.TOP);
+      buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      buttonsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
 
-      buttonsLayout.setMembersMargin(15);
+      buttonsLayout.setSpacing(15);
 
       addFolderButton = new IButton(ADD_FOLDER_BUTTON);
       addFolderButton.setID(ID_ADD_FOLDER_BUTTON);
@@ -215,20 +203,18 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       deleteButton.setHeight(BUTTONS_HEIGHT);
       deleteButton.setIcon(Images.Buttons.DELETE);
 
-      buttonsLayout.addMember(addFolderButton);
-      buttonsLayout.addMember(addFileButton);
-      buttonsLayout.addMember(deleteButton);
+      buttonsLayout.add(addFolderButton);
+      buttonsLayout.add(addFileButton);
+      buttonsLayout.add(deleteButton);
 
       return buttonsLayout;
    }
 
    private void createButtonsForm()
    {
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setHeight(22);
-      buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setMembersMargin(5);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setHeight("22px");
+      buttonsLayout.setSpacing(5);
 
       createButton = new IButton("Create");
       createButton.setID(ID_CREATE_BUTTON);
@@ -242,14 +228,11 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);
 
-      buttonsLayout.addMember(createButton);
-      buttonsLayout.addMember(cancelButton);
+      buttonsLayout.add(createButton);
+      buttonsLayout.add(cancelButton);
 
-      windowLayout.addMember(buttonsLayout);
+      windowLayout.add(buttonsLayout);
 
-      Layout buttonsBottomLayout = new Layout();
-      buttonsBottomLayout.setHeight(15);
-      windowLayout.addMember(buttonsBottomLayout);
    }
 
    @Override

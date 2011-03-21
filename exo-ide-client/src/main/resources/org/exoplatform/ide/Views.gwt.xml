@@ -25,7 +25,7 @@
 		<replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceViewImpl">	
 	 -->
 
-	<replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceViewImplNew">
+	<replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceViewImpl">
 		<when-type-is class="org.exoplatform.ide.client.navigation.WorkspacePresenter.Display" />
 	</replace-with>   
 	

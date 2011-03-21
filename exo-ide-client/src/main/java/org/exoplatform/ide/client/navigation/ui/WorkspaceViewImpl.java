@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.ui.gwt.AbstractView;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
@@ -50,6 +51,7 @@ public class WorkspaceViewImpl extends AbstractView implements org.exoplatform.i
       ScrollPanel treeWrapper = new ScrollPanel(treeGrid);
       treeWrapper.ensureDebugId("Tree-itemTree-Wrapper");
       treeWrapper.setSize("100%", "100%");
+      DOM.setStyleAttribute(treeWrapper.getElement(), "zIndex", "0");
       add(treeWrapper);
    }
 

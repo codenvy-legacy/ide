@@ -28,7 +28,6 @@ import org.exoplatform.ide.client.framework.configuration.event.ConfigurationRec
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.conversation.ConversationServiceImpl;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -82,9 +81,6 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
          new TemplateServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL() + "/"
             + RegistryConstants.EXO_APPLICATIONS + "/" + IDEConfigurationLoader.APPLICATION_NAME);
          
-         new GadgetServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext(),
-            applicationConfiguration.getGadgetServer(), applicationConfiguration.getPublicContext());
-
          new LoadUserInfoPhase(eventBus, applicationConfiguration, controls);
       }
       catch (Throwable e)

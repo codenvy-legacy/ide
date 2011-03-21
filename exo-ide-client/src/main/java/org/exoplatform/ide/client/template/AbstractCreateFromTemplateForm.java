@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.template;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
@@ -63,7 +64,7 @@ implements CreateFromTemplateDisplay<T>
    
    private static final String FILE_NAME_FIELD = "ideCreateFileFromTemplateFormFileNameField";
    
-   protected VLayout windowLayout;
+   protected VerticalPanel windowLayout;
 
    private IButton createButton;
 
@@ -99,17 +100,17 @@ implements CreateFromTemplateDisplay<T>
       //TODO setCanDragResize(true);
       setCanMaximize(true);
 
-      windowLayout = new VLayout();
-      windowLayout.setMargin(10);
+      windowLayout = new VerticalPanel();
+      windowLayout.setSpacing(10);
       setWidget(windowLayout);
 
       createTypeLayout();
 
-      Layout l = new Layout();
-      l.setHeight(10);
-      windowLayout.addMember(l);
+//      Layout l = new Layout();
+//      l.setHeight(10);
+//      windowLayout.addMember(l);
 
-      windowLayout.addMember(getActionsForm());
+      windowLayout.add(getActionsForm());
 
       show();
    }
