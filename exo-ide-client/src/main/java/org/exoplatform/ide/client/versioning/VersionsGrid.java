@@ -54,29 +54,25 @@ public class VersionsGrid extends ListGrid<Version>
 
    Column<Version, String> sizeColumn;
    
-   CellTable<Version> cellTable;
-   
    public VersionsGrid()
    {
       setID(ID);
-      
-      cellTable = getCellTable();
       
       initColumns();
    }
 
    private void initColumns()
    {
+      CellTable<Version> cellTable = getCellTable();
+      
       //name column
       nameColumn = new Column<Version, String>(new TextCell())
       {
-
          @Override
          public String getValue(final Version item)
          {
             return item.getDisplayName();
          }
-
       };
       
       nameColumn.setSortable(true);    
@@ -87,13 +83,11 @@ public class VersionsGrid extends ListGrid<Version>
       //date column
       dateColumn = new Column<Version, String>(new TextCell())
       {
-
          @Override
          public String getValue(final Version item)
          {
             return item.getCreationDate();
          }
-
       };
       dateColumn.setSortable(true);
       cellTable.addColumn(dateColumn, DATE);
@@ -102,13 +96,11 @@ public class VersionsGrid extends ListGrid<Version>
       // content size column
       sizeColumn = new Column<Version, String>(new TextCell())
       {
-
          @Override
          public String getValue(final Version item)
          {
             return String.valueOf(item.getContentLength());
          }
-
       };
       sizeColumn.setSortable(true);
       sizeColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -121,29 +113,15 @@ public class VersionsGrid extends ListGrid<Version>
    {
       super.setValue(versions);
       
-      // Add a ColumnSortEvent.ListHandler to connect sorting to the
-      // java.util.List.
-      ListHandler<Version> columnSortHandler = new ListHandler<Version>(versions){
-         @Override
-         public void onColumnSort(ColumnSortEvent event)
-         {
-            super.onColumnSort(event);
-
-            setValue(items);
-            
-            cellTable.redraw();
-
-         }
-      };
-      
-      cellTable.addColumnSortHandler(columnSortHandler);
+      ListHandler<Version> columnSortHandler = getColumnSortHandler();
       
       // Add comparators
       columnSortHandler.setComparator(nameColumn, new Comparator<Version>()
       {
          public int compare(Version item1, Version item2)
          {
-            return item1.getDisplayName().compareTo(item2.getDisplayName());
+            return Integer.valueOf(item1.getDisplayName()) > Integer.valueOf(item2.getDisplayName()) ? 1 : -1;
+//            return item1.getDisplayName().compareTo(item2.getDisplayName());
          }
       });
       

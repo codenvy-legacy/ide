@@ -18,14 +18,15 @@
  */
 package org.exoplatform.ide.client.editor.custom;
 
+import java.util.Comparator;
+import java.util.List;
+
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.grid.ListGridField;
-
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
 /**
  * Created by The eXo Platform SAS.
@@ -34,14 +35,12 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 */
 public class EditorsListGrid extends ListGrid<EditorInfo>
 {
-
+   Column<EditorInfo, SafeHtml> entryNameColumn;
+   
    public EditorsListGrid()
-   {
-      ListGridField fieldName = new ListGridField("name", "Name");
-      fieldName.setAlign(Alignment.LEFT);
-      
+   {     
       SafeHtmlCell htmlCell = new SafeHtmlCell();
-      Column<EditorInfo, SafeHtml> entryNameColumn = new Column<EditorInfo, SafeHtml>(htmlCell)
+      entryNameColumn = new Column<EditorInfo, SafeHtml>(htmlCell)
       {
 
          @Override
@@ -51,7 +50,6 @@ public class EditorsListGrid extends ListGrid<EditorInfo>
             {
                private static final long serialVersionUID = 1L;
 
-               @Override
                public String asString()
                {
                   if(item.isDefault())
@@ -72,5 +70,20 @@ public class EditorsListGrid extends ListGrid<EditorInfo>
       getCellTable().addColumn(entryNameColumn, "Editors");
       getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
 
+   }
+   
+   @Override
+   public void setValue(List<EditorInfo> editorInfo)
+   {
+      super.setValue(editorInfo);
+      
+      // Add comparator
+      getColumnSortHandler().setComparator(entryNameColumn, new Comparator<EditorInfo>()
+      {
+         public int compare(EditorInfo item1, EditorInfo item2)
+         {
+            return item1.getEditor().getDescription().compareTo(item2.getEditor().getDescription());
+         }
+      });
    }
 }
