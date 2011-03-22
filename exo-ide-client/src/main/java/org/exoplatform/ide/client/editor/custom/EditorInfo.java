@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.editor.custom;
 
-import org.exoplatform.gwtframework.editor.api.Editor;
+import org.exoplatform.ide.editor.api.EditorProducer;
 
 /**
  * Created by The eXo Platform SAS.
@@ -28,17 +28,17 @@ import org.exoplatform.gwtframework.editor.api.Editor;
 public class EditorInfo
 {
 
-   private Editor editor;
+   private EditorProducer editor;
 
    private boolean isDefault;
 
-   public EditorInfo(Editor editor, boolean isDefault)
+   public EditorInfo(EditorProducer editor, boolean isDefault)
    {
       this.editor = editor;
       this.isDefault = isDefault;
    }
 
-   public Editor getEditor()
+   public EditorProducer getEditor()
    {
       return editor;
    }

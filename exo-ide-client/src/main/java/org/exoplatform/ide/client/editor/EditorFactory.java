@@ -51,8 +51,6 @@ public class EditorFactory
 {
    private static Map<String, List<EditorProducer>> editors = new HashMap<String, List<EditorProducer>>();
 
-   private static HashMap<String, String> extensions = new HashMap<String, String>();
-
    static
    {
 
@@ -114,7 +112,7 @@ public class EditorFactory
             new CssParser() // exoplatform code parser 
             , CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_CSS))));
       
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, "CodeMirror HTML editor", "html","", true,
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, "CodeMirror HTML editor", "html",Images.FileTypes.HTML, true,
          new CodeMirrorConfiguration(
             "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
@@ -125,7 +123,7 @@ public class EditorFactory
             new HtmlAutocompleteHelper(), // autocomplete helper
             CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_HTML), true)));
       
-      addEditor(new CKEditorProducer(MimeType.TEXT_HTML, "CKEditor HTML editor", "html","", false,
+      addEditor(new CKEditorProducer(MimeType.TEXT_HTML, "CKEditor HTML editor", "html",Images.FileTypes.HTML, false,
          new CKEditorConfiguration()));   
       
             //To initialize client bundle 
@@ -174,5 +172,17 @@ public class EditorFactory
          }
       }
       throw new EditorNotFoundException();
+   }
+
+   /**
+    * @param mimeType
+    * @return
+    */
+   public static List<EditorProducer> getEditors(String mimeType) throws EditorNotFoundException
+   {
+      List<EditorProducer> editorProducers = editors.get(mimeType);
+      if(editorProducers == null)
+         throw new EditorNotFoundException();
+      return editorProducers;
    }
 }

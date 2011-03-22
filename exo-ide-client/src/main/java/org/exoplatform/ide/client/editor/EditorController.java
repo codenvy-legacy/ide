@@ -521,7 +521,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          params.put(EditorParameters.IS_READ_ONLY, isReadOnly(file));
          params.put(EditorParameters.IS_SHOW_LINE_NUMER, lineNumbers);
          params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
-         EditorProducer producer = EditorFactory.getDefaultEditor(file.getContentType());
+         EditorProducer producer = event.getEditorProducer();
          Editor editor = producer.createEditor(file.getContent(), eventBus, params);
          editors.put(file.getHref(), editor);
          EditorView view = new EditorView(editor, file, getFileTitle(file));

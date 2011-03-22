@@ -18,23 +18,17 @@
  */
 package org.exoplatform.ide.client.editor.custom;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.editor.api.Editor;
-import org.exoplatform.gwtframework.editor.api.EditorFactory;
-import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
+import org.exoplatform.ide.client.editor.EditorFactory;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -45,11 +39,17 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSa
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.editor.api.EditorProducer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -82,7 +82,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
 
    private Handlers handlers;
 
-   private Editor selectedEditor;
+   private EditorProducer selectedEditor;
 
    private File selectedFile;
 
@@ -142,7 +142,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
 
          public void onSelection(SelectionEvent<EditorInfo> event)
          {
-            if (event.getSelectedItem() == selectedEditor)
+            if (event.getSelectedItem().getEditor() == selectedEditor)
             {
                return;
             }
@@ -162,11 +162,11 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
 
       try
       {
-         List<Editor> editorsItems = EditorFactory.getEditors(mimeType);
+         List<EditorProducer> editorsItems = EditorFactory.getEditors(mimeType);
 
          List<EditorInfo> editorInfoItems = new ArrayList<EditorInfo>();
 
-         Editor defaultEditor = null;
+         EditorProducer defaultEditor = null;
          
          Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
          if (defaultEditors == null) 
@@ -177,7 +177,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
          if (defaultEditors.get(mimeType) != null)
          {
             String defaultEdotorDecription = defaultEditors.get(mimeType);
-            for (Editor e : editorsItems)
+            for (EditorProducer e : editorsItems)
             {
                if (e.getDescription().equals(defaultEdotorDecription))
                {
@@ -190,7 +190,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
             defaultEditor = EditorFactory.getDefaultEditor(mimeType);
          }
 
-         for (Editor e : editorsItems)
+         for (EditorProducer e : editorsItems)
          {
             if (e.getDescription().equals(defaultEditor.getDescription()))
             {

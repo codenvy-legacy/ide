@@ -185,6 +185,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
          }
 
          EditorProducer producer= EditorFactory.getEditorProducer(file.getContentType(), selectedEditor);
+         System.out.println(producer);
          eventBus.fireEvent(new EditorOpenFileEvent(file, producer));
       }
       catch (EditorNotFoundException e)
