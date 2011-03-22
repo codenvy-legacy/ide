@@ -18,16 +18,18 @@
  */
 package org.exoplatform.ide.client.statusbar;
 
-import org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent;
-import org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler;
+
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.text.TextButton.TextAlignment;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
 import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -50,9 +52,11 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
       setEnabled(true);
       setSize(70);
       setFireEventOnSingleClick(true);
-      setText("Ddddddddddddddddddddddddddddd");
+      setText("&nbsp;");
       setTextAlignment(TextAlignment.CENTER);
       setEvent(new GoToLineEvent());
+      IDE.EVENT_BUS.addHandler(EditorCursorActivityEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
    
    /**
@@ -60,9 +64,6 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
     */
    public void initialize(HandlerManager eventBus)
    {
-      System.out.println("EditorCursorPositionControl.initialize()");
-      eventBus.addHandler(EditorCursorActivityEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    private void setCursorPosition(int row, int column)
@@ -93,6 +94,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      System.out.println("EditorCursorPositionControl.onEditorActiveFileChanged()");
       if (event.getFile() == null || event.getEditor() == null)
       {
          setText("&nbsp;");

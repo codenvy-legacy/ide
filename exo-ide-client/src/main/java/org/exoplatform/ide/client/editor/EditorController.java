@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLine
 import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFindAndReplaceTextEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFindAndReplaceTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFindTextEvent;
@@ -81,7 +82,6 @@ import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.editor.api.Editor;
@@ -95,6 +95,7 @@ import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -260,8 +261,8 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
     */
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
-      System.out.println("EditorController.onEditorCursorActivity()");
-      //   eventBus.fireEvent(new EditorSetFocusEvent());
+//      System.out.println("EditorController.onEditorCursorActivity()");
+       eventBus.fireEvent(new EditorSetFocusEvent());
    }
 
    /* (non-Javadoc)
@@ -497,7 +498,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          //      display.selectTab(openedFile.getHref());
          EditorView view = editorsViews.get(file.getHref());
          view.setContent(file);
-         eventBus.fireEvent(new SelectViewEvent(view.getId()));
+         view.setVisible(true);
          //      display.setTabContent(file.getHref(), file.getContent());
          return;
       }
@@ -535,7 +536,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          e.printStackTrace();
       }
 
-      //         eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
+               eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
       //         eventBus.fireEvent(new EditorActiveFileChangedEvent(file,editors.get(file.getHref())));
    }
 
@@ -606,11 +607,13 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          ignoreContentChangedList.add(newFile.getHref());
       }
       //TODO 
-      String editorId = editors.get(oldFile).getEditorId();
+      String editorId = editors.get(oldFile.getHref()).getEditorId();
+      editors.remove(oldFile.getHref());
       EditorView editorView = editorsViews.get(editorId);
-      updateTabTitle(newFile);
+      editors.put(newFile.getHref(), editorView.getEditor());
       editorView.setIcon(new Image(newFile.getIcon()));
       editorView.setContent(newFile);
+      updateTabTitle(newFile);
       //   display.replaceFile(oldFile, newFile);
 
       //   display.updateTabTitle(newFile.getHref());
@@ -725,14 +728,24 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
     * @see org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
     */
    @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   public void onViewVisibilityChanged(final ViewVisibilityChangedEvent event)
    {
       System.out.println("EditorController.onViewVisibilityChanged()");
       if (event.getView().getType().equals("editor") && event.getView().isViewVisible())
       {
          activeFile = ((EditorView)event.getView()).getFile();
-         eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, ((EditorView)event.getView()).getEditor()));
-
+         new Timer()
+         {
+            
+            @Override
+            public void run()
+            {
+               // TODO Auto-generated method stub
+               eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, ((EditorView)event.getView()).getEditor()));
+               
+            }
+         }.schedule(200);
+         
       }
    }
 

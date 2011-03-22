@@ -127,18 +127,18 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       boolean openOutline = outlineOpened(activeTextEditor, activeFile);
 
       //if outline was closed, but must be opened, open it
-      if (openOutline && !wasOutlineOpened)
-      {
-         view = new OutlineForm(eventBus, activeTextEditor, activeFile);
-         IDE.getInstance().openView(view);
-         if (isNeedRunTimer)
-         {
-            //run timer on load IDE
-            isNeedRunTimer = false;
-            t.schedule(750);
-         }
-         return;
-      }
+//      if (openOutline && !wasOutlineOpened)
+//      {
+//         view = new OutlineForm(eventBus, activeTextEditor, activeFile);
+//         IDE.getInstance().openView(view);
+//         if (isNeedRunTimer)
+//         {
+//            //run timer on load IDE
+//            isNeedRunTimer = false;
+//            t.schedule(750);
+//         }
+//         return;
+//      }
 
       //if outline was opened, but must be closed, close it
       if (!openOutline && wasOutlineOpened)

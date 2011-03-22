@@ -171,7 +171,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       this.editor = editor;
       this.posX = cursorOffsetX;
       this.posY = cursorOffsetY;
-      printTokens(tokenList, 1);
+//      printTokens(tokenList, 1);
       try
       {
          if (lineContent == null)

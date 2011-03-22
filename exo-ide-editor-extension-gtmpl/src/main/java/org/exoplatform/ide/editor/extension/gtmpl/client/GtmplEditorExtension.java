@@ -60,7 +60,8 @@ public class GtmplEditorExtension extends Extension implements InitializeService
    public void initialize()
    {
       IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-      
+      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Template", "Template", "Create Template", Images.GROOVY_TEMPLATE,
             MimeType.GROOVY_TEMPLATE), DockTarget.NONE, false);
@@ -73,19 +74,28 @@ public class GtmplEditorExtension extends Extension implements InitializeService
    public void onInitializeServices(InitializeServicesEvent event)
    {
       templateCodeAssistant =
-         new GroovyTemplateCodeAssistant(new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()), this);
-      
-      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl",  Images.GROOVY_TEMPLATE, true,
-         new CodeMirrorConfiguration(
-            "['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']",  // generic code parsers
-            "['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
-               true, // can be outlined
-               true, // can be autocompleted
-               new GroovyTemplateParser(), // exoplatform code parser 
-               new GroovyTemplateAutocompleteHelper(), // autocomplete helper
-               true, // can be validated
-               new GroovyTemplateCodeValidator(),
-               templateCodeAssistant, true)));  
+         new GroovyTemplateCodeAssistant(new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()),
+            this);
+
+      IDE.getInstance()
+         .addEditor(
+            new CodeMirrorProducer(
+               MimeType.GROOVY_TEMPLATE,
+               "CodeMirror Groovy Template editor",
+               "gtmpl",
+               Images.GROOVY_TEMPLATE,
+               true,
+               new CodeMirrorConfiguration(
+                  "['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']", // generic code parsers
+                  "['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH
+                     + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
+                     + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
+                  true, // can be outlined
+                  true, // can be autocompleted
+                  new GroovyTemplateParser(), // exoplatform code parser 
+                  new GroovyTemplateAutocompleteHelper(), // autocomplete helper
+                  true, // can be validated
+                  new GroovyTemplateCodeValidator(), templateCodeAssistant, true)));
 
       if (CodeAssistantService.getInstance() == null)
          new CodeAssistantServiceImpl(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
@@ -122,7 +132,8 @@ public class GtmplEditorExtension extends Extension implements InitializeService
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      templateCodeAssistant.setactiveFileHref(event.getFile().getHref());
+      if (event.getFile() != null)
+         templateCodeAssistant.setactiveFileHref(event.getFile().getHref());
    }
 
 }

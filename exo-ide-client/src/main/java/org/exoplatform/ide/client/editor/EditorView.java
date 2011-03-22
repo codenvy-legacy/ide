@@ -60,7 +60,12 @@ public class EditorView extends AbstractView
    public void setContent(File file)
    {
       this.file = file;
+      try
+      {
       editor.setText(file.getContent());
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
    }
    
    public String getFileHref()

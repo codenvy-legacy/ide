@@ -41,7 +41,7 @@ import com.google.gwt.resources.client.ImageResource;
 public class NewFileCommand extends SimpleControl implements IDEControl, PanelSelectedHandler, EntryPointChangedHandler, PanelDeselectedHandler
 {
 
-   protected boolean browserSelected = false;
+   protected boolean browserSelected = true;
 
    protected String entryPoint;
 
@@ -52,6 +52,7 @@ public class NewFileCommand extends SimpleControl implements IDEControl, PanelSe
       setPrompt(prompt);
       setIcon(icon);
       setEvent(event);
+      setEnabled(true);
    }
 
    public NewFileCommand(String id, String title, String prompt, ImageResource normalIcon,
@@ -62,6 +63,7 @@ public class NewFileCommand extends SimpleControl implements IDEControl, PanelSe
       setPrompt(prompt);
       setImages(normalIcon, disabledIcon);
       setEvent(event);
+      setEnabled(true);
    }
    
    /**
