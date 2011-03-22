@@ -27,7 +27,9 @@ import org.exoplatform.ide.client.app.impl.layers.ViewsLayer;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -209,6 +211,17 @@ public class PerspectiveImpl implements Perspective
       {
          panel.removeViewClosedHandler(viewClosedHandler);
       }
+   }
+
+   @Override
+   public HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler)
+   {
+      for (Panel panel : panelsLayer.getPanelsAsList())
+      {
+         panel.addViewVisibilityChangedHandler(viewVisibilityChangedHandler);
+      }
+
+      return null;
    }
 
 }

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.ui.gwt;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,35 +27,33 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public interface ViewEx
+public class SetViewVisibleEvent extends GwtEvent<SetViewVisibleHandler>
 {
-   
-   String getId();
-   
-   String getType();
 
-   String getTitle();
-   
-   void setTitle(String title);
-   
-   Image getIcon();
-   
-   void setIcon(Image icon);
-   
-   boolean hasCloseButton();
+   public static final GwtEvent.Type<SetViewVisibleHandler> TYPE = new GwtEvent.Type<SetViewVisibleHandler>();
 
-   boolean isViewVisible();
-   
-   void setViewVisible(boolean isViewVisible);
-   
-   int getDefaultWidth();
-   
-   int getDefaultHeight();
-   
-   boolean canResize();
-   
-   boolean isActive();
-   
-   void setActive();
-   
+   private ViewEx view;
+
+   public SetViewVisibleEvent(ViewEx view)
+   {
+      this.view = view;
+   }
+
+   public ViewEx getView()
+   {
+      return view;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<SetViewVisibleHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(SetViewVisibleHandler handler)
+   {
+      handler.onSetViewVisible(this);
+   }
+
 }

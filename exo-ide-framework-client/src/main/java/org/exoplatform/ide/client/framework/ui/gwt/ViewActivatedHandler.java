@@ -16,45 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.api;
+package org.exoplatform.ide.client.framework.ui.gwt;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ViewSelectedEvent extends GwtEvent<ViewSelectedHandler>
+public interface ViewActivatedHandler extends EventHandler
 {
-
-   public static final GwtEvent.Type<ViewSelectedHandler> TYPE = new GwtEvent.Type<ViewSelectedHandler>();
-
-   private String viewId;
-
-   public ViewSelectedEvent(String viewId)
-   {
-      this.viewId = viewId;
-   }
-
-   public String getViewId()
-   {
-      return viewId;
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ViewSelectedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   @Override
-   protected void dispatch(ViewSelectedHandler handler)
-   {
-      handler.onViewSelected(this);
-   }
+   
+   void onViewActivated(ViewActivatedEvent event);
 
 }

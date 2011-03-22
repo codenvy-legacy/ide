@@ -39,11 +39,10 @@ public abstract class Log
 
    public static void info(String message)
    {
-      System.out.println("ouuuu >> " + message);
+      System.out.println("[INFO] " + message);
 
       if (instance != null)
       {
-
          instance._info(message);
       }
    }

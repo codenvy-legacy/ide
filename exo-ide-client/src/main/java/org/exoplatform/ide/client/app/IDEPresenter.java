@@ -31,6 +31,8 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.menu.RefreshMenuHandler;
 
@@ -44,7 +46,7 @@ import com.google.gwt.user.client.Timer;
  * @version $
  */
 
-public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, ViewClosedHandler
+public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, ViewClosedHandler, ViewVisibilityChangedHandler
 {
 
    public interface Display
@@ -76,7 +78,8 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
 
       display.getPerspective().addViewOpenedHandler(this);
       display.getPerspective().addViewClosedHandler(this);
-      
+      display.getPerspective().addViewVisibilityChangedHandler(this);
+
       new ToolbarBuilder(eventBus, display.getToolbar(), display.getStatusbar());
 
       new Timer()
@@ -95,8 +98,9 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
    {
       display.getPerspective().openView(view);
    }
-   
-   public void closeView(String viewId) {
+
+   public void closeView(String viewId)
+   {
       display.getPerspective().closeView(viewId);
    }
 
@@ -116,6 +120,12 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
    public void onViewClosed(ViewClosedEvent event)
    {
       eventBus.fireEvent(event);
+   }
+
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      System.out.println("view visibility changed view [" + event.getView().getId() + "] visible [" + event.getView().isViewVisible() + "]");
    }
 
 }

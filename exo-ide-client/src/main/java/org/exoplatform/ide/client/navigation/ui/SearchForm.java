@@ -100,7 +100,7 @@ public class SearchForm extends AbstractView implements org.exoplatform.ide.clie
 
    public SearchForm()
    {
-      super(ID, "popup", "Search", new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
+      super(ID, "navigation", "Search", new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setHeight("100%");

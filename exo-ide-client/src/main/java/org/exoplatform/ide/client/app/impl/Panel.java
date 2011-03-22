@@ -27,14 +27,21 @@ import org.exoplatform.gwtframework.ui.client.tab.TabPanel;
 import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
 import org.exoplatform.ide.client.app.impl.panel.HidePanelHandler;
 import org.exoplatform.ide.client.app.impl.panel.ShowPanelHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.HasViewTitleChangedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewTitleChangedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewTitleChangedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -47,7 +54,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class Panel extends AbsolutePanel implements RequiresResize
+public class Panel extends AbsolutePanel implements RequiresResize, HasViewVisibilityChangedHandler
 {
 
    private String panelId;
@@ -75,6 +82,9 @@ public class Panel extends AbsolutePanel implements RequiresResize
    private List<ViewOpenedHandler> viewOpenedHandlers = new ArrayList<ViewOpenedHandler>();
 
    private List<ViewClosedHandler> viewClosedHandlers = new ArrayList<ViewClosedHandler>();
+
+   private List<ViewVisibilityChangedHandler> viewVisibilityChangedHandlers =
+      new ArrayList<ViewVisibilityChangedHandler>();
 
    public Panel(String panelId, String[] acceptableTypes)
    {
@@ -111,45 +121,64 @@ public class Panel extends AbsolutePanel implements RequiresResize
       public void onSelection(SelectionEvent<Integer> event)
       {
          int selectedTabIndex = event.getSelectedItem();
-         String selectedViewId = tabPanel.getTabIdByIndex(selectedTabIndex);
-
-         /*
-          * hide view which was active to selection
-          */
-         if (currentViewId != null)
-         {
-            ViewEx currentView = views.get(currentViewId);
-            if (currentView instanceof Widget)
-            {
-               ((Widget)currentView).setVisible(false);
-            }
-
-            Widget currentViewWrapper = viewWrappers.get(currentViewId);
-            currentViewWrapper.setVisible(false);
-         }
-
-         currentViewId = selectedViewId;
-
-         ViewEx selectedView = views.get(selectedViewId);
-         if (selectedView instanceof Widget)
-         {
-            ((Widget)selectedView).setVisible(true);
-         }
-
-         Widget selectedViewWrapper = viewWrappers.get(selectedViewId);
-         selectedViewWrapper.setVisible(true);
-         ViewController selectedViewController = viewControllers.get(selectedViewId);
-         selectedViewController.onResize();
+         String viewId = tabPanel.getTabIdByIndex(selectedTabIndex);
+         selectView(viewId);
       }
    };
+
+   public void selectView(String viewId)
+   {
+      System.out.println("Panel.selectView(----------------------------------------->>>>)");
+
+      /*
+       * hide view which was active to selection
+       */
+      if (currentViewId != null)
+      {
+         ViewEx currentView = views.get(currentViewId);
+         if (currentView instanceof Widget)
+         {
+            ((Widget)currentView).setVisible(false);
+         }
+
+         Widget currentViewWrapper = viewWrappers.get(currentViewId);
+         currentViewWrapper.setVisible(false);
+
+         currentView.setViewVisible(false);
+         for (ViewVisibilityChangedHandler handler : viewVisibilityChangedHandlers)
+         {
+            handler.onViewVisibilityChanged(new ViewVisibilityChangedEvent(currentView));
+         }
+      }
+
+      currentViewId = viewId;
+
+      ViewEx selectedView = views.get(viewId);
+      if (selectedView instanceof Widget)
+      {
+         ((Widget)selectedView).setVisible(true);
+      }
+
+      Widget selectedViewWrapper = viewWrappers.get(viewId);
+      selectedViewWrapper.setVisible(true);
+
+      ViewController selectedViewController = viewControllers.get(viewId);
+      selectedViewController.onResize();
+
+      selectedView.setViewVisible(true);
+      for (ViewVisibilityChangedHandler handler : viewVisibilityChangedHandlers)
+      {
+         handler.onViewVisibilityChanged(new ViewVisibilityChangedEvent(selectedView));
+      }
+   }
 
    public void closeView(String viewId)
    {
       tabPanel.removeTab(viewId);
-      closeViewOnly(viewId);
+      doCloseView(viewId);
    }
 
-   protected void closeViewOnly(String viewId)
+   protected void doCloseView(String viewId)
    {
       if (viewId.equals(currentViewId))
       {
@@ -173,7 +202,7 @@ public class Panel extends AbsolutePanel implements RequiresResize
 
       for (ViewClosedHandler handler : viewClosedHandlers)
       {
-         handler.onViewClosed(new ViewClosedEvent(viewId));
+         handler.onViewClosed(new ViewClosedEvent(view));
       }
 
       if (views.size() == 0 && hidePanelHandler != null)
@@ -188,7 +217,7 @@ public class Panel extends AbsolutePanel implements RequiresResize
       public boolean onCloseTab(String tabId)
       {
          String viewId = tabId;
-         closeViewOnly(viewId);
+         doCloseView(viewId);
          return true;
       }
    };
@@ -249,16 +278,30 @@ public class Panel extends AbsolutePanel implements RequiresResize
 
       tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, true);
 
+      // add handlers to view
+      if (view instanceof HasViewTitleChangedHandler)
+      {
+         ((HasViewTitleChangedHandler)view).addViewTitleChangedHandler(viewTitleChangedHandler);
+      }
+
       for (ViewOpenedHandler handler : viewOpenedHandlers)
       {
-         handler.onViewOpened(new ViewOpenedEvent(view.getId()));
+         handler.onViewOpened(new ViewOpenedEvent(view));
       }
 
       tabPanel.selectTab(view.getId());
-
-      //controller.onResize();
-
    }
+
+   private ViewTitleChangedHandler viewTitleChangedHandler = new ViewTitleChangedHandler()
+   {
+      @Override
+      public void onViewTitleChanged(ViewTitleChangedEvent event)
+      {
+         System.out.println("view title changed > " + event.getView().getId());
+         System.out.println("title > " + event.getView().getTitle());
+         System.out.println("old title > " + event.getOldTitle());
+      }
+   };
 
    private class ViewController extends FlowPanel implements RequiresResize
    {
@@ -333,6 +376,13 @@ public class Panel extends AbsolutePanel implements RequiresResize
    public void removeViewClosedHandler(ViewClosedHandler viewClosedHandler)
    {
       viewClosedHandlers.remove(viewClosedHandler);
+   }
+
+   @Override
+   public HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler)
+   {
+      viewVisibilityChangedHandlers.add(viewVisibilityChangedHandler);
+      return null;
    }
 
 }

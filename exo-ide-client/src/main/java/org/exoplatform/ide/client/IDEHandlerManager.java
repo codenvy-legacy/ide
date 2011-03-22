@@ -55,7 +55,7 @@ public class IDEHandlerManager extends HandlerManager
       
             refreshTab();
       
-            System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - event");
+            Log.info(">>> " + tab + "[" + depthIndex + "] " + name + "     - event");
             logEventParams(event);
             depthIndex++;
             refreshTab();
@@ -72,7 +72,7 @@ public class IDEHandlerManager extends HandlerManager
 
             depthIndex--;
             refreshTab();
-            System.out.println(">>> " + tab + "[" + depthIndex + "] " + name + "     - done");
+            Log.info(">>> " + tab + "[" + depthIndex + "] " + name + "     - done");
       
             printSpacesTimer.cancel();
             printSpacesTimer.schedule(3000);
@@ -92,7 +92,7 @@ public class IDEHandlerManager extends HandlerManager
       @Override
       public void run()
       {
-         System.out.println("\r\n\r\n\r\n\r\n");
+         Log.info("\r\n\r\n\r\n\r\n");
       }
    };
 
@@ -102,7 +102,7 @@ public class IDEHandlerManager extends HandlerManager
       if (event instanceof SaveApplicationSettingsEvent)
       {
          SaveApplicationSettingsEvent e = (SaveApplicationSettingsEvent)event;
-         System.out.println("        " + tab + "    - save type: " + e.getSaveType());
+         Log.info("        " + tab + "    - save type: " + e.getSaveType());
       }
    }
 

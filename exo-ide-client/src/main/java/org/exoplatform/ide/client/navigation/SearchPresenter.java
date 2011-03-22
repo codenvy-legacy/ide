@@ -217,7 +217,7 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (Display.ID.equals(event.getViewId()))
+      if (Display.ID.equals(event.getView().getId()))
       {
          display = null;
       }

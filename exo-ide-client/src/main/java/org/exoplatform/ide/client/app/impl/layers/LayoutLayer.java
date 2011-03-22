@@ -104,7 +104,7 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
 
    private static final int STATUSBAR_HEIGHT = 30;
 
-   private static final int MARGIN = 0;
+   private static final int MARGIN = 10;
 
    private SplitLayoutPanel layoutPanel;
 

@@ -33,16 +33,16 @@ public class ViewOpenedEvent extends GwtEvent<ViewOpenedHandler>
 
    public static final GwtEvent.Type<ViewOpenedHandler> TYPE = new GwtEvent.Type<ViewOpenedHandler>();
 
-   private String viewId;
+   private ViewEx view;
 
-   public ViewOpenedEvent(String viewId)
+   public ViewOpenedEvent(ViewEx view)
    {
-      this.viewId = viewId;
+      this.view = view;
    }
 
-   public String getViewId()
+   public ViewEx getView()
    {
-      return viewId;
+      return view;
    }
 
    @Override

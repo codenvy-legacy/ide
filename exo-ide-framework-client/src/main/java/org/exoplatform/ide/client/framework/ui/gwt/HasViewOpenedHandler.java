@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.ui.gwt;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,35 +27,9 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public interface ViewEx
+public interface HasViewOpenedHandler
 {
    
-   String getId();
-   
-   String getType();
+   public HandlerRegistration addViewOpenedHandler(ViewOpenedEvent viewOpenedEvent);
 
-   String getTitle();
-   
-   void setTitle(String title);
-   
-   Image getIcon();
-   
-   void setIcon(Image icon);
-   
-   boolean hasCloseButton();
-
-   boolean isViewVisible();
-   
-   void setViewVisible(boolean isViewVisible);
-   
-   int getDefaultWidth();
-   
-   int getDefaultHeight();
-   
-   boolean canResize();
-   
-   boolean isActive();
-   
-   void setActive();
-   
 }

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.ui.gwt;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,35 +27,41 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public interface ViewEx
+public class ViewTitleChangedEvent extends GwtEvent<ViewTitleChangedHandler>
 {
-   
-   String getId();
-   
-   String getType();
 
-   String getTitle();
-   
-   void setTitle(String title);
-   
-   Image getIcon();
-   
-   void setIcon(Image icon);
-   
-   boolean hasCloseButton();
+   public static final GwtEvent.Type<ViewTitleChangedHandler> TYPE = new GwtEvent.Type<ViewTitleChangedHandler>();
 
-   boolean isViewVisible();
-   
-   void setViewVisible(boolean isViewVisible);
-   
-   int getDefaultWidth();
-   
-   int getDefaultHeight();
-   
-   boolean canResize();
-   
-   boolean isActive();
-   
-   void setActive();
-   
+   private ViewEx view;
+
+   private String oldTitle;
+
+   public ViewTitleChangedEvent(ViewEx view, String oldTitle)
+   {
+      this.view = view;
+      this.oldTitle = oldTitle;
+   }
+
+   public ViewEx getView()
+   {
+      return view;
+   }
+
+   public String getOldTitle()
+   {
+      return oldTitle;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ViewTitleChangedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(ViewTitleChangedHandler handler)
+   {
+      handler.onViewTitleChanged(this);
+   }
+
 }

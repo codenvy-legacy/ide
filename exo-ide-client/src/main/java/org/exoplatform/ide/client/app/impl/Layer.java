@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.app.impl;
 
-import org.exoplatform.ide.client.Log;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -33,7 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class Layer extends AbsolutePanel
 {
-   
+
    public Layer()
    {
       setWidth("0px");
@@ -43,7 +41,6 @@ public class Layer extends AbsolutePanel
 
    public void resize(int width, int height)
    {
-      Log.info("resize for > " + this.getClass().getName());
    }
 
    @Override

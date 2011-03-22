@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.ui.gwt;
 
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -27,35 +28,41 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public interface ViewEx
+public class ViewIconChangedEvent extends GwtEvent<ViewIconChangedHandler>
 {
-   
-   String getId();
-   
-   String getType();
 
-   String getTitle();
-   
-   void setTitle(String title);
-   
-   Image getIcon();
-   
-   void setIcon(Image icon);
-   
-   boolean hasCloseButton();
+   private static final GwtEvent.Type<ViewIconChangedHandler> TYPE = new GwtEvent.Type<ViewIconChangedHandler>();
 
-   boolean isViewVisible();
-   
-   void setViewVisible(boolean isViewVisible);
-   
-   int getDefaultWidth();
-   
-   int getDefaultHeight();
-   
-   boolean canResize();
-   
-   boolean isActive();
-   
-   void setActive();
-   
+   private ViewEx view;
+
+   private Image oldIcon;
+
+   public ViewIconChangedEvent(ViewEx view, Image oldIcon)
+   {
+      this.view = view;
+      this.oldIcon = oldIcon;
+   }
+
+   public ViewEx getView()
+   {
+      return view;
+   }
+
+   public Image getOldIcon()
+   {
+      return oldIcon;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ViewIconChangedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(ViewIconChangedHandler handler)
+   {
+      handler.onViewIconChanged(this);
+   }
+
 }

@@ -23,10 +23,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.GWTItemTreeGrid;
 import org.exoplatform.ide.client.framework.ui.gwt.AbstractView;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
+
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * 
@@ -43,7 +46,7 @@ public class WorkspaceViewImplNew extends AbstractView implements org.exoplatfor
 
    public WorkspaceViewImplNew()
    {
-      super(ID, "navigation", "Workspace");
+      super(ID, "navigation", "Workspace", new Image(IDEImageBundle.INSTANCE.workspace()));
       treeGrid = new GWTItemTreeGrid();
       treeGrid.setEmptyMessage("Root folder not found!");
       add(treeGrid);

@@ -84,7 +84,6 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -174,7 +173,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       handlers.addHandler(SelectItemEvent.TYPE, this);
       handlers.addHandler(PanelSelectedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      
+
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
 
@@ -271,6 +270,14 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
          //context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
          //context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
          eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));
+
+         String title = "Workspace : No Items selected";
+         if (selectedItems.size() > 0)
+         {
+            title = "Workspace : " + selectedItems.get(0).getName();
+         }
+
+         display.getView().setTitle(title);
       }
    };
 
@@ -332,17 +339,20 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       {
          foldersToRefresh = new ArrayList<Folder>();
 
-         Item item = selectedItems.get(0);
-         if (item instanceof File)
+         if (selectedItems.size() > 0)
          {
-            String href = item.getHref();
-            href = href.substring(0, href.lastIndexOf("/") + 1);
-            Folder folder = new Folder(href);
-            foldersToRefresh.add(folder);
-         }
-         else
-         {
-            foldersToRefresh.add((Folder)item);
+            Item item = selectedItems.get(0);
+            if (item instanceof File)
+            {
+               String href = item.getHref();
+               href = href.substring(0, href.lastIndexOf("/") + 1);
+               Folder folder = new Folder(href);
+               foldersToRefresh.add(folder);
+            }
+            else
+            {
+               foldersToRefresh.add((Folder)item);
+            }
          }
       }
 
@@ -539,8 +549,9 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
     */
    public void onSwitchEntryPoint(SwitchEntryPointEvent event)
    {
-      if (!viewOpened) {
-         IDE.getInstance().openView(display.getView());         
+      if (!viewOpened)
+      {
+         IDE.getInstance().openView(display.getView());
       }
 
       entryPoint = null;
@@ -652,7 +663,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      if (Display.ID.equals(event.getViewId()))
+      if (Display.ID.equals(event.getView().getId()))
       {
          viewOpened = true;
       }
@@ -661,7 +672,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (Display.ID.equals(event.getViewId()))
+      if (Display.ID.equals(event.getView().getId()))
       {
          viewOpened = false;
       }

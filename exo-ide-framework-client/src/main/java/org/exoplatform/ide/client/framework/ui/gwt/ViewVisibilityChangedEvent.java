@@ -16,45 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.api;
+package org.exoplatform.ide.client.framework.ui.gwt;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ViewActivatedEvent extends GwtEvent<ViewActivatedHandler>
+public class ViewVisibilityChangedEvent extends GwtEvent<ViewVisibilityChangedHandler>
 {
 
-   public static final GwtEvent.Type<ViewActivatedHandler> TYPE = new GwtEvent.Type<ViewActivatedHandler>();
+   public static final GwtEvent.Type<ViewVisibilityChangedHandler> TYPE =
+      new GwtEvent.Type<ViewVisibilityChangedHandler>();
 
-   private String viewId;
+   private ViewEx view;
 
-   public ViewActivatedEvent(String viewId)
+   public ViewVisibilityChangedEvent(ViewEx view)
    {
-      this.viewId = viewId;
+      this.view = view;
    }
 
-   public String getViewId()
+   public ViewEx getView()
    {
-      return viewId;
+      return view;
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ViewActivatedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ViewVisibilityChangedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    @Override
-   protected void dispatch(ViewActivatedHandler handler)
+   protected void dispatch(ViewVisibilityChangedHandler handler)
    {
-      handler.onViewActivated(this);
+      handler.onViewVisibilityChanged(this);
    }
 
 }

@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.api;
+package org.exoplatform.ide.client.framework.ui.gwt;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,9 +27,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface ViewActivatedHandler extends EventHandler
+public interface HasViewVisibilityChangedHandler
 {
-   
-   void onViewActivated(ViewActivatedEvent event);
 
+   HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler);
+   
 }

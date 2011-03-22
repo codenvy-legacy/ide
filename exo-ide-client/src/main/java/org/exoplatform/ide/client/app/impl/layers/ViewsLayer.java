@@ -36,18 +36,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ViewsLayer extends Layer
 {
-   
+
    public class ViewWrapper extends AbsolutePanel
    {
 
-      private ViewEx view;
-
       public ViewWrapper(ViewEx view)
       {
-         this.view = view;
-
-         //DOM.setStyleAttribute(getElement(), "background", "#EEFFAA");
-
          DOM.setStyleAttribute(getElement(), "width", "100px");
          DOM.setStyleAttribute(getElement(), "height", "100px");
          DOM.setStyleAttribute(getElement(), "overflow", "hidden");
@@ -66,5 +60,5 @@ public class ViewsLayer extends Layer
       add(wrapper);
       return wrapper;
    }
-   
+
 }
