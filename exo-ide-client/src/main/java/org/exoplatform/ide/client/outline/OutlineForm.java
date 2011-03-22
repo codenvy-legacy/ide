@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.editor.api.Editor;
 
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class OutlineForm extends View implements OutlinePresenter.Display
 
    private OutlineTreeGrid<Token> treeGrid;
 
-   public OutlineForm(HandlerManager bus, TextEditor activeTextEditor, File activeFile)
+   public OutlineForm(HandlerManager bus, Editor activeTextEditor, File activeFile)
    {
       super(ID, bus);
       setTitle("Outline");

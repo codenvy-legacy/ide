@@ -151,7 +151,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
             activeTab = (EditorTab)event.getTab();
             ViewHighlightManager.getInstance().selectView((View)activeTab.getPane());
             //            String path = activeTab.getFile().getHref();
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), activeTab.getTextEditor()));
+//            eventBus.fireEvent(new EditorActiveFileChangedEvent(activeTab.getFile(), activeTab.getTextEditor()));
          }
          catch (Exception exc)
          {
@@ -309,7 +309,7 @@ public class EditorForm extends Layout implements EditorPresenter.Display, Edito
             //String newFilePath = newFile.getHref();
             //            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, hasUndoChanges(newFilePath),
             //               hasRedoChanges(newFilePath)));
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, editorTab.getTextEditor()));
+//            eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, editorTab.getTextEditor()));
             return;
          }
       }

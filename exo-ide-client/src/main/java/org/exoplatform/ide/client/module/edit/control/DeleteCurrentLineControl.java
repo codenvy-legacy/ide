@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineEvent;
 import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.editor.api.EditorCapability;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -70,7 +71,7 @@ public class DeleteCurrentLineControl extends SimpleControl implements IDEContro
          return;
       }
 
-      if (event.getEditor().canDeleteCurrentLine())
+      if (event.getEditor().isCapable(EditorCapability.DELETE_CURRENT_LINE))
       {
          setVisible(true);
          setEnabled(true);

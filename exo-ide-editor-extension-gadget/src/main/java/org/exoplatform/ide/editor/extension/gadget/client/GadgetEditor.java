@@ -19,8 +19,12 @@
 package org.exoplatform.ide.editor.extension.gadget.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
+import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
@@ -46,6 +50,7 @@ public class GadgetEditor extends Extension
             MimeType.GOOGLE_GADGET,
             "CodeMirror Google Gadget editor",
             "xml",
+            Images.GOOGLE_GADGET,
             true,
             new CodeMirrorConfiguration(
                "['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']", // generic code parsers
@@ -56,9 +61,14 @@ public class GadgetEditor extends Extension
                new GoogleGadgetParser(), // exoplatform code parser 
                new HtmlAutocompleteHelper(), // autocomplete helper
                new HtmlCodeAssistant(), true));
-
+      
+      IDE.getInstance().addEditor(new CKEditorProducer(MimeType.GOOGLE_GADGET, "CKEditor Google Gadget editor", "xml","", false,
+         new CKEditorConfiguration()));
+      
       IDE.getInstance().addEditor(producer);
 
+      IDE.getInstance().addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget",
+         "Create New Google Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setDelimiterBefore(true), DockTarget.NONE, false);
    }
 
 }

@@ -18,15 +18,17 @@
  */
 package org.exoplatform.ide.client.application.phases;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.editor.api.Editor;
-import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.ide.client.editor.EditorUtil;
+import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
@@ -38,11 +40,9 @@ import org.exoplatform.ide.client.framework.vfs.FileCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.editor.api.EditorProducer;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
@@ -179,8 +179,8 @@ EditorFileOpenedHandler
       try
       {
          String editorDescription = defaultEditors.get(file.getContentType());
-         Editor editor = EditorUtil.getEditor(file.getContentType(), editorDescription);
-         eventBus.fireEvent(new EditorOpenFileEvent(file, editor));
+         EditorProducer producer = EditorFactory.getEditorProducer(file.getContentType(), editorDescription);
+         eventBus.fireEvent(new EditorOpenFileEvent(file, producer));
       }
       catch (EditorNotFoundException e)
       {

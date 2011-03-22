@@ -43,15 +43,15 @@ public class CodeMirrorProducer extends EditorProducer
     * @param ext
     * @param isDefault
     */
-   public CodeMirrorProducer(String mimeType, String description, String ext, boolean isDefault)
+   public CodeMirrorProducer(String mimeType, String description, String ext, String icon, boolean isDefault)
    {
-      super(mimeType, description, ext, isDefault);
+      super(mimeType, description, ext, icon, isDefault);
       params.put(EditorParameters.MIME_TYPE, mimeType);
    }
    
-   public CodeMirrorProducer(String mimeType, String description, String ext, boolean isDefault, CodeMirrorConfiguration configuration)
+   public CodeMirrorProducer(String mimeType, String description, String ext, String icon, boolean isDefault, CodeMirrorConfiguration configuration)
    {
-      this(mimeType, description, ext, isDefault);
+      this(mimeType, description, ext, icon, isDefault);
       params.put(EditorParameters.CONFIGURATION, configuration);
    }
 

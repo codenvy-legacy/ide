@@ -485,7 +485,7 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
       activeFile = file;
 
       String href = file.getHref();
-      eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.getEditor(href)));
+//      eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.getEditor(href)));
    }
 
    public void onEditorOpenFile(EditorOpenFileEvent event)
@@ -497,35 +497,35 @@ public class EditorPresenter implements EditorContentChangedHandler, EditorIniti
          return;
       }
 
-      if (openedFiles.get(file.getHref()) != null
-         && event.getEditor().getDescription().equals(openedEditors.get(file.getHref())))
-      {
-         File openedFile = openedFiles.get(file.getHref());
-         ignoreContentChangedList.add(file.getHref());
-         display.selectTab(openedFile.getHref());
-         display.setTabContent(file.getHref(), file.getContent());
-         return;
-      }
-
-      ignoreContentChangedList.add(file.getHref());
-      openedFiles.put(file.getHref(), file);
-      openedEditors.put(file.getHref(), event.getEditor().getDescription());
-
-      boolean lineNumbers = true;
-      if (applicationSettings.getValueAsBoolean("line-numbers") != null)
-      {
-         lineNumbers = applicationSettings.getValueAsBoolean("line-numbers");
-      }
-
-      try
-      {
-         display.openTab(file, lineNumbers, event.getEditor(), isReadOnly(file));
-         display.selectTab(file.getHref());
-      }
-      catch (Throwable e)
-      {
-         e.printStackTrace();
-      }
+//      if (openedFiles.get(file.getHref()) != null
+//         && event.getEditor().getDescription().equals(openedEditors.get(file.getHref())))
+//      {
+//         File openedFile = openedFiles.get(file.getHref());
+//         ignoreContentChangedList.add(file.getHref());
+//         display.selectTab(openedFile.getHref());
+//         display.setTabContent(file.getHref(), file.getContent());
+//         return;
+//      }
+//
+//      ignoreContentChangedList.add(file.getHref());
+//      openedFiles.put(file.getHref(), file);
+//      openedEditors.put(file.getHref(), event.getEditor().getDescription());
+//
+//      boolean lineNumbers = true;
+//      if (applicationSettings.getValueAsBoolean("line-numbers") != null)
+//      {
+//         lineNumbers = applicationSettings.getValueAsBoolean("line-numbers");
+//      }
+//
+//      try
+//      {
+//         display.openTab(file, lineNumbers, event.getEditor(), isReadOnly(file));
+//         display.selectTab(file.getHref());
+//      }
+//      catch (Throwable e)
+//      {
+//         e.printStackTrace();
+//      }
 
       //      eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
       //      eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.getEditor(file.getHref())));

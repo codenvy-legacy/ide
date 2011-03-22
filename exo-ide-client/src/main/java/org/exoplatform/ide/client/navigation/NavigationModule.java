@@ -102,8 +102,6 @@ import org.exoplatform.ide.client.module.navigation.event.RenameItemEvent;
 import org.exoplatform.ide.client.module.navigation.event.RenameItemHander;
 import org.exoplatform.ide.client.module.navigation.event.SaveFileAsTemplateEvent;
 import org.exoplatform.ide.client.module.navigation.event.SaveFileAsTemplateHandler;
-import org.exoplatform.ide.client.module.navigation.event.SearchFilesEvent;
-import org.exoplatform.ide.client.module.navigation.event.SearchFilesHandler;
 import org.exoplatform.ide.client.module.navigation.event.edit.CopyItemsEvent;
 import org.exoplatform.ide.client.module.navigation.event.edit.CopyItemsHandler;
 import org.exoplatform.ide.client.module.navigation.event.edit.CutItemsEvent;
@@ -135,7 +133,6 @@ import org.exoplatform.ide.client.upload.UploadFileForm;
 import org.exoplatform.ide.client.upload.UploadForm;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -262,6 +259,7 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
 
       new WorkspacePresenter(eventBus);
       new SearchPresenter(eventBus, selectedItems, entryPoint);
+      
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

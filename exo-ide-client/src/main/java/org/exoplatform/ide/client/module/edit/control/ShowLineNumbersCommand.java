@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.module.edit.control;
 
-import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -29,6 +28,8 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSa
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.EditorCapability;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -51,7 +52,7 @@ public class ShowLineNumbersCommand extends SimpleControl implements IDEControl,
 
    private File activeFile;
 
-   private TextEditor activeEditor;
+   private Editor activeEditor;
 
    private boolean showLineNumbers = true;
 
@@ -92,7 +93,7 @@ public class ShowLineNumbersCommand extends SimpleControl implements IDEControl,
       }
 
       // verify and show
-      if (activeFile == null || activeEditor == null || !activeEditor.canSetLineNumbers())
+      if (activeFile == null || activeEditor == null || !activeEditor.isCapable(EditorCapability.SHOW_LINE_NUMBERS))
       {
          setVisible(false);
          setEnabled(false);

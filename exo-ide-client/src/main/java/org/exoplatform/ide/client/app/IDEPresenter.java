@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.app.api.Perspective;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.phases.LoadRegistryConfigurationPhase;
 import org.exoplatform.ide.client.browser.BrowserPanel;
+import org.exoplatform.ide.client.editor.EditorController;
 import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
@@ -79,6 +80,8 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
       display.getPerspective().addViewOpenedHandler(this);
       display.getPerspective().addViewClosedHandler(this);
       display.getPerspective().addViewVisibilityChangedHandler(this);
+      EditorController editorController = new EditorController();
+      display.getPerspective().addViewVisibilityChangedHandler(editorController);
 
       new ToolbarBuilder(eventBus, display.getToolbar(), display.getStatusbar());
 

@@ -61,12 +61,12 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
    }
 
    /**
-    * 
-    * @param editor
-    * @param codeErrorList
-    * @param markOffsetX
-    * @param markOffsetY
-    * @param fileMimeType
+    * If editor support code validation, it's method called when user click on error mark 
+    * @param editor instance of current editor 
+    * @param codeErrorList list with errors
+    * @param markOffsetX coordinate X
+    * @param markOffsetY coordinate X
+    * @param fileMimeType mime type of current edited file
     */
    public abstract void errorMarckClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX,
       int markOffsetY, String fileMimeType);
@@ -205,7 +205,6 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
     */
    protected native JavaScriptObject parseJson(String json) /*-{
 		return eval('(' + json + ')');
-		;
    }-*/;
 
 }

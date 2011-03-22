@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.client.framework.editor.event;
 
-import org.exoplatform.gwtframework.editor.api.Editor;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.editor.api.EditorProducer;
 
 import com.google.gwt.event.shared.GwtEvent;
-
-
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,43 +30,42 @@ import com.google.gwt.event.shared.GwtEvent;
 */
 public class EditorOpenFileEvent extends GwtEvent<EditorOpenFileHandler>
 {
-   
+
    public static final GwtEvent.Type<EditorOpenFileHandler> TYPE = new GwtEvent.Type<EditorOpenFileHandler>();
 
    private File file;
-   
-   private Editor editor;
-   
-   
-   public EditorOpenFileEvent(File file, Editor editor)
+
+   private EditorProducer editorProducer;
+
+   public EditorOpenFileEvent(File file, EditorProducer editorProducer)
    {
       this.file = file;
-      this.editor = editor;
+      this.editorProducer = editorProducer;
    }
 
-   
    public File getFile()
    {
       return file;
    }
 
-   public Editor getEditor()
+   /**
+    * @return the editorProducer
+    */
+   public EditorProducer getEditorProducer()
    {
-      return editor;
+      return editorProducer;
    }
 
-   
    @Override
    protected void dispatch(EditorOpenFileHandler handler)
    {
-      handler.onEditorOpenFile(this);      
+      handler.onEditorOpenFile(this);
    }
 
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<EditorOpenFileHandler> getAssociatedType()
-   {  
+   {
       return TYPE;
    }
-   
-}
 
+}

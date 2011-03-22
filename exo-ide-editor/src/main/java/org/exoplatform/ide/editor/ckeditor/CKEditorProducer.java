@@ -44,15 +44,16 @@ public class CKEditorProducer extends EditorProducer
     * @param ext
     * @param isDefault
     */
-   public CKEditorProducer(String mimeType, String description, String ext, boolean isDefault)
+   public CKEditorProducer(String mimeType, String description, String ext, String icon, boolean isDefault)
    {
-      super(mimeType, description, ext, isDefault);
+      super(mimeType, description, ext, icon, isDefault);
       params.put(EditorParameters.MIME_TYPE, mimeType);
    }
 
-   public CKEditorProducer(String mimeType, String description, String ext, boolean isDefault, CKEditorConfiguration configuration)
+   public CKEditorProducer(String mimeType, String description, String ext, String icon, boolean isDefault,
+      CKEditorConfiguration configuration)
    {
-      this(mimeType, description, ext, isDefault);
+      this(mimeType, description, ext, icon, isDefault);
       params.put(EditorParameters.CONFIGURATION, configuration);
    }
 
@@ -62,7 +63,5 @@ public class CKEditorProducer extends EditorProducer
       params.putAll(this.params);
       return new CKEditor(content, params, eventBus);
    }
-   
-
 
 }

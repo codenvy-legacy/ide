@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.outline.OutlineForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
+import org.exoplatform.ide.editor.api.EditorCapability;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -80,7 +81,7 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || event.getEditor() == null || !event.getEditor().canCreateTokenList())
+      if (event.getFile() == null || event.getEditor() == null || !event.getEditor().isCapable(EditorCapability.CREATE_TOKEN_LIST))
       {
          setVisible(false);
          return;

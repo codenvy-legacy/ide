@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.statusbar;
 
-import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent;
 import org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler;
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
@@ -28,6 +27,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
+import org.exoplatform.ide.editor.api.Editor;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -46,13 +46,13 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
    {
       super(ID);
 
-      setVisible(false);
+      setVisible(true);
       setEnabled(true);
       setSize(70);
       setFireEventOnSingleClick(true);
-      //setText("&nbsp;");
+      setText("Ddddddddddddddddddddddddddddd");
       setTextAlignment(TextAlignment.CENTER);
-      //setEvent(new GoToLineEvent());
+      setEvent(new GoToLineEvent());
    }
    
    /**
@@ -60,6 +60,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
     */
    public void initialize(HandlerManager eventBus)
    {
+      System.out.println("EditorCursorPositionControl.initialize()");
       eventBus.addHandler(EditorCursorActivityEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
@@ -74,6 +75,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
     */
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
+      System.out.println("EditorCursorPositionControl.onEditorCursorActivity()");
       if (event.getRow() > 0 && event.getColumn() > 0)
       {
          setEvent(new GoToLineEvent());
@@ -99,7 +101,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
          return;
       }
       
-      TextEditor editor = event.getEditor();
+      Editor editor = event.getEditor();
       if (editor.getCursorRow() > 0 && editor.getCursorCol() > 0)
       {
          setEvent(new GoToLineEvent());

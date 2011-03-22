@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
+import org.exoplatform.ide.editor.api.EditorCapability;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -69,7 +70,7 @@ public class GoToLineControl extends SimpleControl implements IDEControl, Editor
          return;
       }
 
-      if (event.getEditor().canGoToLine())
+      if (event.getEditor().isCapable(EditorCapability.GO_TO_POSITION))
       {
          setVisible(true);
          setEnabled(true);

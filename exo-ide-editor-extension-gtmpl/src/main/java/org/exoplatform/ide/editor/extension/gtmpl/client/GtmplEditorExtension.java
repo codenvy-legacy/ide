@@ -75,7 +75,7 @@ public class GtmplEditorExtension extends Extension implements InitializeService
       templateCodeAssistant =
          new GroovyTemplateCodeAssistant(new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()), this);
       
-      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl", true,
+      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl",  Images.GROOVY_TEMPLATE, true,
          new CodeMirrorConfiguration(
             "['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']",  // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles

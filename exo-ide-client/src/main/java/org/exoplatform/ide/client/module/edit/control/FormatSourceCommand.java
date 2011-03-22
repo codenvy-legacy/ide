@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFormatTextEvent;
 import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.editor.api.EditorCapability;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -70,7 +71,7 @@ public class FormatSourceCommand extends SimpleControl implements IDEControl, Ed
          return;
       }
 
-      if (event.getEditor().canFormatSource())
+      if (event.getEditor().isCapable(EditorCapability.FORMAT_SOURCE))
       {
          if (MimeType.TEXT_PLAIN.equals(event.getFile().getContentType()))
          {

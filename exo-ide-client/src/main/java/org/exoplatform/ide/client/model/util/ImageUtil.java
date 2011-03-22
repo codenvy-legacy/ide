@@ -38,20 +38,25 @@ public class ImageUtil
 
    static
    {
-      images.put(MimeType.TEXT_HTML, Images.FileTypes.HTML);
-      images.put(MimeType.TEXT_XML, Images.FileTypes.XML);
-      images.put(MimeType.TEXT_PLAIN, Images.FileTypes.TXT);
-      images.put(MimeType.GROOVY_SERVICE, Images.FileTypes.REST_SERVICE);
-      images.put(MimeType.APPLICATION_GROOVY, Images.FileTypes.GROOVY);
-      images.put(MimeType.GOOGLE_GADGET, Images.FileTypes.GADGET);
-      images.put(MimeType.APPLICATION_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
-      images.put(MimeType.TEXT_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
-      images.put(MimeType.APPLICATION_X_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
-      images.put(MimeType.TEXT_CSS, Images.FileTypes.CSS);
-      images.put(MimeType.UWA_WIDGET, Images.FileTypes.UWA_WIDGET);
-      images.put(MimeType.GROOVY_TEMPLATE, Images.FileTypes.GROOVY_TEMPLATE);      
-      images.put(MimeType.CHROMATTIC_DATA_OBJECT, Images.FileTypes.CHROMATTIC);
+//      images.put(MimeType.TEXT_HTML, Images.FileTypes.HTML);
+//      images.put(MimeType.TEXT_XML, Images.FileTypes.XML);
+//      images.put(MimeType.TEXT_PLAIN, Images.FileTypes.TXT);
+//      images.put(MimeType.GROOVY_SERVICE, Images.FileTypes.REST_SERVICE);
+//      images.put(MimeType.APPLICATION_GROOVY, Images.FileTypes.GROOVY);
+//      images.put(MimeType.GOOGLE_GADGET, Images.FileTypes.GADGET);
+//      images.put(MimeType.APPLICATION_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
+//      images.put(MimeType.TEXT_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
+//      images.put(MimeType.APPLICATION_X_JAVASCRIPT, Images.FileTypes.JAVASCRIPT);
+//      images.put(MimeType.TEXT_CSS, Images.FileTypes.CSS);
+//      images.put(MimeType.UWA_WIDGET, Images.FileTypes.UWA_WIDGET);
+//      images.put(MimeType.GROOVY_TEMPLATE, Images.FileTypes.GROOVY_TEMPLATE);      
+//      images.put(MimeType.CHROMATTIC_DATA_OBJECT, Images.FileTypes.CHROMATTIC);
       images.put(null, Images.FileTypes.DEFAULT);
+   }
+   
+   public static void putIcon(String mimeType, String icon)
+   {
+      images.put(mimeType, icon);
    }
 
    public static String getIcon(String mimeType)

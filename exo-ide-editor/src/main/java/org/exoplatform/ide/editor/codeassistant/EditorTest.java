@@ -159,12 +159,12 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       });
       templateCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
 
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, "CodeMirror text editor", "txt", true,
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, "CodeMirror text editor", "txt","", true,
          new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']" // code styles
          )));
 
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_XML, "CodeMirror XML editor", "xml", true,
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_XML, "CodeMirror XML editor", "xml", "",true,
          new CodeMirrorConfiguration("['parsexml.js', 'tokenize.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']", // code styles
             true, // can be outlined
@@ -173,7 +173,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML)
          )));
 
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, "CodeMirror XML editor", "xml", true,
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, "CodeMirror XML editor", "xml","", true,
          new CodeMirrorConfiguration("['parsexml.js', 'tokenize.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']", // code styles
             true, // can be outlined
@@ -182,7 +182,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML)
          )));
 
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT, "CodeMirror JavaScript editor", "js", true,
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT, "CodeMirror JavaScript editor", "js","", true,
          new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']", // code styles
             true, // can be outlined
@@ -191,7 +191,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             new JavaScriptAutocompleteHelper(),// autocomplete helper
             CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_JAVASCRIPT))));
 
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_JAVASCRIPT, "CodeMirror JavaScript editor", "js", true,
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_JAVASCRIPT, "CodeMirror JavaScript editor", "js","", true,
          new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']", // code styles
             true, // can be outlined
@@ -200,7 +200,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             new JavaScriptAutocompleteHelper(), // autocomplete helper
             CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_JAVASCRIPT))));
 
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_X_JAVASCRIPT, "CodeMirror JavaScript editor", "js", true,
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_X_JAVASCRIPT, "CodeMirror JavaScript editor", "js","", true,
          new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']", // code styles
             true, // can be outlined
@@ -209,7 +209,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             new JavaScriptAutocompleteHelper(), // autocomplete helper
             CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_X_JAVASCRIPT))));
 
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, "CodeMirror Css editor", "css", true,
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, "CodeMirror Css editor", "css","", true,
          new CodeMirrorConfiguration("['parsecss.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']", // code styles
             false, // can be outlined
@@ -220,7 +220,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
 //      Set<String> comTypes = new HashSet<String>();
 //      comTypes.add(MimeType.TEXT_HTML);
 
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, "CodeMirror HTML editor", "html", true,
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, "CodeMirror HTML editor", "html","", true,
          new CodeMirrorConfiguration(
             "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
@@ -231,7 +231,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             new HtmlAutocompleteHelper(), // autocomplete helper
             CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_HTML), true)));
       
-      addEditor(new CodeMirrorProducer(MimeType.GOOGLE_GADGET, "CodeMirror Google Gadget editor", "xml", true,
+      addEditor(new CodeMirrorProducer(MimeType.GOOGLE_GADGET, "CodeMirror Google Gadget editor", "xml","", true,
          new CodeMirrorConfiguration(
                "['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']",  // generic code parsers
                "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']", // code styles
@@ -242,7 +242,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                new HtmlCodeAssistant(), true)));
       
       
-      addEditor(new CodeMirrorProducer(MimeType.UWA_WIDGET, "CodeMirror Netvibes editor", "xml", true,
+      addEditor(new CodeMirrorProducer(MimeType.UWA_WIDGET, "CodeMirror Netvibes editor", "xml","", true,
          new CodeMirrorConfiguration(
             "['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']",  // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']", // code styles
@@ -252,7 +252,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             new HtmlAutocompleteHelper(), // autocomplete helper
             new NetvibesCodeAssistant(), true)));
       
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO file editor", "groovy", true,
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO file editor", "groovy","", true,
          new CodeMirrorConfiguration(
             "['parsegroovy.js', 'tokenizegroovy.js']",  // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
@@ -265,7 +265,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                javaCodeAssistant
               )));
 
-      addEditor(new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", true,
+      addEditor(new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs","", true,
          new CodeMirrorConfiguration(
             "['parsegroovy.js', 'tokenizegroovy.js']",  // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
@@ -277,7 +277,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                new GroovyCodeValidator(),
                javaCodeAssistant)));      
 
-      addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", true,
+      addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy","", true,
          new CodeMirrorConfiguration(
             "['parsegroovy.js', 'tokenizegroovy.js']",  // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
@@ -289,7 +289,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                new GroovyCodeValidator(),
                javaCodeAssistant)));
       
-      addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl", true,
+      addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl","", true,
          new CodeMirrorConfiguration(
             "['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']",  // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
@@ -303,10 +303,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
 
       
       // ckeditor
-      addEditor(new CKEditorProducer(MimeType.TEXT_HTML, "CKEditor HTML editor", "html", true,
+      addEditor(new CKEditorProducer(MimeType.TEXT_HTML, "CKEditor HTML editor", "html","", false,
          new CKEditorConfiguration()));   
       
-      addEditor(new CKEditorProducer(MimeType.GOOGLE_GADGET, "CKEditor Google Gadget editor", "xml", true,
+      addEditor(new CKEditorProducer(MimeType.GOOGLE_GADGET, "CKEditor Google Gadget editor", "xml","", true,
          new CKEditorConfiguration()));  
       
       //To initialize client bundles 

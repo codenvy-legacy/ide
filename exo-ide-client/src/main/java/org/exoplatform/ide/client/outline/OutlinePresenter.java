@@ -18,16 +18,11 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.gwtframework.editor.api.Token;
 import org.exoplatform.gwtframework.editor.api.Token.TokenType;
 import org.exoplatform.gwtframework.editor.event.EditorContentChangedEvent;
@@ -39,9 +34,14 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.editor.api.Editor;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Presenter for Outline Panel.
@@ -104,11 +104,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private File activeFile;
 
-   private TextEditor activeTextEditor;
+   private Editor activeTextEditor;
 
    private boolean afterChangineCursorFromOutline = false;
 
-   public OutlinePresenter(HandlerManager bus, TextEditor activeTextEditor, File activeFile)
+   public OutlinePresenter(HandlerManager bus, Editor activeTextEditor, File activeFile)
    {
       eventBus = bus;
       
@@ -168,13 +168,13 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       handlers.removeHandlers();
    }
    
-   private void refreshOutline(TextEditor editor)
+   private void refreshOutline(Editor editor)
    {
-      tokens = editor.getTokenList();
-      display.getOutlineTree().setValue(new Token("", null, -1, tokens));
-      currentRow = editor.getCursorRow();
-      currentToken = null;
-      selectTokenByRow(tokens);
+//      tokens = editor.getTokenList()
+//      display.getOutlineTree().setValue(new Token("", null, -1, tokens));
+//      currentRow = editor.getCursorRow();
+//      currentToken = null;
+//      selectTokenByRow(tokens);
    }
 
    /**
@@ -199,7 +199,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       }
    }
 
-   private boolean isShowOutlineTree(TextEditor editor, File file)
+   private boolean isShowOutlineTree(Editor editor, File file)
    {
       if (editor == null || file == null || file.getContentType() == null)
       {
@@ -233,7 +233,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       activeTextEditor = event.getEditor();
 
       File file = event.getFile();
-      TextEditor editor = event.getEditor();
+      Editor editor = event.getEditor();
 
       if (isShowOutlineTree(editor, file))
       {
@@ -372,6 +372,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
     */
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
+      System.out.println("OutlinePresenter.onEditorCursorActivity()");
       if (currentRow == event.getRow())
       {
          return;

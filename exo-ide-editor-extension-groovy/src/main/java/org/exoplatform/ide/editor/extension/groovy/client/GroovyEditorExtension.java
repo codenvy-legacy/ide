@@ -79,7 +79,7 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
       javaCodeAssistant =
          new JavaCodeAssistant(new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()), this);
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", true,
+         new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", Images.GROOVY,true,
             new CodeMirrorConfiguration("['parsegroovy.js', 'tokenizegroovy.js']", // generic code parsers
                "['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
                true, // can be outlined
@@ -90,7 +90,7 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
                new GroovyCodeValidator(), javaCodeAssistant)));
 
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", true,
+         new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs",Images.GROOVY, true,
             new CodeMirrorConfiguration("['parsegroovy.js', 'tokenizegroovy.js']", // generic code parsers
                "['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
                true, // can be outlined

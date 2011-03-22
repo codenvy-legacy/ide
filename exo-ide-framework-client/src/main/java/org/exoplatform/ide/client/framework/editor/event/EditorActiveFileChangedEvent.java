@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.framework.editor.event;
 
 import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.editor.api.Editor;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -38,9 +39,9 @@ public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChang
 
    private File file;
 
-   private TextEditor editor;
+   private Editor editor;
 
-   public EditorActiveFileChangedEvent(File file, TextEditor editor)
+   public EditorActiveFileChangedEvent(File file, Editor editor)
    {
       this.file = file;
       this.editor = editor;
@@ -66,7 +67,7 @@ public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChang
    /**
     * @return the editor
     */
-   public TextEditor getEditor()
+   public Editor getEditor()
    {
       return editor;
    }

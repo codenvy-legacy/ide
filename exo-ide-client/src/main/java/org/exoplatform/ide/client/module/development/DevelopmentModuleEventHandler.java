@@ -37,6 +37,8 @@ import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineHandler;
 import org.exoplatform.ide.client.outline.OutlineForm;
 import org.exoplatform.ide.client.outline.OutlineTreeGrid;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.EditorCapability;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -56,7 +58,7 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
 
    private ApplicationSettings applicationSettings;
 
-   private TextEditor activeTextEditor;
+   private Editor activeTextEditor;
 
    private File activeFile;
 
@@ -191,12 +193,12 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
     * @param file - file
     * @return is outline must be opened to textEditor and file
     */
-   private boolean outlineOpened(TextEditor textEditor, File file)
+   private boolean outlineOpened(Editor textEditor, File file)
    {
       boolean storedOutlineState =
          applicationSettings.getValueAsBoolean("outline") == null ? false : applicationSettings
             .getValueAsBoolean("outline");
-      boolean canEditorHasOutline = textEditor != null && textEditor.canCreateTokenList();
+      boolean canEditorHasOutline = textEditor != null && textEditor.isCapable(EditorCapability.CREATE_TOKEN_LIST);
       boolean canFileHasOutline =
          file != null && activeFile.getContentType() != null && OutlineTreeGrid.haveOutline(file);
 

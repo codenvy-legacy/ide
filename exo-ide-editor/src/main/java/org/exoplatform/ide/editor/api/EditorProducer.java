@@ -32,16 +32,20 @@ public abstract class EditorProducer
    public final String description;
 
    private String mimeType;
-   
+
    private String exstension;
-   
+
    private boolean isDefault;
 
-   protected EditorProducer(String mimeType, String description, String ext, boolean isDefault)
+   private String icon;
+
+   protected EditorProducer(String mimeType, String description, String ext, String icon, boolean isDefault)
    {
       this.description = description;
       this.mimeType = mimeType;
       this.isDefault = isDefault;
+      this.exstension = ext;
+      this.icon = icon;
    }
 
    public String getMimeType()
@@ -62,6 +66,14 @@ public abstract class EditorProducer
    public boolean isDefault()
    {
       return isDefault;
+   }
+
+   /**
+    * @return the icon
+    */
+   public String getIcon()
+   {
+      return icon;
    }
 
    public abstract Editor createEditor(String content, HandlerManager eventBus, HashMap<String, Object> params);

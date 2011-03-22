@@ -39,7 +39,7 @@ public class IDEMimeTypes
 
    private static HashMap<String, String> extensions = new HashMap<String, String>();
 
-   private static void add(String extension, String mimeType)
+   public static void addExtension(String extension, String mimeType)
    {
       if (mimeTypes.containsKey(extension))
          mimeTypes.get(extension).add(mimeType);
@@ -55,23 +55,23 @@ public class IDEMimeTypes
       }
    }
 
-   static
-   {
-      add("html", MimeType.TEXT_HTML);
-      add("htm", MimeType.TEXT_HTML);
-      add("css", MimeType.TEXT_CSS);
-      add("txt", MimeType.TEXT_PLAIN);
-      add("js", MimeType.TEXT_JAVASCRIPT);
-      add("js", MimeType.APPLICATION_JAVASCRIPT);
-      add("js", MimeType.APPLICATION_X_JAVASCRIPT);
-      add("xml", MimeType.TEXT_XML);
-      add("grs", MimeType.GROOVY_SERVICE);
-      add("groovy", MimeType.APPLICATION_GROOVY);
-      add("xml", MimeType.GOOGLE_GADGET);
-      add("html", MimeType.UWA_WIDGET);
-      add("gtmpl", MimeType.GROOVY_TEMPLATE);      
-      add("groovy", MimeType.CHROMATTIC_DATA_OBJECT);
-   }
+//   static
+//   {
+//      add("html", MimeType.TEXT_HTML);
+//      add("htm", MimeType.TEXT_HTML);
+//      add("css", MimeType.TEXT_CSS);
+//      add("txt", MimeType.TEXT_PLAIN);
+//      add("js", MimeType.TEXT_JAVASCRIPT);
+//      add("js", MimeType.APPLICATION_JAVASCRIPT);
+//      add("js", MimeType.APPLICATION_X_JAVASCRIPT);
+//      add("xml", MimeType.TEXT_XML);
+//      add("grs", MimeType.GROOVY_SERVICE);
+//      add("groovy", MimeType.APPLICATION_GROOVY);
+//      add("xml", MimeType.GOOGLE_GADGET);
+//      add("html", MimeType.UWA_WIDGET);
+//      add("gtmpl", MimeType.GROOVY_TEMPLATE);      
+//      add("groovy", MimeType.CHROMATTIC_DATA_OBJECT);
+//   }
 
    public static boolean isMimeTypeSupported(String mimeType)
    {

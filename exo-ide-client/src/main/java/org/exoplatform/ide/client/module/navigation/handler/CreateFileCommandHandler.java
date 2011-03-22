@@ -25,9 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.editor.api.Editor;
-import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.ide.client.editor.EditorUtil;
+import org.exoplatform.ide.client.editor.EditorFactory;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -46,6 +45,7 @@ import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileEvent;
 import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileHandler;
+import org.exoplatform.ide.editor.api.EditorProducer;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -84,6 +84,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
 
    public void onCreateNewFile(CreateNewFileEvent event)
    {
+      System.out.println("CreateFileCommandHandler.onCreateNewFile()");
       String extension = IDEMimeTypes.getExtensionsMap().get(event.getMimeType());
 
       String href;
@@ -130,8 +131,11 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
       try
       {
          String defaultEditorDescription = defaultEditors.get(event.getMimeType());
-         Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
-         eventBus.fireEvent(new EditorOpenFileEvent(newFile, editor));
+//         Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
+         EditorProducer producer = EditorFactory.getEditorProducer(event.getMimeType(), defaultEditorDescription); 
+         eventBus.fireEvent(new EditorOpenFileEvent(newFile, producer));
+
+
       }
       catch (EditorNotFoundException e)
       {

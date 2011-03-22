@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
 import org.exoplatform.ide.client.framework.form.FormOpenedHandler;
 import org.exoplatform.ide.client.module.edit.event.FindTextEvent;
 import org.exoplatform.ide.client.search.Search;
+import org.exoplatform.ide.editor.api.EditorCapability;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -76,7 +77,7 @@ public class FindTextCommand extends SimpleControl implements IDEControl, Editor
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || event.getEditor() == null || !event.getEditor().canFindAndReplace())
+      if (event.getFile() == null || event.getEditor() == null || !event.getEditor().isCapable(EditorCapability.FIND_AND_REPLACE))
       {
          setVisible(false);
          setEnabled(false);
@@ -93,7 +94,7 @@ public class FindTextCommand extends SimpleControl implements IDEControl, Editor
          return;
       }
       
-      boolean canFindReplace = event.getEditor().canFindAndReplace();
+      boolean canFindReplace = event.getEditor().isCapable(EditorCapability.FIND_AND_REPLACE);
       //boolean isOpened = openedForms.contains(FindTextForm.ID); 
       boolean enableSearch = canFindReplace && !findTextFormOpened;
       setEnabled(enableSearch);

@@ -50,9 +50,6 @@ public class GadgetExtension extends Extension implements InitializeServicesHand
    {
       this.eventBus = IDE.EVENT_BUS;
 
-      IDE.getInstance().addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget",
-         "Create New Google Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setDelimiterBefore(true), DockTarget.NONE, false);
-
       IDE.getInstance().addControl(new DeployGadgetCommand(), DockTarget.TOOLBAR, true);
       IDE.getInstance().addControl(new UndeployGadgetCommand(), DockTarget.TOOLBAR, true);
       IDE.getInstance().addControl(new ShowGadgetPreviewControl(), DockTarget.TOOLBAR,true);
