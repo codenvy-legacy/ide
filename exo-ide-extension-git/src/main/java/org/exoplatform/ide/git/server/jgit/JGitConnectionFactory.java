@@ -21,8 +21,8 @@ package org.exoplatform.ide.git.server.jgit;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.exoplatform.ide.git.server.GitClient;
-import org.exoplatform.ide.git.server.GitClientFactory;
+import org.exoplatform.ide.git.server.GitConnection;
+import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
 
 import java.io.File;
@@ -32,15 +32,15 @@ import java.io.IOException;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: JGitClientFactory.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class JGitClientFactory extends GitClientFactory
+public class JGitConnectionFactory extends GitConnectionFactory
 {
    /**
-    * @see org.exoplatform.ide.git.server.GitClientFactory#getClient(java.io.File)
+    * @see org.exoplatform.ide.git.server.GitConnectionFactory#getConnection(java.io.File)
     */
    @Override
-   public GitClient getClient(File workDir) throws GitException
+   public GitConnection getConnection(File workDir) throws GitException
    {
-      return new JGitClient(createRepository(workDir));
+      return new JGitConnection(createRepository(workDir));
    }
    
    private static Repository createRepository(File workDir) throws GitException

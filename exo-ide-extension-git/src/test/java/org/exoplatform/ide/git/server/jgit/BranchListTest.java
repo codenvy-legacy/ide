@@ -22,7 +22,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.RefSpec;
-import org.exoplatform.ide.git.server.jgit.JGitClient;
+import org.exoplatform.ide.git.server.jgit.JGitConnection;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
@@ -48,7 +48,7 @@ public class BranchListTest extends BaseTest
 
       File workDir = new File(repository.getWorkTree().getParentFile(), "ListBranchTest");
       // Clone repository.
-      JGitClient client2 = new JGitClient(new FileRepository(new File(workDir, ".git")));
+      JGitConnection client2 = new JGitConnection(new FileRepository(new File(workDir, ".git")));
       client2.clone(new CloneRequest(repository.getWorkTree().getAbsolutePath(), //
          null /* .git directory already set. Not need to pass it in this implementation. */, //
          new GitUser("andrey", "andrey@mail.com")));

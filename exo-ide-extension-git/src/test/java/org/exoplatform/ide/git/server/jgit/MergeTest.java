@@ -74,6 +74,9 @@ public class MergeTest extends BaseTest
       git.commit().setMessage("add file in new master").call();
 
       MergeResult mergeResult = getClient().merge(new MergeRequest("MergeTestBranch"));
+      String[] conflicts = mergeResult.getConflicts();
+      assertEquals(1, conflicts.length);
+      assertEquals("t-merge-conflict", conflicts[0]);
 
       assertEquals(MergeResult.MergeStatus.CONFLICTING, mergeResult.getMergeStatus());
 

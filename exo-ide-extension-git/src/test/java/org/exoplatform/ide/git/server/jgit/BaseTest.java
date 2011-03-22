@@ -24,8 +24,8 @@ import org.eclipse.jgit.dircache.DirCacheEntry;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.exoplatform.ide.git.server.GitClient;
-import org.exoplatform.ide.git.server.jgit.JGitClient;
+import org.exoplatform.ide.git.server.GitConnection;
+import org.exoplatform.ide.git.server.jgit.JGitConnection;
 import org.exoplatform.ide.git.shared.Branch;
 
 import java.io.File;
@@ -51,7 +51,7 @@ public abstract class BaseTest extends junit.framework.TestCase
 
    private FileRepository repository;
 
-   private GitClient client;
+   private GitConnection client;
 
    @Override
    protected void setUp() throws Exception
@@ -77,13 +77,13 @@ public abstract class BaseTest extends junit.framework.TestCase
       git.add().addFilepattern(".").call();
       git.commit().setMessage("init").setAuthor("andrey", "andrey@mail.com").call();
 
-      client = new JGitClient(repository);
+      client = new JGitConnection(repository);
    }
 
    @Override
    protected void tearDown() throws Exception
    {
-      GitClient thisClient = getClient();
+      GitConnection thisClient = getClient();
       if (thisClient != null)
          thisClient.close();
       for (File file : forClean)
@@ -99,7 +99,7 @@ public abstract class BaseTest extends junit.framework.TestCase
       return repository;
    }
 
-   protected GitClient getClient()
+   protected GitConnection getClient()
    {
       return client;
    }

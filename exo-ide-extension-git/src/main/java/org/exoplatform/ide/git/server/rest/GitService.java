@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
-import org.exoplatform.ide.git.server.GitClient;
-import org.exoplatform.ide.git.server.GitClientFactory;
+import org.exoplatform.ide.git.server.GitConnection;
+import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.InfoPage;
 import org.exoplatform.ide.git.shared.AddRequest;
@@ -97,7 +97,7 @@ public class GitService
    @Consumes(MediaType.APPLICATION_JSON)
    public void add(@QueryParam("workdir") String workDir, AddRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          gitClient.add(request);
@@ -113,7 +113,7 @@ public class GitService
    @Consumes(MediaType.APPLICATION_JSON)
    public void branchCheckout(@QueryParam("workdir") String workDir, BranchCheckoutRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          gitClient.branchCheckout(request);
@@ -130,7 +130,7 @@ public class GitService
    @Produces(MediaType.APPLICATION_JSON)
    public Branch branchCreate(@QueryParam("workdir") String workDir, BranchCreateRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          return gitClient.branchCreate(request);
@@ -146,7 +146,7 @@ public class GitService
    @Consumes(MediaType.APPLICATION_JSON)
    public void branchDelete(@QueryParam("workdir") String workDir, BranchDeleteRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          gitClient.branchDelete(request);
@@ -163,7 +163,7 @@ public class GitService
    @Produces(MediaType.APPLICATION_JSON)
    public List<Branch> branchList(@QueryParam("workdir") String workDir, BranchListRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          return gitClient.branchList(request);
@@ -180,7 +180,7 @@ public class GitService
    public void clone(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, CloneRequest request)
       throws URISyntaxException, GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          if (request.getUser() == null)
@@ -204,7 +204,7 @@ public class GitService
    @Produces(MediaType.APPLICATION_JSON)
    public Revision commit(@QueryParam("workdir") String workDir, CommitRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          return gitClient.commit(request);
@@ -221,7 +221,7 @@ public class GitService
    @Produces(MediaType.APPLICATION_JSON)
    public StreamingOutput diff(@QueryParam("workdir") String workDir, DiffRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          InfoPage diffPage = gitClient.diff(request);
@@ -238,7 +238,7 @@ public class GitService
    @Consumes(MediaType.APPLICATION_JSON)
    public void fetch(@QueryParam("workdir") String workDir, FetchRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          gitClient.fetch(request);
@@ -255,7 +255,7 @@ public class GitService
    public void init(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, InitRequest request)
       throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          if (request.getUser() == null)
@@ -279,7 +279,7 @@ public class GitService
    @Produces(MediaType.APPLICATION_JSON)
    public StreamingOutput log(@QueryParam("workdir") String workDir, LogRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          InfoPage logPage = gitClient.log(request);
@@ -297,7 +297,7 @@ public class GitService
    @Produces(MediaType.APPLICATION_JSON)
    public MergeResult merge(@QueryParam("workdir") String workDir, MergeRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          return gitClient.merge(request);
@@ -313,7 +313,7 @@ public class GitService
    @Consumes(MediaType.APPLICATION_JSON)
    public void mv(@QueryParam("workdir") String workDir, MoveRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          gitClient.mv(request);
@@ -329,7 +329,7 @@ public class GitService
    @Consumes(MediaType.APPLICATION_JSON)
    public void pull(@QueryParam("workdir") String workDir, PullRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          gitClient.pull(request);
@@ -345,7 +345,7 @@ public class GitService
    @Consumes(MediaType.APPLICATION_JSON)
    public void push(@QueryParam("workdir") String workDir, PushRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          gitClient.push(request);
@@ -361,7 +361,7 @@ public class GitService
    @Consumes(MediaType.APPLICATION_JSON)
    public void reset(@QueryParam("workdir") String workDir, ResetRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          gitClient.reset(request);
@@ -377,7 +377,7 @@ public class GitService
    @Consumes(MediaType.APPLICATION_JSON)
    public void rm(@QueryParam("workdir") String workDir, RmRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          gitClient.rm(request);
@@ -394,7 +394,7 @@ public class GitService
    @Produces(MediaType.APPLICATION_JSON)
    public StreamingOutput status(@QueryParam("workdir") String workDir, StatusRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          InfoPage statusPage = gitClient.status(request);
@@ -412,7 +412,7 @@ public class GitService
    @Produces(MediaType.APPLICATION_JSON)
    public Tag tagCreate(@QueryParam("workdir") String workDir, TagCreateRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          return gitClient.tagCreate(request);
@@ -428,7 +428,7 @@ public class GitService
    @Consumes(MediaType.APPLICATION_JSON)
    public void tagDelete(@QueryParam("workdir") String workDir, TagDeleteRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          gitClient.tagDelete(request);
@@ -445,7 +445,7 @@ public class GitService
    @Consumes(MediaType.APPLICATION_JSON)
    public List<Tag> tagList(@QueryParam("workdir") String workDir, TagListRequest request) throws GitException
    {
-      GitClient gitClient = getGitClient(workDir);
+      GitConnection gitClient = getGitClient(workDir);
       try
       {
          return gitClient.tagList(request);
@@ -456,8 +456,8 @@ public class GitService
       }
    }
 
-   protected GitClient getGitClient(String workDir) throws GitException
+   protected GitConnection getGitClient(String workDir) throws GitException
    {
-      return GitClientFactory.getIntance().getClient(workDir);
+      return GitConnectionFactory.getIntance().getConnection(workDir);
    }
 }

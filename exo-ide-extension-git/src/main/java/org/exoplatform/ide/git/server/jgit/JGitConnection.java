@@ -91,7 +91,7 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
-import org.exoplatform.ide.git.server.GitClient;
+import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.InfoPage;
 import org.exoplatform.ide.git.shared.AddRequest;
@@ -133,9 +133,9 @@ import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: JGitClient.java 22817 2011-03-22 09:17:52Z andrew00x $
+ * @version $Id: JGitConnection.java 22817 2011-03-22 09:17:52Z andrew00x $
  */
-public class JGitClient implements GitClient
+public class JGitConnection implements GitConnection
 {
    // -------------------------
    private String branchName = "master";
@@ -148,7 +148,7 @@ public class JGitClient implements GitClient
    /**
     * @param repository
     */
-   JGitClient(Repository repository)
+   JGitConnection(Repository repository)
    {
       this.repository = repository;
    }
@@ -165,7 +165,7 @@ public class JGitClient implements GitClient
    //   }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#add(org.exoplatform.ide.git.shared.AddRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#add(org.exoplatform.ide.git.shared.AddRequest)
     */
    @Override
    public void add(AddRequest request) throws GitException
@@ -189,7 +189,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#branchCheckout(org.exoplatform.ide.git.shared.BranchCheckoutRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#branchCheckout(org.exoplatform.ide.git.shared.BranchCheckoutRequest)
     */
    @Override
    public void branchCheckout(BranchCheckoutRequest request) throws GitException
@@ -226,7 +226,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#branchCreate(org.exoplatform.ide.git.shared.BranchCreateRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#branchCreate(org.exoplatform.ide.git.shared.BranchCreateRequest)
     */
    @Override
    public Branch branchCreate(BranchCreateRequest request) throws GitException
@@ -265,7 +265,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#branchDelete(org.exoplatform.ide.git.shared.BranchDeleteRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#branchDelete(org.exoplatform.ide.git.shared.BranchDeleteRequest)
     */
    @Override
    public void branchDelete(BranchDeleteRequest request) throws GitException
@@ -292,13 +292,17 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#branchList(org.exoplatform.ide.git.shared.BranchListRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#branchList(org.exoplatform.ide.git.shared.BranchListRequest)
     */
    @Override
    public List<Branch> branchList(BranchListRequest request) throws GitException
    {
-      ListBranchCommand listBranchCommand = new Git(repository).branchList();
       String listMode = request.getListMode();
+      if (listMode != null
+         && !(listMode.equals(BranchListRequest.LIST_ALL) || listMode.equals(BranchListRequest.LIST_REMOTE)))
+         throw new IllegalArgumentException("Unsupported list mode '" + listMode + "'. Must be either 'a' or 'r'. ");
+
+      ListBranchCommand listBranchCommand = new Git(repository).branchList();
       if (listMode != null)
       {
          if (listMode.equals(BranchListRequest.LIST_ALL))
@@ -332,9 +336,9 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#clone(org.exoplatform.ide.git.shared.CloneRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#clone(org.exoplatform.ide.git.shared.CloneRequest)
     */
-   public GitClient clone(CloneRequest request) throws URISyntaxException, GitException
+   public GitConnection clone(CloneRequest request) throws URISyntaxException, GitException
    {
       try
       {
@@ -467,7 +471,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#commit(org.exoplatform.ide.git.shared.CommitRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#commit(org.exoplatform.ide.git.shared.CommitRequest)
     */
    @Override
    public Revision commit(CommitRequest request) throws GitException
@@ -519,7 +523,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#diff(org.exoplatform.ide.git.shared.DiffRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#diff(org.exoplatform.ide.git.shared.DiffRequest)
     */
    @Override
    public InfoPage diff(DiffRequest request) throws GitException
@@ -602,7 +606,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#fetch(org.exoplatform.ide.git.shared.FetchRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#fetch(org.exoplatform.ide.git.shared.FetchRequest)
     */
    @Override
    public void fetch(FetchRequest request) throws GitException
@@ -646,10 +650,10 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#init(org.exoplatform.ide.git.shared.InitRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#init(org.exoplatform.ide.git.shared.InitRequest)
     */
    @Override
-   public GitClient init(InitRequest request) throws GitException
+   public GitConnection init(InitRequest request) throws GitException
    {
       File workDir = repository.getWorkTree();
       if (!(workDir.exists() || workDir.mkdirs()))
@@ -674,7 +678,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#log(org.exoplatform.ide.git.shared.LogRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#log(org.exoplatform.ide.git.shared.LogRequest)
     */
    @Override
    public InfoPage log(LogRequest request) throws GitException
@@ -698,7 +702,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#merge(org.exoplatform.ide.git.shared.MergeRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#merge(org.exoplatform.ide.git.shared.MergeRequest)
     */
    @Override
    public MergeResult merge(MergeRequest request) throws GitException
@@ -742,7 +746,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#mv(org.exoplatform.ide.git.shared.MoveRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#mv(org.exoplatform.ide.git.shared.MoveRequest)
     */
    @Override
    public void mv(MoveRequest request) throws GitException
@@ -751,7 +755,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#pull(org.exoplatform.ide.git.shared.PullRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#pull(org.exoplatform.ide.git.shared.PullRequest)
     */
    @Override
    public void pull(PullRequest request) throws GitException
@@ -778,7 +782,7 @@ public class JGitClient implements GitClient
       }
       catch (InvalidRemoteException e)
       {
-         throw new GitException(e.getMessage(), e);
+         throw new IllegalArgumentException(e.getMessage());
       }
       catch (CanceledException e)
       {
@@ -787,7 +791,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#push(org.exoplatform.ide.git.shared.PushRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#push(org.exoplatform.ide.git.shared.PushRequest)
     */
    @Override
    public void push(PushRequest request) throws GitException
@@ -831,7 +835,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#reset(org.exoplatform.ide.git.shared.ResetRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#reset(org.exoplatform.ide.git.shared.ResetRequest)
     */
    @Override
    public void reset(ResetRequest request) throws GitException
@@ -855,7 +859,7 @@ public class JGitClient implements GitClient
 
          ObjectId objectId = repository.resolve(commit);
          if (objectId == null)
-            throw new IllegalArgumentException("Invalid revision " + request.getCommit());
+            throw new IllegalArgumentException("Invalid commit " + request.getCommit());
 
          RevWalk revWalk = new RevWalk(repository);
          RevCommit revCommit;
@@ -943,7 +947,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#rm(org.exoplatform.ide.git.shared.RmRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#rm(org.exoplatform.ide.git.shared.RmRequest)
     */
    @Override
    public void rm(RmRequest request) throws GitException
@@ -966,7 +970,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#status(org.exoplatform.ide.git.shared.StatusRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#status(org.exoplatform.ide.git.shared.StatusRequest)
     */
    @Override
    public InfoPage status(StatusRequest request) throws GitException
@@ -1069,7 +1073,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#tagCreate(org.exoplatform.ide.git.shared.TagCreateRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#tagCreate(org.exoplatform.ide.git.shared.TagCreateRequest)
     */
    @Override
    public Tag tagCreate(TagCreateRequest request) throws GitException
@@ -1093,7 +1097,7 @@ public class JGitClient implements GitClient
 
          TagCommand tagCommand =
             new Git(repository).tag().setName(request.getName()).setObjectId(revObject)
-               .setMessage(request.getMessage()).setForceUpdate(request.isForceUpdate());
+               .setMessage(request.getMessage()).setForceUpdate(request.isForce());
 
          GitUser tagger = request.getUser();
          if (tagger != null)
@@ -1137,7 +1141,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#tagDelete(org.exoplatform.ide.git.shared.TagDeleteRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#tagDelete(org.exoplatform.ide.git.shared.TagDeleteRequest)
     */
    @Override
    public void tagDelete(TagDeleteRequest request) throws GitException
@@ -1164,7 +1168,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#tagList(org.exoplatform.ide.git.shared.TagListRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#tagList(org.exoplatform.ide.git.shared.TagListRequest)
     */
    @Override
    public List<Tag> tagList(TagListRequest request) throws GitException
@@ -1200,7 +1204,7 @@ public class JGitClient implements GitClient
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.GitClient#close()
+    * @see org.exoplatform.ide.git.server.GitConnection#close()
     */
    @Override
    public void close()

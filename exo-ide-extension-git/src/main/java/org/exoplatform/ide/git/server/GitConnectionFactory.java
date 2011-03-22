@@ -26,22 +26,38 @@ import java.util.ServiceLoader;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: GitClientFactory.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public abstract class GitClientFactory
+public abstract class GitConnectionFactory
 {
-   private static ServiceLoader<GitClientFactory> gitClientFactories = ServiceLoader.load(GitClientFactory.class);
+   private static ServiceLoader<GitConnectionFactory> gitClientFactories = ServiceLoader
+      .load(GitConnectionFactory.class);
 
-   public static GitClientFactory getIntance() throws GitException
+   public static GitConnectionFactory getIntance() throws GitException
    {
-      Iterator<GitClientFactory> iter = gitClientFactories.iterator();
+      Iterator<GitConnectionFactory> iter = gitClientFactories.iterator();
       if (!iter.hasNext())
-         throw new GitException("Could not instantiate GitClientFactory. GitClientFactory is not configured properly. ");
+         throw new GitException(
+            "Could not instantiate GitConnectionFactory. GitConnectionFactory is not configured properly. ");
       return iter.next();
    }
 
-   public final GitClient getClient(String workDir) throws GitException
+   /**
+    * Get connection to Git repository located in <code>workDir</code>.
+    * 
+    * @param workDir repository directory
+    * @return connection t Git repository
+    * @throws GitException if can't initialize connection
+    */
+   public final GitConnection getConnection(String workDir) throws GitException
    {
-      return getClient(new File(workDir));
+      return getConnection(new File(workDir));
    }
 
-   public abstract GitClient getClient(File workDir) throws GitException;
+   /**
+    * Get connection to Git repository located in <code>workDir</code>.
+    * 
+    * @param workDir repository directory
+    * @return connection t Git repository
+    * @throws GitException if can't initialize connection
+    */
+   public abstract GitConnection getConnection(File workDir) throws GitException;
 }

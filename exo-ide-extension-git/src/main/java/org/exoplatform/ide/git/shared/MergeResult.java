@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.git.shared;
 
-import java.util.Map;
-
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: MergeResult.java 22811 2011-03-22 07:28:35Z andrew00x $
@@ -71,13 +69,24 @@ public interface MergeResult
       }
    }
 
-   String getBase();
-
+   /**
+    * @return head after the merge
+    */
    String getNewHead();
 
+   /**
+    * @return status of merge
+    */
    MergeStatus getMergeStatus();
 
+   /**
+    * @return merged commits
+    */
    String[] getMergedCommits();
 
-   Map<String, int[][]> getConflicts();
+   /**
+    * @return files that has conflicts. May return <code>null</code> or empty
+    *         array if there is no conflicts
+    */
+   String[] getConflicts();
 }

@@ -21,6 +21,7 @@ package org.exoplatform.ide.git.server.jgit;
 import org.eclipse.jgit.lib.ObjectId;
 import org.exoplatform.ide.git.shared.MergeResult;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -40,21 +41,16 @@ public class JGitMergeResult implements MergeResult
    }
 
    /**
-    * @see org.exoplatform.ide.git.shared.MergeResult#getBase()
-    */
-   @Override
-   public String getBase()
-   {
-      return jgitMergeResult.getBase().getName();
-   }
-
-   /**
     * @see org.exoplatform.ide.git.shared.MergeResult#getNewHead()
     */
    @Override
    public String getNewHead()
    {
-      return jgitMergeResult.getNewHead().getName();
+      ObjectId newHead = jgitMergeResult.getNewHead();
+      if (newHead != null)
+         return newHead.getName();
+      // Merge failed.
+      return null;
    }
 
    /**
@@ -63,7 +59,7 @@ public class JGitMergeResult implements MergeResult
    @Override
    public MergeStatus getMergeStatus()
    {
-      switch(jgitMergeResult.getMergeStatus())
+      switch (jgitMergeResult.getMergeStatus())
       {
          case ALREADY_UP_TO_DATE :
             return MergeStatus.ALREADY_UP_TO_DATE;
@@ -98,8 +94,28 @@ public class JGitMergeResult implements MergeResult
     * @see org.exoplatform.ide.git.shared.MergeResult#getConflicts()
     */
    @Override
-   public Map<String, int[][]> getConflicts()
+   public String[] getConflicts()
    {
-      return jgitMergeResult.getConflicts();
+      Map<String, int[][]> conflicts = jgitMergeResult.getConflicts();
+      String[] files = null;
+      if (conflicts != null)
+      {
+         files = new String[conflicts.size()];
+         int i = 0;
+         for (String file : conflicts.keySet())
+            files[i++] = file;
+      }
+      return files;
+   }
+
+   /**
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return "JGitMergeResult [getNewHead()=" + getNewHead() + ", getMergeStatus()=" + getMergeStatus()
+         + ", getMergedCommits()=" + Arrays.toString(getMergedCommits()) + ", getConflicts()="
+         + Arrays.toString(getConflicts()) + "]";
    }
 }

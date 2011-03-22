@@ -22,7 +22,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.exoplatform.ide.git.server.jgit.JGitClient;
+import org.exoplatform.ide.git.server.jgit.JGitConnection;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.FetchRequest;
 import org.exoplatform.ide.git.shared.GitUser;
@@ -48,7 +48,7 @@ public class FetchTest extends BaseTest
       File fetchWorkDir = new File(origWorkDir.getParentFile(), "FetchTestRepo");
       forClean.add(fetchWorkDir);
 
-      JGitClient client = new JGitClient(new FileRepository(new File(fetchWorkDir, ".git")));
+      JGitConnection client = new JGitConnection(new FileRepository(new File(fetchWorkDir, ".git")));
       client.clone(new CloneRequest(origWorkDir.getAbsolutePath(), //
          null /* .git directory already set. Not need to pass it in this implementation. */,//
          new GitUser("andrey", "andrey@mail.com")));
@@ -66,7 +66,7 @@ public class FetchTest extends BaseTest
    public void testFetch() throws Exception
    {
       // Use default remote settings.
-      new JGitClient(fetchTestRepo).fetch(new FetchRequest());
+      new JGitConnection(fetchTestRepo).fetch(new FetchRequest());
 
       Git git = new Git(fetchTestRepo);
       git.merge().include(fetchTestRepo.getRef(Constants.FETCH_HEAD)).call();

@@ -44,7 +44,7 @@ public class TagCreateRequest extends GitRequest
    /**
     * Force create tag. If tag with the same exists it will be replaced.
     */
-   private boolean forceUpdate;
+   private boolean force;
 
    /**
     * @param name name of tag to create
@@ -58,7 +58,7 @@ public class TagCreateRequest extends GitRequest
       this.name = name;
       this.commit = commit;
       this.message = message;
-      this.forceUpdate = forceUpdate;
+      this.force = forceUpdate;
       setUser(user);
    }
 
@@ -134,19 +134,19 @@ public class TagCreateRequest extends GitRequest
 
    /**
     * @return force create tag operation
-    * @see #forceUpdate
+    * @see #force
     */
-   public boolean isForceUpdate()
+   public boolean isForce()
    {
-      return forceUpdate;
+      return force;
    }
 
    /**
-    * @param forceUpdate if <code>true</code> force create tag operation
-    * @see #forceUpdate
+    * @param force if <code>true</code> force create tag operation
+    * @see #force
     */
-   public void setForceUpdate(boolean forceUpdate)
+   public void setForce(boolean force)
    {
-      this.forceUpdate = forceUpdate;
+      this.force = force;
    }
 }

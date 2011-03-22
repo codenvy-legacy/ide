@@ -22,7 +22,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.lib.UserConfig;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.exoplatform.ide.git.server.jgit.JGitClient;
+import org.exoplatform.ide.git.server.jgit.JGitConnection;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
 
@@ -48,7 +48,7 @@ public class InitTest extends BaseTest
 
    public void testInitRepo() throws Exception
    {
-      JGitClient client = new JGitClient(new FileRepository(new File(workDir, ".git")));
+      JGitConnection client = new JGitConnection(new FileRepository(new File(workDir, ".git")));
       client.init(new InitRequest(null/* .git directory already set. Not need to pass it in this implementation. */, // 
          false, //
          new GitUser("andrey", "andrey@mail.com")));

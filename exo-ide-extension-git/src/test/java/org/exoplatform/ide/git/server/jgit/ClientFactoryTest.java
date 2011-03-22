@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.git.server.jgit;
 
-import org.exoplatform.ide.git.server.GitClient;
-import org.exoplatform.ide.git.server.GitClientFactory;
+import org.exoplatform.ide.git.server.GitConnection;
+import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.shared.InitRequest;
 
 import java.io.File;
@@ -33,14 +33,14 @@ public class ClientFactoryTest extends BaseTest
 {
    public void testClientFactory() throws Exception
    {
-      GitClientFactory gitClientFactory = GitClientFactory.getIntance();
+      GitConnectionFactory gitClientFactory = GitConnectionFactory.getIntance();
 
       URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
       File target = new File(testCls.toURI()).getParentFile();
       File repoDir = new File(target, "ClientFactoryTest");
       forClean.add(repoDir);
       
-      GitClient gitClient = gitClientFactory.getClient(repoDir);
+      GitConnection gitClient = gitClientFactory.getConnection(repoDir);
       
       // Try to initialize repository via obtained client.
       gitClient.init(new InitRequest());

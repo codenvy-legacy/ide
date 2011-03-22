@@ -22,7 +22,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.exoplatform.ide.git.server.jgit.JGitClient;
+import org.exoplatform.ide.git.server.jgit.JGitConnection;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.PushRequest;
@@ -47,7 +47,7 @@ public class PushTest extends BaseTest
       File pushWorkDir = new File(getRepository().getWorkTree().getParentFile(), "PushTestRepo");
       forClean.add(pushWorkDir);
 
-      JGitClient client = new JGitClient(new FileRepository(new File(pushWorkDir, ".git")));
+      JGitConnection client = new JGitConnection(new FileRepository(new File(pushWorkDir, ".git")));
       client.clone(new CloneRequest(getRepository().getWorkTree().getAbsolutePath(), //
          null/* .git directory already set. Not need to pass it in this implementation. */,//
          new GitUser("andrey", "andrey@mail.com")));
@@ -64,7 +64,7 @@ public class PushTest extends BaseTest
       String remote = "origin";
       boolean force = false;
 
-      new JGitClient(pushTestRepo).push(new PushRequest(new String[]{"refs/heads/master:refs/heads/test"}, remote,
+      new JGitConnection(pushTestRepo).push(new PushRequest(new String[]{"refs/heads/master:refs/heads/test"}, remote,
          force, 0));
 
       Git origGit = new Git(getRepository());
@@ -97,7 +97,7 @@ public class PushTest extends BaseTest
       String remote = remoteWorkDir.getAbsolutePath();
       boolean force = false;
 
-      new JGitClient(getRepository()).push(new PushRequest(new String[]{"refs/heads/master:refs/heads/test"}, remote,
+      new JGitConnection(getRepository()).push(new PushRequest(new String[]{"refs/heads/master:refs/heads/test"}, remote,
          force, 0));
 
       // Check remote repository.

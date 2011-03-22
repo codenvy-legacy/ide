@@ -21,7 +21,7 @@ package org.exoplatform.ide.git.shared;
 import java.util.Map;
 
 /**
- * Abstract request to {@link org.exoplatform.ide.git.server.GitClient}.
+ * Abstract request to {@link org.exoplatform.ide.git.server.GitConnection}.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: GitRequest.java 22811 2011-03-22 07:28:35Z andrew00x $

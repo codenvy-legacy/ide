@@ -20,7 +20,7 @@ package org.exoplatform.ide.git.shared;
 
 
 /**
- * Fetch data from remote repository.
+ * Request to fetch data from remote repository.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: FetchRequest.java 22817 2011-03-22 09:17:52Z andrew00x $

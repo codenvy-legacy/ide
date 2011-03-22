@@ -19,6 +19,8 @@
 package org.exoplatform.ide.git.shared;
 
 /**
+ * Request to get list of available tags.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagListRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
@@ -34,7 +36,7 @@ public class TagListRequest extends GitRequest
     * *feature - get all tags which name ends with 'feature'
     * </pre>
     * 
-    * @see org.exoplatform.ide.git.server.GitClient#tagList(TagListRequest)
+    * @see org.exoplatform.ide.git.server.GitConnection#tagList(TagListRequest)
     */
    private String pattern;
 

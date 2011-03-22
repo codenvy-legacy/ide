@@ -55,8 +55,6 @@ public class BranchListRequest extends GitRequest
     * in this case only local branches displayed. This is default behavior.
     * 
     * @param listMode list branch mode
-    * @throws IllegalArgumentException if <code>listMode</code> is not
-    *            <code>null</code> or 'a' or 'r'
     */
    public BranchListRequest(String listMode)
    {
@@ -77,13 +75,9 @@ public class BranchListRequest extends GitRequest
     *           specified then remote branches only will be displayed. May be
     *           <code>null</code> also in this case only local branches
     *           displayed
-    * @throws IllegalArgumentException if <code>listMode</code> is not
-    *            <code>null</code> or 'a' or 'r'
     */
    public void setListMode(String listMode)
    {
-      if (listMode != null && !(listMode.equals(LIST_ALL) || listMode.equals(LIST_REMOTE)))
-         throw new IllegalArgumentException("Unsupported list mode '" + listMode + "'. Must be either 'a' or 'r'. ");
       this.listMode = listMode;
    }
 }

@@ -21,7 +21,7 @@ package org.exoplatform.ide.git.server.jgit;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.exoplatform.ide.git.server.jgit.JGitClient;
+import org.exoplatform.ide.git.server.jgit.JGitConnection;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.PullRequest;
@@ -47,7 +47,7 @@ public class PullTest extends BaseTest
       File pullWorkDir = new File(origWorkDir.getParentFile(), "PullTestRepo");
       forClean.add(pullWorkDir);
 
-      JGitClient client = new JGitClient(new FileRepository(new File(pullWorkDir, ".git")));
+      JGitConnection client = new JGitConnection(new FileRepository(new File(pullWorkDir, ".git")));
       client.clone(new CloneRequest(origWorkDir.getAbsolutePath(), //
          null/* .git directory already set. Not need to pass it in this implementation. */,//
          new GitUser("andrey", "andrey@mail.com")));
@@ -63,7 +63,7 @@ public class PullTest extends BaseTest
 
    public void testPull() throws Exception
    {
-      new JGitClient(pullTestRepo).pull(new PullRequest());
+      new JGitConnection(pullTestRepo).pull(new PullRequest());
       File fetchWorkDir = pullTestRepo.getWorkTree();
       assertTrue(new File(fetchWorkDir, "t-pull1").exists());
       assertTrue(new File(fetchWorkDir, "t-pull2").exists());

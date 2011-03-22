@@ -27,7 +27,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.lib.UserConfig;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.exoplatform.ide.git.server.jgit.JGitClient;
+import org.exoplatform.ide.git.server.jgit.JGitConnection;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.GitUser;
 
@@ -54,7 +54,7 @@ public class CloneTest extends BaseTest
    public void testSimpleClone() throws Exception
    {
       Repository repository = getRepository();
-      JGitClient client = new JGitClient(new FileRepository(new File(cloneRepoDir, ".git")));
+      JGitConnection client = new JGitConnection(new FileRepository(new File(cloneRepoDir, ".git")));
       client.clone(new CloneRequest(repository.getWorkTree().getAbsolutePath(), //
          null /* .git directory already set. Not need to pass it in this implementation. */, //
          new GitUser("andrey", "andrey@mail.com")));
@@ -96,7 +96,7 @@ public class CloneTest extends BaseTest
       Git git = new Git(repository);
       git.branchCreate().setName("featured").call();
 
-      JGitClient client = new JGitClient(new FileRepository(new File(cloneRepoDir, ".git")));
+      JGitConnection client = new JGitConnection(new FileRepository(new File(cloneRepoDir, ".git")));
       CloneRequest request = new CloneRequest(repository.getWorkTree().getAbsolutePath(), //
          null /* .git directory already set. Not need to pass it in this implementation. */, //
          new GitUser("andrey", "andrey@mail.com"));

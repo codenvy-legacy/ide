@@ -26,7 +26,7 @@ package org.exoplatform.ide.git.server;
 public class GitException extends Exception
 {
    /**
-    * @param message
+    * @param message error message
     */
    public GitException(String message)
    {
@@ -34,7 +34,7 @@ public class GitException extends Exception
    }
 
    /**
-    * @param cause
+    * @param cause cause
     */
    public GitException(Throwable cause)
    {
@@ -42,8 +42,8 @@ public class GitException extends Exception
    }
 
    /**
-    * @param message
-    * @param cause
+    * @param message error message
+    * @param cause cause
     */
    public GitException(String message, Throwable cause)
    {
