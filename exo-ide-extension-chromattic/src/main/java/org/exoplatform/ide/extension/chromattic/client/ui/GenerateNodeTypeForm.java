@@ -91,7 +91,7 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
    }
 
    /**
-    * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
+    * @see org.exoplatform.gwtframework.ui.client.window.Window#destroy()
     */
    @Override
    public void destroy()
@@ -99,7 +99,7 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
       eventBus.fireEvent(new ViewClosedEvent(ID));
       super.destroy();
    }
-   
+
    /**
     * Creates main form.
     * 

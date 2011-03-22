@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -34,6 +36,8 @@ import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
@@ -53,13 +57,8 @@ import com.google.gwt.user.client.DeferredCommand;
 public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandler, EditorActiveFileChangedHandler,
    ViewClosedHandler, NodeTypeGenerationResultReceivedHandler, ViewOpenedHandler, GenerateNodeTypeHandler
 {
-   interface Display
+   interface Display extends ViewDisplay
    {
-      /**
-       * Close the view.
-       */
-      void closeView();
-
       /**
        * Set content to be displayed in editor. 
        * 
@@ -70,9 +69,9 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       /**
        * Get editor.
        * 
-       * @return {@link TextEditor} editor
+       * @return {@link Editor} editor
        */
-      TextEditor getEditor();
+      Editor getEditor();
    }
 
    /**
@@ -108,7 +107,6 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       this.eventBus = eventBus;
 
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(GenerateNodeTypeEvent.TYPE, this);
 
       handlers = new Handlers(eventBus);
@@ -132,7 +130,7 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    {
       if (display.getEditor().getEditorId().equals(event.getEditorId()))
       {
-         DeferredCommand.addCommand(new Command()
+         DeferredCommand.add(new Command()
          {
 
             @Override

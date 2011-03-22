@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client;
 
-import org.exoplatform.gwtframework.ui.client.component.SmartGWTLoader;
+import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,7 +27,7 @@ import org.exoplatform.gwtframework.ui.client.component.SmartGWTLoader;
  * @version $
  */
 
-public class IDELoader extends SmartGWTLoader
+public class IDELoader extends GWTLoader
 {
    
    private static IDELoader loader;

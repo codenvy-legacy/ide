@@ -169,8 +169,8 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private TabPanel createParametersTabSet()
    {
       parametersTabSet = new TabPanel();
-      parametersTabSet.setWidth(480+"px");
-      parametersTabSet.setHeight(155+"px");
+      parametersTabSet.setWidth(480 + "px");
+      parametersTabSet.setHeight(155 + "px");
       parametersTabSet.getElement().setId(ID_TAB_SET);
 
       parametersTabSet.addTab(ID_QUERY_TAB, null, "Query Parameter", createParametersQueryTab(), false);
@@ -201,7 +201,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       requestMediaTypeField = new SelectItem(NAME_REQUEST, "Request Media Type:");
       requestMediaTypeField.setWidth(480);
       requestMediaTypeField.setTitleOrientation(TitleOrientation.TOP);
-      
+
       responseMediaTypeField = new SelectItem(NAME_RESPONSE, "Response Media Type");
       responseMediaTypeField.setWidth(480);
       responseMediaTypeField.setTitleOrientation(TitleOrientation.TOP);
@@ -219,7 +219,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private void createButtonsForm()
    {
       HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(22 + 20 +"px");
+      buttonsLayout.setHeight(22 + 20 + "px");
       buttonsLayout.setSpacing(5);
 
       showUrlButton = new IButton("Get URL");
@@ -254,9 +254,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    }
 
    /**
-    * Destroy the window
-    * 
-    * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
+    * @see org.exoplatform.gwtframework.ui.client.window.Window#destroy()
     */
    @Override
    public void destroy()

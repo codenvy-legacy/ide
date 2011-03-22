@@ -153,7 +153,7 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
    }
 
    /**
-    * @see com.smartgwt.client.widgets.BaseWidget#onDestroy()
+    * @see org.exoplatform.gwtframework.ui.client.window.Window#destroy()
     */
    @Override
    public void destroy()

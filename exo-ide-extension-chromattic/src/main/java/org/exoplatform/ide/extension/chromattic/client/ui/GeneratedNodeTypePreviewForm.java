@@ -18,29 +18,23 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import com.google.gwt.dom.client.IFrameElement;
-
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
-
 import com.google.gwt.user.client.ui.Image;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.editor.api.Editor;
-import org.exoplatform.gwtframework.editor.api.EditorConfiguration;
-import org.exoplatform.gwtframework.editor.api.EditorFactory;
-import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.gwtframework.editor.api.GWTTextEditor;
-import org.exoplatform.gwtframework.editor.api.TextEditor;
-import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
-import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.framework.ui.ViewType;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.gwt.AbstractView;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.extension.chromattic.client.Images;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -50,11 +44,11 @@ import org.exoplatform.ide.extension.chromattic.client.Images;
  * @version $Id: Dec 17, 2010 $
  *
  */
-public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeTypePreviewPresenter.Display
+public class GeneratedNodeTypePreviewForm extends AbstractView implements GeneratedNodeTypePreviewPresenter.Display
 {
    public static final String ID = "ideGeneratedTypePreviewPanel";
 
-   public static final String FORM_ID = "ideGeneratedTypePreviewForm";
+   //public static final String FORM_ID = "ideGeneratedTypePreviewForm";
 
    public static final String TITLE = "Node Type Preview";
 
@@ -66,32 +60,16 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
    /**
     * Editor to display the content of node type definition.
     */
-   private SmartGWTTextEditor gwtTextEditor;
+   private org.exoplatform.ide.editor.api.Editor editor;
 
    /**
     * @param eventBus handler manager
     */
    public GeneratedNodeTypePreviewForm(HandlerManager eventBus)
    {
-      super(ID, eventBus);
+      super(ID, "operation", TITLE, new Image(Images.Controls.PREVIEW_NODE_TYPE));
       this.eventBus = eventBus;
-
-      setID(FORM_ID);
-      setType(ViewType.PREVIEW);
-      setTitle(TITLE);
-      setImage(new Image(Images.Controls.PREVIEW_NODE_TYPE));
-
       createEditor();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.View#onDestroy()
-    */
-   @Override
-   protected void onDestroy()
-   {
-      eventBus.fireEvent(new ViewClosedEvent(ID));
-      super.onDestroy();
    }
 
    /**
@@ -99,23 +77,19 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
     */
    private void createEditor()
    {
-      Editor editor = null;
+      final HashMap<String, Object> params = new HashMap<String, Object>();
+      params.put(EditorParameters.IS_READ_ONLY, true);
+      params.put(EditorParameters.IS_SHOW_LINE_NUMER, true);
+      params.put(EditorParameters.HOT_KEY_LIST, new ArrayList<String>());
       try
       {
-         editor = EditorFactory.getDefaultEditor(MimeType.APPLICATION_XML);
+         editor = IDE.getInstance().getEditor(MimeType.APPLICATION_XML).createEditor("", eventBus, params);
       }
-      catch (EditorNotFoundException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
-
-      EditorConfiguration configuration = new EditorConfiguration(MimeType.APPLICATION_XML);
-      configuration.setLineNumbers(true);
-      configuration.setReadOnly(true);
-
-      GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
-      gwtTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
-      addMember(gwtTextEditor);
+      add(editor);
 
       new Timer()
       {
@@ -124,7 +98,7 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
          public void run()
          {
             Element editorWraper =
-               Document.get().getElementById(gwtTextEditor.getTextEditor().getEditorWrapperID());
+               Document.get().getElementById(editor.getEditorId());
 
             NodeList<Element> iframes = editorWraper.getElementsByTagName("iframe");
             if (iframes != null && iframes.getLength() > 0)
@@ -139,30 +113,21 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.chromattic.ui.GeneratedNodeTypePreviewPresenter.Display#closeView()
-    */
-   @Override
-   public void closeView()
-   {
-      destroy();
-   }
-
-   /**
     * @see org.exoplatform.ide.client.module.chromattic.ui.GeneratedNodeTypePreviewPresenter.Display#setContent()
     */
    @Override
    public void setContent(String content)
    {
-      gwtTextEditor.setText(content);
+      editor.setText(content);
    }
 
    /**
     * @see org.exoplatform.ide.client.module.chromattic.ui.GeneratedNodeTypePreviewPresenter.Display#getEditor()
     */
    @Override
-   public TextEditor getEditor()
+   public Editor getEditor()
    {
-      return gwtTextEditor;
+      return editor;
    }
 
    private native void setHandler(Element e)/*-{
@@ -171,11 +136,11 @@ public class GeneratedNodeTypePreviewForm extends View implements GeneratedNodeT
 
       if(typeof e.contentDocument != "undefined")
       {
-      e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activateView()();},false);
+      e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::setActive()();},false);
       }
       else
       {
-      e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activateView()();});
+      e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::setActive()();});
       }
    }-*/;
 

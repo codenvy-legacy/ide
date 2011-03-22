@@ -23,7 +23,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.widgets.layout.HLayout;
 
 import org.exoplatform.gwtframework.ui.client.component.Align;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -150,7 +149,7 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
    /**
     * Creates layout with buttons with central align.
     * 
-    * @return {@link HLayout} layout with buttons
+    * @return {@link HorizontalPanel} layout with buttons
     */
    private HorizontalPanel createButtonLayout()
    {

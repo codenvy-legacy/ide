@@ -25,15 +25,14 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 
-import org.exoplatform.gwtframework.editor.api.Editor;
-import org.exoplatform.gwtframework.editor.api.EditorConfiguration;
-import org.exoplatform.gwtframework.editor.api.EditorFactory;
-import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
-import org.exoplatform.gwtframework.editor.api.GWTTextEditor;
-import org.exoplatform.gwtframework.ui.client.smartgwteditor.SmartGWTTextEditor;
-import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.gwt.AbstractView;
 import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.editor.api.EditorParameters;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 
@@ -43,22 +42,19 @@ import org.exoplatform.ide.client.framework.vfs.Version;
  * @version $
  */
 
-public class VersionContentForm extends View implements VersionContentPresenter.Display
+public class VersionContentForm extends AbstractView implements VersionContentPresenter.Display
 {
    public static final String ID = "ideVersionContentPanel";
 
-   public static final String FORM_ID = "ideVersionContentForm";
-
    private HandlerManager eventBus;
 
-   private SmartGWTTextEditor smartGWTTextEditor;
+   private org.exoplatform.ide.editor.api.Editor editor;
 
    private VersionContentPresenter presenter;
 
    public VersionContentForm(HandlerManager eventBus, Version version)
    {
-      super(ID, eventBus);
-      setID(FORM_ID);
+      super(ID, "information", "");
       this.eventBus = eventBus;
       createEditor(version);
       presenter = new VersionContentPresenter(eventBus);
@@ -67,28 +63,24 @@ public class VersionContentForm extends View implements VersionContentPresenter.
 
    private void createEditor(Version version)
    {
-      if (smartGWTTextEditor != null)
+      if (editor != null)
       {
-         removeMember(smartGWTTextEditor);
+         remove(editor);
       }
-
-      Editor editor = null;
+      
+      final HashMap<String, Object> params = new HashMap<String, Object>();
+      params.put(EditorParameters.IS_READ_ONLY, true);
+      params.put(EditorParameters.IS_SHOW_LINE_NUMER, true);
+      params.put(EditorParameters.HOT_KEY_LIST, new ArrayList<String>());
       try
       {
-         editor = EditorFactory.getDefaultEditor(version.getContentType());
+         editor = IDE.getInstance().getEditor(MimeType.APPLICATION_XML).createEditor("", eventBus, params);
       }
-      catch (EditorNotFoundException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
-
-      EditorConfiguration configuration = new EditorConfiguration(version.getContentType());
-      configuration.setLineNumbers(true);
-      configuration.setReadOnly(true);
-
-      GWTTextEditor textEditor = editor.createTextEditor(eventBus, configuration);
-      smartGWTTextEditor = new SmartGWTTextEditor(eventBus, textEditor);
-      addMember(smartGWTTextEditor);
+      add(editor);
 
       new Timer()
       {
@@ -97,7 +89,7 @@ public class VersionContentForm extends View implements VersionContentPresenter.
          public void run()
          {
             Element editorWraper =
-               Document.get().getElementById(smartGWTTextEditor.getTextEditor().getEditorWrapperID());
+               Document.get().getElementById(editor.getEditorId());
 
             NodeList<Element> iframes = editorWraper.getElementsByTagName("iframe");
             if (iframes != null && iframes.getLength() > 0)
@@ -110,27 +102,12 @@ public class VersionContentForm extends View implements VersionContentPresenter.
       }.schedule(1000);
    }
 
-   
-   @Override
-   protected void onDraw()
-   {
-      eventBus.fireEvent(new ViewOpenedEvent(ID));
-      super.onDraw();
-   }
-
-   @Override
-   protected void onDestroy()
-   {
-      presenter.destroy();
-      super.onDestroy();
-   }
-
    /**
     * @see org.exoplatform.ide.client.versioning.VersionContentPresenter.Display#getEditorId()
     */
    public String getEditorId()
    {
-      return smartGWTTextEditor.getEditorId();
+      return editor.getEditorId();
    }
 
    /**
@@ -140,20 +117,12 @@ public class VersionContentForm extends View implements VersionContentPresenter.
    {
       try
       {
-         smartGWTTextEditor.setText(content);
+         editor.setText(content);
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.versioning.VersionContentPresenter.Display#closeForm()
-    */
-   public void closeForm()
-   {
-      destroy();
    }
 
    private native void setHandler(Element e)/*-{
@@ -162,11 +131,11 @@ public class VersionContentForm extends View implements VersionContentPresenter.
 
        if(typeof e.contentDocument != "undefined")
       {
-              e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();},false);
+              e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::setActive()();},false);
       }
       else
       {
-         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activateView()();});
+         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::setActive()();});
       }
 
    }-*/;
