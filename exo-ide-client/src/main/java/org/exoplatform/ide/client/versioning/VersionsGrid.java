@@ -18,20 +18,18 @@
  */
 package org.exoplatform.ide.client.versioning;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.client.framework.vfs.Version;
-
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.framework.vfs.Version;
+
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -139,7 +137,7 @@ public class VersionsGrid extends ListGrid<Version>
             {
                return (item1.getContentLength() > item2.getContentLength()) ? 1 : -1;     
             }
-      });       
+      });
    }
 
    /**
