@@ -19,99 +19,132 @@
 package org.exoplatform.ide.git.shared;
 
 /**
+ * Request to create new tag.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagCreateRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public class TagCreateRequest extends GitRequest
 {
+   /**
+    * Name of tag to create.
+    */
    private String name;
-   private String revision;
+
+   /**
+    * Commit to make tag. If <code>null</code> then HEAD will be used.
+    */
+   private String commit;
+
+   /**
+    * Message for the tag.
+    */
    private String message;
-   private boolean signed;
+
+   /**
+    * Force create tag. If tag with the same exists it will be replaced.
+    */
    private boolean forceUpdate;
 
    /**
-    * @param name
-    * @param revision
-    * @param user
-    * @param message
-    * @param signed
-    * @param forceUpdate
+    * @param name name of tag to create
+    * @param commit commit to make tag
+    * @param user user to be assigned as tag creator
+    * @param message message for the tag
+    * @param forceUpdate force create tag operation
     */
-   public TagCreateRequest(String name, String revision, GitUser user, String message, boolean signed,
-      boolean forceUpdate)
+   public TagCreateRequest(String name, String commit, GitUser user, String message, boolean forceUpdate)
    {
       this.name = name;
-      this.revision = revision;
+      this.commit = commit;
       this.message = message;
-      this.signed = signed;
       this.forceUpdate = forceUpdate;
       setUser(user);
    }
 
    /**
-    * @param name
-    * @param revision
-    * @param user
-    * @param message
+    * @param name name of tag to create
+    * @param commit commit to make tag
+    * @param user user to be assigned as tag creator
+    * @param message message for the tag
     */
-   public TagCreateRequest(String name, String revision, GitUser user, String message)
+   public TagCreateRequest(String name, String commit, GitUser user, String message)
    {
       this.name = name;
-      this.revision = revision;
+      this.commit = commit;
       this.message = message;
       setUser(user);
    }
 
+   /**
+    * "Empty" create tag request. Corresponding setters used to setup required
+    * parameters.
+    */
    public TagCreateRequest()
    {
    }
 
+   /**
+    * @return name of tag to create
+    */
    public String getName()
    {
       return name;
    }
 
+   /**
+    * @param name name of tag to create
+    */
    public void setName(String name)
    {
       this.name = name;
    }
 
-   public String getRevision()
+   /**
+    * @return commit to make tag. If <code>null</code> then HEAD is used
+    */
+   public String getCommit()
    {
-      return revision;
+      return commit;
    }
 
-   public void setRevision(String revision)
+   /**
+    * @param commit commit to make tag. If <code>null</code> then HEAD is used
+    */
+   public void setCommit(String commit)
    {
-      this.revision = revision;
+      this.commit = commit;
    }
 
+   /**
+    * @return message for tag
+    */
    public String getMessage()
    {
       return message;
    }
 
+   /**
+    * @param message message for tag
+    */
    public void setMessage(String message)
    {
       this.message = message;
    }
 
-   public boolean isSigned()
-   {
-      return signed;
-   }
-
-   public void setSigned(boolean signed)
-   {
-      this.signed = signed;
-   }
-
+   /**
+    * @return force create tag operation
+    * @see #forceUpdate
+    */
    public boolean isForceUpdate()
    {
       return forceUpdate;
    }
 
+   /**
+    * @param forceUpdate if <code>true</code> force create tag operation
+    * @see #forceUpdate
+    */
    public void setForceUpdate(boolean forceUpdate)
    {
       this.forceUpdate = forceUpdate;

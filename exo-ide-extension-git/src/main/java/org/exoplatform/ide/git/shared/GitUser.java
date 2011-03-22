@@ -28,8 +28,8 @@ public class GitUser
    private String email;
 
    /**
-    * @param name
-    * @param email
+    * @param name name
+    * @param email email
     */
    public GitUser(String name, String email)
    {

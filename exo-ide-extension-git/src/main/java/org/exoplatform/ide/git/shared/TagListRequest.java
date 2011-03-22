@@ -27,13 +27,20 @@ public class TagListRequest extends GitRequest
    /**
     * List tags with names that match the this pattern. If <code>null</code>
     * then all tags included in result list.
+    * <p>
+    * For example:
+    * 
+    * <pre>
+    * *feature - get all tags which name ends with 'feature'
+    * </pre>
     * 
     * @see org.exoplatform.ide.git.server.GitClient#tagList(TagListRequest)
     */
    private String pattern;
 
    /**
-    * @param pattern
+    * @param pattern tag's names pattern
+    * @see #pattern
     */
    public TagListRequest(String pattern)
    {
@@ -44,11 +51,19 @@ public class TagListRequest extends GitRequest
    {
    }
 
+   /**
+    * @return tag's names pattern
+    * @see #pattern
+    */
    public String getPattern()
    {
       return pattern;
    }
 
+   /**
+    * @param pattern tag's names pattern
+    * @see #pattern
+    */
    public void setPattern(String pattern)
    {
       this.pattern = pattern;

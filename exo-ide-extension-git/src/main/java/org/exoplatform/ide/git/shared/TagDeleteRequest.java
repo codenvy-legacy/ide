@@ -19,15 +19,20 @@
 package org.exoplatform.ide.git.shared;
 
 /**
+ * Request to delete named tag.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagDeleteRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public class TagDeleteRequest extends GitRequest
 {
+   /**
+    * Tag to delete.
+    */
    private String name;
 
    /**
-    * @param name
+    * @param name name of tag to delete
     */
    public TagDeleteRequest(String name)
    {
@@ -38,11 +43,17 @@ public class TagDeleteRequest extends GitRequest
    {
    }
 
+   /**
+    * @return name of tag to delete
+    */
    public String getName()
    {
       return name;
    }
 
+   /**
+    * @param name name of tag to delete
+    */
    public void setName(String name)
    {
       this.name = name;

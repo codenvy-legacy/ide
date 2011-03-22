@@ -19,21 +19,30 @@
 package org.exoplatform.ide.git.shared;
 
 /**
+ * Describe single commit.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Revision.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public class Revision
 {
+   /** Id of commit. */
    private String id;
+   
+   /** Commit message. */
    private String message;
+
+   /** Time of commit in long format. */
    private long commitTime;
+   
+   /** Committer. */
    private GitUser committer;
 
    /**
-    * @param id
-    * @param message
-    * @param commitTime
-    * @param committer
+    * @param id commit id
+    * @param message commit message
+    * @param commitTime time of commit in long format
+    * @param committer commiter
     */
    public Revision(String id, String message, long commitTime, GitUser committer)
    {
@@ -43,26 +52,33 @@ public class Revision
       this.committer = committer;
    }
 
+   /**
+    * @return commit id
+    */
    public String getId()
    {
       return id;
    }
 
-   public void setId(String id)
-   {
-      this.id = id;
-   }
-
+   /**
+    * @return commit message
+    */
    public String getMessage()
    {
       return message;
    }
 
+   /**
+    * @return time of commit
+    */
    public long getCommitTime()
    {
       return commitTime;
    }
 
+   /**
+    * @return committer
+    */
    public GitUser getCommitter()
    {
       return committer;

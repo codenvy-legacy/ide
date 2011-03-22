@@ -19,30 +19,56 @@
 package org.exoplatform.ide.git.shared;
 
 /**
+ * Request to get working tree status.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: StatusRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public class StatusRequest extends GitRequest
 {
+   /**
+    * If <code>true</code> then show status in short-format.
+    * <p>
+    * For example:
+    * 
+    * <pre>
+    *  M README.txt
+    * A  a/b/c/d/aaa
+    * D  toRemove
+    * ?? a/b/c/d/bbb
+    * </pre>
+    */
    private boolean shortFormat;
 
    /**
-    * @param shortFormat
+    * @param shortFormat if <code>true</code> then show status in short-format
     */
    public StatusRequest(boolean shortFormat)
    {
       this.shortFormat = shortFormat;
    }
 
+   /**
+    * "Empty" status request. Corresponding setters used to setup required
+    * parameters.
+    */
    public StatusRequest()
    {
    }
 
+   /**
+    * @return if <code>true</code> then show status in short-format
+    * @see #shortFormat
+    */
    public boolean isShortFormat()
    {
       return shortFormat;
    }
 
+   /**
+    * @param shortFormat if <code>true</code> then show status in short-format
+    * @see #shortFormat
+    */
    public void setShortFormat(boolean shortFormat)
    {
       this.shortFormat = shortFormat;

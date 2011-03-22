@@ -19,33 +19,47 @@
 package org.exoplatform.ide.git.shared;
 
 /**
- * Request to remove files from
+ * Request to remove files.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: RmRequest.java 22817 2011-03-22 09:17:52Z andrew00x $
  */
 public class RmRequest extends GitRequest
 {
-   private String[] filepattern;
+   /**
+    * List of files to remove.
+    */
+   private String[] files;
 
    /**
-    * @param filepattern
+    * @param files files to remove
     */
-   public RmRequest(String[] filepattern)
+   public RmRequest(String[] files)
    {
-      this.filepattern = filepattern;
+      this.files = files;
    }
 
+   /**
+    * "Empty" remove request. Corresponding setters used to setup required
+    * parameters.
+    */
    public RmRequest()
    {
    }
 
-   public String[] getFilepattern()
+   /**
+    * @return files to remove
+    */
+   public String[] getFiles()
    {
-      return filepattern;
+      return files;
    }
 
-   public void setFilepattern(String[] filepattern)
+   /**
+    * @param files files to remove
+    */
+   public void setFiles(String[] files)
    {
-      this.filepattern = filepattern;
+      this.files = files;
    }
 }

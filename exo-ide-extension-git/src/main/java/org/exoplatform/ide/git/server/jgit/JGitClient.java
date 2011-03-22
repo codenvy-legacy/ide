@@ -948,12 +948,12 @@ public class JGitClient implements GitClient
    @Override
    public void rm(RmRequest request) throws GitException
    {
-      String[] filepattern = request.getFilepattern();
+      String[] files = request.getFiles();
       RmCommand rmCommand = new Git(repository).rm();
-      if (filepattern != null)
+      if (files != null)
       {
-         for (int i = 0; i < filepattern.length; i++)
-            rmCommand.addFilepattern(filepattern[i]);
+         for (int i = 0; i < files.length; i++)
+            rmCommand.addFilepattern(files[i]);
       }
       try
       {
@@ -1074,9 +1074,9 @@ public class JGitClient implements GitClient
    @Override
    public Tag tagCreate(TagCreateRequest request) throws GitException
    {
-      String revision = request.getRevision();
-      if (revision == null)
-         revision = Constants.HEAD;
+      String commit = request.getCommit();
+      if (commit == null)
+         commit = Constants.HEAD;
 
       try
       {
@@ -1084,7 +1084,7 @@ public class JGitClient implements GitClient
          RevObject revObject;
          try
          {
-            revObject = revWalk.parseAny(repository.resolve(revision));
+            revObject = revWalk.parseAny(repository.resolve(commit));
          }
          finally
          {
@@ -1093,7 +1093,7 @@ public class JGitClient implements GitClient
 
          TagCommand tagCommand =
             new Git(repository).tag().setName(request.getName()).setObjectId(revObject)
-               .setMessage(request.getMessage()).setForceUpdate(request.isForceUpdate()).setSigned(request.isSigned());
+               .setMessage(request.getMessage()).setForceUpdate(request.isForceUpdate());
 
          GitUser tagger = request.getUser();
          if (tagger != null)
