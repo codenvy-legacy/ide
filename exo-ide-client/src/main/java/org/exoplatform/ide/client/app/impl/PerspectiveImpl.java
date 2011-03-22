@@ -135,7 +135,7 @@ public class PerspectiveImpl implements Perspective
          }
          else if ("modal".equals(view.getType()))
          {
-            modalWindowsLayer.openWindow(view);
+            modalWindowsLayer.openView(view);
          }
          else
          {
