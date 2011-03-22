@@ -24,7 +24,8 @@ import java.util.ServiceLoader;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: GitClientFactory.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * @version $Id: GitConnectionFactory.java 22811 2011-03-22 07:28:35Z andrew00x
+ *          $
  */
 public abstract class GitConnectionFactory
 {

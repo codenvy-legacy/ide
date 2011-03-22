@@ -30,7 +30,8 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: JGitClientFactory.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * @version $Id: JGitConnectionFactory.java 22811 2011-03-22 07:28:35Z andrew00x
+ *          $
  */
 public class JGitConnectionFactory extends GitConnectionFactory
 {
@@ -42,7 +43,7 @@ public class JGitConnectionFactory extends GitConnectionFactory
    {
       return new JGitConnection(createRepository(workDir));
    }
-   
+
    private static Repository createRepository(File workDir) throws GitException
    {
       try
