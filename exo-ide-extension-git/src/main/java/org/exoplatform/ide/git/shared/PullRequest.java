@@ -43,17 +43,6 @@ public class PullRequest extends GitRequest
    }
 
    /**
-    * Remote repository. URI or name is acceptable. If not specified then
-    * 'origin' will be used.
-    */
-   public String remote;
-   public PullRequest(String remote)
-   {
-      // TODO
-      this.remote = remote;
-   }
-
-   /**
     * "Empty" pull request. Corresponding setters used to setup required
     * parameters.
     */
