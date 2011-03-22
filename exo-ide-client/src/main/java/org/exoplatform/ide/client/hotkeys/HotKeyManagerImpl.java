@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledEvent;
-import org.exoplatform.gwtframework.editor.event.EditorHotKeyCalledHandler;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledHandler;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
