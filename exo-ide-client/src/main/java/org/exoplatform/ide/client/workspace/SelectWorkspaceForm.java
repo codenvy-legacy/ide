@@ -167,4 +167,9 @@ public class SelectWorkspaceForm extends DialogWindow implements SelectWorkspace
    {
       return okButton;
    }
+   
+   public void setSelectedItem(EntryPoint item)
+   {
+      entryPointListGrid.getCellTable().getSelectionModel().setSelected(item, true);
+   }
 }

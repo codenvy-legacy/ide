@@ -73,6 +73,7 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
 
       void disableOkButton();
 
+      void setSelectedItem(EntryPoint currentEntryPoint);
    }
 
    private HandlerManager eventBus;
@@ -143,6 +144,8 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
          }
       });
 
+      EntryPoint currentEntryPoint = null;
+      
       List<EntryPoint> entryPoints = new ArrayList<EntryPoint>();
       for (int i = 0; i < entryPointList.size(); i++)
       {
@@ -150,10 +153,20 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
          if (entryPoint.getScheme().equals(Scheme.WEBDAV))
          {
             entryPoints.add(entryPoint);
+            if (entryPoint.getHref().equals(applicationSettings.getValueAsString("entry-point")))
+            {
+               currentEntryPoint = entryPoint;
+            }
          }
       }
 
       display.getEntryPoints().setValue(entryPoints);
+      
+      if (currentEntryPoint != null)
+      {
+         display.setSelectedItem(currentEntryPoint);
+      }
+      
       display.getEntryPoints().addSelectionHandler(new SelectionHandler<EntryPoint>()
       {
          public void onSelection(SelectionEvent<EntryPoint> event)
