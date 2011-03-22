@@ -33,6 +33,7 @@ import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
@@ -128,6 +129,7 @@ public class EditorFactory
       
             //To initialize client bundle 
             CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
+            CodeMirrorClientBundle.INSTANCE.css().ensureInjected();
    }
 
    public static void addEditor(EditorProducer producer)
