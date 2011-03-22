@@ -27,22 +27,23 @@ import java.net.URL;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: ClientFactoryTest.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * @version $Id: ConnectionFactoryTest.java 22811 2011-03-22 07:28:35Z andrew00x
+ *          $
  */
-public class ClientFactoryTest extends BaseTest
+public class ConnectionFactoryTest extends BaseTest
 {
    public void testClientFactory() throws Exception
    {
-      GitConnectionFactory gitClientFactory = GitConnectionFactory.getIntance();
+      GitConnectionFactory gitConnectionFactory = GitConnectionFactory.getIntance();
 
       URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
       File target = new File(testCls.toURI()).getParentFile();
-      File repoDir = new File(target, "ClientFactoryTest");
+      File repoDir = new File(target, "ConnectionFactoryTest");
       forClean.add(repoDir);
-      
-      GitConnection gitClient = gitClientFactory.getConnection(repoDir);
-      
-      // Try to initialize repository via obtained client.
-      gitClient.init(new InitRequest());
+
+      GitConnection gitConnection = gitConnectionFactory.getConnection(repoDir);
+
+      // Try to initialize repository via obtained connection.
+      gitConnection.init(new InitRequest());
    }
 }

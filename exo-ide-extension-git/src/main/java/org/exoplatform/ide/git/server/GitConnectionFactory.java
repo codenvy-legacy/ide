@@ -29,12 +29,12 @@ import java.util.ServiceLoader;
  */
 public abstract class GitConnectionFactory
 {
-   private static ServiceLoader<GitConnectionFactory> gitClientFactories = ServiceLoader
+   private static ServiceLoader<GitConnectionFactory> gitConnectionFactories = ServiceLoader
       .load(GitConnectionFactory.class);
 
    public static GitConnectionFactory getIntance() throws GitException
    {
-      Iterator<GitConnectionFactory> iter = gitClientFactories.iterator();
+      Iterator<GitConnectionFactory> iter = gitConnectionFactories.iterator();
       if (!iter.hasNext())
          throw new GitException(
             "Could not instantiate GitConnectionFactory. GitConnectionFactory is not configured properly. ");

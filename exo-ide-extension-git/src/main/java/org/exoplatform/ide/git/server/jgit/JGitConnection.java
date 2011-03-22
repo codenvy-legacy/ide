@@ -153,17 +153,6 @@ public class JGitConnection implements GitConnection
       this.repository = repository;
    }
 
-   //   /**
-   //    * JGitClient which is not assigned to any repository. This constructor
-   //    * should be used when need clone remote repository or init new repository
-   //    * only. In this case local repository is not exist yet. Repository will be
-   //    * initialized after successful execution on {@link #clone(CloneRequest)} or
-   //    * {@link #init(InitRequest)} method.
-   //    */
-   //   JGitClient()
-   //   {
-   //   }
-
    /**
     * @see org.exoplatform.ide.git.server.GitConnection#add(org.exoplatform.ide.git.shared.AddRequest)
     */
