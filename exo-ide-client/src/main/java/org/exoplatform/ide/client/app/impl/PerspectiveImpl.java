@@ -24,6 +24,8 @@ import org.exoplatform.ide.client.app.impl.layers.ModalWindowsLayer;
 import org.exoplatform.ide.client.app.impl.layers.PanelsLayer;
 import org.exoplatform.ide.client.app.impl.layers.PopupWindowsLayer;
 import org.exoplatform.ide.client.app.impl.layers.ViewsLayer;
+import org.exoplatform.ide.client.app.impl.panel.PanelImpl;
+import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
@@ -70,16 +72,16 @@ public class PerspectiveImpl implements Perspective
    {
       layoutLayer.beginBuildLayot();
 
-      Panel p1 = panelsLayer.addPanel("navigation", new String[]{"navigation"});
+      PanelImpl p1 = panelsLayer.addPanel("navigation", new String[]{"navigation"});
       layoutLayer.addWest(p1, 300);
 
-      Panel p2 = panelsLayer.addPanel("information", new String[]{"information"});
+      PanelImpl p2 = panelsLayer.addPanel("information", new String[]{"information"});
       layoutLayer.addEast(p2, 200);
 
-      Panel p3 = panelsLayer.addPanel("operation", new String[]{"operation"});
+      PanelImpl p3 = panelsLayer.addPanel("operation", new String[]{"operation"});
       layoutLayer.addSouth(p3, 150);
 
-      Panel p4 = panelsLayer.addPanel("editor", new String[]{"editor"});
+      PanelImpl p4 = panelsLayer.addPanel("editor", new String[]{"editor"});
       layoutLayer.addCenter(p4);
 
       layoutLayer.finishBuildLayot();
@@ -92,7 +94,7 @@ public class PerspectiveImpl implements Perspective
        * search for opened view
        */
       boolean viewAlreadyOpened = false;
-      for (Panel panel : panelsLayer.getPanelsAsList())
+      for (PanelImpl panel : panelsLayer.getPanels().values())
       {
          if (panel.getViews().get(view.getId()) != null)
          {
@@ -113,8 +115,8 @@ public class PerspectiveImpl implements Perspective
       /*
        * search target panel
        */
-      Panel targetPanel = null;
-      for (Panel panel : panelsLayer.getPanelsAsList())
+      PanelImpl targetPanel = null;
+      for (PanelImpl panel : panelsLayer.getPanels().values())
       {
          if (panel.isTypeAccepted(view.getType()))
          {
@@ -159,16 +161,26 @@ public class PerspectiveImpl implements Perspective
    @Override
    public void closeView(String viewId)
    {
-      // if view is popup
-      if (popupWindowsLayer.getViews().get(viewId) != null)
+      /*
+       * Return if View has been present in ModalWindowsLayer
+       */
+      if (modalWindowsLayer.closeView(viewId))
       {
-         popupWindowsLayer.closeView(viewId);
+         return;
       }
 
-      // if view is modal
+      /*
+       * Return if View has been present in PopupWindowsLayer
+       */
+      if (popupWindowsLayer.closeView(viewId))
+      {
+         return;
+      }
 
-      // if view attached to panel
-      for (Panel panel : panelsLayer.getPanelsAsList())
+      /*
+       * Search panel which contains specified View and then closing View 
+       */
+      for (PanelImpl panel : panelsLayer.getPanels().values())
       {
          if (panel.getViews().get(viewId) != null)
          {
@@ -179,46 +191,71 @@ public class PerspectiveImpl implements Perspective
 
    }
 
-   public void addViewOpenedHandler(ViewOpenedHandler viewOpenedHandler)
-   {
-      for (Panel panel : panelsLayer.getPanelsAsList())
-      {
-         panel.addViewOpenedHandler(viewOpenedHandler);
-      }
-   }
-
-   public void removeViewOpenedHandler(ViewOpenedHandler viewOpenedHandler)
-   {
-      for (Panel panel : panelsLayer.getPanelsAsList())
-      {
-         panel.removeViewOpenedHandler(viewOpenedHandler);
-      }
-   }
-
-   @Override
-   public void addViewClosedHandler(ViewClosedHandler viewClosedHandler)
-   {
-      for (Panel panel : panelsLayer.getPanelsAsList())
-      {
-         panel.addViewClosedHandler(viewClosedHandler);
-      }
-   }
-
-   @Override
-   public void removeViewClosedHandler(ViewClosedHandler viewClosedHandler)
-   {
-      for (Panel panel : panelsLayer.getPanelsAsList())
-      {
-         panel.removeViewClosedHandler(viewClosedHandler);
-      }
-   }
+   //   public void addViewOpenedHandler(ViewOpenedHandler viewOpenedHandler)
+   //   {
+   //      for (Panel panel : panelsLayer.getPanelsAsList())
+   //      {
+   //         panel.addViewOpenedHandler(viewOpenedHandler);
+   //      }
+   //   }
+   //
+   //   @Override
+   //   public void addViewClosedHandler(ViewClosedHandler viewClosedHandler)
+   //   {
+   //      for (Panel panel : panelsLayer.getPanelsAsList())
+   //      {
+   //         panel.addViewClosedHandler(viewClosedHandler);
+   //      }
+   //   }
 
    @Override
    public HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler)
    {
-      for (Panel panel : panelsLayer.getPanelsAsList())
+      for (PanelImpl panel : panelsLayer.getPanels().values())
       {
          panel.addViewVisibilityChangedHandler(viewVisibilityChangedHandler);
+      }
+
+      return null;
+   }
+
+   @Override
+   public HandlerRegistration addViewOpenedHandler(ViewOpenedHandler viewOpenedHandler)
+   {
+      modalWindowsLayer.addViewOpenedHandler(viewOpenedHandler);
+      popupWindowsLayer.addViewOpenedHandler(viewOpenedHandler);
+
+      for (PanelImpl panel : panelsLayer.getPanels().values())
+      {
+         panel.addViewOpenedHandler(viewOpenedHandler);
+      }
+
+      return null;
+   }
+
+   @Override
+   public HandlerRegistration addViewClosedHandler(ViewClosedHandler viewClosedHandler)
+   {
+      modalWindowsLayer.addViewClosedHandler(viewClosedHandler);
+      popupWindowsLayer.addViewClosedHandler(viewClosedHandler);
+
+      for (PanelImpl panel : panelsLayer.getPanels().values())
+      {
+         panel.addViewClosedHandler(viewClosedHandler);
+      }
+
+      return null;
+   }
+
+   @Override
+   public HandlerRegistration addClosingViewHandler(ClosingViewHandler closingViewHandler)
+   {
+      modalWindowsLayer.addClosingViewHandler(closingViewHandler);
+      popupWindowsLayer.addClosingViewHandler(closingViewHandler);
+
+      for (PanelImpl panel : panelsLayer.getPanels().values())
+      {
+         panel.addClosingViewHandler(closingViewHandler);
       }
 
       return null;

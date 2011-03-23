@@ -23,8 +23,6 @@ import org.exoplatform.ide.client.app.api.Menu;
 import org.exoplatform.ide.client.app.api.Perspective;
 import org.exoplatform.ide.client.app.impl.LayerContainer;
 import org.exoplatform.ide.client.app.impl.PerspectiveImpl;
-import org.exoplatform.ide.client.app.impl.layers.BackgroundLayer;
-import org.exoplatform.ide.client.app.impl.layers.DebugLayer;
 import org.exoplatform.ide.client.app.impl.layers.LayoutLayer;
 import org.exoplatform.ide.client.app.impl.layers.MenuLayer;
 import org.exoplatform.ide.client.app.impl.layers.ModalWindowsLayer;
@@ -102,8 +100,8 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
       ModalWindowsLayer modalWindowsLayer = new ModalWindowsLayer();
       addLayer(modalWindowsLayer);
 
-//      DebugLayer debugController = new DebugLayer();
-//      addLayer(debugController);
+      //      DebugLayer debugController = new DebugLayer();
+      //      addLayer(debugController);
 
       perspective = new PerspectiveImpl(layoutLayer, panelsLayer, viewsLayer, popupWindowsLayer, modalWindowsLayer);
    }

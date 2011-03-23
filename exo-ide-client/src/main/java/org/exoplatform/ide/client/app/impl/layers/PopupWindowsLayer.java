@@ -21,10 +21,12 @@ package org.exoplatform.ide.client.app.impl.layers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.gwtframework.ui.client.window.Window;
-import org.exoplatform.ide.client.app.impl.Layer;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
@@ -36,7 +38,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class PopupWindowsLayer extends Layer
+public class PopupWindowsLayer extends AbstractWindowsLayer
 {
 
    private Map<String, WindowController> windowControllers = new HashMap<String, PopupWindowsLayer.WindowController>();
@@ -50,6 +52,7 @@ public class PopupWindowsLayer extends Layer
       views.put(view.getId(), view);
 
       Window window = new Window(view.getTitle());
+      DOM.setStyleAttribute(window.getElement(), "zIndex", "auto");
       window.setWidth(view.getDefaultWidth());
       window.setHeight(view.getDefaultHeight());
       window.center();
@@ -71,25 +74,12 @@ public class PopupWindowsLayer extends Layer
 
       WindowController controller = new WindowController(view, window);
       windowControllers.put(view.getId(), controller);
-   }
 
-   private class WindowController implements CloseClickHandler
-   {
-
-      private ViewEx view;
-
-      public WindowController(ViewEx view, Window window)
+      ViewOpenedEvent viewOpenedEvent = new ViewOpenedEvent(view);
+      for (ViewOpenedHandler viewOpenedHandler : viewOpenedHandlers)
       {
-         this.view = view;
-         window.addCloseClickHandler(this);
+         viewOpenedHandler.onViewOpened(viewOpenedEvent);
       }
-
-      @Override
-      public void onCloseClick()
-      {
-         closeView(view.getId());
-      }
-
    }
 
    public Map<String, ViewEx> getViews()
@@ -97,8 +87,13 @@ public class PopupWindowsLayer extends Layer
       return views;
    }
 
-   public void closeView(String viewId)
+   public boolean closeView(String viewId)
    {
+      if (windows.get(viewId) == null)
+      {
+         return false;
+      }
+
       Window window = windows.get(viewId);
       windows.remove(viewId);
 
@@ -107,7 +102,16 @@ public class PopupWindowsLayer extends Layer
 
       windowControllers.remove(viewId);
 
+      ViewEx closedView = views.get(viewId);
       views.remove(viewId);
+
+      ViewClosedEvent viewClosedEvent = new ViewClosedEvent(closedView);
+      for (ViewClosedHandler viewClosedHandler : viewClosedHandlers)
+      {
+         viewClosedHandler.onViewClosed(viewClosedEvent);
+      }
+
+      return true;
    }
 
 }

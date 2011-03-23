@@ -21,10 +21,12 @@ package org.exoplatform.ide.client.app.impl.layers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.gwtframework.ui.client.window.Window;
-import org.exoplatform.ide.client.app.impl.Layer;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -37,20 +39,56 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class ModalWindowsLayer extends Layer
+public class ModalWindowsLayer extends AbstractWindowsLayer
 {
 
-   private Map<String, ModalWindowController> windowControllers = new HashMap<String, ModalWindowController>();
-
-   private Map<String, ViewEx> views = new HashMap<String, ViewEx>();
-
-   private Map<String, Widget> lockPanels = new HashMap<String, Widget>();
-
-   private Map<String, Window> windows = new HashMap<String, Window>();
+   private int layerHeight;
 
    private int layerWidth;
 
-   private int layerHeight;
+   private Map<String, Widget> lockPanels = new HashMap<String, Widget>();
+
+   private Map<String, ViewEx> views = new HashMap<String, ViewEx>();
+
+   private Map<String, WindowController> windowControllers = new HashMap<String, WindowController>();
+
+   private Map<String, Window> windows = new HashMap<String, Window>();
+
+   public boolean closeView(String viewId)
+   {
+      if (lockPanels.get(viewId) == null)
+      {
+         return false;
+      }
+
+      Widget lockPanel = lockPanels.get(viewId);
+      lockPanel.removeFromParent();
+      lockPanels.remove(viewId);
+
+      Window window = windows.get(viewId);
+      windows.remove(viewId);
+
+      window.hide();
+      window.destroy();
+
+      windowControllers.remove(viewId);
+
+      ViewEx view = views.get(viewId);
+      views.remove(viewId);
+
+      ViewClosedEvent viewClosedEvent = new ViewClosedEvent(view);
+      for (ViewClosedHandler viewClosedHandler : viewClosedHandlers)
+      {
+         viewClosedHandler.onViewClosed(viewClosedEvent);
+      }
+
+      return true;
+   }
+
+   public Map<String, ViewEx> getViews()
+   {
+      return views;
+   }
 
    public void openView(ViewEx view)
    {
@@ -66,6 +104,7 @@ public class ModalWindowsLayer extends Layer
       resizeLockPanels();
 
       Window window = new Window(view.getTitle());
+      DOM.setStyleAttribute(window.getElement(), "zIndex", "auto");
       window.setWidth(view.getDefaultWidth());
       window.setHeight(view.getDefaultHeight());
       window.center();
@@ -85,8 +124,14 @@ public class ModalWindowsLayer extends Layer
          window.add((Widget)view);
       }
 
-      ModalWindowController controller = new ModalWindowController(view, window);
+      WindowController controller = new WindowController(view, window);
       windowControllers.put(view.getId(), controller);
+
+      ViewOpenedEvent viewOpenedEvent = new ViewOpenedEvent(view);
+      for (ViewOpenedHandler viewOpenedHandler : viewOpenedHandlers)
+      {
+         viewOpenedHandler.onViewOpened(viewOpenedEvent);
+      }
    }
 
    @Override
@@ -107,44 +152,4 @@ public class ModalWindowsLayer extends Layer
       }
    }
 
-   private class ModalWindowController implements CloseClickHandler
-   {
-
-      private ViewEx view;
-
-      public ModalWindowController(ViewEx view, Window window)
-      {
-         this.view = view;
-         window.addCloseClickHandler(this);
-      }
-
-      @Override
-      public void onCloseClick()
-      {
-         closeView(view.getId());
-      }
-
-   }
-
-   public Map<String, ViewEx> getViews()
-   {
-      return views;
-   }
-
-   public void closeView(String viewId)
-   {
-      Widget lockPanel = lockPanels.get(viewId);
-      lockPanel.removeFromParent();
-      lockPanels.remove(viewId);
-
-      Window window = windows.get(viewId);
-      windows.remove(viewId);
-
-      window.hide();
-      window.destroy();
-
-      windowControllers.remove(viewId);
-
-      views.remove(viewId);
-   }
 }

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.ui.gwt;
 
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,9 +27,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @version $
  */
 
-public interface HasViewOpenedHandler
+public interface ClosingViewHandler extends EventHandler
 {
-   
-   HandlerRegistration addViewOpenedHandler(ViewOpenedHandler viewOpenedHandler);
 
+   void onClosingView(ClosingViewEvent event);
+   
 }

@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.exoplatform.ide.client.app.impl.Layer;
-import org.exoplatform.ide.client.app.impl.Panel;
 import org.exoplatform.ide.client.app.impl.panel.HidePanelHandler;
+import org.exoplatform.ide.client.app.impl.panel.PanelImpl;
 import org.exoplatform.ide.client.app.impl.panel.ShowPanelHandler;
 
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -47,15 +47,25 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
    private class PanelController extends AbsolutePanel implements RequiresResize
    {
 
-      private Panel panel;
+      private int height;
+
+      private PanelImpl panel;
 
       private int width;
 
-      private int height;
-
-      public PanelController(Panel panel)
+      public PanelController(PanelImpl panel)
       {
          this.panel = panel;
+      }
+
+      public int getHeight()
+      {
+         return height;
+      }
+
+      public int getWidth()
+      {
+         return width;
       }
 
       @Override
@@ -76,45 +86,35 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
          }
       }
 
-      public void setWidth(int width)
-      {
-         this.width = width;
-      }
-
       public void setHeight(int height)
       {
          this.height = height;
       }
 
-      public int getWidth()
+      public void setWidth(int width)
       {
-         return width;
-      }
-
-      public int getHeight()
-      {
-         return height;
+         this.width = width;
       }
 
    }
 
-   private static final int MENU_HEIGHT = 20;
+   private static final int MARGIN = 5;
 
-   private static final int TOOLBAR_HEIGHT = 32;
+   private static final int MENU_HEIGHT = 20;
 
    private static final int STATUSBAR_HEIGHT = 30;
 
-   private static final int MARGIN = 10;
+   private static final int TOOLBAR_HEIGHT = 32;
 
    private SplitLayoutPanel layoutPanel;
 
-   private int top = MENU_HEIGHT + TOOLBAR_HEIGHT + MARGIN;
-
    private int left = MARGIN;
 
-   private Map<String, Panel> panels = new HashMap<String, Panel>();
-
    private Map<String, PanelController> panelControllers = new HashMap<String, PanelController>();
+
+   private Map<String, PanelImpl> panels = new HashMap<String, PanelImpl>();
+
+   private int top = MENU_HEIGHT + TOOLBAR_HEIGHT + MARGIN;
 
    public LayoutLayer()
    {
@@ -122,49 +122,17 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       add(layoutPanel, left, top);
    }
 
-   @Override
-   public void resize(int width, int height)
-   {
-      super.resize(width, height);
-
-      int w = width - MARGIN - MARGIN;
-      int h = height - MENU_HEIGHT - TOOLBAR_HEIGHT - MARGIN - MARGIN - STATUSBAR_HEIGHT;
-
-      layoutPanel.setPixelSize(w, h);
-
-      for (int i = 0; i < layoutPanel.getWidgetCount(); i++)
-      {
-         Widget ww = layoutPanel.getWidget(i);
-         if (ww instanceof PanelController)
-         {
-            ((PanelController)ww).onResize();
-         }
-      }
-
-   }
-
-   public void beginBuildLayot()
-   {
-   }
-
-   public void finishBuildLayot()
-   {
-      layoutPanel.forceLayout();
-      //layoutPanel.animate(1000);
-   }
-
-   public void addWest(Panel panel, int size)
+   public void addCenter(PanelImpl panel)
    {
       PanelController controller = new PanelController(panel);
-      controller.setWidth(size);
-      layoutPanel.addWest(controller, size);
+      layoutPanel.add(controller);
       //layoutPanel.setWidgetMinSize(controller, 50);
 
       panels.put(panel.getPanelId(), panel);
       panel.setShowPanelHandler(this);
       panel.setHidePanelHandler(this);
       panelControllers.put(panel.getPanelId(), controller);
-
+      
       if (panel.getViews().size() == 0)
       {
          onHidePanel(panel.getPanelId());
@@ -173,7 +141,7 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       }
    }
 
-   public void addEast(Panel panel, int size)
+   public void addEast(PanelImpl panel, int size)
    {
       PanelController controller = new PanelController(panel);
       controller.setWidth(size);
@@ -193,7 +161,7 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       }
    }
 
-   public void addNorth(Panel panel, int size)
+   public void addNorth(PanelImpl panel, int size)
    {
       PanelController controller = new PanelController(panel);
       controller.setHeight(size);
@@ -213,7 +181,7 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       }      
    }
 
-   public void addSouth(Panel panel, int size)
+   public void addSouth(PanelImpl panel, int size)
    {
       PanelController controller = new PanelController(panel);
       controller.setHeight(size);
@@ -233,23 +201,34 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       }      
    }
 
-   public void addCenter(Panel panel)
+   public void addWest(PanelImpl panel, int size)
    {
       PanelController controller = new PanelController(panel);
-      layoutPanel.add(controller);
+      controller.setWidth(size);
+      layoutPanel.addWest(controller, size);
       //layoutPanel.setWidgetMinSize(controller, 50);
 
       panels.put(panel.getPanelId(), panel);
       panel.setShowPanelHandler(this);
       panel.setHidePanelHandler(this);
       panelControllers.put(panel.getPanelId(), controller);
-      
+
       if (panel.getViews().size() == 0)
       {
          onHidePanel(panel.getPanelId());
       } else {
          onShowPanel(panel.getPanelId());
       }
+   }
+
+   public void beginBuildLayot()
+   {
+   }
+
+   public void finishBuildLayot()
+   {
+      layoutPanel.forceLayout();
+      //layoutPanel.animate(1000);
    }
 
    @Override
@@ -296,6 +275,27 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       }
 
       layoutPanel.forceLayout();
+   }
+
+   @Override
+   public void resize(int width, int height)
+   {
+      super.resize(width, height);
+
+      int w = width - MARGIN - MARGIN;
+      int h = height - MENU_HEIGHT - TOOLBAR_HEIGHT - MARGIN - MARGIN - STATUSBAR_HEIGHT;
+
+      layoutPanel.setPixelSize(w, h);
+
+      for (int i = 0; i < layoutPanel.getWidgetCount(); i++)
+      {
+         Widget ww = layoutPanel.getWidget(i);
+         if (ww instanceof PanelController)
+         {
+            ((PanelController)ww).onResize();
+         }
+      }
+
    }
 
 }

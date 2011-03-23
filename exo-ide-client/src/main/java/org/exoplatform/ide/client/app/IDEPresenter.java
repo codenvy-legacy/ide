@@ -27,6 +27,8 @@ import org.exoplatform.ide.client.application.phases.LoadRegistryConfigurationPh
 import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.editor.EditorController;
 import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
@@ -47,7 +49,8 @@ import com.google.gwt.user.client.Timer;
  * @version $
  */
 
-public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, ViewClosedHandler, ViewVisibilityChangedHandler
+public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, ViewClosedHandler,
+   ViewVisibilityChangedHandler, ClosingViewHandler
 {
 
    public interface Display
@@ -78,6 +81,7 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
       eventBus.addHandler(RefreshMenuEvent.TYPE, this);
 
       display.getPerspective().addViewOpenedHandler(this);
+      display.getPerspective().addClosingViewHandler(this);
       display.getPerspective().addViewClosedHandler(this);
       display.getPerspective().addViewVisibilityChangedHandler(this);
       EditorController editorController = new EditorController();
@@ -128,7 +132,14 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      System.out.println("view visibility changed view [" + event.getView().getId() + "] visible [" + event.getView().isViewVisible() + "]");
+//      com.google.gwt.user.client.Window.alert("view visibility changed view [" + event.getView().getId()
+//         + "] visible [" + event.getView().isViewVisible() + "]");
+   }
+
+   @Override
+   public void onClosingView(ClosingViewEvent event)
+   {
+      eventBus.fireEvent(event);
    }
 
 }

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.app.impl.layers;
 
+import org.exoplatform.gwtframework.ui.client.button.ext.IconButton;
 import org.exoplatform.ide.client.Log;
 import org.exoplatform.ide.client.app.impl.Layer;
 
@@ -27,6 +28,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,17 +44,19 @@ public class DebugLayer extends Layer
 
    private static final String FONT_COLOR = "#88FF88";
 
-   private static final int WIDTH = 120;
+   private static final int CONTROL_WIDTH = 24;
 
-   private static final int HEIGHT = 18;
+   private static final int CONTROL_HEIGHT = 24;
 
-   private static final int CONTROL_MARGIN = 5;
+   private static final int CONTROL_MARGIN = 3;
 
    private AbsolutePanel backgroundPanel;
 
    private FlowPanel textPanel;
 
-   private HTML control;
+   //private HTML control;
+   
+   private IconButton control;
 
    boolean active = false;
 
@@ -72,9 +76,11 @@ public class DebugLayer extends Layer
       DOM.setStyleAttribute(textPanel.getElement(), "overflow", "auto");
       add(textPanel, 15, 15);
 
-      control = new HTML("<center>Debug <b>Disabled</b></center>");
-      control.setWidth("" + WIDTH + "px");
-      control.setHeight("" + HEIGHT + "px");
+      control = new IconButton(new Image("debug-icon.png"));
+      
+//      control = new HTML("<center>Debug <b>Disabled</b></center>");
+//      control.setWidth("" + WIDTH + "px");
+//      control.setHeight("" + HEIGHT + "px");
 
       //DOM.setStyleAttribute(control.getElement(), "border", "#CC7766 1px solid");
       DOM.setStyleAttribute(control.getElement(), "cursor", "pointer");
@@ -96,8 +102,8 @@ public class DebugLayer extends Layer
       textPanel.setWidth("" + (width - 20 - 10) + "px");
       textPanel.setHeight("" + (height - 10 - 35 - 10) + "px");
 
-      int left = width - CONTROL_MARGIN - WIDTH;
-      int top = height - CONTROL_MARGIN - HEIGHT;
+      int left = (width - CONTROL_WIDTH) / 2;
+      int top = height - CONTROL_MARGIN - CONTROL_HEIGHT;
       DOM.setStyleAttribute(control.getElement(), "left", "" + left + "px");
       DOM.setStyleAttribute(control.getElement(), "top", "" + top + "px");
    }
@@ -128,7 +134,7 @@ public class DebugLayer extends Layer
       backgroundPanel.setVisible(true);
       textPanel.setVisible(true);
       active = true;
-      control.setHTML("<center>Debug <b><font color=\"red\">Enabled</font></b></center>");
+//      control.setHTML("<center>Debug <b><font color=\"red\">Enabled</font></b></center>");
    }
 
    public void hideDebug()
@@ -141,7 +147,7 @@ public class DebugLayer extends Layer
       backgroundPanel.setVisible(false);
       textPanel.setVisible(false);
       active = false;
-      control.setHTML("<center>Debug <b>Disabled</b></center>");
+//      control.setHTML("<center>Debug <b>Disabled</b></center>");
    }
 
    public boolean isDebugActive()

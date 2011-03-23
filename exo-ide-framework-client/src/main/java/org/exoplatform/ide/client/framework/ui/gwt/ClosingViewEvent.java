@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.ui.gwt;
 
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,9 +27,45 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @version $
  */
 
-public interface HasViewOpenedHandler
+public class ClosingViewEvent extends GwtEvent<ClosingViewHandler>
 {
-   
-   HandlerRegistration addViewOpenedHandler(ViewOpenedHandler viewOpenedHandler);
+
+   public static final GwtEvent.Type<ClosingViewHandler> TYPE = new GwtEvent.Type<ClosingViewHandler>();
+
+   private ViewEx view;
+
+   private boolean closingCanceled = false;
+
+   public ClosingViewEvent(ViewEx view)
+   {
+      this.view = view;
+   }
+
+   public ViewEx getView()
+   {
+      return view;
+   }
+
+   public void cancelClosing()
+   {
+      closingCanceled = true;
+   }
+
+   public boolean isClosingCanceled()
+   {
+      return closingCanceled;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ClosingViewHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(ClosingViewHandler handler)
+   {
+      handler.onClosingView(this);
+   }
 
 }

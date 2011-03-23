@@ -19,13 +19,11 @@
 
 package org.exoplatform.ide.client.app.impl.layers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.ide.client.app.impl.Layer;
-import org.exoplatform.ide.client.app.impl.Panel;
+import org.exoplatform.ide.client.app.impl.panel.PanelImpl;
 
 /**
  * 
@@ -38,24 +36,19 @@ import org.exoplatform.ide.client.app.impl.Panel;
 public class PanelsLayer extends Layer
 {
 
-   private Map<String, Panel> panels = new HashMap<String, Panel>();
+   private Map<String, PanelImpl> panels = new HashMap<String, PanelImpl>();
 
-   public Panel addPanel(String panelId, String[] acceptableTypes)
+   public PanelImpl addPanel(String panelId, String[] acceptableTypes)
    {
-      Panel panel = new Panel(panelId, acceptableTypes);
+      PanelImpl panel = new PanelImpl(panelId, acceptableTypes);
       add(panel);
       panels.put(panel.getPanelId(), panel);
       return panel;
    }
 
-   public Map<String, Panel> getPanels()
+   public Map<String, PanelImpl> getPanels()
    {
       return panels;
-   }
-
-   public List<Panel> getPanelsAsList()
-   {
-      return new ArrayList<Panel>(panels.values());
    }
 
 }

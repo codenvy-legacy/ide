@@ -27,9 +27,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @version $
  */
 
-public interface HasViewOpenedHandler
+public interface HasClosingViewHandler
 {
    
-   HandlerRegistration addViewOpenedHandler(ViewOpenedHandler viewOpenedHandler);
+   HandlerRegistration addClosingViewHandler(ClosingViewHandler closingViewHandler);
 
 }

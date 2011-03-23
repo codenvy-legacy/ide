@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.app.api;
 
+import org.exoplatform.ide.client.framework.ui.gwt.HasClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.HasViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.HasViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
-
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,21 +31,14 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
  * @version $
  */
 
-public interface Perspective extends HasViewVisibilityChangedHandler
+public interface Perspective extends HasViewVisibilityChangedHandler, 
+HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
 {
-   
-   void build();
-   
-   void openView(ViewEx view);
-   
-   void closeView(String viewId);
-   
-   void addViewOpenedHandler(ViewOpenedHandler viewOpenedHandler);
 
-   void removeViewOpenedHandler(ViewOpenedHandler viewOpenedHandler);
-   
-   void addViewClosedHandler(ViewClosedHandler viewClosedHandler);
-   
-   void removeViewClosedHandler(ViewClosedHandler viewClosedHandler);
+   void build();
+
+   void openView(ViewEx view);
+
+   void closeView(String viewId);
 
 }

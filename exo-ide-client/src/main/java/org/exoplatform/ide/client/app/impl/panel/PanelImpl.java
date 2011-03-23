@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.impl;
+package org.exoplatform.ide.client.app.impl.panel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -25,8 +25,9 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.tab.CloseTabHandler;
 import org.exoplatform.gwtframework.ui.client.tab.TabPanel;
 import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
-import org.exoplatform.ide.client.app.impl.panel.HidePanelHandler;
-import org.exoplatform.ide.client.app.impl.panel.ShowPanelHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.HasClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.HasViewTitleChangedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
@@ -54,20 +55,37 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class Panel extends AbsolutePanel implements RequiresResize, HasViewVisibilityChangedHandler
+public class PanelImpl extends AbsolutePanel implements RequiresResize, HasViewVisibilityChangedHandler,
+   HasClosingViewHandler
 {
 
+   /**
+    * ID of this Panel
+    */
    private String panelId;
 
+   /**
+    * Width of this Panel
+    */
    private int width;
 
+   /**
+    * Height of this panel
+    */
    private int height;
 
+   /**
+    * List of opened Views
+    */
    private LinkedHashMap<String, ViewEx> views = new LinkedHashMap<String, ViewEx>();
 
+   /**
+    * Each View wrapped in special wrapper
+    */
    private LinkedHashMap<String, Widget> viewWrappers = new LinkedHashMap<String, Widget>();
 
-   private LinkedHashMap<String, ViewController> viewControllers = new LinkedHashMap<String, Panel.ViewController>();
+   private LinkedHashMap<String, ViewController> viewControllers =
+      new LinkedHashMap<String, PanelImpl.ViewController>();
 
    private String currentViewId;
 
@@ -86,7 +104,7 @@ public class Panel extends AbsolutePanel implements RequiresResize, HasViewVisib
    private List<ViewVisibilityChangedHandler> viewVisibilityChangedHandlers =
       new ArrayList<ViewVisibilityChangedHandler>();
 
-   public Panel(String panelId, String[] acceptableTypes)
+   public PanelImpl(String panelId, String[] acceptableTypes)
    {
       this.panelId = panelId;
       this.acceptableTypes = acceptableTypes;
@@ -217,6 +235,19 @@ public class Panel extends AbsolutePanel implements RequiresResize, HasViewVisib
       public boolean onCloseTab(String tabId)
       {
          String viewId = tabId;
+
+         ViewEx view = views.get(viewId);
+         ClosingViewEvent closingViewEvent = new ClosingViewEvent(view);
+         for (ClosingViewHandler closingViewHandler : closingViewHandlers)
+         {
+            closingViewHandler.onClosingView(closingViewEvent);
+         }
+
+         if (closingViewEvent.isClosingCanceled())
+         {
+            return false;
+         }
+
          doCloseView(viewId);
          return true;
       }
@@ -363,25 +394,24 @@ public class Panel extends AbsolutePanel implements RequiresResize, HasViewVisib
       viewOpenedHandlers.add(viewOpenedHandler);
    }
 
-   public void removeViewOpenedHandler(ViewOpenedHandler viewOpenedHandler)
-   {
-      viewOpenedHandlers.remove(viewOpenedHandler);
-   }
-
    public void addViewClosedHandler(ViewClosedHandler viewClosedHandler)
    {
       viewClosedHandlers.add(viewClosedHandler);
-   }
-
-   public void removeViewClosedHandler(ViewClosedHandler viewClosedHandler)
-   {
-      viewClosedHandlers.remove(viewClosedHandler);
    }
 
    @Override
    public HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler)
    {
       viewVisibilityChangedHandlers.add(viewVisibilityChangedHandler);
+      return null;
+   }
+
+   private List<ClosingViewHandler> closingViewHandlers = new ArrayList<ClosingViewHandler>();
+
+   @Override
+   public HandlerRegistration addClosingViewHandler(ClosingViewHandler closingViewHandler)
+   {
+      closingViewHandlers.add(closingViewHandler);
       return null;
    }
 

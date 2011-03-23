@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.module.development.DevelopmentModule;
 import org.exoplatform.ide.client.module.edit.TextEditModule;
 import org.exoplatform.ide.client.module.preferences.PreferencesModule;
 import org.exoplatform.ide.client.navigation.NavigationModule;
+import org.exoplatform.ide.client.test.TestPresenter;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 /**
@@ -79,6 +80,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(EVENT_BUS, ideForm, controlsRegistration);
+      
+      new TestPresenter(EVENT_BUS);
       
       new AutoCompletionManager(EVENT_BUS);
 
