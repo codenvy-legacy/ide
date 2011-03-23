@@ -18,21 +18,19 @@
  */
 package org.exoplatform.ide.client.outline;
 
+import java.util.List;
+
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
-
-import org.exoplatform.gwtframework.editor.api.TextEditor;
-import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.View;
-import org.exoplatform.ide.client.framework.ui.ViewType;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.editor.api.Editor;
-
-import java.util.List;
 
 /**
  * Form for displaying code outline.
@@ -46,26 +44,23 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class OutlineForm extends View implements OutlinePresenter.Display
+public class OutlineForm extends AbstractView implements OutlinePresenter.Display
 {
    private static final String OUTLINE_TREE_GRID_ID = "ideOutlineTreeGrid";
 
    public static final String ID = "ideOutlineForm";
 
-   private Image OUTLINE_TAB_ICON = new Image(IDEImageBundle.INSTANCE.outline());
+   private static Image OUTLINE_TAB_ICON = new Image(IDEImageBundle.INSTANCE.outline());
 
    private HandlerManager eventBus;
 
    private OutlinePresenter presenter;
 
-   private OutlineTreeGrid<Token> treeGrid;
+   private OutlineTreeGrid<TokenBeenImpl> treeGrid;
 
    public OutlineForm(HandlerManager bus, Editor activeTextEditor, File activeFile)
    {
-      super(ID, bus);
-      setTitle("Outline");
-      setType(ViewType.OUTLINE);
-      setImage(OUTLINE_TAB_ICON);
+      super(ID, "information", "Outline", OUTLINE_TAB_ICON);
 
       eventBus = bus;
 
@@ -78,18 +73,18 @@ public class OutlineForm extends View implements OutlinePresenter.Display
 
    private void createTreeGrid()
    {
-      treeGrid = new OutlineTreeGrid<Token>(OUTLINE_TREE_GRID_ID);
+      treeGrid = new OutlineTreeGrid<TokenBeenImpl>(OUTLINE_TREE_GRID_ID);
       ScrollPanel treeWrapper = new ScrollPanel(treeGrid);
       treeWrapper.setSize("100%", "100%");
-      addMember(treeWrapper);
+      add(treeWrapper);
    }
 
-   public TreeGridItem<Token> getOutlineTree()
+   public TreeGridItem<TokenBeenImpl> getOutlineTree()
    {
       return treeGrid;
    }
 
-   public void selectToken(Token token)
+   public void selectToken(TokenBeenImpl token)
    {
       if (token != null)
       {
@@ -97,33 +92,15 @@ public class OutlineForm extends View implements OutlinePresenter.Display
       }
    }
 
-   /**
-    * @see com.smartgwt.client.widgets.BaseWidget#onDraw()
-    */
-   @Override
-   protected void onDraw()
-   {
-      eventBus.fireEvent(new ViewOpenedEvent(ID));
-      super.onDraw();
-   }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.View#onDestroy()
-    */
-   @Override
-   protected void onDestroy()
-   {
-      presenter.destroy();
-      super.onDestroy();
-   }
-
-   public List<Token> getSelectedTokens()
+   public List<TokenBeenImpl> getSelectedTokens()
    {
       return treeGrid.getSelectedTokens();
    }
 
    public void setFocus()
    {
-      focus();
+      setFocus();
    }
+
 }

@@ -23,12 +23,13 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.gwtframework.editor.api.Token.TokenType;
-import org.exoplatform.gwtframework.editor.event.EditorContentChangedEvent;
-import org.exoplatform.gwtframework.editor.event.EditorContentChangedHandler;
-import org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent;
-import org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
+import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -66,21 +67,21 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
        * Get outline tree grid
        * @return {@link TreeGridItem}
        */
-      TreeGridItem<Token> getOutlineTree();
+      TreeGridItem<TokenBeenImpl> getOutlineTree();
 
       /**
        * Select row with token in outline tree.
        * 
        * @param token - token to select
        */
-      void selectToken(Token token);
+      void selectToken(TokenBeenImpl token);
 
       /**
        * Get the list of selected tokens.
        * 
        * @return {@link List}
        */
-      List<Token> getSelectedTokens();
+      List<TokenBeenImpl> getSelectedTokens();
       
       /**
        * Set focus on treegrid.
@@ -94,13 +95,13 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private Display display;
 
-   private List<Token> tokens = new ArrayList<Token>();
+   private List<TokenBeenImpl> tokens = new ArrayList<TokenBeenImpl>();
 
    private int currentRow;
 
    private boolean goToLine;
 
-   private Token currentToken;
+   private TokenBeenImpl currentToken;
 
    private File activeFile;
 
@@ -125,9 +126,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       display = d;
 
-      display.getOutlineTree().addSelectionHandler(new SelectionHandler<Token>()
+      display.getOutlineTree().addSelectionHandler(new SelectionHandler<TokenBeenImpl>()
       {
-         public void onSelection(SelectionEvent<Token> event)
+         public void onSelection(SelectionEvent<TokenBeenImpl> event)
          {
             if (currentToken != null && event.getSelectedItem().getName().equals(currentToken.getName())
                && event.getSelectedItem().getLineNumber() == currentToken.getLineNumber())
@@ -170,11 +171,13 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    
    private void refreshOutline(Editor editor)
    {
-//      tokens = editor.getTokenList()
-//      display.getOutlineTree().setValue(new Token("", null, -1, tokens));
-//      currentRow = editor.getCursorRow();
-//      currentToken = null;
-//      selectTokenByRow(tokens);
+      tokens = (List<TokenBeenImpl>) editor.getTokenList();
+      TokenBeenImpl token = new TokenBeenImpl();
+      token.setSubTokenList(tokens);
+      display.getOutlineTree().setValue(token);
+      currentRow = editor.getCursorRow();
+      currentToken = null;
+      selectTokenByRow(tokens);
    }
 
    /**
@@ -242,11 +245,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       else
       {
          tokens = null;
-         display.getOutlineTree().setValue(new Token("", null));
+         display.getOutlineTree().setValue(new TokenBeenImpl("", null));
       }
    }
 
-   private boolean selectTokenByRow(List<Token> tokens)
+   private boolean selectTokenByRow(List<TokenBeenImpl> tokens)
    {
       if (tokens == null || tokens.size() == 0)
       {
@@ -256,7 +259,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       //if one token in list
       if (tokens.size() == 1)
       {
-         Token token = tokens.get(0);
+         TokenBeenImpl token = tokens.get(0);
          if (token.getType().equals(TokenType.TAG_BREAK))
          {
             return false;
@@ -278,8 +281,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       //if more then one token in list
       for (int i = 0; i < tokens.size() - 1; i++)
       {
-         Token token = tokens.get(i);
-         Token next = tokens.get(i + 1);
+         TokenBeenImpl token = tokens.get(i);
+         TokenBeenImpl next = tokens.get(i + 1);
 
          if (currentRow == token.getLineNumber())
          {
@@ -337,7 +340,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       return false;
    }
 
-   private void selectToken(Token token)
+   private void selectToken(TokenBeenImpl token)
    {
       if (!isCurrentTokenSelected(token))
       {
@@ -352,7 +355,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
     * @param token token to check
     * @return boolean
     */
-   private boolean isCurrentTokenSelected(Token token)
+   private boolean isCurrentTokenSelected(TokenBeenImpl token)
    {
       if (currentToken == null)
       {

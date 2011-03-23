@@ -32,7 +32,7 @@ public class EditorGoToLineEvent extends GwtEvent<EditorGoToLineHandler>
 
    private int lineNumber;
    
-   private int columnNumber = -1;
+   private int columnNumber = 1;
    
    public EditorGoToLineEvent(int lineNumber)
    {

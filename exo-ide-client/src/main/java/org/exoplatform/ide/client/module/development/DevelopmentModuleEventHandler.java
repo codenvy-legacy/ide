@@ -19,7 +19,6 @@
 package org.exoplatform.ide.client.module.development;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -32,6 +31,7 @@ import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettin
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.module.development.event.ShowOutlineHandler;
@@ -92,7 +92,7 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
       if (event.isShow())
       {
-         View view = new OutlineForm(eventBus, activeTextEditor, activeFile);
+         AbstractView view = new OutlineForm(eventBus, activeTextEditor, activeFile);
          IDE.getInstance().openView(view);
       }
       else

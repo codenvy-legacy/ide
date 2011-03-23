@@ -27,8 +27,9 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.editor.api.Token;
-import org.exoplatform.gwtframework.editor.api.Token.TokenType;
+import org.exoplatform.ide.editor.api.codeassitant.Modifier;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -42,7 +43,7 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframework.ui.client.component.Tree<T>
+public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gwtframework.ui.client.component.Tree<T>
 {
 
    private static final String VAR_ICON = Images.Outline.VAR_ITEM;
@@ -120,13 +121,13 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * @param parentNode
     * @param children
     */
-   private void fillTreeItems(TreeItem parentNode, List<Token> children)
+   private void fillTreeItems(TreeItem parentNode, List<TokenBeenImpl> children)
    {
       if (parentNode == null || children == null)
          return;
       //Clear parent node children:
       parentNode.removeItems();
-      for (Token child : children)
+      for (TokenBeenImpl child : children)
       {
          if (child != null && child.getName() != null && child.getType() != null)
          {
@@ -145,12 +146,12 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * 
     * @param children
     */
-   private void fillTreeItems(List<Token> children)
+   private void fillTreeItems(List<TokenBeenImpl> children)
    {
       if (children == null)
          return;
       tree.removeItems();
-      for (Token child : children)
+      for (TokenBeenImpl child : children)
       {
          if (child != null && child.getName() != null && child.getType() != null)
          {
@@ -170,7 +171,7 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * @param token token to display
     * @return {@link String} display string of the token
     */
-   private String getTokenDisplayTitle(Token token)
+   private String getTokenDisplayTitle(TokenBeenImpl token)
    {
       String name = token.getName();
       boolean isDeprecated = isDeprecated(token);
@@ -246,12 +247,12 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * @param token method
     * @return boolean whether method is deprecated
     */
-   private boolean isDeprecated(Token token)
+   private boolean isDeprecated(TokenBeenImpl token)
    {
       if (token.getAnnotations() == null)
          return false;
 
-      for (Token annotation : token.getAnnotations())
+      for (TokenBeenImpl annotation : token.getAnnotations())
       {
          if ("@deprecated".equalsIgnoreCase(annotation.getName()))
          {
@@ -267,7 +268,7 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * @param token token
     * @return icon
     */
-   private String getTokenIcon(Token token)
+   private String getTokenIcon(TokenBeenImpl token)
    {
       if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()) && !TokenType.GROOVY_TAG.equals(token.getType()))
       {
@@ -299,20 +300,8 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
          case CLASS :
             return CLASS_ICON;
 
-         case OBJECT :
-            return OBJECT_ICON;
-
          case ARRAY :
             return ARRAY_ICON;
-
-         case NUMBER :
-         case BOOLEAN :
-         case STRING :
-         case NULL :
-            return DATA_ICON;
-
-         case ERROR :
-            return ERROR_ICON;
 
          case INTERFACE :
             return INTERFACE_ICON;
@@ -327,7 +316,7 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * 
     * @return {@link String} icon
     */
-   private String getIconForJavaFiles(Token token)
+   private String getIconForJavaFiles(TokenBeenImpl token)
    {
       switch (token.getType())
       {
@@ -380,10 +369,10 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
    }
 
    /**
-    * @param token {@link Token} 
+    * @param token {@link TokenBeenImpl} 
     * @return html element with modifers
     */
-   private String getModifiersContainer(Token token)
+   private String getModifiersContainer(TokenBeenImpl token)
    {
       //Get annotation list like string:
       String annotationList = getAnnotationList(token);
@@ -404,49 +393,49 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
       return span;
    }
 
-   private boolean isFinal(Token token)
+   private boolean isFinal(TokenBeenImpl token)
    {
-      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.FINAL);
+      return token.getModifiers() != null && token.getModifiers().contains(Modifier.FINAL);
    }
 
-   private boolean isAbstract(Token token)
+   private boolean isAbstract(TokenBeenImpl token)
    {
-      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.ABSTRACT);
+      return token.getModifiers() != null && token.getModifiers().contains(Modifier.ABSTRACT);
    }
 
-   private boolean isTransient(Token token)
+   private boolean isTransient(TokenBeenImpl token)
    {
-      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.TRANSIENT);
+      return token.getModifiers() != null && token.getModifiers().contains(Modifier.TRANSIENT);
    }
 
-   private boolean isVolative(Token token)
+   private boolean isVolative(TokenBeenImpl token)
    {
-      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.VOLATILE);
+      return token.getModifiers() != null && token.getModifiers().contains(Modifier.VOLATILE);
    }
 
-   private boolean isStatic(Token token)
+   private boolean isStatic(TokenBeenImpl token)
    {
-      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.STATIC);
+      return token.getModifiers() != null && token.getModifiers().contains(Modifier.STATIC);
    }
 
-   private boolean isProtected(Token token)
+   private boolean isProtected(TokenBeenImpl token)
    {
-      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.PROTECTED);
+      return token.getModifiers() != null && token.getModifiers().contains(Modifier.PROTECTED);
    }
 
-   private boolean isPrivate(Token token)
+   private boolean isPrivate(TokenBeenImpl token)
    {
-      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.PRIVATE);
+      return token.getModifiers() != null && token.getModifiers().contains(Modifier.PRIVATE);
    }
 
-   private boolean isPublic(Token token)
+   private boolean isPublic(TokenBeenImpl token)
    {
-      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.PUBLIC);
+      return token.getModifiers() != null && token.getModifiers().contains(Modifier.PUBLIC);
    }
 
-   private boolean isSynchronized(Token token)
+   private boolean isSynchronized(TokenBeenImpl token)
    {
-      return token.getModifiers() != null && token.getModifiers().contains(Token.Modifier.SYNCHRONIZED);
+      return token.getModifiers() != null && token.getModifiers().contains(Modifier.SYNCHRONIZED);
    }
 
    /**
@@ -465,7 +454,7 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * 
     * @param token
     */
-   public void selectToken(Token token)
+   public void selectToken(TokenBeenImpl token)
    {
       if (token.getName() == null)
          return;
@@ -507,11 +496,11 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * 
     * @return {@link List}
     */
-   public List<Token> getSelectedTokens()
+   public List<TokenBeenImpl> getSelectedTokens()
    {
-      List<Token> selectedItems = new ArrayList<Token>();
+      List<TokenBeenImpl> selectedItems = new ArrayList<TokenBeenImpl>();
       if (tree.getSelectedItem() != null)
-         selectedItems.add((Token)tree.getSelectedItem().getUserObject());
+         selectedItems.add((TokenBeenImpl)tree.getSelectedItem().getUserObject());
       return selectedItems;
    }
 
@@ -520,7 +509,7 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * @param token
     * @return string like " : java.lang.String", or "".
     */
-   private String getElementType(Token token)
+   private String getElementType(TokenBeenImpl token)
    {
       if (token.getElementType() != null)
       {
@@ -534,18 +523,18 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * @param token
     * @return parameters list like '(String, int)', or '()' if there are no parameters
     */
-   private String getParametersList(Token token)
+   private String getParametersList(TokenBeenImpl token)
    {
       String parametersDescription = "(";
 
       if (token.getParameters() != null && token.getParameters().size() > 0)
       {
 
-         List<Token> parameters = token.getParameters();
+         List<TokenBeenImpl> parameters = token.getParameters();
 
          for (int i = 0; i < parameters.size(); i++)
          {
-            Token parameter = parameters.get(i);
+            TokenBeenImpl parameter = parameters.get(i);
             if (i > 0)
             {
                parametersDescription += ", ";
@@ -567,13 +556,13 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * @param token
     * @return annotations like '@Path; @PathParam(&#34;name&#34;)' or "", if there are no annotations in the token
     */
-   private String getAnnotationList(Token token)
+   private String getAnnotationList(TokenBeenImpl token)
    {
       if (token.getAnnotations() != null && token.getAnnotations().size() > 0)
       {
          String title = "";
 
-         for (Token annotation : token.getAnnotations())
+         for (TokenBeenImpl annotation : token.getAnnotations())
          {
             title += annotation.getName() + "; ";
          }
@@ -616,15 +605,15 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * @param token token
     * @return {@link TreeItem}
     */
-   private TreeItem getTreeItemByToken(Token token)
+   private TreeItem getTreeItemByToken(TokenBeenImpl token)
    {
       for (int i = 0; i < tree.getItemCount(); i++)
       {
          TreeItem child = tree.getItem(i);
          if (child.getUserObject() == null)
             continue;
-         if (((Token)child.getUserObject()).getName().equals(token.getName())
-            && ((Token)child.getUserObject()).getLineNumber() == token.getLineNumber())
+         if (((TokenBeenImpl)child.getUserObject()).getName().equals(token.getName())
+            && ((TokenBeenImpl)child.getUserObject()).getLineNumber() == token.getLineNumber())
          {
             return child;
          }
@@ -642,15 +631,15 @@ public class OutlineTreeGrid<T extends Token> extends org.exoplatform.gwtframewo
     * @param token token
     * @return {@link TreeItem}
     */
-   private TreeItem getChild(TreeItem parent, Token token)
+   private TreeItem getChild(TreeItem parent, TokenBeenImpl token)
    {
       for (int i = 0; i < parent.getChildCount(); i++)
       {
          TreeItem child = parent.getChild(i);
          if (child.getUserObject() == null)
             continue;
-         if (((Token)child.getUserObject()).getName().equals(token.getName())
-            && ((Token)child.getUserObject()).getLineNumber() == token.getLineNumber())
+         if (((TokenBeenImpl)child.getUserObject()).getName().equals(token.getName())
+            && ((TokenBeenImpl)child.getUserObject()).getLineNumber() == token.getLineNumber())
          {
             return child;
          }
