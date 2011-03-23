@@ -54,6 +54,8 @@ public class EditorsListGrid extends ListGrid<EditorInfo>
                {
                   if(item.isDefault())
                    {
+                      getCellTable().getSelectionModel().setSelected(item, true);
+                      
                       return item.getEditor().getDescription()+"&nbsp;[Default]";         
                    }
                    else
