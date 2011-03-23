@@ -20,8 +20,8 @@ package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.exoplatform.ide.git.server.jgit.JGitConnection;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.PullRequest;
@@ -68,5 +68,39 @@ public class PullTest extends BaseTest
       assertTrue(new File(fetchWorkDir, "t-pull1").exists());
       assertTrue(new File(fetchWorkDir, "t-pull2").exists());
       assertEquals("pull test", new Git(pullTestRepo).log().call().iterator().next().getFullMessage());
+   }
+
+   public void testPullRemote() throws Exception
+   {
+      String branchName = "testPullRemote";
+      Repository sourceRepo = getRepository();
+      Git sourceGit = new Git(sourceRepo);
+      sourceGit.branchCreate().setName(branchName).call();
+      sourceGit.checkout().setName(branchName).call();
+      addFile(sourceRepo.getWorkTree(), "testPullOnly", "");
+      sourceGit.add().addFilepattern(".").call();
+      sourceGit.commit().setMessage(branchName).call();
+
+      File newRepoWorkDir = new File(sourceRepo.getWorkTree().getParentFile(), "TestPullRemote");
+      forClean.add(newRepoWorkDir);
+      FileRepository newRepo = new FileRepository(new File(newRepoWorkDir, ".git"));
+      newRepo.create();
+      StoredConfig config = newRepo.getConfig();
+      config.setString("user", null, "name", "andrew00x");
+      config.setString("user", null, "email", "andrew00x@gmail.com");
+
+      //
+      addFile(newRepoWorkDir, "empty", "");
+      Git newGit = new Git(newRepo);
+      newGit.add().addFilepattern(".").call();
+      newGit.commit().setMessage("empty").call();
+
+      PullRequest request = new PullRequest();
+
+      request.setRemote(sourceRepo.getWorkTree().getAbsolutePath());
+      request.setRefSpec(branchName);
+      new JGitConnection(newRepo).pull(request);
+      
+      assertTrue(new File(newRepoWorkDir, "testPullOnly").exists());
    }
 }

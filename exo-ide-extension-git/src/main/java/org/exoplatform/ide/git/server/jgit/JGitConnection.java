@@ -27,16 +27,13 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.LogCommand;
-import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.RmCommand;
 import org.eclipse.jgit.api.TagCommand;
-import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.DetachedHeadException;
-import org.eclipse.jgit.api.errors.InvalidConfigurationException;
 import org.eclipse.jgit.api.errors.InvalidMergeHeadsException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
@@ -113,6 +110,7 @@ import org.exoplatform.ide.git.shared.MoveRequest;
 import org.exoplatform.ide.git.shared.PullRequest;
 import org.exoplatform.ide.git.shared.PushRequest;
 import org.exoplatform.ide.git.shared.ResetRequest;
+import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
 import org.exoplatform.ide.git.shared.StatusRequest;
@@ -120,7 +118,6 @@ import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
 import org.exoplatform.ide.git.shared.TagDeleteRequest;
 import org.exoplatform.ide.git.shared.TagListRequest;
-import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 
 import java.io.File;
 import java.io.IOException;
@@ -361,13 +358,13 @@ public class JGitConnection implements GitConnection
             remoteConfig.addFetchRefSpec(fetchRefSpec);
          }
 
+         remoteConfig.update(config);
+
          config.setBoolean(ConfigConstants.CONFIG_CORE_SECTION, null, ConfigConstants.CONFIG_KEY_BARE, false);
          config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_REMOTE,
             remoteName);
          config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_MERGE,
             branchRef);
-
-         remoteConfig.update(config);
 
          GitUser gitUser = request.getUser();
          if (gitUser != null)
@@ -605,15 +602,27 @@ public class JGitConnection implements GitConnection
          FetchCommand fetchCommand = new Git(repository).fetch();
 
          String remote = request.getRemote();
-         if (request.getRemote() != null)
+         if (remote != null)
             fetchCommand.setRemote(remote);
 
          String[] refSpec = request.getRefSpec();
          if (refSpec != null && refSpec.length > 0)
          {
+            StoredConfig config = repository.getConfig();
+            Set<String> remoteNames = config.getSubsections("remote");
+            // check is specified remote is name of remote configuration but not URL of remote repository.
+            final boolean isRemoteName = remoteNames.contains(remote);
             List<RefSpec> refSpecInst = new ArrayList<RefSpec>(refSpec.length);
             for (int i = 0; i < refSpec.length; i++)
-               refSpecInst.add(new RefSpec(refSpec[i]));
+            {
+               // Add refs prefixes if branches specified in short form and remote name is specified.
+               RefSpec fetchRefSpec = //
+                  (refSpec[i].indexOf(':') < 0 && isRemoteName) //
+                     ? new RefSpec(Constants.R_HEADS + refSpec[i] + ":" + Constants.R_REMOTES + remote + "/"
+                        + refSpec[i]) // 
+                     : new RefSpec(refSpec[i]);
+               refSpecInst.add(fetchRefSpec);
+            }
             fetchCommand.setRefSpecs(refSpecInst);
          }
 
@@ -749,23 +758,47 @@ public class JGitConnection implements GitConnection
    @Override
    public void pull(PullRequest request) throws GitException
    {
-      PullCommand pullCommand = new Git(repository).pull();
-      int timeout = request.getTimeout();
-      if (timeout > 0)
-         pullCommand.setTimeout(timeout);
       try
       {
-         pullCommand.call();
+         //      PullCommand pullCommand = new Git(repository).pull();
+         //      int timeout = request.getTimeout();
+         //      if (timeout > 0)
+         //         pullCommand.setTimeout(timeout);
+         //         pullCommand.call();
+         // ********************************************************
+
+         String fullBranch = repository.getFullBranch();
+         if (!fullBranch.startsWith(Constants.R_HEADS))
+            throw new DetachedHeadException("HEAD is detached. Cannot pull. ");
+
+         FetchCommand fetchCommand = new Git(repository).fetch();
+
+         String remote = request.getRemote();
+         if (remote != null)
+            fetchCommand.setRemote(remote);
+
+         String refSpec = request.getRefSpec();
+         if (refSpec != null)
+         {
+            RefSpec fetchRefSpec = (refSpec.indexOf(':') < 0) //
+               ? new RefSpec(Constants.R_HEADS + refSpec + ":" + Constants.R_HEADS + Constants.MASTER) // 
+               : new RefSpec(refSpec);
+            fetchCommand.setRefSpecs(fetchRefSpec);
+         }
+
+         int timeout = request.getTimeout();
+         if (timeout > 0)
+            fetchCommand.setTimeout(timeout);
+
+         @SuppressWarnings("unused")
+         FetchResult fetchResult = fetchCommand.call();
+
+         //Ref ref = fetchResult.getAdvertisedRef(branchRef);
+         Ref ref = repository.getRef(Constants.FETCH_HEAD);
+
+         new Git(repository).merge().include(ref).call();
       }
       catch (WrongRepositoryStateException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (InvalidConfigurationException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (DetachedHeadException e)
       {
          throw new GitException(e.getMessage(), e);
       }
@@ -773,7 +806,32 @@ public class JGitConnection implements GitConnection
       {
          throw new IllegalArgumentException(e.getMessage());
       }
-      catch (CanceledException e)
+      catch (NoMessageException e)
+      {
+         // Looks like never happen.
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (InvalidMergeHeadsException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (DetachedHeadException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (CheckoutConflictException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (ConcurrentRefUpdateException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (NoHeadException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (IOException e)
       {
          throw new GitException(e.getMessage(), e);
       }

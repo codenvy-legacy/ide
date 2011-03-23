@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.git.shared;
 
-
 /**
  * Request to fetch data from remote repository.
  * 
@@ -30,14 +29,22 @@ public class FetchRequest extends GitRequest
    /**
     * List of refspec to fetch.
     * <p>
-    * Expected form is "refs/heads/featured:refs/remotes/origin/featured".
-    * Branch 'featured' from remote repository will be fetched to
-    * 'remotes/origin/featured'.
+    * Expected form is:
+    * <ul>
+    * <li>
+    * refs/heads/featured:refs/remotes/origin/featured - branch 'featured' from
+    * remote repository will be fetched to 'refs/remotes/origin/featured'.</li>
+    * <li>featured - remote branch name. In this case {@link #remote} must be
+    * remote name but not uri.</li>
+    * </ul>
+    * <p>
+    * If either <code>null</code> or empty array then default remote settings of
+    * repository will be used.
     */
    private String[] refSpec;
 
    /**
-    * Remote name. If <code>null</code> then 'origin' will be used.
+    * Remote name or uri. If <code>null</code> then 'origin' will be used.
     */
    private String remote;
 

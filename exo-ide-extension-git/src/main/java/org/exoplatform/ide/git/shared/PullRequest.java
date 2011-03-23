@@ -27,6 +27,14 @@ package org.exoplatform.ide.git.shared;
  */
 public class PullRequest extends GitRequest
 {
+   // TODO : docs
+   private String refSpec;
+
+   /**
+    * Remote name. If <code>null</code> then 'origin' will be used.
+    */
+   private String remote;
+
    /**
     * Time (in seconds) to wait without data transfer occurring before aborting
     * fetching data from remote repository.
@@ -37,8 +45,10 @@ public class PullRequest extends GitRequest
     * @param timeout time (in seconds) to wait without data transfer occurring
     *           before aborting fetching data from remote repository
     */
-   public PullRequest(int timeout)
+   public PullRequest(String remote, String refSpec, int timeout)
    {
+      this.remote = remote;
+      this.refSpec = refSpec;
       this.timeout = timeout;
    }
 
@@ -48,6 +58,40 @@ public class PullRequest extends GitRequest
     */
    public PullRequest()
    {
+   }
+
+   /**
+    * @return refspec to fetch
+    * @see #refSpec
+    */
+   public String getRefSpec()
+   {
+      return refSpec;
+   }
+
+   /**
+    * @param refSpec refspec to fetch
+    * @see #refSpec
+    */
+   public void setRefSpec(String refSpec)
+   {
+      this.refSpec = refSpec;
+   }
+
+   /**
+    * @return remote name. If <code>null</code> then 'origin' will be used
+    */
+   public String getRemote()
+   {
+      return remote;
+   }
+
+   /**
+    * @param remote remote name
+    */
+   public void setRemote(String remote)
+   {
+      this.remote = remote;
    }
 
    /**

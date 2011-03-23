@@ -76,4 +76,31 @@ public class FetchTest extends BaseTest
       assertTrue(new File(fetchWorkDir, "t-fetch2").exists());
       assertEquals("fetch test", git.log().call().iterator().next().getFullMessage());
    }
+
+   public void testFetchBranch() throws Exception
+   {
+      String branchName = "testFetchBranch";
+      Repository origin = getRepository();
+      Git originGit = new Git(origin);
+      originGit.branchCreate().setName(branchName).call();
+      originGit.checkout().setName(branchName).call();
+      addFile(origin.getWorkTree(), "aaa", "AAA\n");
+      originGit.add().addFilepattern(".").call();
+      originGit.commit().setMessage("aaa").call();
+      
+      FetchRequest request = new FetchRequest();
+      request.setRemote("origin");
+      request.setRefSpec(new String[] {branchName});
+      new JGitConnection(fetchTestRepo).fetch(request);
+
+      Git newGit = new Git(fetchTestRepo);
+      
+      newGit.merge().include(fetchTestRepo.getRef(Constants.FETCH_HEAD)).call();
+
+      File fetchWorkDir = fetchTestRepo.getWorkTree();
+      assertTrue(new File(fetchWorkDir, "t-fetch1").exists());
+      assertTrue(new File(fetchWorkDir, "t-fetch2").exists());
+      assertTrue(new File(fetchWorkDir, "aaa").exists());
+      assertEquals("aaa", newGit.log().call().iterator().next().getFullMessage());
+   }
 }
