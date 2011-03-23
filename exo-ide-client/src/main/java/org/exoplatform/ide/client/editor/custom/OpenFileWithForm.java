@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -169,5 +170,9 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    {
       openButton.enable();
    }
-   
+
+   public void setSelectedItem(EditorInfo item)
+   {
+      editorsListGrid.getCellTable().getSelectionModel().setSelected(item, true);
+   }
 }

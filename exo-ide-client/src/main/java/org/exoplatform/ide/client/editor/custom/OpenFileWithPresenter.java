@@ -27,8 +27,8 @@ import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.editor.api.EditorNotFoundException;
 import org.exoplatform.ide.client.editor.EditorFactory;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -74,6 +74,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
 
       HasClickHandlers getCancelButton();
 
+      void setSelectedItem(EditorInfo item);      
    }
 
    private HandlerManager eventBus;
@@ -190,11 +191,14 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
             defaultEditor = EditorFactory.getDefaultEditor(mimeType);
          }
 
+         EditorInfo defaultEditorItem = null;
+         
          for (EditorProducer e : editorsItems)
          {
             if (e.getDescription().equals(defaultEditor.getDescription()))
             {
-               editorInfoItems.add(new EditorInfo(e, true));
+               defaultEditorItem = new EditorInfo(e, true);
+               editorInfoItems.add(defaultEditorItem); 
             }
             else
             {
@@ -203,6 +207,12 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
          }
 
          display.getEditorsListGrid().setValue(editorInfoItems);
+       
+         if (defaultEditorItem != null)
+         {
+            display.setSelectedItem(defaultEditorItem);            
+         }
+
       }
       catch (EditorNotFoundException e)
       {
