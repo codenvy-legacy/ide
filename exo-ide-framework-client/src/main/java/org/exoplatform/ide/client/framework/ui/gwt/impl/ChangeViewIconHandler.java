@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.ui.gwt;
+package org.exoplatform.ide.client.framework.ui.gwt.impl;
 
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,9 +27,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @version $
  */
 
-public interface HasSetViewVisibleHandler
+public interface ChangeViewIconHandler extends EventHandler
 {
-   
-   HandlerRegistration addSetViewVisibleHandler(SetViewVisibleHandler setViewVisibleHandler);
 
+   void onChangeViewIcon(ChangeViewIconEvent event);
+   
 }

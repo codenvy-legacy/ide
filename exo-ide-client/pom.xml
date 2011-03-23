@@ -9,11 +9,14 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-client</artifactId>
    <name>eXo IDE :: Client</name>
+   
    <dependencies>
+   
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
+   
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
@@ -120,7 +123,9 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
+   
    <build>
+   
       <resources>
          <resource>
             <directory>src/main/java</directory>
@@ -129,7 +134,9 @@
             <directory>src/main/resources</directory>
          </resource>
       </resources>
+   
       <plugins>
+   
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
@@ -137,6 +144,7 @@
                <skipTests>true</skipTests>
             </configuration>
          </plugin>
+   
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>buildnumber-maven-plugin</artifactId>
@@ -154,6 +162,7 @@
                </execution>
             </executions>
          </plugin>
+   
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
@@ -175,6 +184,7 @@
                </execution>
             </executions>
          </plugin>
+         
       </plugins>
    </build>
    <profiles>
@@ -396,11 +406,13 @@
                   <configuration>
                      <source>${maven.compiler.source}</source>
                      <target>${maven.compiler.target}</target>
+                     <showWarnings>false</showWarnings>
                      <excludes>
                         <exclude>**/IDEGadget.java</exclude>
                      </excludes>
                   </configuration>
                </plugin>
+               
             </plugins>
          </build>
       </profile>

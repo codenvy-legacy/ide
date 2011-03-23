@@ -46,7 +46,7 @@ public interface ViewEx
 
    boolean isViewVisible();
    
-   void setViewVisible(boolean isViewVisible);
+   void setViewVisible();
    
    int getDefaultWidth();
    

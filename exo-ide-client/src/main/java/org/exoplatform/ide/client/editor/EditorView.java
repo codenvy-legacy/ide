@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import org.exoplatform.ide.client.framework.ui.gwt.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 

@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.ui.gwt;
+package org.exoplatform.ide.client.framework.ui.gwt.impl;
 
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,9 +27,33 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @version $
  */
 
-public interface HasViewIconChangedHandler
+public class SetViewVisibleEvent extends GwtEvent<SetViewVisibleHandler>
 {
 
-   HandlerRegistration addViewIconChangedHandler(ViewIconChangedHandler viewIconChangedHandler);
-   
+   public static final GwtEvent.Type<SetViewVisibleHandler> TYPE = new GwtEvent.Type<SetViewVisibleHandler>();
+
+   private String viewId;
+
+   public SetViewVisibleEvent(String viewId)
+   {
+      this.viewId = viewId;
+   }
+
+   public String getViewId()
+   {
+      return viewId;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<SetViewVisibleHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(SetViewVisibleHandler handler)
+   {
+      handler.onSetViewVisible(this);
+   }
+
 }

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.example;
 
-import org.exoplatform.ide.client.framework.ui.gwt.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
 
 /**
  * Created by The eXo Platform SAS .

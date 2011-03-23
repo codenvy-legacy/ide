@@ -24,7 +24,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.gwt.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;

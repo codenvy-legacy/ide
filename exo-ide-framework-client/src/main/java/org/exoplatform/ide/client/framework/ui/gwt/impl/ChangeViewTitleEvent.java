@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.ui.gwt;
+package org.exoplatform.ide.client.framework.ui.gwt.impl;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,9 +27,41 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface ViewTitleChangedHandler extends EventHandler
+public class ChangeViewTitleEvent extends GwtEvent<ChangeViewTitleHandler>
 {
-   
-   void onViewTitleChanged(ViewTitleChangedEvent event);
+
+   public static final GwtEvent.Type<ChangeViewTitleHandler> TYPE = new GwtEvent.Type<ChangeViewTitleHandler>();
+
+   private String viewId;
+
+   private String title;
+
+   public ChangeViewTitleEvent(String viewId, String title)
+   {
+      this.viewId = viewId;
+      this.title = title;
+   }
+
+   public String getViewId()
+   {
+      return viewId;
+   }
+
+   public String getTitle()
+   {
+      return title;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ChangeViewTitleHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(ChangeViewTitleHandler handler)
+   {
+      handler.onChangeViewTitle(this);
+   }
 
 }

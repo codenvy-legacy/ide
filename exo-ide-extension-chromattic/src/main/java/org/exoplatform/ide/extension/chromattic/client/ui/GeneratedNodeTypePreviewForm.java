@@ -18,6 +18,16 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.EditorParameters;
+import org.exoplatform.ide.extension.chromattic.client.Images;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
@@ -25,16 +35,6 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
-
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.gwt.AbstractView;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorParameters;
-import org.exoplatform.ide.extension.chromattic.client.Images;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**

@@ -28,17 +28,20 @@ import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
 import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.HasClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewTitleChangedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewTitleChangedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewTitleChangedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ChangeViewIconEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ChangeViewIconHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ChangeViewTitleEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ChangeViewTitleHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.HasChangeViewIconHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.HasChangeViewTitleHandler;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -55,8 +58,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class PanelImpl extends AbsolutePanel implements RequiresResize, HasViewVisibilityChangedHandler,
-   HasClosingViewHandler
+public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosingViewHandler,
+   HasViewVisibilityChangedHandler
 {
 
    /**
@@ -84,8 +87,7 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasViewV
     */
    private LinkedHashMap<String, Widget> viewWrappers = new LinkedHashMap<String, Widget>();
 
-   private LinkedHashMap<String, ViewController> viewControllers =
-      new LinkedHashMap<String, PanelImpl.ViewController>();
+   private LinkedHashMap<String, ViewController> viewControllers = new LinkedHashMap<String, PanelImpl.ViewController>();
 
    private String currentViewId;
 
@@ -101,8 +103,7 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasViewV
 
    private List<ViewClosedHandler> viewClosedHandlers = new ArrayList<ViewClosedHandler>();
 
-   private List<ViewVisibilityChangedHandler> viewVisibilityChangedHandlers =
-      new ArrayList<ViewVisibilityChangedHandler>();
+   private List<ViewVisibilityChangedHandler> viewVisibilityChangedHandlers = new ArrayList<ViewVisibilityChangedHandler>();
 
    public PanelImpl(String panelId, String[] acceptableTypes)
    {
@@ -162,7 +163,8 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasViewV
          Widget currentViewWrapper = viewWrappers.get(currentViewId);
          currentViewWrapper.setVisible(false);
 
-         currentView.setViewVisible(false);
+         //currentView.setViewVisible(false);
+
          for (ViewVisibilityChangedHandler handler : viewVisibilityChangedHandlers)
          {
             handler.onViewVisibilityChanged(new ViewVisibilityChangedEvent(currentView));
@@ -183,7 +185,8 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasViewV
       ViewController selectedViewController = viewControllers.get(viewId);
       selectedViewController.onResize();
 
-      selectedView.setViewVisible(true);
+      //selectedView.setViewVisible(true);
+
       for (ViewVisibilityChangedHandler handler : viewVisibilityChangedHandlers)
       {
          handler.onViewVisibilityChanged(new ViewVisibilityChangedEvent(selectedView));
@@ -310,9 +313,13 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasViewV
       tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, true);
 
       // add handlers to view
-      if (view instanceof HasViewTitleChangedHandler)
+      if (view instanceof HasChangeViewTitleHandler)
       {
-         ((HasViewTitleChangedHandler)view).addViewTitleChangedHandler(viewTitleChangedHandler);
+         ((HasChangeViewTitleHandler)view).addChangeViewTitleHandler(changeViewTitleHandler);
+      }
+      
+      if (view instanceof HasChangeViewIconHandler) {
+         ((HasChangeViewIconHandler)view).addChangeViewIconHandler(changeViewIconHandler);
       }
 
       for (ViewOpenedHandler handler : viewOpenedHandlers)
@@ -323,14 +330,29 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasViewV
       tabPanel.selectTab(view.getId());
    }
 
-   private ViewTitleChangedHandler viewTitleChangedHandler = new ViewTitleChangedHandler()
+   private ChangeViewTitleHandler changeViewTitleHandler = new ChangeViewTitleHandler()
    {
       @Override
-      public void onViewTitleChanged(ViewTitleChangedEvent event)
+      public void onChangeViewTitle(ChangeViewTitleEvent event)
       {
-         System.out.println("view title changed > " + event.getView().getId());
-         System.out.println("title > " + event.getView().getTitle());
-         System.out.println("old title > " + event.getOldTitle());
+         System.out.println("change view title >>>>>>>");
+         System.out.println("view id > " + event.getViewId());
+         System.out.println("title > " + event.getTitle());
+
+         tabPanel.setTabTitle(event.getViewId(), event.getTitle());
+      }
+   };
+   
+   private ChangeViewIconHandler changeViewIconHandler = new ChangeViewIconHandler()
+   {
+      @Override
+      public void onChangeViewIcon(ChangeViewIconEvent event)
+      {
+         System.out.println(">>>>>>>>>> ChangeViewIcon");
+         
+         
+         
+         tabPanel.setTabIcon(event.getViewId(), event.getIcon());
       }
    };
 

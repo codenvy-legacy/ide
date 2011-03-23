@@ -16,9 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.ui.gwt;
+package org.exoplatform.ide.client.framework.ui.gwt.impl;
 
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,33 +28,41 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class SetViewVisibleEvent extends GwtEvent<SetViewVisibleHandler>
+public class ChangeViewIconEvent extends GwtEvent<ChangeViewIconHandler>
 {
 
-   public static final GwtEvent.Type<SetViewVisibleHandler> TYPE = new GwtEvent.Type<SetViewVisibleHandler>();
+   private static final GwtEvent.Type<ChangeViewIconHandler> TYPE = new GwtEvent.Type<ChangeViewIconHandler>();
 
-   private ViewEx view;
+   private String viewId;
 
-   public SetViewVisibleEvent(ViewEx view)
+   private Image icon;
+
+   public ChangeViewIconEvent(String viewId, Image icon)
    {
-      this.view = view;
+      this.viewId = viewId;
+      this.icon = icon;
    }
 
-   public ViewEx getView()
+   public String getViewId()
    {
-      return view;
+      return viewId;
+   }
+
+   public Image getIcon()
+   {
+      return icon;
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SetViewVisibleHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ChangeViewIconHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    @Override
-   protected void dispatch(SetViewVisibleHandler handler)
+   protected void dispatch(ChangeViewIconHandler handler)
    {
-      handler.onSetViewVisible(this);
+      handler.onChangeViewIcon(this);
    }
 
 }

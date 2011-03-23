@@ -191,23 +191,6 @@ public class PerspectiveImpl implements Perspective
 
    }
 
-   //   public void addViewOpenedHandler(ViewOpenedHandler viewOpenedHandler)
-   //   {
-   //      for (Panel panel : panelsLayer.getPanelsAsList())
-   //      {
-   //         panel.addViewOpenedHandler(viewOpenedHandler);
-   //      }
-   //   }
-   //
-   //   @Override
-   //   public void addViewClosedHandler(ViewClosedHandler viewClosedHandler)
-   //   {
-   //      for (Panel panel : panelsLayer.getPanelsAsList())
-   //      {
-   //         panel.addViewClosedHandler(viewClosedHandler);
-   //      }
-   //   }
-
    @Override
    public HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler)
    {

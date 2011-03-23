@@ -134,9 +134,9 @@ public class TestPresenter implements ViewOpenedHandler, ViewClosedHandler, Clos
       }
 
       String viewId = "ideTestView0";
-      String type = "modal";
+      //String type = "modal";
       //String type = "popup";
-      //String type = "operation";
+      String type = "operation";
       String title = "Test View 0";
 
       TestView view = new TestView(viewId, type, title);

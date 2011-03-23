@@ -16,12 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.ui.gwt;
+package org.exoplatform.ide.client.framework.ui.gwt.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 
@@ -32,8 +36,8 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public abstract class AbstractView extends FlowPanel implements ViewEx, ViewDisplay, HasViewTitleChangedHandler,
-   HasViewIconChangedHandler, HasViewVisibilityChangedHandler
+public class AbstractView extends FlowPanel implements ViewEx, ViewDisplay, HasChangeViewTitleHandler,
+   HasChangeViewIconHandler, HasSetViewVisibleHandler
 {
 
    private String id;
@@ -51,15 +55,15 @@ public abstract class AbstractView extends FlowPanel implements ViewEx, ViewDisp
    protected int defaultHeight = 200;
 
    private boolean canResize = true;
-   
+
    private boolean isViewVisible;
 
-   private List<ViewTitleChangedHandler> viewTitleChangedHandlers = new ArrayList<ViewTitleChangedHandler>();
+   private List<ChangeViewTitleHandler> changeViewTitleHandlers = new ArrayList<ChangeViewTitleHandler>();
 
-   private List<ViewIconChangedHandler> viewIconChangedHandlers = new ArrayList<ViewIconChangedHandler>();
-   
-   private List<ViewVisibilityChangedHandler> viewVisibilityChangedHandlers = new ArrayList<ViewVisibilityChangedHandler>();
-   
+   private List<ChangeViewIconHandler> changeViewIconHandlers = new ArrayList<ChangeViewIconHandler>();
+
+   private List<SetViewVisibleHandler> setViewVisibleHandlers = new ArrayList<SetViewVisibleHandler>();
+
    public AbstractView(String id, String type, String title)
    {
       this(id, type, title, null);
@@ -107,12 +111,12 @@ public abstract class AbstractView extends FlowPanel implements ViewEx, ViewDisp
    @Override
    public void setTitle(String title)
    {
-      String oldTitle = this.tiltle;
       this.tiltle = title;
 
-      for (ViewTitleChangedHandler handler : viewTitleChangedHandlers)
+      ChangeViewTitleEvent changeViewTitleEvent = new ChangeViewTitleEvent(getId(), title);
+      for (ChangeViewTitleHandler changeViewTitleHandler : changeViewTitleHandlers)
       {
-         handler.onViewTitleChanged(new ViewTitleChangedEvent(this, oldTitle));
+         changeViewTitleHandler.onChangeViewTitle(changeViewTitleEvent);
       }
    }
 
@@ -125,12 +129,12 @@ public abstract class AbstractView extends FlowPanel implements ViewEx, ViewDisp
    @Override
    public void setIcon(Image icon)
    {
-      Image oldIcon = this.icon;
       this.icon = icon;
 
-      for (ViewIconChangedHandler handler : viewIconChangedHandlers)
+      ChangeViewIconEvent changeViewIconEvent = new ChangeViewIconEvent(getId(), icon);
+      for (ChangeViewIconHandler changeViewIconHandler : changeViewIconHandlers)
       {
-         handler.onViewIconChanged(new ViewIconChangedEvent(this, oldIcon));
+         changeViewIconHandler.onChangeViewIcon(changeViewIconEvent);
       }
    }
 
@@ -170,89 +174,90 @@ public abstract class AbstractView extends FlowPanel implements ViewEx, ViewDisp
    }
 
    @Override
-   public HandlerRegistration addViewTitleChangedHandler(ViewTitleChangedHandler viewTitleChangedHandler)
-   {
-      viewTitleChangedHandlers.add(viewTitleChangedHandler);
-      return new ViewTitleChangedHandlerRegistration(viewTitleChangedHandler);
-   }
-
-   private class ViewTitleChangedHandlerRegistration implements HandlerRegistration
-   {
-
-      private ViewTitleChangedHandler handler;
-
-      public ViewTitleChangedHandlerRegistration(ViewTitleChangedHandler handler)
-      {
-         this.handler = handler;
-      }
-
-      @Override
-      public void removeHandler()
-      {
-         viewTitleChangedHandlers.remove(handler);
-      }
-
-   }
-
-   @Override
-   public HandlerRegistration addViewIconChangedHandler(ViewIconChangedHandler viewIconChangedHandler)
-   {
-      viewIconChangedHandlers.add(viewIconChangedHandler);
-      return new ViewIconChangedHandlerRegistration(viewIconChangedHandler);
-   }
-
-   private class ViewIconChangedHandlerRegistration implements HandlerRegistration
-   {
-
-      private ViewIconChangedHandler handler;
-
-      public ViewIconChangedHandlerRegistration(ViewIconChangedHandler handler)
-      {
-         this.handler = handler;
-      }
-
-      @Override
-      public void removeHandler()
-      {
-         viewIconChangedHandlers.remove(handler);
-      }
-   }
-
-   @Override
    public boolean isViewVisible()
    {
       return isViewVisible;
    }
 
    @Override
-   public void setViewVisible(boolean isViewVisible)
+   public void setViewVisible()
    {
-      this.isViewVisible = isViewVisible;
-      
+      Window.alert("on set view visible!!!!!!1");
    }
 
    @Override
-   public HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler)
+   public HandlerRegistration addSetViewVisibleHandler(SetViewVisibleHandler setViewVisibleHandler)
    {
-      viewVisibilityChangedHandlers.add(viewVisibilityChangedHandler);
-      return new ViewVisibilityChangedHandlerRegistration(viewVisibilityChangedHandler);
+      setViewVisibleHandlers.add(setViewVisibleHandler);
+      return new SetViewVisibleHandlerRegistration(setViewVisibleHandler);
    }
-   
-   private class ViewVisibilityChangedHandlerRegistration implements HandlerRegistration
+
+   private class SetViewVisibleHandlerRegistration implements HandlerRegistration
    {
-      
-      private ViewVisibilityChangedHandler handler;
-      
-      public ViewVisibilityChangedHandlerRegistration(ViewVisibilityChangedHandler handler) {
+
+      private SetViewVisibleHandler handler;
+
+      public SetViewVisibleHandlerRegistration(SetViewVisibleHandler handler)
+      {
          this.handler = handler;
       }
 
       @Override
       public void removeHandler()
       {
-         viewVisibilityChangedHandlers.remove(handler);
+         setViewVisibleHandlers.remove(handler);
       }
-      
+
+   }
+
+   @Override
+   public HandlerRegistration addChangeViewIconHandler(ChangeViewIconHandler changeViewIconHandler)
+   {
+      changeViewIconHandlers.add(changeViewIconHandler);
+      return new ChangeViewIconHandlerRegistration(changeViewIconHandler);
+   }
+
+   private class ChangeViewIconHandlerRegistration implements HandlerRegistration
+   {
+
+      private ChangeViewIconHandler handler;
+
+      public ChangeViewIconHandlerRegistration(ChangeViewIconHandler handler)
+      {
+         this.handler = handler;
+      }
+
+      @Override
+      public void removeHandler()
+      {
+         changeViewIconHandlers.remove(handler);
+      }
+
+   }
+
+   @Override
+   public HandlerRegistration addChangeViewTitleHandler(ChangeViewTitleHandler changeViewTitleHandler)
+   {
+      changeViewTitleHandlers.add(changeViewTitleHandler);
+      return new ChangeViewTitleHandlerRegistration(changeViewTitleHandler);
+   }
+
+   private class ChangeViewTitleHandlerRegistration implements HandlerRegistration
+   {
+
+      private ChangeViewTitleHandler handler;
+
+      public ChangeViewTitleHandlerRegistration(ChangeViewTitleHandler handler)
+      {
+         this.handler = handler;
+      }
+
+      @Override
+      public void removeHandler()
+      {
+         changeViewTitleHandlers.remove(handler);
+      }
+
    }
 
 }
