@@ -202,7 +202,6 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
             }
          }
 
-         System.out.println("OpenFileWithPresenter.fillEditorListGrid()");
          display.getEditorsListGrid().setValue(editorInfoItems);
       }
       catch (EditorNotFoundException e)
@@ -272,7 +271,6 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
 
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
-      System.out.println("OpenFileWithPresenter.onApplicationSettingsSaved()");
       display.closeForm();
       eventBus.fireEvent(new OpenFileEvent(selectedFile));
    }
