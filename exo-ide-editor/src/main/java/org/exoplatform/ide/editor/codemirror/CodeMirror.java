@@ -707,7 +707,7 @@ public class CodeMirror extends Editor
 		}
    }-*/;
 
-   public native void setShowLineNumbers(boolean showLineNumbers)/*-{
+   public native void showLineNumbers(boolean showLineNumbers)/*-{
       var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 		if (editor == null)
 			return;

@@ -90,7 +90,7 @@ public abstract class Editor extends AbsolutePanel
     * Displays line numbers if showLineNumbers = true, or hides otherwise
     * @param showLineNumbers
     */
-   public abstract void setShowLineNumbers(boolean showLineNumbers);
+   public abstract void showLineNumbers(boolean showLineNumbers);
 
    /**
     * sets text cursor into the editor area

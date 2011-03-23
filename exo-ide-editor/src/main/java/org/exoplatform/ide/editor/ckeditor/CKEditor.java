@@ -621,7 +621,7 @@ public class CKEditor extends Editor
    }
 
    @Override
-   public void setShowLineNumbers(boolean showLineNumbers)
+   public void showLineNumbers(boolean showLineNumbers)
    {
    }
  

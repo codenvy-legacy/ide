@@ -259,9 +259,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       eventBus.fireEvent(new EditorFileContentChangedEvent(file, editor.hasUndoChanges(), editor.hasRedoChanges()));
    }
 
-   /**
-    * @see org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler#onEditorCursorActivity(org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent)
-    */
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
       //      System.out.println("EditorController.onEditorCursorActivity()");
@@ -437,7 +434,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       while (iterator.hasNext())
       {
          String path = iterator.next();
-         editors.get(path).setShowLineNumbers(lineNumbers);
+         editors.get(path).showLineNumbers(lineNumbers);
       }
       editors.get(activeFile.getHref()).setFocus();
    }

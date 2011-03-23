@@ -622,7 +622,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            editor.setShowLineNumbers(true);
+            editor.showLineNumbers(true);
          }
       });
       
@@ -636,7 +636,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            editor.setShowLineNumbers(false);
+            editor.showLineNumbers(false);
          }
       });
 
