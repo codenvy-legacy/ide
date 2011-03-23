@@ -167,8 +167,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       handlers.addHandler(EditorSetFocusEvent.TYPE, this);
       handlers.addHandler(SaveFileAsEvent.TYPE, this);
       handlers.addHandler(ViewClosedEvent.TYPE, this);
-      
-      
+
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -261,8 +260,8 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
     */
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
-//      System.out.println("EditorController.onEditorCursorActivity()");
-       eventBus.fireEvent(new EditorSetFocusEvent());
+      //      System.out.println("EditorController.onEditorCursorActivity()");
+      eventBus.fireEvent(new EditorSetFocusEvent());
    }
 
    /* (non-Javadoc)
@@ -496,7 +495,8 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          ignoreContentChangedList.add(file.getHref());
 
          //      display.selectTab(openedFile.getHref());
-         EditorView view = editorsViews.get(file.getHref());
+         Editor editor = editors.get(file.getHref());
+         EditorView view = editorsViews.get(editor.getEditorId());
          view.setContent(file);
          view.setVisible(true);
          //      display.setTabContent(file.getHref(), file.getContent());
@@ -523,11 +523,25 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
          EditorProducer producer = event.getEditorProducer();
          Editor editor = producer.createEditor(file.getContent(), eventBus, params);
-         editors.put(file.getHref(), editor);
-         EditorView view = new EditorView(editor, file, getFileTitle(file));
-         editorsViews.put(editor.getEditorId(), view);
-         IDE.getInstance().openView(view);
+         if (editors.containsKey(file.getHref()))
+         {
+            Editor oldEditor = editors.get(file.getHref());
+            file.setContent(oldEditor.getText());
+            EditorView editorView = editorsViews.get(oldEditor.getEditorId());
+            editorView.remove(oldEditor);
+            editorView.add(editor);
+            editors.put(file.getHref(),editor);
+            editorsViews.put(editor.getEditorId(), editorView);
+            
+         }
+         else
+         {
+            editors.put(file.getHref(), editor);
 
+            EditorView view = new EditorView(editor, file, getFileTitle(file));
+            editorsViews.put(editor.getEditorId(), view);
+            IDE.getInstance().openView(view);
+         }
          //      display.openTab(file, lineNumbers, event.getEditor(), isReadOnly(file));
          //      display.selectTab(file.getHref());
       }
@@ -536,7 +550,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          e.printStackTrace();
       }
 
-               eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
+      eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
       //         eventBus.fireEvent(new EditorActiveFileChangedEvent(file,editors.get(file.getHref())));
    }
 
@@ -736,16 +750,17 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          activeFile = ((EditorView)event.getView()).getFile();
          new Timer()
          {
-            
+
             @Override
             public void run()
             {
                // TODO Auto-generated method stub
-               eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, ((EditorView)event.getView()).getEditor()));
-               
+               eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, ((EditorView)event.getView())
+                  .getEditor()));
+
             }
          }.schedule(200);
-         
+
       }
    }
 
