@@ -707,16 +707,8 @@ public class CodeMirror extends Editor
 		}
    }-*/;
 
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#setShowLineNumbers(boolean)
-    */
-   @Override
-   public void setShowLineNumbers(boolean showLineNumbers)
-   {
-      setLineNumbers(editorObject, showLineNumbers);
-   }
-
-   private native void setLineNumbers(JavaScriptObject edotor, boolean showLineNumbers)/*-{
+   public native void setShowLineNumbers(boolean showLineNumbers)/*-{
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 		if (editor == null)
 			return;
 

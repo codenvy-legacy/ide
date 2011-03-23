@@ -86,6 +86,8 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
    private static Map<String, EditorProducer> codeEditors = new HashMap<String, EditorProducer>();
    
    private static Map<String, EditorProducer> WYSIWYGEditors = new HashMap<String, EditorProducer>();
+   
+   Editor editor;
 
    static
    {
@@ -366,7 +368,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.TEXT_CSS);
             
-            Editor editor = codeEditors.get(MimeType.TEXT_CSS).createEditor(".test-class{\n\n}", eventBus, params);
+            editor = codeEditors.get(MimeType.TEXT_CSS).createEditor(".test-class{\n\n}", eventBus, params);
             panel.clear();
             panel.add(editor);
             
@@ -385,7 +387,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.TEXT_HTML);
 
-            Editor editor =
+            editor =
                codeEditors.get(MimeType.TEXT_HTML).createEditor(ExamplesBundle.INSTANCE.htmlExample().getText(), eventBus,
                   params);
             panel.clear();
@@ -405,7 +407,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JAVASCRIPT);
 
-            Editor editor =
+            editor =
                codeEditors.get(MimeType.APPLICATION_JAVASCRIPT).createEditor(
                   ExamplesBundle.INSTANCE.jsExample().getText(), eventBus, params);
             panel.clear();
@@ -425,7 +427,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.TEXT_XML);
 
-            Editor editor =
+            editor =
                codeEditors.get(MimeType.TEXT_XML).createEditor(ExamplesBundle.INSTANCE.xmlExample().getText(), eventBus,
                   params);
             panel.clear();
@@ -445,7 +447,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.GOOGLE_GADGET);
             
-            Editor editor =
+            editor =
                codeEditors.get(MimeType.GOOGLE_GADGET).createEditor(ExamplesBundle.INSTANCE.googleGadgetExample().getText(),
                   eventBus, params);
             
@@ -475,7 +477,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.UWA_WIDGET);
 
-            Editor editor =
+            editor =
                codeEditors.get(MimeType.UWA_WIDGET).createEditor(ExamplesBundle.INSTANCE.netvibesExample().getText(),
                   eventBus, params);
             panel.clear();
@@ -495,7 +497,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_GROOVY);
 
-            Editor editor =
+            editor =
                codeEditors.get(MimeType.APPLICATION_GROOVY).createEditor(ExamplesBundle.INSTANCE.groovyExample().getText(),
                   eventBus, params);
             panel.clear();
@@ -515,7 +517,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.GROOVY_SERVICE);
 
-            Editor editor =
+            editor =
                codeEditors.get(MimeType.GROOVY_SERVICE).createEditor(ExamplesBundle.INSTANCE.groovyServiceExample().getText(),
                   eventBus, params);
             panel.clear();
@@ -535,7 +537,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.CHROMATTIC_DATA_OBJECT);
 
-            Editor editor =
+            editor =
                codeEditors.get(MimeType.CHROMATTIC_DATA_OBJECT).createEditor(ExamplesBundle.INSTANCE.dataObjectExample().getText(),
                   eventBus, params);
             panel.clear();
@@ -555,7 +557,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.GROOVY_TEMPLATE);
 
-            Editor editor =
+            editor =
                codeEditors.get(MimeType.GROOVY_TEMPLATE).createEditor(ExamplesBundle.INSTANCE.groovyTemplateExample().getText(),
                   eventBus, params);
             panel.clear();
@@ -574,7 +576,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.TEXT_HTML);
 
-            Editor editor =
+            editor =
                WYSIWYGEditors.get(MimeType.TEXT_HTML).createEditor(ExamplesBundle.INSTANCE.htmlExample().getText(), eventBus,
                   params);
             panel.clear();
@@ -594,7 +596,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          {
             params.put(EditorParameters.MIME_TYPE, MimeType.GOOGLE_GADGET);
 
-            Editor editor =
+            editor =
                WYSIWYGEditors.get(MimeType.GOOGLE_GADGET).createEditor(ExamplesBundle.INSTANCE.googleGadgetExample().getText(),
                   eventBus, params);
             
@@ -609,6 +611,36 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          }
       });
       
+      
+      Button showLineNumbersButton =
+         new Button();
+      showLineNumbersButton.setTitle("Show LineNumbers");
+      showLineNumbersButton.setText("Show LineNumbers");
+      showLineNumbersButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            editor.setShowLineNumbers(true);
+         }
+      });
+      
+      Button hideLineNumbersButton =
+         new Button();
+      hideLineNumbersButton.setTitle("Hide LineNumbers");
+      hideLineNumbersButton.setText("Hide LineNumbers");
+      hideLineNumbersButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            editor.setShowLineNumbers(false);
+         }
+      });
+
+      
       toolbar.add(cssButton);
       toolbar.add(htmlButton);
       toolbar.add(jsButton);
@@ -622,7 +654,9 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       
       toolbar.add(htmlCKEditorButton);
       toolbar.add(googleGadgetCKEditorButton);      
-
+      toolbar.add(showLineNumbersButton);
+      toolbar.add(hideLineNumbersButton);
+      
       RootPanel.get().add(toolbar);
       RootPanel.get().add(panel);
    }
