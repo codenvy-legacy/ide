@@ -43,7 +43,7 @@ public class EditorView extends AbstractView
     */
    public EditorView(Editor editor, File file, String title)
    {
-      super(file.getHref(), "editor", title, new Image(file.getIcon()));
+      super(System.currentTimeMillis() + "-" + file.getHref(), "editor", title, new Image(file.getIcon()));
       this.editor = editor;
       this.file = file;
       add(editor);

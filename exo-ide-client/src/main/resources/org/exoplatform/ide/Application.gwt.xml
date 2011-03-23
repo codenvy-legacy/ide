@@ -58,20 +58,6 @@
    <entry-point class='org.exoplatform.ide.client.IDEApplication' />
    <source path="client" excludes="IDEGadget.java" />
 
-   <!-- Load CodeMirror editor files. -->
-   <stylesheet src='codemirror/css/editor.css' />
-   <script src="codemirror/js/codemirror.js" />
-
-   <!-- Load FCKEditor files. -->
-   <!-- <stylesheet src='fckeditor/content.css' /> -->
-   <script src="fckeditor/ckeditor.js" />
-   <script src="fckeditor/config.js" />
-
-   <!-- Load tokens for auto-complete -->
-   <script src="token/html_tokens.js" />
-   <script src="token/javascript_tokens.js" />
-   <script src="token/css_tokens.js" />
-
    <!-- Specify the application specific style sheet. -->
    <stylesheet src="IDE.css" />
 

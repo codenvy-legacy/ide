@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.component.AskForValueDialog;
 import org.exoplatform.ide.client.component.ValueCallback;
 import org.exoplatform.ide.client.component.ValueDiscardCallback;
@@ -46,10 +45,8 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -58,11 +55,9 @@ import java.util.Map;
  * @version $
  */
 
-public class SaveFileAsCommandHandler implements ExceptionThrownHandler, SaveFileAsHandler, ItemsSelectedHandler,
+public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelectedHandler,
    EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
 {
-
-   private Handlers handlers;
 
    private HandlerManager eventBus;
 
@@ -78,7 +73,6 @@ public class SaveFileAsCommandHandler implements ExceptionThrownHandler, SaveFil
    {
       this.eventBus = eventBus;
 
-      handlers = new Handlers(eventBus);
       eventBus.addHandler(SaveFileAsEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -99,8 +93,6 @@ public class SaveFileAsCommandHandler implements ExceptionThrownHandler, SaveFil
             "Please, select target folder in the Workspace Panel before calling this command !");
          return;
       }
-
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
 
       File file = event.getFile() != null ? event.getFile() : activeFile;
       askForNewFileName(file, event.getDialogType(), event.getEventFiredOnNo(), event.getEventFiredOnCancel());
@@ -124,8 +116,6 @@ public class SaveFileAsCommandHandler implements ExceptionThrownHandler, SaveFil
             {
                if (value == null)
                {
-                  handlers.removeHandlers();
-
                   if (eventFiredOnCancel != null)
                   {
                      eventBus.fireEvent(eventFiredOnCancel);
@@ -147,8 +137,6 @@ public class SaveFileAsCommandHandler implements ExceptionThrownHandler, SaveFil
             {
                if (value == null)
                {
-                  handlers.removeHandlers();
-
                   if (eventFiredOnCancel != null)
                   {
                      eventBus.fireEvent(eventFiredOnCancel);
@@ -164,8 +152,6 @@ public class SaveFileAsCommandHandler implements ExceptionThrownHandler, SaveFil
          {
             public void discard()
             {
-               handlers.removeHandlers();
-               
                if (eventFiredOnNo != null)
                {
                   eventBus.fireEvent(eventFiredOnNo);
@@ -247,10 +233,6 @@ public class SaveFileAsCommandHandler implements ExceptionThrownHandler, SaveFil
       });
    }
 
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandlers();
-   }
 
    private void refreshBrowser(String hrefFolder)
    {

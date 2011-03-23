@@ -73,6 +73,8 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.event.SelectViewEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
@@ -109,7 +111,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
    EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler, EditorDeleteCurrentLineHandler,
    EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler, EditorFindAndReplaceTextHandler,
    EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler, SaveFileAsHandler,
-   ViewVisibilityChangedHandler, ViewClosedHandler
+   ViewVisibilityChangedHandler, ViewClosedHandler, ClosingViewHandler
 {
 
    private HandlerManager eventBus;
@@ -133,6 +135,8 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
    private Map<String, EditorView> editorsViews = new HashMap<String, EditorView>();
 
    private Map<String, Editor> editors = new HashMap<String, Editor>();
+   
+   private boolean waitForEditorInitialized = false;
 
    public EditorController()
    {
@@ -166,7 +170,8 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       handlers.addHandler(EditorGoToLineEvent.TYPE, this);
       handlers.addHandler(EditorSetFocusEvent.TYPE, this);
       handlers.addHandler(SaveFileAsEvent.TYPE, this);
-      handlers.addHandler(ViewClosedEvent.TYPE, this);
+      //      handlers.addHandler(ViewClosedEvent.TYPE, this);
+      handlers.addHandler(ClosingViewEvent.TYPE, this);
 
    }
 
@@ -231,7 +236,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
     */
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
-      System.out.println("EditorController.onEditorContentChanged()");
       String editorId = event.getEditorId();
       String path = editorsViews.get(editorId).getFileHref();
       if (path == null)
@@ -299,9 +303,9 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
    {
       Editor editor = editors.get(file.getHref());
       editors.remove(file.getHref());
-      editorsViews.remove(editor.getEditorId());
 
-      //   IDE.getInstance().closeView(editorsViews.get(editor.getEditorId()).getId());
+      IDE.getInstance().closeView(editorsViews.get(editor.getEditorId()).getId());
+      editorsViews.remove(editor.getEditorId());
       //   display.closeTab(file.getHref());
 
       file.setContent(null);
@@ -316,7 +320,8 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       try
       {
          eventBus.fireEvent(new EditorFileClosedEvent(file, openedFiles));
-         eventBus.fireEvent(new EditorActiveFileChangedEvent(null, null));
+         if (editors.isEmpty())
+            eventBus.fireEvent(new EditorActiveFileChangedEvent(null, null));
       }
       catch (Exception e)
       {
@@ -402,7 +407,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
 
    }
 
-   public String getFileTitle(File file)
+   private String getFileTitle(File file)
    {
       boolean fileChanged = file.isContentChanged() || file.isPropertiesChanged();
 
@@ -439,6 +444,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
 
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
+
       updateLineNumbers(event.isShowLineNumber());
    }
 
@@ -530,9 +536,9 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
             EditorView editorView = editorsViews.get(oldEditor.getEditorId());
             editorView.remove(oldEditor);
             editorView.add(editor);
-            editors.put(file.getHref(),editor);
+            editors.put(file.getHref(), editor);
             editorsViews.put(editor.getEditorId(), editorView);
-            
+
          }
          else
          {
@@ -540,6 +546,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
 
             EditorView view = new EditorView(editor, file, getFileTitle(file));
             editorsViews.put(editor.getEditorId(), view);
+            waitForEditorInitialized = true;
             IDE.getInstance().openView(view);
          }
          //      display.openTab(file, lineNumbers, event.getEditor(), isReadOnly(file));
@@ -576,6 +583,8 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
 
    public void onFileSaved(FileSavedEvent event)
    {
+      System.out.println("EditorController.onFileSaved()");
+      System.out.println(closeFileAfterSaving);
       if (closeFileAfterSaving)
       {
          File file = event.getFile();
@@ -621,12 +630,22 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          ignoreContentChangedList.add(newFile.getHref());
       }
       //TODO 
+      
       String editorId = editors.get(oldFile.getHref()).getEditorId();
       editors.remove(oldFile.getHref());
+      
       EditorView editorView = editorsViews.get(editorId);
-      editors.put(newFile.getHref(), editorView.getEditor());
+      Editor editor = editorView.getEditor();
+      
+//      IDE.getInstance().closeView(editorView.getId());
+//      editorView = new EditorView(editor, newFile, getFileTitle(newFile));
+//      IDE.getInstance().openView(editorView);
+      editors.put(newFile.getHref(), editor);
+      editorsViews.put(editor.getEditorId(), editorView);
       editorView.setIcon(new Image(newFile.getIcon()));
       editorView.setContent(newFile);
+      
+      
       updateTabTitle(newFile);
       //   display.replaceFile(oldFile, newFile);
 
@@ -745,23 +764,47 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
    public void onViewVisibilityChanged(final ViewVisibilityChangedEvent event)
    {
       System.out.println("EditorController.onViewVisibilityChanged()");
-      if (event.getView().getType().equals("editor") && event.getView().isViewVisible())
+      if (event.getView().getType().equals("editor"))
       {
-         activeFile = ((EditorView)event.getView()).getFile();
-         new Timer()
+         final EditorView editorView = (EditorView)event.getView();
+         if (editorView.isVisible())
          {
-
-            @Override
-            public void run()
+            activeFile = editorView.getFile();
+            Timer timer = new Timer()
             {
-               // TODO Auto-generated method stub
-               eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, ((EditorView)event.getView())
-                  .getEditor()));
 
+               @Override
+               public void run()
+               {
+                  eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, editorView.getEditor()));
+               }
+            };
+            if(waitForEditorInitialized)
+            {
+               waitForEditorInitialized = false;
+               timer.schedule(500);
             }
-         }.schedule(200);
+            else
+            {
+               timer.run();
+            }
 
+         }
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler#onClosingView(org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent)
+    */
+   @Override
+   public void onClosingView(ClosingViewEvent event)
+   {
+      if (event.getView().getType().equals("editor"))
+      {
+         event.cancelClosing();
+         eventBus.fireEvent(new EditorCloseFileEvent(((EditorView)event.getView()).getFile()));
+      }
+
    }
 
 }
