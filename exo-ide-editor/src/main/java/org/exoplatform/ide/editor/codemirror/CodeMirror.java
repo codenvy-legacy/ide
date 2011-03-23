@@ -713,7 +713,7 @@ public class CodeMirror extends Editor
    @Override
    public void setShowLineNumbers(boolean showLineNumbers)
    {
-
+      setLineNumbers(editorObject, showLineNumbers);
    }
 
    private native void setLineNumbers(JavaScriptObject edotor, boolean showLineNumbers)/*-{
