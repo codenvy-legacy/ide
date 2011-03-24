@@ -28,6 +28,7 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
@@ -75,6 +76,7 @@ public class OutlineForm extends ViewImpl implements OutlinePresenter.Display
       treeGrid = new OutlineTreeGrid<TokenBeenImpl>(OUTLINE_TREE_GRID_ID);
       ScrollPanel treeWrapper = new ScrollPanel(treeGrid);
       treeWrapper.setSize("100%", "100%");
+      DOM.setStyleAttribute(treeWrapper.getElement(), "zIndex", "0");    // to view current node highlighter
       add(treeWrapper);
    }
 
@@ -99,7 +101,7 @@ public class OutlineForm extends ViewImpl implements OutlinePresenter.Display
 
    public void setFocus()
    {
-      setFocus();
+      getView().setActive();
    }
 
 }

@@ -190,7 +190,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       afterChangineCursorFromOutline = true;               
       eventBus.fireEvent(new EditorGoToLineEvent(lineNumber < maxLineNumber ? lineNumber : maxLineNumber));
-      display.setFocus();
    }
    
    public void onEditorContentChanged(EditorContentChangedEvent event)
@@ -389,7 +388,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       if (afterChangineCursorFromOutline)
       {
          afterChangineCursorFromOutline = false;
-         display.setFocus();
       }      
       
       selectOutlineTimer.schedule(1000);
