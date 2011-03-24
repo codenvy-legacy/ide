@@ -35,7 +35,7 @@ public class TagCreateTest extends BaseTest
    public void testCreateTag() throws Exception
    {
       Tag tag =
-         getClient().tagCreate(
+         getConnection().tagCreate(
             new TagCreateRequest("new_tag", null/*From HEAD*/, new GitUser("andrey", "andrey@mail.com"),
                "test create tag"));
       java.util.Map<String, Ref> tags = getRepository().getTags();

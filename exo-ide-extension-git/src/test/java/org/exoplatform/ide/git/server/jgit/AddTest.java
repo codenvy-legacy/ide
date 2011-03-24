@@ -41,7 +41,7 @@ public class AddTest extends BaseTest
       File file1 = addFile(workDir, "testUpdate", CONTENT);
       AddRequest addRequest = new AddRequest();
       addRequest.setUpdate(true);
-      getClient().add(addRequest);
+      getConnection().add(addRequest);
       // File not added in index. Existed file re-indexed if modified.
       checkNoFilesInCache(file1);
    }
@@ -51,7 +51,7 @@ public class AddTest extends BaseTest
       File workDir = getRepository().getWorkTree();
       File file1 = addFile(workDir, "testAdd", CONTENT);
       AddRequest addRequest = new AddRequest();
-      getClient().add(addRequest);
+      getConnection().add(addRequest);
       checkFilesInCache(file1);
    }
 
@@ -65,7 +65,7 @@ public class AddTest extends BaseTest
       AddRequest addRequest = new AddRequest();
       // If 'update' is 'true' then removed files should be removed from index.
       addRequest.setUpdate(true);
-      getClient().add(addRequest);
+      getConnection().add(addRequest);
       checkNoFilesInCache(relativePath);
    }
 }

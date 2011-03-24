@@ -30,7 +30,7 @@ public class RmTest extends BaseTest
 {
    public void testRm() throws Exception
    {
-      getClient().rm(new RmRequest(new String[]{"README.txt"}));
+      getConnection().rm(new RmRequest(new String[]{"README.txt"}));
       assertFalse(new File(getRepository().getWorkTree(), "README.txt").exists());
       checkNoFilesInCache("README.txt");
    }

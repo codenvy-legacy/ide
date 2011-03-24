@@ -39,7 +39,7 @@ public class LogTest extends BaseTest
       git.commit().setMessage("log\ntest").setCommitter("andrey", "andrey@mail.com").call();
 
       ByteArrayOutputStream out = new ByteArrayOutputStream();
-      getClient().log(new LogRequest()).writeTo(out);
+      getConnection().log(new LogRequest()).writeTo(out);
       // TODO test output.
       System.out.println(new String(out.toByteArray()));
    }

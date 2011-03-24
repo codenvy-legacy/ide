@@ -52,7 +52,7 @@ public class BranchCheckoutTest extends BaseTest
    public void testCheckout() throws Exception
    {
       BranchCheckoutRequest request = new BranchCheckoutRequest(branch1, null, false);
-      getClient().branchCheckout(request);
+      getConnection().branchCheckout(request);
       assertTrue(new File(getRepository().getWorkTree(), "br1").exists());
       assertTrue(new File(getRepository().getWorkTree(), "README.txt").exists());
    }
@@ -62,7 +62,7 @@ public class BranchCheckoutTest extends BaseTest
       List<Ref> all = new Git(getRepository()).branchList().call();
       assertEquals(2, all.size());
 
-      getClient().branchCheckout(new BranchCheckoutRequest(branch2, null, true));
+      getConnection().branchCheckout(new BranchCheckoutRequest(branch2, null, true));
 
       all = new Git(getRepository()).branchList().call();
       assertEquals(3, all.size());
@@ -74,7 +74,7 @@ public class BranchCheckoutTest extends BaseTest
       List<Ref> all = new Git(getRepository()).branchList().call();
       assertEquals(2, all.size());
 
-      getClient().branchCheckout(new BranchCheckoutRequest(branch2, branch1, true));
+      getConnection().branchCheckout(new BranchCheckoutRequest(branch2, branch1, true));
 
       all = new Git(getRepository()).branchList().call();
 

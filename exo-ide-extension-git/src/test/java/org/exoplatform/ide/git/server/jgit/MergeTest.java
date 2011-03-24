@@ -36,7 +36,7 @@ public class MergeTest extends BaseTest
    {
       Git git = new Git(getRepository());
       git.branchCreate().setName(branchName).call();
-      MergeResult mergeResult = getClient().merge(new MergeRequest("MergeTestBranch"));
+      MergeResult mergeResult = getConnection().merge(new MergeRequest("MergeTestBranch"));
       assertEquals(MergeResult.MergeStatus.ALREADY_UP_TO_DATE, mergeResult.getMergeStatus());
    }
 
@@ -51,7 +51,7 @@ public class MergeTest extends BaseTest
       git.commit().setMessage("add file in new branch").call();
       git.checkout().setName("master").call();
 
-      MergeResult mergeResult = getClient().merge(new MergeRequest("MergeTestBranch"));
+      MergeResult mergeResult = getConnection().merge(new MergeRequest("MergeTestBranch"));
       assertEquals(MergeResult.MergeStatus.FAST_FORWARD, mergeResult.getMergeStatus());
       assertTrue(file.exists());
       assertEquals("aaa\n", readFile(file));
@@ -73,7 +73,7 @@ public class MergeTest extends BaseTest
       git.add().addFilepattern(".").call();
       git.commit().setMessage("add file in new master").call();
 
-      MergeResult mergeResult = getClient().merge(new MergeRequest("MergeTestBranch"));
+      MergeResult mergeResult = getConnection().merge(new MergeRequest("MergeTestBranch"));
       String[] conflicts = mergeResult.getConflicts();
       assertEquals(1, conflicts.length);
       assertEquals("t-merge-conflict", conflicts[0]);

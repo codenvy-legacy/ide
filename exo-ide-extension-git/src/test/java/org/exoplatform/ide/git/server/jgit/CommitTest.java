@@ -40,7 +40,7 @@ public class CommitTest extends BaseTest
 
       CommitRequest request = new CommitRequest("add file1", new GitUser("andrey", "andrey@mail.com"));
       request.setMessage("add file1");
-      Revision revision = getClient().commit(request);
+      Revision revision = getConnection().commit(request);
 
       RevCommit revCommit = git.log().call().iterator().next();
 

@@ -46,13 +46,13 @@ public class TagListTest extends BaseTest
 
    public void testListAllTag() throws Exception
    {
-      List<Tag> tagList = getClient().tagList(new TagListRequest());
+      List<Tag> tagList = getConnection().tagList(new TagListRequest());
       validateTags(tagList, bugfixTag.getTagName(), featureTag.getTagName());
    }
 
    public void testListTagPattern() throws Exception
    {
-      List<Tag> tagList = getClient().tagList(new TagListRequest("feature*"));
+      List<Tag> tagList = getConnection().tagList(new TagListRequest("feature*"));
       validateTags(tagList, featureTag.getTagName());
    }
 

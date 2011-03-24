@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.server;
 
+import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.AddRequest;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
@@ -244,6 +245,8 @@ public interface GitConnection
     * @see PushRequest
     */
    void push(PushRequest request) throws GitException;
+
+   void remoteAdd(RemoteAddRequest request) throws GitException;
 
    /**
     * Reset current HEAD to the specified state.

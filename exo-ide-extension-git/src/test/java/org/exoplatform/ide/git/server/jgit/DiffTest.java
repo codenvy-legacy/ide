@@ -83,7 +83,7 @@ public class DiffTest extends BaseTest
 
    private List<String> readDiff(DiffRequest request) throws Exception
    {
-      DiffPage diffPage = (DiffPage)getClient().diff(request);
+      DiffPage diffPage = (DiffPage)getConnection().diff(request);
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       diffPage.writeTo(out);
       BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(out.toByteArray())));
@@ -99,7 +99,7 @@ public class DiffTest extends BaseTest
    public void testDiffRaw() throws Exception
    {
       DiffRequest request = new DiffRequest(null, DiffType.RAW, false, 0);
-      DiffPage diffPage = (DiffPage)getClient().diff(request);
+      DiffPage diffPage = (DiffPage)getConnection().diff(request);
       // TODO
       diffPage.writeTo(System.out);
    }

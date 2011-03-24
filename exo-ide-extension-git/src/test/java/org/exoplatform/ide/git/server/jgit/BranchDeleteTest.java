@@ -42,7 +42,7 @@ public class BranchDeleteTest extends BaseTest
 
    public void testDelete() throws Exception
    {
-      getClient().branchDelete(new BranchDeleteRequest("branch1", false));
+      getConnection().branchDelete(new BranchDeleteRequest("branch1", false));
       testBranch(new String[]{"refs/heads/master", "refs/heads/branch2"});
    }
 
@@ -50,7 +50,7 @@ public class BranchDeleteTest extends BaseTest
    {
       try
       {
-         getClient().branchDelete(new BranchDeleteRequest("master", true));
+         getConnection().branchDelete(new BranchDeleteRequest("master", true));
          fail("Expected exception was not thrown. ");
       }
       catch (IllegalArgumentException e)
@@ -71,7 +71,7 @@ public class BranchDeleteTest extends BaseTest
       BranchDeleteRequest request = new BranchDeleteRequest("branch2", false);
       try
       {
-         getClient().branchDelete(request);
+         getConnection().branchDelete(request);
          fail("Expected exception was not thrown. ");
       }
       catch (IllegalArgumentException e)
@@ -82,7 +82,7 @@ public class BranchDeleteTest extends BaseTest
 
       request.setForce(true);
       // Able to delete now.
-      getClient().branchDelete(request);
+      getConnection().branchDelete(request);
 
       testBranch(new String[]{"refs/heads/master", "refs/heads/branch1"});
    }

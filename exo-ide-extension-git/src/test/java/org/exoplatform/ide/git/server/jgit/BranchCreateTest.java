@@ -57,7 +57,7 @@ public class BranchCreateTest extends BaseTest
 
    private void testBranch(String name, String start, File[] exists, File[] notExists) throws Exception
    {
-      Branch branch = getClient().branchCreate(new BranchCreateRequest(name, start));
+      Branch branch = getConnection().branchCreate(new BranchCreateRequest(name, start));
 
       Git git = new Git(getRepository());
       List<Ref> branches = git.branchList().call();

@@ -49,7 +49,7 @@ public class TagDeleteTest extends BaseTest
       assertTrue(tags.containsKey(badTag.getTagName()));
       assertTrue(tags.containsKey(goodTag.getTagName()));
 
-      getClient().tagDelete(new TagDeleteRequest(badTag.getTagName()));
+      getConnection().tagDelete(new TagDeleteRequest(badTag.getTagName()));
 
       tags = getRepository().getTags();
       assertFalse(tags.containsKey(badTag.getTagName()));

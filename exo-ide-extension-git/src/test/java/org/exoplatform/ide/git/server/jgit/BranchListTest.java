@@ -68,14 +68,14 @@ public class BranchListTest extends BaseTest
    public void testListBranchSimple() throws Exception
    {
       BranchListRequest request = new BranchListRequest();
-      List<Branch> branchList = getClient().branchList(request);
+      List<Branch> branchList = getConnection().branchList(request);
       validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/master", true, "master")));
    }
 
    public void testListBranchRemote() throws Exception
    {
       BranchListRequest request = new BranchListRequest("r");
-      List<Branch> branchList = getClient().branchList(request);
+      List<Branch> branchList = getConnection().branchList(request);
       validateBranchList(branchList, Arrays.asList(new Branch("refs/remotes/test", false, "test")));
    }
 
@@ -85,7 +85,7 @@ public class BranchListTest extends BaseTest
    public void __testListBranchAll() throws Exception
    {
       BranchListRequest request = new BranchListRequest("a");
-      List<Branch> branchList = getClient().branchList(request);
+      List<Branch> branchList = getConnection().branchList(request);
       validateBranchList(branchList,
          Arrays.asList(new Branch("refs/remotes/test", false, "test"), new Branch("refs/heads/master", true, "master")));
    }
@@ -94,7 +94,7 @@ public class BranchListTest extends BaseTest
    {
       new Git(getRepository()).branchCreate().setName("testListBranch2").call();
       BranchListRequest request = new BranchListRequest();
-      List<Branch> branchList = getClient().branchList(request);
+      List<Branch> branchList = getConnection().branchList(request);
       validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/testListBranch2", false, "testListBranch2"),
          new Branch("refs/heads/master", true, "master")));
    }
@@ -107,7 +107,7 @@ public class BranchListTest extends BaseTest
       git.checkout().setName("testListBranch3").call();
 
       BranchListRequest request = new BranchListRequest();
-      List<Branch> branchList = getClient().branchList(request);
+      List<Branch> branchList = getConnection().branchList(request);
       validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/master", false, "master"), new Branch(
          "refs/heads/testListBranch3", true, "testListBranch3")));
    }

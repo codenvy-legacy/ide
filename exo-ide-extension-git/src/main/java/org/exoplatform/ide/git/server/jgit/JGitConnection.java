@@ -109,6 +109,7 @@ import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.MoveRequest;
 import org.exoplatform.ide.git.shared.PullRequest;
 import org.exoplatform.ide.git.shared.PushRequest;
+import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
@@ -135,8 +136,8 @@ import java.util.regex.Pattern;
 public class JGitConnection implements GitConnection
 {
    // -------------------------
-   private String branchName = "master";
-   private String branchRef = "refs/heads/master";
+   private String _branchName = "master";
+   private String _branchRef = "refs/heads/master";
    // -------------------------
    private final Repository repository;
    // TODO
@@ -361,10 +362,10 @@ public class JGitConnection implements GitConnection
          remoteConfig.update(config);
 
          config.setBoolean(ConfigConstants.CONFIG_CORE_SECTION, null, ConfigConstants.CONFIG_KEY_BARE, false);
-         config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_REMOTE,
+         config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, _branchName, ConfigConstants.CONFIG_KEY_REMOTE,
             remoteName);
-         config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_MERGE,
-            branchRef);
+         config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, _branchName, ConfigConstants.CONFIG_KEY_MERGE,
+            _branchRef);
 
          GitUser gitUser = request.getUser();
          if (gitUser != null)
@@ -398,7 +399,7 @@ public class JGitConnection implements GitConnection
 
          // Merge command is not work here. Looks like JGit bug. It fails with NPE that should not happen.
          // But 'merge' command from C git (original) works as well on repository create and fetched with JGit.
-         Ref headRef = fetchResult.getAdvertisedRef(branchRef);
+         Ref headRef = fetchResult.getAdvertisedRef(_branchRef);
          if (headRef == null || headRef.getObjectId() == null)
             return this;
 
@@ -599,38 +600,31 @@ public class JGitConnection implements GitConnection
    {
       try
       {
+         List<RefSpec> fetchRefSpecs = null;
+         String[] refSpec = request.getRefSpec();
+         if (refSpec != null && refSpec.length > 0)
+         {
+            fetchRefSpecs = new ArrayList<RefSpec>(refSpec.length);
+            for (int i = 0; i < refSpec.length; i++)
+            {
+               RefSpec fetchRefSpec = (refSpec[i].indexOf(':') < 0) //
+                  ? new RefSpec(Constants.R_HEADS + refSpec[i] + ":") // 
+                  : new RefSpec(refSpec[i]);
+               fetchRefSpecs.add(fetchRefSpec);
+            }
+         }
+
          FetchCommand fetchCommand = new Git(repository).fetch();
 
          String remote = request.getRemote();
          if (remote != null)
             fetchCommand.setRemote(remote);
-
-         String[] refSpec = request.getRefSpec();
-         if (refSpec != null && refSpec.length > 0)
-         {
-            StoredConfig config = repository.getConfig();
-            Set<String> remoteNames = config.getSubsections("remote");
-            // check is specified remote is name of remote configuration but not URL of remote repository.
-            final boolean isRemoteName = remoteNames.contains(remote);
-            List<RefSpec> refSpecInst = new ArrayList<RefSpec>(refSpec.length);
-            for (int i = 0; i < refSpec.length; i++)
-            {
-               // Add refs prefixes if branches specified in short form and remote name is specified.
-               RefSpec fetchRefSpec = //
-                  (refSpec[i].indexOf(':') < 0 && isRemoteName) //
-                     ? new RefSpec(Constants.R_HEADS + refSpec[i] + ":" + Constants.R_REMOTES + remote + "/"
-                        + refSpec[i]) // 
-                     : new RefSpec(refSpec[i]);
-               refSpecInst.add(fetchRefSpec);
-            }
-            fetchCommand.setRefSpecs(refSpecInst);
-         }
-
-         fetchCommand.setRemoveDeletedRefs(request.isRemoveDeletedRefs());
-
+         if (fetchRefSpecs != null)
+            fetchCommand.setRefSpecs(fetchRefSpecs);
          int timeout = request.getTimeout();
          if (timeout > 0)
             fetchCommand.setTimeout(timeout);
+         fetchCommand.setRemoveDeletedRefs(request.isRemoveDeletedRefs());
 
          fetchCommand.call();
       }
@@ -656,9 +650,51 @@ public class JGitConnection implements GitConnection
       File workDir = repository.getWorkTree();
       if (!(workDir.exists() || workDir.mkdirs()))
          throw new GitException("Can't create working folder " + workDir + ". ");
+
+      boolean bare = request.isBare();
+
       try
       {
-         repository.create(request.isBare());
+         repository.create(bare);
+
+         if (!bare)
+         {
+            try
+            {
+               Git git = new Git(repository);
+               git.add().addFilepattern(".").call();
+               git.commit().setMessage("init").call();
+            }
+            catch (NoFilepatternException e)
+            {
+               // Never happen since filepattern is set.
+               throw new GitException(e.getMessage(), e);
+            }
+            catch (WrongRepositoryStateException e)
+            {
+               throw new GitException(e.getMessage(), e);
+            }
+            catch (NoHeadException e)
+            {
+               throw new GitException(e.getMessage(), e);
+            }
+            catch (NoMessageException e)
+            {
+               // Never happen since message is set.
+               throw new GitException(e.getMessage(), e);
+            }
+            catch (ConcurrentRefUpdateException e)
+            {
+               throw new GitException(e.getMessage(), e);
+            }
+            catch (JGitInternalException e)
+            {
+               Throwable cause = e.getCause();
+               if (cause != null)
+                  throw new GitException(cause.getMessage(), cause);
+               throw new GitException(e.getMessage(), e);
+            }
+         }
          GitUser gitUser = request.getUser();
          if (gitUser != null)
          {
@@ -760,43 +796,61 @@ public class JGitConnection implements GitConnection
    {
       try
       {
-         //      PullCommand pullCommand = new Git(repository).pull();
-         //      int timeout = request.getTimeout();
-         //      if (timeout > 0)
-         //         pullCommand.setTimeout(timeout);
-         //         pullCommand.call();
-         // ********************************************************
-
          String fullBranch = repository.getFullBranch();
          if (!fullBranch.startsWith(Constants.R_HEADS))
             throw new DetachedHeadException("HEAD is detached. Cannot pull. ");
 
-         FetchCommand fetchCommand = new Git(repository).fetch();
+         String branch = fullBranch.substring(Constants.R_HEADS.length());
 
+         StoredConfig config = repository.getConfig();
          String remote = request.getRemote();
-         if (remote != null)
-            fetchCommand.setRemote(remote);
+         if (remote == null)
+         {
+            remote = config.getString(ConfigConstants.CONFIG_BRANCH_SECTION, branch, ConfigConstants.CONFIG_KEY_REMOTE);
+            if (remote == null)
+               remote = Constants.DEFAULT_REMOTE_NAME;
+         }
 
+         String remoteBranch = null;
+         RefSpec fetchRefSpecs = null;
          String refSpec = request.getRefSpec();
          if (refSpec != null)
          {
-            RefSpec fetchRefSpec = (refSpec.indexOf(':') < 0) //
-               ? new RefSpec(Constants.R_HEADS + refSpec + ":" + Constants.R_HEADS + Constants.MASTER) // 
+            fetchRefSpecs = (refSpec.indexOf(':') < 0) //
+               ? new RefSpec(Constants.R_HEADS + refSpec + ":" + fullBranch) // 
                : new RefSpec(refSpec);
-            fetchCommand.setRefSpecs(fetchRefSpec);
+            remoteBranch = fetchRefSpecs.getSource();
+         }
+         else
+         {
+            remoteBranch =
+               config.getString(ConfigConstants.CONFIG_BRANCH_SECTION, branch, ConfigConstants.CONFIG_KEY_MERGE);
          }
 
+         if (remoteBranch == null)
+         {
+            String key = ConfigConstants.CONFIG_BRANCH_SECTION + "." + branch + "." + ConfigConstants.CONFIG_KEY_MERGE;
+            throw new GitException("Remote branch is not specified in request and " + key
+               + " in configuration is not set. ");
+         }
+
+         FetchCommand fetchCommand = new Git(repository).fetch();
+         fetchCommand.setRemote(remote);
+         if (fetchRefSpecs != null)
+            fetchCommand.setRefSpecs(fetchRefSpecs);
          int timeout = request.getTimeout();
          if (timeout > 0)
             fetchCommand.setTimeout(timeout);
 
-         @SuppressWarnings("unused")
          FetchResult fetchResult = fetchCommand.call();
 
-         //Ref ref = fetchResult.getAdvertisedRef(branchRef);
-         Ref ref = repository.getRef(Constants.FETCH_HEAD);
+         Ref remoteBranchRef = fetchResult.getAdvertisedRef(remoteBranch);
+         if (remoteBranchRef == null)
+            remoteBranchRef = fetchResult.getAdvertisedRef(Constants.R_HEADS + remoteBranch);
+         if (remoteBranchRef == null)
+            throw new GitException("Cannot get ref for remote branch " + remoteBranch + ". ");
 
-         new Git(repository).merge().include(ref).call();
+         new Git(repository).merge().include(remoteBranchRef).call();
       }
       catch (WrongRepositoryStateException e)
       {
@@ -878,6 +932,91 @@ public class JGitConnection implements GitConnection
       catch (InvalidRemoteException e)
       {
          throw new IllegalArgumentException(e.getMessage());
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.server.GitConnection#remoteAdd(org.exoplatform.ide.git.shared.RemoteAddRequest)
+    */
+   @Override
+   public void remoteAdd(RemoteAddRequest request) throws GitException
+   {
+      String remoteName = request.getName();
+      if (remoteName == null || remoteName.length() == 0)
+         throw new IllegalArgumentException("Remote name required. ");
+
+      String url = request.getUrl();
+      if (url == null || url.length() == 0)
+         throw new IllegalArgumentException("Remote url required. ");
+
+      StoredConfig config = repository.getConfig();
+      Set<String> remoteNames = config.getSubsections("remote");
+      if (remoteNames.contains(remoteName))
+         throw new IllegalArgumentException("Remote " + remoteName + " already exists. ");
+
+      RemoteConfig remoteConfig;
+      try
+      {
+         remoteConfig = new RemoteConfig(config, remoteName);
+      }
+      catch (URISyntaxException e)
+      {
+         // Not happen since it is newly created remote.
+         throw new GitException(e.getMessage(), e);
+      }
+
+      try
+      {
+         remoteConfig.addURI(new URIish(url));
+      }
+      catch (URISyntaxException e)
+      {
+         throw new IllegalArgumentException("Remote url " + url + " is invalid. ");
+      }
+
+      String[] pushUrls = request.getPushUrls();
+      if (pushUrls != null)
+      {
+         for (int i = 0; i < pushUrls.length; i++)
+         {
+            try
+            {
+               remoteConfig.addURI(new URIish(pushUrls[i]));
+            }
+            catch (URISyntaxException e)
+            {
+               throw new IllegalArgumentException("Remote push url " + pushUrls[i] + " is invalid. ");
+            }
+         }
+      }
+
+      String[] branches = request.getBranches();
+      if (branches != null)
+      {
+         for (int i = 0; i < branches.length; i++)
+            remoteConfig.addFetchRefSpec( //
+               new RefSpec(Constants.R_HEADS + branches[i] + ":" + Constants.R_REMOTES + remoteName + "/" + branches[i]));
+      }
+      else
+      {
+         remoteConfig.addFetchRefSpec(new RefSpec(Constants.R_HEADS + "*" + ":" + Constants.R_REMOTES + remoteName
+            + "/*").setForceUpdate(true));
+      }
+
+      /*config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_REMOTE,
+         name);*/
+      //      config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_MERGE,
+      //         branchRef);
+
+      remoteConfig.update(config);
+
+      try
+      {
+         config.save();
+      }
+      catch (IOException e)
+      {
+         throw new GitException(e.getMessage(), e);
       }
    }
 

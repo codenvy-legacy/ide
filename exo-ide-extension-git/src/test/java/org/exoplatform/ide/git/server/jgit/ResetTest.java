@@ -47,7 +47,7 @@ public class ResetTest extends BaseTest
       git.add().addFilepattern(".").call();
       git.commit().setMessage("add file").call();
 
-      getClient().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.HARD));
+      getConnection().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.HARD));
 
       // Revert to previous revision.
       assertEquals(initMessage, git.log().call().iterator().next().getFullMessage());
@@ -74,7 +74,7 @@ public class ResetTest extends BaseTest
       git.add().addFilepattern(".").call();
       git.commit().setMessage("add file").call();
 
-      getClient().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.SOFT));
+      getConnection().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.SOFT));
 
       // Revert to previous revision.
       assertEquals(initMessage, git.log().call().iterator().next().getFullMessage());
@@ -101,7 +101,7 @@ public class ResetTest extends BaseTest
       git.add().addFilepattern(".").call();
       git.commit().setMessage("add file").call();
 
-      getClient().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.MIXED));
+      getConnection().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.MIXED));
 
       // Revert to previous revision.
       assertEquals(initMessage, git.log().call().iterator().next().getFullMessage());
@@ -130,7 +130,7 @@ public class ResetTest extends BaseTest
       checkFilesInCache(aaa);
       checkFilesInCache(bbb);
 
-      getClient().reset(new ResetRequest(new String[]{"aaa"}));
+      getConnection().reset(new ResetRequest(new String[]{"aaa"}));
 
       // New files untouched.
       assertTrue(aaa.exists());
@@ -157,7 +157,7 @@ public class ResetTest extends BaseTest
       request.setType(ResetType.HARD);
       try
       {
-         getClient().reset(request);
+         getConnection().reset(request);
          fail("Expected exception was not thrown. ");
       }
       catch (IllegalArgumentException e)

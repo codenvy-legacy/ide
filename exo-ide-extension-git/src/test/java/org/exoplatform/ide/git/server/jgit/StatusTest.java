@@ -83,7 +83,7 @@ public class StatusTest extends BaseTest
 
    public void testStatus() throws Exception
    {
-      StatusPage statusPage = (StatusPage)getClient().status(new StatusRequest());
+      StatusPage statusPage = (StatusPage)getConnection().status(new StatusRequest());
 
       statusPage.writeTo(System.out);
 
@@ -114,13 +114,13 @@ public class StatusTest extends BaseTest
       git.add().addFilepattern(".").call();
       git.commit().setMessage("commit all changes").call();
 
-      StatusPage statusPage = (StatusPage)getClient().status(new StatusRequest());
+      StatusPage statusPage = (StatusPage)getConnection().status(new StatusRequest());
       statusPage.writeTo(System.out);
    }
 
    public void testShortStatus() throws Exception
    {
-      StatusPage statusPage = (StatusPage)getClient().status(new StatusRequest(true));
+      StatusPage statusPage = (StatusPage)getConnection().status(new StatusRequest(true));
       statusPage.writeTo(System.out);
    }
 }

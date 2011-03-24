@@ -83,7 +83,7 @@ public abstract class BaseTest extends junit.framework.TestCase
    @Override
    protected void tearDown() throws Exception
    {
-      GitConnection thisClient = getClient();
+      GitConnection thisClient = getConnection();
       if (thisClient != null)
          thisClient.close();
       for (File file : forClean)
@@ -99,7 +99,7 @@ public abstract class BaseTest extends junit.framework.TestCase
       return repository;
    }
 
-   protected GitConnection getClient()
+   protected GitConnection getConnection()
    {
       return client;
    }

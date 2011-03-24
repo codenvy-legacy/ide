@@ -90,7 +90,7 @@ public class FetchTest extends BaseTest
       
       FetchRequest request = new FetchRequest();
       request.setRemote("origin");
-      request.setRefSpec(new String[] {branchName});
+      request.setRefSpec(new String[] {/*"refs/heads/" + */branchName});
       new JGitConnection(fetchTestRepo).fetch(request);
 
       Git newGit = new Git(fetchTestRepo);

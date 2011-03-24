@@ -90,10 +90,9 @@ public class PullTest extends BaseTest
       config.setString("user", null, "email", "andrew00x@gmail.com");
 
       //
-      addFile(newRepoWorkDir, "empty", "");
       Git newGit = new Git(newRepo);
       newGit.add().addFilepattern(".").call();
-      newGit.commit().setMessage("empty").call();
+      newGit.commit().setMessage("init").call();
 
       PullRequest request = new PullRequest();
 
