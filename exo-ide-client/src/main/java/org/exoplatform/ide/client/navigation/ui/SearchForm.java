@@ -24,7 +24,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id:   $
  *
  */
-public class SearchForm extends AbstractView implements org.exoplatform.ide.client.navigation.SearchPresenter.Display
+public class SearchForm extends ViewImpl implements org.exoplatform.ide.client.navigation.SearchPresenter.Display
 {
 
    private static final int WIDTH = 450;
@@ -100,7 +100,7 @@ public class SearchForm extends AbstractView implements org.exoplatform.ide.clie
 
    public SearchForm()
    {
-      super(ID, "popup", "Search", new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
+      super(ID, "navigation", "Search", new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setHeight("100%");

@@ -16,9 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.example;
+package org.exoplatform.ide.client.framework.ui.gwt.impl;
 
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,12 +29,33 @@ import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
  * @version $
  */
 
-public class AskForNameView extends ViewImpl implements AskForNamePresenter.Display
+public class ActivateViewEvent extends GwtEvent<ActivateViewHandler>
 {
 
-   public AskForNameView()
+   public static final GwtEvent.Type<ActivateViewHandler> TYPE = new GwtEvent.Type<ActivateViewHandler>();
+
+   private ViewEx view;
+
+   public ActivateViewEvent(ViewEx view)
    {
-      super(ID, "modal", "Ask for Name");
+      this.view = view;
+   }
+
+   public ViewEx getView()
+   {
+      return view;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ActivateViewHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(ActivateViewHandler handler)
+   {
+      handler.onActivateView(this);
    }
 
 }

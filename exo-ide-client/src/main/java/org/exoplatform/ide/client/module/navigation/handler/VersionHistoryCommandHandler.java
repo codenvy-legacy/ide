@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileCallback;
 import org.exoplatform.ide.client.framework.vfs.Version;
@@ -245,7 +245,7 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
       version = versionToShow;
       if (!isVersionPanelOpened)
       {
-         AbstractView view = new VersionContentForm(eventBus, version);
+         ViewImpl view = new VersionContentForm(eventBus, version);
          view.setIcon(new Image(IDEImageBundle.INSTANCE.viewVersions()));
          view.setTitle("Version");
          IDE.getInstance().openView(view);

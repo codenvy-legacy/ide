@@ -84,8 +84,9 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
       display.getPerspective().addClosingViewHandler(this);
       display.getPerspective().addViewClosedHandler(this);
       display.getPerspective().addViewVisibilityChangedHandler(this);
+
       EditorController editorController = new EditorController();
-      display.getPerspective().addViewVisibilityChangedHandler(editorController);
+      //      display.getPerspective().addViewVisibilityChangedHandler(editorController);
 
       new ToolbarBuilder(eventBus, display.getToolbar(), display.getStatusbar());
 
@@ -132,8 +133,8 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-//      com.google.gwt.user.client.Window.alert("view visibility changed view [" + event.getView().getId()
-//         + "] visible [" + event.getView().isViewVisible() + "]");
+      System.out.println("IDEPresenter.onViewVisibilityChanged()");
+      eventBus.fireEvent(event);
    }
 
    @Override

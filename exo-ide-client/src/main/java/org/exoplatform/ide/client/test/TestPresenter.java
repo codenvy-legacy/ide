@@ -23,11 +23,15 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -44,7 +48,8 @@ import com.google.gwt.user.client.ui.RootPanel;
  * @version $
  */
 
-public class TestPresenter implements ViewOpenedHandler, ViewClosedHandler, ClosingViewHandler
+public class TestPresenter implements ViewOpenedHandler, ViewClosedHandler, ClosingViewHandler, ExecuteCommandHandler,
+   ViewVisibilityChangedHandler, ViewActivatedHandler
 {
 
    public interface Display extends ViewDisplay
@@ -81,6 +86,11 @@ public class TestPresenter implements ViewOpenedHandler, ViewClosedHandler, Clos
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(ClosingViewEvent.TYPE, this);
+
+      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      eventBus.addHandler(ViewActivatedEvent.TYPE, this);
+
+      eventBus.addHandler(ExecuteCommandEvent.TYPE, this);
 
       HTML test =
          new HTML("<font color=\"blue\" style=\"text-decoration:underline; cursor:pointer;\">Open Test View</font>");
@@ -198,6 +208,24 @@ public class TestPresenter implements ViewOpenedHandler, ViewClosedHandler, Clos
          display.getView().setTitle(title);
       }
 
+   }
+
+   @Override
+   public void onExecuteCommand(ExecuteCommandEvent event)
+   {
+   }
+
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      //      System.out.println("view [ " + event.getView().getId() + " ] visibility changed to [ "
+      //         + event.getView().isViewVisible() + " ]");
+   }
+
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      //System.out.println("view [ " + event.getView().getId() + " ] has been activated!");
    }
 
 }

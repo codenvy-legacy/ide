@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 
@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.Image;
  * @version $Id: EditorView Mar 21, 2011 4:33:38 PM evgen $
  *
  */
-public class EditorView extends AbstractView
+public class EditorView extends ViewImpl
 {
 
    private static int i = 0;

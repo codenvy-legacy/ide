@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * @version $
  */
 
-public class WorkspaceViewImpl extends AbstractView implements org.exoplatform.ide.client.navigation.WorkspacePresenter.Display
+public class WorkspaceViewImpl extends ViewImpl implements org.exoplatform.ide.client.navigation.WorkspacePresenter.Display
 {
 
    private ItemTree treeGrid;
@@ -51,6 +51,7 @@ public class WorkspaceViewImpl extends AbstractView implements org.exoplatform.i
       ScrollPanel treeWrapper = new ScrollPanel(treeGrid);
       treeWrapper.ensureDebugId("Tree-itemTree-Wrapper");
       treeWrapper.setSize("100%", "100%");
+      //treeWrapper.setSize("100px", "100px");
       DOM.setStyleAttribute(treeWrapper.getElement(), "zIndex", "0");
       add(treeWrapper);
    }

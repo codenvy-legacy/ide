@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.editor.api.EditorParameters;
 
@@ -42,7 +42,7 @@ import com.google.gwt.user.client.Timer;
  * @version $
  */
 
-public class VersionContentForm extends AbstractView implements VersionContentPresenter.Display
+public class VersionContentForm extends ViewImpl implements VersionContentPresenter.Display
 {
    public static final String ID = "ideVersionContentPanel";
 

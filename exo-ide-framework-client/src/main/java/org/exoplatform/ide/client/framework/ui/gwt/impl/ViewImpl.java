@@ -21,13 +21,17 @@ package org.exoplatform.ide.client.framework.ui.gwt.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS .
@@ -36,8 +40,8 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public class AbstractView extends FlowPanel implements ViewEx, ViewDisplay, HasChangeViewTitleHandler,
-   HasChangeViewIconHandler, HasSetViewVisibleHandler
+public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChangeViewTitleHandler,
+   HasChangeViewIconHandler, HasSetViewVisibleHandler, HasActivateViewHandler
 {
 
    private String id;
@@ -56,7 +60,7 @@ public class AbstractView extends FlowPanel implements ViewEx, ViewDisplay, HasC
 
    private boolean canResize = true;
 
-   private boolean isViewVisible;
+   private boolean activated = false;
 
    private List<ChangeViewTitleHandler> changeViewTitleHandlers = new ArrayList<ChangeViewTitleHandler>();
 
@@ -64,17 +68,17 @@ public class AbstractView extends FlowPanel implements ViewEx, ViewDisplay, HasC
 
    private List<SetViewVisibleHandler> setViewVisibleHandlers = new ArrayList<SetViewVisibleHandler>();
 
-   public AbstractView(String id, String type, String title)
+   public ViewImpl(String id, String type, String title)
    {
       this(id, type, title, null);
    }
 
-   public AbstractView(String id, String type, String title, Image icon)
+   public ViewImpl(String id, String type, String title, Image icon)
    {
       this(id, type, title, icon, 300, 200);
    }
 
-   public AbstractView(String id, String type, String title, Image icon, int defaultWidth, int defaultHeight)
+   public ViewImpl(String id, String type, String title, Image icon, int defaultWidth, int defaultHeight)
    {
       this.id = id;
       this.type = type;
@@ -82,6 +86,42 @@ public class AbstractView extends FlowPanel implements ViewEx, ViewDisplay, HasC
       this.icon = icon;
       this.defaultWidth = defaultWidth;
       this.defaultHeight = defaultHeight;
+
+      wrapper = new Wrapper(3);
+      wrapper.setSize("100%", "100%");
+      super.add((Widget)wrapper);
+
+      sinkEvents(Event.ONMOUSEDOWN);
+   }
+
+   @Override
+   public void onBrowserEvent(Event event)
+   {
+      switch (DOM.eventGetType(event))
+      {
+         case Event.ONMOUSEDOWN :
+            if (event.getButton() != Event.BUTTON_LEFT)
+            {
+               return;
+            }
+
+            onMouseDown();
+            break;
+      }
+   }
+
+   protected void onMouseDown()
+   {
+      ViewHighlightManager.getInstance().selectView(this);
+   }
+
+   private Wrapper wrapper;
+
+   @Override
+   public void add(Widget w)
+   {
+      //super.add(w);
+      wrapper.add(w);
    }
 
    @Override
@@ -151,14 +191,19 @@ public class AbstractView extends FlowPanel implements ViewEx, ViewDisplay, HasC
    }
 
    @Override
-   public boolean isActive()
+   public void activate()
    {
-      return false;
+      ActivateViewEvent event = new ActivateViewEvent(this);
+      for (ActivateViewHandler activateViewHandler : activateViewHandlers)
+      {
+         activateViewHandler.onActivateView(event);
+      }
    }
 
-   @Override
-   public void setActive()
+   public void setActivated(boolean activated)
    {
+      this.activated = activated;
+      wrapper.setHighlited(activated);
    }
 
    @Override
@@ -176,13 +221,15 @@ public class AbstractView extends FlowPanel implements ViewEx, ViewDisplay, HasC
    @Override
    public boolean isViewVisible()
    {
-      return isViewVisible;
+      boolean visible = isVisible();
+      System.out.println("returning view [" + getId() + "] visible [ " + visible + " ]");
+      return visible;
    }
 
    @Override
-   public void setViewVisible()
+   public void setActive()
    {
-      Window.alert("on set view visible!!!!!!1");
+      ViewHighlightManager.getInstance().selectView(this);
    }
 
    @Override
@@ -258,6 +305,41 @@ public class AbstractView extends FlowPanel implements ViewEx, ViewDisplay, HasC
          changeViewTitleHandlers.remove(handler);
       }
 
+   }
+
+   private List<ActivateViewHandler> activateViewHandlers = new ArrayList<ActivateViewHandler>();
+
+   @Override
+   public HandlerRegistration addActivateViewHandler(ActivateViewHandler activateViewHandler)
+   {
+      activateViewHandlers.add(activateViewHandler);
+      return new ActivateViewHandlerRegistration(activateViewHandler);
+   }
+
+   private class ActivateViewHandlerRegistration implements HandlerRegistration
+   {
+
+      private ActivateViewHandler handler;
+
+      public ActivateViewHandlerRegistration(ActivateViewHandler handler)
+      {
+         this.handler = handler;
+      }
+
+      @Override
+      public void removeHandler()
+      {
+         activateViewHandlers.remove(handler);
+      }
+   }
+
+   @Override
+   public boolean setViewVisible()
+   {
+
+      Window.alert("Prompt to set view [" + getId() + "] visible: true");
+
+      return false;
    }
 
 }

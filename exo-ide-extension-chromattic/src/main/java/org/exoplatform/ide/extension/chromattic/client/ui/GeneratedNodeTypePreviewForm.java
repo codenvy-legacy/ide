@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.extension.chromattic.client.Images;
@@ -44,7 +44,7 @@ import com.google.gwt.user.client.ui.Image;
  * @version $Id: Dec 17, 2010 $
  *
  */
-public class GeneratedNodeTypePreviewForm extends AbstractView implements GeneratedNodeTypePreviewPresenter.Display
+public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedNodeTypePreviewPresenter.Display
 {
    public static final String ID = "ideGeneratedTypePreviewPanel";
 

@@ -30,8 +30,10 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -90,6 +92,11 @@ public class PerspectiveImpl implements Perspective
    @Override
    public void openView(ViewEx view)
    {
+      if (view instanceof ViewImpl)
+      {
+         DOM.setStyleAttribute(((ViewImpl)view).getElement(), "zIndex", "0");
+      }
+
       /*
        * search for opened view
        */

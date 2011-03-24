@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
 import com.google.gwt.user.client.ui.Image;
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * @version $
  */
 
-public class SearchResultsView extends AbstractView implements
+public class SearchResultsView extends ViewImpl implements
    org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display
 {
 

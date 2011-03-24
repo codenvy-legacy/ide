@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.example;
+package org.exoplatform.ide.client.debug;
 
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,12 +27,13 @@ import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
  * @version $
  */
 
-public class AskForNameView extends ViewImpl implements AskForNamePresenter.Display
+public class IDEDebugger
 {
-
-   public AskForNameView()
-   {
-      super(ID, "modal", "Ask for Name");
+   
+   private HandlerManager eventBus;
+   
+   public IDEDebugger(HandlerManager eventBus) {
+      this.eventBus = eventBus;
    }
 
 }

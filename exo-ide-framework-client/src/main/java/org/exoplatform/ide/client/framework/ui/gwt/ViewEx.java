@@ -46,7 +46,7 @@ public interface ViewEx
 
    boolean isViewVisible();
    
-   void setViewVisible();
+   boolean setViewVisible();
    
    int getDefaultWidth();
    
@@ -54,7 +54,7 @@ public interface ViewEx
    
    boolean canResize();
    
-   boolean isActive();
+   void activate();
    
    void setActive();
    

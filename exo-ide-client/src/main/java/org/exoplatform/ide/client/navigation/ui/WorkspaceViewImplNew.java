@@ -25,7 +25,7 @@ import java.util.Map;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.browser.GWTItemTreeGrid;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public class WorkspaceViewImplNew extends AbstractView implements org.exoplatform.ide.client.navigation.WorkspacePresenter.Display
+public class WorkspaceViewImplNew extends ViewImpl implements org.exoplatform.ide.client.navigation.WorkspacePresenter.Display
 {
 
    private GWTItemTreeGrid treeGrid;

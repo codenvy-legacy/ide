@@ -19,7 +19,7 @@
 package org.exoplatform.ide.client.test;
 
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;
@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public class TestView extends AbstractView implements TestPresenter.Display
+public class TestView extends ViewImpl implements TestPresenter.Display
 {
 
    private Button askOnCloseButton;
