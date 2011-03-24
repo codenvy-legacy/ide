@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.extension.chromattic.client;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteEvent;
-import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -32,10 +29,6 @@ import org.exoplatform.ide.extension.chromattic.client.handler.CompileGroovyComm
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticServiceImpl;
 import org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypePresenter;
 import org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypePresenter;
-import org.exoplatform.ide.extension.groovy.client.codeassistant.GroovyImportDeclarationTokenCollector;
-import org.exoplatform.ide.extension.groovy.client.codeassistant.autocompletion.GroovyTokenCollector;
-import org.exoplatform.ide.extension.groovy.client.codeassistant.autocompletion.GroovyTokenWidgetFactory;
-import org.exoplatform.ide.extension.groovy.client.codeassistant.event.RegisterImportTokenCollectorEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -80,10 +73,6 @@ public class ChromatticExtension extends Extension implements InitializeServices
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new ChrommaticServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
-      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyTokenWidgetFactory(
-         event.getApplicationConfiguration().getContext()), new GroovyTokenCollector(eventBus)));
-      eventBus.fireEvent(new RegisterImportTokenCollectorEvent(MimeType.CHROMATTIC_DATA_OBJECT,
-         new GroovyImportDeclarationTokenCollector(eventBus)));
    }
 
 }

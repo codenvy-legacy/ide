@@ -33,8 +33,4 @@
    <source path="client" />
    <entry-point class='org.exoplatform.ide.extension.netvibes.client.NetvibesExtension' />
    
-   <script src="token/js_netvibes_tokens.js" />
-   <script src="token/netvibes_api_tokens.js" />
-   <script src="token/java_script_api.js" />
-   
 </module>

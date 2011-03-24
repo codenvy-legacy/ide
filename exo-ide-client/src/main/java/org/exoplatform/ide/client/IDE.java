@@ -26,8 +26,6 @@ import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
-import org.exoplatform.ide.client.autocompletion.AutoCompletionManager;
-import org.exoplatform.ide.client.autocompletion.AutoCompletionManagerExt;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
@@ -82,10 +80,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       presenter = new IDEPresenter(EVENT_BUS, ideForm, controlsRegistration);
       
       new TestPresenter(EVENT_BUS);
-      
-      new AutoCompletionManager(EVENT_BUS);
-
-      new AutoCompletionManagerExt(EVENT_BUS);
 
       new ApplicationStateSnapshotListener(EVENT_BUS);
 

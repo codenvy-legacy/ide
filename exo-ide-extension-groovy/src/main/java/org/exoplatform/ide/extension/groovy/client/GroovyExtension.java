@@ -18,21 +18,18 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.codeassistant.events.RegisterAutocompleteEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -51,10 +48,8 @@ import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter;
-import org.exoplatform.ide.extension.groovy.client.codeassistant.AssistImportDeclarationManager;
-import org.exoplatform.ide.extension.groovy.client.codeassistant.autocompletion.GroovyTokenCollector;
-import org.exoplatform.ide.extension.groovy.client.codeassistant.autocompletion.GroovyTokenWidgetFactory;
 import org.exoplatform.ide.extension.groovy.client.controls.ConfigureBuildPathCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.DeployGroovyCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.DeployGroovySandboxCommand;
@@ -75,7 +70,6 @@ import org.exoplatform.ide.extension.groovy.client.handlers.DeployGroovyCommandH
 import org.exoplatform.ide.extension.groovy.client.handlers.RunGroovyServiceCommandHandler;
 import org.exoplatform.ide.extension.groovy.client.handlers.UndeployGroovyCommandHandler;
 import org.exoplatform.ide.extension.groovy.client.handlers.ValidateGroovyCommandHandler;
-import org.exoplatform.ide.extension.groovy.client.service.codeassistant.CodeAssistantServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedHandler;
@@ -84,8 +78,8 @@ import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ide.extension.groovy.client.util.GroovyPropertyUtil;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS.
@@ -113,6 +107,8 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    private boolean undeployOnCancel = false;
 
    private boolean previewOpened = false;
+
+   private CodeAssistantService codeAssistantService;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
@@ -147,7 +143,6 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       new ValidateGroovyCommandHandler(eventBus);
       new DeployGroovyCommandHandler(eventBus);
       new UndeployGroovyCommandHandler(eventBus);
-      new AssistImportDeclarationManager(eventBus);
       new ConfigureBuildPathPresenter(eventBus);
 
       GroovyClientBundle.INSTANCE.css().ensureInjected();
@@ -158,14 +153,6 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       configuration = event.getApplicationConfiguration();
       new GroovyServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
       new WadlServiceImpl(eventBus, event.getLoader());
-      new CodeAssistantServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
-      GroovyTokenWidgetFactory groovyTokenWidgetFactory =
-         new GroovyTokenWidgetFactory(event.getApplicationConfiguration().getContext());
-      GroovyTokenCollector groovyTokenCollector = new GroovyTokenCollector(eventBus);
-      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.GROOVY_SERVICE, groovyTokenWidgetFactory,
-         groovyTokenCollector));
-      eventBus.fireEvent(new RegisterAutocompleteEvent(MimeType.APPLICATION_GROOVY, groovyTokenWidgetFactory,
-         groovyTokenCollector));
    }
 
    /**
