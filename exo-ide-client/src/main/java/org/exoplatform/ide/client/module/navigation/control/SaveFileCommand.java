@@ -31,14 +31,14 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
+import org.exoplatform.ide.client.framework.event.FileSavedEvent;
+import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
 
@@ -52,7 +52,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 @RolesAllowed({"administrators", "developers"})
 public class SaveFileCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ItemPropertiesSavedHandler, EditorFileContentChangedHandler,  FileContentSavedHandler,
+   ItemPropertiesSavedHandler, EditorFileContentChangedHandler,  FileSavedHandler,
    EntryPointChangedHandler, ApplicationSettingsReceivedHandler
 {
 
@@ -80,11 +80,12 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
     */
    public void initialize(HandlerManager eventBus)
    {
+      System.out.println("SaveFileCommand.initialize()");
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
 //      eventBus.addHandler(FilePropertiesChangedEvent.TYPE, this);
-      eventBus.addHandler(FileContentSavedEvent.TYPE, this);
+      eventBus.addHandler(FileSavedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
@@ -194,7 +195,24 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
 //      }
 //   }
 
-   public void onFileContentSaved(FileContentSavedEvent event)
+
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
+      {
+         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
+    */
+   @Override
+   public void onFileSaved(FileSavedEvent event)
    {
       if (event.getFile() != activeFile)
       {
@@ -209,17 +227,5 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
       {
          setEnabled(false);
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
-    */
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
-      {
-         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
-      }
-      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 }

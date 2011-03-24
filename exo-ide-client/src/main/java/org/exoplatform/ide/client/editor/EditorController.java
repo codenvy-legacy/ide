@@ -97,6 +97,7 @@ import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
@@ -278,7 +279,8 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       }
 
       activeFile = curentFile;
-      editors.get(curentFile.getHref()).setFocus();
+      Editor editor = editors.get(curentFile.getHref());
+      editor.setFocus();
    }
 
    public void onEditorSaveContent(EditorSaveContentEvent event)
@@ -579,8 +581,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
 
    public void onFileSaved(FileSavedEvent event)
    {
-      System.out.println("EditorController.onFileSaved()");
-      System.out.println(closeFileAfterSaving);
       if (closeFileAfterSaving)
       {
          File file = event.getFile();
@@ -599,7 +599,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          {
             openedFiles.remove(event.getSourceHref());
             activeFile = savedFile;
-
+//TODO 
             openedFiles.put(savedFile.getHref(), savedFile);
             replaceFile(currentOpenedFile, savedFile);
          }
@@ -633,14 +633,16 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       EditorView editorView = editorsViews.get(editorId);
       Editor editor = editorView.getEditor();
       
-//      IDE.getInstance().closeView(editorView.getId());
-//      editorView = new EditorView(editor, newFile, getFileTitle(newFile));
-//      IDE.getInstance().openView(editorView);
+      
       editors.put(newFile.getHref(), editor);
       editorsViews.put(editor.getEditorId(), editorView);
       editorView.setIcon(new Image(newFile.getIcon()));
+      
+      boolean contentChanged = newFile.isContentChanged();
       editorView.setContent(newFile);
       
+      //to avoid change content
+      newFile.setContentChanged(contentChanged);
       
       updateTabTitle(newFile);
       //   display.replaceFile(oldFile, newFile);

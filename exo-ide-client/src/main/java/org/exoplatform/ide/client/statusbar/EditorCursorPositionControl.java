@@ -76,7 +76,6 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
     */
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
-      System.out.println("EditorCursorPositionControl.onEditorCursorActivity()");
       if (event.getRow() > 0 && event.getColumn() > 0)
       {
          setEvent(new GoToLineEvent());
@@ -94,7 +93,6 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      System.out.println("EditorCursorPositionControl.onEditorActiveFileChanged()");
       if (event.getFile() == null || event.getEditor() == null)
       {
          setText("&nbsp;");

@@ -18,11 +18,9 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
@@ -38,8 +36,7 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -48,11 +45,9 @@ import java.util.Map;
  * @version $
  */
 
-public class SaveFileCommandHandler implements ExceptionThrownHandler, SaveFileHandler, 
+public class SaveFileCommandHandler implements SaveFileHandler, 
 EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
 {
-
-   private Handlers handlers;
 
    private HandlerManager eventBus;
 
@@ -63,8 +58,6 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
    public SaveFileCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-
-      handlers = new Handlers(eventBus);
 
       eventBus.addHandler(SaveFileEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -81,8 +74,6 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
          return;
       }
 
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-      
       String lockToken = lockTokens.get(file.getHref());
 
       if (file.isContentChanged())
@@ -112,8 +103,7 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
             return;
          }
       }
-
-      handlers.removeHandlers();
+      eventBus.fireEvent(new FileSavedEvent(file, null));
    }
 
    private void getProperties(File file)
@@ -126,12 +116,6 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
             eventBus.fireEvent(new FileSavedEvent((File)result, null));
          }
       });
-   }
-
-   public void onError(ExceptionThrownEvent event)
-   {
-      handlers.removeHandlers();
-      event.getError().printStackTrace();
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
