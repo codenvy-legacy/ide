@@ -97,6 +97,7 @@ import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
@@ -170,7 +171,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       handlers.addHandler(EditorGoToLineEvent.TYPE, this);
       handlers.addHandler(EditorSetFocusEvent.TYPE, this);
       handlers.addHandler(SaveFileAsEvent.TYPE, this);
-      //      handlers.addHandler(ViewClosedEvent.TYPE, this);
+      handlers.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       handlers.addHandler(ClosingViewEvent.TYPE, this);
 
    }
@@ -526,6 +527,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
          EditorProducer producer = event.getEditorProducer();
          Editor editor = producer.createEditor(file.getContent(), eventBus, params);
+         DOM.setStyleAttribute(editor.getElement(), "zIndex", "0");
          if (editors.containsKey(file.getHref()))
          {
             Editor oldEditor = editors.get(file.getHref());
@@ -760,11 +762,10 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
    @Override
    public void onViewVisibilityChanged(final ViewVisibilityChangedEvent event)
    {
-      if (event.getView().getType().equals("editor"))
+      System.out.println("EditorController.onViewVisibilityChanged()");
+      if (event.getView().getType().equals("editor") && event.getView().isViewVisible())
       {
-         final EditorView editorView = (EditorView)event.getView();
-         if (editorView.isVisible())
-         {
+            final EditorView editorView = (EditorView)event.getView();
             activeFile = editorView.getFile();
             Timer timer = new Timer()
             {
@@ -786,7 +787,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
             }
 
          }
-      }
    }
 
    /**
