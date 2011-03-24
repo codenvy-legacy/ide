@@ -32,6 +32,8 @@ import com.google.gwt.user.client.ui.Image;
 public class EditorView extends AbstractView
 {
 
+   private static int i = 0;
+   
    private Editor editor;
 
    private File file;
@@ -43,7 +45,7 @@ public class EditorView extends AbstractView
     */
    public EditorView(Editor editor, File file, String title)
    {
-      super(System.currentTimeMillis() + "-" + file.getHref(), "editor", title, new Image(file.getIcon()));
+      super("editor-" + i++, "editor", title, new Image(file.getIcon()));
       this.editor = editor;
       this.file = file;
       add(editor);

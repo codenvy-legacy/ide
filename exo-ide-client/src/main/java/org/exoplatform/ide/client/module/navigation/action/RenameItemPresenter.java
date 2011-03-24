@@ -319,7 +319,7 @@ public class RenameItemPresenter
 
             openedFiles.remove(key);
             openedFiles.put(fileHref, file);
-            eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
+            eventBus.fireEvent(new EditorReplaceFileEvent(new File(key), file));
          }
       }
    }
@@ -379,14 +379,16 @@ public class RenameItemPresenter
    
    private void moveItem(Item item, String destination)
    {
-      VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), new MoveItemCallback()
+      MoveItemCallback moveItemCallback = new MoveItemCallback()
       {
          @Override
          protected void onSuccess(MoveItemData result)
          {
             itemMoved(result.getItem(), result.getOldHref());
          }
-      });
+      };
+      moveItemCallback.setEventBus(eventBus);
+      VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), moveItemCallback);
    }
    
    private void itemMoved(Item item, String oldItemHref)
@@ -405,7 +407,7 @@ public class RenameItemPresenter
             openedFiles.remove(oldItemHref);
             openedFiles.put(openedFile.getHref(), openedFile);
 
-            eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
+            eventBus.fireEvent(new EditorReplaceFileEvent(new File(oldItemHref), file));
          }
 
          VirtualFileSystem.getInstance().getProperties(item, new ItemPropertiesCallback()

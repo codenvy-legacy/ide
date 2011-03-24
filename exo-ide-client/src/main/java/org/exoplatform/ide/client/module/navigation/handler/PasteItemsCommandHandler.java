@@ -311,7 +311,7 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
 
             openedFiles.remove(key);
             openedFiles.put(fileHref, file);
-            eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
+            eventBus.fireEvent(new EditorReplaceFileEvent(new File(key),file));
          }
       }
    }
@@ -330,7 +330,7 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
             openedFiles.remove(oldSourceHref);
             openedFiles.put(openedFle.getHref(), openedFle);
 
-            eventBus.fireEvent(new EditorReplaceFileEvent(file, null));
+            eventBus.fireEvent(new EditorReplaceFileEvent(new File(oldSourceHref), file));
          }
       }
       else

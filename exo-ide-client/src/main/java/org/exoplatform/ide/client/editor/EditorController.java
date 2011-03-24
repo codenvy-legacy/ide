@@ -261,7 +261,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
 
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
-      //      System.out.println("EditorController.onEditorCursorActivity()");
       eventBus.fireEvent(new EditorSetFocusEvent());
    }
 
@@ -760,7 +759,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
    @Override
    public void onViewVisibilityChanged(final ViewVisibilityChangedEvent event)
    {
-      System.out.println("EditorController.onViewVisibilityChanged()");
       if (event.getView().getType().equals("editor"))
       {
          final EditorView editorView = (EditorView)event.getView();

@@ -32,13 +32,12 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 
 public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
 {
-   
 
    public static void handlerEvent(ExceptionThrownEvent event)
    {
       Throwable error = event.getError();
       System.out.println(event.getErrorMessage());
-//      error.printStackTrace();
+      //      error.printStackTrace();
 
       if (error instanceof ServerException)
       {
@@ -68,7 +67,10 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
       else
       {
          System.out.println("IDEExceptionThrownEventHandler.handlerEvent() not server exc");
-         Dialogs.getInstance().showError(error.getMessage());
+         if (error != null)
+            Dialogs.getInstance().showError(error.getMessage());
+         else
+            Dialogs.getInstance().showError(event.getErrorMessage());
       }
    }
 
