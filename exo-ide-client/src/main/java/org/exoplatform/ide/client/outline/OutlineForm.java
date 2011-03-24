@@ -22,8 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.ViewType;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.AbstractView;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
@@ -44,7 +43,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * @version $Id:
  *
  */
-public class OutlineForm extends AbstractView implements OutlinePresenter.Display
+public class OutlineForm extends ViewImpl implements OutlinePresenter.Display
 {
    private static final String OUTLINE_TREE_GRID_ID = "ideOutlineTreeGrid";
 
