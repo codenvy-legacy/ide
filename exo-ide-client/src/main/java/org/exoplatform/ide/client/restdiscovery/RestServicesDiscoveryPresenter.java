@@ -44,6 +44,9 @@ import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -64,7 +67,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
       UntypedTreeGrid getTreeGrid();
 
-      ListGridItem<Param> getParametersListGrid();
+      ListGridItem<ParamExt> getParametersListGrid();
       
       HasValue<String> getPathField();
 
@@ -197,7 +200,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    {
       dispaly.setRequestType("");
       dispaly.setResponseType("");
-      dispaly.getParametersListGrid().setValue(new ArrayList<Param>());
+      dispaly.getParametersListGrid().setValue(new ArrayList<ParamExt>());
       dispaly.setParametersListGridVisible(false);
       dispaly.setRequestFieldVisible(false);
       dispaly.setResponseFieldVisible(false);
@@ -228,13 +231,14 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          }
          dispaly.setParametersListGridVisible(true);
          dispaly.setParametersListGridEnabled(!method.getRequest().getParam().isEmpty());
-         dispaly.getParametersListGrid().setValue(method.getRequest().getParam());
+         List<ParamExt> paramsExt = convertParamList(method.getRequest().getParam());
+         dispaly.getParametersListGrid().setValue(paramsExt);
 
       }
       else
       {
          dispaly.setRequestType("n/a");
-         dispaly.getParametersListGrid().setValue(new ArrayList<Param>());
+         dispaly.getParametersListGrid().setValue(new ArrayList<ParamExt>());
          dispaly.setParametersListGridVisible(true);
          dispaly.setParametersListGridEnabled(false);
          dispaly.setRequestFieldVisible(true);
@@ -253,6 +257,69 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          dispaly.setResponseFieldVisible(true);
          dispaly.setResponseFieldEnabled(false);
       }
+   }
+   
+   private String getParamGroup(Param param)
+   {
+      String groupName = "";
+      switch (param.getStyle())
+      {
+         case HEADER :
+            groupName = "Header";
+            break;
+         case QUERY :
+            groupName = "Query";
+            break;
+         case PLAIN :
+            groupName = "Plain";
+            break;
+         case TEMPLATE :
+            groupName = "Path";
+            break;
+         case MATRIX :
+            groupName = "Matrix";
+            break;
+      }
+
+      groupName += " param";
+      
+      return groupName;
+   }
+   
+   private List<ParamExt> convertParamList(List<Param> params)
+   {
+      
+      HashMap<String, List<Param>> groups = new LinkedHashMap<String, List<Param>>();
+      
+      for (Param param: params)
+      {
+         String groupName = getParamGroup(param);
+         
+         List<Param> paramsFromGroup = groups.get(groupName);
+         
+         if (paramsFromGroup == null)
+         {
+            paramsFromGroup = new ArrayList<Param>();
+            groups.put(groupName, paramsFromGroup);
+         }
+         
+         paramsFromGroup.add(param);
+      }
+      
+      List<ParamExt> paramsExtList = new ArrayList<ParamExt>();
+      Iterator<String> keyIter = groups.keySet().iterator();
+      while (keyIter.hasNext())
+      {
+         final String groupName = keyIter.next();
+         paramsExtList.add(new ParamExt(groupName));
+         List<Param> paramsToAdd = groups.get(groupName);
+         for (Param param: paramsToAdd)
+         {
+            paramsExtList.add(new ParamExt(param));
+         }
+      }
+      
+      return paramsExtList;
    }
 
    /**

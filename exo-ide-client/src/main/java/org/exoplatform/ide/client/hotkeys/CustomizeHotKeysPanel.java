@@ -341,5 +341,10 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    {
       hotKeyField.focusInItem();
    }
+   
+   public HotKeyItem getSelectedItem()
+   {
+      return hotKeyItemListGrid.getSelectedItems().get(0);
+   }
 
 }

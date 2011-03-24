@@ -24,6 +24,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Image;
 
+import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.ImageUtil;
 
@@ -50,8 +51,6 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
 
    public HotKeyItemListGrid()
    {
-      //TODO:
-      //sort rows by menu titles.
       initColumns();
    }
    
@@ -70,36 +69,7 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
                @Override
                public String asString()
                {
-                  String controlName = item.getControlId();
-
-                  if (controlName.indexOf("/") >= 0)
-                  {
-                     controlName = controlName.substring(controlName.lastIndexOf("/") + 1);
-                  }
-
-                  while (controlName.indexOf("\\") >= 0)
-                  {
-                     controlName = controlName.replace("\\", "/");
-                  }
-                  String title = "";
-                  if (item.getImage() != null)
-                  {
-                     Image image = new Image(item.getImage());
-                     String imageHTML = ImageUtil.getHTML(image);
-                     title = "<span>" + imageHTML + "&nbsp;" + controlName + "</span>";
-                  }
-                  else
-                  {
-                     if (item.getIcon() != null)
-                     {
-                        title = "<span><img src=\"" + item.getIcon() + "\"/>&nbsp;" + controlName + "</span>";
-                     }
-                     else
-                     {
-                        title = "<span>&nbsp;" + controlName + "</span>";
-                     }
-                  }
-                  return title;
+                  return getItemTitle(item);
                }
             };
             return html;
@@ -131,6 +101,70 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
       };
       getCellTable().addColumn(controlColumn, CONTROL);
       getCellTable().setColumnWidth(controlColumn, 100, Unit.PCT);
+   }
+   
+   private String getItemTitle(HotKeyItem item)
+   {
+      if (item.isGroup())
+      {
+         String title = item.getTitle();
+         title = title.replace("/", "&nbsp;/&nbsp;");
+         title = getDivider(title);
+         return title;
+      }
+      else
+      {
+         String title = "";
+         if (item.getCommand() == null)
+         {
+            return item.getTitle();
+         }
+         String commandName = item.getCommand().getId();
+         if (commandName.indexOf("/") >= 0)
+         {
+            commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
+         }
+
+         while (commandName.indexOf("\\") >= 0)
+         {
+            commandName = commandName.replace("\\", "/");
+         }
+
+         if (item.getCommand() instanceof PopupMenuControl)
+         {
+            commandName += "&nbsp;[Popup]";
+         }
+
+         if (item.getCommand().getNormalImage() != null)
+         {
+            Image image = new Image(item.getCommand().getNormalImage());
+            String imageHTML = ImageUtil.getHTML(image);
+            title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
+         }
+         else if (item.getCommand().getIcon() != null)
+         {
+            title = "<span><img src = \"" + item.getCommand().getIcon() + "\"/>&nbsp;" + commandName + "</span>";
+         }
+         else
+         {
+            title = "<span>" + commandName + "</span>";
+         }
+
+         return title;
+      }
+   }
+   
+   private String getDivider(String title)
+   {
+      String divider =
+         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:20px;\">"
+            + "<tr><td></td><td>&nbsp;" + 
+            "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 15px\">" + title + "</font></b>"
+            + "&nbsp;</td><td></td></tr>"
+            + "</table>";
+      
+      return divider;
+//      return "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 20px\">" + title + "</font></b>";
    }
 
 }

@@ -239,7 +239,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
    /**
     * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#getParametersListGrid()
     */
-   public ListGridItem<Param> getParametersListGrid()
+   public ListGridItem<ParamExt> getParametersListGrid()
    {
       return parameters;
    }

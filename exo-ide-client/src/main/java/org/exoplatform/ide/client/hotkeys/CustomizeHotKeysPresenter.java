@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -33,16 +35,17 @@ import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettin
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
- * Created by The eXo Platform SAS.
+ * Presenter for customize hotkeys form.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  *
@@ -70,6 +73,8 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       ListGridItem<HotKeyItem> getHotKeyItemListGrid();
 
       HasValue<String> getHotKeyField();
+      
+      HotKeyItem getSelectedItem();
 
       void disableSaveButton();
 
@@ -147,16 +152,19 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       {
          public void onSelection(SelectionEvent<HotKeyItem> event)
          {
-            if (event.getSelectedItem().getGroup().equals(EDITOR_GROUP))
+            selectedItem = display.getSelectedItem();
+            if (selectedItem.getGroup().equals(EDITOR_GROUP))
             {
                selectedItem = null;
 
                display.disableBindButton();
                display.disableUnbindButton();
                display.disableHotKeyField();
+               display.showError(null, null);
+               display.getHotKeyField().setValue("");
                return;
             }
-            hotKeySelected(event.getSelectedItem());
+            hotKeySelected(selectedItem);
             display.showError(null, null);
          }
       });
@@ -179,63 +187,89 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
          }
       });
 
-      fillHotKeyList();
+      fillHotkeyListGrid();
 
       display.disableHotKeyField();
    }
-
-   private void fillHotKeyList()
+   
+   /**
+    * Fill hotkey list grid with hotkey items.
+    * 
+    * Choose only SimpleControls from list of contols,
+    * create hotkey items from them and add to list.
+    * 
+    * At the end get the list of editor non-changable controls
+    * (like Save, SaveAs ect), create hotkey items from them
+    * and add to the end on hotkey list.
+    * 
+    * Update value of hotkey list grid.
+    */
+   private void fillHotkeyListGrid()
    {
-      /*
-       * fill list of available controls
-       */
+      HashMap<String, List<SimpleControl>> groups = new LinkedHashMap<String, List<SimpleControl>>();
+
       for (Control command : controls)
       {
-         
-         if (!(command instanceof SimpleControl)) {
-            continue;
-         }
-         
-         SimpleControl control = (SimpleControl)command;
-         
-         if (control.getEvent() != null)
+         if (command instanceof SimpleControl)
          {
-            String groupName = command.getId();
-            if (groupName.indexOf("/") >= 0)
+            if (((SimpleControl)command).getEvent() != null)
             {
-               groupName = groupName.substring(0, groupName.lastIndexOf("/"));
-            }
-
-            String hotKey = control.getHotKey();
-            if (hotKey == null)
-            {
-               hotKey = "";
-            }
-
-            if (command.getNormalImage() != null)
-            {
-               hotKeys.add(new HotKeyItem(command.getId(), hotKey, command.getNormalImage(), groupName));
-            }
-            else
-            {
-               hotKeys.add(new HotKeyItem(command.getId(), hotKey, command.getIcon(), groupName));
+               addCommand(groups, (SimpleControl)command);
             }
          }
       }
 
+      hotKeys = new ArrayList<HotKeyItem>();
+      Iterator<String> keyIter = groups.keySet().iterator();
+      while (keyIter.hasNext())
+      {
+         String groupName = keyIter.next();
+         hotKeys.add(new HotKeyItem(groupName, null, true, groupName));
+         List<SimpleControl> commands = groups.get(groupName);
+         for (SimpleControl command : commands)
+         {
+            hotKeys.add(new HotKeyItem(command, command.getHotKey(), groupName));
+         }
+      }
+      
       /*
-       * fill default hot keys
+       * fill default hotkeys
        */
+      hotKeys.add(new HotKeyItem(EDITOR_GROUP, null, true, EDITOR_GROUP));
       Iterator<Entry<String, String>> it = ReservedHotKeys.getHotkeys().entrySet().iterator();
       while (it.hasNext())
       {
          Entry<String, String> entry = it.next();
          String id = entry.getValue();
          String hotkey = HotKeyHelper.convertToStringCombination(entry.getKey());
-         hotKeys.add(new HotKeyItem(id, hotkey, (String)null, EDITOR_GROUP));
+         hotKeys.add(new HotKeyItem(id, hotkey, false, EDITOR_GROUP));
+      }
+      
+      display.getHotKeyItemListGrid().setValue(hotKeys);
+
+   }
+
+   private void addCommand(HashMap<String, List<SimpleControl>> groups, SimpleControl command)
+   {
+
+      String groupName = command.getId();
+      if (groupName.indexOf("/") >= 0)
+      {
+         groupName = groupName.substring(0, groupName.lastIndexOf("/"));
+      }
+      else
+      {
+         groupName = "Other";
       }
 
-      display.getHotKeyItemListGrid().setValue(hotKeys);
+      List<SimpleControl> commands = groups.get(groupName);
+      if (commands == null)
+      {
+         commands = new ArrayList<SimpleControl>();
+         groups.put(groupName, commands);
+      }
+
+      commands.add(command);
    }
 
    private void hotKeySelected(HotKeyItem hotKeyItem)
@@ -258,7 +292,10 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
 
       for (HotKeyItem hotKey : hotKeys)
       {
-         if (hotKey.getControlId().equals(selectedItem.getControlId()))
+         final String commandId = hotKey.getCommand() == null ? hotKey.getTitle() : hotKey.getCommand().getId();
+         final String selectedCommandId =
+            selectedItem.getCommand() == null ? selectedItem.getTitle() : selectedItem.getCommand().getId();
+         if (commandId.equals(selectedCommandId))
          {
             hotKey.setHotKey(newHotKey);
          }
@@ -271,11 +308,13 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
     */
    private void unbindHotKey()
    {
-      String controlId = selectedItem.getControlId();
-
       for (HotKeyItem hotKeyItem : hotKeys)
       {
-         if (hotKeyItem.getControlId().equals(controlId))
+         final String commandId =
+            hotKeyItem.getCommand() == null ? hotKeyItem.getTitle() : hotKeyItem.getCommand().getId();
+         final String selectedCommandId =
+            selectedItem.getCommand() == null ? selectedItem.getTitle() : selectedItem.getCommand().getId();
+         if (commandId.equals(selectedCommandId))
          {
             hotKeyItem.setHotKey(null);
          }
@@ -392,12 +431,12 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       }
       
       //--- check, is hotkey alread bound to another command ---
-      String controlId = selectedItem.getControlId();
+      String controlId = selectedItem.getCommand().getId();
       
       for (HotKeyItem hotKeyIdentifier : hotKeys)
       {
          if (hotKeyIdentifier.getHotKey() != null && hotKeyIdentifier.getHotKey().equals(stringHotKey)
-            && !hotKeyIdentifier.getControlId().equals(controlId))
+            && !hotKeyIdentifier.getCommand().getId().equals(controlId))
          {
             display.showError(LabelStyle.ERROR, boundToAnotherCommand);
             return false;
@@ -424,7 +463,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
             if (hotKey != null && !"".equals(hotKey))
             {
                String keyCode = HotKeyHelper.convertToCodeCombination(hotKey);
-               keys.put(keyCode, hotKeyItem.getControlId());
+               keys.put(keyCode, hotKeyItem.getCommand().getId());
             }
          }
       }

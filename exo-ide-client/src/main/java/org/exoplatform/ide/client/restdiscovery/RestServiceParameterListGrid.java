@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
 
-import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
 /**
@@ -29,99 +29,104 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class RestServiceParameterListGrid extends ListGrid<Param>
+public class RestServiceParameterListGrid extends ListGrid<ParamExt>
 {
-
    private static final String NAME = "Name";
-   
+
    private static final String TYPE = "Type";
-   
+
    private static final String DEFAULT = "By default";
-   
-   private static final String GROUP = "Group";
 
    public RestServiceParameterListGrid()
    {
-//      setEmptyMessage("Method has no parameters.");
-      
       initColumns();
-
    }
-   
+
    private void initColumns()
    {
       //name column
-      Column<Param, String> nameColumn = new Column<Param, String>(new TextCell())
+      Column<ParamExt, SafeHtml> nameColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell())
       {
 
          @Override
-         public String getValue(final Param item)
+         public SafeHtml getValue(final ParamExt item)
          {
-            return item.getName();
-         }
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
 
+               @Override
+               public String asString()
+               {
+                  if (item.getParam() == null)
+                  {
+                     String title = item.getTitle();
+                     title = getDivider(title);
+                     return title;
+                  }
+                  return item.getParam().getName();
+               }
+            };
+            return html;
+         }
       };
       getCellTable().addColumn(nameColumn, NAME);
-      
+
       //type column
-      Column<Param, String> typeColumn = new Column<Param, String>(new TextCell())
+      Column<ParamExt, SafeHtml> typeColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell())
       {
 
          @Override
-         public String getValue(final Param item)
+         public SafeHtml getValue(final ParamExt item)
          {
-            return item.getType().getLocalName();
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  if (item.getParam() == null)
+                     return "";
+                  return item.getParam().getType().getLocalName();
+               }
+            };
+            return html;
          }
 
       };
       getCellTable().addColumn(typeColumn, TYPE);
-      
+
       //column By default
-      Column<Param, String> defaultColumn = new Column<Param, String>(new TextCell())
+      Column<ParamExt, SafeHtml> defaultColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell())
       {
 
          @Override
-         public String getValue(final Param item)
+         public SafeHtml getValue(final ParamExt item)
          {
-            return item.getDefault();
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  if (item.getParam() == null)
+                     return "";
+                  return item.getParam().getDefault();
+               }
+            };
+            return html;
          }
 
       };
       getCellTable().addColumn(defaultColumn, DEFAULT);
-      
-      //group column (will be removed)
-      //TODO: made grouping by group column
-//      Column<Param, String> groupColumn = new Column<Param, String>(new TextCell())
-//      {
-//
-//         @Override
-//         public String getValue(final Param item)
-//         {
-//            String paramType = "";
-//            switch (item.getStyle())
-//            {
-//               case HEADER :
-//                  paramType = "Header";
-//                  break;
-//               case QUERY :
-//                  paramType = "Query";
-//                  break;
-//               case PLAIN :
-//                   paramType = "Plain";
-//                  break;
-//               case TEMPLATE :
-//                   paramType = "Path";
-//                  break;
-//               case MATRIX :
-//                   paramType = "Matrix";
-//                  break;
-//            }
-//            
-//            return paramType + " param";
-//         }
-//
-//      };
-//      getCellTable().addColumn(groupColumn, GROUP);
+
+   }
+
+   private String getDivider(String title)
+   {
+      return "<b><font color=\"#3764A3\">" + title + "</font></b>";
    }
 
 }

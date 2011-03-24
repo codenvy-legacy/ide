@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-import com.google.gwt.resources.client.ImageResource;
+import org.exoplatform.gwtframework.ui.client.command.Control;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -28,51 +28,54 @@ import com.google.gwt.resources.client.ImageResource;
 public class HotKeyItem
 {
 
-   private String controlId;
-
    private String hotKey;
 
-   private String icon;
-
-   private ImageResource image;
-
+   private Control command;
+   
+   //--- fields for group item
+   private boolean isGroup = false;
+   
+   private String title;
+   
    private String group;
-
-   public HotKeyItem(String controlId, String hotKey, String icon, String group)
+   
+   public HotKeyItem(Control command, String hotkey, String group)
    {
-      this.controlId = controlId;
-      this.hotKey = hotKey;
-      this.icon = icon;
+      this.command = command;
+      this.hotKey = hotkey;
       this.group = group;
    }
 
-   public HotKeyItem(String controlId, String hotKeys, ImageResource image, String group)
+   public HotKeyItem(String title, String hotkey, boolean isGroup, String group)
    {
-      this.controlId = controlId;
-      this.hotKey = hotKeys;
-      this.image = image;
+      this.title = title;
+      this.hotKey = hotkey;
+      this.isGroup = isGroup;
       this.group = group;
    }
-
+   
+   /**
+    * @return the group
+    */
    public String getGroup()
    {
       return group;
    }
-
+   
    /**
-    * @return the control id
+    * @return the isGroup
     */
-   public String getControlId()
+   public boolean isGroup()
    {
-      return controlId;
+      return isGroup;
    }
-
+   
    /**
-    * @param controlId the control id to set
+    * @return the title
     */
-   public void setControlId(String controlId)
+   public String getTitle()
    {
-      this.controlId = controlId;
+      return title;
    }
 
    public String getHotKey()
@@ -85,14 +88,12 @@ public class HotKeyItem
       this.hotKey = hotKey;
    }
 
-   public String getIcon()
+   /**
+    * @return the command
+    */
+   public Control getCommand()
    {
-      return icon;
-   }
-
-   public ImageResource getImage()
-   {
-      return image;
+      return command;
    }
 
 }
