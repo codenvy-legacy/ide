@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.Repository;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 
@@ -33,11 +34,12 @@ public class ResetTest extends BaseTest
 {
    public void testResetHard() throws Exception
    {
-      Git git = new Git(getRepository());
+      Repository repository = getDefaultRepository();
+      Git git = new Git(repository);
 
-      File aaa = addFile(git.getRepository().getWorkTree(), "aaa", "aaa\n");
+      File aaa = addFile(repository.getWorkTree(), "aaa", "aaa\n");
 
-      FileOutputStream fos = new FileOutputStream(new File(git.getRepository().getWorkTree(), "README.txt"));
+      FileOutputStream fos = new FileOutputStream(new File(repository.getWorkTree(), "README.txt"));
       fos.write("MODIFIED\n".getBytes());
       fos.flush();
       fos.close();
@@ -47,24 +49,25 @@ public class ResetTest extends BaseTest
       git.add().addFilepattern(".").call();
       git.commit().setMessage("add file").call();
 
-      getConnection().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.HARD));
+      getDefaultConnection().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.HARD));
 
       // Revert to previous revision.
       assertEquals(initMessage, git.log().call().iterator().next().getFullMessage());
       // Removed.
       assertFalse(aaa.exists());
-      checkNoFilesInCache(aaa);
+      checkNoFilesInCache(repository, aaa);
       // previous content.
-      assertEquals(CONTENT, readFile(new File(git.getRepository().getWorkTree(), "README.txt")));
+      assertEquals(CONTENT, readFile(new File(repository.getWorkTree(), "README.txt")));
    }
 
    public void testResetSoft() throws Exception
    {
-      Git git = new Git(getRepository());
+      Repository repository = getDefaultRepository();
+      Git git = new Git(repository);
 
-      File aaa = addFile(git.getRepository().getWorkTree(), "aaa", "aaa\n");
+      File aaa = addFile(repository.getWorkTree(), "aaa", "aaa\n");
 
-      FileOutputStream fos = new FileOutputStream(new File(git.getRepository().getWorkTree(), "README.txt"));
+      FileOutputStream fos = new FileOutputStream(new File(repository.getWorkTree(), "README.txt"));
       fos.write("MODIFIED\n".getBytes());
       fos.flush();
       fos.close();
@@ -74,24 +77,25 @@ public class ResetTest extends BaseTest
       git.add().addFilepattern(".").call();
       git.commit().setMessage("add file").call();
 
-      getConnection().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.SOFT));
+      getDefaultConnection().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.SOFT));
 
       // Revert to previous revision.
       assertEquals(initMessage, git.log().call().iterator().next().getFullMessage());
       // New file untouched.
       assertTrue(aaa.exists());
-      checkFilesInCache(aaa);
+      checkFilesInCache(repository, aaa);
       // Modified content.
-      assertEquals("MODIFIED\n", readFile(new File(git.getRepository().getWorkTree(), "README.txt")));
+      assertEquals("MODIFIED\n", readFile(new File(repository.getWorkTree(), "README.txt")));
    }
 
    public void testResetMixed() throws Exception
    {
-      Git git = new Git(getRepository());
+      Repository repository = getDefaultRepository();
+      Git git = new Git(repository);
 
-      File aaa = addFile(git.getRepository().getWorkTree(), "aaa", "aaa\n");
+      File aaa = addFile(repository.getWorkTree(), "aaa", "aaa\n");
 
-      FileOutputStream fos = new FileOutputStream(new File(git.getRepository().getWorkTree(), "README.txt"));
+      FileOutputStream fos = new FileOutputStream(new File(repository.getWorkTree(), "README.txt"));
       fos.write("MODIFIED\n".getBytes());
       fos.flush();
       fos.close();
@@ -101,63 +105,65 @@ public class ResetTest extends BaseTest
       git.add().addFilepattern(".").call();
       git.commit().setMessage("add file").call();
 
-      getConnection().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.MIXED));
+      getDefaultConnection().reset(new ResetRequest("HEAD^", ResetRequest.ResetType.MIXED));
 
       // Revert to previous revision.
       assertEquals(initMessage, git.log().call().iterator().next().getFullMessage());
       // New file untouched.
       assertTrue(aaa.exists());
       // But removed from index.
-      checkNoFilesInCache(aaa);
+      checkNoFilesInCache(repository, aaa);
       // Modified content.
-      assertEquals("MODIFIED\n", readFile(new File(git.getRepository().getWorkTree(), "README.txt")));
+      assertEquals("MODIFIED\n", readFile(new File(repository.getWorkTree(), "README.txt")));
    }
 
    public void testResetWithPath() throws Exception
    {
-      Git git = new Git(getRepository());
+      Repository repository = getDefaultRepository();
+      Git git = new Git(repository);
 
-      File aaa = addFile(git.getRepository().getWorkTree(), "aaa", "aaa\n");
-      File bbb = addFile(git.getRepository().getWorkTree(), "bbb", "bbb\n");
+      File aaa = addFile(repository.getWorkTree(), "aaa", "aaa\n");
+      File bbb = addFile(repository.getWorkTree(), "bbb", "bbb\n");
 
-      FileOutputStream fos = new FileOutputStream(new File(git.getRepository().getWorkTree(), "README.txt"));
+      FileOutputStream fos = new FileOutputStream(new File(repository.getWorkTree(), "README.txt"));
       fos.write("MODIFIED\n".getBytes());
       fos.flush();
       fos.close();
 
       git.add().addFilepattern(".").call();
 
-      checkFilesInCache(aaa);
-      checkFilesInCache(bbb);
+      checkFilesInCache(repository, aaa);
+      checkFilesInCache(repository, bbb);
 
-      getConnection().reset(new ResetRequest(new String[]{"aaa"}));
+      getDefaultConnection().reset(new ResetRequest(new String[]{"aaa"}));
 
       // New files untouched.
       assertTrue(aaa.exists());
-      checkNoFilesInCache(aaa);
+      checkNoFilesInCache(repository, aaa);
       assertTrue(bbb.exists());
-      checkFilesInCache(bbb);
+      checkFilesInCache(repository, bbb);
       // Modified content.
-      assertEquals("MODIFIED\n", readFile(new File(git.getRepository().getWorkTree(), "README.txt")));
+      assertEquals("MODIFIED\n", readFile(new File(repository.getWorkTree(), "README.txt")));
    }
 
    public void testResetWithPathFail() throws Exception
    {
-      Git git = new Git(getRepository());
+      Repository repository = getDefaultRepository();
+      Git git = new Git(repository);
 
-      File aaa = addFile(git.getRepository().getWorkTree(), "aaa", "aaa\n");
-      File bbb = addFile(git.getRepository().getWorkTree(), "bbb", "bbb\n");
+      File aaa = addFile(repository.getWorkTree(), "aaa", "aaa\n");
+      File bbb = addFile(repository.getWorkTree(), "bbb", "bbb\n");
 
       git.add().addFilepattern(".").call();
 
-      checkFilesInCache(aaa);
-      checkFilesInCache(bbb);
+      checkFilesInCache(repository, aaa);
+      checkFilesInCache(repository, bbb);
 
       ResetRequest request = new ResetRequest(new String[]{"aaa"});
       request.setType(ResetType.HARD);
       try
       {
-         getConnection().reset(request);
+         getDefaultConnection().reset(request);
          fail("Expected exception was not thrown. ");
       }
       catch (IllegalArgumentException e)

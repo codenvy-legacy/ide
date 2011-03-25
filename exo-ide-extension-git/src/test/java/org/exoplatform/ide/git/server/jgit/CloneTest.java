@@ -47,13 +47,13 @@ public class CloneTest extends BaseTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      cloneRepoDir = new File(getRepository().getWorkTree().getParentFile(), "repository2");
+      cloneRepoDir = new File(getDefaultRepository().getWorkTree().getParentFile(), "repository2");
       forClean.add(cloneRepoDir);
    }
 
    public void testSimpleClone() throws Exception
    {
-      Repository repository = getRepository();
+      Repository repository = getDefaultRepository();
       JGitConnection client = new JGitConnection(new FileRepository(new File(cloneRepoDir, ".git")));
       client.clone(new CloneRequest(repository.getWorkTree().getAbsolutePath(), //
          null /* .git directory already set. Not need to pass it in this implementation. */, //
@@ -92,7 +92,7 @@ public class CloneTest extends BaseTest
 
    public void testCloneBranch() throws Exception
    {
-      Repository repository = getRepository();
+      Repository repository = getDefaultRepository();
       Git git = new Git(repository);
       git.branchCreate().setName("featured").call();
 

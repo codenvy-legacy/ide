@@ -21,8 +21,10 @@ package org.exoplatform.ide.git.server.jgit;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.RemoteConfig;
+import org.eclipse.jgit.transport.URIish;
 import org.exoplatform.ide.git.shared.InitRequest;
-import org.exoplatform.ide.git.shared.RemoteAddRequest;
 
 import java.io.File;
 import java.net.URL;
@@ -31,7 +33,7 @@ import java.net.URL;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class RemoteAddTest extends BaseTest
+public class RemoteDeleteTest extends BaseTest
 {
    private Repository repo;
 
@@ -43,7 +45,7 @@ public class RemoteAddTest extends BaseTest
       // Create clean repository instead use default one.
       URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
       File target = new File(testCls.toURI()).getParentFile();
-      File repoDir = new File(target, "RemoteAddTest");
+      File repoDir = new File(target, "RemoteDeleteTest");
       forClean.add(repoDir);
       repo = new FileRepository(new File(repoDir, ".git"));
       /* May be empty request in this impl. 
@@ -51,23 +53,36 @@ public class RemoteAddTest extends BaseTest
        * Directory .git does not exists yet. */
       InitRequest request = new InitRequest();
       new JGitConnection(repo).init(request);
-   }
-
-   public void testRemoteAdd() throws Exception
-   {
-      String remoteUrl = getDefaultRepository().getWorkTree().getAbsolutePath();
-      new JGitConnection(repo).remoteAdd(new RemoteAddRequest("origin", remoteUrl));
+      
       StoredConfig config = repo.getConfig();
-      assertEquals(remoteUrl, config.getString("remote", "origin", "url"));
-      assertEquals("+refs/heads/*:refs/remotes/origin/*", config.getString("remote", "origin", "fetch"));
-   }
-
-   public void testRemoteAddWithBranches() throws Exception
-   {
+      RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
       String remoteUrl = getDefaultRepository().getWorkTree().getAbsolutePath();
-      new JGitConnection(repo).remoteAdd(new RemoteAddRequest("origin", remoteUrl, new String[]{"test"}));
+      remoteConfig.addURI(new URIish(remoteUrl));
+      remoteConfig.addPushURI(new URIish(remoteUrl));
+      remoteConfig.addFetchRefSpec(new RefSpec("refs/heads/*:refs/remotes/origin/*"));
+      config.setString("branch", "master", "remote", "origin");
+      config.setString("branch", "master", "merge", "refs/heads/master");
+      remoteConfig.update(config);
+      config.save();
+   }
+   
+   public void testRemoteDelete() throws Exception
+   {
       StoredConfig config = repo.getConfig();
-      assertEquals(remoteUrl, config.getString("remote", "origin", "url"));
-      assertEquals("+refs/heads/test:refs/remotes/origin/test", config.getString("remote", "origin", "fetch"));
+      assertNotNull(config.getString("remote", "origin", "url"));
+      assertNotNull(config.getString("remote", "origin", "pushurl"));
+      assertNotNull(config.getString("remote", "origin", "fetch"));
+      assertNotNull(config.getString("branch", "master", "remote"));
+      assertNotNull(config.getString("branch", "master", "merge"));
+      //System.out.println(repo.getConfig().toText());
+      new JGitConnection(repo).remoteDelete("origin");
+      //System.out.println();
+      //System.out.println(repo.getConfig().toText());
+      config = repo.getConfig();
+      assertNull(config.getString("remote", "origin", "url"));
+      assertNull(config.getString("remote", "origin", "pushurl"));
+      assertNull(config.getString("remote", "origin", "fetch"));
+      assertNull(config.getString("branch", "master", "remote"));
+      assertNull(config.getString("branch", "master", "merge"));
    }
 }

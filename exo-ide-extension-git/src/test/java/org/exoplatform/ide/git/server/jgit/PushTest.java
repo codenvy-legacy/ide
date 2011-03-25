@@ -44,11 +44,11 @@ public class PushTest extends BaseTest
    {
       super.setUp();
 
-      File pushWorkDir = new File(getRepository().getWorkTree().getParentFile(), "PushTestRepo");
+      File pushWorkDir = new File(getDefaultRepository().getWorkTree().getParentFile(), "PushTestRepo");
       forClean.add(pushWorkDir);
 
       JGitConnection client = new JGitConnection(new FileRepository(new File(pushWorkDir, ".git")));
-      client.clone(new CloneRequest(getRepository().getWorkTree().getAbsolutePath(), //
+      client.clone(new CloneRequest(getDefaultRepository().getWorkTree().getAbsolutePath(), //
          null/* .git directory already set. Not need to pass it in this implementation. */,//
          new GitUser("andrey", "andrey@mail.com")));
       pushTestRepo = client.getRepository();
@@ -67,7 +67,7 @@ public class PushTest extends BaseTest
       new JGitConnection(pushTestRepo).push(new PushRequest(new String[]{"refs/heads/master:refs/heads/test"}, remote,
          force, 0));
 
-      Git origGit = new Git(getRepository());
+      Git origGit = new Git(getDefaultRepository());
       List<Ref> branches = origGit.branchList().call();
       List<String> bNames = new ArrayList<String>(2);
       for (Ref br : branches)
@@ -84,7 +84,7 @@ public class PushTest extends BaseTest
 
    public void testPushRemote() throws Exception
    {
-      File remoteWorkDir = new File(getRepository().getWorkTree().getParentFile(), "RemoteRepo");
+      File remoteWorkDir = new File(getDefaultRepository().getWorkTree().getParentFile(), "RemoteRepo");
       forClean.add(remoteWorkDir);
 
       Git remoteGit = Git.init().setDirectory(remoteWorkDir).call();
@@ -97,7 +97,7 @@ public class PushTest extends BaseTest
       String remote = remoteWorkDir.getAbsolutePath();
       boolean force = false;
 
-      new JGitConnection(getRepository()).push(new PushRequest(new String[]{"refs/heads/master:refs/heads/test"}, remote,
+      new JGitConnection(getDefaultRepository()).push(new PushRequest(new String[]{"refs/heads/master:refs/heads/test"}, remote,
          force, 0));
 
       // Check remote repository.

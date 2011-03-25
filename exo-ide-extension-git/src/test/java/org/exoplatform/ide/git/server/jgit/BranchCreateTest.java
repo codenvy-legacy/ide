@@ -37,13 +37,13 @@ public class BranchCreateTest extends BaseTest
 {
    public void testCreateBranch() throws Exception
    {
-      testBranch("new-branch", null, new File[]{new File(getRepository().getWorkTree(), "README.txt")}, new File[0]);
+      testBranch("new-branch", null, new File[]{new File(getDefaultRepository().getWorkTree(), "README.txt")}, new File[0]);
    }
 
    public void testCreateBranchRevision() throws Exception
    {
-      Git git = new Git(getRepository());
-      File file1 = addFile(getRepository().getWorkTree(), "file1", "file1");
+      Git git = new Git(getDefaultRepository());
+      File file1 = addFile(getDefaultRepository().getWorkTree(), "file1", "file1");
       git.add().addFilepattern(".").call();
       git.commit().setMessage("file1").setAuthor("andrey", "andrey@mail.com").call();
 
@@ -51,15 +51,15 @@ public class BranchCreateTest extends BaseTest
       commitIter.next();
       RevCommit commit = commitIter.next();
 
-      testBranch("new-branch", commit.getId().getName(), new File[]{new File(getRepository().getWorkTree(),
+      testBranch("new-branch", commit.getId().getName(), new File[]{new File(getDefaultRepository().getWorkTree(),
          "README.txt")}, new File[]{file1});
    }
 
    private void testBranch(String name, String start, File[] exists, File[] notExists) throws Exception
    {
-      Branch branch = getConnection().branchCreate(new BranchCreateRequest(name, start));
+      Branch branch = getDefaultConnection().branchCreate(new BranchCreateRequest(name, start));
 
-      Git git = new Git(getRepository());
+      Git git = new Git(getDefaultRepository());
       List<Ref> branches = git.branchList().call();
       assertEquals(2, branches.size());
       List<String> bNames = new ArrayList<String>(2);

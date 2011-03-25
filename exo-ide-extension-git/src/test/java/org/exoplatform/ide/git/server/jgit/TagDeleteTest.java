@@ -38,20 +38,20 @@ public class TagDeleteTest extends BaseTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      Git git = new Git(getRepository());
+      Git git = new Git(getDefaultRepository());
       goodTag = git.tag().setName("good-tag").setMessage("good-tag").call();
       badTag = git.tag().setName("bad-tag").setMessage("bad-tag").call();
    }
 
    public void testDeleteTag() throws Exception
    {
-      Map<String, Ref> tags = getRepository().getTags();
+      Map<String, Ref> tags = getDefaultRepository().getTags();
       assertTrue(tags.containsKey(badTag.getTagName()));
       assertTrue(tags.containsKey(goodTag.getTagName()));
 
-      getConnection().tagDelete(new TagDeleteRequest(badTag.getTagName()));
+      getDefaultConnection().tagDelete(new TagDeleteRequest(badTag.getTagName()));
 
-      tags = getRepository().getTags();
+      tags = getDefaultRepository().getTags();
       assertFalse(tags.containsKey(badTag.getTagName()));
       assertTrue(tags.containsKey(goodTag.getTagName()));
    }

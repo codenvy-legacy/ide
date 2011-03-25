@@ -42,7 +42,7 @@ public class FetchTest extends BaseTest
    {
       super.setUp();
 
-      Repository origRepository = getRepository();
+      Repository origRepository = getDefaultRepository();
       File origWorkDir = origRepository.getWorkTree();
 
       File fetchWorkDir = new File(origWorkDir.getParentFile(), "FetchTestRepo");
@@ -80,7 +80,7 @@ public class FetchTest extends BaseTest
    public void testFetchBranch() throws Exception
    {
       String branchName = "testFetchBranch";
-      Repository origin = getRepository();
+      Repository origin = getDefaultRepository();
       Git originGit = new Git(origin);
       originGit.branchCreate().setName(branchName).call();
       originGit.checkout().setName(branchName).call();

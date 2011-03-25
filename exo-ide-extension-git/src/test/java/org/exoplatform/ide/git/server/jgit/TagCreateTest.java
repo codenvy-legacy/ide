@@ -35,15 +35,15 @@ public class TagCreateTest extends BaseTest
    public void testCreateTag() throws Exception
    {
       Tag tag =
-         getConnection().tagCreate(
+         getDefaultConnection().tagCreate(
             new TagCreateRequest("new_tag", null/*From HEAD*/, new GitUser("andrey", "andrey@mail.com"),
                "test create tag"));
-      java.util.Map<String, Ref> tags = getRepository().getTags();
+      java.util.Map<String, Ref> tags = getDefaultRepository().getTags();
 
       Ref refTag = tags.get(tag.getName());
       assertNotNull(refTag);
 
-      RevTag revTag = new RevWalk(getRepository()).parseTag(refTag.getLeaf().getObjectId());
+      RevTag revTag = new RevWalk(getDefaultRepository()).parseTag(refTag.getLeaf().getObjectId());
 
       assertEquals("test create tag", revTag.getFullMessage());
       PersonIdent tagger = revTag.getTaggerIdent();

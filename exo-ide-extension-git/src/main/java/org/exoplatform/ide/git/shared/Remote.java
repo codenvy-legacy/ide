@@ -16,22 +16,48 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.jgit;
-
-import org.exoplatform.ide.git.shared.RmRequest;
-
-import java.io.File;
+package org.exoplatform.ide.git.shared;
 
 /**
+ * Info about remote configuration.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: RmTest.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * @version $Id$
  */
-public class RmTest extends BaseTest
+public class Remote
 {
-   public void testRm() throws Exception
+   /** Remote name. */
+   private String name;
+
+   /** Remote repository url. */
+   private String url;
+
+   /**
+    * @param name remote name
+    * @param url repository url
+    */
+   public Remote(String name, String url)
    {
-      getDefaultConnection().rm(new RmRequest(new String[]{"README.txt"}));
-      assertFalse(new File(getDefaultRepository().getWorkTree(), "README.txt").exists());
-      checkNoFilesInCache(getDefaultRepository(), "README.txt");
+      this.name = name;
+      this.url = url;
+   }
+
+   public String getName()
+   {
+      return name;
+   }
+
+   public String getUrl()
+   {
+      return url;
+   }
+
+   /**
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return "Remote [name=" + name + ", url=" + url + "]";
    }
 }

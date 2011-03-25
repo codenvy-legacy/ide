@@ -41,7 +41,7 @@ public class PullTest extends BaseTest
    {
       super.setUp();
 
-      Repository origRepository = getRepository();
+      Repository origRepository = getDefaultRepository();
       File origWorkDir = origRepository.getWorkTree();
 
       File pullWorkDir = new File(origWorkDir.getParentFile(), "PullTestRepo");
@@ -73,7 +73,7 @@ public class PullTest extends BaseTest
    public void testPullRemote() throws Exception
    {
       String branchName = "testPullRemote";
-      Repository sourceRepo = getRepository();
+      Repository sourceRepo = getDefaultRepository();
       Git sourceGit = new Git(sourceRepo);
       sourceGit.branchCreate().setName(branchName).call();
       sourceGit.checkout().setName(branchName).call();

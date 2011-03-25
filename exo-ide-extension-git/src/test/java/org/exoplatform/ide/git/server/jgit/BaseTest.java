@@ -43,15 +43,15 @@ import java.util.List;
 public abstract class BaseTest extends junit.framework.TestCase
 {
    protected static final String CONTENT = "GIT REPOSITORY\n";
-   private static final String REPO1 = "repository1";
+   private static final String DEFAULT_REPO_NAME = "repository1";
 
-   protected List<File> forClean = new ArrayList<File>(3);
+   protected List<File> forClean = new ArrayList<File>();
 
-   private File repoDir;
+   private File defaultRepoDir;
 
-   private FileRepository repository;
+   private FileRepository defaultRepository;
 
-   private GitConnection client;
+   private GitConnection defaultRepoConnection;
 
    @Override
    protected void setUp() throws Exception
@@ -61,29 +61,29 @@ public abstract class BaseTest extends junit.framework.TestCase
       // Create folder for test repository.
       URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
       File target = new File(testCls.toURI()).getParentFile();
-      repoDir = new File(target, REPO1);
-      forClean.add(repoDir);
+      defaultRepoDir = new File(target, DEFAULT_REPO_NAME);
+      forClean.add(defaultRepoDir);
 
       // Create repository.
-      repository =
-         new FileRepositoryBuilder().setGitDir(new File(repoDir + "/.git")).readEnvironment().findGitDir().build();
-      repository.create();
+      defaultRepository =
+         new FileRepositoryBuilder().setGitDir(new File(defaultRepoDir + "/.git")).readEnvironment().findGitDir().build();
+      defaultRepository.create();
 
       // Create file in repository.
-      addFile(repoDir, "README.txt", CONTENT);
+      addFile(defaultRepoDir, "README.txt", CONTENT);
 
       // Add file in git index and commit.
-      Git git = new Git(repository);
+      Git git = new Git(defaultRepository);
       git.add().addFilepattern(".").call();
       git.commit().setMessage("init").setAuthor("andrey", "andrey@mail.com").call();
 
-      client = new JGitConnection(repository);
+      defaultRepoConnection = new JGitConnection(defaultRepository);
    }
 
    @Override
    protected void tearDown() throws Exception
    {
-      GitConnection thisClient = getConnection();
+      GitConnection thisClient = getDefaultConnection();
       if (thisClient != null)
          thisClient.close();
       for (File file : forClean)
@@ -94,14 +94,14 @@ public abstract class BaseTest extends junit.framework.TestCase
 
    //
 
-   protected Repository getRepository()
+   protected Repository getDefaultRepository()
    {
-      return repository;
+      return defaultRepository;
    }
 
-   protected GitConnection getConnection()
+   protected GitConnection getDefaultConnection()
    {
-      return client;
+      return defaultRepoConnection;
    }
 
    protected void delete(File fileOrDir)
@@ -111,7 +111,7 @@ public abstract class BaseTest extends junit.framework.TestCase
 
       if (fileOrDir.isDirectory())
       {
-         final File[] fileList = fileOrDir.listFiles();
+         File[] fileList = fileOrDir.listFiles();
          if (fileList != null)
          {
             for (File i : fileList)
@@ -190,24 +190,24 @@ public abstract class BaseTest extends junit.framework.TestCase
       return content.toString();
    }
 
-   protected void checkFilesInCache(File... files) throws IOException
+   protected void checkFilesInCache(Repository repo, File... files) throws IOException
    {
       String[] sFiles = new String[files.length];
       for (int i = 0; i < files.length; i++)
       {
          File file = files[i];
-         String path = calculateRelativePath(repoDir, file);
+         String path = calculateRelativePath(repo.getWorkTree(), file);
          sFiles[i] = path;
       }
-      checkFilesInCache(sFiles);
+      checkFilesInCache(repo, sFiles);
    }
 
-   protected void checkFilesInCache(String... files) throws IOException
+   protected void checkFilesInCache(Repository repo, String... files) throws IOException
    {
       DirCache dirCache = null;
       try
       {
-         dirCache = repository.lockDirCache();
+         dirCache = repo.lockDirCache();
          for (int i = 0; i < files.length; i++)
          {
             String path = files[i];
@@ -223,24 +223,24 @@ public abstract class BaseTest extends junit.framework.TestCase
       }
    }
 
-   protected void checkNoFilesInCache(File... files) throws IOException
+   protected void checkNoFilesInCache(Repository repo, File... files) throws IOException
    {
       String[] sFiles = new String[files.length];
       for (int i = 0; i < files.length; i++)
       {
          File file = files[i];
-         String path = calculateRelativePath(repoDir, file);
+         String path = calculateRelativePath(repo.getWorkTree(), file);
          sFiles[i] = path;
       }
-      checkNoFilesInCache(sFiles);
+      checkNoFilesInCache(repo, sFiles);
    }
 
-   protected void checkNoFilesInCache(String... files) throws IOException
+   protected void checkNoFilesInCache(Repository repo, String... files) throws IOException
    {
       DirCache dirCache = null;
       try
       {
-         dirCache = repository.lockDirCache();
+         dirCache = repo.lockDirCache();
          for (int i = 0; i < files.length; i++)
          {
             String path = files[i];

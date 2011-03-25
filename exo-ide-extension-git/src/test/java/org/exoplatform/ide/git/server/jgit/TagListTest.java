@@ -39,20 +39,20 @@ public class TagListTest extends BaseTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      Git git = new Git(getRepository());
+      Git git = new Git(getDefaultRepository());
       bugfixTag = git.tag().setName("bugfix-tag").setMessage("bugfix-tag").call();
       featureTag = git.tag().setName("feature-tag").setMessage("feature-tag").call();
    }
 
    public void testListAllTag() throws Exception
    {
-      List<Tag> tagList = getConnection().tagList(new TagListRequest());
+      List<Tag> tagList = getDefaultConnection().tagList(new TagListRequest());
       validateTags(tagList, bugfixTag.getTagName(), featureTag.getTagName());
    }
 
    public void testListTagPattern() throws Exception
    {
-      List<Tag> tagList = getConnection().tagList(new TagListRequest("feature*"));
+      List<Tag> tagList = getDefaultConnection().tagList(new TagListRequest("feature*"));
       validateTags(tagList, featureTag.getTagName());
    }
 

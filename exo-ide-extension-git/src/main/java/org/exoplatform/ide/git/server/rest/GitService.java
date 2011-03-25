@@ -40,6 +40,10 @@ import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.MoveRequest;
 import org.exoplatform.ide.git.shared.PullRequest;
 import org.exoplatform.ide.git.shared.PushRequest;
+import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.git.shared.RemoteAddRequest;
+import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
@@ -58,6 +62,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -349,6 +354,70 @@ public class GitService
       try
       {
          gitConnection.push(request);
+      }
+      finally
+      {
+         gitConnection.close();
+      }
+   }
+
+   @Path("remote-add")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void remoteAdd(@QueryParam("workdir") String workDir, RemoteAddRequest request) throws GitException
+   {
+      GitConnection gitConnection = getGitConnection(workDir);
+      try
+      {
+         gitConnection.remoteAdd(request);
+      }
+      finally
+      {
+         gitConnection.close();
+      }
+   }
+
+   @Path("remote-delete/{name}")
+   @POST
+   public void remoteDelete(@QueryParam("workdir") String workDir, @PathParam("name") String name) throws GitException
+   {
+      GitConnection gitConnection = getGitConnection(workDir);
+      try
+      {
+         gitConnection.remoteDelete(name);
+      }
+      finally
+      {
+         gitConnection.close();
+      }
+   }
+
+   @Path("remote-list")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<Remote> remoteList(@QueryParam("workdir") String workDir, RemoteListRequest request) throws GitException
+   {
+      GitConnection gitConnection = getGitConnection(workDir);
+      try
+      {
+         return gitConnection.remoteList(request);
+      }
+      finally
+      {
+         gitConnection.close();
+      }
+   }
+
+   @Path("remote-update")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void remoteUpdate(@QueryParam("workdir") String workDir, RemoteUpdateRequest request) throws GitException
+   {
+      GitConnection gitConnection = getGitConnection(workDir);
+      try
+      {
+         gitConnection.remoteUpdate(request);
       }
       finally
       {

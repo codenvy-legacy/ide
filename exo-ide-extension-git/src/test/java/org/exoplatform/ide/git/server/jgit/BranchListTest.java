@@ -44,7 +44,7 @@ public class BranchListTest extends BaseTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      Repository repository = getRepository();
+      Repository repository = getDefaultRepository();
 
       File workDir = new File(repository.getWorkTree().getParentFile(), "ListBranchTest");
       // Clone repository.
@@ -68,14 +68,14 @@ public class BranchListTest extends BaseTest
    public void testListBranchSimple() throws Exception
    {
       BranchListRequest request = new BranchListRequest();
-      List<Branch> branchList = getConnection().branchList(request);
+      List<Branch> branchList = getDefaultConnection().branchList(request);
       validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/master", true, "master")));
    }
 
    public void testListBranchRemote() throws Exception
    {
       BranchListRequest request = new BranchListRequest("r");
-      List<Branch> branchList = getConnection().branchList(request);
+      List<Branch> branchList = getDefaultConnection().branchList(request);
       validateBranchList(branchList, Arrays.asList(new Branch("refs/remotes/test", false, "test")));
    }
 
@@ -85,29 +85,29 @@ public class BranchListTest extends BaseTest
    public void __testListBranchAll() throws Exception
    {
       BranchListRequest request = new BranchListRequest("a");
-      List<Branch> branchList = getConnection().branchList(request);
+      List<Branch> branchList = getDefaultConnection().branchList(request);
       validateBranchList(branchList,
          Arrays.asList(new Branch("refs/remotes/test", false, "test"), new Branch("refs/heads/master", true, "master")));
    }
 
    public void testListBranch2() throws Exception
    {
-      new Git(getRepository()).branchCreate().setName("testListBranch2").call();
+      new Git(getDefaultRepository()).branchCreate().setName("testListBranch2").call();
       BranchListRequest request = new BranchListRequest();
-      List<Branch> branchList = getConnection().branchList(request);
+      List<Branch> branchList = getDefaultConnection().branchList(request);
       validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/testListBranch2", false, "testListBranch2"),
          new Branch("refs/heads/master", true, "master")));
    }
 
    public void testListBranch3() throws Exception
    {
-      Git git = new Git(getRepository());
+      Git git = new Git(getDefaultRepository());
       git.branchCreate().setName("testListBranch3").call();
       // Make newly created branch active.
       git.checkout().setName("testListBranch3").call();
 
       BranchListRequest request = new BranchListRequest();
-      List<Branch> branchList = getConnection().branchList(request);
+      List<Branch> branchList = getDefaultConnection().branchList(request);
       validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/master", false, "master"), new Branch(
          "refs/heads/testListBranch3", true, "testListBranch3")));
    }

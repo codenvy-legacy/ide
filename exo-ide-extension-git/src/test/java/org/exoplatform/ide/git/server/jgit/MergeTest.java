@@ -34,15 +34,15 @@ public class MergeTest extends BaseTest
 
    public void testMergeNoChanges() throws Exception
    {
-      Git git = new Git(getRepository());
+      Git git = new Git(getDefaultRepository());
       git.branchCreate().setName(branchName).call();
-      MergeResult mergeResult = getConnection().merge(new MergeRequest("MergeTestBranch"));
+      MergeResult mergeResult = getDefaultConnection().merge(new MergeRequest("MergeTestBranch"));
       assertEquals(MergeResult.MergeStatus.ALREADY_UP_TO_DATE, mergeResult.getMergeStatus());
    }
 
    public void testMerge() throws Exception
    {
-      Git git = new Git(getRepository());
+      Git git = new Git(getDefaultRepository());
       git.branchCreate().setName(branchName).call();
       git.checkout().setName(branchName).call();
       File file = addFile(git.getRepository().getWorkTree(), "t-merge", "aaa\n");
@@ -51,7 +51,7 @@ public class MergeTest extends BaseTest
       git.commit().setMessage("add file in new branch").call();
       git.checkout().setName("master").call();
 
-      MergeResult mergeResult = getConnection().merge(new MergeRequest("MergeTestBranch"));
+      MergeResult mergeResult = getDefaultConnection().merge(new MergeRequest("MergeTestBranch"));
       assertEquals(MergeResult.MergeStatus.FAST_FORWARD, mergeResult.getMergeStatus());
       assertTrue(file.exists());
       assertEquals("aaa\n", readFile(file));
@@ -60,7 +60,7 @@ public class MergeTest extends BaseTest
 
    public void testMergeConflict() throws Exception
    {
-      Git git = new Git(getRepository());
+      Git git = new Git(getDefaultRepository());
       git.branchCreate().setName(branchName).call();
       git.checkout().setName(branchName).call();
       addFile(git.getRepository().getWorkTree(), "t-merge-conflict", "aaa\n");
@@ -73,7 +73,7 @@ public class MergeTest extends BaseTest
       git.add().addFilepattern(".").call();
       git.commit().setMessage("add file in new master").call();
 
-      MergeResult mergeResult = getConnection().merge(new MergeRequest("MergeTestBranch"));
+      MergeResult mergeResult = getDefaultConnection().merge(new MergeRequest("MergeTestBranch"));
       String[] conflicts = mergeResult.getConflicts();
       assertEquals(1, conflicts.length);
       assertEquals("t-merge-conflict", conflicts[0]);

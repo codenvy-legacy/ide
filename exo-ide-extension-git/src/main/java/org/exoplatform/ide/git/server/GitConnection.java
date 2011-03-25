@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.git.server;
 
-import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.AddRequest;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
@@ -36,6 +35,10 @@ import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.MoveRequest;
 import org.exoplatform.ide.git.shared.PullRequest;
 import org.exoplatform.ide.git.shared.PushRequest;
+import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.git.shared.RemoteAddRequest;
+import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
@@ -246,7 +249,49 @@ public interface GitConnection
     */
    void push(PushRequest request) throws GitException;
 
+   /**
+    * Add new remote configuration.
+    * 
+    * @param request add remote configuration request
+    * @throws GitException if any error occurs
+    * @throws IllegalArgumentException if remote (see
+    *            {@link RemoteAddRequest#getName()}) already exists or any
+    *            updated parameter (e.g. URLs) invalid
+    * @see RemoteAddRequest
+    */
    void remoteAdd(RemoteAddRequest request) throws GitException;
+
+   /**
+    * Remove the remote named <code>name</code>. All remote tracking branches
+    * and configuration settings for the remote are removed.
+    * 
+    * @param name remote configuration to remove
+    * @throws GitException if any error occurs
+    * @throws IllegalArgumentException if remote <code>name</code> not found
+    */
+   void remoteDelete(String name) throws GitException;
+
+   /**
+    * Show remotes.
+    * 
+    * @param request remote list request
+    * @throws GitException if any error occurs
+    * @throws IllegalArgumentException if remote <code>name</code> not found
+    * @see RemoteListRequest
+    */
+   List<Remote> remoteList(RemoteListRequest request) throws GitException;
+
+   /**
+    * Update remote configuration.
+    * 
+    * @param request update remote configuration request
+    * @throws GitException if any error occurs
+    * @throws IllegalArgumentException if remote configuration (see
+    *            {@link RemoteUpdateRequest#getName()}) not found or any updated
+    *            parameter (e.g. URLs) invalid
+    * @see RemoteUpdateRequest
+    */
+   void remoteUpdate(RemoteUpdateRequest request) throws GitException;
 
    /**
     * Reset current HEAD to the specified state.

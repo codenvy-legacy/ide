@@ -35,14 +35,14 @@ public class BranchDeleteTest extends BaseTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      Git git = new Git(getRepository());
+      Git git = new Git(getDefaultRepository());
       git.branchCreate().setName("branch1").call();
       git.branchCreate().setName("branch2").call();
    }
 
    public void testDelete() throws Exception
    {
-      getConnection().branchDelete(new BranchDeleteRequest("branch1", false));
+      getDefaultConnection().branchDelete(new BranchDeleteRequest("branch1", false));
       testBranch(new String[]{"refs/heads/master", "refs/heads/branch2"});
    }
 
@@ -50,7 +50,7 @@ public class BranchDeleteTest extends BaseTest
    {
       try
       {
-         getConnection().branchDelete(new BranchDeleteRequest("master", true));
+         getDefaultConnection().branchDelete(new BranchDeleteRequest("master", true));
          fail("Expected exception was not thrown. ");
       }
       catch (IllegalArgumentException e)
@@ -62,16 +62,16 @@ public class BranchDeleteTest extends BaseTest
 
    public void testDeleteNotMerged() throws Exception
    {
-      Git git = new Git(getRepository());
+      Git git = new Git(getDefaultRepository());
       git.checkout().setName("branch2").call();
-      addFile(getRepository().getWorkTree(), "br2-file", "aaa");
+      addFile(getDefaultRepository().getWorkTree(), "br2-file", "aaa");
       git.add().addFilepattern(".").call();
       git.commit().setMessage("br2 commit").setAuthor("andrey", "andrey@mail.com").call();
       git.checkout().setName("master").call();
       BranchDeleteRequest request = new BranchDeleteRequest("branch2", false);
       try
       {
-         getConnection().branchDelete(request);
+         getDefaultConnection().branchDelete(request);
          fail("Expected exception was not thrown. ");
       }
       catch (IllegalArgumentException e)
@@ -82,14 +82,14 @@ public class BranchDeleteTest extends BaseTest
 
       request.setForce(true);
       // Able to delete now.
-      getConnection().branchDelete(request);
+      getDefaultConnection().branchDelete(request);
 
       testBranch(new String[]{"refs/heads/master", "refs/heads/branch1"});
    }
 
    private void testBranch(String[] exp) throws Exception
    {
-      List<Ref> list = new Git(getRepository()).branchList().call();
+      List<Ref> list = new Git(getDefaultRepository()).branchList().call();
       assertEquals(exp.length, list.size());
       List<String> refNames = new ArrayList<String>(list.size());
       for (Ref refName : list)

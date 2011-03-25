@@ -38,11 +38,11 @@ public class BranchCheckoutTest extends BaseTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      Git git = new Git(getRepository());
+      Git git = new Git(getDefaultRepository());
 
       git.branchCreate().setName(branch1).call();
       git.checkout().setName(branch1).call();
-      addFile(getRepository().getWorkTree(), "br1", "aaa");
+      addFile(getDefaultRepository().getWorkTree(), "br1", "aaa");
       git.add().addFilepattern(".").call();
       git.commit().setMessage("aaa").call();
 
@@ -52,34 +52,34 @@ public class BranchCheckoutTest extends BaseTest
    public void testCheckout() throws Exception
    {
       BranchCheckoutRequest request = new BranchCheckoutRequest(branch1, null, false);
-      getConnection().branchCheckout(request);
-      assertTrue(new File(getRepository().getWorkTree(), "br1").exists());
-      assertTrue(new File(getRepository().getWorkTree(), "README.txt").exists());
+      getDefaultConnection().branchCheckout(request);
+      assertTrue(new File(getDefaultRepository().getWorkTree(), "br1").exists());
+      assertTrue(new File(getDefaultRepository().getWorkTree(), "README.txt").exists());
    }
 
    public void testCheckoutCreate() throws Exception
    {
-      List<Ref> all = new Git(getRepository()).branchList().call();
+      List<Ref> all = new Git(getDefaultRepository()).branchList().call();
       assertEquals(2, all.size());
 
-      getConnection().branchCheckout(new BranchCheckoutRequest(branch2, null, true));
+      getDefaultConnection().branchCheckout(new BranchCheckoutRequest(branch2, null, true));
 
-      all = new Git(getRepository()).branchList().call();
+      all = new Git(getDefaultRepository()).branchList().call();
       assertEquals(3, all.size());
-      assertTrue(new File(getRepository().getWorkTree(), "README.txt").exists());
+      assertTrue(new File(getDefaultRepository().getWorkTree(), "README.txt").exists());
    }
 
    public void testCheckoutCreateWithStartPoint() throws Exception
    {
-      List<Ref> all = new Git(getRepository()).branchList().call();
+      List<Ref> all = new Git(getDefaultRepository()).branchList().call();
       assertEquals(2, all.size());
 
-      getConnection().branchCheckout(new BranchCheckoutRequest(branch2, branch1, true));
+      getDefaultConnection().branchCheckout(new BranchCheckoutRequest(branch2, branch1, true));
 
-      all = new Git(getRepository()).branchList().call();
+      all = new Git(getDefaultRepository()).branchList().call();
 
       assertEquals(3, all.size());
-      assertTrue(new File(getRepository().getWorkTree(), "br1").exists());
-      assertTrue(new File(getRepository().getWorkTree(), "README.txt").exists());
+      assertTrue(new File(getDefaultRepository().getWorkTree(), "br1").exists());
+      assertTrue(new File(getDefaultRepository().getWorkTree(), "README.txt").exists());
    }
 }

@@ -32,7 +32,8 @@ public abstract class GitRequest
     * User on whose behalf the current request will be performed, e.g. commit
     * author.
     */
-   private GitUser user;
+   // Transient to avoid JSON processing.
+   private transient GitUser user;
 
    /**
     * Opaque set of request attributes. If some attribute not need value then

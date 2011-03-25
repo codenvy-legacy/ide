@@ -19,33 +19,42 @@
 package org.exoplatform.ide.git.shared;
 
 /**
+ * Request to add remote configuration {@link #name} for repository at
+ * {@link #url}.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 public class RemoteAddRequest extends GitRequest
 {
+   /** Remote name. */
    private String name;
+
+   /** Repository url. */
    private String url;
-   private String[] pushUrls;
+
+   /**
+    * List of tracked branches in remote repository. If not set then track all
+    * branches.
+    */
    private String[] branches;
 
    /**
-    * @param name
-    * @param url
-    * @param pushUrls
-    * @param branches
+    * @param name remote name
+    * @param url repository url
+    * @param branches list of tracked branches in remote repository. If not set
+    *           then track all branches
     */
-   public RemoteAddRequest(String name, String url, String[] pushUrls, String[] branches)
+   public RemoteAddRequest(String name, String url, String[] branches)
    {
       this.name = name;
       this.url = url;
-      this.pushUrls = pushUrls;
       this.branches = branches;
    }
 
    /**
-    * @param name
-    * @param url
+    * @param name remote name
+    * @param url repository url
     */
    public RemoteAddRequest(String name, String url)
    {
@@ -54,47 +63,58 @@ public class RemoteAddRequest extends GitRequest
    }
 
    /**
-    * 
+    * "Empty" request for create remote configuration. Corresponding setters
+    * used to setup required parameters.
     */
    public RemoteAddRequest()
    {
    }
 
+   /**
+    * @return remote name
+    */
    public String getName()
    {
       return name;
    }
 
+   /**
+    * @param name remote name
+    */
    public void setName(String name)
    {
       this.name = name;
    }
 
+   /**
+    * @return repository url
+    */
    public String getUrl()
    {
       return url;
    }
 
+   /**
+    * @param url repository url
+    */
    public void setUrl(String url)
    {
       this.url = url;
    }
 
-   public String[] getPushUrls()
-   {
-      return pushUrls;
-   }
-
-   public void setPushUrls(String[] pushUrls)
-   {
-      this.pushUrls = pushUrls;
-   }
-
+   /**
+    * @return list of tracked branches in remote repository
+    * @see #branches
+    */
    public String[] getBranches()
    {
       return branches;
    }
 
+   /**
+    * @param branches list of tracked branches in remote repository
+    * @see #branches
+    */
    public void setBranches(String[] branches)
    {
       this.branches = branches;

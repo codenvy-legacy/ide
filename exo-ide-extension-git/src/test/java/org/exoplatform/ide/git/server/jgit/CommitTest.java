@@ -33,14 +33,14 @@ public class CommitTest extends BaseTest
    public void testCommit() throws Exception
    {
       // Add file.
-      addFile(getRepository().getWorkTree(), "file1", "file1");
+      addFile(getDefaultRepository().getWorkTree(), "file1", "file1");
 
-      Git git = new Git(getRepository());
+      Git git = new Git(getDefaultRepository());
       git.add().addFilepattern(".").call();
 
       CommitRequest request = new CommitRequest("add file1", new GitUser("andrey", "andrey@mail.com"));
       request.setMessage("add file1");
-      Revision revision = getConnection().commit(request);
+      Revision revision = getDefaultConnection().commit(request);
 
       RevCommit revCommit = git.log().call().iterator().next();
 

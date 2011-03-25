@@ -30,42 +30,42 @@ public class AddTest extends BaseTest
 {
    public void testNoAdd() throws Exception
    {
-      File workDir = getRepository().getWorkTree();
+      File workDir = getDefaultRepository().getWorkTree();
       File file1 = addFile(workDir, "testNoAdd", CONTENT);
-      checkNoFilesInCache(file1);
+      checkNoFilesInCache(getDefaultRepository(), file1);
    }
 
    public void testUpdate() throws Exception
    {
-      File workDir = getRepository().getWorkTree();
+      File workDir = getDefaultRepository().getWorkTree();
       File file1 = addFile(workDir, "testUpdate", CONTENT);
       AddRequest addRequest = new AddRequest();
       addRequest.setUpdate(true);
-      getConnection().add(addRequest);
+      getDefaultConnection().add(addRequest);
       // File not added in index. Existed file re-indexed if modified.
-      checkNoFilesInCache(file1);
+      checkNoFilesInCache(getDefaultRepository(), file1);
    }
 
    public void testAdd() throws Exception
    {
-      File workDir = getRepository().getWorkTree();
+      File workDir = getDefaultRepository().getWorkTree();
       File file1 = addFile(workDir, "testAdd", CONTENT);
       AddRequest addRequest = new AddRequest();
-      getConnection().add(addRequest);
-      checkFilesInCache(file1);
+      getDefaultConnection().add(addRequest);
+      checkFilesInCache(getDefaultRepository(), file1);
    }
 
    public void testAddAfterRemove() throws Exception
    {
-      File workDir = getRepository().getWorkTree();
+      File workDir = getDefaultRepository().getWorkTree();
       File readMe = new File(workDir, "README.txt");
       String relativePath = calculateRelativePath(workDir, readMe);
-      checkFilesInCache(readMe);
+      checkFilesInCache(getDefaultRepository(), readMe);
       readMe.delete();
       AddRequest addRequest = new AddRequest();
       // If 'update' is 'true' then removed files should be removed from index.
       addRequest.setUpdate(true);
-      getConnection().add(addRequest);
-      checkNoFilesInCache(relativePath);
+      getDefaultConnection().add(addRequest);
+      checkNoFilesInCache(getDefaultRepository(), relativePath);
    }
 }

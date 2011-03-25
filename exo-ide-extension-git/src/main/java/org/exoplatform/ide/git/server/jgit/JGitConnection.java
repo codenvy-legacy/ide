@@ -77,7 +77,6 @@ import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -109,7 +108,10 @@ import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.MoveRequest;
 import org.exoplatform.ide.git.shared.PullRequest;
 import org.exoplatform.ide.git.shared.PushRequest;
+import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
+import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
@@ -125,6 +127,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -140,8 +143,6 @@ public class JGitConnection implements GitConnection
    private String _branchRef = "refs/heads/master";
    // -------------------------
    private final Repository repository;
-   // TODO
-   private CredentialsProvider credentialsProvider;
 
    /**
     * @param repository
@@ -361,7 +362,6 @@ public class JGitConnection implements GitConnection
 
          remoteConfig.update(config);
 
-         config.setBoolean(ConfigConstants.CONFIG_CORE_SECTION, null, ConfigConstants.CONFIG_KEY_BARE, false);
          config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, _branchName, ConfigConstants.CONFIG_KEY_REMOTE,
             remoteName);
          config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, _branchName, ConfigConstants.CONFIG_KEY_MERGE,
@@ -379,9 +379,6 @@ public class JGitConnection implements GitConnection
 
          // Fetch data from remote repository.
          Transport transport = Transport.open(repository, remoteConfig);
-
-         if (credentialsProvider != null)
-            transport.setCredentialsProvider(credentialsProvider);
 
          int timeout = request.getTimeout();
          if (timeout > 0)
@@ -945,14 +942,14 @@ public class JGitConnection implements GitConnection
       if (remoteName == null || remoteName.length() == 0)
          throw new IllegalArgumentException("Remote name required. ");
 
-      String url = request.getUrl();
-      if (url == null || url.length() == 0)
-         throw new IllegalArgumentException("Remote url required. ");
-
       StoredConfig config = repository.getConfig();
       Set<String> remoteNames = config.getSubsections("remote");
       if (remoteNames.contains(remoteName))
          throw new IllegalArgumentException("Remote " + remoteName + " already exists. ");
+
+      String url = request.getUrl();
+      if (url == null || url.length() == 0)
+         throw new IllegalArgumentException("Remote url required. ");
 
       RemoteConfig remoteConfig;
       try
@@ -974,28 +971,13 @@ public class JGitConnection implements GitConnection
          throw new IllegalArgumentException("Remote url " + url + " is invalid. ");
       }
 
-      String[] pushUrls = request.getPushUrls();
-      if (pushUrls != null)
-      {
-         for (int i = 0; i < pushUrls.length; i++)
-         {
-            try
-            {
-               remoteConfig.addURI(new URIish(pushUrls[i]));
-            }
-            catch (URISyntaxException e)
-            {
-               throw new IllegalArgumentException("Remote push url " + pushUrls[i] + " is invalid. ");
-            }
-         }
-      }
-
       String[] branches = request.getBranches();
       if (branches != null)
       {
          for (int i = 0; i < branches.length; i++)
             remoteConfig.addFetchRefSpec( //
-               new RefSpec(Constants.R_HEADS + branches[i] + ":" + Constants.R_REMOTES + remoteName + "/" + branches[i]));
+               new RefSpec(Constants.R_HEADS + branches[i] + ":" + Constants.R_REMOTES + remoteName + "/" + branches[i])
+                  .setForceUpdate(true));
       }
       else
       {
@@ -1003,10 +985,209 @@ public class JGitConnection implements GitConnection
             + "/*").setForceUpdate(true));
       }
 
-      /*config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_REMOTE,
-         name);*/
-      //      config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_MERGE,
-      //         branchRef);
+      remoteConfig.update(config);
+
+      try
+      {
+         config.save();
+      }
+      catch (IOException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.server.GitConnection#remoteDelete(java.lang.String)
+    */
+   @Override
+   public void remoteDelete(String name) throws GitException
+   {
+      StoredConfig config = repository.getConfig();
+      Set<String> remoteNames = config.getSubsections(ConfigConstants.CONFIG_KEY_REMOTE);
+      if (!remoteNames.contains(name))
+         throw new IllegalArgumentException("Remote " + name + " not found. ");
+
+      config.unsetSection(ConfigConstants.CONFIG_REMOTE_SECTION, name);
+      Set<String> branches = config.getSubsections(ConfigConstants.CONFIG_BRANCH_SECTION);
+      for (String branch : branches)
+      {
+         String r = config.getString(ConfigConstants.CONFIG_BRANCH_SECTION, branch, ConfigConstants.CONFIG_KEY_REMOTE);
+         if (name.equals(r))
+         {
+            config.unset(ConfigConstants.CONFIG_BRANCH_SECTION, branch, ConfigConstants.CONFIG_KEY_REMOTE);
+            config.unset(ConfigConstants.CONFIG_BRANCH_SECTION, branch, ConfigConstants.CONFIG_KEY_MERGE);
+         }
+      }
+
+      try
+      {
+         config.save();
+      }
+      catch (IOException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.server.GitConnection#remoteList(org.exoplatform.ide.git.shared.RemoteListRequest)
+    */
+   @Override
+   public List<Remote> remoteList(RemoteListRequest request) throws GitException
+   {
+      StoredConfig config = repository.getConfig();
+      Set<String> remoteNames = new HashSet<String>(config.getSubsections(ConfigConstants.CONFIG_KEY_REMOTE));
+      String remote = request.getRemote();
+
+      if (remote != null && remoteNames.contains(remote))
+      {
+         remoteNames.clear();
+         remoteNames.add(remote);
+      }
+
+      boolean verbose = request.isVerbose();
+      List<Remote> result = new ArrayList<Remote>(remoteNames.size());
+      for (String rn : remoteNames)
+      {
+         if (verbose)
+         {
+            try
+            {
+               List<URIish> uris = new RemoteConfig(config, rn).getURIs();
+               result.add(new Remote(rn, uris.isEmpty() ? null : uris.get(0).toString()));
+            }
+            catch (URISyntaxException e)
+            {
+               throw new GitException(e.getMessage(), e);
+            }
+         }
+         else
+         {
+            result.add(new Remote(rn, null));
+         }
+      }
+      return result;
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.server.GitConnection#remoteUpdate(org.exoplatform.ide.git.shared.RemoteUpdateRequest)
+    */
+   @Override
+   public void remoteUpdate(RemoteUpdateRequest request) throws GitException
+   {
+      String remoteName = request.getName();
+      if (remoteName == null || remoteName.length() == 0)
+         throw new IllegalArgumentException("Remote name required. ");
+
+      StoredConfig config = repository.getConfig();
+      Set<String> remoteNames = config.getSubsections(ConfigConstants.CONFIG_KEY_REMOTE);
+      if (!remoteNames.contains(remoteName))
+         throw new IllegalArgumentException("Remote " + remoteName + " not found. ");
+
+      RemoteConfig remoteConfig;
+      try
+      {
+         remoteConfig = new RemoteConfig(config, remoteName);
+      }
+      catch (URISyntaxException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+
+      String[] tmp;
+
+      tmp = request.getBranches();
+      if (tmp != null && tmp.length > 0)
+      {
+         if (!request.isAddBranches())
+         {
+            remoteConfig.setFetchRefSpecs(new ArrayList<RefSpec>());
+            remoteConfig.setPushRefSpecs(new ArrayList<RefSpec>());
+         }
+         else
+         {
+            // Replace wildcard refspec if any.
+            remoteConfig.removeFetchRefSpec(new RefSpec(Constants.R_HEADS + "*" + ":" + Constants.R_REMOTES
+               + remoteName + "/*").setForceUpdate(true));
+            remoteConfig.removeFetchRefSpec(new RefSpec(Constants.R_HEADS + "*" + ":" + Constants.R_REMOTES
+               + remoteName + "/*"));
+         }
+
+         // Add new refspec.
+         for (int i = 0; i < tmp.length; i++)
+            remoteConfig.addFetchRefSpec( //
+               new RefSpec(Constants.R_HEADS + tmp[i] + ":" + Constants.R_REMOTES + remoteName + "/" + tmp[i])
+                  .setForceUpdate(true));
+      }
+
+      // Remove URLs first.
+      tmp = request.getRemoveUrl();
+      if (tmp != null)
+      {
+         for (int i = 0; i < tmp.length; i++)
+         {
+            try
+            {
+               remoteConfig.removeURI(new URIish(tmp[i]));
+            }
+            catch (URISyntaxException e)
+            {
+               // Ignore this error. Cannot remove invalid URL. 
+            }
+         }
+      }
+
+      // Add new URLs.
+      tmp = request.getAddUrl();
+      if (tmp != null)
+      {
+         for (int i = 0; i < tmp.length; i++)
+         {
+            try
+            {
+               remoteConfig.addURI(new URIish(tmp[i]));
+            }
+            catch (URISyntaxException e)
+            {
+               throw new IllegalArgumentException("Remote url " + tmp[i] + " is invalid. ");
+            }
+         }
+      }
+
+      // Remove URLs for pushing.
+      tmp = request.getRemovePushUrl();
+      if (tmp != null)
+      {
+         for (int i = 0; i < tmp.length; i++)
+         {
+            try
+            {
+               remoteConfig.removePushURI(new URIish(tmp[i]));
+            }
+            catch (URISyntaxException e)
+            {
+               // Ignore this error. Cannot remove invalid URL. 
+            }
+         }
+      }
+
+      // Add URLs for pushing.
+      tmp = request.getAddPushUrl();
+      if (tmp != null)
+      {
+         for (int i = 0; i < tmp.length; i++)
+         {
+            try
+            {
+               remoteConfig.addPushURI(new URIish(tmp[i]));
+            }
+            catch (URISyntaxException e)
+            {
+               throw new IllegalArgumentException("Remote push url " + tmp[i] + " is invalid. ");
+            }
+         }
+      }
 
       remoteConfig.update(config);
 

@@ -42,7 +42,7 @@ public class DiffTest extends BaseTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      Repository repository = getRepository();
+      Repository repository = getDefaultRepository();
       addFile(repository.getWorkTree(), "aaa", "AAA\n");
 
       new File(repository.getWorkTree(), "README.txt").delete();
@@ -83,7 +83,7 @@ public class DiffTest extends BaseTest
 
    private List<String> readDiff(DiffRequest request) throws Exception
    {
-      DiffPage diffPage = (DiffPage)getConnection().diff(request);
+      DiffPage diffPage = (DiffPage)getDefaultConnection().diff(request);
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       diffPage.writeTo(out);
       BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(out.toByteArray())));
@@ -99,7 +99,7 @@ public class DiffTest extends BaseTest
    public void testDiffRaw() throws Exception
    {
       DiffRequest request = new DiffRequest(null, DiffType.RAW, false, 0);
-      DiffPage diffPage = (DiffPage)getConnection().diff(request);
+      DiffPage diffPage = (DiffPage)getDefaultConnection().diff(request);
       // TODO
       diffPage.writeTo(System.out);
    }
