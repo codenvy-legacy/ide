@@ -36,7 +36,7 @@ public class BackgroundLayer extends Layer
 
    public BackgroundLayer()
    {
-      backgroundImage = new Image("ide-background.jpeg");
+      backgroundImage = new Image("ide-background.jpg");
       backgroundImage.setWidth("100%");
       backgroundImage.setHeight("100%");
       add(backgroundImage);

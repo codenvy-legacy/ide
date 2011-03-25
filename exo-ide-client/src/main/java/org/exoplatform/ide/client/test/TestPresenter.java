@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.test.ui.TestView;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

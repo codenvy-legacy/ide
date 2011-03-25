@@ -23,8 +23,8 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.button.IconButton;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.test.ui.ViewManagerForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
@@ -40,13 +40,13 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class ViewManagerPresenter
 {
 
-   public interface Display extends ViewDisplay
+   public interface Display
    {
 
    }
 
    private Map<String, ViewEx> views = new LinkedHashMap<String, ViewEx>();
-   
+
    private Display display;
 
    public ViewManagerPresenter(HandlerManager eventBus)
@@ -56,11 +56,24 @@ public class ViewManagerPresenter
       DOM.setStyleAttribute(button.getElement(), "zIndex", "100000");
       RootPanel.get().add(button, 0, 20 + 32);
    }
-   
-   protected void showOrHideManager() {
-      if (display == null) {
-         display = 
+
+   protected void showOrHideManager()
+   {
+      if (display == null)
+      {
+         ViewManagerForm form = new ViewManagerForm();
+         bindDisplay(form);
       }
+      else
+      {
+         ((ViewManagerForm)display).removeFromParent();
+         display = null;
+      }
+   }
+
+   public void bindDisplay(Display d)
+   {
+      display = d;
    }
 
 }

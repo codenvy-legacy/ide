@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class ViewManagerForm extends Composite
+public class ViewManagerForm extends Composite implements org.exoplatform.ide.client.test.ViewManagerPresenter.Display
 {
 
    private static ViewManagerFormUiBinder uiBinder = GWT.create(ViewManagerFormUiBinder.class);
