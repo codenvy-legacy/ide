@@ -93,7 +93,6 @@ public class VersionContentForm extends ViewImpl implements VersionContentPresen
             NodeList<Element> iframes = editorWraper.getElementsByTagName("iframe");
             if (iframes != null && iframes.getLength() > 0)
             {
-
                Element iFrameElement = iframes.getItem(0);
                setHandler(iFrameElement);
             }
@@ -130,11 +129,11 @@ public class VersionContentForm extends ViewImpl implements VersionContentPresen
 
        if(typeof e.contentDocument != "undefined")
       {
-              e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::setActive()();},false);
+         e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activate()();},false);
       }
       else
       {
-         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::setActive()();});
+         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.versioning.VersionContentForm::activate()();});
       }
 
    }-*/;
@@ -142,4 +141,5 @@ public class VersionContentForm extends ViewImpl implements VersionContentPresen
    private native Document getIFrameDocument(IFrameElement iframe)/*-{
       return iframe.contentDocument || iframe.contentWindow.document;
    }-*/;
+   
 }

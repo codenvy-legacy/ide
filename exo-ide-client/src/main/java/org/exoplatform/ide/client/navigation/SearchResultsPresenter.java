@@ -22,19 +22,24 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedHandler;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -46,7 +51,8 @@ import com.google.gwt.user.client.Timer;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class SearchResultsPresenter implements PanelSelectedHandler
+public class SearchResultsPresenter implements SearchResultReceivedHandler, ViewVisibilityChangedHandler,
+   ViewClosedHandler
 {
 
    public interface Display extends ViewDisplay
@@ -66,46 +72,42 @@ public class SearchResultsPresenter implements PanelSelectedHandler
 
    private HandlerManager eventBus;
 
-   private ApplicationContext context;
-
    private Display display;
 
    private List<Item> selectedItems;
 
    private Folder searchResult;
 
-   private Handlers handlers;
-
-   public SearchResultsPresenter(HandlerManager eventBus, ApplicationContext context, Folder searchResult)
+   public SearchResultsPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.context = context;
-      this.searchResult = searchResult;
-
-      handlers = new Handlers(eventBus);
+      eventBus.addHandler(SearchResultReceivedEvent.TYPE, this);
+      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
-   public void bindDsplay(Display d)
+   @Override
+   public void onSearchResultReceived(SearchResultReceivedEvent event)
    {
-      this.display = d;
+      searchResult = event.getFolder();
 
-      handlers.addHandler(PanelSelectedEvent.TYPE, this);
-      display.getSearchResultTree().addDoubleClickHandler(new DoubleClickHandler()
+      if (display == null)
       {
-         public void onDoubleClick(DoubleClickEvent arg0)
-         {
-            onBrowserDoubleClicked();
-         }
-      });
-
-      display.getSearchResultTree().addSelectionHandler(new SelectionHandler<Item>()
+         Display display = GWT.create(Display.class);
+         IDE.getInstance().openView((ViewEx)display);
+         bindDsplay(display);
+      }
+      else
       {
-         public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<Item> event)
-         {
-            onItemSelected();
-         }
-      });
+         ((ViewEx)display).setViewVisible();
+         ((ViewEx)display).activate();
+      }
 
+      refreshSearchResult();
+   }
+
+   private void refreshSearchResult()
+   {
       searchResult.setIcon(Images.FileTypes.WORKSPACE);
 
       if (searchResult.getChildren() != null && !searchResult.getChildren().isEmpty())
@@ -132,6 +134,27 @@ public class SearchResultsPresenter implements PanelSelectedHandler
       onItemSelected();
    }
 
+   public void bindDsplay(Display d)
+   {
+      this.display = d;
+
+      display.getSearchResultTree().addDoubleClickHandler(new DoubleClickHandler()
+      {
+         public void onDoubleClick(DoubleClickEvent arg0)
+         {
+            openSelectedFile();
+         }
+      });
+
+      display.getSearchResultTree().addSelectionHandler(new SelectionHandler<Item>()
+      {
+         public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<Item> event)
+         {
+            onItemSelected();
+         }
+      });
+   }
+
    public void destroy()
    {
       if (updateSelectionTimer != null)
@@ -140,13 +163,12 @@ public class SearchResultsPresenter implements PanelSelectedHandler
       }
 
       updateSelectionTimer = null;
-      handlers.removeHandlers();
    }
 
    /**
     * Handling of mouse double clicking
     */
-   protected void onBrowserDoubleClicked()
+   protected void openSelectedFile()
    {
       if (selectedItems == null || selectedItems.size() != 1)
       {
@@ -183,21 +205,41 @@ public class SearchResultsPresenter implements PanelSelectedHandler
       public void run()
       {
          selectedItems = display.getSelectedItems();
-
-         //         context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-         //         context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
-
          eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, Display.ID));
       }
 
    };
 
-   public void onPanelSelected(PanelSelectedEvent event)
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (Display.ID.equals(event.getPanelId()))
+      if (display == null)
       {
-         onItemSelected();
+         return;
       }
+
+      if (event.getView() instanceof Display)
+      {
+         if (event.getView().isViewVisible())
+         {
+            onItemSelected();
+         }
+         else
+         {
+            updateSelectionTimer.cancel();
+         }
+      }
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (display != null && event.getView() instanceof Display)
+      {
+         display = null;
+         updateSelectionTimer.cancel();
+      }
+
    }
 
 }

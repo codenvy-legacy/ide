@@ -29,4 +29,8 @@
 		<when-type-is class="org.exoplatform.ide.client.navigation.SearchPresenter.Display" />
 	</replace-with>
 
+	<replace-with class="org.exoplatform.ide.client.navigation.ui.SearchResultsView">
+		<when-type-is class="org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display" />
+	</replace-with>
+
 </module>

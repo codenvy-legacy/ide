@@ -119,8 +119,9 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
       setPath();
       fillMimeTypes();
    }
-   
-   private void setPath() {
+
+   private void setPath()
+   {
       String path;
       if (selectedItems.size() == 0)
       {
@@ -139,7 +140,7 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
          path = href.substring(entryPoint.length() - 1);
       }
 
-      display.getPathItem().setValue(path);      
+      display.getPathItem().setValue(path);
    }
 
    private void doSearch()
@@ -174,11 +175,11 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
       final Folder folder = new Folder(entryPoint);
       VirtualFileSystem.getInstance().search(folder, content, contentType, path, new AsyncRequestCallback<Folder>()
       {
-
          @Override
          protected void onSuccess(Folder result)
          {
             eventBus.fireEvent(new SearchResultReceivedEvent(folder));
+            IDE.getInstance().closeView(Display.ID);
          }
 
          @Override
@@ -187,8 +188,6 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
             eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Search path does not exist."));
          }
       });
-
-      IDE.getInstance().closeView(Display.ID);
    }
 
    private void fillMimeTypes()
@@ -232,7 +231,8 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-      if (display != null) {
+      if (display != null)
+      {
          setPath();
       }
    }

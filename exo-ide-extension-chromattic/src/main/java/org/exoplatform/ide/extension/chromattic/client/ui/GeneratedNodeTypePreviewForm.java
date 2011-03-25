@@ -136,11 +136,11 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
 
       if(typeof e.contentDocument != "undefined")
       {
-      e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::setActive()();},false);
+         e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activate()();},false);
       }
       else
       {
-      e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::setActive()();});
+         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activate()();});
       }
    }-*/;
 

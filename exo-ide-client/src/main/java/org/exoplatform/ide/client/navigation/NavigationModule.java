@@ -140,10 +140,10 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class NavigationModule implements OpenFileWithHandler, UploadFileHandler, SaveFileAsTemplateHandler,
-   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler,
-   GetFileURLHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
-   EditorFileClosedHandler, EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler,
-   EditorActiveFileChangedHandler, InitializeServicesHandler, OpenFileByPathHandler
+   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, DeleteItemHandler, GetFileURLHandler,
+   ApplicationSettingsReceivedHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+   EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler,
+   InitializeServicesHandler, OpenFileByPathHandler
 {
    private HandlerManager eventBus;
 
@@ -253,14 +253,14 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
       new GoToFolderCommandHandler(eventBus);
       new PasteItemsCommandHandler(eventBus, context);
       new FileClosedHandler(eventBus);
-      
+
       new ShowVersionListCommandHandler(eventBus);
       new VersionHistoryCommandHandler(eventBus);
       new RestoreToVersionCommandHandler(eventBus);
 
       new WorkspacePresenter(eventBus);
       new SearchPresenter(eventBus, selectedItems, entryPoint);
-      
+      new SearchResultsPresenter(eventBus);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
