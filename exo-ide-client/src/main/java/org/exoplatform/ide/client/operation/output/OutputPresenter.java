@@ -93,7 +93,6 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
 
    public void onOutput(OutputEvent event)
    {
-      System.out.println("OutputPresenter.onOutput()" + event.getMessage());
       try
       {
       eventBus.fireEvent(new RestorePerspectiveEvent());
