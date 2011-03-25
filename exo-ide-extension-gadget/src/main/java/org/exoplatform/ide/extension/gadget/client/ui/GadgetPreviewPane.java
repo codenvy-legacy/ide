@@ -28,7 +28,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window.Location;
 
@@ -65,6 +64,7 @@ public class GadgetPreviewPane extends ViewImpl
       super(ID, ViewType.OPERATION, TITLE);
       this.configuration = configuration;
       metadata = gadgetMetadata;
+      showGadget();
    }
 
    private native String getST()/*-{
