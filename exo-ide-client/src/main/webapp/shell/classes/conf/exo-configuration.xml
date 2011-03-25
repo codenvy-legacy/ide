@@ -122,18 +122,16 @@
    </component>
 
    <component>
-      <key>org.exoplatform.commons.chromattic.ChromatticManager</key>
-      <type>org.exoplatform.commons.chromattic.ChromatticManager</type>
-   </component>
-
-   <component>
       <type>org.exoplatform.ide.extension.chromattic.server.ChromatticServiceApplication</type>
    </component>
 
    <component>
       <type>org.chromattic.dataobject.DataObjectService</type>
    </component>
-
+   
+    <component>
+      <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
+   </component>
 
    <component>
       <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</key>
