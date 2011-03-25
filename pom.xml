@@ -215,6 +215,12 @@
             <artifactId>exo-ide-extension-chromattic</artifactId>
             <version>${project.version}</version>
          </dependency>
+         
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-git</artifactId>
+            <version>${project.version}</version>
+         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -538,7 +544,7 @@
          </plugins>
       </pluginManagement>
       <plugins>
-         <plugin>
+         <!--plugin>
             <inherited>false</inherited>
             <groupId>com.mycila.maven-license-plugin</groupId>
             <artifactId>maven-license-plugin</artifactId>
@@ -602,7 +608,7 @@
                   </goals>
                </execution>
             </executions>
-         </plugin>
+         </plugin-->
       </plugins>
    </build>
    <modules>
@@ -627,6 +633,7 @@
       <module>exo-ide-extension-groovy</module>
       <module>exo-ide-extension-netvibes</module>
       <module>exo-ide-extension-chromattic</module>
+      <module>exo-ide-extension-git</module>
 
       <module>exo-ide-docs</module>
 
