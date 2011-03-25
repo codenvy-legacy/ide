@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.operation;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
@@ -25,19 +27,15 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputHandler;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
-import org.exoplatform.ide.client.operation.output.OutputForm;
 import org.exoplatform.ide.client.operation.properties.PropertiesForm;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesEvent;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -46,7 +44,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version @version $Id: $
  */
 
-public class OperationPresenter implements ShowItemPropertiesHandler, EditorActiveFileChangedHandler, OutputHandler,
+public class OperationPresenter implements ShowItemPropertiesHandler, EditorActiveFileChangedHandler,
    PreviewFileHandler, ViewClosedHandler
 {
 
@@ -60,8 +58,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
 
    private PropertiesForm propertiesForm;
 
-   private OutputForm outputForm;
-
    public OperationPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -69,7 +65,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       handlers = new Handlers(eventBus);
       handlers.addHandler(ShowItemPropertiesEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      handlers.addHandler(OutputEvent.TYPE, this);
       handlers.addHandler(PreviewFileEvent.TYPE, this);
    }
 
@@ -141,16 +136,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
 
    public void onOutput(OutputEvent event)
    {
-      eventBus.fireEvent(new RestorePerspectiveEvent());
-      if (outputForm == null)
-      {
-         outputForm = new OutputForm(IDE.EVENT_BUS);
-         IDE.getInstance().openView(outputForm);
-      }
-      else
-      {
-         outputForm.setViewVisible();
-      }
    }
 
    public void onPreviewFile(PreviewFileEvent event)
@@ -184,9 +169,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
          previewForm = null;
       if (event.getView() == propertiesForm)
          propertiesForm = null;
-
-      if (event.getView() == outputForm)
-         outputForm = null;
    }
 
 }

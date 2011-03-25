@@ -18,16 +18,14 @@
  */
 package org.exoplatform.ide.client.operation.output;
 
-import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.LabelBase;
+
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 
 /**
  * Created by The eXo Platform SAS .
@@ -59,7 +57,6 @@ public class OutputRecord extends Label implements MouseOutHandler, MouseOverHan
 
    public OutputRecord(OutputMessage message, boolean odd)
    {
-
       if (message.getType() == OutputMessage.Type.LOG)
       {
          setContents("<font color=\"" + LOG_COLOR + "\">[" + OutputMessage.Type.LOG.name() + "] "

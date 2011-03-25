@@ -103,7 +103,6 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
          {
             outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
          }
-         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
       }
       else
       {

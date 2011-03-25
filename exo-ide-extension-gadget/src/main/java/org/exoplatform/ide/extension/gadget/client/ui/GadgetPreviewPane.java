@@ -18,18 +18,18 @@
  */
 package org.exoplatform.ide.extension.gadget.client.ui;
 
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.ui.PreviewFrame;
-import org.exoplatform.ide.client.framework.ui.ViewType;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window.Location;
+
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.ui.PreviewFrame;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 
 /**
  * Created by The eXo Platform SAS.

@@ -18,17 +18,22 @@
  */
 package org.exoplatform.ide.client.operation.output;
 
+import com.google.gwt.user.client.DOM;
+
+import com.google.gwt.user.client.ui.ScrollPanel;
+
+import com.google.gwt.user.client.ui.FlowPanel;
+
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -47,13 +52,11 @@ public class OutputForm extends ViewImpl implements OutputPresenter.Display
 
    private final static String ID = "ideOutputForm";
 
-   private OutputPresenter presenter;
-
-   private VerticalPanel outputLayout;
+   private FlowPanel outputLayout;
 
    private Image clearOutputButton;
 
-   public OutputForm(HandlerManager eventBus)
+   public OutputForm()
    {
       super(OUTPUT_VIEW_ID, ViewType.OPERATION, "Output");
       setIcon(new Image(IDEImageBundle.INSTANCE.output()));
@@ -62,13 +65,15 @@ public class OutputForm extends ViewImpl implements OutputPresenter.Display
 
       //      setOverflow(Overflow.HIDDEN);
 
-      outputLayout = new VerticalPanel();
-      outputLayout.setWidth("100%");
-      outputLayout.setHeight("100%");
+      outputLayout = new FlowPanel();
+      ScrollPanel scrollWraper = new ScrollPanel(outputLayout);
+      scrollWraper.setWidth("100%");
+      scrollWraper.setHeight("100%");
 //      outputLayout.setOverflow(Overflow.SCROLL);
 //      outputLayout.setCanFocus(Boolean.TRUE);
       outputLayout.getElement().setId(ID);
-      add(outputLayout);
+      
+      add(scrollWraper);
 
       clearOutputButton = new Image(Images.OutputPanel.BUTTON_CLEAR);
       clearOutputButton.setWidth(20 + "px");
@@ -77,8 +82,6 @@ public class OutputForm extends ViewImpl implements OutputPresenter.Display
       //clearOutputButton1.disable();
 //      addTabButton(clearOutputButton);
 
-      presenter = new OutputPresenter(eventBus);
-      presenter.bindDisplay(this);
    }
 
    public void clearOutput()
@@ -91,6 +94,7 @@ public class OutputForm extends ViewImpl implements OutputPresenter.Display
    public void outMessage(OutputMessage message)
    {
       OutputRecord record = new OutputRecord(message, odd);
+      DOM.setStyleAttribute(record.getElement(), "marginTop", "3px");
       odd = !odd;
       outputLayout.add(record);
       scrollToBottomTimer.schedule(100);
@@ -102,7 +106,7 @@ public class OutputForm extends ViewImpl implements OutputPresenter.Display
       @Override
       public void run()
       {
-         outputLayout.getElement().scrollIntoView();
+//         outputLayout.getElement().scrollIntoView();
       }
 
    };

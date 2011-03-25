@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.D
 import org.exoplatform.ide.client.module.development.control.ShowOutlineControl;
 import org.exoplatform.ide.client.module.development.control.ShowPreviewCommand;
 import org.exoplatform.ide.client.operation.OperationPresenter;
+import org.exoplatform.ide.client.operation.output.OutputPresenter;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -46,6 +47,8 @@ public class DevelopmentModule
       new DocumentationPresenter(eventBus);
       
       new OperationPresenter(eventBus);
+      
+      new OutputPresenter(eventBus);
    }
 
 }

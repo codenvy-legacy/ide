@@ -18,12 +18,19 @@
  */
 package org.exoplatform.ide.client.operation.output;
 
+import com.google.gwt.core.client.GWT;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -38,7 +45,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @version @version $Id: $
  */
 
-public class OutputPresenter implements OutputHandler
+public class OutputPresenter implements OutputHandler, ViewClosedHandler
 {
 
    public interface Display
@@ -63,6 +70,8 @@ public class OutputPresenter implements OutputHandler
    public OutputPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
+      outputHandler = eventBus.addHandler(OutputEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void destroy()
@@ -70,12 +79,8 @@ public class OutputPresenter implements OutputHandler
       outputHandler.removeHandler();
    }
 
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      display = d;
-
-      outputHandler = eventBus.addHandler(OutputEvent.TYPE, this);
-
       display.getClearOutputButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -88,6 +93,20 @@ public class OutputPresenter implements OutputHandler
 
    public void onOutput(OutputEvent event)
    {
+      System.out.println("OutputPresenter.onOutput()" + event.getMessage());
+      try
+      {
+      eventBus.fireEvent(new RestorePerspectiveEvent());
+      if (display == null)
+      {
+         display = GWT.create(OutputForm.class);
+         bindDisplay();
+         IDE.getInstance().openView((ViewEx)display);
+      }
+      else
+      {
+         ((ViewEx)display).setViewVisible();
+      }
       OutputMessage message = new OutputMessage(event.getMessage(), event.getOutputType());
       if (message.getType() == OutputMessage.Type.LOG)
       {
@@ -95,6 +114,22 @@ public class OutputPresenter implements OutputHandler
       }
       messages.add(message);
       display.outMessage(message);
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if(event.getView() == display)
+      {
+         display = null;
+      }
    }
 
 }
