@@ -19,8 +19,9 @@
 package org.exoplatform.ide.extension.gadget.client.ui;
 
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.ui.LockableView;
 import org.exoplatform.ide.client.framework.ui.PreviewFrame;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 
 import com.google.gwt.dom.client.Element;
@@ -36,7 +37,7 @@ import com.google.gwt.user.client.Window.Location;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class GadgetPreviewPane extends LockableView
+public class GadgetPreviewPane extends ViewImpl
 {
 
    /**
@@ -59,43 +60,23 @@ public class GadgetPreviewPane extends LockableView
     * @param eventBus
     * @param gadgetMetadata
     */
-   public GadgetPreviewPane(HandlerManager eventBus, IDEConfiguration configuration, GadgetMetadata gadgetMetadata)
+   public GadgetPreviewPane(IDEConfiguration configuration, GadgetMetadata gadgetMetadata)
    {
-      super(ID, eventBus, true);
+      super(ID, ViewType.OPERATION, TITLE);
       this.configuration = configuration;
       metadata = gadgetMetadata;
    }
 
-   @Override
-   public String getTitle()
-   {
-      return TITLE;
-   }
-
-   @Override
-   public void onCloseTab()
-   {
-      destroy();
-      super.onCloseTab();
-   }
-
-   @Override
-   public void onOpenTab()
-   {
-      super.onOpenTab();
-      showGadget();
-   }
-
    private native String getST()/*-{
-      return encodeURIComponent(gadgets.util.getUrlParameters().st);
+		return encodeURIComponent(gadgets.util.getUrlParameters().st);
    }-*/;
 
    private native String getGadgetParent()/*-{
-      return encodeURIComponent(gadgets.util.getUrlParameters().parent);
+		return encodeURIComponent(gadgets.util.getUrlParameters().parent);
    }-*/;
 
    private native boolean isGadget()/*-{
-      return (typeof(gadgets) !== "undefined" &&  typeof(gadgets) !== "null");
+		return (typeof (gadgets) !== "undefined" && typeof (gadgets) !== "null");
    }-*/;
 
    /**
@@ -135,20 +116,27 @@ public class GadgetPreviewPane extends LockableView
          }
       });
 
-      addMember(frame);
+      add(frame);
    }
 
    private native void setHandler(Element e)/*-{
-      var type = "mousedown";
-      var instance = this;
-      if(typeof e.contentDocument != "undefined")
-      {
-      e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activateView()();},false);
-      }
-      else if (typeof e.contentWindow != "undefined")
-      {
-      e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activateView()();});
-      }
+		var type = "mousedown";
+		var instance = this;
+		if (typeof e.contentDocument != "undefined") {
+			e.contentDocument
+					.addEventListener(
+							type,
+							function() {
+								instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activate()();
+							}, false);
+		} else if (typeof e.contentWindow != "undefined") {
+			e.contentWindow.document
+					.attachEvent(
+							"on" + type,
+							function() {
+								instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activate()();
+							});
+		}
    }-*/;
 
    public String getId()

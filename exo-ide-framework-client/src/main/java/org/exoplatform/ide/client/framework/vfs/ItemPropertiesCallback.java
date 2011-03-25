@@ -36,6 +36,7 @@ public abstract class ItemPropertiesCallback extends AsyncRequestCallback<Item>
    @Override
    protected void onFailure(Throwable exception)
    {
+      exception.printStackTrace();
       fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
    }
 

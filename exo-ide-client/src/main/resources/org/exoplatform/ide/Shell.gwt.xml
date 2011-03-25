@@ -31,11 +31,6 @@
    <inherits name='com.google.gwt.xml.XML' />
    <inherits name="com.google.gwt.i18n.I18N" />
 
-
-   <!--  Inherit the SmartGWT Toolkit library configuration. -->
-   <inherits name="com.smartgwt.SmartGwt" />
-   <inherits name='com.smartgwt.tools.SmartGwtTools' />
-
    
    <!-- load GWT Commons Libraries -->
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />

@@ -31,7 +31,6 @@ import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEv
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.model.ApplicationContext;
@@ -39,8 +38,6 @@ import org.exoplatform.ide.client.module.development.DevelopmentModule;
 import org.exoplatform.ide.client.module.edit.TextEditModule;
 import org.exoplatform.ide.client.module.preferences.PreferencesModule;
 import org.exoplatform.ide.client.navigation.NavigationModule;
-import org.exoplatform.ide.client.test.ViewActionsLogger;
-import org.exoplatform.ide.client.test.ViewManagerPresenter;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 /**
@@ -113,15 +110,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public void addControl(Control<?> control, DockTarget dockTarget, boolean rightDocking)
    {
       controlsRegistration.addControl(control, dockTarget, rightDocking);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.module.IDE#openView(org.exoplatform.ide.client.framework.ui.View)
-    */
-   @Override
-   public void openView(View view)
-   {
-      context.getCurrentPerspective().openView(view);
    }
 
    /**

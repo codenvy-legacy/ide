@@ -18,18 +18,17 @@
  */
 package org.exoplatform.ide.client.operation.output;
 
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.layout.VLayout;
-
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.ui.LockableView;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,7 +37,7 @@ import org.exoplatform.ide.client.framework.ui.LockableView;
  * @version @version $Id: $
  */
 
-public class OutputForm extends LockableView implements OutputPresenter.Display
+public class OutputForm extends ViewImpl implements OutputPresenter.Display
 {
 
    /**
@@ -46,50 +45,45 @@ public class OutputForm extends LockableView implements OutputPresenter.Display
     */
    private static final String OUTPUT_VIEW_ID = "ideOutputView";
 
-   private final static String ID = "ideOutputForm"; 
-   
+   private final static String ID = "ideOutputForm";
+
    private OutputPresenter presenter;
 
-   private VLayout outputLayout;
+   private VerticalPanel outputLayout;
 
    private Image clearOutputButton;
 
    public OutputForm(HandlerManager eventBus)
    {
-      super(OUTPUT_VIEW_ID,eventBus, true);
-      
-//      setVertical(Boolean.TRUE);
-      
-      
-      setOverflow(Overflow.HIDDEN);
+      super(OUTPUT_VIEW_ID, ViewType.OPERATION, "Output");
+      setIcon(new Image(IDEImageBundle.INSTANCE.output()));
 
-      outputLayout = new VLayout();
-      outputLayout.setWidth100();
-      outputLayout.setHeight100();
-      outputLayout.setOverflow(Overflow.SCROLL);
-      outputLayout.setCanFocus(Boolean.TRUE);
-      outputLayout.setID(ID);
-      addMember(outputLayout);
+      //      setVertical(Boolean.TRUE);
+
+      //      setOverflow(Overflow.HIDDEN);
+
+      outputLayout = new VerticalPanel();
+      outputLayout.setWidth("100%");
+      outputLayout.setHeight("100%");
+//      outputLayout.setOverflow(Overflow.SCROLL);
+//      outputLayout.setCanFocus(Boolean.TRUE);
+      outputLayout.getElement().setId(ID);
+      add(outputLayout);
 
       clearOutputButton = new Image(Images.OutputPanel.BUTTON_CLEAR);
       clearOutputButton.setWidth(20 + "px");
       clearOutputButton.setHeight(18 + "px");
       clearOutputButton.setTitle("Clear output");
       //clearOutputButton1.disable();
-      addTabButton(clearOutputButton);
-      
-      image = new Image(IDEImageBundle.INSTANCE.output());
-      
+//      addTabButton(clearOutputButton);
+
       presenter = new OutputPresenter(eventBus);
       presenter.bindDisplay(this);
    }
 
    public void clearOutput()
    {
-      for (Canvas canvas : outputLayout.getChildren())
-      {
-         outputLayout.removeChild(canvas);
-      }
+      outputLayout.clear();
    }
 
    private boolean odd = true;
@@ -98,7 +92,7 @@ public class OutputForm extends LockableView implements OutputPresenter.Display
    {
       OutputRecord record = new OutputRecord(message, odd);
       odd = !odd;
-      outputLayout.addMember(record);
+      outputLayout.add(record);
       scrollToBottomTimer.schedule(100);
    }
 
@@ -108,35 +102,14 @@ public class OutputForm extends LockableView implements OutputPresenter.Display
       @Override
       public void run()
       {
-         outputLayout.scrollToBottom();
+         outputLayout.getElement().scrollIntoView();
       }
 
    };
 
-   private Image image;
-
-   @Override
-   public String getTitle()
-   {
-      return "Output";
-   }
-
-   /**
-    * @return the image
-    */
-   public Image getImage()
-   {
-      return image;
-   }
-
    public HasClickHandlers getClearOutputButton()
    {
       return clearOutputButton;
-   }
-
-   public String getId()
-   {
-      return "Output";
    }
 
 }

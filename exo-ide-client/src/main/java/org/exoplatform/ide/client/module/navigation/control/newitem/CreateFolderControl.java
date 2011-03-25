@@ -20,16 +20,14 @@ package org.exoplatform.ide.client.module.navigation.control.newitem;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.navigation.WorkspacePresenter;
 import org.exoplatform.ide.client.navigation.event.CreateFolderEvent;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
-import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -41,7 +39,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 @RolesAllowed({"administrators", "developers"})
 public class CreateFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   PanelSelectedHandler, PanelDeselectedHandler
+   ViewVisibilityChangedHandler
 {
 
    private boolean folderItemSelected = true;
@@ -65,9 +63,8 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
     */
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(PanelSelectedEvent.TYPE, this);
+      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
 
    private void updateEnabling()
@@ -101,24 +98,18 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
 
    }
 
-   public void onPanelSelected(PanelSelectedEvent event)
-   {
-      if (BrowserPanel.ID.equals(event.getPanelId()))
-      {
-         browserPanelSelected = true;
-         updateEnabling();
-      }
-   }
-
    /**
-    * @see org.exoplatform.ide.client.panel.event.PanelDeselectedHandler#onPanelDeselected(org.exoplatform.ide.client.panel.event.PanelDeselectedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
     */
-   public void onPanelDeselected(PanelDeselectedEvent event)
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId()))
+      if (WorkspacePresenter.Display.ID.equals(event.getView().getId()))
       {
-         browserPanelSelected = false;
+
+         browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();
       }
+
    }
 }

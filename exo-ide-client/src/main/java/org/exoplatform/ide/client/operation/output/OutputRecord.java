@@ -20,12 +20,14 @@ package org.exoplatform.ide.client.operation.output;
 
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 
-import com.smartgwt.client.types.Cursor;
-import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.events.MouseOutEvent;
-import com.smartgwt.client.widgets.events.MouseOutHandler;
-import com.smartgwt.client.widgets.events.MouseOverEvent;
-import com.smartgwt.client.widgets.events.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LabelBase;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,7 +36,7 @@ import com.smartgwt.client.widgets.events.MouseOverHandler;
  * @version $
  */
 
-public class OutputRecord extends Label implements MouseOverHandler, MouseOutHandler
+public class OutputRecord extends Label implements MouseOutHandler, MouseOverHandler
 {
 
    private static final String LOG_COLOR = "#000077";
@@ -57,6 +59,7 @@ public class OutputRecord extends Label implements MouseOverHandler, MouseOutHan
 
    public OutputRecord(OutputMessage message, boolean odd)
    {
+
       if (message.getType() == OutputMessage.Type.LOG)
       {
          setContents("<font color=\"" + LOG_COLOR + "\">[" + OutputMessage.Type.LOG.name() + "] "
@@ -97,24 +100,51 @@ public class OutputRecord extends Label implements MouseOverHandler, MouseOutHan
 
       setBackgroundColor(backgroundColor);
 
-      setWidth100();
-      setAutoHeight();
-      setPadding(4);
-      setCanSelectText(true);
-      setCursor(Cursor.TEXT);
-
+      setWidth("100%");
+//      setAutoHeight();
+//      setPadding(4);
+//      setCanSelectText(true);
+//      setCursor(Cursor.TEXT);
+ 
       addMouseOverHandler(this);
       addMouseOutHandler(this);
+
    }
 
+   /**
+    * @param string
+    */
+   private void setContents(String string)
+   {
+      getElement().setInnerHTML(string);
+   }
+
+   /**
+    * @param backgroundColor
+    */
+   private void setBackgroundColor(String backgroundColor)
+   {
+      DOM.setStyleAttribute(getElement(), "backroundColor", backgroundColor);
+   }
+
+   /**
+    * @see com.google.gwt.event.dom.client.MouseOverHandler#onMouseOver(com.google.gwt.event.dom.client.MouseOverEvent)
+    */
+   @Override
    public void onMouseOver(MouseOverEvent event)
    {
       setBackgroundColor(OVER_BACKGROUND);
+
    }
 
+   /**
+    * @see com.google.gwt.event.dom.client.MouseOutHandler#onMouseOut(com.google.gwt.event.dom.client.MouseOutEvent)
+    */
+   @Override
    public void onMouseOut(MouseOutEvent event)
    {
       setBackgroundColor(backgroundColor);
+
    }
 
 }

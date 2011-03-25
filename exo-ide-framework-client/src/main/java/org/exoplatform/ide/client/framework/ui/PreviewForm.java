@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
 
 /**
@@ -32,7 +33,7 @@ import com.google.gwt.user.client.DOM;
  * @version @version $Id: $
  */
 
-public class PreviewForm extends LockableView
+public class PreviewForm extends ViewImpl
 {
 
    public static final String ID = "Preview";
@@ -42,10 +43,10 @@ public class PreviewForm extends LockableView
    /**
     * @param eventBus
     */
-   public PreviewForm(HandlerManager eventBus)
+   public PreviewForm()
    {
-      super(ID, eventBus, true);
-      setHeight100();
+      super(ID, ViewType.OPERATION, ID);
+//      setHeight100();
    }
 
    /**
@@ -87,7 +88,7 @@ public class PreviewForm extends LockableView
             setHandler(IFrameElement.as(frame.getElement()));
          }
       });
-      addMember(frame);
+      add(frame);
    }
 
    private native void setHandler(Element e)/*-{
@@ -95,25 +96,13 @@ public class PreviewForm extends LockableView
       var instance = this;
       if(typeof e.contentDocument != "undefined")
       {
-              e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.framework.ui.PreviewForm::activateView()();},false);
+              e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.framework.ui.PreviewForm::activate()();},false);
       }
       else
       {
-         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.framework.ui.PreviewForm::activateView()();});
+         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.framework.ui.PreviewForm::activate()();});
       }
    }-*/;
-
-   @Override
-   public void onOpenTab()
-   {
-      super.onOpenTab();
-   }
-
-   @Override
-   public void onCloseTab()
-   {
-      super.onCloseTab();
-   }
 
    public String getId()
    {

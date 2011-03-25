@@ -51,8 +51,8 @@ import com.google.gwt.user.client.Timer;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class SearchResultsPresenter implements SearchResultReceivedHandler, ViewVisibilityChangedHandler,
-   ViewClosedHandler
+public class SearchResultsPresenter implements ViewVisibilityChangedHandler,
+ViewClosedHandler, SearchResultReceivedHandler
 {
 
    public interface Display extends ViewDisplay
@@ -210,6 +210,11 @@ public class SearchResultsPresenter implements SearchResultReceivedHandler, View
 
    };
 
+
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
+    */
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
@@ -230,7 +235,7 @@ public class SearchResultsPresenter implements SearchResultReceivedHandler, View
          }
       }
    }
-
+   
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {

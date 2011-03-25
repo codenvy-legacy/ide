@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.module.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
@@ -28,10 +27,9 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
-import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.navigation.WorkspacePresenter;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -43,7 +41,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 @RolesAllowed({"administrators", "developers"})
 public class RefreshBrowserControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   PanelSelectedHandler, EntryPointChangedHandler, PanelDeselectedHandler
+   ViewVisibilityChangedHandler, EntryPointChangedHandler
 {
 
    private static final String ID = "File/Refresh Selected Folder";
@@ -71,9 +69,8 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(PanelSelectedEvent.TYPE, this);
+      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
-      eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
 
    private void updateEnabling()
@@ -104,14 +101,6 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
       }
    }
 
-   public void onPanelSelected(PanelSelectedEvent event)
-   {
-      if (BrowserPanel.ID.equals(event.getPanelId()))
-      {
-         browserPanelSelected = true;
-         updateEnabling();
-      }
-   }
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
@@ -125,14 +114,17 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
       }
    }
 
+
    /**
-    * @see org.exoplatform.ide.client.panel.event.PanelDeselectedHandler#onPanelDeselected(org.exoplatform.ide.client.panel.event.PanelDeselectedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
     */
-   public void onPanelDeselected(PanelDeselectedEvent event)
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId()))
+      if (WorkspacePresenter.Display.ID.equals(event.getView().getId()))
       {
-         browserPanelSelected = false;
+
+         browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();
       }
    }

@@ -70,6 +70,7 @@ public abstract class MoveItemCallback extends AsyncRequestCallback<MoveItemData
    @Override
    protected void onFailure(Throwable exception)
    {
+      exception.printStackTrace();
       fireEvent(new ExceptionThrownEvent(
          "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
    }

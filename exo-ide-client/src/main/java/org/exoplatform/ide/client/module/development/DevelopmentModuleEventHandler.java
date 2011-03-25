@@ -28,7 +28,6 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
-import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
@@ -41,7 +40,6 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -64,7 +62,7 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
 
    private boolean isClosedByUser = true;
 
-   private View view;
+   private ViewEx view;
 
    private static boolean isNeedRunTimer = true;
 
@@ -101,16 +99,15 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       }
    }
 
-   Timer t = new Timer()
-   {
-
-      @Override
-      public void run()
-      {
-         view.blur();
-         view.focus();
-      }
-   };
+//   Timer t = new Timer()
+//   {
+//
+//      @Override
+//      public void run()
+//      {
+//         view.;
+//      }
+//   };
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)

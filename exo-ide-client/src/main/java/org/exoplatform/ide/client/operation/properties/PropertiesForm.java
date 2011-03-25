@@ -18,29 +18,24 @@
  */
 package org.exoplatform.ide.client.operation.properties;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
+import org.exoplatform.gwtframework.ui.client.component.Align;
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.PropertyTitle;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS .
@@ -49,26 +44,25 @@ import java.util.Comparator;
  * @version @version $Id: $
  */
 
-public class PropertiesForm extends View implements PropertiesPresenter.Display
+public class PropertiesForm extends ViewImpl implements PropertiesPresenter.Display
 {
    public final static String ID = "idePropertiesView";
-   
+
    public final static String FORM_ID = "ideDynamicPropertiesForm";
-   
-   private Canvas content;
+
+   private Widget content;
 
    private PropertiesPresenter presenter;
 
    private Image image;
 
-   public PropertiesForm(HandlerManager eventBus)
+   public PropertiesForm()
    {
-      super(ID, eventBus);
-      setCanFocus(Boolean.TRUE);
+      super(ID, ViewType.OPERATION, "Properties");
       image = new Image(IDEImageBundle.INSTANCE.properties());
-      setWidth100();
-      setHeight100();
-      presenter = new PropertiesPresenter(eventBus);
+      setWidth("100%");
+      setHeight("100%");
+      presenter = new PropertiesPresenter();
       presenter.bindDisplay(this);
 
    }
@@ -79,46 +73,46 @@ public class PropertiesForm extends View implements PropertiesPresenter.Display
 
       if (content != null)
       {
-         if (hasMember(content))
-            removeMember(content);
-         //         content.hide();
-         //         content.removeFromParent();
-         content.destroy();
+//         if (hasMember(content))
+//            removeMember(content);
+//         //         content.hide();
+//         //         content.removeFromParent();
+//         content.destroy();
+         remove(content);
       }
 
       if (file.getProperties().size() == 0)
       {
-         content = new Label("There are no properties for this file.");
-         content.setWidth100();
-         content.setHeight100();
-         content.setAlign(Alignment.CENTER);
+         content = new com.google.gwt.user.client.ui.Label("There are no properties for this file.");
+         content.setWidth("100%");
+         content.setHeight("100$");
+//         content.setAlign(Alignment.CENTER);
       }
       else
       {
          content = getPropertiesForm(file.getProperties());
-         content.setID(FORM_ID);
-         content.setPadding(10);
+//         content.setID(FORM_ID);
+//         content.setPadding(10);
          //         content.setTitleWidth(200);
-         content.setLayoutAlign(VerticalAlignment.TOP);
-         content.setLayoutAlign(Alignment.LEFT);
+//         content.setLayoutAlign(VerticalAlignment.TOP);
+//         content.setLayoutAlign(Alignment.LEFT);
 
       }
-      addMember(content);
-      markForRedraw();
+      add(content);
    }
 
-   public DynamicForm getPropertiesForm(Collection<Property> properties)
+   public VerticalPanel getPropertiesForm(Collection<Property> properties)
    {
-      DynamicForm propertiesForm = new DynamicForm();
-      propertiesForm.setWidth100();
-      propertiesForm.setHeight100();
-      propertiesForm.setCanFocus(true);
+      VerticalPanel propertiesForm = new VerticalPanel();
+      propertiesForm.setWidth("100%");
+      propertiesForm.setHeight("100%");
+      //      propertiesForm.setCanFocus(true);
       if (properties == null)
       {
          return propertiesForm;
       }
 
-      ArrayList<FormItem> formItems = new ArrayList<FormItem>();
+      ArrayList<Widget> formItems = new ArrayList<Widget>();
 
       for (Property property : properties)
       {
@@ -150,8 +144,9 @@ public class PropertiesForm extends View implements PropertiesPresenter.Display
          }
       }
 
-      Collections.sort(formItems, itemsComparator);
-      propertiesForm.setFields(formItems.toArray(new FormItem[formItems.size()]));
+      //      Collections.sort(formItems, itemsComparator);
+      for (Widget w : formItems)
+         propertiesForm.add(w);
 
       return propertiesForm;
    }
@@ -166,27 +161,27 @@ public class PropertiesForm extends View implements PropertiesPresenter.Display
       return booleanItem;
    }
 
-   protected StaticTextItem getStaticTextItem(String name, String value)
+   protected TextField getStaticTextItem(String name, String value)
    {
-      StaticTextItem staticTextItem = new StaticTextItem();
+      TextField staticTextItem = new TextField();
       staticTextItem.setName("idePropertiesText" + name.replaceAll(" ", ""));
-      staticTextItem.setWrapTitle(false);
+      //      staticTextItem.setWrapTitle(false);
       staticTextItem.setTitle("<b>" + name + "</b>");
       staticTextItem.setValue(value);
-      staticTextItem.setTitleAlign(Alignment.RIGHT);
+      staticTextItem.setTitleAlign(Align.RIGHT);
 
-      staticTextItem.setWrap(false);
+      //      staticTextItem.setWrap(false);
 
       return staticTextItem;
    }
 
-   protected static Comparator<FormItem> itemsComparator = new Comparator<FormItem>()
-   {
-      public int compare(FormItem item1, FormItem item2)
-      {
-         return item1.getTitle().compareToIgnoreCase(item2.getTitle());
-      }
-   };
+   //   protected static Comparator<FormItem> itemsComparator = new Comparator<FormItem>()
+   //   {
+   //      public int compare(FormItem item1, FormItem item2)
+   //      {
+   //         return item1.getTitle().compareToIgnoreCase(item2.getTitle());
+   //      }
+   //   };
 
    @Override
    public String getTitle()
@@ -207,11 +202,11 @@ public class PropertiesForm extends View implements PropertiesPresenter.Display
       return image;
    }
 
-   @Override
-   public void destroy()
-   {
-      presenter.destroy();
-      super.destroy();
-   }
+   //   @Override
+   //   public void destroy()
+   //   {
+   //      presenter.destroy();
+   //      super.destroy();
+   //   }
 
 }

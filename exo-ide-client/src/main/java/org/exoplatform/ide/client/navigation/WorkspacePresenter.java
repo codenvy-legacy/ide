@@ -49,8 +49,11 @@ import org.exoplatform.ide.client.framework.ui.event.SelectViewEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -65,8 +68,6 @@ import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.DeleteItemEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointHandler;
 
@@ -94,7 +95,7 @@ import com.google.gwt.user.client.Timer;
  * @version $Id: $
 */
 public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPointHandler, SelectItemHandler,
-   PanelSelectedHandler, EntryPointChangedHandler, ItemUnlockedHandler, ItemLockResultReceivedHandler,
+   ViewVisibilityChangedHandler, EntryPointChangedHandler, ItemUnlockedHandler, ItemLockResultReceivedHandler,
    ApplicationSettingsReceivedHandler, ViewOpenedHandler, ViewClosedHandler
 {
 
@@ -171,7 +172,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
       handlers.addHandler(SwitchEntryPointEvent.TYPE, this);
       handlers.addHandler(SelectItemEvent.TYPE, this);
-      handlers.addHandler(PanelSelectedEvent.TYPE, this);
+      handlers.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
@@ -446,13 +447,6 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       display.selectItem(event.getItemHref());
    }
 
-   public void onPanelSelected(PanelSelectedEvent event)
-   {
-      if (BrowserPanel.ID.equals(event.getPanelId()))
-      {
-         onItemSelected();
-      }
-   }
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
@@ -528,7 +522,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
             eventBus.fireEvent(new EntryPointChangedEvent(result.getHref()));
 
             eventBus.fireEvent(new SelectViewEvent(Display.ID));
-            eventBus.fireEvent(new PanelSelectedEvent(Display.ID));
+            eventBus.fireEvent(new ViewVisibilityChangedEvent((ViewEx)display));
 
             display.getBrowserTree().setValue(result);
             display.selectItem(result.getHref());
@@ -626,6 +620,18 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       if (Display.ID.equals(event.getView().getId()))
       {
          viewOpened = false;
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      if (BrowserPanel.ID.equals(event.getView().getId()) && event.getView().isViewVisible())
+      {
+         onItemSelected();
       }
    }
 

@@ -22,16 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
-import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ide.client.navigation.WorkspacePresenter;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -40,8 +38,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public abstract class MultipleSelectionItemsCommand extends SimpleControl implements IDEControl, PanelSelectedHandler,
-   EntryPointChangedHandler, PanelDeselectedHandler
+public abstract class MultipleSelectionItemsCommand extends SimpleControl implements IDEControl,
+   EntryPointChangedHandler, ViewVisibilityChangedHandler
 {
 
    protected boolean browserSelected = true;
@@ -58,9 +56,8 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
     */
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(PanelSelectedEvent.TYPE, this);
+      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
-      eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
    }
    
    public boolean isItemsInSameFolder(List<Item> items)
@@ -100,14 +97,6 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
 
    protected abstract void updateEnabling();
 
-   public void onPanelSelected(PanelSelectedEvent event)
-   {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
-         browserSelected = true;
-         updateEnabling();
-      }
-      
-   }
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
@@ -123,14 +112,18 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
 
    }
 
+
    /**
-    * @see org.exoplatform.ide.client.panel.event.PanelDeselectedHandler#onPanelDeselected(org.exoplatform.ide.client.panel.event.PanelDeselectedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
     */
-   public void onPanelDeselected(PanelDeselectedEvent event)
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
-         browserSelected = false;
+      if (WorkspacePresenter.Display.ID.equals(event.getView().getId()))
+      {
+
+         browserSelected = event.getView().isViewVisible();
          updateEnabling();
       }
-    }
+   }
 }

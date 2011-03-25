@@ -19,15 +19,13 @@
 package org.exoplatform.ide.client.module.navigation.control.newitem;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
-import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.navigation.WorkspacePresenter;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -38,7 +36,8 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class NewFileCommand extends SimpleControl implements IDEControl, PanelSelectedHandler, EntryPointChangedHandler, PanelDeselectedHandler
+public class NewFileCommand extends SimpleControl implements IDEControl, ViewVisibilityChangedHandler,
+   EntryPointChangedHandler
 {
 
    protected boolean browserSelected = true;
@@ -55,8 +54,8 @@ public class NewFileCommand extends SimpleControl implements IDEControl, PanelSe
       setEnabled(true);
    }
 
-   public NewFileCommand(String id, String title, String prompt, ImageResource normalIcon,
-      ImageResource disabledIcon, GwtEvent<?> event)
+   public NewFileCommand(String id, String title, String prompt, ImageResource normalIcon, ImageResource disabledIcon,
+      GwtEvent<?> event)
    {
       super(id);
       setTitle(title);
@@ -65,16 +64,15 @@ public class NewFileCommand extends SimpleControl implements IDEControl, PanelSe
       setEvent(event);
       setEnabled(true);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(PanelSelectedEvent.TYPE, this);
+      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
-      eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
-      
+
       updateEnabling();
    }
 
@@ -86,9 +84,9 @@ public class NewFileCommand extends SimpleControl implements IDEControl, PanelSe
          setEnabled(false);
          return;
       }
-      
+
       setVisible(true);
-      
+
       if (browserSelected)
       {
          setEnabled(true);
@@ -99,29 +97,22 @@ public class NewFileCommand extends SimpleControl implements IDEControl, PanelSe
       }
    }
 
-   public void onPanelSelected(PanelSelectedEvent event)
-   {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
-         browserSelected = true;
-         updateEnabling();
-      }
-   }
-   
-   
-
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       entryPoint = event.getEntryPoint();
       updateEnabling();
    }
-
+   
    /**
-    * @see org.exoplatform.ide.client.panel.event.PanelDeselectedHandler#onPanelDeselected(org.exoplatform.ide.client.panel.event.PanelDeselectedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
     */
-   public void onPanelDeselected(PanelDeselectedEvent event)
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getPanelId())) {
-         browserSelected = false;
+      if (WorkspacePresenter.Display.ID.equals(event.getView().getId()))
+      {
+
+         browserSelected = event.getView().isViewVisible();
          updateEnabling();
       }
    }

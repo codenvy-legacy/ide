@@ -142,7 +142,6 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    {
       DocumentationForm view = new DocumentationForm(eventBus);
       display = view;
-      view.onOpenTab();
       display.setDocumentationURL(docs.get(activeFile.getContentType()));
       IDE.getInstance().openView(view);
    }

@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.Image;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -34,7 +30,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetHadndler;
@@ -47,6 +42,10 @@ import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
 import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
 import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
 import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -214,9 +213,8 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
          @Override
          protected void onSuccess(GadgetMetadata result)
          {
-            GadgetPreviewPane gadgetPreviewPane = new GadgetPreviewPane(eventBus, applicationConfiguration, result);
-            gadgetPreviewPane.setType(ViewType.PREVIEW);
-            gadgetPreviewPane.setImage(new Image(GadgetClientBundle.INSTANCE.preview()));
+            GadgetPreviewPane gadgetPreviewPane = new GadgetPreviewPane(applicationConfiguration, result);
+            gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
             IDE.getInstance().openView(gadgetPreviewPane);
             //            eventBus.fireEvent(new OpenViewEvent(gadgetPreviewPane));
             previewOpened = true;

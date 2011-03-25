@@ -279,9 +279,8 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    public void onShowGroovyTemplatePreview(ShowGroovyTemplatePreviewEvent event)
    {
 
-      PreviewForm form = new PreviewForm(eventBus);
-      form.setType(ViewType.PREVIEW);
-      form.setImage(new Image(GroovyClientBundle.INSTANCE.preview()));
+      PreviewForm form = new PreviewForm();
+      form.setIcon(new Image(GroovyClientBundle.INSTANCE.preview()));
       form.showPreview(configuration.getContext() + "/ide/gtmpl/render?url=" + activeFile.getHref());
 
       IDE.getInstance().openView(form);

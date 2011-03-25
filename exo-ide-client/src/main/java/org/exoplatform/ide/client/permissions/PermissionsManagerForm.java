@@ -18,11 +18,7 @@
  */
 package org.exoplatform.ide.client.permissions;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -33,7 +29,11 @@ import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
 
-import java.util.Map;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  *This class represent form for managing permissions.<br>
@@ -73,7 +73,7 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
 
    private IButton addEntityButton;
 
-   private VLayout vLayout;
+   private VerticalPanel vLayout;
 
    private TextField itemNameField;
 
@@ -87,9 +87,9 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
 
       setTitle("Permissions");
 
-      vLayout = new VLayout();
-      vLayout.setHeight100();
-      vLayout.setMargin(15);
+      vLayout = new VerticalPanel();
+      vLayout.setHeight("100%");
+      vLayout.setSpacing(5);
       //vLayout.setT(Align.CENTER);
 
       setWidget(vLayout);
@@ -137,8 +137,8 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       formOwner.add(itemOwnerField);
       formOwner.setHeight(28);
 
-      vLayout.addMember(formName);
-      vLayout.addMember(formOwner);
+      vLayout.add(formName);
+      vLayout.add(formOwner);
    }
 
    /**
@@ -172,19 +172,19 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       removeButton.setHeight(22);
       removeButton.setIcon(Images.Buttons.DELETE);
 
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setHeight(22);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setWidth("100%");
+      buttonsLayout.setHeight("22px");
    //   buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setMembersMargin(5);
+      buttonsLayout.setSpacing(5);
 
-      buttonsLayout.addMember(addEntityButton);
-      buttonsLayout.addMember(removeButton);
+      buttonsLayout.add(addEntityButton);
+      buttonsLayout.add(removeButton);
 
       form.add(permissionsListGrid);
 
-      vLayout.addMember(form);
-      vLayout.addMember(buttonsLayout);
+      vLayout.add(form);
+      vLayout.add(buttonsLayout);
    }
 
    /**
@@ -192,11 +192,11 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
     */
    private void addButtonForm()
    {
-      HLayout buttonsLayout = new HLayout();
-      buttonsLayout.setAutoWidth();
-      buttonsLayout.setHeight(22);
+      HorizontalPanel buttonsLayout = new HorizontalPanel();
+      buttonsLayout.setWidth("100$");
+      buttonsLayout.setHeight("22px");
     //  buttonsLayout.setLayoutAlign(Alignment.CENTER);
-      buttonsLayout.setMembersMargin(5);
+      buttonsLayout.setSpacing(5);
 
       saveACLButton = new IButton("Save");
       saveACLButton.setWidth(90);
@@ -210,10 +210,10 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       cancelButton.setIcon(Images.Buttons.NO);
       cancelButton.setID(ID_CANCEL);
       
-      buttonsLayout.addMember(saveACLButton);
-      buttonsLayout.addMember(cancelButton);
+      buttonsLayout.add(saveACLButton);
+      buttonsLayout.add(cancelButton);
       
-      vLayout.addMember(buttonsLayout);
+      vLayout.add(buttonsLayout);
    }
 
    @Override

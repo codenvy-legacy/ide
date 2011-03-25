@@ -18,17 +18,16 @@
  */
 package org.exoplatform.ide.client.versioning;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.ImageUtil;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
 import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.panel.event.ChangePanelTitleEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * 
@@ -50,9 +49,12 @@ public class VersionContentPresenter implements ShowVersionContentHandler
 
       void setVersionContent(String content);
 
-   }
+      /**
+       * @param title
+       */
+      void setTitle(String title);
 
-   private HandlerManager eventBus;
+   }
 
    private Display display;
 
@@ -62,7 +64,6 @@ public class VersionContentPresenter implements ShowVersionContentHandler
 
    public VersionContentPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
       handlers.addHandler(ShowVersionContentEvent.TYPE, this);
    }
@@ -83,7 +84,8 @@ public class VersionContentPresenter implements ShowVersionContentHandler
    public void onShowVersionContent(ShowVersionContentEvent event)
    {
       version = event.getVersion();
-      eventBus.fireEvent(new ChangePanelTitleEvent(VersionContentForm.ID, getTitle()));
+      display.setTitle(getTitle());
+//      eventBus.fireEvent(new ChangePanelTitleEvent(VersionContentForm.ID, getTitle()));
       display.setVersionContent(event.getVersion().getContent());
    }
 

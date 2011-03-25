@@ -33,11 +33,7 @@
    <inherits name="com.google.gwt.i18n.I18N" />
 
 
-   <!--  Inherit the SmartGWT Toolkit library configuration. -->
    <script src="applicationInitializer.js" />
-   <script src="init_smartgwt_for_gadget.js" />
-   <!-- script src="init_preload_gadget.js" /-->
-   <inherits name="com.smartgwt.SmartGwtNoScript" />
 
    <!-- load GWT Commons Libraries -->
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />

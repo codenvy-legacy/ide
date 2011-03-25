@@ -238,11 +238,11 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
       String editorId = event.getEditorId();
-      String path = editorsViews.get(editorId).getFileHref();
-      if (path == null)
+      if (editorsViews.get(editorId) == null)
       {
          return;
       }
+      String path = editorsViews.get(editorId).getFileHref();
 
       if (ignoreContentChangedList.contains(path))
       {
@@ -502,7 +502,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          Editor editor = editors.get(file.getHref());
          EditorView view = editorsViews.get(editor.getEditorId());
          view.setContent(file);
-         view.setVisible(true);
+         view.setViewVisible();
          //      display.setTabContent(file.getHref(), file.getContent());
          return;
       }
@@ -637,8 +637,13 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       
       editors.put(newFile.getHref(), editor);
       editorsViews.put(editor.getEditorId(), editorView);
+      try
+      {
       editorView.setIcon(new Image(newFile.getIcon()));
-      
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+      }
       boolean contentChanged = newFile.isContentChanged();
       editorView.setContent(newFile);
       

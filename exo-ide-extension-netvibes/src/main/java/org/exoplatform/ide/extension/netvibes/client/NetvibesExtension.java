@@ -29,7 +29,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
-import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.netvibes.client.controls.DeployUwaWidgetControl;
 import org.exoplatform.ide.extension.netvibes.client.controls.ShowNetvibesPreviewControl;
@@ -110,9 +109,8 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
       String href = activeFile.getHref();
       href = href.replace("jcr", "ide/netvibes");
       
-      PreviewForm form = new PreviewForm(eventBus);
-      form.setType(ViewType.PREVIEW);
-      form.setImage(new Image(NetvibesClientBundle.INSTANCE.preview()));
+      PreviewForm form = new PreviewForm();
+      form.setIcon(new Image(NetvibesClientBundle.INSTANCE.preview()));
       form.showPreview(href);
       
 //      eventBus.fireEvent(new OpenViewEvent(form));

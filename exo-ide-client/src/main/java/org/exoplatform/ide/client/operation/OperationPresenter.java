@@ -21,15 +21,17 @@ package org.exoplatform.ide.client.operation;
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
-import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
+import org.exoplatform.ide.client.framework.ui.PreviewForm;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
+import org.exoplatform.ide.client.operation.output.OutputForm;
+import org.exoplatform.ide.client.operation.properties.PropertiesForm;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesEvent;
 import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesHandler;
 
@@ -46,34 +48,26 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
    PreviewFileHandler
 {
 
-   public interface Display
-   {
-      
-      void showOutput();
-
-      void showProperties(File file);
-
-      void showPreview(String path);
-
-      void closePreviewTab();
-
-      void closePropertiesTab();
-
-      void changeActiveFile(File file);
-   }
-
-   private Display display;
-
    private HandlerManager eventBus;
 
    private Handlers handlers;
 
    private File activeFile;
 
+   private PreviewForm previewForm;
+
+   private PropertiesForm propertiesForm;
+
+   private OutputForm outputForm;
+
    public OperationPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlers = new Handlers(eventBus);
+      handlers.addHandler(ShowItemPropertiesEvent.TYPE, this);
+      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      handlers.addHandler(OutputEvent.TYPE, this);
+      handlers.addHandler(PreviewFileEvent.TYPE, this);
    }
 
    public void destroy()
@@ -81,61 +75,86 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       handlers.removeHandlers();
    }
 
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      display = d;
 
-      handlers.addHandler(ShowItemPropertiesEvent.TYPE, this);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      handlers.addHandler(OutputEvent.TYPE, this);
-      handlers.addHandler(PreviewFileEvent.TYPE, this);
-//      handlers.addHandler(GadgetMetadaRecievedEvent.TYPE, this);
-//      handlers.addHandler(SecurityTokenRecievedEvent.TYPE, this);
+      //      handlers.addHandler(GadgetMetadaRecievedEvent.TYPE, this);
+      //      handlers.addHandler(SecurityTokenRecievedEvent.TYPE, this);
 
    }
 
    public void onShowItemProperties(ShowItemPropertiesEvent event)
    {
       eventBus.fireEvent(new RestorePerspectiveEvent());
-      display.showProperties(activeFile);
+      showProperies(activeFile);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
 
-      display.closePreviewTab();
+      if (previewForm != null)
+         IDE.getInstance().closeView(PreviewForm.ID);
 
       if (event.getFile() == null)
       {
-         display.closePropertiesTab();
+         IDE.getInstance().closeView(PropertiesForm.ID);
+         propertiesForm = null;
       }
       else
       {
-         display.changeActiveFile(event.getFile());
+         if (propertiesForm != null)
+            propertiesForm.refreshProperties(event.getFile());
+         else
+         {
+            showProperies(event.getFile());
+         }
       }
+   }
+
+   /**
+    * @param event
+    */
+   private void showProperies(File file)
+   {
+      propertiesForm = new PropertiesForm();
+      propertiesForm.refreshProperties(file);
+      IDE.getInstance().openView(propertiesForm);
    }
 
    public void onOutput(OutputEvent event)
    {
       eventBus.fireEvent(new RestorePerspectiveEvent());
-      display.showOutput();
+      if(outputForm == null)
+      {
+        outputForm = new OutputForm(IDE.EVENT_BUS);
+        IDE.getInstance().openView(outputForm);
+      }
+      else 
+      {
+         outputForm.setViewVisible();
+      }
    }
 
    public void onPreviewFile(PreviewFileEvent event)
    {
-      display.closePreviewTab();
+      if(previewForm != null)
+      {
+         IDE.getInstance().closeView(PreviewForm.ID);
+         previewForm = null;
+      }
 
       if (activeFile.isNewFile())
       {
          Dialogs.getInstance().showInfo("You should save the file!");
          return;
       }
-
+      
+      previewForm = new PreviewForm();
+      previewForm.showPreview(activeFile.getHref());
+      IDE.getInstance().openView(previewForm);
       eventBus.fireEvent(new RestorePerspectiveEvent());
 
-
-         display.showPreview(activeFile.getHref());
       
    }
 

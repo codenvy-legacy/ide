@@ -28,8 +28,6 @@ import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 
 import com.google.gwt.user.client.ui.TreeItem;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.tree.TreeNode;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

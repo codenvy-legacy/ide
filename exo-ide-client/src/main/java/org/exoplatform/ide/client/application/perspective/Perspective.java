@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.application.perspective;
 
-import org.exoplatform.ide.client.framework.ui.View;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.framework.ui.View;
 public interface Perspective
 {
 
-   void openView(View view);
+   void openView(ViewEx view);
 
    void closeView(String viewId);
 
