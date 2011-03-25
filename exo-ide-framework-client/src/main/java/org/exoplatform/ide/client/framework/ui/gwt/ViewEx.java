@@ -56,6 +56,4 @@ public interface ViewEx
    
    void activate();
    
-   void setActive();
-   
 }

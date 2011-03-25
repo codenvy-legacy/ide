@@ -464,7 +464,7 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
    @Override
    public void onSetViewVisible(SetViewVisibleEvent event)
    {
-      tabPanel.selectTab(event.getViewId());      
+      tabPanel.selectTab(event.getViewId());
    }
 
 }

@@ -101,7 +101,7 @@ public class OutlineForm extends ViewImpl implements OutlinePresenter.Display
 
    public void setFocus()
    {
-      getView().setActive();
+      activate();
    }
 
 }

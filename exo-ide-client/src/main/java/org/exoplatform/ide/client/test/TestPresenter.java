@@ -49,7 +49,7 @@ import com.google.gwt.user.client.ui.RootPanel;
  * @version $
  */
 
-public class TestPresenter implements ViewOpenedHandler, ViewClosedHandler, ClosingViewHandler, ExecuteCommandHandler,
+public class TestPresenter implements ViewOpenedHandler, ViewClosedHandler, ClosingViewHandler,
    ViewVisibilityChangedHandler, ViewActivatedHandler
 {
 
@@ -90,8 +90,6 @@ public class TestPresenter implements ViewOpenedHandler, ViewClosedHandler, Clos
 
       eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       eventBus.addHandler(ViewActivatedEvent.TYPE, this);
-
-      eventBus.addHandler(ExecuteCommandEvent.TYPE, this);
 
       HTML test =
          new HTML("<font color=\"blue\" style=\"text-decoration:underline; cursor:pointer;\">Open Test View</font>");
@@ -209,11 +207,6 @@ public class TestPresenter implements ViewOpenedHandler, ViewClosedHandler, Clos
          display.getView().setTitle(title);
       }
 
-   }
-
-   @Override
-   public void onExecuteCommand(ExecuteCommandEvent event)
-   {
    }
 
    @Override

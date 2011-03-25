@@ -18,16 +18,20 @@
  */
 package org.exoplatform.ide.client.test;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.ui.client.button.IconButton;
-import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
-import org.exoplatform.ide.client.test.ui.ViewManagerForm;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -37,43 +41,66 @@ import com.google.gwt.user.client.ui.RootPanel;
  * @version $
  */
 
-public class ViewManagerPresenter
+public class ViewManagerPresenter implements ViewOpenedHandler, ViewClosedHandler
 {
 
-   public interface Display
-   {
-
-   }
-
-   private Map<String, ViewEx> views = new LinkedHashMap<String, ViewEx>();
-
-   private Display display;
+   private Map<String, ViewEx> views = new HashMap<String, ViewEx>();
 
    public ViewManagerPresenter(HandlerManager eventBus)
    {
-      String image = ImageHelper.getImageHTML("debug-icon.png");
-      IconButton button = new IconButton(image, image);
-      DOM.setStyleAttribute(button.getElement(), "zIndex", "100000");
-      RootPanel.get().add(button, 0, 20 + 32);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+
+      Button selectWorkspaceButton = new Button("Select Workspace");
+      DOM.setStyleAttribute(selectWorkspaceButton.getElement(), "zIndex", "100000");
+      Button selectSearchButton = new Button("Select Search");
+      DOM.setStyleAttribute(selectSearchButton.getElement(), "zIndex", "100000");
+
+      RootPanel.get().add(selectWorkspaceButton, 400, 100);
+      RootPanel.get().add(selectSearchButton, 400, 140);
+
+      selectWorkspaceButton.addClickHandler(selectWorkspaceClickHandler);
+      selectSearchButton.addClickHandler(selectSearchClickHandler);
    }
 
-   protected void showOrHideManager()
+   protected ClickHandler selectWorkspaceClickHandler = new ClickHandler()
    {
-      if (display == null)
+      @Override
+      public void onClick(ClickEvent event)
       {
-         ViewManagerForm form = new ViewManagerForm();
-         bindDisplay(form);
+         ViewEx view = views.get("ideWorkspaceView");
+         if (view != null)
+         {
+            view.setViewVisible();
+            view.activate();
+         }
       }
-      else
+   };
+
+   protected ClickHandler selectSearchClickHandler = new ClickHandler()
+   {
+      @Override
+      public void onClick(ClickEvent event)
       {
-         ((ViewManagerForm)display).removeFromParent();
-         display = null;
+         ViewEx view = views.get("ideSearchView");
+         if (view != null)
+         {
+            view.setViewVisible();
+            view.activate();
+         }
       }
+   };
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      views.remove(event.getView().getId());
    }
 
-   public void bindDisplay(Display d)
+   @Override
+   public void onViewOpened(ViewOpenedEvent event)
    {
-      display = d;
+      views.put(event.getView().getId(), event.getView());
    }
 
 }

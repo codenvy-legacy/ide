@@ -39,6 +39,8 @@ import org.exoplatform.ide.client.module.development.DevelopmentModule;
 import org.exoplatform.ide.client.module.edit.TextEditModule;
 import org.exoplatform.ide.client.module.preferences.PreferencesModule;
 import org.exoplatform.ide.client.navigation.NavigationModule;
+import org.exoplatform.ide.client.test.ViewActionsLogger;
+import org.exoplatform.ide.client.test.ViewManagerPresenter;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 /**
@@ -82,7 +84,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       //new TestPresenter(EVENT_BUS);
       //new ViewActionsLogger(EVENT_BUS);
-      //      new ViewManagerPresenter(EVENT_BUS);
+      //new ViewManagerPresenter(EVENT_BUS);
 
       new ApplicationStateSnapshotListener(EVENT_BUS);
 

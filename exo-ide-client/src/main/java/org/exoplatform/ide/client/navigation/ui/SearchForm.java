@@ -100,7 +100,7 @@ public class SearchForm extends ViewImpl implements org.exoplatform.ide.client.n
 
    public SearchForm()
    {
-      super(ID, "popup", "Search", new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
+      super(ID, "navigation", "Search", new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setHeight("100%");

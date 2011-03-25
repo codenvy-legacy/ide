@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 
 public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChangeViewTitleHandler,
-   HasChangeViewIconHandler, HasSetViewVisibleHandler, HasActivateViewHandler
+   HasChangeViewIconHandler, HasSetViewVisibleHandler
 {
 
    private String id;
@@ -198,12 +198,6 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
       }
 
       ViewHighlightManager.getInstance().selectView(this);
-
-      //      ActivateViewEvent event = new ActivateViewEvent(this);
-      //      for (ActivateViewHandler activateViewHandler : activateViewHandlers)
-      //      {
-      //         activateViewHandler.onActivateView(event);
-      //      }
    }
 
    public void setActivated(boolean activated)
@@ -228,12 +222,6 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
    public boolean isViewVisible()
    {
       return isVisible();
-   }
-
-   @Override
-   public void setActive()
-   {
-      ViewHighlightManager.getInstance().selectView(this);
    }
 
    @Override
@@ -311,36 +299,11 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
 
    }
 
-   private List<ActivateViewHandler> activateViewHandlers = new ArrayList<ActivateViewHandler>();
-
-   @Override
-   public HandlerRegistration addActivateViewHandler(ActivateViewHandler activateViewHandler)
-   {
-      activateViewHandlers.add(activateViewHandler);
-      return new ActivateViewHandlerRegistration(activateViewHandler);
-   }
-
-   private class ActivateViewHandlerRegistration implements HandlerRegistration
-   {
-
-      private ActivateViewHandler handler;
-
-      public ActivateViewHandlerRegistration(ActivateViewHandler handler)
-      {
-         this.handler = handler;
-      }
-
-      @Override
-      public void removeHandler()
-      {
-         activateViewHandlers.remove(handler);
-      }
-   }
-
    @Override
    public boolean setViewVisible()
    {
       SetViewVisibleEvent event = new SetViewVisibleEvent(getId());
+      
       for (SetViewVisibleHandler setViewVisibleHandler : setViewVisibleHandlers)
       {
          setViewVisibleHandler.onSetViewVisible(event);
