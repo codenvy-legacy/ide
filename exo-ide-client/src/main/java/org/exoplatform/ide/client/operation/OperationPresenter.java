@@ -27,6 +27,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
@@ -45,7 +47,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class OperationPresenter implements ShowItemPropertiesHandler, EditorActiveFileChangedHandler, OutputHandler,
-   PreviewFileHandler
+   PreviewFileHandler, ViewClosedHandler
 {
 
    private HandlerManager eventBus;
@@ -63,6 +65,7 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
    public OperationPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
       handlers = new Handlers(eventBus);
       handlers.addHandler(ShowItemPropertiesEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -94,7 +97,10 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       activeFile = event.getFile();
 
       if (previewForm != null)
+      {
          IDE.getInstance().closeView(PreviewForm.ID);
+         previewForm = null;
+      }
 
       if (event.getFile() == null)
       {
@@ -104,11 +110,14 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       else
       {
          if (propertiesForm != null)
-            propertiesForm.refreshProperties(event.getFile());
-         else
          {
-            showProperies(event.getFile());
+            propertiesForm.refreshProperties(event.getFile());
+            propertiesForm.setViewVisible();
          }
+         //         else
+         //         {
+         //            showProperies(event.getFile());
+         //         }
       }
    }
 
@@ -117,20 +126,28 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
     */
    private void showProperies(File file)
    {
-      propertiesForm = new PropertiesForm();
-      propertiesForm.refreshProperties(file);
-      IDE.getInstance().openView(propertiesForm);
+      if (propertiesForm == null)
+      {
+         propertiesForm = new PropertiesForm();
+         propertiesForm.refreshProperties(file);
+         IDE.getInstance().openView(propertiesForm);
+      }
+      else
+      {
+         propertiesForm.refreshProperties(activeFile);
+         propertiesForm.setViewVisible();
+      }
    }
 
    public void onOutput(OutputEvent event)
    {
       eventBus.fireEvent(new RestorePerspectiveEvent());
-      if(outputForm == null)
+      if (outputForm == null)
       {
-        outputForm = new OutputForm(IDE.EVENT_BUS);
-        IDE.getInstance().openView(outputForm);
+         outputForm = new OutputForm(IDE.EVENT_BUS);
+         IDE.getInstance().openView(outputForm);
       }
-      else 
+      else
       {
          outputForm.setViewVisible();
       }
@@ -138,7 +155,7 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
 
    public void onPreviewFile(PreviewFileEvent event)
    {
-      if(previewForm != null)
+      if (previewForm != null)
       {
          IDE.getInstance().closeView(PreviewForm.ID);
          previewForm = null;
@@ -149,13 +166,27 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
          Dialogs.getInstance().showInfo("You should save the file!");
          return;
       }
-      
+
       previewForm = new PreviewForm();
       previewForm.showPreview(activeFile.getHref());
       IDE.getInstance().openView(previewForm);
       eventBus.fireEvent(new RestorePerspectiveEvent());
 
-      
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() == previewForm)
+         previewForm = null;
+      if (event.getView() == propertiesForm)
+         propertiesForm = null;
+
+      if (event.getView() == outputForm)
+         outputForm = null;
    }
 
 }

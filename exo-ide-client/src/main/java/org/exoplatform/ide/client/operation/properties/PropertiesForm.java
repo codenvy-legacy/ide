@@ -50,7 +50,7 @@ public class PropertiesForm extends ViewImpl implements PropertiesPresenter.Disp
 
    public final static String FORM_ID = "ideDynamicPropertiesForm";
 
-   private Widget content;
+   private VerticalPanel content;
 
    private PropertiesPresenter presenter;
 
@@ -73,29 +73,31 @@ public class PropertiesForm extends ViewImpl implements PropertiesPresenter.Disp
 
       if (content != null)
       {
-//         if (hasMember(content))
-//            removeMember(content);
-//         //         content.hide();
-//         //         content.removeFromParent();
-//         content.destroy();
-         remove(content);
+         //         if (hasMember(content))
+         //            removeMember(content);
+         //         //         content.hide();
+         //         //         content.removeFromParent();
+         //         content.destroy();
+         content.clear();
+         content.removeFromParent();
       }
 
       if (file.getProperties().size() == 0)
       {
-         content = new com.google.gwt.user.client.ui.Label("There are no properties for this file.");
+         content = new VerticalPanel();
+         content.add(new com.google.gwt.user.client.ui.Label("There are no properties for this file."));
          content.setWidth("100%");
          content.setHeight("100$");
-//         content.setAlign(Alignment.CENTER);
+         //         content.setAlign(Alignment.CENTER);
       }
       else
       {
          content = getPropertiesForm(file.getProperties());
-//         content.setID(FORM_ID);
-//         content.setPadding(10);
+         //         content.setID(FORM_ID);
+         //         content.setPadding(10);
          //         content.setTitleWidth(200);
-//         content.setLayoutAlign(VerticalAlignment.TOP);
-//         content.setLayoutAlign(Alignment.LEFT);
+         //         content.setLayoutAlign(VerticalAlignment.TOP);
+         //         content.setLayoutAlign(Alignment.LEFT);
 
       }
       add(content);
