@@ -44,7 +44,6 @@ import com.google.gwt.user.client.Timer;
 
 public class VersionContentForm extends ViewImpl implements VersionContentPresenter.Display
 {
-   public static final String ID = "ideVersionContentPanel";
 
    private HandlerManager eventBus;
 

@@ -43,6 +43,9 @@ public class VersionContentPresenter implements ShowVersionContentHandler
 
    public interface Display extends ViewDisplay
    {
+      
+      String ID ="ideVersionContentView";
+      
       String getEditorId();
 
       void setVersionContent(String content);

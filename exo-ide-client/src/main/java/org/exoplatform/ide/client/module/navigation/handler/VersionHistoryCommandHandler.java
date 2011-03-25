@@ -29,11 +29,10 @@ import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileCallback;
 import org.exoplatform.ide.client.framework.vfs.Version;
@@ -60,8 +59,8 @@ import com.google.gwt.user.client.ui.Image;
  * @version $Id: Sep 27, 2010 $
  *
  */
-public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorActiveFileChangedHandler, ShowPreviousVersionHandler, 
-ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHandler
+public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorActiveFileChangedHandler,
+   ShowPreviousVersionHandler, ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHandler
 {
    private HandlerManager eventBus;
 
@@ -78,6 +77,8 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
    private int ignoreErrorCount = 0;
 
    private boolean isVersionPanelOpened = false;
+
+   private VersionContentForm view;
 
    public VersionHistoryCommandHandler(HandlerManager eventBus)
    {
@@ -171,6 +172,7 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
    {
       activeFile = event.getFile();
       IDE.getInstance().closeView(VersionContentForm.ID);
+      view = null;
    }
 
    /**
@@ -239,16 +241,24 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
          }
       });
    }
-   
+
    private void showVersion(final Version versionToShow)
    {
       version = versionToShow;
       if (!isVersionPanelOpened)
       {
-         ViewImpl view = new VersionContentForm(eventBus, version);
-         view.setIcon(new Image(IDEImageBundle.INSTANCE.viewVersions()));
-         view.setTitle("Version");
-         IDE.getInstance().openView(view);
+         if (view == null)
+         {
+            view = new VersionContentForm(eventBus, version);
+            view.setIcon(new Image(IDEImageBundle.INSTANCE.viewVersions()));
+            view.setTitle("Version");
+            IDE.getInstance().openView(view);
+         }
+         else
+         {
+            view.setVersionContent(versionToShow.getContent());
+         }
+
          Timer timer = new Timer()
          {
             @Override
@@ -295,31 +305,6 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onPanelClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
-    */
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (VersionContentForm.ID.equals(event.getViewId()))
-      {
-         isVersionPanelOpened = false;
-         version = null;
-         handlers.removeHandler(FileContentSavedEvent.TYPE);
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.panel.event.PanelOpenedHandler#onPanelOpened(org.exoplatform.ide.client.panel.event.PanelOpenedEvent)
-    */
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-      if (VersionContentForm.ID.equals(event.getViewId()))
-      {
-         isVersionPanelOpened = true;
-         handlers.addHandler(FileContentSavedEvent.TYPE, this);
-      }
-   }
-
-   /**
     * @see org.exoplatform.ide.client.framework.vfs.event.event.FileContentSavedHandler#onFileContentSaved(org.exoplatform.ide.client.framework.vfs.event.event.FileContentSavedEvent)
     */
    public void onFileContentSaved(FileContentSavedEvent event)
@@ -327,6 +312,35 @@ ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHa
       if (version != null && event.getFile().getHref().equals(version.getItemHref()))
       {
          getVersionHistory();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent)
+    */
+   @Override
+   public void onViewOpened(ViewOpenedEvent event)
+   {
+      if (VersionContentForm.ID.equals(event.getView().getId()))
+      {
+         isVersionPanelOpened = true;
+         handlers.addHandler(FileContentSavedEvent.TYPE, this);
+      }
+
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (VersionContentForm.ID.equals(event.getView().getId()))
+      {
+         isVersionPanelOpened = false;
+         version = null;
+         handlers.removeHandler(FileContentSavedEvent.TYPE);
+         view = null;
       }
    }
 }

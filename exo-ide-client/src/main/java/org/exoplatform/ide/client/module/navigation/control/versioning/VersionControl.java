@@ -20,15 +20,12 @@ package org.exoplatform.ide.client.module.navigation.control.versioning;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelDeselectedHandler;
-import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
-import org.exoplatform.ide.client.versioning.VersionContentForm;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.versioning.VersionContentPresenter;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -37,8 +34,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Oct 13, 2010 $
  *
  */
-public class VersionControl extends SimpleControl implements IDEControl, ViewClosedHandler, ViewOpenedHandler,
-   PanelDeselectedHandler, PanelSelectedHandler
+public class VersionControl extends SimpleControl implements IDEControl, ViewOpenedHandler,
+   ViewVisibilityChangedHandler, org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler
 {
 
    /**
@@ -57,51 +54,47 @@ public class VersionControl extends SimpleControl implements IDEControl, ViewClo
    {
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(PanelDeselectedEvent.TYPE, this);
-      eventBus.addHandler(PanelSelectedEvent.TYPE, this);
+      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
    }
    
+
    /**
-    * @see org.exoplatform.ide.client.panel.event.PanelSelectedHandler#onPanelSelected(org.exoplatform.ide.client.panel.event.PanelSelectedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
     */
-   public void onPanelSelected(PanelSelectedEvent event)
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getPanelId()))
+      if (event.getView() instanceof VersionContentPresenter.Display && event.getView().isViewVisible())
       {
          setVisible(true);
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.panel.event.PanelDeselectedHandler#onPanelDeselected(org.exoplatform.ide.client.panel.event.PanelDeselectedEvent)
-    */
-   public void onPanelDeselected(PanelDeselectedEvent event)
-   {
-      if (VersionContentForm.ID.equals(event.getPanelId()))
+      else
       {
          setVisible(false);
       }
    }
 
    /**
-    * @see org.exoplatform.ide.client.panel.event.PanelOpenedHandler#onPanelOpened(org.exoplatform.ide.client.panel.event.PanelOpenedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent)
     */
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-      if (VersionContentForm.ID.equals(event.getViewId()))
-      {
-         setVisible(true);
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onPanelClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
-    */
+   @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getViewId()))
+      if(event.getView()  instanceof VersionContentPresenter.Display )
       {
          setVisible(false);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent)
+    */
+   @Override
+   public void onViewOpened(ViewOpenedEvent event)
+   {
+      if(event.getView()  instanceof VersionContentPresenter.Display )
+      {
+         setVisible(true);
       }
    }
 }

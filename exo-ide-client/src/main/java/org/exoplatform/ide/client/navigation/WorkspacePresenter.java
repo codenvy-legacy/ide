@@ -400,7 +400,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
          {
             itemToSelect = null;
             foldersToRefresh.clear();
-
+            exception.printStackTrace();
             eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
             eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
          }

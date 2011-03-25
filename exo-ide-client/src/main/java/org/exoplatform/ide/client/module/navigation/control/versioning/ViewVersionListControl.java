@@ -20,10 +20,9 @@ package org.exoplatform.ide.client.module.navigation.control.versioning;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent;
-import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
-import org.exoplatform.ide.client.versioning.VersionContentForm;
+import org.exoplatform.ide.client.versioning.VersionContentPresenter;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -53,21 +52,20 @@ public class ViewVersionListControl extends VersionControl
       setImages(IDEImageBundle.INSTANCE.viewVersions(), IDEImageBundle.INSTANCE.viewVersionsDisabled());
    }
    
-   public void onPanelSelected(PanelSelectedEvent event)
+   /**
+    * @see org.exoplatform.ide.client.module.navigation.control.versioning.VersionControl#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getPanelId()))
+      if (event.getView() instanceof VersionContentPresenter.Display)
       {
          setVisible(true);
          setEnabled(true);
       }
-   }
-
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-      if (VersionContentForm.ID.equals(event.getViewId()))
+      else
       {
-         setVisible(true);
-         setEnabled(true);
+         setVisible(false);
       }
    }
 }

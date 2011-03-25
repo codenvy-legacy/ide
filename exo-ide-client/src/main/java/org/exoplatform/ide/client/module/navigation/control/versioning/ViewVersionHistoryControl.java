@@ -127,6 +127,7 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
       }
    }
 
+   
    /**
     * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onPanelClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
     */
