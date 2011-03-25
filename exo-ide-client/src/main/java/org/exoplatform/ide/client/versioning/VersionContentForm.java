@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.Version;
@@ -71,14 +72,16 @@ public class VersionContentForm extends ViewImpl implements VersionContentPresen
       params.put(EditorParameters.IS_READ_ONLY, true);
       params.put(EditorParameters.IS_SHOW_LINE_NUMER, true);
       params.put(EditorParameters.HOT_KEY_LIST, new ArrayList<String>());
+
       try
       {
-         editor = IDE.getInstance().getEditor(MimeType.APPLICATION_XML).createEditor("", eventBus, params);
+         editor = IDE.getInstance().getEditor(version.getContentType()).createEditor(version.getContent(), eventBus, params);
       }
-      catch (Exception e)
+      catch (EditorNotFoundException e)
       {
          e.printStackTrace();
       }
+      
       add(editor);
 
       new Timer()
