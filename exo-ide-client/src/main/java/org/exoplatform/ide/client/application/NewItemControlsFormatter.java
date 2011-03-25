@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.module.navigation.control.newitem.CreateProjec
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateProjectTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopupMenuControl;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileEvent;
+import org.exoplatform.ide.client.navigation.event.CreateNewFileEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;

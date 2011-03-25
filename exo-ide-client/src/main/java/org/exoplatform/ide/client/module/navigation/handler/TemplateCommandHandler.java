@@ -37,12 +37,12 @@ import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateEvent;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateHandler;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateEvent;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateHandler;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateEvent;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateHandler;
+import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
+import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler;
+import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
+import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
+import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
+import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
 import org.exoplatform.ide.client.template.CreateFileFromTemplateForm;
 import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
@@ -124,7 +124,7 @@ CreateProjectTemplateHandler
    }
    
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateHandler#onCreateFileFromTemplate(org.exoplatform.ide.client.module.navigation.event.newitem.CreateFileFromTemplateEvent)
+    * @see org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler#onCreateFileFromTemplate(org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent)
     */
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
    {
@@ -157,7 +157,7 @@ CreateProjectTemplateHandler
 
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateHandler#onCreateProjectFromTemplate(org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateEvent)
+    * @see org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler#onCreateProjectFromTemplate(org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent)
     */
    public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
    {
@@ -188,7 +188,7 @@ CreateProjectTemplateHandler
    }
    
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateHandler#onCreateProjectTemplate(org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateEvent)
+    * @see org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler#onCreateProjectTemplate(org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent)
     */
    public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
    {

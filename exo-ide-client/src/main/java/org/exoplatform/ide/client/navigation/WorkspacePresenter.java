@@ -61,10 +61,10 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEven
 import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
-import org.exoplatform.ide.client.module.navigation.event.DeleteItemEvent;
-import org.exoplatform.ide.client.module.navigation.event.edit.CopyItemsEvent;
-import org.exoplatform.ide.client.module.navigation.event.edit.CutItemsEvent;
-import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
+import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
+import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
+import org.exoplatform.ide.client.navigation.event.DeleteItemEvent;
+import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedEvent;
 import org.exoplatform.ide.client.panel.event.PanelSelectedHandler;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
@@ -270,14 +270,6 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
          //context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
          //context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
          eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));
-
-         String title = "Workspace : No Items selected";
-         if (selectedItems.size() > 0)
-         {
-            title = "Workspace : " + selectedItems.get(0).getName();
-         }
-
-         display.getView().setTitle(title);
       }
    };
 
@@ -444,32 +436,6 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       }
    };
 
-   //   /**
-   //    * Initializing application
-   //    * 
-   //    * @see org.exoplatform.ide.client.application.event.InitializeApplicationHandler#onInitializeApplication(org.exoplatform.ide.client.application.event.InitializeApplicationEvent)
-   //    */
-   //   public void onInitializeApplication(InitializeApplicationEvent event)
-   //   {
-   //      eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
-   //
-   //      if (entryPoint == null)
-   //      {
-   //         return;
-   //      }
-   //
-   //      switchWorkspace(entryPoint);
-   //
-   //      new Timer()
-   //      {
-   //         @Override
-   //         public void run()
-   //         {
-   //            eventBus.fireEvent(new PanelSelectedEvent(BrowserPanel.ID));
-   //         }
-   //      }.schedule(500);
-   //   }
-
    /**
     * Select chosen item in browser.
     * 
@@ -526,21 +492,6 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
          }
       }
    }
-
-   //   /**
-   //    * Switching active workspace
-   //    */
-   //   private void switchWorkspace(String entryPoint)
-   //   {
-   //
-   //      //handlers.addHandler(ChildrenReceivedEvent.TYPE, this);
-   //      //handlers.addHandler(type, handler)
-   //      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
-   //
-   //      Folder rootFolder = new Folder(entryPoint);
-   //      rootFolder.setIcon(Images.FileTypes.WORKSPACE);
-   //      VirtualFileSystem.getInstance().getChildren(rootFolder);
-   //   }
 
    /**
     * Switching active workspace by Switch Workspace Event

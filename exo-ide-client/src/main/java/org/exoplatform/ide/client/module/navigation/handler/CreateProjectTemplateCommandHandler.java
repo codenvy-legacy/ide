@@ -25,8 +25,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateEvent;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateHandler;
+import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
+import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
 import org.exoplatform.ide.client.template.CreateProjectTemplateForm;
 
 /**
@@ -46,7 +46,7 @@ public class CreateProjectTemplateCommandHandler implements CreateProjectTemplat
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateHandler#onCreateProjectTemplate(org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectTemplateEvent)
+    * @see org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler#onCreateProjectTemplate(org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent)
     */
    public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
    {

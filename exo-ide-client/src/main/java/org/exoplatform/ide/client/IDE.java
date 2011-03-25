@@ -33,12 +33,12 @@ import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.ui.View;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.development.DevelopmentModule;
 import org.exoplatform.ide.client.module.edit.TextEditModule;
 import org.exoplatform.ide.client.module.preferences.PreferencesModule;
 import org.exoplatform.ide.client.navigation.NavigationModule;
-import org.exoplatform.ide.client.test.TestPresenter;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 /**
@@ -52,7 +52,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    private ControlsRegistration controlsRegistration;
 
    private ApplicationContext context;
-   
+
    private IDEPresenter presenter;
 
    public IDE()
@@ -78,8 +78,11 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(EVENT_BUS, ideForm, controlsRegistration);
-      
-      new TestPresenter(EVENT_BUS);
+      new ViewHighlightManager(EVENT_BUS);
+
+      //new TestPresenter(EVENT_BUS);
+      //new ViewActionsLogger(EVENT_BUS);
+      //      new ViewManagerPresenter(EVENT_BUS);
 
       new ApplicationStateSnapshotListener(EVENT_BUS);
 
@@ -87,7 +90,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
        * MODULES INITIALIZATION
        */
       new NavigationModule(EVENT_BUS, context);
-      
+
       new TextEditModule(EVENT_BUS);
       new DevelopmentModule(EVENT_BUS);
       new PreferencesModule(EVENT_BUS);

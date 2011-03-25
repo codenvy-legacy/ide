@@ -19,6 +19,8 @@
 package org.exoplatform.ide.client.framework.ui.gwt.impl;
 
 import org.exoplatform.ide.client.framework.ui.gwt.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -30,14 +32,14 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Nov 3, 2010 $
  *
  */
-public class ViewHighlightManager
+public class ViewHighlightManager implements ViewClosedHandler
 {
 
    private static ViewHighlightManager instance;
 
    private ViewEx currentActiveView;
 
-   private ViewEx lastActiveView;
+   private ViewEx previousActiveView;
 
    private HandlerManager eventBus;
 
@@ -48,6 +50,8 @@ public class ViewHighlightManager
    {
       this.eventBus = eventBus;
       instance = this;
+
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void selectView(ViewEx view)
@@ -57,6 +61,7 @@ public class ViewHighlightManager
          return;
       }
 
+      previousActiveView = currentActiveView;
       if (currentActiveView != null)
       {
          ((ViewImpl)currentActiveView).setActivated(false);
@@ -66,43 +71,6 @@ public class ViewHighlightManager
       ((ViewImpl)currentActiveView).setActivated(true);
 
       eventBus.fireEvent(new ViewActivatedEvent(view));
-   }
-
-   public void viewClosed(ViewEx view)
-   {
-      //      if (view == currentActiveView)
-      //      {
-      //         if (lastActiveView != null)
-      //         {
-      //            try
-      //            {
-      //               if(!view.getDestroying())
-      //                  view.removeFocus();
-      //            }
-      //            catch (Exception e)
-      //            {
-      //               view.removeFocus();
-      //            }            
-      //            try
-      //            {
-      ////               view.removeFocus();
-      //               if (!lastActiveView.getDestroying())
-      //                  lastActiveView.highlightView();
-      //            }
-      //            catch (Exception e)
-      //            {
-      //               lastActiveView.highlightView();
-      //            }
-      //            currentActiveView = lastActiveView;
-      //            lastActiveView = null;
-      //            eventBus.fireEvent(new ViewActivatedEvent(currentActiveView.getViewId()));
-      //         }
-      //         else
-      //         {
-      //            //TODO fire event to select default view
-      //            eventBus.fireEvent(new ActivateViewEvent("BrowserPanel"));
-      //         }
-      //      }
    }
 
    /**
@@ -116,6 +84,28 @@ public class ViewHighlightManager
       }
 
       return instance;
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() != currentActiveView)
+      {
+         return;
+      }
+
+      if (previousActiveView != null)
+      {
+         ((ViewImpl)previousActiveView).setActivated(false);
+         currentActiveView = previousActiveView;
+         ((ViewImpl)currentActiveView).setActivated(true);
+         eventBus.fireEvent(new ViewActivatedEvent(currentActiveView));
+      }
+      else
+      {
+         currentActiveView = null;
+      }
+
    }
 
 }

@@ -133,7 +133,6 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      System.out.println("IDEPresenter.onViewVisibilityChanged()");
       eventBus.fireEvent(event);
    }
 

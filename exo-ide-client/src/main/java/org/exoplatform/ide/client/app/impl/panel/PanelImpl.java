@@ -42,6 +42,9 @@ import org.exoplatform.ide.client.framework.ui.gwt.impl.ChangeViewTitleEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.impl.ChangeViewTitleHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.impl.HasChangeViewIconHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.impl.HasChangeViewTitleHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.HasSetViewVisibleHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.SetViewVisibleEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.SetViewVisibleHandler;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -60,7 +63,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosingViewHandler,
-   HasViewVisibilityChangedHandler
+   HasViewVisibilityChangedHandler, SetViewVisibleHandler
 {
 
    /**
@@ -142,8 +145,6 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
       @Override
       public void onSelection(SelectionEvent<Integer> event)
       {
-         System.out.println("tab selection handler >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-         
          int selectedTabIndex = event.getSelectedItem();
          String viewId = tabPanel.getTabIdByIndex(selectedTabIndex);
          selectView(viewId);
@@ -258,8 +259,6 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
       @Override
       public boolean onCloseTab(String tabId)
       {
-         System.out.println("close tab handler >>>>>>>>>>>>>>>>>>>");
-         
          String viewId = tabId;
 
          ViewEx view = views.get(viewId);
@@ -322,7 +321,6 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
 
    public void addView(ViewEx view, Widget viewWrapper)
    {
-      final ViewController controller = new ViewController(view, viewWrapper);
 
       if (views.size() == 0 && showPanelHandler != null)
       {
@@ -331,26 +329,35 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
 
       views.put(view.getId(), view);
       viewWrappers.put(view.getId(), viewWrapper);
-      viewControllers.put(view.getId(), controller);
 
+      
+      
+      final ViewController controller = new ViewController(view, viewWrapper);
+      viewControllers.put(view.getId(), controller);
       tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, true);
 
+      
       // add handlers to view
       if (view instanceof HasChangeViewTitleHandler)
       {
          ((HasChangeViewTitleHandler)view).addChangeViewTitleHandler(changeViewTitleHandler);
       }
 
+      
       if (view instanceof HasChangeViewIconHandler)
       {
          ((HasChangeViewIconHandler)view).addChangeViewIconHandler(changeViewIconHandler);
       }
-
+      
+      if (view instanceof HasSetViewVisibleHandler) {
+         ((HasSetViewVisibleHandler)view).addSetViewVisibleHandler(this);
+      }
+      
       for (ViewOpenedHandler handler : viewOpenedHandlers)
       {
          handler.onViewOpened(new ViewOpenedEvent(view));
       }
-
+      
       tabPanel.selectTab(view.getId());
    }
 
@@ -359,10 +366,6 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
       @Override
       public void onChangeViewTitle(ChangeViewTitleEvent event)
       {
-         System.out.println("change view title >>>>>>>");
-         System.out.println("view id > " + event.getViewId());
-         System.out.println("title > " + event.getTitle());
-
          tabPanel.setTabTitle(event.getViewId(), event.getTitle());
       }
    };
@@ -372,14 +375,13 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
       @Override
       public void onChangeViewIcon(ChangeViewIconEvent event)
       {
-         System.out.println(">>>>>>>>>> ChangeViewIcon");
-
          tabPanel.setTabIcon(event.getViewId(), event.getIcon());
       }
    };
 
    private class ViewController extends FlowPanel implements RequiresResize
    {
+
       private ViewEx view;
 
       private Widget viewWrapper;
@@ -457,6 +459,12 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
    {
       closingViewHandlers.add(closingViewHandler);
       return null;
+   }
+
+   @Override
+   public void onSetViewVisible(SetViewVisibleEvent event)
+   {
+      tabPanel.selectTab(event.getViewId());      
    }
 
 }

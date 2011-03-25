@@ -26,10 +26,10 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.module.navigation.event.download.DownloadFileEvent;
-import org.exoplatform.ide.client.module.navigation.event.download.DownloadFileHandler;
-import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippedFolderEvent;
-import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippedFolderHandler;
+import org.exoplatform.ide.client.navigation.event.DownloadFileEvent;
+import org.exoplatform.ide.client.navigation.event.DownloadFileHandler;
+import org.exoplatform.ide.client.navigation.event.DownloadZippedFolderEvent;
+import org.exoplatform.ide.client.navigation.event.DownloadZippedFolderHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.FlowPanel;

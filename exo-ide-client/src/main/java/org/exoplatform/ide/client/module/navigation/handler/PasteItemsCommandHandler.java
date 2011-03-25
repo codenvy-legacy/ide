@@ -45,8 +45,8 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
-import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsHandler;
+import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
+import org.exoplatform.ide.client.navigation.event.PasteItemsHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;

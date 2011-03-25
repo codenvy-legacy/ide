@@ -24,7 +24,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateProjectFromTemplateEvent;
+import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
 
 /**
  * Control for create project from template command.

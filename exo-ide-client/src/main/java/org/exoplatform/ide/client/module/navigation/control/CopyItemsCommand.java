@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.ui.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.module.navigation.event.edit.CopyItemsEvent;
+import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

@@ -40,15 +40,15 @@ import org.exoplatform.ide.client.framework.vfs.VersionsCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionHandler;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
+import org.exoplatform.ide.client.versioning.event.OpenVersionEvent;
+import org.exoplatform.ide.client.versioning.event.OpenVersionHandler;
+import org.exoplatform.ide.client.versioning.event.ShowNextVersionEvent;
+import org.exoplatform.ide.client.versioning.event.ShowNextVersionHandler;
+import org.exoplatform.ide.client.versioning.event.ShowPreviousVersionEvent;
+import org.exoplatform.ide.client.versioning.event.ShowPreviousVersionHandler;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionListEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -93,7 +93,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionHandler#onOpenVersion(org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent)
+    * @see org.exoplatform.ide.client.versioning.event.OpenVersionHandler#onOpenVersion(org.exoplatform.ide.client.versioning.event.OpenVersionEvent)
     */
    public void onOpenVersion(OpenVersionEvent event)
    {
@@ -176,7 +176,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionHandler#onShowNextVersion(org.exoplatform.ide.client.module.navigation.event.versioning.ShowNextVersionEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowNextVersionHandler#onShowNextVersion(org.exoplatform.ide.client.versioning.event.ShowNextVersionEvent)
     */
    public void onShowNextVersion(ShowNextVersionEvent event)
    {
@@ -193,7 +193,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionHandler#onShowPreviousVersion(org.exoplatform.ide.client.module.navigation.event.versioning.ShowPreviousVersionEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowPreviousVersionHandler#onShowPreviousVersion(org.exoplatform.ide.client.versioning.event.ShowPreviousVersionEvent)
     */
    public void onShowPreviousVersion(ShowPreviousVersionEvent event)
    {
@@ -278,7 +278,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListHandler#onShowVersionList(org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowVersionListHandler#onShowVersionList(org.exoplatform.ide.client.versioning.event.ShowVersionListEvent)
     */
    public void onShowVersionList(ShowVersionListEvent event)
    {

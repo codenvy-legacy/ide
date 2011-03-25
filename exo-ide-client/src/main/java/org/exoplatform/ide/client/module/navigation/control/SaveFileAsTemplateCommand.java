@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedH
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.module.navigation.event.SaveFileAsTemplateEvent;
+import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

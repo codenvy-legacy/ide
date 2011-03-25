@@ -89,31 +89,36 @@ public class PerspectiveImpl implements Perspective
       layoutLayer.finishBuildLayot();
    }
 
-   @Override
-   public void openView(ViewEx view)
+   private void setZIndex(ViewEx view)
    {
       if (view instanceof ViewImpl)
       {
          DOM.setStyleAttribute(((ViewImpl)view).getElement(), "zIndex", "0");
       }
+   }
 
-      /*
-       * search for opened view
-       */
-      boolean viewAlreadyOpened = false;
+   private boolean isViewOpened(ViewEx view)
+   {
       for (PanelImpl panel : panelsLayer.getPanels().values())
       {
          if (panel.getViews().get(view.getId()) != null)
          {
-            viewAlreadyOpened = true;
-            break;
+            return true;
          }
       }
+
+      return false;
+   }
+
+   @Override
+   public void openView(ViewEx view)
+   {
+      setZIndex(view);
 
       /*
        * return if view already opened
        */
-      if (viewAlreadyOpened)
+      if (isViewOpened(view))
       {
          Window.alert("View [" + view.getId() + "] already opened!");
          return;
@@ -150,19 +155,21 @@ public class PerspectiveImpl implements Perspective
          {
             Window.alert("Can't open view [" + view.getId() + "] of type [" + view.getType() + "]");
          }
+      }
+      else
+      {
+         /*
+          * add view to ViewLayout
+          */
+         Widget viewWrapper = viewsLayer.openView(view);
 
-         return;
+         /*
+          * add view to Panel
+          */
+         targetPanel.addView(view, viewWrapper);
       }
 
-      /*
-       * add view to ViewLayout
-       */
-      Widget viewWrapper = viewsLayer.openView(view);
-
-      /*
-       * add view to Panel
-       */
-      targetPanel.addView(view, viewWrapper);
+      view.activate();
    }
 
    @Override

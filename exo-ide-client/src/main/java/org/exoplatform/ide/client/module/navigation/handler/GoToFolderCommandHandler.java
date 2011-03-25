@@ -32,8 +32,8 @@ import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.module.navigation.event.GoToFolderEvent;
-import org.exoplatform.ide.client.module.navigation.event.GoToFolderHandler;
+import org.exoplatform.ide.client.navigation.event.GoToFolderEvent;
+import org.exoplatform.ide.client.navigation.event.GoToFolderHandler;
 
 import java.util.ArrayList;
 

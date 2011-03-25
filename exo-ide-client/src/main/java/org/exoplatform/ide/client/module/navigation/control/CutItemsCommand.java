@@ -23,7 +23,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.module.navigation.event.edit.CutItemsEvent;
+import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

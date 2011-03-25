@@ -32,8 +32,8 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreToVersionEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.RestoreToVersionHandler;
+import org.exoplatform.ide.client.versioning.event.RestoreToVersionEvent;
+import org.exoplatform.ide.client.versioning.event.RestoreToVersionHandler;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
 
@@ -82,7 +82,7 @@ public class RestoreToVersionCommandHandler implements ShowVersionContentHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.RestoreToVersionHandler#onRestoreToVersion(org.exoplatform.ide.client.module.navigation.event.versioning.RestoreToVersionEvent)
+    * @see org.exoplatform.ide.client.versioning.event.RestoreToVersionHandler#onRestoreToVersion(org.exoplatform.ide.client.versioning.event.RestoreToVersionEvent)
     */
    public void onRestoreToVersion(RestoreToVersionEvent event)
    {

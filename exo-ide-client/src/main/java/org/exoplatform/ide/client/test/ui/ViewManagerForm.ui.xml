@@ -1,0 +1,24 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:style>
+		
+		.managerPanel
+		{
+			position: absolute;
+			left:100px;
+			top:50px;
+			width: 200px;
+			height: 300px;
+			background: #FFEEAA;
+			opacity: 0.5;
+		}
+		
+	</ui:style>
+
+	<g:HTMLPanel styleName="{style.managerPanel}">
+	</g:HTMLPanel>
+
+</ui:UiBinder>
+ 

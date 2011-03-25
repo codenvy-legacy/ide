@@ -27,6 +27,8 @@ package org.exoplatform.ide.client.framework.ui;
  */
 public interface ViewType
 {
+   
+   
    public static final String PREVIEW = "preview";
    
    public static final String OUTPUT = "output";
@@ -39,5 +41,20 @@ public interface ViewType
    
    public static final String DOCUMENTATION = "documentation";
    
+   /*
+    * for Views
+    */
    String NAVIGATION  = "navigation";
+   
+   String EDITOR  = "editor";
+   
+   String INFORMATION  = "information";
+   
+   String OPERATION  = "operation";
+   
+   String POPUP  = "popup";
+   
+   String MODAL  = "modal";
+   
+   
 }

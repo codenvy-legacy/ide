@@ -218,14 +218,14 @@ public class TestPresenter implements ViewOpenedHandler, ViewClosedHandler, Clos
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      //      System.out.println("view [ " + event.getView().getId() + " ] visibility changed to [ "
-      //         + event.getView().isViewVisible() + " ]");
+      System.out.println("view [ " + event.getView().getId() + " ] visibility changed to [ "
+         + event.getView().isViewVisible() + " ]");
    }
 
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      //System.out.println("view [ " + event.getView().getId() + " ] has been activated!");
+      System.out.println("view [ " + event.getView().getId() + " ] has been activated!");
    }
 
 }

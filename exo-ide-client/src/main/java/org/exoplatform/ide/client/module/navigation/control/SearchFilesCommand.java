@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedH
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.module.navigation.event.SearchFilesEvent;
+import org.exoplatform.ide.client.navigation.event.SearchFilesEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

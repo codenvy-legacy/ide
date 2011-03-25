@@ -39,8 +39,8 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
-import org.exoplatform.ide.client.module.navigation.event.SearchFilesEvent;
-import org.exoplatform.ide.client.module.navigation.event.SearchFilesHandler;
+import org.exoplatform.ide.client.navigation.event.SearchFilesEvent;
+import org.exoplatform.ide.client.navigation.event.SearchFilesHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

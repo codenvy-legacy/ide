@@ -21,8 +21,8 @@ package org.exoplatform.ide.client.module.navigation.control.versioning;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent;
 import org.exoplatform.ide.client.versioning.VersionContentPresenter;
+import org.exoplatform.ide.client.versioning.event.ShowVersionListEvent;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>

@@ -28,7 +28,6 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -193,11 +192,18 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
    @Override
    public void activate()
    {
-      ActivateViewEvent event = new ActivateViewEvent(this);
-      for (ActivateViewHandler activateViewHandler : activateViewHandlers)
+      if (isViewVisible())
       {
-         activateViewHandler.onActivateView(event);
+         setViewVisible();
       }
+
+      ViewHighlightManager.getInstance().selectView(this);
+
+      //      ActivateViewEvent event = new ActivateViewEvent(this);
+      //      for (ActivateViewHandler activateViewHandler : activateViewHandlers)
+      //      {
+      //         activateViewHandler.onActivateView(event);
+      //      }
    }
 
    public void setActivated(boolean activated)
@@ -221,9 +227,7 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
    @Override
    public boolean isViewVisible()
    {
-      boolean visible = isVisible();
-      System.out.println("returning view [" + getId() + "] visible [ " + visible + " ]");
-      return visible;
+      return isVisible();
    }
 
    @Override
@@ -336,8 +340,11 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
    @Override
    public boolean setViewVisible()
    {
-
-      Window.alert("Prompt to set view [" + getId() + "] visible: true");
+      SetViewVisibleEvent event = new SetViewVisibleEvent(getId());
+      for (SetViewVisibleHandler setViewVisibleHandler : setViewVisibleHandlers)
+      {
+         setViewVisibleHandler.onSetViewVisible(event);
+      }
 
       return false;
    }

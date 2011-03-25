@@ -30,9 +30,9 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.framework.vfs.VersionsCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent;
-import org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListHandler;
 import org.exoplatform.ide.client.versioning.ViewVersionsForm;
+import org.exoplatform.ide.client.versioning.event.ShowVersionListEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionListHandler;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -98,7 +98,7 @@ public class ShowVersionListCommandHandler implements ShowVersionListHandler, Ed
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListHandler#onShowVersionList(org.exoplatform.ide.client.module.navigation.event.versioning.ShowVersionListEvent)
+    * @see org.exoplatform.ide.client.versioning.event.ShowVersionListHandler#onShowVersionList(org.exoplatform.ide.client.versioning.event.ShowVersionListEvent)
     */
    public void onShowVersionList(ShowVersionListEvent event)
    {

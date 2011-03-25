@@ -24,7 +24,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand;
-import org.exoplatform.ide.client.module.navigation.event.download.DownloadZippedFolderEvent;
+import org.exoplatform.ide.client.navigation.event.DownloadZippedFolderEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

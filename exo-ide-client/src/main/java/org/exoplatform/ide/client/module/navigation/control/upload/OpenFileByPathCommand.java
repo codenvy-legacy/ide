@@ -24,7 +24,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.module.navigation.event.upload.OpenFileByPathEvent;
+import org.exoplatform.ide.client.navigation.event.OpenFileByPathEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

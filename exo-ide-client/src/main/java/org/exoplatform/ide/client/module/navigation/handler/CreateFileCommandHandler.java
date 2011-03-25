@@ -43,8 +43,8 @@ import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.template.FileTemplates;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileEvent;
-import org.exoplatform.ide.client.module.navigation.event.newitem.CreateNewFileHandler;
+import org.exoplatform.ide.client.navigation.event.CreateNewFileEvent;
+import org.exoplatform.ide.client.navigation.event.CreateNewFileHandler;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 import com.google.gwt.event.shared.HandlerManager;

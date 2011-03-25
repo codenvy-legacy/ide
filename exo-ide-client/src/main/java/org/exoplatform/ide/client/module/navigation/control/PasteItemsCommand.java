@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.event.edit.PasteItemsCompleteHandler;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.module.navigation.event.edit.PasteItemsEvent;
+import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

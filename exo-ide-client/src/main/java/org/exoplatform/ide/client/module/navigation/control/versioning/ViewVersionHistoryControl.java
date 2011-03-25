@@ -33,8 +33,8 @@ import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.client.module.navigation.event.versioning.OpenVersionEvent;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
+import org.exoplatform.ide.client.versioning.event.OpenVersionEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
