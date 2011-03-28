@@ -16,27 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.navigation.action;
+package org.exoplatform.ide.client.navigation.ui;
 
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import org.exoplatform.gwtframework.ui.client.component.HTMLLabel;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
-import org.exoplatform.gwtframework.ui.client.component.IButton;
-import org.exoplatform.gwtframework.ui.client.component.Label;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -45,70 +40,49 @@ import java.util.Map;
  * @version $
  */
 
-public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.Display
+public class DeleteItemView extends ViewImpl implements
+   org.exoplatform.ide.client.navigation.DeleteItemsPresenter.Display
 {
 
-   public static final int WIDTH = 500;
+   public static final int DEFAULT_WIDTH = 500;
 
-   public static final int HEIGHT = 130;
-
-   public static final String ID = "ideDeleteItemForm";
+   public static final int DEFAULT_HEIGHT = 130;
 
    public static final String ID_OK_BUTTON = "ideDeleteItemFormOkButton";
 
    public static final String ID_CANCEL_BUTTON = "ideDeleteItemFormCancelButton";
 
-   private VerticalPanel mainLayout;
-   
    private HorizontalPanel infoLayout;
-
-   private String prompt;
 
    private IButton deleteButton;
 
    private IButton cancelButton;
 
-   private DeleteItemPresenter presenter;
+   private HTMLLabel promptField;
 
-   public DeleteItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles,
-      Map<String, String> lockTokens)
+   public DeleteItemView()
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(ID, ViewType.MODAL, "IDE", new Image(IDEImageBundle.INSTANCE.delete()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
-      if (selectedItems.size() == 1)
-      {
-         prompt = "<br>Do you want to delete  <b>" + selectedItems.get(0).getName() + "</b> ?";
-      }
-      else
-      {
-         prompt = "<br>Do you want to delete <b>" + selectedItems.size() + "</b> items?";
-      }
-      setTitle("Delete Item(s)");
-
-      mainLayout = new VerticalPanel();
+      VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
       mainLayout.setHeight("100%");
       mainLayout.setSpacing(10);
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+      add(mainLayout);
 
-      setWidget(mainLayout);
-      
       infoLayout = new HorizontalPanel();
       infoLayout.setWidth("100%");
       infoLayout.setHeight(32 + "px");
       infoLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
       createImage();
-      createTextLayout(prompt);
-      
+      createPromptField();
+
       mainLayout.add(infoLayout);
       mainLayout.add(createButtonsLayout());
 
-      show();
-
       deleteButton.focus();
-      presenter = new DeleteItemPresenter(eventBus, selectedItems, openedFiles, lockTokens);
-      presenter.bindDisplay(this);
    }
 
    private void createImage()
@@ -120,12 +94,11 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
       infoLayout.setCellHorizontalAlignment(image, HasHorizontalAlignment.ALIGN_CENTER);
    }
 
-   private void createTextLayout(String text)
+   private void createPromptField()
    {
-      Label label = new Label();
-      label.getElement().setInnerHTML(text);
-      infoLayout.add(label);
-      infoLayout.setCellHorizontalAlignment(label, HasHorizontalAlignment.ALIGN_LEFT);
+      promptField = new HTMLLabel();
+      infoLayout.add(promptField);
+      infoLayout.setCellHorizontalAlignment(promptField, HasHorizontalAlignment.ALIGN_LEFT);
    }
 
    private HorizontalPanel createButtonsLayout()
@@ -152,18 +125,6 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
       return buttonsLayout;
    }
 
-   @Override
-   public void destroy()
-   {
-      presenter.destroy();
-      super.destroy();
-   }
-
-   public void closeDisplay()
-   {
-      destroy();
-   }
-
    public HasClickHandlers getCancelButton()
    {
       return cancelButton;
@@ -174,15 +135,10 @@ public class DeleteItemForm extends DialogWindow implements DeleteItemPresenter.
       return deleteButton;
    }
 
-   public void closeForm()
+   @Override
+   public HasValue<String> getPromptField()
    {
-      destroy();
-   }
-
-   public void hideForm()
-   {
-      hide();
-
+      return promptField;
    }
 
 }

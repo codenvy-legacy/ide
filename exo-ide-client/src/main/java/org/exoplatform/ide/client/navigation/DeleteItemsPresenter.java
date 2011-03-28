@@ -16,31 +16,51 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.navigation.action;
+package org.exoplatform.ide.client.navigation;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
+import org.exoplatform.ide.client.navigation.event.DeleteItemEvent;
+import org.exoplatform.ide.client.navigation.event.DeleteItemHandler;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS .
@@ -49,56 +69,96 @@ import java.util.Map;
  * @version @version $Id: $
  */
 
-public class DeleteItemPresenter
+public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler, ItemsSelectedHandler,
+   EditorFileOpenedHandler, EditorFileClosedHandler, DeleteItemHandler, ViewClosedHandler
 {
 
-   public interface Display
+   public interface Display extends ViewDisplay
    {
+
+      String ID = "ideDeleteItemsView";
+
+      HasValue<String> getPromptField();
 
       HasClickHandlers getDeleteButton();
 
       HasClickHandlers getCancelButton();
 
-      void closeForm();
-
-      void hideForm();
-
    }
-
-   private Display display;
-
-   private List<Item> selectedItems;
-
-   private Handlers handlers;
 
    private HandlerManager eventBus;
 
+   private Display display;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
+
    private Item lastDeletedItem;
 
-   private Map<String, File> openedFiles;
+   private Map<String, File> openedFiles = new HashMap<String, File>();
 
-   private Map<String, String> lockTokens;
+   private Map<String, String> lockTokens = new HashMap<String, String>();
 
-   public DeleteItemPresenter(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles,
-      Map<String, String> lockTokens)
+   public DeleteItemsPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.selectedItems = selectedItems;
-      this.openedFiles = openedFiles;
-      this.lockTokens = lockTokens;
 
-      handlers = new Handlers(eventBus);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      eventBus.addHandler(DeleteItemEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+   }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      ApplicationSettings applicationSettings = event.getApplicationSettings();
+      if (applicationSettings.getValueAsMap("lock-tokens") == null)
+      {
+         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+      lockTokens = applicationSettings.getValueAsMap("lock-tokens");
+   }
+
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+   }
+
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   public void onDeleteItem(DeleteItemEvent event)
+   {
+      if (display == null)
+      {
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView((ViewEx)d);
+         bindDisplay(d);
+      }
    }
 
    public void bindDisplay(Display d)
    {
       display = d;
 
+      String prompt =
+         selectedItems.size() == 1 ? "<br>Do you want to delete  <b>" + selectedItems.get(0).getName() + "</b> ?"
+            : "<br>Do you want to delete <b>" + selectedItems.size() + "</b> items?";
+      display.getPromptField().setValue(prompt);
+
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
          {
-            display.closeForm();
+            IDE.getInstance().closeView(Display.ID);
          }
       });
 
@@ -106,24 +166,16 @@ public class DeleteItemPresenter
       {
          public void onClick(ClickEvent event)
          {
-            display.hideForm();
             deleteNextItem();
          }
       });
-
-   }
-
-
-   public void destroy()
-   {
-      handlers.removeHandlers();
    }
 
    private void deleteNextItem()
    {
       if (selectedItems.size() == 0)
       {
-         display.closeForm();
+         IDE.getInstance().closeView(Display.ID);
          deleteItemsComplete();
          return;
       }
@@ -181,19 +233,19 @@ public class DeleteItemPresenter
       {
          VirtualFileSystem.getInstance().unlock(item, lockTokens.get(item.getHref()), new AsyncRequestCallback<Item>()
          {
-            
+
             @Override
             protected void onSuccess(Item result)
             {
                eventBus.fireEvent(new ItemUnlockedEvent(result));
                deleteItem(result);
-               
+
             }
-            
+
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));               
+               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
             }
          });
       }
@@ -202,7 +254,7 @@ public class DeleteItemPresenter
          deleteItem(item);
       }
    }
-   
+
    /**
     * Delete item.
     * 
@@ -212,7 +264,7 @@ public class DeleteItemPresenter
    {
       VirtualFileSystem.getInstance().deleteItem(item, new AsyncRequestCallback<Item>()
       {
-         
+
          @Override
          protected void onSuccess(Item result)
          {
@@ -250,12 +302,12 @@ public class DeleteItemPresenter
             lastDeletedItem = item;
             deleteNextItem();
          }
-         
+
          @Override
          protected void onFailure(Throwable exception)
          {
             eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
-            display.closeForm();
+            IDE.getInstance().closeView(Display.ID);
          }
       });
    }
@@ -272,7 +324,7 @@ public class DeleteItemPresenter
             }
             else
             {
-               display.closeForm();
+               IDE.getInstance().closeView(Display.ID);
                deleteItemsComplete();
             }
          }
@@ -288,7 +340,6 @@ public class DeleteItemPresenter
       }
 
       selectedItems.clear();
-      handlers.removeHandlers();
 
       String selectedItemHref = lastDeletedItem.getHref();
 
@@ -303,4 +354,14 @@ public class DeleteItemPresenter
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
       eventBus.fireEvent(new SelectItemEvent(folder.getHref()));
    }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
+   }
+
 }

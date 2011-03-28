@@ -26,7 +26,6 @@ import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -41,11 +40,6 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 public class OutputForm extends ViewImpl implements org.exoplatform.ide.client.operation.OutputPresenter.Display
 {
 
-   /**
-    * 
-    */
-   private static final String OUTPUT_VIEW_ID = "ideOutputView";
-
    private final static String ID = "ideOutputForm";
 
    private FlowPanel outputLayout;
@@ -54,30 +48,20 @@ public class OutputForm extends ViewImpl implements org.exoplatform.ide.client.o
 
    public OutputForm()
    {
-      super(OUTPUT_VIEW_ID, ViewType.OPERATION, "Output");
-      setIcon(new Image(IDEImageBundle.INSTANCE.output()));
-
-      //      setVertical(Boolean.TRUE);
-
-      //      setOverflow(Overflow.HIDDEN);
+      super(ID, ViewType.OPERATION, "Output", new Image(IDEImageBundle.INSTANCE.output()));
 
       outputLayout = new FlowPanel();
       ScrollPanel scrollWraper = new ScrollPanel(outputLayout);
       scrollWraper.setWidth("100%");
       scrollWraper.setHeight("100%");
-//      outputLayout.setOverflow(Overflow.SCROLL);
-//      outputLayout.setCanFocus(Boolean.TRUE);
       outputLayout.getElement().setId(ID);
-      
+
       add(scrollWraper);
 
       clearOutputButton = new Image(Images.OutputPanel.BUTTON_CLEAR);
       clearOutputButton.setWidth(20 + "px");
       clearOutputButton.setHeight(18 + "px");
       clearOutputButton.setTitle("Clear output");
-      //clearOutputButton1.disable();
-//      addTabButton(clearOutputButton);
-
    }
 
    public void clearOutput()
@@ -93,19 +77,7 @@ public class OutputForm extends ViewImpl implements org.exoplatform.ide.client.o
       DOM.setStyleAttribute(record.getElement(), "marginTop", "3px");
       odd = !odd;
       outputLayout.add(record);
-      scrollToBottomTimer.schedule(100);
    }
-
-   private Timer scrollToBottomTimer = new Timer()
-   {
-
-      @Override
-      public void run()
-      {
-//         outputLayout.getElement().scrollIntoView();
-      }
-
-   };
 
    public HasClickHandlers getClearOutputButton()
    {
