@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.git.shared;
 
-
 /**
  * Clone repository to {@link #workingDir}.
  * 
@@ -63,31 +62,26 @@ public class CloneRequest extends GitRequest
     *           repository
     * @param workingDir work directory for cloning
     * @param remoteName remote name
-    * @param user git user
     * @param timeout time (in seconds) to wait without data transfer occurring
     *           before aborting fetching data from remote repository
     */
-   public CloneRequest(String remoteUri, String[] branchesToFetch, String workingDir, String remoteName, GitUser user,
-      int timeout)
+   public CloneRequest(String remoteUri, String[] branchesToFetch, String workingDir, String remoteName, int timeout)
    {
       this.remoteUri = remoteUri;
       this.branchesToFetch = branchesToFetch;
       this.workingDir = workingDir;
       this.remoteName = remoteName;
       this.timeout = timeout;
-      setUser(user);
    }
 
    /**
     * @param remoteUri URI of repository to be cloned
     * @param workingDir work directory for cloning
-    * @param user git user
     */
-   public CloneRequest(String remoteUri, String workingDir, GitUser user)
+   public CloneRequest(String remoteUri, String workingDir)
    {
       this.remoteUri = remoteUri;
       this.workingDir = workingDir;
-      setUser(user);
    }
 
    /**

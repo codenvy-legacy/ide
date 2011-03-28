@@ -32,13 +32,11 @@ public class CommitRequest extends GitRequest
    private String message;
 
    /**
-    * @param user commit author
     * @param message commit message
     */
-   public CommitRequest(String message, GitUser user)
+   public CommitRequest(String message)
    {
       this.message = message;
-      setUser(user);
    }
 
    /**

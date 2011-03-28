@@ -47,10 +47,10 @@ public class PullTest extends BaseTest
       File pullWorkDir = new File(origWorkDir.getParentFile(), "PullTestRepo");
       forClean.add(pullWorkDir);
 
-      JGitConnection client = new JGitConnection(new FileRepository(new File(pullWorkDir, ".git")));
+      JGitConnection client =
+         new JGitConnection(new FileRepository(new File(pullWorkDir, ".git")), new GitUser("andrey", "andrey@mail.com"));
       client.clone(new CloneRequest(origWorkDir.getAbsolutePath(), //
-         null/* .git directory already set. Not need to pass it in this implementation. */,//
-         new GitUser("andrey", "andrey@mail.com")));
+         null/* .git directory already set. Not need to pass it in this implementation. */));
       pullTestRepo = client.getRepository();
 
       addFile(origWorkDir, "t-pull1", "AAA\n");
@@ -63,7 +63,7 @@ public class PullTest extends BaseTest
 
    public void testPull() throws Exception
    {
-      new JGitConnection(pullTestRepo).pull(new PullRequest());
+      new JGitConnection(pullTestRepo, new GitUser("andrey", "andrey@mail.com")).pull(new PullRequest());
       File fetchWorkDir = pullTestRepo.getWorkTree();
       assertTrue(new File(fetchWorkDir, "t-pull1").exists());
       assertTrue(new File(fetchWorkDir, "t-pull2").exists());
@@ -98,8 +98,8 @@ public class PullTest extends BaseTest
 
       request.setRemote(sourceRepo.getWorkTree().getAbsolutePath());
       request.setRefSpec(branchName);
-      new JGitConnection(newRepo).pull(request);
-      
+      new JGitConnection(newRepo, new GitUser("andrey", "andrey@mail.com")).pull(request);
+
       assertTrue(new File(newRepoWorkDir, "testPullOnly").exists());
    }
 }

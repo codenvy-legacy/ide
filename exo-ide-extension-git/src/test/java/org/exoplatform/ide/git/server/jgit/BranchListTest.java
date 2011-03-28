@@ -48,10 +48,10 @@ public class BranchListTest extends BaseTest
 
       File workDir = new File(repository.getWorkTree().getParentFile(), "ListBranchTest");
       // Clone repository.
-      JGitConnection client2 = new JGitConnection(new FileRepository(new File(workDir, ".git")));
+      JGitConnection client2 =
+         new JGitConnection(new FileRepository(new File(workDir, ".git")), new GitUser("andrey", "andrey@mail.com"));
       client2.clone(new CloneRequest(repository.getWorkTree().getAbsolutePath(), //
-         null /* .git directory already set. Not need to pass it in this implementation. */, //
-         new GitUser("andrey", "andrey@mail.com")));
+         null /* .git directory already set. Not need to pass it in this implementation. */));
       repository2 = client2.getRepository();
 
       File workDir2 = repository2.getWorkTree();

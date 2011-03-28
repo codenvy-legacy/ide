@@ -143,13 +143,16 @@ public class JGitConnection implements GitConnection
    private String _branchRef = "refs/heads/master";
    // -------------------------
    private final Repository repository;
+   private final GitUser user;
 
    /**
     * @param repository
+    * @param user
     */
-   JGitConnection(Repository repository)
+   JGitConnection(Repository repository, GitUser user)
    {
       this.repository = repository;
+      this.user = user;
    }
 
    /**
@@ -367,7 +370,7 @@ public class JGitConnection implements GitConnection
          config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, _branchName, ConfigConstants.CONFIG_KEY_MERGE,
             _branchRef);
 
-         GitUser gitUser = request.getUser();
+         GitUser gitUser = getUser();
          if (gitUser != null)
          {
             config.setString("user", null, "name", gitUser.getName());
@@ -464,7 +467,7 @@ public class JGitConnection implements GitConnection
       {
          CommitCommand commitCommand = new Git(repository).commit().setMessage(request.getMessage());
 
-         GitUser committer = request.getUser();
+         GitUser committer = getUser();
          if (committer != null)
             commitCommand.setCommitter(committer.getName(), committer.getEmail());
 
@@ -692,7 +695,7 @@ public class JGitConnection implements GitConnection
                throw new GitException(e.getMessage(), e);
             }
          }
-         GitUser gitUser = request.getUser();
+         GitUser gitUser = getUser();
          if (gitUser != null)
          {
             StoredConfig config = repository.getConfig();
@@ -1466,7 +1469,7 @@ public class JGitConnection implements GitConnection
             new Git(repository).tag().setName(request.getName()).setObjectId(revObject)
                .setMessage(request.getMessage()).setForceUpdate(request.isForce());
 
-         GitUser tagger = request.getUser();
+         GitUser tagger = getUser();
          if (tagger != null)
             tagCommand.setTagger(new PersonIdent(tagger.getName(), tagger.getEmail()));
 
@@ -1570,6 +1573,14 @@ public class JGitConnection implements GitConnection
       return tags;
    }
 
+   /**
+    * @see org.exoplatform.ide.git.server.GitConnection#getUser()
+    */
+   public GitUser getUser()
+   {
+      return user;
+   }
+   
    /**
     * @see org.exoplatform.ide.git.server.GitConnection#close()
     */

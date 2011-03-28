@@ -39,13 +39,11 @@ public class InitRequest extends GitRequest
    /**
     * @param workingDir working directory for new git repository
     * @param bare <code>true</code> then bare repository created
-    * @param user git user
     */
-   public InitRequest(String workingDir, boolean bare, GitUser user)
+   public InitRequest(String workingDir, boolean bare)
    {
       this.workingDir = workingDir;
       this.bare = bare;
-      setUser(user);
    }
 
    /**

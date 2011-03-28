@@ -24,6 +24,7 @@ import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
+import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
 
 import java.io.File;
@@ -52,7 +53,7 @@ public class RemoteDeleteTest extends BaseTest
        * Working directory already specified but may be not initialized yet.
        * Directory .git does not exists yet. */
       InitRequest request = new InitRequest();
-      new JGitConnection(repo).init(request);
+      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).init(request);
       
       StoredConfig config = repo.getConfig();
       RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
@@ -75,7 +76,7 @@ public class RemoteDeleteTest extends BaseTest
       assertNotNull(config.getString("branch", "master", "remote"));
       assertNotNull(config.getString("branch", "master", "merge"));
       //System.out.println(repo.getConfig().toText());
-      new JGitConnection(repo).remoteDelete("origin");
+      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteDelete("origin");
       //System.out.println();
       //System.out.println(repo.getConfig().toText());
       config = repo.getConfig();

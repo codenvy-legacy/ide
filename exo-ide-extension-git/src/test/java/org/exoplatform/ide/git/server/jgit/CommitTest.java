@@ -21,7 +21,6 @@ package org.exoplatform.ide.git.server.jgit;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.exoplatform.ide.git.shared.CommitRequest;
-import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.Revision;
 
 /**
@@ -38,7 +37,7 @@ public class CommitTest extends BaseTest
       Git git = new Git(getDefaultRepository());
       git.add().addFilepattern(".").call();
 
-      CommitRequest request = new CommitRequest("add file1", new GitUser("andrey", "andrey@mail.com"));
+      CommitRequest request = new CommitRequest("add file1");
       request.setMessage("add file1");
       Revision revision = getDefaultConnection().commit(request);
 

@@ -28,6 +28,7 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.FetchRequest;
+import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.LogRequest;
 import org.exoplatform.ide.git.shared.MergeRequest;
@@ -359,6 +360,8 @@ public interface GitConnection
     */
    List<Tag> tagList(TagListRequest request) throws GitException;
 
+   GitUser getUser();
+   
    /**
     * Close connection, release associated resources.
     */

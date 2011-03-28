@@ -48,10 +48,11 @@ public class FetchTest extends BaseTest
       File fetchWorkDir = new File(origWorkDir.getParentFile(), "FetchTestRepo");
       forClean.add(fetchWorkDir);
 
-      JGitConnection client = new JGitConnection(new FileRepository(new File(fetchWorkDir, ".git")));
+      JGitConnection client =
+         new JGitConnection(new FileRepository(new File(fetchWorkDir, ".git")),
+            new GitUser("andrey", "andrey@mail.com"));
       client.clone(new CloneRequest(origWorkDir.getAbsolutePath(), //
-         null /* .git directory already set. Not need to pass it in this implementation. */,//
-         new GitUser("andrey", "andrey@mail.com")));
+         null /* .git directory already set. Not need to pass it in this implementation. */));
 
       fetchTestRepo = client.getRepository();
 
@@ -66,7 +67,7 @@ public class FetchTest extends BaseTest
    public void testFetch() throws Exception
    {
       // Use default remote settings.
-      new JGitConnection(fetchTestRepo).fetch(new FetchRequest());
+      new JGitConnection(fetchTestRepo, new GitUser("andrey", "andrey@mail.com")).fetch(new FetchRequest());
 
       Git git = new Git(fetchTestRepo);
       git.merge().include(fetchTestRepo.getRef(Constants.FETCH_HEAD)).call();
@@ -87,14 +88,14 @@ public class FetchTest extends BaseTest
       addFile(origin.getWorkTree(), "aaa", "AAA\n");
       originGit.add().addFilepattern(".").call();
       originGit.commit().setMessage("aaa").call();
-      
+
       FetchRequest request = new FetchRequest();
       request.setRemote("origin");
-      request.setRefSpec(new String[] {/*"refs/heads/" + */branchName});
-      new JGitConnection(fetchTestRepo).fetch(request);
+      request.setRefSpec(new String[]{/*"refs/heads/" + */branchName});
+      new JGitConnection(fetchTestRepo, new GitUser("andrey", "andrey@mail.com")).fetch(request);
 
       Git newGit = new Git(fetchTestRepo);
-      
+
       newGit.merge().include(fetchTestRepo.getRef(Constants.FETCH_HEAD)).call();
 
       File fetchWorkDir = fetchTestRepo.getWorkTree();

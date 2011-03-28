@@ -47,10 +47,10 @@ public class PushTest extends BaseTest
       File pushWorkDir = new File(getDefaultRepository().getWorkTree().getParentFile(), "PushTestRepo");
       forClean.add(pushWorkDir);
 
-      JGitConnection client = new JGitConnection(new FileRepository(new File(pushWorkDir, ".git")));
+      JGitConnection client =
+         new JGitConnection(new FileRepository(new File(pushWorkDir, ".git")), new GitUser("andrey", "andrey@mail.com"));
       client.clone(new CloneRequest(getDefaultRepository().getWorkTree().getAbsolutePath(), //
-         null/* .git directory already set. Not need to pass it in this implementation. */,//
-         new GitUser("andrey", "andrey@mail.com")));
+         null/* .git directory already set. Not need to pass it in this implementation. */));
       pushTestRepo = client.getRepository();
    }
 
@@ -64,8 +64,8 @@ public class PushTest extends BaseTest
       String remote = "origin";
       boolean force = false;
 
-      new JGitConnection(pushTestRepo).push(new PushRequest(new String[]{"refs/heads/master:refs/heads/test"}, remote,
-         force, 0));
+      new JGitConnection(pushTestRepo, new GitUser("andrey", "andrey@mail.com")).push(new PushRequest(
+         new String[]{"refs/heads/master:refs/heads/test"}, remote, force, 0));
 
       Git origGit = new Git(getDefaultRepository());
       List<Ref> branches = origGit.branchList().call();
@@ -97,8 +97,8 @@ public class PushTest extends BaseTest
       String remote = remoteWorkDir.getAbsolutePath();
       boolean force = false;
 
-      new JGitConnection(getDefaultRepository()).push(new PushRequest(new String[]{"refs/heads/master:refs/heads/test"}, remote,
-         force, 0));
+      new JGitConnection(getDefaultRepository(), new GitUser("andrey", "andrey@mail.com")).push(new PushRequest(
+         new String[]{"refs/heads/master:refs/heads/test"}, remote, force, 0));
 
       // Check remote repository.
       List<Ref> branches = remoteGit.branchList().call();

@@ -20,6 +20,7 @@ package org.exoplatform.ide.git.server.jgit;
 
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
+import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
 
 import java.io.File;
@@ -41,7 +42,8 @@ public class ConnectionFactoryTest extends BaseTest
       File repoDir = new File(target, "ConnectionFactoryTest");
       forClean.add(repoDir);
 
-      GitConnection gitConnection = gitConnectionFactory.getConnection(repoDir);
+      GitConnection gitConnection =
+         gitConnectionFactory.getConnection(repoDir, new GitUser("andrey", "andrey@mail.com"));
 
       // Try to initialize repository via obtained connection.
       gitConnection.init(new InitRequest());

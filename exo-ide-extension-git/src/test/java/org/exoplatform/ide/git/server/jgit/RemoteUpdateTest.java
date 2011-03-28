@@ -24,6 +24,7 @@ import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
+import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
 
@@ -55,7 +56,7 @@ public class RemoteUpdateTest extends BaseTest
        * Working directory already specified but may be not initialized yet.
        * Directory .git does not exists yet. */
       InitRequest request = new InitRequest();
-      new JGitConnection(repo).init(request);
+      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).init(request);
 
       StoredConfig config = repo.getConfig();
       RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
@@ -71,7 +72,7 @@ public class RemoteUpdateTest extends BaseTest
    {
       RemoteUpdateRequest request =
          new RemoteUpdateRequest("origin", new String[]{"test", "master"}, false, null, null, null, null);
-      new JGitConnection(repo).remoteUpdate(request);
+      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteUpdate(request);
       
       StoredConfig config = repo.getConfig();
       RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
@@ -92,7 +93,7 @@ public class RemoteUpdateTest extends BaseTest
 
       RemoteUpdateRequest request =
          new RemoteUpdateRequest("origin", new String[]{"test"}, true, null, null, null, null);
-      new JGitConnection(repo).remoteUpdate(request);
+      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteUpdate(request);
       
       config.load();
       remoteConfig = new RemoteConfig(config, "origin");
@@ -113,7 +114,7 @@ public class RemoteUpdateTest extends BaseTest
 
       RemoteUpdateRequest request =
          new RemoteUpdateRequest("origin", new String[]{"test"}, false, null, null, null, null);
-      new JGitConnection(repo).remoteUpdate(request);
+      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteUpdate(request);
       
       config.load();
       remoteConfig = new RemoteConfig(config, "origin");

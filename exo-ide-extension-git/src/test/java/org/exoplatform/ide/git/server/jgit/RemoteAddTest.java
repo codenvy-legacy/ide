@@ -21,6 +21,7 @@ package org.exoplatform.ide.git.server.jgit;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 
@@ -50,13 +51,13 @@ public class RemoteAddTest extends BaseTest
        * Working directory already specified but may be not initialized yet.
        * Directory .git does not exists yet. */
       InitRequest request = new InitRequest();
-      new JGitConnection(repo).init(request);
+      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).init(request);
    }
 
    public void testRemoteAdd() throws Exception
    {
       String remoteUrl = getDefaultRepository().getWorkTree().getAbsolutePath();
-      new JGitConnection(repo).remoteAdd(new RemoteAddRequest("origin", remoteUrl));
+      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteAdd(new RemoteAddRequest("origin", remoteUrl));
       StoredConfig config = repo.getConfig();
       assertEquals(remoteUrl, config.getString("remote", "origin", "url"));
       assertEquals("+refs/heads/*:refs/remotes/origin/*", config.getString("remote", "origin", "fetch"));
@@ -65,7 +66,7 @@ public class RemoteAddTest extends BaseTest
    public void testRemoteAddWithBranches() throws Exception
    {
       String remoteUrl = getDefaultRepository().getWorkTree().getAbsolutePath();
-      new JGitConnection(repo).remoteAdd(new RemoteAddRequest("origin", remoteUrl, new String[]{"test"}));
+      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteAdd(new RemoteAddRequest("origin", remoteUrl, new String[]{"test"}));
       StoredConfig config = repo.getConfig();
       assertEquals(remoteUrl, config.getString("remote", "origin", "url"));
       assertEquals("+refs/heads/test:refs/remotes/origin/test", config.getString("remote", "origin", "fetch"));

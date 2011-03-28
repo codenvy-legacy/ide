@@ -29,33 +29,10 @@ import java.util.Map;
 public abstract class GitRequest
 {
    /**
-    * User on whose behalf the current request will be performed, e.g. commit
-    * author.
-    */
-   // Transient to avoid JSON processing.
-   private transient GitUser user;
-
-   /**
     * Opaque set of request attributes. If some attribute not need value then
     * empty string or <code>null</code> may be used.
     */
    private Map<String, String> attributes;
-
-   /**
-    * @return user on whose behalf the current request will be performed
-    */
-   public GitUser getUser()
-   {
-      return user;
-   }
-
-   /**
-    * @param user user on whose behalf the current request will be performed
-    */
-   public void setUser(GitUser user)
-   {
-      this.user = user;
-   }
 
    /**
     * @return set of request attributes

@@ -54,10 +54,11 @@ public class CloneTest extends BaseTest
    public void testSimpleClone() throws Exception
    {
       Repository repository = getDefaultRepository();
-      JGitConnection client = new JGitConnection(new FileRepository(new File(cloneRepoDir, ".git")));
+      JGitConnection client =
+         new JGitConnection(new FileRepository(new File(cloneRepoDir, ".git")),
+            new GitUser("andrey", "andrey@mail.com"));
       client.clone(new CloneRequest(repository.getWorkTree().getAbsolutePath(), //
-         null /* .git directory already set. Not need to pass it in this implementation. */, //
-         new GitUser("andrey", "andrey@mail.com")));
+         null /* .git directory already set. Not need to pass it in this implementation. */));
       Repository clone = client.getRepository();
 
       assertEquals(cloneRepoDir.getAbsolutePath(), clone.getWorkTree().getAbsolutePath());
@@ -96,10 +97,11 @@ public class CloneTest extends BaseTest
       Git git = new Git(repository);
       git.branchCreate().setName("featured").call();
 
-      JGitConnection client = new JGitConnection(new FileRepository(new File(cloneRepoDir, ".git")));
+      JGitConnection client =
+         new JGitConnection(new FileRepository(new File(cloneRepoDir, ".git")),
+            new GitUser("andrey", "andrey@mail.com"));
       CloneRequest request = new CloneRequest(repository.getWorkTree().getAbsolutePath(), //
-         null /* .git directory already set. Not need to pass it in this implementation. */, //
-         new GitUser("andrey", "andrey@mail.com"));
+         null /* .git directory already set. Not need to pass it in this implementation. */);
       request.setBranchesToFetch(new String[]{"refs/heads/featured:refs/remotes/origin/featured"});
       client.clone(request);
 

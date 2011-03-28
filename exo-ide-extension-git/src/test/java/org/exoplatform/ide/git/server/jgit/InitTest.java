@@ -48,10 +48,10 @@ public class InitTest extends BaseTest
 
    public void testInitRepo() throws Exception
    {
-      JGitConnection client = new JGitConnection(new FileRepository(new File(workDir, ".git")));
+      JGitConnection client =
+         new JGitConnection(new FileRepository(new File(workDir, ".git")), new GitUser("andrey", "andrey@mail.com"));
       client.init(new InitRequest(null/* .git directory already set. Not need to pass it in this implementation. */, // 
-         false, //
-         new GitUser("andrey", "andrey@mail.com")));
+         false));
       Repository repository = client.getRepository();
       assertNotNull(repository);
       StoredConfig config = repository.getConfig();

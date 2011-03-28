@@ -27,6 +27,7 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.jgit.JGitConnection;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.GitUser;
 
 import java.io.File;
 import java.io.FileReader;
@@ -66,7 +67,8 @@ public abstract class BaseTest extends junit.framework.TestCase
 
       // Create repository.
       defaultRepository =
-         new FileRepositoryBuilder().setGitDir(new File(defaultRepoDir + "/.git")).readEnvironment().findGitDir().build();
+         new FileRepositoryBuilder().setGitDir(new File(defaultRepoDir + "/.git")).readEnvironment().findGitDir()
+            .build();
       defaultRepository.create();
 
       // Create file in repository.
@@ -77,7 +79,7 @@ public abstract class BaseTest extends junit.framework.TestCase
       git.add().addFilepattern(".").call();
       git.commit().setMessage("init").setAuthor("andrey", "andrey@mail.com").call();
 
-      defaultRepoConnection = new JGitConnection(defaultRepository);
+      defaultRepoConnection = new JGitConnection(defaultRepository, new GitUser("andrey", "andrey@mail.com"));
    }
 
    @Override

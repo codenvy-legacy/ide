@@ -49,31 +49,27 @@ public class TagCreateRequest extends GitRequest
    /**
     * @param name name of tag to create
     * @param commit commit to make tag
-    * @param user user to be assigned as tag creator
     * @param message message for the tag
     * @param forceUpdate force create tag operation
     */
-   public TagCreateRequest(String name, String commit, GitUser user, String message, boolean forceUpdate)
+   public TagCreateRequest(String name, String commit, String message, boolean forceUpdate)
    {
       this.name = name;
       this.commit = commit;
       this.message = message;
       this.force = forceUpdate;
-      setUser(user);
    }
 
    /**
     * @param name name of tag to create
     * @param commit commit to make tag
-    * @param user user to be assigned as tag creator
     * @param message message for the tag
     */
-   public TagCreateRequest(String name, String commit, GitUser user, String message)
+   public TagCreateRequest(String name, String commit, String message)
    {
       this.name = name;
       this.commit = commit;
       this.message = message;
-      setUser(user);
    }
 
    /**

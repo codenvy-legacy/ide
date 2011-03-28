@@ -24,6 +24,7 @@ import org.eclipse.jgit.storage.file.FileRepository;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.shared.GitUser;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,12 +37,13 @@ import java.io.IOException;
 public class JGitConnectionFactory extends GitConnectionFactory
 {
    /**
-    * @see org.exoplatform.ide.git.server.GitConnectionFactory#getConnection(java.io.File)
+    * @see org.exoplatform.ide.git.server.GitConnectionFactory#getConnection(java.io.File,
+    *      org.exoplatform.ide.git.shared.GitUser)
     */
    @Override
-   public GitConnection getConnection(File workDir) throws GitException
+   public GitConnection getConnection(File workDir, GitUser user) throws GitException
    {
-      return new JGitConnection(createRepository(workDir));
+      return new JGitConnection(createRepository(workDir), user);
    }
 
    private static Repository createRepository(File workDir) throws GitException

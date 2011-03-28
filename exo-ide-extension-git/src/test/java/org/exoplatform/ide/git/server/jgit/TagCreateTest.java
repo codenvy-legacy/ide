@@ -22,7 +22,6 @@ import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
 
@@ -35,9 +34,7 @@ public class TagCreateTest extends BaseTest
    public void testCreateTag() throws Exception
    {
       Tag tag =
-         getDefaultConnection().tagCreate(
-            new TagCreateRequest("new_tag", null/*From HEAD*/, new GitUser("andrey", "andrey@mail.com"),
-               "test create tag"));
+         getDefaultConnection().tagCreate(new TagCreateRequest("new_tag", null/*From HEAD*/, "test create tag"));
       java.util.Map<String, Ref> tags = getDefaultRepository().getTags();
 
       Ref refTag = tags.get(tag.getName());

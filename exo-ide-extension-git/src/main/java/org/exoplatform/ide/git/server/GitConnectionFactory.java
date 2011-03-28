@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.server;
 
+import org.exoplatform.ide.git.shared.GitUser;
+
 import java.io.File;
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -45,20 +47,22 @@ public abstract class GitConnectionFactory
     * Get connection to Git repository located in <code>workDir</code>.
     * 
     * @param workDir repository directory
-    * @return connection t Git repository
+    * @param user user
+    * @return connection to Git repository
     * @throws GitException if can't initialize connection
     */
-   public final GitConnection getConnection(String workDir) throws GitException
+   public final GitConnection getConnection(String workDir, GitUser user) throws GitException
    {
-      return getConnection(new File(workDir));
+      return getConnection(new File(workDir), user);
    }
 
    /**
     * Get connection to Git repository located in <code>workDir</code>.
     * 
     * @param workDir repository directory
-    * @return connection t Git repository
+    * @param user user
+    * @return connection to Git repository
     * @throws GitException if can't initialize connection
     */
-   public abstract GitConnection getConnection(File workDir) throws GitException;
+   public abstract GitConnection getConnection(File workDir, GitUser user) throws GitException;
 }
