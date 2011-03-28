@@ -89,8 +89,7 @@ public class PushTest extends BaseTest
 
       Git remoteGit = Git.init().setDirectory(remoteWorkDir).call();
 
-      // XXX : Need add file to init 'master' branch. If not then checkout operation fails with NPE.
-      addFile(remoteWorkDir, "init", "init");
+      // XXX : Need commit to init 'master' branch. If not then checkout operation fails with NPE.
       remoteGit.add().addFilepattern(".").call();
       remoteGit.commit().setMessage("init").call();
 

@@ -27,7 +27,7 @@ package org.exoplatform.ide.git.shared;
  */
 public class PullRequest extends GitRequest
 {
-   // TODO : docs
+   // Refspec for pull.
    private String refSpec;
 
    /**
