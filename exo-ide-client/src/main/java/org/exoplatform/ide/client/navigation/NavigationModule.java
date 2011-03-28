@@ -57,7 +57,6 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.module.navigation.action.CreateFolderForm;
-import org.exoplatform.ide.client.module.navigation.action.GetItemURLForm;
 import org.exoplatform.ide.client.module.navigation.action.RenameItemForm;
 import org.exoplatform.ide.client.module.navigation.control.CopyItemsCommand;
 import org.exoplatform.ide.client.module.navigation.control.CutItemsCommand;
@@ -110,8 +109,6 @@ import org.exoplatform.ide.client.navigation.event.CreateFolderEvent;
 import org.exoplatform.ide.client.navigation.event.CreateFolderHandler;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsHandler;
-import org.exoplatform.ide.client.navigation.event.GetFileURLEvent;
-import org.exoplatform.ide.client.navigation.event.GetFileURLHandler;
 import org.exoplatform.ide.client.navigation.event.OpenFileByPathEvent;
 import org.exoplatform.ide.client.navigation.event.OpenFileByPathHandler;
 import org.exoplatform.ide.client.navigation.event.OpenFileWithEvent;
@@ -137,7 +134,7 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class NavigationModule implements OpenFileWithHandler, UploadFileHandler, SaveFileAsTemplateHandler,
-   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, GetFileURLHandler,
+   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander,
    ApplicationSettingsReceivedHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler,
    InitializeServicesHandler, OpenFileByPathHandler
@@ -232,7 +229,7 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
       handlers.addHandler(CutItemsEvent.TYPE, this);
 
       handlers.addHandler(RenameItemEvent.TYPE, this);
-      handlers.addHandler(GetFileURLEvent.TYPE, this);
+      
 
       handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
       handlers.addHandler(ItemsSelectedEvent.TYPE, this);
@@ -258,6 +255,7 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
       new SearchPresenter(eventBus, selectedItems, entryPoint);
       new SearchResultsPresenter(eventBus);
       new DeleteItemsPresenter(eventBus);
+      new GetItemURLPresenter(eventBus);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -362,13 +360,6 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
    public void onRenameItem(RenameItemEvent event)
    {
       new RenameItemForm(eventBus, selectedItems, openedFiles, lockTokens);
-   }
-
-
-   public void onGetFileURL(GetFileURLEvent event)
-   {
-      String url = selectedItems.get(0).getHref();
-      new GetItemURLForm(eventBus, url);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)

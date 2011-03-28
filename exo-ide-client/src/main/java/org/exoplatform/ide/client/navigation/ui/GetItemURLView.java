@@ -16,21 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.navigation.action;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+package org.exoplatform.ide.client.navigation.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.ViewType;
+import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -39,18 +41,16 @@ import org.exoplatform.ide.client.framework.ui.DialogWindow;
  * @version @version $Id: $
  */
 
-public class GetItemURLForm extends DialogWindow
+public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.client.navigation.GetItemURLPresenter.Display
 {
 
-   private static final int WIDTH = 500;
+   private static final int DEFAULT_WIDTH = 500;
 
-   private static final int HEIGHT = 155;
+   private static final int DEFAULT_HEIGHT = 150;
    
    private static final int BUTTON_WIDTH = 90;
 
    private static final int BUTTON_HEIGHT = 22;
-
-   public static final String ID = "ideGetItemURLForm";
 
    public static final String URL_FIELD = "ideGetItemURLFormURLField";
 
@@ -58,60 +58,55 @@ public class GetItemURLForm extends DialogWindow
 
    public static final String ID_OK_BUTTON = "ideGetItemURLFormOkButton";
 
-   private static final String TITLE = "Item URL";
-
-   private TextField itemURLField;
+   private TextField urlField;
 
    private IButton okButton;
    
    private VerticalPanel mainPanel;
 
-   public GetItemURLForm(HandlerManager eventBus, String url)
+   public GetItemURLView()
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(ID, ViewType.MODAL, "Item URL", new Image(IDEImageBundle.INSTANCE.url()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
-      setTitle(TITLE);
       mainPanel = new VerticalPanel();
       mainPanel.setWidth("100%");
       mainPanel.setHeight("100%");
-      
-      createFieldForm(url);
-      createButtons();
-      
+      mainPanel.setSpacing(5);      
       add(mainPanel);
       
-      show();
-
+      createFieldForm();
+      createButtons();
+      
       new Timer()
       {
 
          @Override
          public void run()
          {
-            itemURLField.selectValue();
+            urlField.selectValue();
          }
 
       }.schedule(500);
    }
 
-   private void createFieldForm(String url)
+   private void createFieldForm()
    {
       DynamicForm paramsForm = new DynamicForm();
       paramsForm.setID(ID_DYNAMIC_FORM);
       paramsForm.setPadding(5);
       paramsForm.setWidth(450);
 
-      itemURLField = new TextField(URL_FIELD, "WebDav item's URL:");
-      itemURLField.setWidth(450);
-      itemURLField.setHeight(22);
-      itemURLField.setTitleOrientation(TitleOrientation.TOP);
-      paramsForm.add(itemURLField);
-      itemURLField.focusInItem();
+      urlField = new TextField(URL_FIELD, "WebDav item's URL:");
+      urlField.setWidth(450);
+      urlField.setHeight(22);
+      urlField.setTitleOrientation(TitleOrientation.TOP);
+      paramsForm.add(urlField);
+      urlField.focusInItem();
       
       mainPanel.add(paramsForm);
       mainPanel.setCellHorizontalAlignment(paramsForm, HorizontalPanel.ALIGN_CENTER);
       mainPanel.setCellVerticalAlignment(paramsForm, HorizontalPanel.ALIGN_MIDDLE);
-      itemURLField.setValue(url);
+      //urlField.setValue(url);
    }
 
    private void createButtons()
@@ -126,18 +121,22 @@ public class GetItemURLForm extends DialogWindow
       okButton.setIcon(Images.Buttons.OK);
 
       buttonsLayout.add(okButton);
-
-      okButton.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            destroy();
-         }
-      });
       
       mainPanel.add(buttonsLayout);
       mainPanel.setCellHorizontalAlignment(buttonsLayout, HorizontalPanel.ALIGN_CENTER);
       mainPanel.setCellVerticalAlignment(buttonsLayout, HorizontalPanel.ALIGN_MIDDLE);
+   }
+
+   @Override
+   public HasClickHandlers getOkButton()
+   {
+      return okButton;
+   }
+
+   @Override
+   public HasValue<String> getURLField()
+   {
+      return urlField;
    }
 
 }
