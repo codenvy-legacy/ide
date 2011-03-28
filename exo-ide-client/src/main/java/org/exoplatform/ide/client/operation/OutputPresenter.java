@@ -50,6 +50,8 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
 
    public interface Display extends ViewDisplay
    {
+      
+      String ID = "ideOutputView";
 
       void clearOutput();
 
