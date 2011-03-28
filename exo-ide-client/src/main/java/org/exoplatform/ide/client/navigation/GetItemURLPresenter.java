@@ -75,6 +75,7 @@ public class GetItemURLPresenter implements GetFileURLHandler, ItemsSelectedHand
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
+      updateURLField();
    }
 
    @Override
@@ -88,12 +89,18 @@ public class GetItemURLPresenter implements GetFileURLHandler, ItemsSelectedHand
       }
    }
 
+   private void updateURLField()
+   {
+      if (display != null)
+      {
+         String url = selectedItems.get(0).getHref();
+         display.getURLField().setValue(url);
+      }
+   }
+
    public void bindDisplay(Display display)
    {
       this.display = display;
-
-      String url = selectedItems.get(0).getHref();
-      display.getURLField().setValue(url);
 
       display.getOkButton().addClickHandler(new ClickHandler()
       {
@@ -103,6 +110,8 @@ public class GetItemURLPresenter implements GetFileURLHandler, ItemsSelectedHand
             IDE.getInstance().closeView(Display.ID);
          }
       });
+      
+      updateURLField();
    }
 
    @Override

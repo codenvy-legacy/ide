@@ -66,7 +66,7 @@ public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.clie
 
    public GetItemURLView()
    {
-      super(ID, ViewType.MODAL, "Item URL", new Image(IDEImageBundle.INSTANCE.url()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      super(ID, ViewType.POPUP, "Item URL", new Image(IDEImageBundle.INSTANCE.url()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
       mainPanel = new VerticalPanel();
       mainPanel.setWidth("100%");
