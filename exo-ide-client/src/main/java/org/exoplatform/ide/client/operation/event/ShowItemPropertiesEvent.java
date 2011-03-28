@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation.properties.event;
+package org.exoplatform.ide.client.operation.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -27,9 +27,20 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id: 
  */
 
-public interface ShowItemPropertiesHandler extends EventHandler
+public class ShowItemPropertiesEvent extends GwtEvent<ShowItemPropertiesHandler>
 {
+   public static final GwtEvent.Type<ShowItemPropertiesHandler> TYPE = new GwtEvent.Type<ShowItemPropertiesHandler>();
 
-   void onShowItemProperties(ShowItemPropertiesEvent event);
+   @Override
+   protected void dispatch(ShowItemPropertiesHandler handler)
+   {
+      handler.onShowItemProperties(this);
+   }
+
+   @Override
+   public Type<ShowItemPropertiesHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

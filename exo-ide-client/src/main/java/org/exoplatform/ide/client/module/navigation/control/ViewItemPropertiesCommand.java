@@ -24,7 +24,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesEvent;
+import org.exoplatform.ide.client.operation.event.ShowItemPropertiesEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

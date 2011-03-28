@@ -402,6 +402,8 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
          int width = getOffsetWidth();
          int height = getOffsetHeight();
 
+         System.out.println("resize:" + view.getId() + "  left:" + left + "  top:" + top + "  width:" + width + "  height:" + height);
+         
          DOM.setStyleAttribute(viewWrapper.getElement(), "left", "" + (left + 0) + "px");
          DOM.setStyleAttribute(viewWrapper.getElement(), "top", "" + (top + 0) + "px");
          DOM.setStyleAttribute(viewWrapper.getElement(), "width", "" + width + "px");

@@ -38,6 +38,7 @@ import org.exoplatform.ide.client.module.development.DevelopmentModule;
 import org.exoplatform.ide.client.module.edit.TextEditModule;
 import org.exoplatform.ide.client.module.preferences.PreferencesModule;
 import org.exoplatform.ide.client.navigation.NavigationModule;
+import org.exoplatform.ide.client.operation.OperationModule;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 /**
@@ -89,8 +90,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
        * MODULES INITIALIZATION
        */
       new NavigationModule(EVENT_BUS, context);
-
       new TextEditModule(EVENT_BUS);
+      new OperationModule(EVENT_BUS);
       new DevelopmentModule(EVENT_BUS);
       new PreferencesModule(EVENT_BUS);
 

@@ -16,19 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation.properties;
+package org.exoplatform.ide.client.operation;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.client.operation.event.ShowItemPropertiesEvent;
+import org.exoplatform.ide.client.operation.event.ShowItemPropertiesHandler;
 
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,75 +44,102 @@ import com.google.gwt.user.client.Timer;
  */
 
 public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemPropertiesReceivedHandler,
-   EditorActiveFileChangedHandler
+   EditorActiveFileChangedHandler, ShowItemPropertiesHandler, ViewClosedHandler
 {
 
-   public interface Display
+   public interface Display extends ViewDisplay
    {
-      void refreshProperties(File file);
+
+      String ID = "ideFilePropertiesView";
+
+      void showProperties(File file);
+
    }
 
    private Display display;
 
-   private Handlers handlers;
+   private File file;
 
-   private File activeFile;
-
-   public PropertiesPresenter()
+   public PropertiesPresenter(HandlerManager eventBus)
    {
-      handlers = new Handlers(IDE.EVENT_BUS);
-      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ItemPropertiesSavedEvent.TYPE, this);
+      eventBus.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+      eventBus.addHandler(ShowItemPropertiesEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
-   public void bindDisplay(Display d)
+   @Override
+   public void onShowItemProperties(ShowItemPropertiesEvent event)
    {
-      display = d;
-      handlers.addHandler(ItemPropertiesSavedEvent.TYPE, this);
-      handlers.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-   }
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView((ViewEx)display);
+      }
+      else
+      {
+         if (!display.getView().isViewVisible())
+         {
+            display.getView().setViewVisible();
+         }
+      }
 
-   public void destroy()
-   {
-      handlers.removeHandlers();
+      display.showProperties(file);
    }
 
    private void refreshProperties(File file)
    {
-      refresh.cancel();
-      if (file == null)
+      if (this.file == null)
       {
          return;
       }
-      activeFile = file;
-      refresh.cancel();
-      refresh.schedule(200);
-   }
-   
-   Timer refresh = new Timer()
-   {
-      
-      @Override
-      public void run()
+
+      if (!file.getHref().equals(this.file.getHref()))
       {
-         display.refreshProperties(activeFile);
+         return;
       }
-   };
+
+      this.file = file;
+
+      if (display != null)
+      {
+         display.showProperties(file);
+      }
+   }
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
       if (event.getItem() instanceof File)
+      {
          refreshProperties((File)event.getItem());
+      }
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
       if (event.getItem() instanceof File)
+      {
          refreshProperties((File)event.getItem());
+      }
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      refreshProperties(event.getFile());
+      file = event.getFile();
+
+      if (display != null)
+      {
+         display.showProperties(file);
+      }
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display) {
+         display = null;
+      }
    }
 
 }
