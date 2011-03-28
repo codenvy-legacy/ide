@@ -45,7 +45,29 @@ public abstract class GitClientService
       instance = this;
    }
    
+   /**
+    * Initializes new Git repository.
+    * 
+    * @param workDir working directory of the new repository
+    * @param bare to create bare repository or not
+    * @param callback callback
+    */
    public abstract void init(String workDir, boolean bare, AsyncRequestCallback<String> callback);
    
+   /**
+    * Clones one remote repository to local one.
+    * 
+    * @param workDir working directory of the new repository
+    * @param remoteUri the location of the remote repository
+    * @param remoteName remote name instead of "origin"
+    * @param callback callback
+    */
    public abstract void cloneRepository(String workDir, String remoteUri, String remoteName, AsyncRequestCallback<String> callback);
+
+   /**
+    * @param workDir working directory of the Git repository
+    * @param shortFormat
+    * @param callback
+    */
+   public abstract void status(String workDir, boolean shortFormat, AsyncRequestCallback<String> callback);
 }

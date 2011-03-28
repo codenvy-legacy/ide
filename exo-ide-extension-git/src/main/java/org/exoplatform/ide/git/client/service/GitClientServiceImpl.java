@@ -73,7 +73,7 @@ public class GitClientServiceImpl extends GitClientService
       String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
 
-      InitRequest initRequest = new InitRequest(workDir, bare, null);
+      InitRequest initRequest = new InitRequest(workDir, bare);
       InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
       
       String params = "workdir="+workDir;
@@ -90,12 +90,23 @@ public class GitClientServiceImpl extends GitClientService
       String url = restServiceContext + CLONE;
       String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
-      CloneRequest cloneRequest = new CloneRequest(remoteUri, workDir, null);
+      CloneRequest cloneRequest = new CloneRequest(remoteUri, workDir);
+      cloneRequest.setRemoteName(remoteName);
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
       
       String params = "workdir="+workDir;
       
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.service.GitClientService#status(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void status(String workDir, boolean shortFormat, AsyncRequestCallback<String> callback)
+   {
+      // TODO Auto-generated method stub
+      
    }
 
 }
