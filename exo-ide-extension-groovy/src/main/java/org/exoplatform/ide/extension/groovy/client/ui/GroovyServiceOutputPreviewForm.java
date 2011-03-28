@@ -95,7 +95,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private VerticalPanel vLayout;
 
-   private SelectItem pathField;
+   private ComboBoxField pathField;
 
    private SelectItem methodField;
 
@@ -187,12 +187,13 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       form.setSpacing(3);
       form.getElement().setId(ID_FORM);
 
-      pathField = new SelectItem();
+      pathField = new ComboBoxField();
       pathField.setWidth(480);
       pathField.setTitleOrientation(TitleOrientation.TOP);
       pathField.setShowTitle(true);
       pathField.setTitle("Path:");
       pathField.setName(NAME_PATH);
+      
 
       methodField = new SelectItem(NAME_METHOD, "Method:");
       methodField.setWidth(480);
