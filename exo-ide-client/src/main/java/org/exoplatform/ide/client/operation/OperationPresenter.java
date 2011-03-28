@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.operation;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
@@ -33,9 +31,8 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
-import org.exoplatform.ide.client.operation.properties.PropertiesForm;
-import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesEvent;
-import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesHandler;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,8 +41,7 @@ import org.exoplatform.ide.client.operation.properties.event.ShowItemPropertiesH
  * @version @version $Id: $
  */
 
-public class OperationPresenter implements ShowItemPropertiesHandler, EditorActiveFileChangedHandler,
-   PreviewFileHandler, ViewClosedHandler
+public class OperationPresenter implements EditorActiveFileChangedHandler, PreviewFileHandler, ViewClosedHandler
 {
 
    private HandlerManager eventBus;
@@ -56,14 +52,11 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
 
    private PreviewForm previewForm;
 
-   private PropertiesForm propertiesForm;
-
    public OperationPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       handlers = new Handlers(eventBus);
-      handlers.addHandler(ShowItemPropertiesEvent.TYPE, this);
       handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       handlers.addHandler(PreviewFileEvent.TYPE, this);
    }
@@ -81,12 +74,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
 
    }
 
-   public void onShowItemProperties(ShowItemPropertiesEvent event)
-   {
-      eventBus.fireEvent(new RestorePerspectiveEvent());
-      showProperies(activeFile);
-   }
-
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
@@ -95,42 +82,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
       {
          IDE.getInstance().closeView(PreviewForm.ID);
          previewForm = null;
-      }
-
-      if (event.getFile() == null)
-      {
-         IDE.getInstance().closeView(PropertiesForm.ID);
-         propertiesForm = null;
-      }
-      else
-      {
-         if (propertiesForm != null)
-         {
-            propertiesForm.refreshProperties(event.getFile());
-            propertiesForm.setViewVisible();
-         }
-         //         else
-         //         {
-         //            showProperies(event.getFile());
-         //         }
-      }
-   }
-
-   /**
-    * @param event
-    */
-   private void showProperies(File file)
-   {
-      if (propertiesForm == null)
-      {
-         propertiesForm = new PropertiesForm();
-         propertiesForm.refreshProperties(file);
-         IDE.getInstance().openView(propertiesForm);
-      }
-      else
-      {
-         propertiesForm.refreshProperties(activeFile);
-         propertiesForm.setViewVisible();
       }
    }
 
@@ -167,8 +118,6 @@ public class OperationPresenter implements ShowItemPropertiesHandler, EditorActi
    {
       if (event.getView() == previewForm)
          previewForm = null;
-      if (event.getView() == propertiesForm)
-         propertiesForm = null;
    }
 
 }

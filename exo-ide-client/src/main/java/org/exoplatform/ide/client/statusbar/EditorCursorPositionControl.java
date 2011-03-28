@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.statusbar;
 
-
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.text.TextButton.TextAlignment;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -26,12 +25,14 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -58,7 +59,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
       IDE.EVENT_BUS.addHandler(EditorCursorActivityEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
@@ -88,31 +89,62 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
       }
    }
 
+   private File file;
+
+   private Editor editor;
+
+   private Timer updateCursorPositionTimer = new Timer()
+   {
+
+      @Override
+      public void run()
+      {
+         updateCursorPosition();
+      }
+
+   };
+
+   private void updateCursorPosition()
+   {
+      try
+      {
+         if (file == null || editor == null)
+         {
+            setText("&nbsp;");
+            setEvent(null);
+            setVisible(false);
+            return;
+         }
+
+         if (editor.getCursorRow() > 0 && editor.getCursorCol() > 0)
+         {
+            setEvent(new GoToLineEvent());
+            setCursorPosition(editor.getCursorRow(), editor.getCursorCol());
+         }
+         else
+         {
+            setEvent(null);
+            setText("&nbsp;");
+         }
+
+         setVisible(true);
+      }
+      catch (Throwable e)
+      {
+         e.printStackTrace();
+      }
+   }
+
    /**
     * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || event.getEditor() == null)
-      {
-         setText("&nbsp;");
-         setEvent(null);
-         setVisible(false);
-         return;
-      }
-      
-      Editor editor = event.getEditor();
-      if (editor.getCursorRow() > 0 && editor.getCursorCol() > 0)
-      {
-         setEvent(new GoToLineEvent());
-         setCursorPosition(editor.getCursorRow(), editor.getCursorCol());
-      }
-      else
-      {
-         setEvent(null);
-         setText("&nbsp;");
-      }
-      
-      setVisible(true);      
+      file = event.getFile();
+      editor = event.getEditor();
+
+      updateCursorPositionTimer.cancel();
+      updateCursorPositionTimer.schedule(500);
    }
+
 }
