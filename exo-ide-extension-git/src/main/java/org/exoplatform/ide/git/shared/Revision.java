@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.shared;
 
+
 /**
  * Describe single commit.
  * 

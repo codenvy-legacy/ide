@@ -21,6 +21,8 @@ package org.exoplatform.ide.git.server.jgit;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -28,6 +30,8 @@ import org.exoplatform.ide.git.shared.GitUser;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -36,6 +40,38 @@ import java.io.IOException;
  */
 public class JGitConnectionFactory extends GitConnectionFactory
 {
+   static
+   {
+      // XXX : Temporary solution to get access to remote Git Repository.
+      // Need find appropriate place for it at least.
+      InputStream ins = JGitConnectionFactory.class.getResourceAsStream("GitCredentials.properties");
+      if (ins != null)
+      {
+         Properties credentialProperties = new Properties();
+         try
+         {
+            credentialProperties.load(ins);
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
+         }
+         finally
+         {
+            try
+            {
+               ins.close();
+            }
+            catch (Exception e)
+            {
+            }
+         }
+         String username = credentialProperties.getProperty("username");
+         String password = credentialProperties.getProperty("password");
+         CredentialsProvider.setDefault(new UsernamePasswordCredentialsProvider(username, password));
+      }
+   }
+
    /**
     * @see org.exoplatform.ide.git.server.GitConnectionFactory#getConnection(java.io.File,
     *      org.exoplatform.ide.git.shared.GitUser)

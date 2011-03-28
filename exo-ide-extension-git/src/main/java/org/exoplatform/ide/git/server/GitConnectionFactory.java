@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.server;
 
+
 import org.exoplatform.ide.git.shared.GitUser;
 
 import java.io.File;

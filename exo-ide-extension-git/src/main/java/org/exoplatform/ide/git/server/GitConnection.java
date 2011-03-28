@@ -360,8 +360,11 @@ public interface GitConnection
     */
    List<Tag> tagList(TagListRequest request) throws GitException;
 
+   /**
+    * @return user associated with this connection
+    */
    GitUser getUser();
-   
+
    /**
     * Close connection, release associated resources.
     */
