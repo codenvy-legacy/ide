@@ -30,7 +30,7 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
-import org.exoplatform.ide.client.operation.output.OutputForm;
+import org.exoplatform.ide.client.operation.ui.OutputForm;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

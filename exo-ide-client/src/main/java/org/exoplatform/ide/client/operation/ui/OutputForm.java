@@ -16,24 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation.output;
-
-import com.google.gwt.user.client.DOM;
-
-import com.google.gwt.user.client.ui.ScrollPanel;
-
-import com.google.gwt.user.client.ui.FlowPanel;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
+package org.exoplatform.ide.client.operation.ui;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,7 +38,7 @@ import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
  * @version @version $Id: $
  */
 
-public class OutputForm extends ViewImpl implements OutputPresenter.Display
+public class OutputForm extends ViewImpl implements org.exoplatform.ide.client.operation.OutputPresenter.Display
 {
 
    /**

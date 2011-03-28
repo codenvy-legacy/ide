@@ -35,6 +35,7 @@ public class OperationModule
    public OperationModule(HandlerManager eventBus) {
       this.eventBus = eventBus;
       
+      new OutputPresenter(eventBus);
       new PropertiesPresenter(eventBus);
    }
 
