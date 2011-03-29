@@ -27,6 +27,12 @@ package org.exoplatform.ide.git.shared;
 public class StatusRequest extends GitRequest
 {
    /**
+    * Filter of file to show status. It may be either list of file names to show
+    * status or name of directory to show all files under them.
+    */
+   private String[] fileFilter;
+
+   /**
     * If <code>true</code> then show status in short-format.
     * <p>
     * For example:
@@ -39,6 +45,18 @@ public class StatusRequest extends GitRequest
     * </pre>
     */
    private boolean shortFormat;
+
+   /**
+    * @param fileFilter filter of file to show status. It may be either list of
+    *           file names to show status or name of directory to show all files
+    *           under them
+    * @param shortFormat if <code>true</code> then show status in short-format
+    */
+   public StatusRequest(String[] fileFilter, boolean shortFormat)
+   {
+      this.fileFilter = fileFilter;
+      this.shortFormat = shortFormat;
+   }
 
    /**
     * @param shortFormat if <code>true</code> then show status in short-format
@@ -54,6 +72,24 @@ public class StatusRequest extends GitRequest
     */
    public StatusRequest()
    {
+   }
+
+   /**
+    * @return file filter
+    * @see #fileFilter
+    */
+   public String[] getFileFilter()
+   {
+      return fileFilter;
+   }
+
+   /**
+    * @param fileFilter file filter
+    * @see #fileFilter
+    */
+   public void setFileFilter(String[] fileFilter)
+   {
+      this.fileFilter = fileFilter;
    }
 
    /**

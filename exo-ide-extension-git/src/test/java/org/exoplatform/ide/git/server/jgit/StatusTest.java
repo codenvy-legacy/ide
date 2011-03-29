@@ -120,7 +120,7 @@ public class StatusTest extends BaseTest
 
    public void testShortStatus() throws Exception
    {
-      StatusPage statusPage = (StatusPage)getDefaultConnection().status(new StatusRequest(true));
+      StatusPage statusPage = (StatusPage)getDefaultConnection().status(new StatusRequest(new String[]{"a/b/c/d"}, true));
       statusPage.writeTo(System.out);
    }
 }

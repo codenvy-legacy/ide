@@ -1375,6 +1375,10 @@ public class JGitConnection implements GitConnection
          treeWalk.reset();
          treeWalk.setRecursive(true);
 
+         String[] rawFileFilter = request.getFileFilter();
+         if (rawFileFilter != null && rawFileFilter.length > 0)
+            treeWalk.setFilter(PathFilterGroup.createFromStrings(Arrays.asList(rawFileFilter)));
+
          try
          {
             treeWalk.addTree(headTree);
@@ -1580,7 +1584,7 @@ public class JGitConnection implements GitConnection
    {
       return user;
    }
-   
+
    /**
     * @see org.exoplatform.ide.git.server.GitConnection#close()
     */
