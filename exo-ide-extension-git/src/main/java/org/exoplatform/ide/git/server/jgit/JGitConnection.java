@@ -82,6 +82,7 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
@@ -1350,17 +1351,6 @@ public class JGitConnection implements GitConnection
          Ref headRef = repository.getRef(Constants.HEAD);
          String currentBranch = Repository.shortenRefName(headRef.getLeaf().getName());
 
-         RevWalk revWalk = new RevWalk(repository);
-         RevTree headTree;
-         try
-         {
-            headTree = revWalk.parseTree(headRef.getObjectId());
-         }
-         finally
-         {
-            revWalk.release();
-         }
-
          List<GitFile> changedNotUpdated = new ArrayList<GitFile>();
          List<GitFile> changedNotCommited = new ArrayList<GitFile>();
          List<GitFile> untracked = new ArrayList<GitFile>();
@@ -1381,7 +1371,26 @@ public class JGitConnection implements GitConnection
 
          try
          {
-            treeWalk.addTree(headTree);
+            RevWalk revWalk = new RevWalk(repository);
+            ObjectId headId = headRef.getObjectId();
+            if (headId != null)
+            {
+               RevTree headTree;
+               try
+               {
+                  headTree = revWalk.parseTree(headRef.getObjectId());
+               }
+               finally
+               {
+                  revWalk.release();
+               }
+               treeWalk.addTree(headTree);
+            }
+            else
+            {
+               treeWalk.addTree(new EmptyTreeIterator());
+            }
+
             treeWalk.addTree(new DirCacheIterator(dirCache));
             treeWalk.addTree(new FileTreeIterator(repository));
 
