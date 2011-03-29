@@ -26,7 +26,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -117,8 +116,6 @@ public class GroovyServiceOutputPreviewPresenter
 
    private Display display;
 
-   private Handlers handlers;
-
    private WadlApplication wadlApplication;
 
    private List<SimpleParameterEntry> headers = new Vector<SimpleParameterEntry>();
@@ -149,7 +146,6 @@ public class GroovyServiceOutputPreviewPresenter
       this.wadlApplication = wadlApplication;
       this.undeployOnCancel = undeloyOnCansel;
       
-      handlers = new Handlers(eventBus);
    }
 
    public void bindDisplay(Display d)
@@ -530,7 +526,6 @@ public class GroovyServiceOutputPreviewPresenter
 
    public void destroy()
    {
-      handlers.removeHandlers();
    }
 
    /**

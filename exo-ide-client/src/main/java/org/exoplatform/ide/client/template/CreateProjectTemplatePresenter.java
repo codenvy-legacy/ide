@@ -32,7 +32,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
@@ -107,8 +106,6 @@ public class CreateProjectTemplatePresenter
    
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private Display display;
 
    private List<Template> templateList = new ArrayList<Template>();
@@ -122,7 +119,6 @@ public class CreateProjectTemplatePresenter
       this.eventBus = eventBus;
       this.templateList = templateList;
 
-      handlers = new Handlers(eventBus);
    }
 
    public void bindDisplay(Display d)
@@ -439,7 +435,6 @@ public class CreateProjectTemplatePresenter
 
    public void destroy()
    {
-      handlers.removeHandlers();
    }
 
 //   /**

@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.client.workspace;
 
+import com.google.gwt.event.shared.GwtEvent;
+
+import com.google.gwt.event.shared.HandlerRegistration;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -27,7 +31,6 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -48,6 +51,7 @@ import org.exoplatform.ide.client.model.discovery.Scheme;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,9 +82,11 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
 
    private HandlerManager eventBus;
 
-   //private ApplicationContext context;
-
-   private Handlers handlers;
+   /**
+    * Used to remove handlers when they are no longer needed.
+    */
+   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
+      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
    private List<EntryPoint> entryPointList;
 
@@ -106,8 +112,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
       this.lockTokens = lockTokens;
       this.applicationSettings = applicationSettings;
       this.openedFiles = openedFiles;
-
-      handlers = new Handlers(eventBus);
    }
 
    public void bindDisplay(Display d)
@@ -200,7 +204,7 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
 
    public void destroy()
    {
-      handlers.removeHandlers();
+      eventBus.removeHandler(ApplicationSettingsSavedEvent.TYPE, this);
    }
 
    private void changeEntryPoint()
@@ -300,13 +304,13 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
       applicationSettings.setValue("entry-point", selectedEntryPoint.getHref(), Store.COOKIES);
       //      applicationSettings.setStoredIn("entry-point", Store.COOKIES);
 
-      handlers.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
+      handlerRegistrations.put(ApplicationSettingsSavedEvent.TYPE, eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this));
       eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
    }
 
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
-      handlers.removeHandler(ApplicationSettingsSavedEvent.TYPE);
+      handlerRegistrations.get(ApplicationSettingsSavedEvent.TYPE).removeHandler();
       display.closeForm();
       eventBus.fireEvent(new SwitchEntryPointEvent(selectedEntryPoint.getHref()));
    }

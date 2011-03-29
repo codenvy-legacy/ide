@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.module.preferences;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.component.AboutForm;
@@ -80,8 +79,6 @@ public class PreferencesModule implements InitializeServicesHandler, Application
 
    private HandlerManager eventBus;
 
-   protected Handlers handlers;
-
    private IDEConfiguration applicationConfiguration;
 
    private ApplicationSettings applicationSettings;
@@ -95,7 +92,6 @@ public class PreferencesModule implements InitializeServicesHandler, Application
    public PreferencesModule(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
@@ -106,14 +102,14 @@ public class PreferencesModule implements InitializeServicesHandler, Application
       eventBus.fireEvent(new RegisterControlEvent(new ShowAboutCommand(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new RestServicesDiscoveryControl()));
 
-      handlers.addHandler(ShowAboutDialogEvent.TYPE, this);
-      handlers.addHandler(ControlsUpdatedEvent.TYPE, this);
-      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
-      handlers.addHandler(EditorFileClosedEvent.TYPE, this);
-      handlers.addHandler(SelectWorkspaceEvent.TYPE, this);
-      handlers.addHandler(CustomizeToolbarEvent.TYPE, this);
-      handlers.addHandler(CustomizeHotKeysEvent.TYPE, this);
+      eventBus.addHandler(ShowAboutDialogEvent.TYPE, this);
+      eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      eventBus.addHandler(SelectWorkspaceEvent.TYPE, this);
+      eventBus.addHandler(CustomizeToolbarEvent.TYPE, this);
+      eventBus.addHandler(CustomizeHotKeysEvent.TYPE, this);
       new RestServicesDiscoveryPresenter(eventBus);
    }
 

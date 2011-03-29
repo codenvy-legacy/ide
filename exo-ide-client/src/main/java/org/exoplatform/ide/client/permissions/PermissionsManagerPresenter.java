@@ -27,7 +27,6 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -83,8 +82,6 @@ public class PermissionsManagerPresenter
 
    private Dispaly dispaly;
 
-   private Handlers handlers;
-
    private AccessControlList acl;
 
    private AccessControlEntry selectedEntry;
@@ -100,8 +97,6 @@ public class PermissionsManagerPresenter
       this.eventBus = eventBus;
       this.item = item;
       this.lockTokens = lockTokens;
-
-      handlers = new Handlers(eventBus);
    }
 
    public void bindDisplay(Dispaly d)
@@ -210,7 +205,6 @@ public class PermissionsManagerPresenter
     */
    public void destroy()
    {
-      handlers.removeHandlers();
    }
 
    private void removeSelectedPermission()

@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide.client.application.phases;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -29,7 +33,8 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.module.preferences.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -44,8 +49,11 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
+   /**
+    * Used to remove handlers when they are no longer needed.
+    */
+   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
+      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
    private IDEConfiguration applicationConfiguration;
 
    private ApplicationSettings applicationSettings;
@@ -57,8 +65,19 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
       this.applicationConfiguration = applicationConfiguration;
       this.applicationSettings = applicationSettings;
 
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
+      handlerRegistrations.put(EntryPointChangedEvent.TYPE, eventBus.addHandler(EntryPointChangedEvent.TYPE, this));
+   }
+   
+   /**
+    * Remove handlers, that are no longer needed.
+    */
+   private void removeHandlers()
+   {
+      for (HandlerRegistration h : handlerRegistrations.values())
+      {
+         h.removeHandler();
+      }
+      handlerRegistrations.clear();
    }
 
    protected void execute()
@@ -93,7 +112,7 @@ public class CheckEntryPointPhase extends Phase implements EntryPointChangedHand
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      handlers.removeHandlers();
+      removeHandlers();
 
       if (event.getEntryPoint() == null)
       {

@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.module.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
@@ -43,16 +42,13 @@ public class ShowVersionListCommandHandler implements ShowVersionListHandler, Ed
 {
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private File activeFile;
 
    public ShowVersionListCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(ShowVersionListEvent.TYPE, this);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ShowVersionListEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    private void getVersionHistory()

@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.client.module.development;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
+
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -39,6 +41,7 @@ import org.exoplatform.ide.client.outline.OutlineTreeGrid;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 
+
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -49,8 +52,6 @@ import com.google.gwt.event.shared.HandlerManager;
 public class DevelopmentModuleEventHandler implements ShowOutlineHandler, ApplicationSettingsReceivedHandler,
    EditorActiveFileChangedHandler, ViewClosedHandler
 {
-
-   private Handlers handlers;
 
    private HandlerManager eventBus;
 
@@ -69,11 +70,10 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
    public DevelopmentModuleEventHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handlers.addHandler(ShowOutlineEvent.TYPE, this);
-      handlers.addHandler(ViewClosedEvent.TYPE, this);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(ShowOutlineEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

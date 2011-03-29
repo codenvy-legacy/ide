@@ -20,9 +20,10 @@ package org.exoplatform.ide.extension.chromattic.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.editor.event.EditorInitializedEvent;
@@ -43,6 +44,9 @@ import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEve
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedHandler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Presenter for the preview of the generated node type definition.
@@ -87,9 +91,10 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    private String generatedNodeType;
 
    /**
-    * Handlers of this presenter.
+    * Used to remove handlers when they are no longer needed.
     */
-   private Handlers handlers;
+   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
+      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
    /**
     * The view state : opened or not.
@@ -105,8 +110,6 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
 
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(GenerateNodeTypeEvent.TYPE, this);
-
-      handlers = new Handlers(eventBus);
    }
    
    /**
@@ -157,12 +160,20 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       if (GeneratedNodeTypePreviewForm.ID.equals(event.getViewId()))
       {
          isOpened = false;
-         handlers.removeHandlers();
+         removeHandlers();
       }
       else if (GenerateNodeTypeForm.ID.equals(event.getViewId()))
       {
-         handlers.removeHandler(NodeTypeGenerationResultReceivedEvent.TYPE);
+         handlerRegistrations.get(NodeTypeGenerationResultReceivedEvent.TYPE).removeHandler();
       }
+   }
+   
+   private void removeHandlers()
+   {
+      eventBus.removeHandler(EditorInitializedEvent.TYPE, this);
+      eventBus.removeHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.removeHandler(ViewClosedEvent.TYPE, this);
+      eventBus.removeHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this);
    }
 
    /**
@@ -171,7 +182,7 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    @Override
    public void onNodeTypeGenerationResultReceived(NodeTypeGenerationResultReceivedEvent event)
    {
-      handlers.removeHandler(NodeTypeGenerationResultReceivedEvent.TYPE);
+      handlerRegistrations.get(NodeTypeGenerationResultReceivedEvent.TYPE).removeHandler();
       if (event.getException() != null)
       {
          if (event.getException().getMessage() != null
@@ -194,9 +205,9 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       }
       else
       {
-         handlers.addHandler(EditorInitializedEvent.TYPE, this);
-         handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-         handlers.addHandler(ViewClosedEvent.TYPE, this);
+         handlerRegistrations.put(EditorInitializedEvent.TYPE, eventBus.addHandler(EditorInitializedEvent.TYPE, this));
+         handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
+         handlerRegistrations.put(ViewClosedEvent.TYPE, eventBus.addHandler(ViewClosedEvent.TYPE, this));
 
          final Display view = new GeneratedNodeTypePreviewForm(eventBus);
          bindDisplay(view);
@@ -264,6 +275,6 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    @Override
    public void onGenerateNodeType(GenerateNodeTypeEvent event)
    {
-      handlers.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this);
+      handlerRegistrations.put(NodeTypeGenerationResultReceivedEvent.TYPE, eventBus.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this));
    }
 }

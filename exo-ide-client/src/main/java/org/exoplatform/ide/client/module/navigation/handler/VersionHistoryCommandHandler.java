@@ -18,10 +18,13 @@
  */
 package org.exoplatform.ide.client.module.navigation.handler;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -50,9 +53,10 @@ import org.exoplatform.ide.client.versioning.event.ShowPreviousVersionHandler;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionListEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -63,8 +67,6 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    ShowPreviousVersionHandler, ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileContentSavedHandler
 {
    private HandlerManager eventBus;
-
-   private Handlers handlers;
 
    private Version version;
 
@@ -79,17 +81,21 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    private boolean isVersionPanelOpened = false;
 
    private VersionContentForm view;
+   
+   /**
+    * Used to remove handler when it is no longer needed.
+    */
+   private HandlerRegistration fileContentHandlerRegistration;
 
    public VersionHistoryCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(OpenVersionEvent.TYPE, this);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      handlers.addHandler(ShowNextVersionEvent.TYPE, this);
-      handlers.addHandler(ShowPreviousVersionEvent.TYPE, this);
-      handlers.addHandler(ViewOpenedEvent.TYPE, this);
-      handlers.addHandler(ViewClosedEvent.TYPE, this);
+      eventBus.addHandler(OpenVersionEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ShowNextVersionEvent.TYPE, this);
+      eventBus.addHandler(ShowPreviousVersionEvent.TYPE, this);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -324,7 +330,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
       if (VersionContentForm.ID.equals(event.getView().getId()))
       {
          isVersionPanelOpened = true;
-         handlers.addHandler(FileContentSavedEvent.TYPE, this);
+         fileContentHandlerRegistration = eventBus.addHandler(FileContentSavedEvent.TYPE, this);
       }
 
    }
@@ -339,7 +345,10 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
       {
          isVersionPanelOpened = false;
          version = null;
-         handlers.removeHandler(FileContentSavedEvent.TYPE);
+         if (fileContentHandlerRegistration != null)
+         {
+            fileContentHandlerRegistration.removeHandler();
+         }
          view = null;
       }
    }

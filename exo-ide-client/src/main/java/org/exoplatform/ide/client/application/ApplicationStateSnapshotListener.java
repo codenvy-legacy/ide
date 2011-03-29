@@ -24,7 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -72,26 +71,23 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
 
    private ApplicationSettings applicationSettings;
 
-   private Handlers handlers;
-
    private Map<String, String> lockTokens;
 
-   public ApplicationStateSnapshotListener(HandlerManager eventBus)
+   public ApplicationStateSnapshotListener(HandlerManager eventbus)
    {
-      this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
+      this.eventBus = eventbus;
 
-      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
-      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
-      handlers.addHandler(EditorFileClosedEvent.TYPE, this);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
-      handlers.addHandler(EditorReplaceFileEvent.TYPE, this);
-      handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
-      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
-      handlers.addHandler(ItemDeletedEvent.TYPE, this);
-      handlers.addHandler(MoveCompleteEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorReplaceFileEvent.TYPE, this);
+      eventBus.addHandler(ItemLockResultReceivedEvent.TYPE, this);
+      eventBus.addHandler(ItemUnlockedEvent.TYPE, this);
+      eventBus.addHandler(ItemDeletedEvent.TYPE, this);
+      eventBus.addHandler(MoveCompleteEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

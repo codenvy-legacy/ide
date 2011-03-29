@@ -18,14 +18,17 @@
  */
 package org.exoplatform.ide.client.navigation;
 
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.webdav.Property;
@@ -152,7 +155,11 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
+   /**
+    * Used to remove handlers when they are no longer needed.
+    */
+   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
+      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
    private String itemToSelect;
 
@@ -165,15 +172,14 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    public WorkspacePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(RefreshBrowserEvent.TYPE, this);
-      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
-      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
-      handlers.addHandler(ItemLockResultReceivedEvent.TYPE, this);
-      handlers.addHandler(SwitchEntryPointEvent.TYPE, this);
-      handlers.addHandler(SelectItemEvent.TYPE, this);
-      handlers.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      handlerRegistrations.put(RefreshBrowserEvent.TYPE, eventBus.addHandler(RefreshBrowserEvent.TYPE, this));
+      handlerRegistrations.put(EntryPointChangedEvent.TYPE, eventBus.addHandler(EntryPointChangedEvent.TYPE, this));
+      handlerRegistrations.put(ItemUnlockedEvent.TYPE, eventBus.addHandler(ItemUnlockedEvent.TYPE, this));
+      handlerRegistrations.put(ItemLockResultReceivedEvent.TYPE, eventBus.addHandler(ItemLockResultReceivedEvent.TYPE, this));
+      handlerRegistrations.put(SwitchEntryPointEvent.TYPE, eventBus.addHandler(SwitchEntryPointEvent.TYPE, this));
+      handlerRegistrations.put(SelectItemEvent.TYPE, eventBus.addHandler(SelectItemEvent.TYPE, this));
+      handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE, eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this));
+      handlerRegistrations.put(ApplicationSettingsReceivedEvent.TYPE, eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
 
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
@@ -184,7 +190,22 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
    public void destroy()
    {
-      handlers.removeHandlers();
+      removeHandlers();
+   }
+   
+   /**
+    * Remove handlers, that are no longer needed.
+    */
+   private void removeHandlers()
+   {
+      //TODO: such method is not very convenient.
+      //If gwt mvp framework will be used , it will be good to use
+      //ResettableEventBus class
+      for (HandlerRegistration h : handlerRegistrations.values())
+      {
+         h.removeHandler();
+      }
+      handlerRegistrations.clear();
    }
 
    public void bindDisplay(Display display)

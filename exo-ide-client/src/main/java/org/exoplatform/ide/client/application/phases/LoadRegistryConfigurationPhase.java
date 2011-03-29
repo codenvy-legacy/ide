@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.application.phases;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.application.ControlsRegistration;
@@ -28,8 +29,6 @@ import org.exoplatform.ide.client.framework.configuration.event.ConfigurationRec
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.conversation.ConversationServiceImpl;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
@@ -44,8 +43,6 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private IDEConfiguration applicationConfiguration;
 
    private ControlsRegistration controls;
@@ -55,8 +52,7 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
       this.eventBus = eventBus;
       this.controls = controls;
 
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
 
    @Override

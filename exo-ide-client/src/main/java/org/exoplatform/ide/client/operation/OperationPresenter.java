@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.operation;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -32,7 +35,8 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
 import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -46,7 +50,11 @@ public class OperationPresenter implements EditorActiveFileChangedHandler, Previ
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
+   /**
+    * Used to remove handlers when they are no longer needed.
+    */
+   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
+      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
    private File activeFile;
 
@@ -56,14 +64,28 @@ public class OperationPresenter implements EditorActiveFileChangedHandler, Previ
    {
       this.eventBus = eventBus;
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      handlers.addHandler(PreviewFileEvent.TYPE, this);
+      handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
+      handlerRegistrations.put(PreviewFileEvent.TYPE, eventBus.addHandler(PreviewFileEvent.TYPE, this));
+   }
+   
+   /**
+    * Remove handlers, that are no longer needed.
+    */
+   private void removeHandlers()
+   {
+      //TODO: such method is not very convenient.
+      //If gwt mvp framework will be used , it will be good to use
+      //ResettableEventBus class
+      for (HandlerRegistration h : handlerRegistrations.values())
+      {
+         h.removeHandler();
+      }
+      handlerRegistrations.clear();
    }
 
    public void destroy()
    {
-      handlers.removeHandlers();
+      removeHandlers();
    }
 
    public void bindDisplay()

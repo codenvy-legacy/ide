@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.client.application.phases;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import com.google.gwt.event.shared.HandlerRegistration;
+
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.editor.EditorFactory;
@@ -42,7 +42,11 @@ import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -58,8 +62,6 @@ EditorFileOpenedHandler
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private ApplicationSettings applicationSettings;
 
    private List<String> filesToLoad;
@@ -73,15 +75,32 @@ EditorFileOpenedHandler
    private List<String> filesToOpen;
 
    private String activeFileURL;
+   
+   /**
+    * Used to remove handlers when they are no longer needed.
+    */
+   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
+      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
-   public RestoreOpenedFilesPhase(HandlerManager eventBus, ApplicationSettings applicationSettings)
+   public RestoreOpenedFilesPhase(HandlerManager eventbus, ApplicationSettings applicationSettings)
    {
-      this.eventBus = eventBus;
+      this.eventBus = eventbus;
       this.applicationSettings = applicationSettings;
-      handlers = new Handlers(eventBus);
 
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-      handlers.addHandler(ExceptionThrownEvent.TYPE, this);
+      handlerRegistrations.put(ExceptionThrownEvent.TYPE, eventBus.addHandler(ExceptionThrownEvent.TYPE, this));
+   }
+   
+   /**
+    * Remove handlers, that are no longer needed.
+    */
+   private void removeHandlers()
+   {
+      for (HandlerRegistration h : handlerRegistrations.values())
+      {
+         h.removeHandler();
+      }
+      handlerRegistrations.clear();
    }
 
    @Override
@@ -108,7 +127,7 @@ EditorFileOpenedHandler
       if (filesToLoad.size() == 0)
       {
          fileToLoad = null;
-         handlers.removeHandlers();
+         removeHandlers();
          eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
          openFilesInEditor();
          return;
@@ -149,7 +168,7 @@ EditorFileOpenedHandler
    {
       activeFileURL = applicationSettings.getValueAsString("active-file");
       filesToOpen = new ArrayList<String>(openedFiles.keySet());
-      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
+      handlerRegistrations.put(EditorFileOpenedEvent.TYPE, eventBus.addHandler(EditorFileOpenedEvent.TYPE, this));
       openNextFileInEditor();
    }
 
@@ -157,7 +176,7 @@ EditorFileOpenedHandler
    {
       if (filesToOpen.size() == 0)
       {
-         handlers.removeHandlers();
+         removeHandlers();
 
          if (activeFileURL != null)
          {

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.toolbar.customize;
 
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -25,7 +28,6 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
@@ -45,6 +47,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -109,9 +112,11 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
 
    private Display display;
 
-   private Handlers handlers;
-
-   //private ApplicationContext context;
+   /**
+    * Used to remove handlers when they are no longer needed.
+    */
+   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
+      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
    private CommandItemEx selectedCommandItem;
 
@@ -129,15 +134,23 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
       this.eventBus = eventBus;
       this.applicationSettings = applicationSettings;
       this.controls = controls;
-      handlers = new Handlers(eventBus);
    }
 
+   /**
+    * Remove handlers, that are no longer needed.
+    */
    public void destroy()
    {
-      handlers.removeHandlers();
+      //TODO: such method is not very convenient.
+      //If gwt mvp framework will be used , it will be good to use
+      //ResettableEventBus class
+      for (HandlerRegistration h : handlerRegistrations.values())
+      {
+         h.removeHandler();
+      }
+      handlerRegistrations.clear();
    }
 
-   @SuppressWarnings("unchecked")
    public void bindDisplay(Display d)
    {
       display = d;
@@ -532,8 +545,7 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
             itemsToUpdate.add("---");
          }
       }
-      //SettingsService.getInstance().saveSetting(applicationSettings);
-      handlers.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
+      handlerRegistrations.put(ApplicationSettingsSavedEvent.TYPE, eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this));
 
       eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
    }

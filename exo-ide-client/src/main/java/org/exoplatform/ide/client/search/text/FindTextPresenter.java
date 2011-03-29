@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.search.text;
 
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -27,7 +30,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -44,6 +46,7 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.search.Search;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -92,7 +95,11 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
+   /**
+    * Used to remove handlers when they are no longer needed.
+    */
+   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
+      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
    private final String STRING_NOT_FOUND = "String not found.";
 
@@ -110,10 +117,24 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
       this.activeFile = activeFile;
 
       filesFindState = new HashMap<String, FindTextState>();
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(EditorTextFoundEvent.TYPE, this);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      handlers.addHandler(EditorCloseFileEvent.TYPE, this);
+      handlerRegistrations.put(EditorTextFoundEvent.TYPE, eventBus.addHandler(EditorTextFoundEvent.TYPE, this));
+      handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
+      handlerRegistrations.put(EditorCloseFileEvent.TYPE, eventBus.addHandler(EditorCloseFileEvent.TYPE, this));
+   }
+   
+   /**
+    * Remove handlers, that are no longer needed.
+    */
+   private void removeHandlers()
+   {
+      //TODO: such method is not very convenient.
+      //If gwt mvp framework will be used , it will be good to use
+      //ResettableEventBus class
+      for (HandlerRegistration h : handlerRegistrations.values())
+      {
+         h.removeHandler();
+      }
+      handlerRegistrations.clear();
    }
 
    public void bindDisplay(Display d)
@@ -233,7 +254,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
 
    public void destroy()
    {
-      handlers.removeHandlers();
+      removeHandlers();
 
       eventBus.fireEvent(new FormClosedEvent(Search.FORM_ID));
 

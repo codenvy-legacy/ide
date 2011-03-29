@@ -19,15 +19,14 @@
 package org.exoplatform.ide.client.application.phases;
 
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.userinfo.event.GetUserInfoEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
@@ -42,8 +41,6 @@ public class LoadUserInfoPhase extends Phase implements UserInfoReceivedHandler
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private IDEConfiguration applicationConfiguration;
 
    private ControlsRegistration controls;
@@ -55,8 +52,7 @@ public class LoadUserInfoPhase extends Phase implements UserInfoReceivedHandler
       this.applicationConfiguration = applicationConfiguration;
       this.controls = controls;
 
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(UserInfoReceivedEvent.TYPE, this);
+      eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
    }
 
    @Override

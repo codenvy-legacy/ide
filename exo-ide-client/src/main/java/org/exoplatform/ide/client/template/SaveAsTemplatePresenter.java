@@ -26,7 +26,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -38,6 +37,10 @@ import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 
 /**
+ * Presenter for Save as Template form.
+ * 
+ * Save file as template.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:   $
  *
@@ -67,8 +70,6 @@ public class SaveAsTemplatePresenter
 
    private Display display;
 
-   private Handlers handlers;
-
    private File file;
    
    private Template templateToCreate;
@@ -79,12 +80,10 @@ public class SaveAsTemplatePresenter
    {
       this.file = file;
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
    }
 
    public void destroy()
    {
-      handlers.removeHandlers();
    }
 
    public void bindDisplay(Display d)

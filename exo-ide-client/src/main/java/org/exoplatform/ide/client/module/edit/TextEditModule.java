@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.module.edit;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -60,8 +59,6 @@ public class TextEditModule implements FindTextHandler, GoToLineHandler,
 {
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private ApplicationSettings applicationSettings;
 
    private File activeFile;
@@ -83,13 +80,12 @@ public class TextEditModule implements FindTextHandler, GoToLineHandler,
       
       eventBus.fireEvent(new RegisterControlEvent(new LockUnlockFileControl(), DockTarget.TOOLBAR));
 
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       
-      handlers.addHandler(ShowLineNumbersEvent.TYPE, this);
-      handlers.addHandler(FindTextEvent.TYPE, this);
-      handlers.addHandler(GoToLineEvent.TYPE, this);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ShowLineNumbersEvent.TYPE, this);
+      eventBus.addHandler(FindTextEvent.TYPE, this);
+      eventBus.addHandler(GoToLineEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       
       new LockUnlockFileHandler(eventBus);
    }

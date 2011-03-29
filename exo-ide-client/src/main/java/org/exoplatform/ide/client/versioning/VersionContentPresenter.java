@@ -18,7 +18,12 @@
  */
 package org.exoplatform.ide.client.versioning;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.ImageUtil;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
@@ -26,8 +31,8 @@ import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -56,16 +61,22 @@ public class VersionContentPresenter implements ShowVersionContentHandler
 
    }
 
+   private HandlerManager eventBus;
+
    private Display display;
 
-   private Handlers handlers;
+   /**
+    * Used to remove handlers when they are no longer needed.
+    */
+   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
+      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
    private Version version;
 
    public VersionContentPresenter(HandlerManager eventBus)
    {
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(ShowVersionContentEvent.TYPE, this);
+      this.eventBus = eventBus;
+      handlerRegistrations.put(ShowVersionContentEvent.TYPE, eventBus.addHandler(ShowVersionContentEvent.TYPE, this));
    }
 
    public void bindDisplay(Display d)
@@ -73,9 +84,19 @@ public class VersionContentPresenter implements ShowVersionContentHandler
       display = d;
    }
 
+   /**
+    * Remove handlers, that are no longer needed.
+    */
    public void destroy()
    {
-      handlers.removeHandlers();
+      //TODO: such method is not very convenient.
+      //If gwt mvp framework will be used , it will be good to use
+      //ResettableEventBus class
+      for (HandlerRegistration h : handlerRegistrations.values())
+      {
+         h.removeHandler();
+      }
+      handlerRegistrations.clear();
    }
 
    /**

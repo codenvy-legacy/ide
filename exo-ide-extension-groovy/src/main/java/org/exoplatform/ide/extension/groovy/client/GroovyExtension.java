@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -41,7 +43,6 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
-import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
@@ -78,8 +79,9 @@ import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ide.extension.groovy.client.util.GroovyPropertyUtil;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -94,7 +96,11 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
+   /**
+    * Used to remove handlers when they are no longer needed.
+    */
+   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
+      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
    private File activeFile;
 
@@ -117,8 +123,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    public void initialize()
    {
       this.eventBus = IDE.EVENT_BUS;
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(InitializeServicesEvent.TYPE, this);
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(InitializeServicesEvent.TYPE, this));
 
       IDE.getInstance().addControl(new SetAutoloadCommand(), DockTarget.TOOLBAR, true);
       IDE.getInstance().addControl(new ConfigureBuildPathCommand(), DockTarget.NONE, false);
@@ -131,13 +136,12 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       IDE.getInstance().addControl(new PreviewWadlOutputCommand(), DockTarget.TOOLBAR, true);
       IDE.getInstance().addControl(new ShowGroovyTemplatePreviewControl(), DockTarget.TOOLBAR, true);
 
-      handlers.addHandler(RestServiceOutputReceivedEvent.TYPE, this);
-      handlers.addHandler(SetAutoloadEvent.TYPE, this);
-      handlers.addHandler(PreviewWadlOutputEvent.TYPE, this);
-      //      handlers.addHandler(WadlServiceOutputReceivedEvent.TYPE, this);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handlers.addHandler(ShowGroovyTemplatePreviewEvent.TYPE, this);
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(RestServiceOutputReceivedEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(SetAutoloadEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewWadlOutputEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(ShowGroovyTemplatePreviewEvent.TYPE, this));
 
       new RunGroovyServiceCommandHandler(eventBus);
       new ValidateGroovyCommandHandler(eventBus);

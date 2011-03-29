@@ -18,15 +18,14 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledHandler;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -38,14 +37,14 @@ import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ide.client.module.edit.control.GoToLineControl;
 import org.exoplatform.ide.client.module.navigation.control.SaveFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
-import com.google.gwt.user.client.Window.ClosingHandler;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -74,8 +73,6 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private Map<String, String> hotKeys;
 
    private List<Control> registeredControls = new ArrayList<Control>();
@@ -99,9 +96,8 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       Window.addWindowClosingHandler(closeListener);
       closeListener.init();
 
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(EditorHotKeyCalledEvent.TYPE, this);
-      handlers.addHandler(RefreshHotKeysEvent.TYPE, this);
+      eventBus.addHandler(EditorHotKeyCalledEvent.TYPE, this);
+      eventBus.addHandler(RefreshHotKeysEvent.TYPE, this);
 
       refreshHotKeys();
    }

@@ -18,22 +18,14 @@
  */
 package org.exoplatform.ide.client.module.edit.action;
 
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-
-import com.google.gwt.user.client.Window;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
@@ -70,8 +62,6 @@ public class GoToLinePresenter
 
    private Display display;
 
-   private Handlers handlers;
-
    private int maxLineNumber;
 
    private HandlerRegistration keyUpHandler;
@@ -85,7 +75,6 @@ public class GoToLinePresenter
       this.eventBus = eventBus;
       this.activeFile = activeFile;
 
-      handlers = new Handlers(eventBus);
    }
 
    public void bindDisplay(Display d)
@@ -176,7 +165,6 @@ public class GoToLinePresenter
    public void destroy()
    {
       eventBus.fireEvent(new EditorSetFocusEvent());
-      handlers.removeHandlers();
    }
 
 }

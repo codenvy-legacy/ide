@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.statusbar;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -29,8 +30,6 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -46,8 +45,6 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
 
    private String entryPoint;
 
-   private Handlers handlers;
-
    public NavigatorStatusControl()
    {
       super(ID);
@@ -61,9 +58,8 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
     */
    public void initialize(HandlerManager eventBus)
    {
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(ItemsSelectedEvent.TYPE, this);
-      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
    
    public void onItemsSelected(ItemsSelectedEvent event)

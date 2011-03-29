@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.application.phases;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.application.ControlsRegistration;
@@ -52,8 +51,6 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private IDEConfiguration applicationConfiguration;
 
    private ApplicationSettings applicationSettings;
@@ -70,8 +67,7 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
       this.userInfo = userInfo;
       this.controls = controls;
 
-      handlers = new Handlers(eventBus);
-      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    @Override

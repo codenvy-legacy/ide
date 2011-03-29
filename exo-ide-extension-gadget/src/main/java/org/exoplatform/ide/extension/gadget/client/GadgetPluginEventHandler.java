@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -58,8 +57,6 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-
    private File activeFile;
 
    private IDEConfiguration applicationConfiguration;
@@ -70,13 +67,11 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    {
       this.eventBus = eventBus;
 
-      handlers = new Handlers(eventBus);
-
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      handlers.addHandler(DeployGadgetEvent.TYPE, this);
-      handlers.addHandler(UndeployGadgetEvent.TYPE, this);
-      handlers.addHandler(PreviewGadgetEvent.TYPE, this);
-      handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(DeployGadgetEvent.TYPE, this);
+      eventBus.addHandler(UndeployGadgetEvent.TYPE, this);
+      eventBus.addHandler(PreviewGadgetEvent.TYPE, this);
+      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
 
    }
 

@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.framework.annotation.ClassAnnotationMap;
@@ -31,11 +30,11 @@ import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEv
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterHandler;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlHandler;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -56,19 +55,16 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-   
    private List<ControlsFormatter> controlsFormatters = new ArrayList<ControlsFormatter>();
 
    public ControlsRegistration(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
 
       toolbarDefaultControls.add("");
       statusBarControls.add("");
-      handlers.addHandler(RegisterControlEvent.TYPE, this);
-      handlers.addHandler(AddControlsFormatterEvent.TYPE, this);
+      eventBus.addHandler(RegisterControlEvent.TYPE, this);
+      eventBus.addHandler(AddControlsFormatterEvent.TYPE, this);
    }
 
    public List<Control> getRegisteredControls()

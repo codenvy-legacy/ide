@@ -23,17 +23,12 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileCallback;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.model.ApplicationContext;
@@ -55,12 +50,9 @@ public class HistoryManager implements EditorActiveFileChangedHandler,
 
    private String pathToLoad;
 
-   private Handlers handlers;
-
    public HistoryManager(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
 
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
@@ -146,7 +138,6 @@ public class HistoryManager implements EditorActiveFileChangedHandler,
 
    private void stopHandling()
    {
-      handlers.removeHandlers();
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
    }
 

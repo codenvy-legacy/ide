@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.download;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
@@ -48,8 +47,6 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
 
    private final String CONTEXT_DOWNLOAD = "/ide/downloadcontent";
 
-   private Handlers handlers;
-
    //private HTMLPane htmlPane;
 
    private FlowPanel htmlPane;
@@ -60,11 +57,10 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
 
    public DownloadForm(HandlerManager eventBus)
    {
-      handlers = new Handlers(eventBus);
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      handlers.addHandler(DownloadFileEvent.TYPE, this);
-      handlers.addHandler(DownloadZippedFolderEvent.TYPE, this);
-      handlers.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(DownloadFileEvent.TYPE, this);
+      eventBus.addHandler(DownloadZippedFolderEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
 
       htmlPane = new FlowPanel();
       htmlPane.setWidth("1px");

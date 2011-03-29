@@ -18,17 +18,20 @@
  */
 package org.exoplatform.ide.client.editor.custom;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.editor.EditorFactory;
-import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
@@ -42,15 +45,10 @@ import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettin
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -82,8 +80,6 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
 
    private Display display;
 
-   private Handlers handlers;
-
    private EditorProducer selectedEditor;
 
    private File selectedFile;
@@ -99,18 +95,25 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
       this.selectedFile = selectedFile;
       this.openedFiles = openedFiles;
       this.applicationSettings = applicationSettings;
-      handlers = new Handlers(eventBus);
       this.eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
    }
 
    public void destroy()
    {
-      handlers.removeHandlers();
+      removeHandlers();
+   }
+   
+   /**
+    * Remove handlers, that are no longer needed.
+    */
+   private void removeHandlers()
+   {
+      eventBus.removeHandler(ApplicationSettingsSavedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
    {
-      handlers.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
 
       display = d;
       display.getCancelButton().addClickHandler(new ClickHandler()

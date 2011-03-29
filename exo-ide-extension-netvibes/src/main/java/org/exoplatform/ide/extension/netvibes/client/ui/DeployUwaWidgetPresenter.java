@@ -27,7 +27,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -218,11 +217,6 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
    public HandlerManager eventBus;
 
    /**
-    * Handlers for this presenter.
-    */
-   private Handlers handlers;
-
-   /**
     * Display.
     */
    private Display display;
@@ -243,7 +237,6 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
    public DeployUwaWidgetPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      handlers = new Handlers(eventBus);
       eventBus.addHandler(DeployUwaWidgetEvent.TYPE, this);
    }
 
@@ -493,7 +486,6 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
     */
    public void destroy()
    {
-      handlers.removeHandlers();
    }
 
    private void getCategories()

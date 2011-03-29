@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.Images;
@@ -126,7 +122,10 @@ import org.exoplatform.ide.client.upload.OpenLocalFileForm;
 import org.exoplatform.ide.client.upload.UploadFileForm;
 import org.exoplatform.ide.client.upload.UploadForm;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -142,8 +141,6 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
    private HandlerManager eventBus;
 
    private ApplicationContext context;
-
-   protected Handlers handlers;
 
    private ApplicationSettings applicationSettings;
 
@@ -163,7 +160,6 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
    {
       this.eventBus = eventBus;
       this.context = context;
-      handlers = new Handlers(eventBus);
 
       NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
 
@@ -214,25 +210,24 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
       eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(), DockTarget.STATUSBAR));
       eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
 
-      handlers.addHandler(InitializeServicesEvent.TYPE, this);
-      handlers.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handlers.addHandler(EntryPointChangedEvent.TYPE, this);
-      handlers.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      handlers.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
-      handlers.addHandler(OpenFileWithEvent.TYPE, this);
-      handlers.addHandler(OpenFileByPathEvent.TYPE, this);
-      handlers.addHandler(UploadFileEvent.TYPE, this);
-      handlers.addHandler(SaveFileAsTemplateEvent.TYPE, this);
-      handlers.addHandler(CreateFolderEvent.TYPE, this);
-      handlers.addHandler(CopyItemsEvent.TYPE, this);
-      handlers.addHandler(CutItemsEvent.TYPE, this);
+      eventBus.addHandler(OpenFileWithEvent.TYPE, this);
+      eventBus.addHandler(OpenFileByPathEvent.TYPE, this);
+      eventBus.addHandler(UploadFileEvent.TYPE, this);
+      eventBus.addHandler(SaveFileAsTemplateEvent.TYPE, this);
+      eventBus.addHandler(CreateFolderEvent.TYPE, this);
+      eventBus.addHandler(CopyItemsEvent.TYPE, this);
+      eventBus.addHandler(CutItemsEvent.TYPE, this);
 
-      handlers.addHandler(RenameItemEvent.TYPE, this);
-      
+      eventBus.addHandler(RenameItemEvent.TYPE, this);
 
-      handlers.addHandler(EditorFileOpenedEvent.TYPE, this);
-      handlers.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
 
       //      handlers.addHandler(ItemLockedEvent.TYPE, this);
       //      handlers.addHandler(ItemUnlockedEvent.TYPE, this);

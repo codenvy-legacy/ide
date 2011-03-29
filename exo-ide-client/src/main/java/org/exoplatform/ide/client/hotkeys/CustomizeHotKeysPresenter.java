@@ -26,7 +26,6 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -123,7 +122,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
       this.applicationSettings = applicationSettings;
       this.controls = controls;
 
-      new Handlers(eventBus);
       HotKeyManager.getInstance().setHotKeyPressedListener(this);
    }
 

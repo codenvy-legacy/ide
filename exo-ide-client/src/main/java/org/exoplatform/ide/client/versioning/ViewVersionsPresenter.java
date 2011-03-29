@@ -27,7 +27,6 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.versioning.event.OpenVersionEvent;
@@ -61,15 +60,12 @@ public class ViewVersionsPresenter
 
    private HandlerManager eventBus;
 
-   private Handlers handlers;
-   
    private List<Version> versionHistory;
 
    public ViewVersionsPresenter(HandlerManager eventBus, List<Version> versionHistory)
    {
       this.eventBus = eventBus;
       this.versionHistory = versionHistory;
-      handlers = new Handlers(eventBus);
    }
 
    private Display display;
@@ -123,7 +119,6 @@ public class ViewVersionsPresenter
     */
    public void destroy()
    {
-      handlers.removeHandlers();
    }
 
    /**
