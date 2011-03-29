@@ -30,6 +30,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -42,6 +43,19 @@ import com.google.gwt.user.client.ui.Widget;
 public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChangeViewTitleHandler,
    HasChangeViewIconHandler, HasSetViewVisibleHandler
 {
+
+   protected class ViewScrollPanel extends ScrollPanel
+   {
+      public ViewScrollPanel()
+      {
+         DOM.setStyleAttribute(getContainerElement(), "position", "absolute");
+         DOM.setStyleAttribute(getContainerElement(), "left", "0px");
+         DOM.setStyleAttribute(getContainerElement(), "top", "0px");
+         DOM.setStyleAttribute(getContainerElement(), "width", "100%");
+         DOM.setStyleAttribute(getContainerElement(), "height", "100%");
+         setSize("100%", "100%");
+      }
+   }
 
    private String id;
 
@@ -116,11 +130,35 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
 
    private Wrapper wrapper;
 
-   @Override
-   public void add(Widget w)
+   private ViewScrollPanel scrollPanel;
+
+   public ScrollPanel getScrollPanel()
    {
-      //super.add(w);
-      wrapper.add(w);
+      return scrollPanel;
+   }
+
+   public final void add(Widget w, boolean contentScrollable)
+   {
+      if (contentScrollable)
+      {
+         if (scrollPanel == null) {
+            scrollPanel = new ViewScrollPanel();
+            DOM.setStyleAttribute(scrollPanel.getElement(), "zIndex", "0");
+            wrapper.add(scrollPanel);            
+         }
+         scrollPanel.add(w);
+         w.setSize("100%", "100%");
+      }
+      else
+      {
+         wrapper.add(w);
+      }
+   }
+
+   @Override
+   public final void add(Widget w)
+   {
+      add(w, false);
    }
 
    @Override
@@ -303,7 +341,7 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
    public boolean setViewVisible()
    {
       SetViewVisibleEvent event = new SetViewVisibleEvent(getId());
-      
+
       for (SetViewVisibleHandler setViewVisibleHandler : setViewVisibleHandlers)
       {
          setViewVisibleHandler.onSetViewVisible(event);
