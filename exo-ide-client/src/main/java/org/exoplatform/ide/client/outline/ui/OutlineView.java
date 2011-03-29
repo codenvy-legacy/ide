@@ -16,21 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.outline;
+package org.exoplatform.ide.client.outline.ui;
 
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Form for displaying code outline.
@@ -44,40 +42,38 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * @version $Id:
  *
  */
-public class OutlineForm extends ViewImpl implements OutlinePresenter.Display
+public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.outline.OutlinePresenter.Display
 {
    private static final String OUTLINE_TREE_GRID_ID = "ideOutlineTreeGrid";
 
-   public static final String ID = "ideOutlineForm";
-
    private static Image OUTLINE_TAB_ICON = new Image(IDEImageBundle.INSTANCE.outline());
 
-   private HandlerManager eventBus;
-
-   private OutlinePresenter presenter;
+   private FlowPanel outlinePanel;
 
    private OutlineTreeGrid<TokenBeenImpl> treeGrid;
 
-   public OutlineForm(HandlerManager bus, Editor activeTextEditor, File activeFile)
+   private HTML outlineDisabledHTML;
+
+   private boolean outlineAvailable = false;
+
+   public OutlineView()
    {
       super(ID, "information", "Outline", OUTLINE_TAB_ICON);
 
-      eventBus = bus;
+      outlinePanel = new FlowPanel();
+      add(outlinePanel, true);
 
-      createTreeGrid();
+      outlineDisabledHTML =
+         new HTML(
+            "<table style=\"width:100%; height:100%;\"><tr style=\"vertical-align:top;\"><td style=\"text-align:center;\">An outline is not available.</td></tr></table>");
+      outlineDisabledHTML.setSize("100%", "100%");
+      outlinePanel.add(outlineDisabledHTML);
 
-      presenter = new OutlinePresenter(eventBus, activeTextEditor, activeFile);
-      presenter.bindDisplay(this);
-
-   }
-
-   private void createTreeGrid()
-   {
       treeGrid = new OutlineTreeGrid<TokenBeenImpl>(OUTLINE_TREE_GRID_ID);
-      ScrollPanel treeWrapper = new ScrollPanel(treeGrid);
-      treeWrapper.setSize("100%", "100%");
-      DOM.setStyleAttribute(treeWrapper.getElement(), "zIndex", "0");    // to view current node highlighter
-      add(treeWrapper);
+      treeGrid.setSize("100%", "100%");
+      treeGrid.setVisible(false);
+      DOM.setStyleAttribute(treeGrid.getElement(), "zIndex", "0");
+      outlinePanel.add(treeGrid);
    }
 
    public TreeGridItem<TokenBeenImpl> getOutlineTree()
@@ -93,15 +89,36 @@ public class OutlineForm extends ViewImpl implements OutlinePresenter.Display
       }
    }
 
-
    public List<TokenBeenImpl> getSelectedTokens()
    {
       return treeGrid.getSelectedTokens();
    }
 
-   public void setFocus()
+   @Override
+   public void setOutlineAvailable(boolean available)
    {
-      activate();
+      if (outlineAvailable == available)
+      {
+         return;
+      }
+
+      outlineAvailable = available;
+
+      if (available)
+      {
+         outlineDisabledHTML.setVisible(false);
+         treeGrid.setVisible(true);
+      }
+      else
+      {
+         treeGrid.setVisible(false);
+         outlineDisabledHTML.setVisible(true);
+      }
    }
+
+   //   public void setFocus()
+   //   {
+   //      activate();
+   //   }
 
 }

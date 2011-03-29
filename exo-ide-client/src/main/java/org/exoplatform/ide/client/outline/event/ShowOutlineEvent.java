@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.development.event;
+package org.exoplatform.ide.client.outline.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -33,9 +33,9 @@ public class ShowOutlineEvent extends GwtEvent<ShowOutlineHandler>
    
    private boolean show;
 
-   public ShowOutlineEvent(boolean isShow)
+   public ShowOutlineEvent(boolean show)
    {
-      show = isShow;
+      this.show = show;
    }
 
    @Override

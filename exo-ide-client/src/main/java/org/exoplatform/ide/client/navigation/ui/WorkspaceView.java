@@ -27,9 +27,7 @@ import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,22 +36,17 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * @version $
  */
 
-public class WorkspaceViewImpl extends ViewImpl implements org.exoplatform.ide.client.navigation.WorkspacePresenter.Display
+public class WorkspaceView extends ViewImpl implements org.exoplatform.ide.client.navigation.WorkspacePresenter.Display
 {
 
    private ItemTree treeGrid;
 
-   public WorkspaceViewImpl()
+   public WorkspaceView()
    {
       super(ID, "navigation", "Workspace", new Image(IDEImageBundle.INSTANCE.workspace()));
 
       treeGrid = new ItemTree();
-      ScrollPanel treeWrapper = new ScrollPanel(treeGrid);
-      treeWrapper.ensureDebugId("Tree-itemTree-Wrapper");
-      treeWrapper.setSize("100%", "100%");
-      //treeWrapper.setSize("100px", "100px");
-      DOM.setStyleAttribute(treeWrapper.getElement(), "zIndex", "0");
-      add(treeWrapper);
+      add(treeGrid, true);
    }
 
    public TreeGridItem<Item> getBrowserTree()

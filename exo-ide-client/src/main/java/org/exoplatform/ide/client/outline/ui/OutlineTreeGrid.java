@@ -16,7 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.outline;
+package org.exoplatform.ide.client.outline.ui;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.editor.api.codeassitant.Modifier;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Grid;
@@ -25,17 +35,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
-
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.editor.api.codeassitant.Modifier;
-import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.vfs.File;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -470,25 +469,6 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
          parent = parent.getParentItem();
       }
       tree.setSelectedItem(nodeToSelect);
-   }
-
-   /**
-    * Checks if file's MIME type gives an opportunity to show outline.
-    * 
-    * @param file
-    * @return
-    */
-   public static boolean haveOutline(File file)
-   {
-      return file.getContentType().equals(MimeType.APPLICATION_JAVASCRIPT)
-         || file.getContentType().equals(MimeType.APPLICATION_X_JAVASCRIPT)
-         || file.getContentType().equals(MimeType.GOOGLE_GADGET)
-         || file.getContentType().equals(MimeType.TEXT_JAVASCRIPT)
-         || file.getContentType().equals(MimeType.APPLICATION_XML) || file.getContentType().equals(MimeType.TEXT_XML)
-         || file.getContentType().equals(MimeType.TEXT_HTML) || file.getContentType().equals(MimeType.GROOVY_SERVICE)
-         || file.getContentType().equals(MimeType.APPLICATION_GROOVY)
-         || file.getContentType().equals(MimeType.GROOVY_TEMPLATE) || file.getContentType().equals(MimeType.UWA_WIDGET)
-         || file.getContentType().equals(MimeType.CHROMATTIC_DATA_OBJECT);
    }
 
    /**

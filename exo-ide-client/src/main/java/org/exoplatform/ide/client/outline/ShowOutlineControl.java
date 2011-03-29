@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.development.control;
+package org.exoplatform.ide.client.outline;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -24,13 +24,11 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
-import org.exoplatform.ide.client.outline.OutlineForm;
-import org.exoplatform.ide.client.outline.OutlineTreeGrid;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.outline.event.ShowOutlineEvent;
 import org.exoplatform.ide.editor.api.EditorCapability;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -53,7 +51,7 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
 
    public static final String PROMPT_HIDE = "Hide Outline";
 
-   private boolean outLineFormOpened = false;
+   private boolean outlineViewOpened = false;
 
    public ShowOutlineControl()
    {
@@ -75,31 +73,33 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || event.getEditor() == null || !event.getEditor().isCapable(EditorCapability.CREATE_TOKEN_LIST))
+      if (event.getFile() == null || event.getEditor() == null
+         || !event.getEditor().isCapable(EditorCapability.CREATE_TOKEN_LIST))
       {
          setVisible(false);
          return;
       }
 
-      boolean visible = OutlineTreeGrid.haveOutline(event.getFile());
+      boolean visible = OutlineSupporting.isOutlineSupported(event.getFile().getContentType());
       setVisible(visible);
       if (visible)
       {
          update();
       }
+
    }
 
    private void update()
    {
-      setSelected(outLineFormOpened);
+      setSelected(outlineViewOpened);
 
-      if (outLineFormOpened)
+      if (outlineViewOpened)
       {
          setPrompt(PROMPT_HIDE);
          setEvent(new ShowOutlineEvent(false));
@@ -111,25 +111,22 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
       }
    }
 
+   @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      if (OutlineForm.ID.equals(event.getViewId()))
+      if (event.getView() instanceof OutlinePresenter.Display)
       {
-         setSelected(true);
-         outLineFormOpened = true;
+         outlineViewOpened = true;
          update();
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onPanelClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
-    */
+   @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (OutlineForm.ID.equals(event.getViewId()))
+      if (event.getView() instanceof OutlinePresenter.Display)
       {
-         setSelected(false);
-         outLineFormOpened = false;
+         outlineViewOpened = false;
          update();
       }
    }

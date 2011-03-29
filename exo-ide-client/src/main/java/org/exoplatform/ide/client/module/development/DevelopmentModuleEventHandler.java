@@ -18,29 +18,14 @@
  */
 package org.exoplatform.ide.client.module.development;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
-
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.module.development.event.ShowOutlineEvent;
-import org.exoplatform.ide.client.module.development.event.ShowOutlineHandler;
-import org.exoplatform.ide.client.outline.OutlineForm;
-import org.exoplatform.ide.client.outline.OutlineTreeGrid;
 import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorCapability;
-
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -49,8 +34,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class DevelopmentModuleEventHandler implements ShowOutlineHandler, ApplicationSettingsReceivedHandler,
-   EditorActiveFileChangedHandler, ViewClosedHandler
+public class DevelopmentModuleEventHandler implements ApplicationSettingsReceivedHandler,
+   EditorActiveFileChangedHandler
 {
 
    private HandlerManager eventBus;
@@ -71,8 +56,7 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
    {
       this.eventBus = eventBus;
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ShowOutlineEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+//      eventBus.addHandler(ShowOutlineEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
@@ -81,23 +65,24 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       applicationSettings = event.getApplicationSettings();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.outline.event.ShowOutlineHandler#onShowOutline(org.exoplatform.ide.client.outline.event.ShowOutlineEvent)
-    */
-   public void onShowOutline(ShowOutlineEvent event)
-   {
-      applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
-      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
-      if (event.isShow())
-      {
-        ViewEx view = new OutlineForm(eventBus, activeTextEditor, activeFile);
-         IDE.getInstance().openView(view);
-      }
-      else
-      {
-         IDE.getInstance().closeView(OutlineForm.ID);
-      }
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.outline.event.ShowOutlineHandler#onShowOutline(org.exoplatform.ide.client.outline.event.ShowOutlineEvent)
+//    */
+//   public void onShowOutline(ShowOutlineEvent event)
+//   {
+//      applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
+//      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+//      if (event.isShow())
+//      {
+//        ViewEx view = new OutlineForm(eventBus, activeTextEditor, activeFile);
+//         IDE.getInstance().openView(view);
+//      }
+//      else
+//      {
+//         IDE.getInstance().closeView(OutlineForm.ID);
+//      }
+//   }
+   
 
 //   Timer t = new Timer()
 //   {
@@ -114,14 +99,14 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      //check, was outline opened
-      //to know, to create new OutlineForm
-      boolean wasOutlineOpened = outlineOpened(activeTextEditor, activeFile);
-
-      activeTextEditor = event.getEditor();
-      activeFile = event.getFile();
-
-      boolean openOutline = outlineOpened(activeTextEditor, activeFile);
+//      //check, was outline opened
+//      //to know, to create new OutlineForm
+//      boolean wasOutlineOpened = outlineOpened(activeTextEditor, activeFile);
+//
+//      activeTextEditor = event.getEditor();
+//      activeFile = event.getFile();
+//
+//      boolean openOutline = outlineOpened(activeTextEditor, activeFile);
 
       //if outline was closed, but must be opened, open it
 //      if (openOutline && !wasOutlineOpened)
@@ -137,12 +122,13 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
 //         return;
 //      }
 
-      //if outline was opened, but must be closed, close it
-      if (!openOutline && wasOutlineOpened)
-      {
-         isClosedByUser = false;
-         IDE.getInstance().closeView(OutlineForm.ID);
-      }
+//      //if outline was opened, but must be closed, close it
+//      if (!openOutline && wasOutlineOpened)
+//      {
+//         isClosedByUser = false;
+//         IDE.getInstance().closeView(OutlineForm.ID);
+//      }
+      
 
       //      if (activeFile == null || activeFile.getContentType() == null)
       //      {
@@ -180,39 +166,39 @@ public class DevelopmentModuleEventHandler implements ShowOutlineHandler, Applic
       //      }
    }
 
-   /**
-    * Determine the state of outline panel 
-    * by text editor (can have outline or not), 
-    * by file (is null, does outline support file mime type),
-    * by outline value, stored in cookies (do user click Outline button to show panel)
-    * 
-    * @param textEditor - text editor
-    * @param file - file
-    * @return is outline must be opened to textEditor and file
-    */
-   private boolean outlineOpened(Editor textEditor, File file)
-   {
-      boolean storedOutlineState =
-         applicationSettings.getValueAsBoolean("outline") == null ? false : applicationSettings
-            .getValueAsBoolean("outline");
-      boolean canEditorHasOutline = textEditor != null && textEditor.isCapable(EditorCapability.CREATE_TOKEN_LIST);
-      boolean canFileHasOutline =
-         file != null && activeFile.getContentType() != null && OutlineTreeGrid.haveOutline(file);
+//   /**
+//    * Determine the state of outline panel 
+//    * by text editor (can have outline or not), 
+//    * by file (is null, does outline support file mime type),
+//    * by outline value, stored in cookies (do user click Outline button to show panel)
+//    * 
+//    * @param textEditor - text editor
+//    * @param file - file
+//    * @return is outline must be opened to textEditor and file
+//    */
+//   private boolean outlineOpened(Editor textEditor, File file)
+//   {
+//      boolean storedOutlineState =
+//         applicationSettings.getValueAsBoolean("outline") == null ? false : applicationSettings
+//            .getValueAsBoolean("outline");
+//      boolean canEditorHasOutline = textEditor != null && textEditor.isCapable(EditorCapability.CREATE_TOKEN_LIST);
+//      boolean canFileHasOutline =
+//         file != null && activeFile.getContentType() != null && OutlineTreeGrid.haveOutline(file);
+//
+//      return storedOutlineState && canEditorHasOutline && canFileHasOutline;
+//   }
 
-      return storedOutlineState && canEditorHasOutline && canFileHasOutline;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
-    */
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (OutlineForm.ID.equals(event.getViewId()) && isClosedByUser)
-      {
-         applicationSettings.setValue("outline", new Boolean(false), Store.COOKIES);
-         eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
-      }
-      isClosedByUser = true;
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
+//    */
+//   public void onViewClosed(ViewClosedEvent event)
+//   {
+//      if (OutlineForm.ID.equals(event.getViewId()) && isClosedByUser)
+//      {
+//         applicationSettings.setValue("outline", new Boolean(false), Store.COOKIES);
+//         eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+//      }
+//      isClosedByUser = true;
+//   }
 
 }

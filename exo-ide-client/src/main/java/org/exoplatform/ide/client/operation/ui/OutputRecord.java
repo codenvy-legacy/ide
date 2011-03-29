@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.client.operation.ui;
 
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Label;
-
-import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import com.google.gwt.user.client.ui.HTML;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
  * @version $
  */
 
-public class OutputRecord extends Label implements MouseOutHandler, MouseOverHandler
+public class OutputRecord extends HTML implements MouseOutHandler, MouseOverHandler
 {
 
    private static final String LOG_COLOR = "#000077";
@@ -49,6 +49,7 @@ public class OutputRecord extends Label implements MouseOutHandler, MouseOverHan
 
    private static final String EVEN_BACKGROUND = "#FFFFFF";
 
+   //   private static final String ODD_BACKGROUND = "#ff9999";
    private static final String ODD_BACKGROUND = "#f8f8f8";
 
    private static final String OVER_BACKGROUND = "#D9E8FF";
@@ -61,19 +62,16 @@ public class OutputRecord extends Label implements MouseOutHandler, MouseOverHan
       {
          setContents("<font color=\"" + LOG_COLOR + "\">[" + OutputMessage.Type.LOG.name() + "] "
             + message.getMessage() + "</font>");
-
       }
       else if (message.getType() == OutputMessage.Type.INFO)
       {
          setContents("<font color=\"" + INFO_COLOR + "\">[" + OutputMessage.Type.INFO.name() + "] "
             + message.getMessage() + "</font>");
-
       }
       else if (message.getType() == OutputMessage.Type.WARNING)
       {
          setContents("<font color=\"" + WARNING_COLOR + "\">[" + OutputMessage.Type.WARNING.name() + "] "
             + message.getMessage() + "</font>");
-
       }
       else if (message.getType() == OutputMessage.Type.ERROR)
       {
@@ -96,24 +94,25 @@ public class OutputRecord extends Label implements MouseOutHandler, MouseOverHan
       }
 
       setBackgroundColor(backgroundColor);
-
       setWidth("100%");
-//      setAutoHeight();
-//      setPadding(4);
-//      setCanSelectText(true);
-//      setCursor(Cursor.TEXT);
- 
       addMouseOverHandler(this);
       addMouseOutHandler(this);
-
    }
 
    /**
     * @param string
     */
-   private void setContents(String string)
+   private void setContents(String html)
    {
-      getElement().setInnerHTML(string);
+      String table =
+         "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\"><tr>" +
+            "<td style=\"" +
+               "font-family: Verdana,Bitstream Vera Sans,sans-serif;" +
+               "font-size: 11px;" +
+               "font-style: normal;" +
+               "font-weight: normal" +
+               "\">" + html + "</td></tr></table>";
+      getElement().setInnerHTML(table);
    }
 
    /**
@@ -121,7 +120,7 @@ public class OutputRecord extends Label implements MouseOutHandler, MouseOverHan
     */
    private void setBackgroundColor(String backgroundColor)
    {
-      DOM.setStyleAttribute(getElement(), "backroundColor", backgroundColor);
+      DOM.setStyleAttribute(getElement(), "background", backgroundColor);
    }
 
    /**
@@ -131,7 +130,6 @@ public class OutputRecord extends Label implements MouseOutHandler, MouseOverHan
    public void onMouseOver(MouseOverEvent event)
    {
       setBackgroundColor(OVER_BACKGROUND);
-
    }
 
    /**
@@ -141,7 +139,6 @@ public class OutputRecord extends Label implements MouseOutHandler, MouseOverHan
    public void onMouseOut(MouseOutEvent event)
    {
       setBackgroundColor(backgroundColor);
-
    }
 
 }

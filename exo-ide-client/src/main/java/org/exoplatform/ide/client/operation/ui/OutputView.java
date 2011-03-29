@@ -25,10 +25,8 @@ import org.exoplatform.ide.client.framework.ui.ViewType;
 import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,7 +35,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * @version @version $Id: $
  */
 
-public class OutputForm extends ViewImpl implements org.exoplatform.ide.client.operation.OutputPresenter.Display
+public class OutputView extends ViewImpl implements org.exoplatform.ide.client.operation.OutputPresenter.Display
 {
 
    private final static String ID = "ideOutputForm";
@@ -46,18 +44,14 @@ public class OutputForm extends ViewImpl implements org.exoplatform.ide.client.o
 
    private Image clearOutputButton;
 
-   public OutputForm()
+   public OutputView()
    {
       super(ID, ViewType.OPERATION, "Output", new Image(IDEImageBundle.INSTANCE.output()));
 
       outputLayout = new FlowPanel();
-      ScrollPanel scrollWraper = new ScrollPanel(outputLayout);
-      scrollWraper.setWidth("100%");
-      scrollWraper.setHeight("100%");
       outputLayout.getElement().setId(ID);
-
-      add(scrollWraper);
-
+      add(outputLayout, true);
+      
       clearOutputButton = new Image(Images.OutputPanel.BUTTON_CLEAR);
       clearOutputButton.setWidth(20 + "px");
       clearOutputButton.setHeight(18 + "px");
@@ -74,9 +68,9 @@ public class OutputForm extends ViewImpl implements org.exoplatform.ide.client.o
    public void outMessage(OutputMessage message)
    {
       OutputRecord record = new OutputRecord(message, odd);
-      DOM.setStyleAttribute(record.getElement(), "marginTop", "3px");
       odd = !odd;
       outputLayout.add(record);
+      getScrollPanel().scrollToBottom();
    }
 
    public HasClickHandlers getClearOutputButton()

@@ -26,7 +26,6 @@ import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -48,17 +47,7 @@ public class SearchResultsView extends ViewImpl implements
       super(ID, "navigation", "Search", new Image(IDEImageBundle.INSTANCE.search()));
 
       searchItemTreeGrid = new ItemTree();
-      ScrollPanel treeWrapper = new ScrollPanel(searchItemTreeGrid);
-      treeWrapper.ensureDebugId("Tree-itemTree-Wrapper");
-      treeWrapper.setSize("100%", "100%");
-      //      searchItemTreeGrid = new ItemTreeGrid<Item>(TREE_ID, true);
-      //      searchItemTreeGrid.setEmptyMessage(FILE_NOT_FOUND_MESSAGE);
-      //      searchItemTreeGrid.setShowHeader(false);
-      //      searchItemTreeGrid.setLeaveScrollbarGap(false);
-      //
-      //      searchItemTreeGrid.setHeight100();
-      //      searchItemTreeGrid.setWidth100();
-      add(treeWrapper);
+      add(searchItemTreeGrid, true);
    }
 
    public TreeGridItem<Item> getSearchResultTree()

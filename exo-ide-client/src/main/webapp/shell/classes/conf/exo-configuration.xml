@@ -276,6 +276,7 @@
                <field name="jars">
                   <collection type="java.util.ArrayList">
                   
+                  <!-- 
                      <value>
                         <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
@@ -293,6 +294,7 @@
                            </field>
                         </object>
                      </value>
+                      -->
                   
                   </collection>
                </field>
@@ -316,6 +318,7 @@
                <field name="jars">
                   <collection type="java.util.ArrayList">
                    
+                   <!-- 
                      <value>
                         <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
@@ -323,6 +326,7 @@
                            </field>
                         </object>
                      </value>
+                      -->
                   
                   </collection>
                </field>

@@ -30,7 +30,7 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
-import org.exoplatform.ide.client.operation.ui.OutputForm;
+import org.exoplatform.ide.client.operation.ui.OutputView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -95,7 +95,7 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
          eventBus.fireEvent(new RestorePerspectiveEvent());
          if (display == null)
          {
-            display = GWT.create(OutputForm.class);
+            display = GWT.create(OutputView.class);
             bindDisplay();
             IDE.getInstance().openView((ViewEx)display);
          }

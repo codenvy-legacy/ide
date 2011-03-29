@@ -18,22 +18,30 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.outline.event.ShowOutlineEvent;
+import org.exoplatform.ide.client.outline.event.ShowOutlineHandler;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
@@ -42,10 +50,15 @@ import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Presenter for Outline Panel.
@@ -58,14 +71,17 @@ import java.util.Map;
  *
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-   EditorCursorActivityHandler
+   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler
 {
-   
+
    /**
     * View for outline panel.
     */
-   interface Display
+   public interface Display extends ViewDisplay
    {
+
+      String ID = "ideOutlineView";
+
       /**
        * Get outline tree grid
        * @return {@link TreeGridItem}
@@ -85,11 +101,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
        * @return {@link List}
        */
       List<TokenBeenImpl> getSelectedTokens();
-      
-      /**
-       * Set focus on treegrid.
-       */
-      void setFocus();
+
+      void setOutlineAvailable(boolean available);
+
    }
 
    private HandlerManager eventBus;
@@ -112,35 +126,71 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private File activeFile;
 
-   private Editor activeTextEditor;
+   private Editor activeEditor;
 
    private boolean afterChangineCursorFromOutline = false;
 
-   public OutlinePresenter(HandlerManager bus, Editor activeTextEditor, File activeFile)
-   {
-      eventBus = bus;
-      
-      this.activeTextEditor = activeTextEditor;
-      this.activeFile = activeFile;
+   private ApplicationSettings applicationSettings;
 
-      handlerRegistrations.put(EditorContentChangedEvent.TYPE, eventBus.addHandler(EditorContentChangedEvent.TYPE, this));
-      handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
-      handlerRegistrations.put(EditorCursorActivityEvent.TYPE, eventBus.addHandler(EditorCursorActivityEvent.TYPE, this));
-   }
-   
-   /**
-    * Remove handlers, that are no longer needed.
-    */
-   private void removeHandlers()
+   public OutlinePresenter(HandlerManager eventBus)
    {
-      //TODO: such method is not very convenient.
-      //If gwt mvp framework will be used , it will be good to use
-      //ResettableEventBus class
-      for (HandlerRegistration h : handlerRegistrations.values())
+      this.eventBus = eventBus;
+
+      eventBus.addHandler(ShowOutlineEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorContentChangedEvent.TYPE, this);
+      eventBus.addHandler(EditorCursorActivityEvent.TYPE, this);
+   }
+
+   @Override
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      this.applicationSettings = event.getApplicationSettings();
+
+      boolean showOutline = applicationSettings.getValueAsBoolean("outline");
+      if (showOutline)
       {
-         h.removeHandler();
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView((ViewEx)d);
+         bindDisplay(d);
       }
-      handlerRegistrations.clear();
+   }
+
+   @Override
+   public void onShowOutline(ShowOutlineEvent event)
+   {
+      if (event.isShow() && display == null)
+      {
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView((ViewEx)d);
+         bindDisplay(d);
+
+         applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
+         eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+
+         return;
+      }
+
+      if (!event.isShow() && display != null)
+      {
+         IDE.getInstance().closeView(Display.ID);
+
+         applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
+         eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+
+         return;
+      }
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
    }
 
    public void bindDisplay(Display d)
@@ -151,52 +201,79 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          public void onSelection(SelectionEvent<TokenBeenImpl> event)
          {
-            if (currentToken != null && event.getSelectedItem().getName().equals(currentToken.getName())
-               && event.getSelectedItem().getLineNumber() == currentToken.getLineNumber())
-            {
-               return;
-            }
-
-            currentToken = event.getSelectedItem();
-
-            if (goToLine)
-            {              
-               setEditorCursorPosition(event.getSelectedItem().getLineNumber());               
-            }
-            goToLine = true;
+            onItemSelected(event.getSelectedItem());
          }
       });
-      
+
       display.getOutlineTree().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
          {
-            if (display.getSelectedTokens().size() > 0)
-            {
-               currentToken = display.getSelectedTokens().get(0);
-               setEditorCursorPosition(currentToken.getLineNumber());
-            }
+            onItemClicked();
          }
       });
 
       currentRow = 0;
       goToLine = true;
-      
-      refreshOutline(activeTextEditor);
+
+      if (canShowOutline())
+      {
+         display.setOutlineAvailable(true);
+         refreshOutlineTree();
+      }
+      else
+      {
+         tokens = null;
+         display.setOutlineAvailable(false);
+      }
    }
 
-   public void destroy()
+   private void onItemSelected(TokenBeenImpl selectedItem)
    {
-      removeHandlers();
+      if (currentToken != null && selectedItem.getName().equals(currentToken.getName())
+         && selectedItem.getLineNumber() == currentToken.getLineNumber())
+      {
+         return;
+      }
+
+      currentToken = selectedItem;
+
+      if (goToLine)
+      {
+         setEditorCursorPosition(selectedItem.getLineNumber());
+      }
+      goToLine = true;
    }
-   
-   private void refreshOutline(Editor editor)
+
+   /**
+    * Update cursor position in editor
+    */
+   private void onItemClicked()
    {
-      tokens = (List<TokenBeenImpl>) editor.getTokenList();
+      if (display.getSelectedTokens().size() > 0)
+      {
+         currentToken = display.getSelectedTokens().get(0);
+         setEditorCursorPosition(currentToken.getLineNumber());
+      }
+   }
+
+   /**
+    * Refresh Outline Tree
+    * 
+    * @param editor
+    */
+   private void refreshOutlineTree()
+   {
+      if (activeEditor == null)
+      {
+         return;
+      }
+
+      tokens = (List<TokenBeenImpl>)activeEditor.getTokenList();
       TokenBeenImpl token = new TokenBeenImpl();
       token.setSubTokenList(tokens);
       display.getOutlineTree().setValue(token);
-      currentRow = editor.getCursorRow();
+      currentRow = activeEditor.getCursorRow();
       currentToken = null;
       selectTokenByRow(tokens);
    }
@@ -209,29 +286,31 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       int maxLineNumber = activeFile.getContent().split("\n").length;
 
-      afterChangineCursorFromOutline = true;               
+      afterChangineCursorFromOutline = true;
       eventBus.fireEvent(new EditorGoToLineEvent(lineNumber < maxLineNumber ? lineNumber : maxLineNumber));
    }
-   
+
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
-      if (isShowOutlineTree(activeTextEditor, activeFile))
+      if (display == null || !canShowOutline())
       {
-         refreshOutlineTimer.cancel();
-         refreshOutlineTimer.schedule(2000);
+         return;
       }
+
+      refreshOutlineTimer.cancel();
+      refreshOutlineTimer.schedule(2000);
    }
 
-   private boolean isShowOutlineTree(Editor editor, File file)
+   private boolean canShowOutline()
    {
-      if (editor == null || file == null || file.getContentType() == null)
+      if (activeEditor == null || activeFile == null || activeFile.getContentType() == null)
       {
          refreshOutlineTimer.cancel();
          selectOutlineTimer.cancel();
          return false;
       }
 
-      return OutlineTreeGrid.haveOutline(file);
+      return OutlineSupporting.isOutlineSupported(activeFile.getContentType());
    }
 
    private Timer refreshOutlineTimer = new Timer()
@@ -241,7 +320,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          try
          {
-            refreshOutline(activeTextEditor);
+            refreshOutlineTree();
          }
          catch (Throwable e)
          {
@@ -253,19 +332,23 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      activeTextEditor = event.getEditor();
+      activeEditor = event.getEditor();
 
-      File file = event.getFile();
-      Editor editor = event.getEditor();
-
-      if (isShowOutlineTree(editor, file))
+      if (display == null)
       {
-         refreshOutline(editor);
+         return;
+      }
+
+      if (canShowOutline())
+      {
+         display.setOutlineAvailable(true);
+         refreshOutlineTree();
       }
       else
       {
          tokens = null;
-         display.getOutlineTree().setValue(new TokenBeenImpl("", null));
+         //display.getOutlineTree().setValue(new TokenBeenImpl("An Outline is not available.", null));
+         display.setOutlineAvailable(false);
       }
    }
 
@@ -395,7 +478,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
     */
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
-      System.out.println("OutlinePresenter.onEditorCursorActivity()");
+      if (display == null)
+      {
+         return;
+      }
+
       if (currentRow == event.getRow())
       {
          return;
@@ -409,8 +496,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       if (afterChangineCursorFromOutline)
       {
          afterChangineCursorFromOutline = false;
-      }      
-      
+      }
+
       selectOutlineTimer.schedule(1000);
    }
 

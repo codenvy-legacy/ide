@@ -35,7 +35,6 @@ import org.exoplatform.ide.client.framework.vfs.PropertyTitle;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -76,13 +75,8 @@ public class PropertiesView extends ViewImpl implements
       else
       {
          Map<String, String> properties = getVisibleProperties(file.getProperties());
-         Widget widget = createPropertiesTable(properties);
-         
-         ScrollPanel scrollPanel = new ScrollPanel(widget);
-         scrollPanel.setSize("100%", "100%");
-         DOM.setStyleAttribute(scrollPanel.getElement(), "zIndex", "0");
-         
-         setContentWidget(scrollPanel);
+         Widget propertiesTable = createPropertiesTable(properties);
+         setContentWidget(propertiesTable);
       }
    }
 
@@ -94,7 +88,7 @@ public class PropertiesView extends ViewImpl implements
       }
 
       contentWidget = w;
-      add(contentWidget);
+      add(contentWidget, true);
    }
 
    public Map<String, String> getVisibleProperties(Collection<Property> properties)

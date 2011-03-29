@@ -21,10 +21,10 @@ package org.exoplatform.ide.client.module.development;
 import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
-import org.exoplatform.ide.client.module.development.control.ShowOutlineControl;
 import org.exoplatform.ide.client.module.development.control.ShowPreviewCommand;
 import org.exoplatform.ide.client.operation.OperationPresenter;
-import org.exoplatform.ide.client.operation.OutputPresenter;
+import org.exoplatform.ide.client.outline.OutlinePresenter;
+import org.exoplatform.ide.client.outline.ShowOutlineControl;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -45,6 +45,8 @@ public class DevelopmentModule
       new DevelopmentModuleEventHandler(eventBus);
       
       new DocumentationPresenter(eventBus);
+      
+      new OutlinePresenter(eventBus);
       
       new OperationPresenter(eventBus);
    }

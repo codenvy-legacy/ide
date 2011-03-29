@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
-import org.exoplatform.gwtframework.ui.client.component.HTMLLabel;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.ViewType;
@@ -58,7 +58,7 @@ public class DeleteItemView extends ViewImpl implements
 
    private IButton cancelButton;
 
-   private HTMLLabel promptField;
+   private Label promptField;
 
    public DeleteItemView()
    {
@@ -96,7 +96,8 @@ public class DeleteItemView extends ViewImpl implements
 
    private void createPromptField()
    {
-      promptField = new HTMLLabel();
+      promptField = new Label();
+      promptField.setIsHTML(true);
       infoLayout.add(promptField);
       infoLayout.setCellHorizontalAlignment(promptField, HasHorizontalAlignment.ALIGN_LEFT);
    }
