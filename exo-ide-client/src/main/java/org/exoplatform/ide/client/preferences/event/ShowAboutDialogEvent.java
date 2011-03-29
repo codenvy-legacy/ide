@@ -16,41 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.model;
+package org.exoplatform.ide.client.preferences.event;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.ide.client.framework.vfs.Item;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version @version $Id: $
+ * @version $
  */
 
-public class ApplicationContext
+public class ShowAboutDialogEvent extends GwtEvent<ShowAboutDialogHandler>
 {
 
-   /**
-    * Uses for storing items to need copy
-    */
-   private List<Item> itemsToCopy = new ArrayList<Item>();
+   public static final GwtEvent.Type<ShowAboutDialogHandler> TYPE = new GwtEvent.Type<ShowAboutDialogHandler>();
 
-   /**
-    * Uses to storing items to need cut
-    */
-   private List<Item> itemsToCut = new ArrayList<Item>();
-
-   public List<Item> getItemsToCopy()
+   @Override
+   protected void dispatch(ShowAboutDialogHandler handler)
    {
-      return itemsToCopy;
+      handler.onShowAboutDialog(this);
    }
 
-   public List<Item> getItemsToCut()
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowAboutDialogHandler> getAssociatedType()
    {
-      return itemsToCut;
+      return TYPE;
    }
 
 }

@@ -16,15 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.navigation.control.download;
+package org.exoplatform.ide.client.navigation.control;
 
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand;
-import org.exoplatform.ide.client.navigation.event.DownloadZippedFolderEvent;
+import org.exoplatform.ide.client.navigation.event.SearchFilesEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -35,57 +37,53 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
+public class SearchFilesCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+   EntryPointChangedHandler
 {
 
-   private final static String ID = "File/Download Zipped Folder...";
+   public static final String ID = "File/Search...";
 
-   private boolean oneItemSelected = true;
+   public static final String TITLE = "Search...";
 
-   public DownloadZippedFolderCommand()
+   public SearchFilesCommand()
    {
       super(ID);
-      setTitle("Download Zipped Folder...");
-      setPrompt("Download Zipped Folder...");
-      setImages(IDEImageBundle.INSTANCE.downloadFolder(), IDEImageBundle.INSTANCE.downloadFolderDisabled());
-      setEvent(new DownloadZippedFolderEvent());
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setImages(IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
+      setEvent(new SearchFilesEvent());
    }
 
    /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
-   @Override
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      super.initialize(eventBus);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof Folder))
-      {
-         oneItemSelected = false;
-         updateEnabling();
-      }
-      else
-      {
-         oneItemSelected = true;
-         updateEnabling();
-      }
-   }
-
-   @Override
-   protected void updateEnabling()
-   {
-      if (browserSelected && oneItemSelected)
-      {
-         setEnabled(true);
-      }
-      else
+      if (event.getSelectedItems().size() != 1)
       {
          setEnabled(false);
       }
+      else
+      {
+         setEnabled(true);
+      }
    }
 
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
+   }
 }

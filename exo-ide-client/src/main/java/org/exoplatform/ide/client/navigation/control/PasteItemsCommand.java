@@ -16,71 +16,93 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.navigation.control.download;
+package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.event.edit.ItemsToPasteSelectedEvent;
+import org.exoplatform.ide.client.event.edit.ItemsToPasteSelectedHandler;
+import org.exoplatform.ide.client.event.edit.PasteItemsCompleteEvent;
+import org.exoplatform.ide.client.event.edit.PasteItemsCompleteHandler;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand;
-import org.exoplatform.ide.client.navigation.event.DownloadZippedFolderEvent;
+import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: $
+*/
 @RolesAllowed({"administrators", "developers"})
-public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
+public class PasteItemsCommand extends MultipleSelectionItemsCommand implements ItemsToPasteSelectedHandler,
+   PasteItemsCompleteHandler, ItemsSelectedHandler
 {
+   public static final String ID = "Edit/Paste Item(s)";
 
-   private final static String ID = "File/Download Zipped Folder...";
+   private boolean pastePrepared = false;
 
-   private boolean oneItemSelected = true;
-
-   public DownloadZippedFolderCommand()
+   public PasteItemsCommand()
    {
       super(ID);
-      setTitle("Download Zipped Folder...");
-      setPrompt("Download Zipped Folder...");
-      setImages(IDEImageBundle.INSTANCE.downloadFolder(), IDEImageBundle.INSTANCE.downloadFolderDisabled());
-      setEvent(new DownloadZippedFolderEvent());
+      setTitle("Paste Item(s)");
+      setPrompt("Paste Selected Item(s)");
+      setImages(IDEImageBundle.INSTANCE.paste(), IDEImageBundle.INSTANCE.pasteDisabled());
+      setEvent(new PasteItemsEvent());
    }
-
+   
    /**
     * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
     */
    @Override
    public void initialize(HandlerManager eventBus)
    {
+      eventBus.addHandler(ItemsToPasteSelectedEvent.TYPE, this);
+      eventBus.addHandler(PasteItemsCompleteEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       super.initialize(eventBus);
    }
 
+   public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event)
+   {
+      pastePrepared = true;
+      setEnabled(true);
+   }
+
+   public void onPasteItemsComlete(PasteItemsCompleteEvent event)
+   {
+      setEnabled(false);
+      pastePrepared = false;
+   }
+
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof Folder))
+      if (event.getSelectedItems().size() == 1)
       {
-         oneItemSelected = false;
          updateEnabling();
       }
       else
       {
-         oneItemSelected = true;
-         updateEnabling();
+         setEnabled(false);
       }
+
    }
 
    @Override
    protected void updateEnabling()
    {
-      if (browserSelected && oneItemSelected)
+      if (browserSelected)
       {
-         setEnabled(true);
+         if (pastePrepared)
+         {
+            setEnabled(true);
+         }
+         else
+         {
+            setEnabled(false);
+         }
+
       }
       else
       {

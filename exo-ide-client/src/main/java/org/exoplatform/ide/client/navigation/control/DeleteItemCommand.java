@@ -16,19 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.navigation.control;
-
-import com.google.gwt.event.shared.HandlerManager;
+package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
+import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.navigation.event.DeleteItemEvent;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,25 +36,25 @@ import org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsComma
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements EditorActiveFileChangedHandler,
-   ItemsSelectedHandler
+public class DeleteItemCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler,
+   ItemDeletedHandler
 {
 
-   private static final String ID = "File/Save As...";
+   private static final String ID = "File/Delete...";
 
-   private static final String TITLE = "Save As...";
+   private static final String TITLE = "Delete...";
 
-   private boolean singleItemSelected = true;
-   
-   private File activeFile;
+   private static final String PROMPT = "Delete Item(s)...";
 
-   public SaveFileAsCommand()
+   private Item selectedItem;
+
+   public DeleteItemCommand()
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.saveAs(), IDEImageBundle.INSTANCE.saveAsDisabled());
-      setEvent(new SaveFileAsEvent(activeFile, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
+      setPrompt(PROMPT);
+      setImages(IDEImageBundle.INSTANCE.delete(), IDEImageBundle.INSTANCE.deleteDisabled());
+      setEvent(new DeleteItemEvent());
    }
 
    /**
@@ -64,42 +63,55 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
    @Override
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ItemDeletedEvent.TYPE, this);
       super.initialize(eventBus);
-   }
-
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
-      updateEnabling();
-   }
-
-   @Override
-   protected void updateEnabling()
-   {
-      if (browserSelected && activeFile != null && singleItemSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() == 1)
+
+      if (!isItemsInSameFolder(event.getSelectedItems()))
       {
-         singleItemSelected = true;
+         setEnabled(false);
+         return;
+      }
+      if (event.getSelectedItems().size() != 0)
+      {
+         selectedItem = event.getSelectedItems().get(0);
          updateEnabling();
       }
       else
       {
-         singleItemSelected = false;
-         updateEnabling();
+         setEnabled(false);
+         return;
       }
+   }
+
+   public void onItemDeleted(ItemDeletedEvent event)
+   {
+      selectedItem = null;
+      updateEnabling();
+   }
+
+
+   @Override
+   protected void updateEnabling()
+   {
+      if (!browserSelected)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (selectedItem == null)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      setEnabled(true);
+
    }
 
 }

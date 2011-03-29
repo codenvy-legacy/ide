@@ -45,4 +45,8 @@
 		<when-type-is class="org.exoplatform.ide.client.navigation.GetItemURLPresenter.Display" />
 	</replace-with>
 
+	<replace-with class="org.exoplatform.ide.client.workspace.ui.SelectWorkspaceView">
+		<when-type-is class="org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display" />
+	</replace-with>
+
 </module>

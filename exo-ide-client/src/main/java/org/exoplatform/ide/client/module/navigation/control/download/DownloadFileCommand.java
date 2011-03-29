@@ -23,7 +23,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand;
+import org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand;
 import org.exoplatform.ide.client.navigation.event.DownloadFileEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -52,7 +52,7 @@ public class DownloadFileCommand extends MultipleSelectionItemsCommand implement
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
     */
    @Override
    public void initialize(HandlerManager eventBus)

@@ -24,11 +24,11 @@ import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFolderControl;
-import org.exoplatform.ide.client.module.navigation.control.newitem.CreateProjectFromTemplateControl;
-import org.exoplatform.ide.client.module.navigation.control.newitem.CreateProjectTemplateControl;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFileCommand;
 import org.exoplatform.ide.client.module.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileEvent;
+import org.exoplatform.ide.client.project.control.CreateProjectFromTemplateControl;
+import org.exoplatform.ide.client.project.control.CreateProjectTemplateControl;
 
 import java.util.ArrayList;
 import java.util.Collections;

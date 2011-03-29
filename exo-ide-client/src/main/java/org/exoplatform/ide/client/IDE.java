@@ -36,9 +36,9 @@ import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.development.DevelopmentModule;
 import org.exoplatform.ide.client.module.edit.TextEditModule;
-import org.exoplatform.ide.client.module.preferences.PreferencesModule;
 import org.exoplatform.ide.client.navigation.NavigationModule;
 import org.exoplatform.ide.client.operation.OperationModule;
+import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 /**

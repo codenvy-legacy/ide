@@ -16,41 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.model;
+package org.exoplatform.ide.client.preferences.event;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.ide.client.framework.vfs.Item;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version @version $Id: $
+ * @version $
  */
 
-public class ApplicationContext
+public interface SelectWorkspaceHandler extends EventHandler
 {
 
-   /**
-    * Uses for storing items to need copy
-    */
-   private List<Item> itemsToCopy = new ArrayList<Item>();
-
-   /**
-    * Uses to storing items to need cut
-    */
-   private List<Item> itemsToCut = new ArrayList<Item>();
-
-   public List<Item> getItemsToCopy()
-   {
-      return itemsToCopy;
-   }
-
-   public List<Item> getItemsToCut()
-   {
-      return itemsToCut;
-   }
+   void onSelectWorkspace(SelectWorkspaceEvent event);
 
 }

@@ -95,10 +95,8 @@ public class ModalWindowsLayer extends AbstractWindowsLayer
       views.put(view.getId(), view);
 
       AbsolutePanel lockPanel = new AbsolutePanel();
-      DOM.setStyleAttribute(lockPanel.getElement(), "background", "#5566FF");
-      DOM.setStyleAttribute(lockPanel.getElement(), "opacity", "0.2");
-      lockPanel.setWidth("100px");
-      lockPanel.setHeight("50px");
+      DOM.setStyleAttribute(lockPanel.getElement(), "background", "#9999FF");
+      DOM.setStyleAttribute(lockPanel.getElement(), "opacity", "0.1");
       add(lockPanel, 0, 0);
       lockPanels.put(view.getId(), lockPanel);
       resizeLockPanels();

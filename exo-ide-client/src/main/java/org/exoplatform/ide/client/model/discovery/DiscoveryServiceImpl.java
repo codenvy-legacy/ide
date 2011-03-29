@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.model.discovery;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -36,8 +36,8 @@ import org.exoplatform.ide.client.model.discovery.marshal.DiscoveryServiceDiscov
 import org.exoplatform.ide.client.model.discovery.marshal.EntryPointListUnmarshaller;
 import org.exoplatform.ide.client.model.discovery.marshal.RestServicesUnmarshaller;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
 
 /**
  * Created by The eXo Platform SAS.

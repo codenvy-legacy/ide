@@ -167,7 +167,7 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
       if (currentViewId != null)
       {
          setViewVisible(currentViewId, false);
-         fireVisibilityChangedEvent(currentViewId);         
+         fireVisibilityChangedEvent(currentViewId);
       }
 
       currentViewId = viewId;
@@ -330,34 +330,31 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
       views.put(view.getId(), view);
       viewWrappers.put(view.getId(), viewWrapper);
 
-      
-      
       final ViewController controller = new ViewController(view, viewWrapper);
       viewControllers.put(view.getId(), controller);
       tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, true);
 
-      
       // add handlers to view
       if (view instanceof HasChangeViewTitleHandler)
       {
          ((HasChangeViewTitleHandler)view).addChangeViewTitleHandler(changeViewTitleHandler);
       }
 
-      
       if (view instanceof HasChangeViewIconHandler)
       {
          ((HasChangeViewIconHandler)view).addChangeViewIconHandler(changeViewIconHandler);
       }
-      
-      if (view instanceof HasSetViewVisibleHandler) {
+
+      if (view instanceof HasSetViewVisibleHandler)
+      {
          ((HasSetViewVisibleHandler)view).addSetViewVisibleHandler(this);
       }
-      
+
       for (ViewOpenedHandler handler : viewOpenedHandlers)
       {
          handler.onViewOpened(new ViewOpenedEvent(view));
       }
-      
+
       tabPanel.selectTab(view.getId());
    }
 
@@ -402,8 +399,6 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
          int width = getOffsetWidth();
          int height = getOffsetHeight();
 
-         System.out.println("resize:" + view.getId() + "  left:" + left + "  top:" + top + "  width:" + width + "  height:" + height);
-         
          DOM.setStyleAttribute(viewWrapper.getElement(), "left", "" + (left + 0) + "px");
          DOM.setStyleAttribute(viewWrapper.getElement(), "top", "" + (top + 0) + "px");
          DOM.setStyleAttribute(viewWrapper.getElement(), "width", "" + width + "px");
