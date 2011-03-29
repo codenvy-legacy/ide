@@ -58,7 +58,7 @@ public class TokenResponseUnmarshal implements Unmarshallable
 
    private void parseTokenResponse(String body)
    {
-      JSONObject jsonObj = (JSONObject)JSONParser.parse(body);
+      JSONObject jsonObj = (JSONObject)JSONParser.parseLenient(body);
 
       if (jsonObj.containsKey(TokenResponse.GADGET_URL))
          tokenResponse.setGadgetURL(jsonObj.get(TokenResponse.GADGET_URL).isString().stringValue());

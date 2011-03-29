@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.component.Handlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -39,10 +43,6 @@ import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEve
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 
 /**
  * Presenter for the preview of the generated node type definition.
@@ -127,15 +127,15 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    {
       if (display.getEditor().getEditorId().equals(event.getEditorId()))
       {
-         DeferredCommand.add(new Command()
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
          {
-
+            
             @Override
             public void execute()
             {
-               display.setContent(generatedNodeType);
+               display.setContent(generatedNodeType);               
             }
-         });
+         });         
       }
    }
 

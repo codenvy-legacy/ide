@@ -106,8 +106,8 @@ public class GadgetServiceImpl extends GadgetService
       String url =
          restServiceContext +
          /*Configuration.getInstance().getContext() + */CONTEXT + DEPLOY + "?" + QueryParams.GADGET_URL + "="
-            + URL.encodeComponent(href) + "&" + QueryParams.PRIVATE_CONTEXT + "=" + URL.encodeComponent(restServiceContext)
-            + "&" + QueryParams.PUBLIC_CONTEXT + "=" + URL.encodeComponent(publicContext);
+            + URL.encodeQueryString(href) + "&" + QueryParams.PRIVATE_CONTEXT + "=" + URL.encodeQueryString(restServiceContext)
+            + "&" + QueryParams.PUBLIC_CONTEXT + "=" + URL.encodeQueryString(publicContext);
       callback.setResult(url);
       callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
@@ -118,9 +118,9 @@ public class GadgetServiceImpl extends GadgetService
    {
       String url =
          restServiceContext + /*Configuration.getInstance().getContext() + */CONTEXT + UNDEPLOY + "?"
-            + QueryParams.GADGET_URL + "=" + URL.encodeComponent(href) + "&" + QueryParams.PRIVATE_CONTEXT + "="
-            + URL.encodeComponent(restServiceContext) + "&" + QueryParams.PUBLIC_CONTEXT + "="
-            + URL.encodeComponent(publicContext);
+            + QueryParams.GADGET_URL + "=" + URL.encodeQueryString(href) + "&" + QueryParams.PRIVATE_CONTEXT + "="
+            + URL.encodeQueryString(restServiceContext) + "&" + QueryParams.PUBLIC_CONTEXT + "="
+            + URL.encodeQueryString(publicContext);
       callback.setResult(url);
       callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);

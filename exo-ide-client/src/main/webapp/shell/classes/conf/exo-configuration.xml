@@ -321,13 +321,6 @@
                            <field name="jarPath">
                               <string>${env.JAVA_HOME}${file.separator}src.zip</string>
                            </field>
-                           <field name="includePkg">
-                              <collection type="java.util.ArrayList">
-                                 <value>
-                                    <string>java.lang</string>
-                                 </value>
-                              </collection>
-                           </field>
                         </object>
                      </value>
                   

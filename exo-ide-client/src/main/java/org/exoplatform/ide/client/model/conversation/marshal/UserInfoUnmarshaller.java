@@ -51,7 +51,7 @@ public class UserInfoUnmarshaller implements Unmarshallable
 
    public void unmarshal(Response response)
    {
-      JSONObject json = JSONParser.parse(response.getText()).isObject();
+      JSONObject json = JSONParser.parseLenient(response.getText()).isObject();
       if (json.containsKey(USER_ID))
       {
          userInfo.setName(json.get(USER_ID).isString().stringValue());
