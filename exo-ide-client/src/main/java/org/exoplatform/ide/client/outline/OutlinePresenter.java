@@ -102,6 +102,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
        */
       List<TokenBeenImpl> getSelectedTokens();
 
+      /**
+       * Sets is outline available
+       * 
+       * @param available
+       */
       void setOutlineAvailable(boolean available);
 
    }
@@ -149,7 +154,16 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       this.applicationSettings = event.getApplicationSettings();
 
-      boolean showOutline = applicationSettings.getValueAsBoolean("outline");
+      boolean showOutline = false;
+      if (applicationSettings.getValueAsBoolean("outline") == null)
+      {
+         applicationSettings.setValue("outline", false, Store.COOKIES);
+      }
+      else
+      {
+         showOutline = applicationSettings.getValueAsBoolean("outline");
+      }
+
       if (showOutline)
       {
          Display d = GWT.create(Display.class);

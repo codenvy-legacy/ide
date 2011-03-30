@@ -34,7 +34,6 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.model.ApplicationContext;
-import org.exoplatform.ide.client.module.development.DevelopmentModule;
 import org.exoplatform.ide.client.module.edit.TextEditModule;
 import org.exoplatform.ide.client.navigation.NavigationModule;
 import org.exoplatform.ide.client.operation.OperationModule;
@@ -92,7 +91,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new NavigationModule(EVENT_BUS, context);
       new TextEditModule(EVENT_BUS);
       new OperationModule(EVENT_BUS);
-      new DevelopmentModule(EVENT_BUS);
       new PreferencesModule(EVENT_BUS);
 
       //initialize extensions

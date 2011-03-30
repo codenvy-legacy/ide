@@ -18,25 +18,9 @@
  */
 package org.exoplatform.ide.client.operation;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.ui.PreviewForm;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
-import org.exoplatform.ide.client.module.development.event.PreviewFileHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -45,48 +29,43 @@ import java.util.Map;
  * @version @version $Id: $
  */
 
-public class OperationPresenter implements EditorActiveFileChangedHandler, PreviewFileHandler, ViewClosedHandler
+public class OperationPresenter
 {
 
-   private HandlerManager eventBus;
-
-   /**
-    * Used to remove handlers when they are no longer needed.
-    */
-   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
-      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
-
-   private File activeFile;
-
-   private PreviewForm previewForm;
+//   private HandlerManager eventBus;
+//
+//   /**
+//    * Used to remove handlers when they are no longer needed.
+//    */
+//   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
+//      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
+//
+//   private File activeFile;
+//
+//   private PreviewForm previewForm;
 
    public OperationPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
-      handlerRegistrations.put(PreviewFileEvent.TYPE, eventBus.addHandler(PreviewFileEvent.TYPE, this));
+//      this.eventBus = eventBus;
+//      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+//      handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
+//      handlerRegistrations.put(PreviewHTMLEvent.TYPE, eventBus.addHandler(PreviewHTMLEvent.TYPE, this));
    }
    
-   /**
-    * Remove handlers, that are no longer needed.
-    */
-   private void removeHandlers()
-   {
-      //TODO: such method is not very convenient.
-      //If gwt mvp framework will be used , it will be good to use
-      //ResettableEventBus class
-      for (HandlerRegistration h : handlerRegistrations.values())
-      {
-         h.removeHandler();
-      }
-      handlerRegistrations.clear();
-   }
-
-   public void destroy()
-   {
-      removeHandlers();
-   }
+//   /**
+//    * Remove handlers, that are no longer needed.
+//    */
+//   private void removeHandlers()
+//   {
+//      //TODO: such method is not very convenient.
+//      //If gwt mvp framework will be used , it will be good to use
+//      //ResettableEventBus class
+//      for (HandlerRegistration h : handlerRegistrations.values())
+//      {
+//         h.removeHandler();
+//      }
+//      handlerRegistrations.clear();
+//   }
 
    public void bindDisplay()
    {
@@ -96,50 +75,50 @@ public class OperationPresenter implements EditorActiveFileChangedHandler, Previ
 
    }
 
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
-
-      if (previewForm != null)
-      {
-         IDE.getInstance().closeView(PreviewForm.ID);
-         previewForm = null;
-      }
-   }
+//   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+//   {
+//      activeFile = event.getFile();
+//
+//      if (previewForm != null)
+//      {
+//         IDE.getInstance().closeView(PreviewForm.ID);
+//         previewForm = null;
+//      }
+//   }
 
    public void onOutput(OutputEvent event)
    {
    }
 
-   public void onPreviewFile(PreviewFileEvent event)
-   {
-      if (previewForm != null)
-      {
-         IDE.getInstance().closeView(PreviewForm.ID);
-         previewForm = null;
-      }
+//   public void onPreviewHTMLFile(PreviewHTMLEvent event)
+//   {
+//      if (previewForm != null)
+//      {
+//         IDE.getInstance().closeView(PreviewForm.ID);
+//         previewForm = null;
+//      }
+//
+//      if (activeFile.isNewFile())
+//      {
+//         Dialogs.getInstance().showInfo("You should save the file!");
+//         return;
+//      }
+//
+//      previewForm = new PreviewForm();
+//      previewForm.showPreview(activeFile.getHref());
+//      IDE.getInstance().openView(previewForm);
+//      eventBus.fireEvent(new RestorePerspectiveEvent());
+//
+//   }
 
-      if (activeFile.isNewFile())
-      {
-         Dialogs.getInstance().showInfo("You should save the file!");
-         return;
-      }
-
-      previewForm = new PreviewForm();
-      previewForm.showPreview(activeFile.getHref());
-      IDE.getInstance().openView(previewForm);
-      eventBus.fireEvent(new RestorePerspectiveEvent());
-
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() == previewForm)
-         previewForm = null;
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent)
+//    */
+//   @Override
+//   public void onViewClosed(ViewClosedEvent event)
+//   {
+//      if (event.getView() == previewForm)
+//         previewForm = null;
+//   }
 
 }

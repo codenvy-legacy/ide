@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.development.control;
+package org.exoplatform.ide.client.preview;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -25,7 +25,11 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.module.development.event.PreviewFileEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.preview.event.PreviewHTMLEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -36,20 +40,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class ShowPreviewCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class PreviewHTMLControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, ViewOpenedHandler, ViewClosedHandler
 {
 
    public static final String ID = "Run/Show Preview";
 
    public static final String TITLE = "Show Preview";
 
-   public ShowPreviewCommand()
+   public PreviewHTMLControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.preview(), IDEImageBundle.INSTANCE.previewDisabled());
-      setEvent(new PreviewFileEvent());
+      setEvent(new PreviewHTMLEvent(true));
    }
 
    /**
@@ -58,6 +62,8 @@ public class ShowPreviewCommand extends SimpleControl implements IDEControl, Edi
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -87,4 +93,23 @@ public class ShowPreviewCommand extends SimpleControl implements IDEControl, Edi
          setEnabled(false);
       }
    }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof PreviewHTMLPresenter.Display) {
+         setSelected(false);
+         setEvent(new PreviewHTMLEvent(true));
+      }
+   }
+
+   @Override
+   public void onViewOpened(ViewOpenedEvent event)
+   {
+      if (event.getView() instanceof PreviewHTMLPresenter.Display) {
+         setSelected(true);
+         setEvent(new PreviewHTMLEvent(false));
+      }
+   }
+   
 }

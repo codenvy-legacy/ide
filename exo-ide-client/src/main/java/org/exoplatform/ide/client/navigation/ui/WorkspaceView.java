@@ -44,7 +44,8 @@ public class WorkspaceView extends ViewImpl implements org.exoplatform.ide.clien
    public WorkspaceView()
    {
       super(ID, "navigation", "Workspace", new Image(IDEImageBundle.INSTANCE.workspace()));
-
+      setHasCloseButton(false);
+      
       treeGrid = new ItemTree();
       add(treeGrid, true);
    }

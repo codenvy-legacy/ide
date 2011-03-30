@@ -24,9 +24,7 @@ import org.exoplatform.ide.client.app.api.Menu;
 import org.exoplatform.ide.client.app.api.Perspective;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.phases.LoadRegistryConfigurationPhase;
-import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.editor.EditorController;
-import org.exoplatform.ide.client.framework.ui.event.ActivateViewEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
@@ -96,7 +94,7 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
          public void run()
          {
             //activate default view
-            eventBus.fireEvent(new ActivateViewEvent(BrowserPanel.ID));
+            //eventBus.fireEvent(new ActivateViewEvent(BrowserPanel.ID));
             new LoadRegistryConfigurationPhase(eventBus, controlsRegistration);
          }
       }.schedule(500);

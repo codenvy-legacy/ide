@@ -141,10 +141,11 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
    {
       if (contentScrollable)
       {
-         if (scrollPanel == null) {
+         if (scrollPanel == null)
+         {
             scrollPanel = new ViewScrollPanel();
             DOM.setStyleAttribute(scrollPanel.getElement(), "zIndex", "0");
-            wrapper.add(scrollPanel);            
+            wrapper.add(scrollPanel);
          }
          scrollPanel.add(w);
          w.setSize("100%", "100%");
@@ -219,6 +220,11 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
    public boolean hasCloseButton()
    {
       return hasCloseButton;
+   }
+
+   public void setHasCloseButton(boolean hasCloseButton)
+   {
+      this.hasCloseButton = hasCloseButton;
    }
 
    @Override

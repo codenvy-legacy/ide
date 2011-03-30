@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,7 +30,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ide.client.browser.BrowserPanel;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -86,7 +82,9 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 
 /**
@@ -291,7 +289,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
          //context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
          //context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
-         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));
+         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, Display.ID));
       }
    };
 
@@ -395,7 +393,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
             display.getBrowserTree().setValue(folder);
 
             eventBus.fireEvent(new RestorePerspectiveEvent());
-            eventBus.fireEvent(new SelectViewEvent(BrowserPanel.ID));
+            eventBus.fireEvent(new SelectViewEvent(Display.ID));
 
             if (itemToSelect != null)
             {
@@ -525,7 +523,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       display.getBrowserTree().setValue(null);
       selectedItems.clear();
       selectedItems.clear();
-      eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, BrowserPanel.ID));
+      eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, Display.ID));
 
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
@@ -650,7 +648,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (BrowserPanel.ID.equals(event.getView().getId()) && event.getView().isViewVisible())
+      if (Display.ID.equals(event.getView().getId()) && event.getView().isViewVisible())
       {
          onItemSelected();
       }

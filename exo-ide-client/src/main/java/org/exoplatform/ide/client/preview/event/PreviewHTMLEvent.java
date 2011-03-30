@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.development.event;
+package org.exoplatform.ide.client.preview.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -25,19 +25,31 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: $
  */
 
-public class PreviewFileEvent extends GwtEvent<PreviewFileHandler>
+public class PreviewHTMLEvent extends GwtEvent<PreviewHTMLHandler>
 {
 
-   public static final GwtEvent.Type<PreviewFileHandler> TYPE = new GwtEvent.Type<PreviewFileHandler>();
+   public static final GwtEvent.Type<PreviewHTMLHandler> TYPE = new GwtEvent.Type<PreviewHTMLHandler>();
 
-   @Override
-   protected void dispatch(PreviewFileHandler handler)
+   private boolean showPreview;
+
+   public PreviewHTMLEvent(boolean showPreview)
    {
-      handler.onPreviewFile(this);
+      this.showPreview = showPreview;
+   }
+
+   public boolean isShowPreview()
+   {
+      return showPreview;
    }
 
    @Override
-   public GwtEvent.Type<PreviewFileHandler> getAssociatedType()
+   protected void dispatch(PreviewHTMLHandler handler)
+   {
+      handler.onPreviewHTMLFile(this);
+   }
+
+   @Override
+   public GwtEvent.Type<PreviewHTMLHandler> getAssociatedType()
    {
       return TYPE;
    }

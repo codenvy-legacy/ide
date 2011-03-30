@@ -332,7 +332,7 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
 
       final ViewController controller = new ViewController(view, viewWrapper);
       viewControllers.put(view.getId(), controller);
-      tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, true);
+      tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, view.hasCloseButton());
 
       // add handlers to view
       if (view instanceof HasChangeViewTitleHandler)

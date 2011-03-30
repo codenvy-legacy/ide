@@ -18,6 +18,14 @@
  */
 package org.exoplatform.ide.client.operation;
 
+import org.exoplatform.ide.client.documentation.DocumentationPresenter;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.outline.OutlinePresenter;
+import org.exoplatform.ide.client.outline.ShowOutlineControl;
+import org.exoplatform.ide.client.preview.PreviewHTMLControl;
+import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
+
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -35,8 +43,18 @@ public class OperationModule
    public OperationModule(HandlerManager eventBus) {
       this.eventBus = eventBus;
       
+      eventBus.fireEvent(new RegisterControlEvent(new ShowOutlineControl(), DockTarget.TOOLBAR));
+      new OutlinePresenter(eventBus);
+
+      eventBus.fireEvent(new RegisterControlEvent(new PreviewHTMLControl(), DockTarget.TOOLBAR, true));
+      new PreviewHTMLPresenter(eventBus);
+      
+      new DocumentationPresenter(eventBus);
+      
       new OutputPresenter(eventBus);
+      
       new PropertiesPresenter(eventBus);
+      
    }
 
 }
