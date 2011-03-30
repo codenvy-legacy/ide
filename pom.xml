@@ -170,6 +170,12 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-java</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-gadget</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -631,6 +637,7 @@
     
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>
+      <module>exo-ide-extension-java</module>
       <module>exo-ide-extension-netvibes</module>
       <module>exo-ide-extension-chromattic</module>
       <module>exo-ide-extension-git</module>

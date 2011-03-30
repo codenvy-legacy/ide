@@ -268,6 +268,10 @@
    </component>
 
    <component>
+      <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
+   </component>
+
+   <component>
       <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</key>
       <type>org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationImpl</type>
       <init-params>
