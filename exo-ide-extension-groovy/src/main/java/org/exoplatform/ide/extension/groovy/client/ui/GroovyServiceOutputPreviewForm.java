@@ -183,16 +183,17 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    private void createParamsForm()
    {
       VerticalPanel form = new VerticalPanel();
-      form.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      form.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
       form.setSpacing(3);
       form.getElement().setId(ID_FORM);
 
       pathField = new ComboBoxField();
-      pathField.setWidth(480);
       pathField.setTitleOrientation(TitleOrientation.TOP);
       pathField.setShowTitle(true);
       pathField.setTitle("Path:");
       pathField.setName(NAME_PATH);
+      pathField.setWidth(483);
+      pathField.setPickListHeight(100);
       
 
       methodField = new SelectItem(NAME_METHOD, "Method:");

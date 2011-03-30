@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.navigation.ui;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
@@ -156,6 +157,7 @@ public class SearchForm extends ViewImpl implements org.exoplatform.ide.client.n
       comboboxField.setTitle("<NOBR>" + title + "</NOBR>");
       comboboxField.setWidth(FIELD_WIDTH);
       comboboxField.setHeight(FIELD_HEIGHT);
+      comboboxField.setTitleOrientation(TitleOrientation.LEFT);
       return comboboxField;
    }
 
