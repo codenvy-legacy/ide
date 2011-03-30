@@ -24,45 +24,39 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.create.InitRepositoryEvent;
+import org.exoplatform.ide.git.client.add.AddToIndexEvent;
 
 /**
- * Control for initializing the repository.
+ * Control for adding changes to index (temporary storage).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 23, 2011 5:36:00 PM anya $
+ * @version $Id:  Mar 29, 2011 4:23:20 PM anya $
  *
  */
-public class InitRepositoryControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class AddToIndexControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
    /**
     * Control ID.
     */
-   public static final String ID = "Git/Initialize repository";
+   public static final String ID = "Git/Add to index";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Initialize repository";
+   public static final String TITLE = "Add to index";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Initialize repository";
+   public static final String PROMPT = "Add changes to index";
 
-   /**
-    * @param id
-    */
-   public InitRepositoryControl()
+   public AddToIndexControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new InitRepositoryEvent());
-      setImages(GitClientBundle.INSTANCE.initRepo(), GitClientBundle.INSTANCE.initRepoDisabled());
-      setVisible(true);
+      setEvent(new AddToIndexEvent());
+      setDelimiterBefore(true);
    }
 
    /**
@@ -72,6 +66,7 @@ public class InitRepositoryControl extends SimpleControl implements IDEControl, 
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      setVisible(true);
    }
 
    /**
@@ -85,8 +80,6 @@ public class InitRepositoryControl extends SimpleControl implements IDEControl, 
          setEnabled(false);
          return;
       }
-      //Check whether folder is selected:
-      boolean enabled = (event.getSelectedItems().get(0) instanceof Folder);
-      setEnabled(enabled);
+      setEnabled(true);
    }
 }

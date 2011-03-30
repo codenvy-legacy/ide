@@ -16,11 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.service;
+package org.exoplatform.ide.git.client;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.git.client.marshaller.StatusResponse;
+import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
 /**
+ * Service contains methods for working with Git repository from client side.
+ * Example usage, initialize Git repository: <br>
+ * <code>
+ * GitClientService.getInstance().init(workDir, bare, callback);
+ * <code>
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 23, 2011 11:48:14 AM anya $
  *
@@ -45,6 +53,8 @@ public abstract class GitClientService
       instance = this;
    }
    
+   public abstract void add(String workDir, boolean update, String[] filePattern, AsyncRequestCallback<String> callback);
+   
    /**
     * Initializes new Git repository.
     * 
@@ -65,9 +75,38 @@ public abstract class GitClientService
    public abstract void cloneRepository(String workDir, String remoteUri, String remoteName, AsyncRequestCallback<String> callback);
 
    /**
+    * Gets the working tree status. The status of added, modified or deleted files is shown is written in {@link String}.
+    * The format may be short or not.
+    * Example of detailed format:<br>
+    * <pre>
+    * # Untracked files:
+    * #
+    * # file.html
+    * # folder
+    * </pre>
+    * 
+    * Example of short format:
+    * <pre>
+    * M  pom.xml
+    * A  folder/test.html
+    * D  123.txt
+    * ?? folder/test.css
+    * </pre>
+    * 
     * @param workDir working directory of the Git repository
-    * @param shortFormat
+    * @param shortFormat to show in short format or not
+    * @param fileFilter file filter to show status. It may be either list of file names to show status or name of directory to show all files under them.
+    * @param callback callback
+    */
+   public abstract void status(String workDir, boolean shortFormat, String[] fileFilter, AsyncRequestCallback<StatusResponse> callback);
+
+   /**
+    * Get the Git work directory (where ".git" folder is located) 
+    * for the pointed item's location.
+    * 
+    * @param href item's location
     * @param callback
     */
-   public abstract void status(String workDir, boolean shortFormat, AsyncRequestCallback<String> callback);
+   public abstract void getWorkDir(String href,  AsyncRequestCallback<WorkDirResponse> callback);
+
 }

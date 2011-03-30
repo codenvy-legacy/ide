@@ -36,13 +36,13 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.git.client.clone.event.CloneRepositoryEvent;
-import org.exoplatform.ide.git.client.clone.event.CloneRepositoryHandler;
-import org.exoplatform.ide.git.client.service.GitClientService;
+import org.exoplatform.ide.git.client.GitClientService;
 
 import java.util.List;
 
 /**
+ * Presenter for Clone Repository View.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 22, 2011 4:31:12 PM anya $
  *
@@ -51,28 +51,64 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
 {
    public interface Display extends ViewDisplay
    {
+      /**
+       * Returns working directory field.
+       * 
+       * @return {@link HasValue<{@link String}>}
+       */
       HasValue<String> getWorkDirValue();
 
+      /**
+       * Returns remote URI field.
+       * 
+       * @return {@link HasValue<{@link String}>}
+       */
       HasValue<String> getRemoteUriValue();
 
+      /**
+       * Returns remote name field.
+       * 
+       * @return {@link HasValue<{@link String}>}
+       */
       HasValue<String> getRemoteNameValue();
 
+      /**
+       * Returns clone repository button.
+       * 
+       * @return {@link HasClickHandlers}
+       */
       HasClickHandlers getCloneButton();
 
+      /**
+       * Returns cancel button.
+       * 
+       * @return {@link HasClickHandlers}
+       */
       HasClickHandlers getCancelButton();
 
+      /**
+       * Changes the state of clone button.
+       * 
+       * @param enable
+       */
       void enableCloneButton(boolean enable);
 
    }
 
+   /**
+    * Presenter's display.
+    */
    private Display display;
 
    private HandlerManager eventBus;
 
+   /**
+    * Selected items in browser tree.
+    */
    private List<Item> selectedItems;
 
    /**
-    * 
+    * @param eventBus
     */
    public CloneRepositoryPresenter(HandlerManager eventBus)
    {
@@ -82,6 +118,9 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
       eventBus.addHandler(CloneRepositoryEvent.TYPE, this);
    }
 
+   /**
+    * @param d
+    */
    public void bindDisplay(Display d)
    {
       this.display = d;
@@ -117,7 +156,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.clone.event.CloneRepositoryHandler#onCloneRepository(org.exoplatform.ide.git.client.clone.event.CloneRepositoryEvent)
+    * @see org.exoplatform.ide.git.client.clone.CloneRepositoryHandler#onCloneRepository(org.exoplatform.ide.git.client.clone.CloneRepositoryEvent)
     */
    @Override
    public void onCloneRepository(CloneRepositoryEvent event)
@@ -144,6 +183,9 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
       selectedItems = event.getSelectedItems();
    }
 
+   /**
+    * Get the necessary parameters values and call the clone repository method.
+    */
    private void cloneRepository()
    {
       String workDir = display.getWorkDirValue().getValue();

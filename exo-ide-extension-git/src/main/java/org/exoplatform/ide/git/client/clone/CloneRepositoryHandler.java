@@ -16,22 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.create.event;
+package org.exoplatform.ide.git.client.clone;
 
 import com.google.gwt.event.shared.EventHandler;
 
-
 /**
- * Handler for {@link InitRepositoryEvent} event.
+ * Handler for {@link CloneRepositoryEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 23, 2011 5:53:50 PM anya $
+ * @version $Id:  Mar 22, 2011 4:07:45 PM anya $
  *
  */
-public interface InitRepositoryHandler extends EventHandler
+public interface CloneRepositoryHandler extends EventHandler
 {
    /**
+    * Perform actions on try to clone repository.
+    * 
     * @param event
     */
-   void onInitRepository(InitRepositoryEvent event);
+   void onCloneRepository(CloneRepositoryEvent event);
 }

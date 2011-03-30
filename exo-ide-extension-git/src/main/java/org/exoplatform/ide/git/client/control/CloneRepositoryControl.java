@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.clone.event.CloneRepositoryEvent;
+import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
 
 /**
  * Control for cloning remote repository to local one.

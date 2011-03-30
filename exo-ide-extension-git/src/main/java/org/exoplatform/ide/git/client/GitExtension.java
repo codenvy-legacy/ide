@@ -25,13 +25,18 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
+import org.exoplatform.ide.git.client.control.AddToIndexControl;
 import org.exoplatform.ide.git.client.control.CloneRepositoryControl;
 import org.exoplatform.ide.git.client.control.InitRepositoryControl;
+import org.exoplatform.ide.git.client.control.ShowStatusControl;
 import org.exoplatform.ide.git.client.create.InitRepositoryPresenter;
-import org.exoplatform.ide.git.client.service.GitClientServiceImpl;
+import org.exoplatform.ide.git.client.status.StatusCommandHandler;
 
 /**
+ * Git extension to be added to IDE application.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 22, 2011 12:53:29 PM anya $
  *
@@ -52,10 +57,14 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       //Add controls:
       IDE.getInstance().addControl(new InitRepositoryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CloneRepositoryControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ShowStatusControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new AddToIndexControl(), DockTarget.NONE, false);
       
       //Create presenters:
       new CloneRepositoryPresenter(eventBus);
       new InitRepositoryPresenter(eventBus);
+      new StatusCommandHandler(eventBus);
+      new AddToIndexPresenter(eventBus);
    }
 
    /**

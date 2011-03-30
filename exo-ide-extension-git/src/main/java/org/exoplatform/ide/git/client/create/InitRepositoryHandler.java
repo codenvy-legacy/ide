@@ -16,34 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.rest;
+package org.exoplatform.ide.git.client.create;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.google.gwt.event.shared.EventHandler;
 
-import javax.ws.rs.core.Application;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: GitApplication.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * Handler for {@link InitRepositoryEvent} event.
+ * 
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Mar 23, 2011 5:53:50 PM anya $
+ *
  */
-public class GitApplication extends Application
+public interface InitRepositoryHandler extends EventHandler
 {
-   private Set<Class<?>> classes;
-
-   public GitApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(GitService.class);
-      classes.add(GitRepoService.class);
-   }
-
    /**
-    * @see javax.ws.rs.core.Application#getClasses()
+    * @param event
     */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+   void onInitRepository(InitRepositoryEvent event);
 }

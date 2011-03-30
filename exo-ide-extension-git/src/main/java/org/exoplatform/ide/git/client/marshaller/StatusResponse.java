@@ -16,23 +16,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.clone.event;
+package org.exoplatform.ide.git.client.marshaller;
 
-import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link CloneRepositoryEvent} event.
+ * The bean representing a status of the working tree (changed, untracked files).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 22, 2011 4:07:45 PM anya $
+ * @version $Id:  Mar 29, 2011 11:02:10 AM anya $
  *
  */
-public interface CloneRepositoryHandler extends EventHandler
+public class StatusResponse
 {
    /**
-    * Perform actions on try to clone repository.
-    * 
-    * @param event
+    * The string notion of the GIT work tree status.
+    * It contains the information of the modified, added, deleted files.
+    * Example for short format:<br>
+    *   <pre>
+    *   M README.txt
+    *   A  test/abc/
+    *   </pre>
     */
-   void onCloneRepository(CloneRepositoryEvent event);
+   private String workTreeStatus;
+
+   /**
+    * @return the workTreeStatus
+    */
+   public String getWorkTreeStatus()
+   {
+      return workTreeStatus;
+   }
+
+   /**
+    * @param workTreeStatus the workTreeStatus to set
+    */
+   public void setWorkTreeStatus(String workTreeStatus)
+   {
+      this.workTreeStatus = workTreeStatus;
+   }
 }

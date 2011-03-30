@@ -16,34 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.rest;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
+package org.exoplatform.ide.git.client.marshaller;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: GitApplication.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * The response of the found root of the work tree.
+ * 
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Mar 29, 2011 1:57:46 PM anya $
+ *
  */
-public class GitApplication extends Application
+public class WorkDirResponse
 {
-   private Set<Class<?>> classes;
+   /**
+    * The Git repository working directory.
+    */
+   private String workDir;
 
-   public GitApplication()
+   /**
+    * @return the workDir
+    */
+   public String getWorkDir()
    {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(GitService.class);
-      classes.add(GitRepoService.class);
+      return workDir;
    }
 
    /**
-    * @see javax.ws.rs.core.Application#getClasses()
+    * @param workDir the workDir to set
     */
-   @Override
-   public Set<Class<?>> getClasses()
+   public void setWorkDir(String workDir)
    {
-      return classes;
+      this.workDir = workDir;
    }
 }

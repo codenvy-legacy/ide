@@ -16,13 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.clone.event;
+package org.exoplatform.ide.git.client.clone;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event is fired, on user action to clone remote repository.
- * Implement {@link CloneRepositoryHandler} handler.
+ * Implement {@link CloneRepositoryHandler} handler to process event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 22, 2011 4:07:34 PM anya $

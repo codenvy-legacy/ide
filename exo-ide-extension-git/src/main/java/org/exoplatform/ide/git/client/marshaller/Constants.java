@@ -16,34 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.rest;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
+package org.exoplatform.ide.git.client.marshaller;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: GitApplication.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * Used for marshallers and unmarshallers.
+ * 
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Mar 24, 2011 11:57:20 AM anya $
+ *
  */
-public class GitApplication extends Application
+public interface Constants
 {
-   private Set<Class<?>> classes;
+   public static final String WORKNG_DIR = "workingDir";
 
-   public GitApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(GitService.class);
-      classes.add(GitRepoService.class);
-   }
-
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+   public static final String BARE = "bare";
+   
+   public static final String REMOTE_URI = "remoteUri";
+   
+   public static final String REMOTE_NAME = "remoteName";
+   
+   public static final String SHORT_FORMAT = "shortFormat";
+   
+   public static final String FILE_FILTER = "fileFilter";
+   
+   public static final String FILE_PATTERN = "filepattern";
+   
+   public static final String UPDATE = "update";
+   
 }

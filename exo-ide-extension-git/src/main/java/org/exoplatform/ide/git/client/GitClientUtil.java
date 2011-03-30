@@ -25,8 +25,14 @@ package org.exoplatform.ide.git.client;
  */
 public class GitClientUtil
 {
+   /**
+    * The name of mounted folder on local file system.
+    */
    public static final String MOUNTED_FOLDER = "git";
 
+   /**
+    * WebDav's context.
+    */
    public static final String WEBDAV_CONTEXT = "jcr/";
 
    /**
@@ -50,5 +56,32 @@ public class GitClientUtil
       href = (parts.length > 1) ? href.replace(parts[0] + "/" + parts[1], "") : href;
       href = (href.startsWith("/")) ? MOUNTED_FOLDER + href : MOUNTED_FOLDER + "/" + href;
       return href;
+   }
+
+   /**
+    * Get the pattern of the file or folder, which can be used for setting patterns in Git requests.
+    * For example, file with the following href : <br>
+    *  <pre>
+    *  http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/repo/test/file.html
+    *  </pre>
+    * working tree href:<br>
+    * <pre>
+    * http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/repo
+    * </pre>
+    * The patten is <pre>test/file.html</pre> .
+    * 
+    * @param href href of the item, for which to return pattern
+    * @param workTree the location of the Git work tree, which contains the item pointed by href
+    * @return {@link String} pattern
+    */
+   public static String getFilePatternByHref(String href, String workTree)
+   {
+      workTree = workTree.endsWith("/.git") ? workTree.substring(0, workTree.lastIndexOf("/.git")) : workTree;
+      //Remove last "/" from path if exists:
+      String pattern = href.endsWith("/") ? href.substring(0, href.length() - 1) : href;
+      pattern = pattern.replace(workTree, "");
+      //Remove first "/" if exists:
+      pattern = (pattern.length() > 0 && pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
+      return pattern;
    }
 }

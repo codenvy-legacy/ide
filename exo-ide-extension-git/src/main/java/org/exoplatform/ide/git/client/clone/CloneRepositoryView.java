@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.clone.ui;
+package org.exoplatform.ide.git.client.clone;
 
 import com.google.gwt.resources.client.ImageResource;
 
@@ -34,6 +34,8 @@ import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
 
 /**
+ * UI for cloning repository.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 22, 2011 4:54:24 PM anya $
  *
@@ -85,11 +87,6 @@ public class CloneRepositoryView extends ViewImpl implements
 
    private TextField remoteNameField;
 
-   /**
-    * @param id
-    * @param type
-    * @param title
-    */
    public CloneRepositoryView()
    {
       super(ID, TYPE, TITLE, null, 480, 240);
@@ -131,9 +128,17 @@ public class CloneRepositoryView extends ViewImpl implements
       buttonsLayout.add(cancelButton);
 
       panel.add(buttonsLayout);
-      // panel.setCellHorizontalAlignment(buttonsLayout, HasHorizontalAlignment.ALIGN_CENTER);
    }
 
+   /**
+    * Creates button.
+    * 
+    * @param id button's id
+    * @param title button's title
+    * @param icon button's normal icon
+    * @param disabledIcon button's icon in disabled state
+    * @return {@link IButton}
+    */
    private IButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
    {
       IButton button = new IButton(title);
@@ -144,6 +149,13 @@ public class CloneRepositoryView extends ViewImpl implements
       return button;
    }
 
+   /**
+    * Creates {@link TextField} component.
+    * 
+    * @param id element's id
+    * @param title title near text field
+    * @return {@link TextField}
+    */
    private TextField createTextField(String id, String title)
    {
       TextField textField = new TextField(id, title);

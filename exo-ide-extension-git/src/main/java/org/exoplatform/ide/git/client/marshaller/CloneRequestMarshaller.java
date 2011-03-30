@@ -16,37 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.service.marshaller;
+package org.exoplatform.ide.git.client.marshaller;
 
-import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.ide.git.shared.InitRequest;
+import org.exoplatform.ide.git.shared.CloneRequest;
 
 /**
- * Marshaller for creation request in JSON format for {@link InitRequest}. 
+ * Marshaller for clone repository request.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 24, 2011 11:48:40 AM anya $
+ * @version $Id:  Mar 24, 2011 12:32:56 PM anya $
  *
  */
-public class InitRequestMarshaller implements Marshallable, Constants
+public class CloneRequestMarshaller implements Marshallable, Constants
 {
    /**
-    * Initialize repository request.
+    * Clone repository request.
     */
-   private InitRequest initRequest;
-
+   private CloneRequest cloneRequest;
+   
    /**
-    * @param initRequest initialize repository request
+    * @param cloneRequest
     */
-   public InitRequestMarshaller(InitRequest initRequest)
+   public CloneRequestMarshaller(CloneRequest cloneRequest)
    {
-      this.initRequest = initRequest;
+      this.cloneRequest = cloneRequest;
    }
-
+   
+   
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
     */
@@ -54,8 +54,12 @@ public class InitRequestMarshaller implements Marshallable, Constants
    public String marshal()
    {
       JSONObject jsonObject = new JSONObject();
-      jsonObject.put(WORKNG_DIR, new JSONString(initRequest.getWorkingDir()));
-      jsonObject.put(BARE, JSONBoolean.getInstance(initRequest.isBare()));
+      jsonObject.put(WORKNG_DIR, new JSONString(cloneRequest.getWorkingDir()));
+      jsonObject.put(REMOTE_URI, new JSONString(cloneRequest.getRemoteUri()));
+      if (cloneRequest.getRemoteName() != null)
+      {
+         jsonObject.put(REMOTE_NAME, new JSONString(cloneRequest.getRemoteName()));
+      }
       return jsonObject.toString();
    }
 

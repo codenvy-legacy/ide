@@ -16,29 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.service.marshaller;
+package org.exoplatform.ide.git.client.marshaller;
 
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.ide.git.shared.CloneRequest;
+import org.exoplatform.ide.git.shared.StatusRequest;
 
 /**
+ * Marshaller for creation request in JSON format for {@link StatusRequest}. 
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 24, 2011 12:32:56 PM anya $
+ * @version $Id:  Mar 28, 2011 2:32:53 PM anya $
  *
  */
-public class CloneRequestMarshaller implements Marshallable, Constants
+public class StatusRequestMarshaller implements Marshallable, Constants
 {
-   private CloneRequest cloneRequest;
-   
-   public CloneRequestMarshaller(CloneRequest cloneRequest)
+
+   /**
+    * Status request.
+    */
+   private StatusRequest statusRequest;
+
+   /**
+    * @param statusRequest
+    */
+   public StatusRequestMarshaller(StatusRequest statusRequest)
    {
-      this.cloneRequest = cloneRequest;
+      this.statusRequest = statusRequest;
    }
-   
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
     */
@@ -46,13 +56,16 @@ public class CloneRequestMarshaller implements Marshallable, Constants
    public String marshal()
    {
       JSONObject jsonObject = new JSONObject();
-      jsonObject.put(WORKNG_DIR, new JSONString(cloneRequest.getWorkingDir()));
-      jsonObject.put(REMOTE_URI, new JSONString(cloneRequest.getRemoteUri()));
-      if (cloneRequest.getRemoteName() != null)
+      jsonObject.put(SHORT_FORMAT, JSONBoolean.getInstance(statusRequest.isShortFormat()));
+      if (statusRequest.getFileFilter() != null && statusRequest.getFileFilter().length > 0)
       {
-         jsonObject.put(REMOTE_NAME, new JSONString(cloneRequest.getRemoteName()));
+         JSONArray filterArray = new JSONArray();
+         for (int i = 0; i < statusRequest.getFileFilter().length; i++)
+         {
+            filterArray.set(i, new JSONString(statusRequest.getFileFilter()[i]));
+         }
+         jsonObject.put(FILE_FILTER, filterArray);
       }
       return jsonObject.toString();
    }
-
 }

@@ -24,45 +24,38 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.create.InitRepositoryEvent;
+import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
 
 /**
- * Control for initializing the repository.
+ * Control for showing the status of the Git working tree.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 23, 2011 5:36:00 PM anya $
+ * @version $Id:  Mar 28, 2011 2:57:35 PM anya $
  *
  */
-public class InitRepositoryControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class ShowStatusControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
    /**
     * Control ID.
     */
-   public static final String ID = "Git/Initialize repository";
+   public static final String ID = "Git/Status";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Initialize repository";
+   public static final String TITLE = "Show Status";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Initialize repository";
+   public static final String PROMPT = "Show the work tree status";
 
-   /**
-    * @param id
-    */
-   public InitRepositoryControl()
+   public ShowStatusControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new InitRepositoryEvent());
-      setImages(GitClientBundle.INSTANCE.initRepo(), GitClientBundle.INSTANCE.initRepoDisabled());
-      setVisible(true);
+      setEvent(new ShowWorkTreeStatusEvent());
    }
 
    /**
@@ -72,6 +65,8 @@ public class InitRepositoryControl extends SimpleControl implements IDEControl, 
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      setVisible(true);
+      setEnabled(true);
    }
 
    /**
@@ -85,8 +80,6 @@ public class InitRepositoryControl extends SimpleControl implements IDEControl, 
          setEnabled(false);
          return;
       }
-      //Check whether folder is selected:
-      boolean enabled = (event.getSelectedItems().get(0) instanceof Folder);
-      setEnabled(enabled);
+      setEnabled(true);
    }
 }

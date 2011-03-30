@@ -34,13 +34,13 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.git.client.create.event.InitRepositoryEvent;
-import org.exoplatform.ide.git.client.create.event.InitRepositoryHandler;
-import org.exoplatform.ide.git.client.service.GitClientService;
+import org.exoplatform.ide.git.client.GitClientService;
 
 import java.util.List;
 
 /**
+ * Presenter for Init Repository view.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 24, 2011 9:07:58 AM anya $
  *
@@ -49,12 +49,32 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
 {
    public interface Display extends ViewDisplay
    {
+      /**
+       * Get's bare field.
+       * 
+       * @return {@link HasValue}
+       */
       HasValue<Boolean> getBareValue();
-
+      
+      /**
+       * Get's working directory field.
+       * 
+       * @return {@link HasValue}
+       */
       HasValue<String> getWorkDirValue();
 
+      /**
+       * Gets initialize repository button.
+       * 
+       * @return {@link HasClickHandlers}
+       */
       HasClickHandlers getInitButton();
-
+      
+      /**
+       * Gets cancel button.
+       * 
+       * @return {@link HasClickHandlers}
+       */
       HasClickHandlers getCancelButton();
    }
 
@@ -62,8 +82,14 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
 
    private HandlerManager eventBus;
 
+   /**
+    * Selected items in the browser tree.
+    */
    private List<Item> selectedItems;
 
+   /**
+    * @param eventBus
+    */
    public InitRepositoryPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -97,7 +123,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.create.event.InitRepositoryHandler#onInitRepository(org.exoplatform.ide.git.client.create.event.InitRepositoryEvent)
+    * @see org.exoplatform.ide.git.client.create.InitRepositoryHandler#onInitRepository(org.exoplatform.ide.git.client.create.InitRepositoryEvent)
     */
    @Override
    public void onInitRepository(InitRepositoryEvent event)
@@ -114,6 +140,9 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
       display.getWorkDirValue().setValue(selectedItems.get(0).getHref(), true);
    }
 
+   /**
+    * Get the values of the necessary parameters for initialization of the repository.
+    */
    public void initRepository()
    {
       String workDir = display.getWorkDirValue().getValue();

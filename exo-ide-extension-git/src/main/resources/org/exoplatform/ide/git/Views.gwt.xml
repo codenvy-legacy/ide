@@ -20,11 +20,15 @@
 -->
 <module>
 	<inherits name='com.google.gwt.user.User' />
-	<replace-with class="org.exoplatform.ide.git.client.clone.ui.CloneRepositoryView">
+	<replace-with class="org.exoplatform.ide.git.client.clone.CloneRepositoryView">
 		<when-type-is class="org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display" />
 	</replace-with> 
    
-   <replace-with class="org.exoplatform.ide.git.client.create.ui.InitRepositoryView">
+   <replace-with class="org.exoplatform.ide.git.client.create.InitRepositoryView">
       <when-type-is class="org.exoplatform.ide.git.client.create.InitRepositoryPresenter.Display" />
    </replace-with>  
+   
+    <replace-with class="org.exoplatform.ide.git.client.add.AddToIndexView">
+      <when-type-is class="org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display" />
+   </replace-with>
 </module>
