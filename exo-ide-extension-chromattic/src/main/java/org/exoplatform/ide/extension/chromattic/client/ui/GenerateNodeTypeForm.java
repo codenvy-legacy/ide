@@ -18,18 +18,17 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
+import org.exoplatform.gwtframework.ui.client.component.Align;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.extension.chromattic.client.Images;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
-import org.exoplatform.gwtframework.ui.client.component.Align;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
-import org.exoplatform.ide.extension.chromattic.client.Images;
 
 /**
  * View for generating node type definition.
@@ -40,6 +39,7 @@ import org.exoplatform.ide.extension.chromattic.client.Images;
  */
 public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTypePresenter.Display
 {
+   
    public static final int WIDTH = 450;
 
    public static final int HEIGHT = 160;
@@ -96,7 +96,8 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
    @Override
    public void destroy()
    {
-      eventBus.fireEvent(new ViewClosedEvent(ID));
+      //eventBus.fireEvent(new ViewClosedEvent(this));
+      System.out.println("eventBus.fireEvent(new ViewClosedEvent(this));");
       super.destroy();
    }
 

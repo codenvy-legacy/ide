@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
@@ -26,15 +33,6 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
-import org.exoplatform.gwtframework.commons.wadl.Param;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -156,7 +154,8 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
    public void destroy()
    {
       super.destroy();
-      eventBus.fireEvent(new ViewClosedEvent(ID));
+      //eventBus.fireEvent(new ViewClosedEvent(ID));
+      System.out.println("eventBus.fireEvent(new ViewClosedEvent(ID));");
    }
 
    /**

@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -72,7 +71,6 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.event.SelectViewEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
@@ -96,12 +94,12 @@ import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -474,7 +472,9 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
 
       //   display.selectTab(event.getFile().getHref());
 
-      eventBus.fireEvent(new SelectViewEvent(editorsViews.get(editor.getEditorId()).getId()));
+      editorsViews.get(editor.getEditorId()).activate();
+      //eventBus.fireEvent(new SelectViewEvent(editorsViews.get(editor.getEditorId()).getId()));
+      
 
       //      context.setActiveFile(event.getFile());
       //      context.setActiveTextEditor(display.getEditor(event.getFile().getHref()));
@@ -495,7 +495,9 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       }
       //   display.selectTab(file.getHref());
       Editor editor = editors.get(file.getHref());
-      eventBus.fireEvent(new SelectViewEvent(editorsViews.get(editor.getEditorId()).getId()));
+      
+      editorsViews.get(editor.getEditorId()).activate();
+      //eventBus.fireEvent(new SelectViewEvent(editorsViews.get(editor.getEditorId()).getId()));
 
       activeFile = file;
 

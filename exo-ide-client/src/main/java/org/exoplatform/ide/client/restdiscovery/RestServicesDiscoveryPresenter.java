@@ -18,15 +18,14 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -42,14 +41,15 @@ import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryE
 import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryHandler;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -63,12 +63,13 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
    public interface Display
    {
+
       HasClickHandlers getOkButton();
 
       UntypedTreeGrid getTreeGrid();
 
       ListGridItem<ParamExt> getParametersListGrid();
-      
+
       HasValue<String> getPathField();
 
       void setRequestType(String value);
@@ -88,7 +89,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       void setParametersListGridVisible(boolean b);
 
       void setParametersListGridEnabled(boolean enabled);
-      
+
       void setPathFieldVisible(boolean visible);
    }
 
@@ -126,13 +127,13 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
       DiscoveryService.getInstance().getRestServices(new AsyncRequestCallback<List<RestService>>()
       {
-         
+
          @Override
          protected void onSuccess(List<RestService> result)
          {
             restServicesReceived(result);
          }
-         
+
          @Override
          protected void onFailure(Throwable exception)
          {
@@ -180,7 +181,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       {
 
          public void onSelection(SelectionEvent<Object> event)
-         {           
+         {
             if (event.getSelectedItem() instanceof Method)
             {
                updateMethodInfo((Method)event.getSelectedItem());
@@ -214,7 +215,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    {
       dispaly.setPathFieldVisible(true);
       dispaly.getPathField().setValue(method.getHref());
-      
+
       if (method.getRequest() != null)
       {
          if (!method.getRequest().getRepresentation().isEmpty())
@@ -258,7 +259,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          dispaly.setResponseFieldEnabled(false);
       }
    }
-   
+
    private String getParamGroup(Param param)
    {
       String groupName = "";
@@ -282,30 +283,30 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       }
 
       groupName += " param";
-      
+
       return groupName;
    }
-   
+
    private List<ParamExt> convertParamList(List<Param> params)
    {
-      
+
       HashMap<String, List<Param>> groups = new LinkedHashMap<String, List<Param>>();
-      
-      for (Param param: params)
+
+      for (Param param : params)
       {
          String groupName = getParamGroup(param);
-         
+
          List<Param> paramsFromGroup = groups.get(groupName);
-         
+
          if (paramsFromGroup == null)
          {
             paramsFromGroup = new ArrayList<Param>();
             groups.put(groupName, paramsFromGroup);
          }
-         
+
          paramsFromGroup.add(param);
       }
-      
+
       List<ParamExt> paramsExtList = new ArrayList<ParamExt>();
       Iterator<String> keyIter = groups.keySet().iterator();
       while (keyIter.hasNext())
@@ -313,12 +314,12 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          final String groupName = keyIter.next();
          paramsExtList.add(new ParamExt(groupName));
          List<Param> paramsToAdd = groups.get(groupName);
-         for (Param param: paramsToAdd)
+         for (Param param : paramsToAdd)
          {
             paramsExtList.add(new ParamExt(param));
          }
       }
-      
+
       return paramsExtList;
    }
 
@@ -338,7 +339,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       {
          url += "/" + target.getFullPath();
       }
-      
+
       WadlService.getInstance().getWadl(url, new AsyncRequestCallback<WadlApplication>()
       {
          @Override
@@ -347,7 +348,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
             dispaly.getTreeGrid().setPaths(currentRestService,
                result.getResources().getResource().get(0).getMethodOrResource());
          }
-         
+
          @Override
          protected void onFailure(Throwable exception)
          {

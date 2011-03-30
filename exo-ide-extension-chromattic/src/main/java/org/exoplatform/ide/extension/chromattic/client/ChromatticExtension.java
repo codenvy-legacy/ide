@@ -59,8 +59,11 @@ public class ChromatticExtension extends Extension implements InitializeServices
       IDE.getInstance().addControl(new DeployNodeTypeControl(), DockTarget.TOOLBAR, true);
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      
       new GenerateNodeTypePresenter(eventBus);
+      
       new DeployNodeTypePresenter(eventBus);
+      
       new CompileGroovyCommandHandler(eventBus);
 
    }

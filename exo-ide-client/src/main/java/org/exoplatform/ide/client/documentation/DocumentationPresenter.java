@@ -37,10 +37,10 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -56,11 +56,15 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
 
    public interface Display
    {
+
+      String ID = "ideDocumentationView";
+
       void setDocumentationURL(String url);
 
       void bindClickHandlers();
 
       void removeHandlers();
+
    }
 
    private HandlerManager eventBus;
@@ -72,7 +76,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    private File activeFile;
 
    private ApplicationSettings settings;
-   
+
    private boolean isClosedByUser = true;
 
    private Map<String, String> docs = new HashMap<String, String>();
@@ -171,7 +175,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      if (DocumentationForm.ID.equals(event.getViewId()) && display != null)
+      if (event.getView() instanceof Display)
       {
          display.bindClickHandlers();
          control.setSelected(true);
@@ -186,7 +190,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (DocumentationForm.ID.equals(event.getViewId())&& isClosedByUser)
+      if (event.getView() instanceof Display && isClosedByUser)
       {
          settings.setValue("documentation", false, Store.COOKIES);
          eventBus.fireEvent(new SaveApplicationSettingsEvent(settings, SaveType.COOKIES));
@@ -196,6 +200,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
          control.setEvent(new ShowDocumentationEvent(true));
          control.setPrompt(ShowDocumentationControl.PROMPT_SHOW);
       }
+
       isClosedByUser = true;
    }
 

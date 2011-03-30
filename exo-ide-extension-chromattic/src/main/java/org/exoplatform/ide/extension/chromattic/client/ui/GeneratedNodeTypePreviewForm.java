@@ -46,7 +46,6 @@ import com.google.gwt.user.client.ui.Image;
  */
 public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedNodeTypePreviewPresenter.Display
 {
-   public static final String ID = "ideGeneratedTypePreviewPanel";
 
    //public static final String FORM_ID = "ideGeneratedTypePreviewForm";
 

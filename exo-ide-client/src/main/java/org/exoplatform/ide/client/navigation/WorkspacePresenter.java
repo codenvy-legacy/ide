@@ -44,7 +44,6 @@ import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.event.SelectViewEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
@@ -393,7 +392,9 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
             display.getBrowserTree().setValue(folder);
 
             eventBus.fireEvent(new RestorePerspectiveEvent());
-            eventBus.fireEvent(new SelectViewEvent(Display.ID));
+            
+            //eventBus.fireEvent(new SelectViewEvent(Display.ID));
+            display.getView().setViewVisible();
 
             if (itemToSelect != null)
             {
@@ -540,7 +541,9 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
             eventBus.fireEvent(new EntryPointChangedEvent(result.getHref()));
 
-            eventBus.fireEvent(new SelectViewEvent(Display.ID));
+            display.getView().setViewVisible();
+            //eventBus.fireEvent(new SelectViewEvent(Display.ID));
+            
             eventBus.fireEvent(new ViewVisibilityChangedEvent((ViewEx)display));
 
             display.getBrowserTree().setValue(result);

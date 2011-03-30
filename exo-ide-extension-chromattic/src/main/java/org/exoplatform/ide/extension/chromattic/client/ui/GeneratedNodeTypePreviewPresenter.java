@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -33,20 +30,23 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Presenter for the preview of the generated node type definition.
@@ -58,8 +58,12 @@ import java.util.Map;
 public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandler, EditorActiveFileChangedHandler,
    ViewClosedHandler, NodeTypeGenerationResultReceivedHandler, ViewOpenedHandler, GenerateNodeTypeHandler
 {
+
    interface Display extends ViewDisplay
    {
+
+      String ID = "ideGeneratedTypePreviewView";
+
       /**
        * Set content to be displayed in editor. 
        * 
@@ -111,7 +115,7 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(GenerateNodeTypeEvent.TYPE, this);
    }
-   
+
    /**
     * Bind view with presenter.
     * 
@@ -132,13 +136,13 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       {
          Scheduler.get().scheduleDeferred(new ScheduledCommand()
          {
-            
+
             @Override
             public void execute()
             {
-               display.setContent(generatedNodeType);               
+               display.setContent(generatedNodeType);
             }
-         });         
+         });
       }
    }
 
@@ -157,17 +161,19 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (GeneratedNodeTypePreviewForm.ID.equals(event.getViewId()))
-      {
-         isOpened = false;
-         removeHandlers();
-      }
-      else if (GenerateNodeTypeForm.ID.equals(event.getViewId()))
-      {
-         handlerRegistrations.get(NodeTypeGenerationResultReceivedEvent.TYPE).removeHandler();
-      }
+      System.out.println("GeneratedNodeTypePreviewPresenter.onViewClosed()");
+      
+//      if (GeneratedNodeTypePreviewForm.ID.equals(event.getViewId()))
+//      {
+//         isOpened = false;
+//         removeHandlers();
+//      }
+//      else if (GenerateNodeTypeForm.ID.equals(event.getViewId()))
+//      {
+//         handlerRegistrations.get(NodeTypeGenerationResultReceivedEvent.TYPE).removeHandler();
+//      }
    }
-   
+
    private void removeHandlers()
    {
       eventBus.removeHandler(EditorInitializedEvent.TYPE, this);
@@ -206,7 +212,8 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       else
       {
          handlerRegistrations.put(EditorInitializedEvent.TYPE, eventBus.addHandler(EditorInitializedEvent.TYPE, this));
-         handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
+         handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE,
+            eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
          handlerRegistrations.put(ViewClosedEvent.TYPE, eventBus.addHandler(ViewClosedEvent.TYPE, this));
 
          final Display view = new GeneratedNodeTypePreviewForm(eventBus);
@@ -263,7 +270,7 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      if (GeneratedNodeTypePreviewForm.ID.equals(event.getViewId()))
+      if (event.getView() instanceof Display)
       {
          isOpened = true;
       }
@@ -275,6 +282,7 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    @Override
    public void onGenerateNodeType(GenerateNodeTypeEvent event)
    {
-      handlerRegistrations.put(NodeTypeGenerationResultReceivedEvent.TYPE, eventBus.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this));
+      handlerRegistrations.put(NodeTypeGenerationResultReceivedEvent.TYPE,
+         eventBus.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this));
    }
 }

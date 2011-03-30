@@ -44,6 +44,7 @@ import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeT
  */
 public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, EditorActiveFileChangedHandler
 {
+   
    interface Display
    {
       /**

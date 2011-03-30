@@ -36,8 +36,6 @@ import com.google.gwt.user.client.ui.Image;
 public class DocumentationForm extends ViewImpl implements DocumentationPresenter.Display
 {
 
-   public static final String ID = "ideDocumentationForm";
-   
    private static final String FRAME_ID = "ideDocumentationFrame";
 
    private Image DOCUMENTATION_TAB_ICON = new Image(IDEImageBundle.INSTANCE.documentation());
@@ -48,7 +46,7 @@ public class DocumentationForm extends ViewImpl implements DocumentationPresente
 
    public DocumentationForm(HandlerManager eventBus)
    {
-      super(ID,ViewType.INFORMATION , "Documentation");
+      super(ID, ViewType.INFORMATION , "Documentation");
       this.eventBus = eventBus;
       setIcon(DOCUMENTATION_TAB_ICON);
 

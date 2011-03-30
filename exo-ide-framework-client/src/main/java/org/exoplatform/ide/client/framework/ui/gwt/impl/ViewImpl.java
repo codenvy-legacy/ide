@@ -344,7 +344,7 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
    }
 
    @Override
-   public boolean setViewVisible()
+   public void setViewVisible()
    {
       SetViewVisibleEvent event = new SetViewVisibleEvent(getId());
 
@@ -352,8 +352,6 @@ public class ViewImpl extends FlowPanel implements ViewEx, ViewDisplay, HasChang
       {
          setViewVisibleHandler.onSetViewVisible(event);
       }
-
-      return false;
    }
 
 }

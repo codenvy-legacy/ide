@@ -22,9 +22,10 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.event.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.navigation.WorkspacePresenter;
 import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -82,7 +83,7 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
 
    @Override
    protected void updateEnabling()
-   {      
+   {
       if (!browserSelected)
       {
          setEnabled(false);
@@ -107,7 +108,7 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
 
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if ("ideNavigatorItemTreeGrid".equals(event.getViewId()))
+      if (event.getView() instanceof WorkspacePresenter.Display)
       {
          setEnabled(true);
       }

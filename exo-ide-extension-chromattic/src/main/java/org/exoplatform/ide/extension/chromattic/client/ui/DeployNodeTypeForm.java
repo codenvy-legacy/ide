@@ -18,20 +18,19 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import java.util.LinkedHashMap;
 
 import org.exoplatform.gwtframework.ui.client.component.Align;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent;
 import org.exoplatform.ide.extension.chromattic.client.Images;
 
-import java.util.LinkedHashMap;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * View for deploy node type operation.
@@ -225,7 +224,8 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
    @Override
    public void closeView()
    {
-      eventBus.fireEvent(new ViewClosedEvent(ID));
+      System.out.println("eventBus.fireEvent(new ViewClosedEvent(ID));");
+      //eventBus.fireEvent(new ViewClosedEvent(ID));
       destroy();
    }
 
