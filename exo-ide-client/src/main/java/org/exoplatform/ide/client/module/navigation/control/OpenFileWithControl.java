@@ -37,14 +37,14 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 @RolesAllowed({"administrators", "developers"})
-public class OpenFileWithCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+public class OpenFileWithControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
    EntryPointChangedHandler
 {
    private static final String ID = "File/Open File With...";
 
    private boolean browserPanelSelected = true;
 
-   public OpenFileWithCommand()
+   public OpenFileWithControl()
    {
       super(ID);
       setTitle("Open With...");

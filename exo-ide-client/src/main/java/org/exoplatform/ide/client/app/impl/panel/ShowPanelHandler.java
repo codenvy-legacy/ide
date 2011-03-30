@@ -29,7 +29,7 @@ package org.exoplatform.ide.client.app.impl.panel;
 public interface ShowPanelHandler
 {
    
-   void onShowPanel(String panelId);
+   void updatePanelSizes(String panelId);
 
 }
 

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation;
+package org.exoplatform.ide.client.properties;
 
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -30,8 +30,8 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEven
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
-import org.exoplatform.ide.client.operation.event.ShowItemPropertiesEvent;
-import org.exoplatform.ide.client.operation.event.ShowItemPropertiesHandler;
+import org.exoplatform.ide.client.properties.event.ShowPropertiesEvent;
+import org.exoplatform.ide.client.properties.event.ShowPropertiesHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -44,7 +44,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemPropertiesReceivedHandler,
-   EditorActiveFileChangedHandler, ShowItemPropertiesHandler, ViewClosedHandler
+   EditorActiveFileChangedHandler, ShowPropertiesHandler, ViewClosedHandler
 {
 
    public interface Display extends ViewDisplay
@@ -65,27 +65,25 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       eventBus.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      eventBus.addHandler(ShowItemPropertiesEvent.TYPE, this);
+      eventBus.addHandler(ShowPropertiesEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    @Override
-   public void onShowItemProperties(ShowItemPropertiesEvent event)
+   public void onShowProperties(ShowPropertiesEvent event)
    {
-      if (display == null)
+      if (event.isShowProperties() && display == null)
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView((ViewEx)display);
-      }
-      else
-      {
-         if (!display.getView().isViewVisible())
-         {
-            display.getView().setViewVisible();
-         }
+         display.showProperties(file);
+         return;
       }
 
-      display.showProperties(file);
+      if (!event.isShowProperties() && display != null)
+      {
+         IDE.getInstance().closeView(Display.ID);
+      }
    }
 
    private void refreshProperties(File file)
@@ -137,7 +135,8 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof Display) {
+      if (event.getView() instanceof Display)
+      {
          display = null;
       }
    }

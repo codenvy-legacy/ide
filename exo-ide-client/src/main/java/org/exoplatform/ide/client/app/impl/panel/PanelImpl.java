@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.app.impl.panel;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -277,11 +278,26 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
          return true;
       }
    };
+   
+   public void removeOutOfScreen() {
+      
+   }
+   
+   public void restoreDefaultPosition() {
+      
+   }
 
    public void setPosition(int left, int top)
    {
       DOM.setStyleAttribute(getElement(), "left", "" + (left + 0) + "px");
       DOM.setStyleAttribute(getElement(), "top", "" + (top + 0) + "px");
+
+      Iterator<ViewController> viewControllerIterator = viewControllers.values().iterator();
+      while (viewControllerIterator.hasNext()) {
+         ViewController viewController = viewControllerIterator.next();
+         viewController.repositionOnly();
+      }
+      
    }
 
    public void resize(int width, int height)
@@ -321,10 +337,9 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
 
    public void addView(ViewEx view, Widget viewWrapper)
    {
-
       if (views.size() == 0 && showPanelHandler != null)
       {
-         showPanelHandler.onShowPanel(panelId);
+         showPanelHandler.updatePanelSizes(panelId);
       }
 
       views.put(view.getId(), view);
@@ -403,6 +418,13 @@ public class PanelImpl extends AbsolutePanel implements RequiresResize, HasClosi
          DOM.setStyleAttribute(viewWrapper.getElement(), "top", "" + (top + 0) + "px");
          DOM.setStyleAttribute(viewWrapper.getElement(), "width", "" + width + "px");
          DOM.setStyleAttribute(viewWrapper.getElement(), "height", "" + height + "px");
+      }
+      
+      public void repositionOnly() {
+         int left = getAbsoluteLeft();
+         int top = getAbsoluteTop();
+         DOM.setStyleAttribute(viewWrapper.getElement(), "left", "" + (left + 0) + "px");
+         DOM.setStyleAttribute(viewWrapper.getElement(), "top", "" + (top + 0) + "px");
       }
 
    }

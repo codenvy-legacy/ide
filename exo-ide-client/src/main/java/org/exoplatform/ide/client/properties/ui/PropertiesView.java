@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation.ui;
+package org.exoplatform.ide.client.properties.ui;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -46,7 +46,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 
 public class PropertiesView extends ViewImpl implements
-   org.exoplatform.ide.client.operation.PropertiesPresenter.Display
+   org.exoplatform.ide.client.properties.PropertiesPresenter.Display
 {
 
    private static int WIDTH = 300;

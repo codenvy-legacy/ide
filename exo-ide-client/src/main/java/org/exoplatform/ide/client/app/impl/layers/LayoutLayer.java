@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.app.impl.panel.HidePanelHandler;
 import org.exoplatform.ide.client.app.impl.panel.PanelImpl;
 import org.exoplatform.ide.client.app.impl.panel.ShowPanelHandler;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -44,6 +45,14 @@ import com.google.gwt.user.client.ui.Widget;
 public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHandler
 {
 
+   public static final int PANEL_MINIMAL_WIDTH = 80;
+
+   public static final int PANEL_MINIMAL_HEIGHT = 50;
+   
+   public static final String INVISIBLE_PANEL_BACKGROUND = "#F9F9F9";
+   
+   public static final String INVISIBLE_PANEL_MESSAGE = "Not enough space to display this panel.";
+
    private class PanelController extends AbsolutePanel implements RequiresResize
    {
 
@@ -52,6 +61,8 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       private PanelImpl panel;
 
       private int width;
+
+      private boolean hidden = false;
 
       public PanelController(PanelImpl panel)
       {
@@ -73,11 +84,47 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       {
          int left = getAbsoluteLeft();
          int top = getAbsoluteTop();
+         
+         int minimalTop = MENU_HEIGHT + TOOLBAR_HEIGHT + MARGIN;
+         
+         int heightDifference = 0;
+         
+         if (top < minimalTop) {
+            heightDifference = minimalTop - top;
+            top = minimalTop;
+         }
+         
          int width = getOffsetWidth();
+         
          int height = getOffsetHeight();
+         height = height - heightDifference;
 
          if (panel.isVisible())
          {
+            if (width < PANEL_MINIMAL_WIDTH || height < PANEL_MINIMAL_HEIGHT)
+            {
+               if (!hidden)
+               {
+                  hidden = true;
+                  panel.setPosition(-100000, -100000);
+                  
+                  DOM.setStyleAttribute(getElement(), "background", INVISIBLE_PANEL_BACKGROUND);
+                  getElement().setInnerHTML(INVISIBLE_PANEL_MESSAGE);
+                  
+                  return;
+               }
+               else
+               {
+                  return;
+               }
+            }
+
+            if (hidden) {
+               hidden = false;
+               DOM.setStyleAttribute(getElement(), "background", "transparent");
+               getElement().setInnerHTML(null);
+            }
+
             this.width = width;
             this.height = height;
 
@@ -106,38 +153,44 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
 
    private static final int TOOLBAR_HEIGHT = 32;
 
-   private SplitLayoutPanel layoutPanel;
-
    private int left = MARGIN;
+
+   private int top = MENU_HEIGHT + TOOLBAR_HEIGHT + MARGIN;
+
+   private AbsolutePanel layoutWrapper;
+
+   private SplitLayoutPanel layoutPanel;
 
    private Map<String, PanelController> panelControllers = new HashMap<String, PanelController>();
 
    private Map<String, PanelImpl> panels = new HashMap<String, PanelImpl>();
 
-   private int top = MENU_HEIGHT + TOOLBAR_HEIGHT + MARGIN;
-
    public LayoutLayer()
    {
+      layoutWrapper = new AbsolutePanel();
+      add(layoutWrapper, left, top);
+
       layoutPanel = new SplitLayoutPanel();
-      add(layoutPanel, left, top);
+      layoutWrapper.add(layoutPanel, 0, 0);
    }
 
    public void addCenter(PanelImpl panel)
    {
       PanelController controller = new PanelController(panel);
       layoutPanel.add(controller);
-      //layoutPanel.setWidgetMinSize(controller, 50);
 
       panels.put(panel.getPanelId(), panel);
       panel.setShowPanelHandler(this);
       panel.setHidePanelHandler(this);
       panelControllers.put(panel.getPanelId(), controller);
-      
+
       if (panel.getViews().size() == 0)
       {
          onHidePanel(panel.getPanelId());
-      } else {
-         onShowPanel(panel.getPanelId());
+      }
+      else
+      {
+         updatePanelSizes(panel.getPanelId());
       }
    }
 
@@ -152,12 +205,14 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       panel.setShowPanelHandler(this);
       panel.setHidePanelHandler(this);
       panelControllers.put(panel.getPanelId(), controller);
-      
+
       if (panel.getViews().size() == 0)
       {
          onHidePanel(panel.getPanelId());
-      } else {
-         onShowPanel(panel.getPanelId());
+      }
+      else
+      {
+         updatePanelSizes(panel.getPanelId());
       }
    }
 
@@ -172,13 +227,15 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       panel.setShowPanelHandler(this);
       panel.setHidePanelHandler(this);
       panelControllers.put(panel.getPanelId(), controller);
-      
+
       if (panel.getViews().size() == 0)
       {
          onHidePanel(panel.getPanelId());
-      } else {
-         onShowPanel(panel.getPanelId());
-      }      
+      }
+      else
+      {
+         updatePanelSizes(panel.getPanelId());
+      }
    }
 
    public void addSouth(PanelImpl panel, int size)
@@ -192,13 +249,15 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       panel.setShowPanelHandler(this);
       panel.setHidePanelHandler(this);
       panelControllers.put(panel.getPanelId(), controller);
-      
+
       if (panel.getViews().size() == 0)
       {
          onHidePanel(panel.getPanelId());
-      } else {
-         onShowPanel(panel.getPanelId());
-      }      
+      }
+      else
+      {
+         updatePanelSizes(panel.getPanelId());
+      }
    }
 
    public void addWest(PanelImpl panel, int size)
@@ -216,8 +275,10 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       if (panel.getViews().size() == 0)
       {
          onHidePanel(panel.getPanelId());
-      } else {
-         onShowPanel(panel.getPanelId());
+      }
+      else
+      {
+         updatePanelSizes(panel.getPanelId());
       }
    }
 
@@ -237,10 +298,11 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       PanelController controller = panelControllers.get(panelId);
       panels.get(panelId).setVisible(false);
 
-      if (layoutPanel.getWidgetDirection(controller) == Direction.CENTER) {
+      if (layoutPanel.getWidgetDirection(controller) == Direction.CENTER)
+      {
          return;
       }
-      
+
       controller.setVisible(false);
 
       layoutPanel.setWidgetSize(controller, 0);
@@ -250,12 +312,13 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
    }
 
    @Override
-   public void onShowPanel(String panelId)
+   public void updatePanelSizes(String panelId)
    {
       PanelController controller = panelControllers.get(panelId);
       panels.get(panelId).setVisible(true);
 
-      if (layoutPanel.getWidgetDirection(controller) == Direction.CENTER) {
+      if (layoutPanel.getWidgetDirection(controller) == Direction.CENTER)
+      {
          controller.onResize();
          return;
       }
@@ -285,6 +348,7 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       int w = width - MARGIN - MARGIN;
       int h = height - MENU_HEIGHT - TOOLBAR_HEIGHT - MARGIN - MARGIN - STATUSBAR_HEIGHT;
 
+      layoutWrapper.setPixelSize(w, h);
       layoutPanel.setPixelSize(w, h);
 
       for (int i = 0; i < layoutPanel.getWidgetCount(); i++)

@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -54,7 +57,7 @@ import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.module.navigation.action.CreateFolderForm;
 import org.exoplatform.ide.client.module.navigation.action.RenameItemForm;
-import org.exoplatform.ide.client.module.navigation.control.OpenFileWithCommand;
+import org.exoplatform.ide.client.module.navigation.control.OpenFileWithControl;
 import org.exoplatform.ide.client.module.navigation.control.SaveAllFilesCommand;
 import org.exoplatform.ide.client.module.navigation.control.SaveFileAsCommand;
 import org.exoplatform.ide.client.module.navigation.control.SaveFileAsTemplateCommand;
@@ -87,7 +90,6 @@ import org.exoplatform.ide.client.navigation.control.PasteItemsCommand;
 import org.exoplatform.ide.client.navigation.control.RefreshBrowserControl;
 import org.exoplatform.ide.client.navigation.control.RenameItemCommand;
 import org.exoplatform.ide.client.navigation.control.SearchFilesCommand;
-import org.exoplatform.ide.client.navigation.control.ViewItemPropertiesCommand;
 import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CopyItemsHandler;
 import org.exoplatform.ide.client.navigation.event.CreateFolderEvent;
@@ -122,10 +124,7 @@ import org.exoplatform.ide.client.versioning.handler.RestoreToVersionCommandHand
 import org.exoplatform.ide.client.versioning.handler.ShowVersionListCommandHandler;
 import org.exoplatform.ide.client.versioning.handler.VersionHistoryCommandHandler;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -180,8 +179,10 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
          Images.FileTypes.CSS, MimeType.TEXT_CSS)));
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
-      eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(), DockTarget.TOOLBAR, true));
+      eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithControl()));
+      
+//      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(), DockTarget.TOOLBAR, true));
+      
       eventBus.fireEvent(new RegisterControlEvent(new ViewVersionHistoryControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewVersionListControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(), DockTarget.TOOLBAR, true));

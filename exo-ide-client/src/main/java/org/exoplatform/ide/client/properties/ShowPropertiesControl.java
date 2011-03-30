@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.control;
+package org.exoplatform.ide.client.properties;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -24,7 +24,11 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.operation.event.ShowItemPropertiesEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.properties.event.ShowPropertiesEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -35,22 +39,25 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class ViewItemPropertiesCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class ShowPropertiesControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
+   ViewOpenedHandler, ViewClosedHandler
 {
 
    public static final String ID = "View/Properties";
 
    public static final String TITLE = "Properties";
 
-   public static final String PROMPT = "Show Properties";
+   public static final String PROMPT_SHOW = "Show Properties";
 
-   public ViewItemPropertiesCommand()
+   public static final String PROMPT_HIDE = "Hide Properties";
+
+   public ShowPropertiesControl()
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);
+      setPrompt(PROMPT_SHOW);
       setImages(IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
-      setEvent(new ShowItemPropertiesEvent());
+      setEvent(new ShowPropertiesEvent(true));
    }
 
    /**
@@ -59,8 +66,10 @@ public class ViewItemPropertiesCommand extends SimpleControl implements IDEContr
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
-   
+
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)
@@ -81,4 +90,27 @@ public class ViewItemPropertiesCommand extends SimpleControl implements IDEContr
          setEnabled(true);
       }
    }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof PropertiesPresenter.Display)
+      {
+         setSelected(false);
+         setPrompt(PROMPT_SHOW);
+         setEvent(new ShowPropertiesEvent(true));
+      }
+   }
+
+   @Override
+   public void onViewOpened(ViewOpenedEvent event)
+   {
+      if (event.getView() instanceof PropertiesPresenter.Display)
+      {
+         setSelected(true);
+         setPrompt(PROMPT_HIDE);
+         setEvent(new ShowPropertiesEvent(false));
+      }
+   }
+
 }

@@ -25,6 +25,8 @@ import org.exoplatform.ide.client.outline.OutlinePresenter;
 import org.exoplatform.ide.client.outline.ShowOutlineControl;
 import org.exoplatform.ide.client.preview.PreviewHTMLControl;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
+import org.exoplatform.ide.client.properties.PropertiesPresenter;
+import org.exoplatform.ide.client.properties.ShowPropertiesControl;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -37,24 +39,26 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class OperationModule
 {
-   
+
    private HandlerManager eventBus;
-   
-   public OperationModule(HandlerManager eventBus) {
+
+   public OperationModule(HandlerManager eventBus)
+   {
       this.eventBus = eventBus;
-      
+
+      eventBus.fireEvent(new RegisterControlEvent(new ShowPropertiesControl(), DockTarget.TOOLBAR, true));
+      new PropertiesPresenter(eventBus);
+
       eventBus.fireEvent(new RegisterControlEvent(new ShowOutlineControl(), DockTarget.TOOLBAR));
       new OutlinePresenter(eventBus);
 
       eventBus.fireEvent(new RegisterControlEvent(new PreviewHTMLControl(), DockTarget.TOOLBAR, true));
       new PreviewHTMLPresenter(eventBus);
-      
+
       new DocumentationPresenter(eventBus);
-      
+
       new OutputPresenter(eventBus);
-      
-      new PropertiesPresenter(eventBus);
-      
+
    }
 
 }
