@@ -44,7 +44,7 @@ public class JGitConnectionFactory extends GitConnectionFactory
    {
       // XXX : Temporary solution to get access to remote Git Repository.
       // Need find appropriate place for it at least.
-      InputStream ins = JGitConnectionFactory.class.getResourceAsStream("GitCredentials.properties");
+      InputStream ins = Thread.currentThread().getContextClassLoader().getResourceAsStream("GitCredentials.properties");
       if (ins != null)
       {
          Properties credentialProperties = new Properties();
