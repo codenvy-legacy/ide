@@ -43,6 +43,7 @@ public class MainMenuControlsFormatter implements ControlsFormatter
       controlIdsOrder.add("Edit");
       controlIdsOrder.add("View");
       controlIdsOrder.add("Run");
+      controlIdsOrder.add("Git");
       controlIdsOrder.add("Window");
       controlIdsOrder.add("Help");
    }
