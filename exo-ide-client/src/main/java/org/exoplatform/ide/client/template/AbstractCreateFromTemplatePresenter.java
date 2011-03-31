@@ -41,7 +41,7 @@ import org.exoplatform.ide.client.model.template.TemplateService;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
+ * Abstract presenter for template form.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
@@ -75,10 +75,16 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
    {
    }
 
+   /**
+    * @param d
+    */
    public void bindDisplay(CreateFromTemplateDisplay<T> d)
    {
       display = d;
       
+      /*
+       * If name field is empty - disable create button
+       */
       display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          public void onValueChange(ValueChangeEvent<String> event)
@@ -96,6 +102,9 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
          }
       });
 
+      /*
+       * Add click handler for create button
+       */
       display.getCreateButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -104,6 +113,9 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
          }
       });
 
+      /*
+       * If double click on template - than new template will be created.
+       */
       display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler()
       {
          public void onDoubleClick(DoubleClickEvent event)
@@ -112,6 +124,9 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
          }
       });
 
+      /*
+       * Close action on cancel button
+       */
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -120,6 +135,9 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
          }
       });
 
+      /*
+       * If template selected - than copy template name to name field and enable create button
+       */
       display.getTemplateListGrid().addSelectionHandler(new SelectionHandler<T>()
       {
          public void onSelection(SelectionEvent<T> event)
@@ -129,6 +147,9 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
          }
       });
 
+      /*
+       * Delete action on delete button
+       */
       display.getDeleteButton().addClickHandler(new ClickHandler()
       {
 
@@ -138,14 +159,21 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
          }
       });
 
+      /*
+       * Initialize template list grid with template list
+       */
       display.getTemplateListGrid().setValue(templateList);
+      /*
+       * Disable buttons and name field, because no template is selected
+       */
       display.disableCreateButton();
       display.disableDeleteButton();
       display.disableNameField();
    }
 
    /**
-    * Delete selected template
+    * Executes, when delete button pressed.
+    * Show ask dialog.
     */
    protected void deleteTemplate()
    {
@@ -180,6 +208,9 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
       });
    }
    
+   /**
+    * Delete next template from selected list.
+    */
    protected void deleteNextTemplate()
    {
       if (selectedTemplates.size() == 0)
@@ -190,12 +221,12 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
       deleteOneTemplate(selectedTemplates.get(0));
    }
    
+   /**
+    * Call template service to delete template.
+    * If success, call method, that will delete next template from selected list.
+    * @param template
+    */
    protected void deleteOneTemplate(T template)
-   {
-      deleteTemplate(template);
-   }
-   
-   protected void deleteTemplate(T template)
    {
       TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback()
       {
@@ -208,6 +239,9 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
       });
    }
    
+   /**
+    * Calls, when template selected in list grid.
+    */
    protected void templatesSelected()
    {
       if (selectedTemplates.size() == 0)
@@ -278,10 +312,24 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
       });
    }
    
+   /**
+    * Set the value to name field, based on selected template.
+    */
    abstract void setNewInstanceName();
    
+   /**
+    * Updates template list with new values.
+    * Pass the list of all templates (projects and files),
+    * subclasses have to filter this list and save only thos templates,
+    * that they are interested in.
+    * @param templates - the list of all templates.
+    */
    abstract void updateTemplateList(List<Template> templates);
    
+   /**
+    * Call, when create button pressed (or when double clicked on template).
+    * Create new instance of selected template.
+    */
    abstract void submitTemplate();
 
 }
