@@ -46,6 +46,8 @@ public class TemplateUtils
    
    public static final String DEFAULT_PROJECT_TEMPLATE_NAME = "ide-project";
    
+   public static final String EMPTY_PROJECT_TEMPLATE_NAME = "new-project";
+   
    public static void checkCreateProjectFromTemplateForm(Selenium selenium)
    {
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/"));

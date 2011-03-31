@@ -49,6 +49,8 @@ public class CreateProjectFromTemplateTest extends BaseTest
    
    private static final String PROJECT_FROM_DEFAULT_TEMPLATE = "Greeting Project";
    
+   private static final String EMPTY_PROJECT = "New Project";
+   
    private static final String FOLDER_ORG = "org";
    
    private static final String FOLDER_EXOPLATFORM = "exoplatform";
@@ -207,6 +209,31 @@ public class CreateProjectFromTemplateTest extends BaseTest
       IDE.navigator().clickOpenIconOfFolder("data");
       assertElementPresentInWorkspaceTree("DataObject.groovy");
       assertElementPresentInWorkspaceTree("Pojo.groovy");
+   }
+   
+   /**
+    * IDE-668 Add template for empty project in IDE
+    * @throws Exception
+    */
+   @Test
+   public void createEmptyProject() throws Exception
+   {
+      refresh();
+      /*
+       * 1. Create new empty project
+       */
+      TemplateUtils.createProjectFromTemplate(selenium, TemplateUtils.EMPTY_PROJECT_TEMPLATE_NAME, EMPTY_PROJECT);
+      
+      /*
+       * 2. Configure classpath window dialog appeared. Close it
+       */
+      ClasspathUtils.checkConfigureClasspathDialog();
+      ClasspathUtils.clickCancel();
+      
+      /*
+       * 3. Check new project created
+       */
+      assertElementPresentInWorkspaceTree(EMPTY_PROJECT);
    }
    
    /**
