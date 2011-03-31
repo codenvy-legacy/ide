@@ -18,11 +18,7 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
@@ -38,8 +34,6 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
@@ -50,8 +44,13 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler;
+import org.exoplatform.ide.client.model.settings.SettingsService;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -137,7 +136,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       }
 
       applicationSettings.setValue("opened-files", files, Store.COOKIES);
-      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 
    private void storeActiveFile(File file)
@@ -149,13 +148,13 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       }
 
       applicationSettings.setValue("active-file", activeFile, Store.COOKIES);
-      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       applicationSettings.setValue("entry-point", event.getEntryPoint(), Store.COOKIES);
-      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 
    /**
@@ -193,7 +192,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    private void storeLockTokens()
    {
       applicationSettings.setValue("lock-tokens", lockTokens, Store.COOKIES);
-      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 
    /**

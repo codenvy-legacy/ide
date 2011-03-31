@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.client.documentation;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.documentation.control.ShowDocumentationControl;
 import org.exoplatform.ide.client.documentation.event.ShowDocumentationEvent;
@@ -35,15 +34,15 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.model.settings.SettingsService;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -157,7 +156,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    public void onShowDocumentation(ShowDocumentationEvent event)
    {
       settings.setValue("documentation", event.isShow(), Store.COOKIES);
-      eventBus.fireEvent(new SaveApplicationSettingsEvent(settings, SaveType.COOKIES));
+      SettingsService.getInstance().saveSettingsToCookies(settings);
       if (event.isShow())
       {
          openDocForm();
@@ -193,7 +192,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
       if (event.getView() instanceof Display && isClosedByUser)
       {
          settings.setValue("documentation", false, Store.COOKIES);
-         eventBus.fireEvent(new SaveApplicationSettingsEvent(settings, SaveType.COOKIES));
+         SettingsService.getInstance().saveSettingsToCookies(settings);
          control.setSelected(false);
          display.removeHandlers();
          display = null;

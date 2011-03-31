@@ -18,11 +18,15 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -42,10 +46,6 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
@@ -54,26 +54,23 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.model.discovery.Scheme;
+import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.preferences.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.preferences.event.SelectWorkspaceHandler;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler, EditorFileOpenedHandler,
+public class SelectWorkspacePresenter implements EditorFileOpenedHandler,
    EditorFileClosedHandler, ApplicationSettingsReceivedHandler, SelectWorkspaceHandler, ViewClosedHandler
 {
 
@@ -167,7 +164,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
       eventBus.addHandler(SelectWorkspaceEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
@@ -459,16 +455,10 @@ public class SelectWorkspacePresenter implements ApplicationSettingsSavedHandler
    private void storeCurrentWorkspaceToConfiguration()
    {
       applicationSettings.setValue("entry-point", selectedWorkspace.getHref(), Store.COOKIES);
-      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
-   }
-
-   /**
-    * Handle of ApplicationSettingsSaved Event and switch current workspace.
-    * 
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler#onApplicationSettingsSaved(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent)
-    */
-   public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
-   {
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+      /*
+       * Handle of ApplicationSettingsSaved Event and switch current workspace.
+       */
       if (display != null)
       {
          workingWorkspace = selectedWorkspace.getHref();

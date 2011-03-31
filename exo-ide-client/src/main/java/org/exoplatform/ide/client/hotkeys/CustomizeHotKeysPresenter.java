@@ -26,13 +26,14 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
+import org.exoplatform.ide.client.model.settings.SettingsService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -449,7 +450,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
     */
    private void saveHotKeys()
    {
-      Map<String, String> keys = applicationSettings.getValueAsMap("hotkeys");
+      final Map<String, String> keys = applicationSettings.getValueAsMap("hotkeys");
       keys.clear();
 
       for (HotKeyItem hotKeyItem : hotKeys)
@@ -466,10 +467,23 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener
          }
       }
 
-      display.closeForm();
+      SettingsService.getInstance().saveSettingsToRegistry(applicationSettings, 
+         new AsyncRequestCallback<ApplicationSettings>()
+         {
 
-      eventBus.fireEvent(new RefreshHotKeysEvent(keys));
-      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
+            @Override
+            protected void onSuccess(ApplicationSettings result)
+            {
+               display.closeForm();
+               eventBus.fireEvent(new RefreshHotKeysEvent(keys));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent("Can't save hotkeys."));
+            }
+         });
    }
 
    /**

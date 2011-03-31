@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -38,11 +39,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 import java.util.ArrayList;
@@ -51,11 +49,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS.
+ * Presenter for open file with editor form.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileWithPresenter implements EditorFileOpenedHandler, ApplicationSettingsSavedHandler
+public class OpenFileWithPresenter implements EditorFileOpenedHandler
 {
 
    public interface Display
@@ -100,20 +99,10 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
 
    public void destroy()
    {
-      removeHandlers();
    }
    
-   /**
-    * Remove handlers, that are no longer needed.
-    */
-   private void removeHandlers()
-   {
-      eventBus.removeHandler(ApplicationSettingsSavedEvent.TYPE, this);
-   }
-
    public void bindDisplay(Display d)
    {
-      eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
 
       display = d;
       display.getCancelButton().addClickHandler(new ClickHandler()
@@ -161,6 +150,10 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
       fillEditorListGrid();
    }
 
+   /**
+    * Find all editors for file's mime-type and show
+    * them in list grid.
+    */
    private void fillEditorListGrid()
    {
       String mimeType = selectedFile.getContentType();
@@ -225,12 +218,15 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
       }
    }
 
+   /**
+    * Open file in selected editor.
+    * Fires {@link OpenFileEvent} and close form if all success.
+    */
    private void openFile()
    {
       if (display.getIsDefaultCheckItem().getValue() == null || display.getIsDefaultCheckItem().getValue() == false)
       {
          eventBus.fireEvent(new OpenFileEvent(selectedFile, selectedEditor.getDescription()));
-         display.closeForm();
       }
       else
       {
@@ -243,11 +239,30 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
             applicationSettings.setValue("default-editors", defaultEditors, Store.REGISTRY);
          }
          
-         defaultEditors.put(mimeType, selectedEditor.getDescription());         
-         eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
+         defaultEditors.put(mimeType, selectedEditor.getDescription());
+         
+         SettingsService.getInstance().saveSettingsToRegistry(applicationSettings, 
+            new AsyncRequestCallback<ApplicationSettings>()
+            {
+
+               @Override
+               protected void onSuccess(ApplicationSettings result)
+               {
+                  eventBus.fireEvent(new OpenFileEvent(selectedFile));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent("Can't save information about default editor"));
+               }
+            });
       }
    }
 
+   /**
+    * If file is opened, than show reopen dialog.
+    */
    private void showAskReopenDialog()
    {
       Dialogs.getInstance().ask("Info", "Do you want to reopen <b>" + selectedFile.getName() + "</b> in selected editor?",
@@ -272,6 +287,11 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
          });
    }
 
+   /**
+    * Check, is file opened or closed.
+    * If opened, than show ask dialog,
+    * otherwise open file.
+    */
    private void tryOpenFile()
    {
       if (openedFiles.get(selectedFile.getHref()) != null)
@@ -281,12 +301,6 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, Applicati
       }
 
       openFile();
-   }
-
-   public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
-   {
-      display.closeForm();
-      eventBus.fireEvent(new OpenFileEvent(selectedFile));
    }
 
    /**

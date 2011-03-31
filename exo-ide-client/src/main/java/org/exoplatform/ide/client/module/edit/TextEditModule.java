@@ -28,9 +28,10 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.module.edit.action.GoToLineForm;
 import org.exoplatform.ide.client.module.edit.control.DeleteCurrentLineControl;
 import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
@@ -96,10 +97,11 @@ public class TextEditModule implements FindTextHandler, GoToLineHandler,
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
       applicationSettings.setValue("line-numbers", new Boolean(event.isShowLineNumber()), Store.COOKIES);
-      //      applicationSettings.setStoredIn("line-numbers", Store.COOKIES);
-      //applicationSettings.setShowLineNumbers(event.isShowLineNumber());
-      //CookieManager.setShowLineNumbers(event.isShowLineNumber());
-      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+      /*
+       * fire event for show-hide line numbers command be able to update state.
+       */
+      eventBus.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
    }
 
    /**

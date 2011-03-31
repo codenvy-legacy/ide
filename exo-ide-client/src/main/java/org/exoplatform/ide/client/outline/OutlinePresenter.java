@@ -18,10 +18,13 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
@@ -33,13 +36,12 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.outline.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.outline.event.ShowOutlineHandler;
 import org.exoplatform.ide.editor.api.Editor;
@@ -50,15 +52,8 @@ import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for Outline Panel.
@@ -112,12 +107,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    }
 
    private HandlerManager eventBus;
-
-   /**
-    * Used to remove handlers when they are no longer needed.
-    */
-   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
-      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
    private Display display;
 
@@ -182,7 +171,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          bindDisplay(d);
 
          applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
-         eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
 
          return;
       }
@@ -192,7 +181,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          IDE.getInstance().closeView(Display.ID);
 
          applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
-         eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
 
          return;
       }

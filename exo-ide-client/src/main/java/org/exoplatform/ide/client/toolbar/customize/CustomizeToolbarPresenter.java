@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.toolbar.customize;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -28,6 +25,8 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
@@ -36,10 +35,7 @@ import org.exoplatform.gwtframework.ui.client.command.TextInputControl;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
-import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
+import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.toolbar.customize.ToolbarItem.Type;
 
 import java.util.ArrayList;
@@ -47,7 +43,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -56,7 +51,7 @@ import java.util.Map;
  * @version @version $Id: $
  */
 
-public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandler
+public class CustomizeToolbarPresenter
 {
 
    public interface Display
@@ -112,12 +107,6 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
 
    private Display display;
 
-   /**
-    * Used to remove handlers when they are no longer needed.
-    */
-   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
-      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
-
    private CommandItemEx selectedCommandItem;
 
    private ToolbarItem selectedToolbarItem;
@@ -136,19 +125,8 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
       this.controls = controls;
    }
 
-   /**
-    * Remove handlers, that are no longer needed.
-    */
    public void destroy()
    {
-      //TODO: such method is not very convenient.
-      //If gwt mvp framework will be used , it will be good to use
-      //ResettableEventBus class
-      for (HandlerRegistration h : handlerRegistrations.values())
-      {
-         h.removeHandler();
-      }
-      handlerRegistrations.clear();
    }
 
    public void bindDisplay(Display d)
@@ -545,9 +523,25 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
             itemsToUpdate.add("---");
          }
       }
-      handlerRegistrations.put(ApplicationSettingsSavedEvent.TYPE, eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this));
+      
+      SettingsService.getInstance().saveSettingsToRegistry(applicationSettings, 
+         new AsyncRequestCallback<ApplicationSettings>()
+         {
 
-      eventBus.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.REGISTRY));
+            @Override
+            protected void onSuccess(ApplicationSettings result)
+            {
+               eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", itemsToUpdate, controls));
+               display.closeForm();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent("Can't save toolbar settings"));
+            }
+         });
+      
    }
 
    private void restoreDefaults()
@@ -566,12 +560,6 @@ public class CustomizeToolbarPresenter implements ApplicationSettingsSavedHandle
       display.disableDeleteCommandButton();
       display.disableMoveUpButton();
       display.disableMoveDownButton();
-   }
-
-   public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
-   {
-      eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", itemsToUpdate, controls));
-      display.closeForm();
    }
 
 }

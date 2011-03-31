@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.client.application.phases;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.application.ControlsRegistration;
@@ -30,13 +31,13 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.model.settings.SettingsServiceImpl;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -53,7 +54,7 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
 
    private IDEConfiguration applicationConfiguration;
 
-   private ApplicationSettings applicationSettings;
+   private ApplicationSettings applicationSettings = new ApplicationSettings();
 
    private ControlsRegistration controls;
 
@@ -73,9 +74,26 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
    @Override
    protected void execute()
    {
-      new SettingsService(eventBus, applicationConfiguration.getRegistryURL(), userInfo.getName(), IDELoader.getInstance());
+      new SettingsServiceImpl(eventBus, applicationConfiguration.getRegistryURL(), userInfo.getName(),
+         IDELoader.getInstance());
 
-      eventBus.fireEvent(new GetApplicationSettingsEvent());
+      SettingsService.getInstance().getApplicationSettings(applicationSettings,
+         new AsyncRequestCallback<ApplicationSettings>()
+         {
+            @Override
+            protected void onSuccess(ApplicationSettings result)
+            {
+               eventBus.fireEvent(new ApplicationSettingsReceivedEvent(applicationSettings));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
+               event.setException(exception);
+               eventBus.fireEvent(event);
+            }
+         });
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
