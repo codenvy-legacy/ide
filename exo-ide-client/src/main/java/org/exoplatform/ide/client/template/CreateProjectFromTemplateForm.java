@@ -49,6 +49,8 @@ public class CreateProjectFromTemplateForm extends AbstractCreateFromTemplateFor
    {
       templateListGrid = new TemplateListGrid<ProjectTemplate>();
       // templateListGrid.setCanFocus(false);  // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."
+      templateListGrid.setWidth("100%");
+      templateListGrid.setHeight(200);
       windowLayout.add(templateListGrid);
    }
 

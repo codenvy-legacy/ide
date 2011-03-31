@@ -33,7 +33,6 @@ import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshalle
 import org.exoplatform.ide.client.model.template.marshal.TemplateMarshaller;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -181,6 +180,7 @@ public class TemplateServiceImpl extends TemplateService
       templateList.getTemplates().add(createChromatticForSampleProject());
 
       templateList.getTemplates().add(getSampleProject());
+      templateList.getTemplates().add(getEmptyProject());
       return templateList;
    }
 
@@ -211,6 +211,14 @@ public class TemplateServiceImpl extends TemplateService
       sampleProject.getChildren().add(dataFolder);
       sampleProject.getChildren().add(businessLogicFolder);
       sampleProject.getChildren().add(uiFolder);
+
+      return sampleProject;
+   }
+   
+   private static ProjectTemplate getEmptyProject()
+   {
+      ProjectTemplate sampleProject = new ProjectTemplate("new-project");
+      sampleProject.setDescription("Empty project");
 
       return sampleProject;
    }
