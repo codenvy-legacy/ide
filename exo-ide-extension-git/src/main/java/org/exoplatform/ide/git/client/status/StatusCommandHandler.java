@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
@@ -95,7 +96,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
          @Override
          protected void onFailure(Throwable exception)
          {
-            Dialogs.getInstance().showInfo("Not a git repository (or any of the parent directories)");
+            Dialogs.getInstance().showInfo(Messages.NOT_GIT_REPOSITORY);
          }
       });
    }
@@ -143,7 +144,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
             protected void onFailure(Throwable exception)
             {
                String errorMessage =
-                  (exception.getMessage() != null) ? exception.getMessage() : "Fail on getting work tree status.";
+                  (exception.getMessage() != null) ? exception.getMessage() : Messages.STATUS_FAILED;
                eventBus.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
             }
          });

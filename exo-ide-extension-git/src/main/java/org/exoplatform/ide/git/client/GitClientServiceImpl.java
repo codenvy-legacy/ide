@@ -28,7 +28,9 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.git.client.marshaller.AddRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.CloneRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.CommitRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.InitRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.RevisionUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.StatusRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
@@ -36,7 +38,9 @@ import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponseUnmarshaller;
 import org.exoplatform.ide.git.shared.AddRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
+import org.exoplatform.ide.git.shared.CommitRequest;
 import org.exoplatform.ide.git.shared.InitRequest;
+import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.StatusRequest;
 
 /**
@@ -51,6 +55,8 @@ public class GitClientServiceImpl extends GitClientService
    public static final String ADD = "/ide/git/add";
 
    public static final String CLONE = "/ide/git/clone";
+   
+   public static final String COMMIT = "/ide/git/commit";
 
    public static final String INIT = "/ide/git/init";
 
@@ -175,6 +181,31 @@ public class GitClientServiceImpl extends GitClientService
       AddRequest addRequest = new AddRequest(filePattern, update);
       AddRequestMarshaller marshaller = new AddRequestMarshaller(addRequest);
 
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#commit(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void commit(String href, String message, AsyncRequestCallback<Revision> callback)
+   {
+      String url = restServiceContext + COMMIT;
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+      
+      CommitRequest commitRequest = new CommitRequest(message);
+      CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
+      
+      Revision revision = new Revision(null, message, 0, null);
+      RevisionUnmarshaller unmarshaller = new RevisionUnmarshaller(revision);
+      
+      callback.setPayload(unmarshaller);
+      callback.setResult(revision);
+      
       String params = "workdir=" + workDir;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)

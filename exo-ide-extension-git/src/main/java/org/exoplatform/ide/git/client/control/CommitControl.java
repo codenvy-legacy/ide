@@ -24,39 +24,38 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
+import org.exoplatform.ide.git.client.commit.CommitEvent;
 
 /**
- * Control for showing the status of the Git working tree.
+ * Control for performing commit.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 2:57:35 PM anya $
+ * @version $Id:  Mar 31, 2011 9:21:04 AM anya $
  *
  */
-public class ShowStatusControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class CommitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
    /**
     * Control ID.
     */
-   public static final String ID = "Git/Status";
+   public static final String ID = "Git/Commit";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Show Status";
+   public static final String TITLE = "Commit";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Show the work tree status";
+   public static final String PROMPT = "Commit";
 
-   public ShowStatusControl()
+   public CommitControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new ShowWorkTreeStatusEvent());
-      setDelimiterBefore(true);
+      setEvent(new CommitEvent());
    }
 
    /**
@@ -65,9 +64,8 @@ public class ShowStatusControl extends SimpleControl implements IDEControl, Item
    @Override
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       setVisible(true);
-      setEnabled(true);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -83,4 +81,5 @@ public class ShowStatusControl extends SimpleControl implements IDEControl, Item
       }
       setEnabled(true);
    }
+
 }

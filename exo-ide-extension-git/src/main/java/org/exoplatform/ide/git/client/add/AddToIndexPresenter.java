@@ -38,6 +38,7 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitClientUtil;
+import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
 import java.util.List;
@@ -51,7 +52,7 @@ import java.util.List;
  * @version $Id:  Mar 29, 2011 4:35:16 PM anya $
  *
  */
-public class AddToIndexPresenter implements AddToIndexHandler, ItemsSelectedHandler
+public class AddToIndexPresenter implements AddToIndexHandler, ItemsSelectedHandler, Messages
 {
    public interface Display extends ViewDisplay
    {
@@ -150,7 +151,7 @@ public class AddToIndexPresenter implements AddToIndexHandler, ItemsSelectedHand
    {
       if (selectedItems == null || selectedItems.size() <= 0)
       {
-         Dialogs.getInstance().showInfo("Please, select one item(s), you want to add, in browser tree.");
+         Dialogs.getInstance().showInfo(SELECTED_ITEMS_FAIL);
          return;
       }
 
@@ -173,7 +174,7 @@ public class AddToIndexPresenter implements AddToIndexHandler, ItemsSelectedHand
             @Override
             protected void onFailure(Throwable exception)
             {
-               Dialogs.getInstance().showInfo("Not a git repository (or any of the parent directories)");
+               Dialogs.getInstance().showInfo(NOT_GIT_REPOSITORY);
             }
          });
    }
@@ -230,7 +231,7 @@ public class AddToIndexPresenter implements AddToIndexHandler, ItemsSelectedHand
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent("Successfully added to index."));
+            eventBus.fireEvent(new OutputEvent(ADD_SUCCESS));
          }
 
          @Override
@@ -238,7 +239,7 @@ public class AddToIndexPresenter implements AddToIndexHandler, ItemsSelectedHand
          {
             String errorMessage =
                (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : "Failed on adding changes to index.";
+                  : ADD_FAILED;
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });

@@ -21,6 +21,7 @@ package org.exoplatform.ide.git.client;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
+import org.exoplatform.ide.git.shared.Revision;
 
 /**
  * Service contains methods for working with Git repository from client side.
@@ -53,6 +54,15 @@ public abstract class GitClientService
       instance = this;
    }
    
+   /**
+    * Add changes to Git index (temporary storage).
+    * 
+    * @param workDir location of Git repository working directory
+    * @param update if <code>true</code> then never stage new files, but stage modified new contents of tracked files
+    * and remove files from the index if the corresponding files in the working tree have been removed 
+    * @param filePattern pattern of the files to be added, default is "." (all files are added)
+    * @param callback callback
+    */
    public abstract void add(String workDir, boolean update, String[] filePattern, AsyncRequestCallback<String> callback);
    
    /**
@@ -73,7 +83,18 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void cloneRepository(String workDir, String remoteUri, String remoteName, AsyncRequestCallback<String> callback);
-
+   
+   /**
+    * Performs commit changes from index to repository.
+    * The result of the commit is represented by {@link Revision}, which is returned
+    * by callback in <code>onSuccess(Revision result)</code>.
+    * 
+    * @param workDir location of Git repository working directory
+    * @param message commit log message
+    * @param callback callback
+    */
+   public abstract void commit(String workDir, String message, AsyncRequestCallback<Revision> callback);
+   
    /**
     * Gets the working tree status. The status of added, modified or deleted files is shown is written in {@link String}.
     * The format may be short or not.

@@ -27,8 +27,10 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
+import org.exoplatform.ide.git.client.commit.CommitPresenter;
 import org.exoplatform.ide.git.client.control.AddToIndexControl;
 import org.exoplatform.ide.git.client.control.CloneRepositoryControl;
+import org.exoplatform.ide.git.client.control.CommitControl;
 import org.exoplatform.ide.git.client.control.InitRepositoryControl;
 import org.exoplatform.ide.git.client.control.ShowStatusControl;
 import org.exoplatform.ide.git.client.create.InitRepositoryPresenter;
@@ -57,14 +59,16 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       //Add controls:
       IDE.getInstance().addControl(new InitRepositoryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CloneRepositoryControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ShowStatusControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new AddToIndexControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new CommitControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ShowStatusControl(), DockTarget.NONE, false);
       
       //Create presenters:
       new CloneRepositoryPresenter(eventBus);
       new InitRepositoryPresenter(eventBus);
       new StatusCommandHandler(eventBus);
       new AddToIndexPresenter(eventBus);
+      new CommitPresenter(eventBus);
    }
 
    /**

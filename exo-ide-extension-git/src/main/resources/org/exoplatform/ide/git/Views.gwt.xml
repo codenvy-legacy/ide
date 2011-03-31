@@ -31,4 +31,8 @@
     <replace-with class="org.exoplatform.ide.git.client.add.AddToIndexView">
       <when-type-is class="org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.git.client.commit.CommitView">
+      <when-type-is class="org.exoplatform.ide.git.client.commit.CommitPresenter.Display" />
+   </replace-with>
 </module>

@@ -18,41 +18,43 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
+
+import org.exoplatform.gwtframework.commons.rest.Marshallable;
+import org.exoplatform.ide.git.shared.CommitRequest;
+
 /**
- * Used for marshallers and unmarshallers.
+ * Marshaller for forming commit request in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 24, 2011 11:57:20 AM anya $
+ * @version $Id:  Mar 31, 2011 11:11:25 AM anya $
  *
  */
-public interface Constants
+public class CommitRequestMarshaller implements Marshallable, Constants
 {
-   public static final String ID = "id";
+   /**
+    * Request for commit.
+    */
+   private CommitRequest commitRequest;
    
-   public static final String COMMIT_TIME = "commitTime";
+   /**
+    * @param commitRequest request for commit
+    */
+   public CommitRequestMarshaller(CommitRequest commitRequest)
+   {
+      this.commitRequest = commitRequest;
+   }
    
-   public static final String COMMITTER = "committer";
-   
-   public static final String EMAIL = "email";
-   
-   public static final String NAME = "name";
-   
-   public static final String WORKNG_DIR = "workingDir";
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
+    */
+   @Override
+   public String marshal()
+   {
+      JSONObject jsonObject = new JSONObject();
+      jsonObject.put(MESSAGE, new JSONString(commitRequest.getMessage()));
+      return jsonObject.toString();
+   }
 
-   public static final String BARE = "bare";
-   
-   public static final String MESSAGE = "message";
-
-   public static final String REMOTE_URI = "remoteUri";
-   
-   public static final String REMOTE_NAME = "remoteName";
-   
-   public static final String SHORT_FORMAT = "shortFormat";
-   
-   public static final String FILE_FILTER = "fileFilter";
-   
-   public static final String FILE_PATTERN = "filepattern";
-   
-   public static final String UPDATE = "update";
-   
 }

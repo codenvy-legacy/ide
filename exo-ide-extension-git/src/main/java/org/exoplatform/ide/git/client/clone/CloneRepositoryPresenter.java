@@ -32,11 +32,14 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.Messages;
 
 import java.util.List;
 
@@ -163,7 +166,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
    {
       if (selectedItems == null || selectedItems.size() != 1 || !(selectedItems.get(0) instanceof Folder))
       {
-         Dialogs.getInstance().showInfo("Please, select one folder in browser tree.");
+         Dialogs.getInstance().showInfo(Messages.SELECTED_ITEMS_FAIL);
          return;
       }
 
@@ -198,13 +201,16 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
          @Override
          protected void onSuccess(String result)
          {
-            Dialogs.getInstance().showInfo("Clone remote repository", "Repository was successfully cloned.");
+            Dialogs.getInstance().showInfo("Clone remote repository", Messages.CLONE_SUCCESS);
          }
 
          @Override
          protected void onFailure(Throwable exception)
          {
-            Dialogs.getInstance().showError("Clone remote repository", "Repository was not cloned.");
+            String errorMessage =
+               (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                  : Messages.CLONE_FAILED;
+            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
       IDE.getInstance().closeView(display.getView().getId());

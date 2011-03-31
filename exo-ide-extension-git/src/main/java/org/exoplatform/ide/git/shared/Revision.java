@@ -84,6 +84,38 @@ public class Revision
    {
       return committer;
    }
+   
+   /**
+    * @param id the id to set
+    */
+   public void setId(String id)
+   {
+      this.id = id;
+   }
+
+   /**
+    * @param message the message to set
+    */
+   public void setMessage(String message)
+   {
+      this.message = message;
+   }
+
+   /**
+    * @param commitTime the commitTime to set
+    */
+   public void setCommitTime(long commitTime)
+   {
+      this.commitTime = commitTime;
+   }
+
+   /**
+    * @param committer the committer to set
+    */
+   public void setCommitter(GitUser committer)
+   {
+      this.committer = committer;
+   }
 
    @Override
    public String toString()
