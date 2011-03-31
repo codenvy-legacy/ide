@@ -35,12 +35,17 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * Created by The eXo Platform SAS .
+ * Abstract class, that creates base form for templates.
+ * 
+ * Create empty list grid, name field and action buttons: create, delete, cancel.
+ * 
+ * Initializing of lisg grid must implement concrete subclasses.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version @version $Id: $
+ * @version $Id: AbstractCreateFromTemplateForm.java Mar 31, 2011 11:14:45 AM vereshchaka $
+ *
+ * @param <T> - type of template (file or project)
  */
-
 public abstract class AbstractCreateFromTemplateForm<T extends Template> extends DialogWindow 
 implements CreateFromTemplateDisplay<T>
 {
@@ -56,8 +61,6 @@ implements CreateFromTemplateDisplay<T>
    private static final String ID_CANCEL_BUTTON = "ideCreateFileFromTemplateFormCancelButton";
    
    private static final String ID_DELETE_BUTTON = "ideCreateFileFromTemplateFormDeleteButton";
-   
-   private static final String ID_DYNAMIC_FORM = "ideCreateFileFromTemplateFormDynamicForm";
    
    private static final String FILE_NAME_FIELD = "ideCreateFileFromTemplateFormFileNameField";
    
@@ -89,6 +92,11 @@ implements CreateFromTemplateDisplay<T>
       super.destroy();
    }
    
+   /**
+    * Create main form and initialize it.
+    * 
+    * @param eventBus - the eventbus
+    */
    private void initForm(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -105,43 +113,58 @@ implements CreateFromTemplateDisplay<T>
 
       createTypeLayout();
 
-//      Layout l = new Layout();
-//      l.setHeight(10);
-//      windowLayout.addMember(l);
-
       windowLayout.add(getActionsForm());
 
       show();
    }
 
+   /**
+    * Create list grid for templates.
+    */
    abstract void createTypeLayout();
 
+   /**
+    * Create form with name field and action buttons.
+    * 
+    * @return {@link HorizontalPanel}
+    */
    private HorizontalPanel getActionsForm()
    {
       HorizontalPanel actionsLayout = new HorizontalPanel();
       actionsLayout.setHeight("35px");
       actionsLayout.setWidth("100%");
-//      DynamicForm form = new DynamicForm();
-//      form.setID(ID_DYNAMIC_FORM);
       nameField = new TextField("Name", getNameFieldLabel());
       nameField.setName(FILE_NAME_FIELD);
       nameField.setWidth(200);
       actionsLayout.add(nameField);
 
-//      Layout l = new Layout();
-//      l.setWidth100();
-//      actionsLayout.addMember(l);
-
       actionsLayout.add(getButtonsForm());
       return actionsLayout;
    }
    
+   /**
+    * Get the title of button, that create new instance
+    * @return {@link String}
+    */
    abstract String getCreateButtonTitle();
    
+   /**
+    * Get the name of field for typing new instance name.
+    * @return {@link String}
+    */
    abstract String getNameFieldLabel();
    
+   /**
+    * Get the title of form (window).
+    * @return {@link String}
+    */
    abstract String getFormTitle();
    
+   /**
+    * Create the horizontal panel with action buttons:
+    * create, delete and cancel.
+    * @return {@link HorizontalPanel}
+    */
    private HorizontalPanel getButtonsForm()
    {
       HorizontalPanel buttonsLayout = new HorizontalPanel();
@@ -175,26 +198,41 @@ implements CreateFromTemplateDisplay<T>
       return buttonsLayout;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.template.CreateFromTemplateDisplay#getCancelButton()
+    */
    public HasClickHandlers getCancelButton()
    {
       return cancelButton;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.template.CreateFromTemplateDisplay#getCreateButton()
+    */
    public HasClickHandlers getCreateButton()
    {
       return createButton;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.template.CreateFromTemplateDisplay#closeForm()
+    */
    public void closeForm()
    {
       destroy();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.template.CreateFromTemplateDisplay#disableCreateButton()
+    */
    public void disableCreateButton()
    {
       createButton.disable();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.template.CreateFromTemplateDisplay#enableCreateButton()
+    */
    public void enableCreateButton()
    {
       createButton.enable();
@@ -232,6 +270,9 @@ implements CreateFromTemplateDisplay<T>
       return nameField;
    }
    
+   /**
+    * @see org.exoplatform.ide.client.template.CreateFromTemplateDisplay#getTemplatesSelected()
+    */
    public List<T> getTemplatesSelected()
    {
       return templateListGrid.getSelectedItems();

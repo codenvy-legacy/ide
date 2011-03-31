@@ -27,38 +27,88 @@ import org.exoplatform.ide.client.model.template.Template;
 import java.util.List;
 
 /**
+ * Display interface, that templates view have to implement. 
+ * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  *
  */
 public interface CreateFromTemplateDisplay<T extends Template>
 {
+   /**
+    * Get the template list grid for registration handlers.
+    * @return
+    */
    ListGridItem<T> getTemplateListGrid();
 
+   /**
+    * Get the value of name field.
+    * @return
+    */
    HasValue<String> getNameField();
 
+   /**
+    * Get cancel button for registration click handlers.
+    * @return
+    */
    HasClickHandlers getCancelButton();
 
+   /**
+    * Get create button for registration click handlers.
+    * @return
+    */
    HasClickHandlers getCreateButton();
 
+   /**
+    * Get delete button for registration click handlers.
+    * @return
+    */
    HasClickHandlers getDeleteButton();
    
+   /**
+    * Get the list of selected templates in list grid.
+    * @return
+    */
    List<T> getTemplatesSelected();
 
+   /**
+    * Close templates form.
+    */
    void closeForm();
 
+   /**
+    * Make create button enabled.
+    */
    void enableCreateButton();
 
+   /**
+    * Make crate button disabled.
+    */
    void disableCreateButton();
    
+   /**
+    * Make delete button enabled.
+    */
    void enableDeleteButton();
 
+   /**
+    * Make delete button disable.
+    */
    void disableDeleteButton();
    
+   /**
+    * Enable the name field.
+    */
    void enableNameField();
 
+   /**
+    * Disable the name field.
+    */
    void disableNameField();
 
+   /**
+    * Select the last template in list grid.
+    */
    void selectLastTemplate();
 
 }

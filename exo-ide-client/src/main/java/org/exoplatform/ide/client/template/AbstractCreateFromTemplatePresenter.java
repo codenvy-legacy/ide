@@ -54,8 +54,16 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
 
    protected CreateFromTemplateDisplay<T> display;
 
+   /**
+    * The list of templates, that selected.
+    */
    protected List<T> selectedTemplates;
 
+   /**
+    * The list of templates to display.
+    * This list must be initialized by subclasses,
+    * because it depends on type of template (file of project).
+    */
    protected List<T> templateList;
    
    public AbstractCreateFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems)
