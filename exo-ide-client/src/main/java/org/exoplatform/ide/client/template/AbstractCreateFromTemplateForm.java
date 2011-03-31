@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.template;
 
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -133,9 +135,10 @@ implements CreateFromTemplateDisplay<T>
       HorizontalPanel actionsLayout = new HorizontalPanel();
       actionsLayout.setHeight("35px");
       actionsLayout.setWidth("100%");
+      actionsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
       nameField = new TextField("Name", getNameFieldLabel());
       nameField.setName(FILE_NAME_FIELD);
-      nameField.setWidth(200);
+      nameField.setWidth(150);
       actionsLayout.add(nameField);
 
       actionsLayout.add(getButtonsForm());
