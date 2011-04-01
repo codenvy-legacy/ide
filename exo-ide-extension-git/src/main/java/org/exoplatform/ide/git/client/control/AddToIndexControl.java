@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.add.AddToIndexEvent;
 
 /**
@@ -56,6 +57,7 @@ public class AddToIndexControl extends SimpleControl implements IDEControl, Item
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new AddToIndexEvent());
+      setImages(GitClientBundle.INSTANCE.addToIndex(), GitClientBundle.INSTANCE.addToIndexDisabled());
       setDelimiterBefore(true);
    }
 

@@ -38,6 +38,7 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.Messages;
+import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
 import java.util.List;
 
@@ -136,12 +137,39 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
          Dialogs.getInstance().showInfo(Messages.SELECTED_ITEMS_FAIL);
          return;
       }
-
-      Display d = GWT.create(Display.class);
-      IDE.getInstance().openView((ViewEx)d);
-      bindDisplay(d);
-      display.getWorkDirValue().setValue(selectedItems.get(0).getHref(), true);
+      
+      getWorkDir(selectedItems.get(0).getHref());
    }
+   
+   /**
+    * Get the location of the Git working directory, starting 
+    * from pointed href.
+    * 
+    * @param href
+    */
+   private void getWorkDir(String href)
+   {
+      GitClientService.getInstance().getWorkDir(href, new AsyncRequestCallback<WorkDirResponse>()
+      {
+
+         @Override
+         protected void onSuccess(WorkDirResponse result)
+         {
+            Dialogs.getInstance().showInfo(Messages.REPOSITORY_ALREADY_EXISTS);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView((ViewEx)d);
+            bindDisplay(d);
+            display.getWorkDirValue().setValue(selectedItems.get(0).getHref(), true);
+         }
+      });
+   }
+   
+   
 
    /**
     * Get the values of the necessary parameters for initialization of the repository.

@@ -47,5 +47,7 @@ public interface Messages
 
    public static final String INIT_FAILED = "Init repository failed.";
    
+   public static final String REPOSITORY_ALREADY_EXISTS = "Git repository already exists in this folder or parent one.";
+   
    public static final String STATUS_FAILED = "Get work tree status failed.";
 }

@@ -55,4 +55,22 @@ public interface GitClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/git/images/controls/initRepo_Disabled.png")
    ImageResource initRepoDisabled();
+   
+   @Source("org/exoplatform/ide/git/images/controls/add.png")
+   ImageResource addToIndex();
+   
+   @Source("org/exoplatform/ide/git/images/controls/add_Disabled.png")
+   ImageResource addToIndexDisabled();
+   
+   @Source("org/exoplatform/ide/git/images/controls/commit.png")
+   ImageResource commit();
+   
+   @Source("org/exoplatform/ide/git/images/controls/commit_Disabled.png")
+   ImageResource commitDisabled();
+   
+   @Source("org/exoplatform/ide/git/images/controls/status.png")
+   ImageResource status();
+   
+   @Source("org/exoplatform/ide/git/images/controls/status_Disabled.png")
+   ImageResource statusDisabled();
 }
