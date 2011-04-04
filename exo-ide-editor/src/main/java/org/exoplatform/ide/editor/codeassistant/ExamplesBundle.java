@@ -58,4 +58,6 @@ public interface ExamplesBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/public/example/groovyTemplate.txt")   
    TextResource groovyTemplateExample();
 
+   @Source("org/exoplatform/ide/editor/public/example/java.txt")   
+   TextResource javaExample();   
 }

@@ -39,6 +39,7 @@ public abstract class CodeValidatorImpl extends CodeValidator
 {
    private static HashMap<String, CodeValidator> factory = new HashMap<String, CodeValidator>() {{
       put(MimeType.APPLICATION_GROOVY, new GroovyCodeValidator());
+      put(MimeType.APPLICATION_JAVA, new JavaCodeValidator());
    }};  
    
    public static CodeValidator getValidator(String mimeType)

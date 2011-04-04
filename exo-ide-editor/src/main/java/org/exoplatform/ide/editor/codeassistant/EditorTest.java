@@ -53,16 +53,19 @@ import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyTemplateAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
+import org.exoplatform.ide.editor.codemirror.autocomplete.JavaAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 import org.exoplatform.ide.editor.codemirror.parser.GoogleGadgetParser;
 import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
 import org.exoplatform.ide.editor.codemirror.parser.GroovyTemplateParser;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
+import org.exoplatform.ide.editor.codemirror.parser.JavaParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
 import org.exoplatform.ide.editor.codevalidator.GroovyTemplateCodeValidator;
+import org.exoplatform.ide.editor.codevalidator.JavaCodeValidator;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -303,6 +306,19 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                new GroovyTemplateCodeValidator(),
                templateCodeAssistant, true)));     
 
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java","", true,
+         new CodeMirrorConfiguration(
+            "['parsejava.js', 'tokenizejava.js']",  // generic code parsers
+            "['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']", // code styles
+               true, // can be outlined
+               true, // can be autocompleted
+               new JavaParser(), // exoplatform code parser 
+               new JavaAutocompleteHelper(), // autocomplete helper
+               true, // can be validated
+               new JavaCodeValidator(),
+               javaCodeAssistant
+              )));      
+      
       
       // ckeditor
       addEditor(new CKEditorProducer(MimeType.TEXT_HTML, "CKEditor HTML editor", "html","", false,
@@ -564,6 +580,26 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             panel.add(editor);
          }
       });
+
+      Button javaButton =
+         new Button();
+      javaButton.setTitle("Create JavaCodeMirror Editor");
+      javaButton.setText("Java");
+      javaButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JAVA);
+
+            editor =
+               codeEditors.get(MimeType.APPLICATION_JAVA).createEditor(ExamplesBundle.INSTANCE.javaExample().getText(),
+                  eventBus, params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });      
       
       Button htmlCKEditorButton = new Button();
       htmlCKEditorButton.setTitle("Create HTML CKEditor");
@@ -651,6 +687,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       toolbar.add(groovyServiceButton);   
       toolbar.add(dataObjectButton);      
       toolbar.add(groovyTemplateButton);  
+      toolbar.add(javaButton);      
       
       toolbar.add(htmlCKEditorButton);
       toolbar.add(googleGadgetCKEditorButton);      

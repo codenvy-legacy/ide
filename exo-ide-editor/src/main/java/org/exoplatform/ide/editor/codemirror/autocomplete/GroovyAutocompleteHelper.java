@@ -22,12 +22,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
-
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -43,7 +42,7 @@ public class GroovyAutocompleteHelper extends AutocompleteHelper
     * 
     * @param node
     * @param lineNumber 
-    * @param cursorPosition TODO
+    * @param cursorPosition
     * @param tokenList
     * @return
     */
@@ -107,7 +106,7 @@ public class GroovyAutocompleteHelper extends AutocompleteHelper
       return null;
    }
    
-   private static TokenBeenImpl getGenericToken(String nodeContent, int targetLineNumber, List<TokenBeenImpl> tokenList)
+   protected static TokenBeenImpl getGenericToken(String nodeContent, int targetLineNumber, List<TokenBeenImpl> tokenList)
    {
       if (tokenList == null || tokenList.size() == 0)
          return null;

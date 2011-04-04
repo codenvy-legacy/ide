@@ -27,6 +27,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.Node;
 import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
+import org.exoplatform.ide.editor.codemirror.parser.JavaParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -115,12 +116,12 @@ public abstract class AutocompleteHelper
 
    private static boolean isVariable(String nodeType)
    {
-      return GroovyParser.isGroovyVariable(nodeType) || JavaScriptParser.isJsVariable(nodeType) || JavaScriptParser.isJsLocalVariable(nodeType);
+      return GroovyParser.isGroovyVariable(nodeType) || JavaParser.isJavaVariable(nodeType) || JavaScriptParser.isJsVariable(nodeType) || JavaScriptParser.isJsLocalVariable(nodeType);
    }
 
    private static boolean isPoint(String nodeType, String nodeContent)
    {
-      return GroovyParser.isPoint(nodeType, nodeContent) || JavaScriptParser.isPoint(nodeType, nodeContent);
+      return GroovyParser.isPoint(nodeType, nodeContent) || JavaParser.isPoint(nodeType, nodeContent) || JavaScriptParser.isPoint(nodeType, nodeContent);
    }
    
    

@@ -46,6 +46,7 @@ public class CodeMirrorParserImpl extends Parser
       factory.put(MimeType.TEXT_HTML, new HtmlParser());
       factory.put(MimeType.TEXT_XML, new XmlParser());   
       factory.put(MimeType.APPLICATION_GROOVY, new GroovyParser());
+      factory.put(MimeType.APPLICATION_JAVA, new JavaParser());      
    }
 
    protected static CodeMirrorParserImpl getParser(String mimeType)
