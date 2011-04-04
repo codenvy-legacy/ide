@@ -31,21 +31,26 @@ import java.util.List;
  *
  */
 public class Project extends org.exoplatform.ide.vfs.shared.Project 
-implements ProjectContext
+implements ItemContext
 {
-   public Project(String name, String path, String type, List<Property> properties)
+   public Project(String name, String path, String parentId, String type, List<Property> properties)
    {
-      super(null, name, PROJECT_MIME_TYPE, path, new Date().getTime(), 
+      super(null, name, PROJECT_MIME_TYPE, path, parentId, new Date().getTime(), 
          properties, new HashMap<String, Link>(), type);
    }
    
-   public Project(org.exoplatform.ide.vfs.shared.Project persistedProject)
+//   public Project(org.exoplatform.ide.vfs.shared.Project persistedProject)
+//   {
+//      super(persistedProject.getId(), persistedProject.getName(), 
+//         PROJECT_MIME_TYPE,
+//         persistedProject.getPath(), persistedProject.getCreationDate(), 
+//         persistedProject.getProperties(), persistedProject.getLinks(),
+//         persistedProject.getProjectType());
+//   }
+   
+   public Project()
    {
-      super(persistedProject.getId(), persistedProject.getName(), 
-         PROJECT_MIME_TYPE,
-         persistedProject.getPath(), persistedProject.getCreationDate(), 
-         persistedProject.getProperties(), persistedProject.getLinks(),
-         persistedProject.getProjectType());
+      super();
    }
 
    @Override

@@ -39,7 +39,7 @@ import java.util.HashSet;
  * @version $Id: $
  */
 
-public class File extends org.exoplatform.ide.vfs.shared.File implements ProjectContext
+public class File extends org.exoplatform.ide.vfs.shared.File implements ItemContext
 {
 
    private boolean newFile;
@@ -53,36 +53,24 @@ public class File extends org.exoplatform.ide.vfs.shared.File implements Project
    private LockToken lockToken = null;
    
    private Project project;
+   
+   private Folder parent;
 
-   public File(String name, String path, String mimeType, String content)
+   public File(String name, String path, String mimeType, String content, Folder parent)
    {
-//      public File(String id, String name, String path, long creationDate, long lastModificationDate, String versionId,
-//         String mimeType, long length, boolean locked, List<Property> properties, Map<String, Link> links)
-
-	  super(null, name, path, new Date().getTime(), 
+	  super(null, name, path, parent.getId(), new Date().getTime(), 
 			new Date().getTime(), null /*versionId*/,
 			mimeType, 0, false, new ArrayList<Property>(),
 			new HashMap<String, Link>());
       this.newFile = true;
       this.content = content;
+      this.parent = parent;
    }
 
-//   public File(org.exoplatform.ide.vfs.shared.File persistedFile) 
-//   {
-//	   super(persistedFile.getId(), 
-//	       persistedFile.getName(), 
-//	       persistedFile.getPath(), 
-//			 persistedFile.getCreationDate(), 
-//			 persistedFile.getLastModificationDate(), 
-//			 persistedFile.getVersionId(), 
-//			 persistedFile.getMimeType(),
-//			 persistedFile.getLength(), 
-//			 persistedFile.isLocked(), 
-//			 persistedFile.getProperties(), 
-//			 persistedFile.getLinks());
-//
-//	   this.newFile = false;
-//   }
+   public File() 
+   {
+      super();
+   }
    
    
    public File(JSONObject itemObject)
@@ -90,6 +78,7 @@ public class File extends org.exoplatform.ide.vfs.shared.File implements Project
       super(itemObject.get("id").isString().stringValue(),
             itemObject.get("name").isString().stringValue(),
             itemObject.get("path").isString().stringValue(),
+            itemObject.get("parentId").isString().stringValue(),
             (long)itemObject.get("creationDate").isNumber().doubleValue(),
             (long)itemObject.get("lastModificationDate").isNumber().doubleValue(),
             itemObject.get("versionId").isString().stringValue(),
@@ -192,6 +181,11 @@ public class File extends org.exoplatform.ide.vfs.shared.File implements Project
    {
       this.project = proj;
       
+   }
+
+   public final Folder getParent()
+   {
+      return parent;
    }
 
    

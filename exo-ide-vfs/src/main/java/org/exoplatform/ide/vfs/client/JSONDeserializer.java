@@ -272,7 +272,7 @@ public abstract class JSONDeserializer<O>
             List properties = JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(root.get("properties"));      
             Map links = JSONDeserializer.LINK_DESERIALIZER.toMap(root.get("links"));
             
-            Folder rootFolder = new Folder(rootId, rootName, rootMimeType, rootPath, rootCreationDate, 
+            Folder rootFolder = new Folder(rootId, rootName, rootMimeType, rootPath, null, rootCreationDate, 
                   (List<Property>)properties, (Map <String, Link>)links);
             
             //System.out.println("ROOT folder "+rootFolder);

@@ -79,7 +79,7 @@ public abstract class JSONSerializer<O>
       @Override
       public JSONValue fromObject(Property source)
       {
-         if (source == null)
+         if (source == null) 
             return JSONNull.getInstance();
          String typename = source.getClass().getName();
          if (typename.equals(BooleanProperty.class.getName()))

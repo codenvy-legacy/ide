@@ -22,15 +22,13 @@ import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Property;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 
 
 
@@ -41,47 +39,44 @@ import java.util.Map;
  * @version $Id: $
  */
 
-public class Folder extends org.exoplatform.ide.vfs.shared.Folder implements ProjectContext
+public class Folder extends org.exoplatform.ide.vfs.shared.Folder implements ItemContext
 {
 
-   private HashSet<Item> children = new HashSet<Item>();
+   private ItemList<Item> children = new ItemList<Item>();
    
    private Project project;
-   
-   //Folder(String id, String name, String mimeType, String path, long creationDate, List<Property> properties,
-     // Map<String, Link> links)
-   
-   public Folder(String name, String path)
+ 
+   public Folder(String name, String path, String parentId)
    {
-      super(null, name, FOLDER_MIME_TYPE, path, new Date().getTime(), 
+      super(null, name, FOLDER_MIME_TYPE, path, parentId, new Date().getTime(), 
     		new ArrayList<Property>(), new HashMap<String, Link>());
    }
-   
-//   public Folder(org.exoplatform.ide.vfs.shared.Folder persistedFolder)
-//   {
-//      super(persistedFolder.getId(), persistedFolder.getName(), 
-//         FOLDER_MIME_TYPE,
-//    		persistedFolder.getPath(), persistedFolder.getCreationDate(), 
-//    		persistedFolder.getProperties(), persistedFolder.getLinks());
-//   }
-   
+
+
    public Folder(JSONObject itemObject)
    {
       super(itemObject.get("id").isString().stringValue(),
             itemObject.get("name").isString().stringValue(),
             itemObject.get("mimeType").isString().stringValue(),
-            itemObject.get("path").isString().stringValue(),
+            itemObject.get("path").isString().stringValue(),            
+            itemObject.get("parentId").isString().stringValue(),
             (long)itemObject.get("creationDate").isNumber().doubleValue(),     
             JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties")),     
             JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links")));
 
    }
+   
 
+   public Folder()
+   {
+      super();
+   }
+   
 
    /**
     * @return the children
     */
-   public HashSet<Item> getChildren()
+   public ItemList<Item> getChildren()
    {
       return children;
    }
@@ -89,7 +84,7 @@ public class Folder extends org.exoplatform.ide.vfs.shared.Folder implements Pro
    /**
     * @param children the children to set
     */
-   public void setChildren(HashSet<Item> children)
+   public void setChildren(ItemList<Item> children)
    {
       this.children = children;
    }

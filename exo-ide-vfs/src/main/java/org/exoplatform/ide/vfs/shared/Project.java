@@ -31,11 +31,16 @@ public class Project extends Folder
    public static String PROJECT_MIME_TYPE = "text/directory";
    private String projectType;
 
-   public Project(String id, String name, String mimeType, String path, long creationDate, List<Property> properties,
+   public Project(String id, String name, String mimeType, String path, String parentId, long creationDate, List<Property> properties,
       Map<String, Link> links, String type)
    {
-      super(id, name, mimeType, path, creationDate, properties, links);
+      super(id, name, mimeType, path, parentId, creationDate, properties, links);
       this.projectType = type;
+   }
+
+   public Project()
+   {
+      super();
    }
 
    public final String getProjectType()

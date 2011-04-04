@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class VirtualFileSystemInfoReceivedEvent extends GwtEvent<VirtualFileSystemInfoReceivedHandler>
 {
-
+ 
    public static GwtEvent.Type<VirtualFileSystemInfoReceivedHandler> TYPE =
       new Type<VirtualFileSystemInfoReceivedHandler>();
 

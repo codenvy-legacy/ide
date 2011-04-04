@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
+import com.google.gwt.json.client.JSONObject;
+
+import org.exoplatform.ide.vfs.client.JSONDeserializer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,28 +42,32 @@ public class Item
    public static String REL_SEARCH = "search";
    public static String REL_COPY = "copy";
    public static String REL_MOVE = "move";
+   public static String REL_DELETE = "delete";
    
    /** Id of object. */
-   private String id;
+   protected String id;
 
    /** Name of object. */
-   private String name;
+   protected String name;
 
    /** Type of object. */
-   private ItemType itemType;
+   protected ItemType itemType;
 
    /**  */
-   private String mimeType;
+   protected String mimeType;
 
    /** Path. */
-   private String path;
+   protected String path;
+   
+   /** Parent ID. */
+   protected String parentId;
 
    /** Creation date in long format. */
-   private long creationDate;
+   protected long creationDate;
 
-   private List<Property> properties;
+   protected List<Property> properties;
 
-   private Map<String, Link> links;
+   protected Map<String, Link> links;
 
    /**
     * @param id id of item
@@ -71,7 +79,7 @@ public class Item
     * @param properties other properties of object
     * @param links hyper-links for retrieved or(and) manage item
     */
-   public Item(String id, String name, ItemType itemType, String mimeType, String path, long creationDate,
+   public Item(String id, String name, ItemType itemType, String mimeType, String path, String parentId, long creationDate,
       List<Property> properties, Map<String, Link> links)
    {
       this.id = id;
@@ -79,13 +87,34 @@ public class Item
       this.itemType = itemType;
       this.mimeType = mimeType;
       this.path = path;
+      this.parentId = parentId;
       this.creationDate = creationDate;
       this.properties = properties;
       this.links = links;
+      
+      // TODO
+//      links = new HashMap<String, Link>();
+//      links.put(REL_SELF, //
+//         new Link(createURI("item", id).toString(), REL_SELF, MediaType.APPLICATION_JSON));
+//      links.put(REL_ACL, //
+//         new Link(createURI("acl", id).toString(), REL_ACL, MediaType.APPLICATION_JSON));
    }
 
    public Item()
    {
+   }
+   
+   public void init(JSONObject itemObject)
+   {
+      id = itemObject.get("id").isString().stringValue();
+      name = itemObject.get("name").isString().stringValue();
+      itemType = ItemType.fromValue(itemObject.get("itemType").isString().stringValue());
+      mimeType = itemObject.get("mimeType").isString().stringValue();
+      path = itemObject.get("path").isString().stringValue();
+      parentId = itemObject.get("parentId").isString().stringValue();
+      creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
+      properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
+      links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
    }
 
    /**
@@ -151,6 +180,17 @@ public class Item
    public void setPath(String path)
    {
       this.path = path;
+   }
+   
+
+   public final String getParentId()
+   {
+      return parentId;
+   }
+
+   public final void setParentId(String parentId)
+   {
+      this.parentId = parentId;
    }
 
    /**

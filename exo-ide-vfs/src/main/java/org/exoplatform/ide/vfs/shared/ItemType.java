@@ -53,7 +53,7 @@ public enum ItemType {
    public static ItemType fromValue(String value)
    {
       for (ItemType e : ItemType.values())
-         if (e.value.equals(value))
+         if (e.value.equals(value.toLowerCase()))
             return e;
       throw new IllegalArgumentException(value);
    }

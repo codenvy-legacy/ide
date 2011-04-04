@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
-import com.google.gwt.json.client.JSONObject;
-
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +33,7 @@ public class Folder extends Item
    
    public static String REL_CREATE_FILE = "create-file";
    public static String REL_CREATE_FOLDER = "create-folder";
+   public static String REL_CREATE_PROJECT = "create-project";
    public static String REL_CHILDREN = "children";
    
    /**
@@ -50,10 +49,10 @@ public class Folder extends Item
     * @param properties other properties of folder
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   public Folder(String id, String name, String mimeType, String path, long creationDate, List properties,
+   public Folder(String id, String name, String mimeType, String path, String parentId, long creationDate, List properties,
       Map<String, Link> links)
    {
-      super(id, name, ItemType.FOLDER, mimeType, path, creationDate, properties, links);
+      super(id, name, ItemType.FOLDER, mimeType, path, parentId, creationDate, properties, links);
    }
 
    /**

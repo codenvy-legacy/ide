@@ -63,6 +63,11 @@ public class ItemList<T>
          list = new ArrayList<T>();
       return list;
    }
+   
+   public void setItems(List<T> list)
+   {
+      this.list = list;
+   }
 
    /**
     * @return total number of items. It is not need to be equals to number of

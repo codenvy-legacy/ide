@@ -26,14 +26,9 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
 import org.exoplatform.ide.vfs.client.model.Folder;
-import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -83,18 +78,8 @@ public class VFSInfoUnmarshaller implements Unmarshallable
             toMap(jsonObject.get("urlTemplates")));
             
       JSONObject root = jsonObject.get("root").isObject();
-//      String rootId = root.get("id").isString().stringValue();
-//      String rootName = root.get("name").isString().stringValue();
-//      String rootMimeType = root.get("mimeType").isString().stringValue();
-//      String rootPath = root.get("path").isString().stringValue();
-//      long rootCreationDate = (long)root.get("creationDate").isNumber().doubleValue();     
-//      List properties = JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(root.get("properties"));      
-//      Map links = JSONDeserializer.LINK_DESERIALIZER.toMap(root.get("links"));
-
-//      virtualFileSystemInfo.setRoot(new Folder(rootId, rootName, rootMimeType, rootPath, rootCreationDate, 
-//            (List<Property>)properties, (Map <String, Link>)links) );
-      
-      virtualFileSystemInfo.setRoot(new Folder(root));
+    
+      virtualFileSystemInfo.setRoot(new Folder(root)); 
    }
 
 }

@@ -22,7 +22,7 @@ package org.exoplatform.ide.vfs.client.model;
  * @version $Id:$
  *
  */
-public interface ProjectContext
+public interface ItemContext
 {
    
    Project getProject();

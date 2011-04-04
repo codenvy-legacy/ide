@@ -21,17 +21,24 @@ package org.exoplatform.ide.vfs.client;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.File;
 import org.exoplatform.ide.vfs.client.model.Folder;
+import org.exoplatform.ide.vfs.client.model.Project;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.List;
 
 public class VirtualFileSystem
 {
@@ -89,7 +96,7 @@ public class VirtualFileSystem
 
       this.eventBus = eventBus;
       this.workspaceURL = workspaceURL;     
-   }
+   } 
 
    public static void init(AsyncRequestCallback<VirtualFileSystemInfo> callback, Loader loader,
          HandlerManager eventBus, String workspaceURL)
@@ -126,22 +133,14 @@ public class VirtualFileSystem
     */
    public void getChildren(Folder folder, AsyncRequestCallback<ItemList<Item>> callback, Loader loader)
    {
-     // String url = encodeURI(workspace + "/children/" + id);
-      
-      //String url = encodeURI(workspaceURL + "/children/" + id);
-
       ItemList<Item> items = new ItemList<Item>();
+      folder.setChildren(items);
+      
       callback.setResult(items);
       ChildrenUnmarshaller unmarshaller = new ChildrenUnmarshaller(folder);
 
-//      String errorMessage = "Service is not deployed.<br>Parent folder not found.";
-//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-//      loader.setMessage(Messages.GET_FOLDER_CONTENT);
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
-      
-      System.out.println("getChildren "+folder.getLinkByRelation(Folder.REL_CHILDREN).getHref());
       
       AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Folder.REL_CHILDREN).getHref(), loader).send(callback);
 
@@ -152,30 +151,66 @@ public class VirtualFileSystem
     * 
     * @param path
     */
-   public void createFolder(String parentId, String name, AsyncRequestCallback<String> callback, Loader loader)
+   public void createFolder(Folder parent, String name, AsyncRequestCallback<Folder> callback, Loader loader)
    {
-      String url = workspaceURL + "/folder" + parentId;
-      if (url.endsWith("/"))
-      {
-         url = url.substring(0, url.length() - 1);
-      }
+      
+      String url = parent.getLinkByRelation(Folder.REL_CREATE_FOLDER).getHref()+"?name="+name;
 
-      url += "?name=" + name;
-      url = encodeURI(url);
+      Folder newFolder = new Folder();
+      
+      callback.setResult(newFolder);
+      callback.setPayload(new ItemUnmarshaller(newFolder));
 
-      String newFolderID = parentId;
-      if (!newFolderID.endsWith("/"))
-         newFolderID += "/";
-      newFolderID += name;
-
-      callback.setResult(newFolderID);
-
-//      String errorMessage = "Service is not deployed.<br>Resource already exist.<br>Parent folder not found.";
-//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      loader.setMessage(Messages.COPY_FOLDER);
-      callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
+   }
+   
+   
+   /**
+    * Create new project
+    * 
+    * @param path
+    */
+   public void createProject(Folder parent, String name, String type, 
+         List<Property> properties, AsyncRequestCallback<Project> callback, 
+         Loader loader)
+   {
+      
+      String url = parent.getLinkByRelation(Folder.REL_CREATE_PROJECT).getHref()+
+      "?name="+name+"&type="+type;
+
+      Project newProject = new Project();
+      
+      callback.setResult(newProject);
+      callback.setPayload(new ItemUnmarshaller(newProject));
+
+      AsyncRequest.build(RequestBuilder.POST, url, loader).
+      data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(properties).toString()).
+      send(callback);
+   }
+   
+   /**
+    * Create new folder
+    * 
+    * @param path
+    */
+   public void createFile(File newFile,
+         AsyncRequestCallback<File> callback, Loader loader)
+   {
+      
+ //     System.out.println("createFile "+
+ //           newFile.getParent().getLinkByRelation(Folder.REL_CREATE_FILE)+" "+newFile.getContent());
+      
+      String url = newFile.getParent().getLinkByRelation(Folder.REL_CREATE_FILE).getHref()+
+      "?name="+newFile.getName();
+      
+       File file = new File();
+      
+      callback.setResult(file);
+      callback.setPayload(new ItemUnmarshaller(file));
+      
+ 
+      AsyncRequest.build(RequestBuilder.POST, url, loader).data(newFile.getContent()).
+      header(HTTPHeader.CONTENT_TYPE, newFile.getMimeType()).send(callback);
    }
 
    /**
@@ -183,25 +218,40 @@ public class VirtualFileSystem
     * 
     * @param file
     */
-   public void getFileContent(String id, AsyncRequestCallback<String> callback, Loader loader)
+   public void getContent(File file, AsyncRequestCallback<String> callback, Loader loader)
    {
-      String url = workspaceURL + "/content" + id;
+      //System.out.println("getContent "+ file.getPath());
       
-      FileContentUnmarshaller unmarshaller = new FileContentUnmarshaller(callback);
+      String url = file.getLinkByRelation(File.REL_CONTENT).getHref();
       
-//      String errorMessage = " Service is not deployed.<br>Resource not found.";
-//      ExceptionThrownEvent errorEvent = getErrorEvent(errorMessage);
-
-      loader.setMessage(Messages.GET_FILE_CONTENT);
-      callback.setEventBus(eventBus);
-      callback.setPayload(unmarshaller);
+      callback.setResult(file.getContent());
+      callback.setPayload(new FileContentUnmarshaller(callback));
+     
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
       
    }
 
-   public void saveFileContent(String id, String mediaType, String content, String lockToken, Loader loader)
+   public void updateContent(File file, AsyncRequestCallback<String> callback, Loader loader)
    {
-      
+
+      String url = file.getLinkByRelation(File.REL_CONTENT).getHref()+
+      //"?mediaType="+file.getMimeType()+
+      ((file.isLocked())?"?lockToken="+file.getLockToken():"");
+
+      AsyncRequest.build(RequestBuilder.POST, url, loader).
+      header(HTTPHeader.CONTENT_TYPE, file.getMimeType()).
+      data(file.getContent()).send(callback);
+   }
+   
+   public void delete(Item item, AsyncRequestCallback<String> callback, Loader loader)
+   {
+      String lockStr = "";
+      if(item.getItemType() == ItemType.FILE && ((File)item).isLocked())
+         lockStr = "?lockToken="+((File)item).getLockToken();
+
+      String url = item.getLinkByRelation(Item.REL_DELETE).getHref()+lockStr;
+
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
    public void copy(String source, String destination, Loader loader)
@@ -209,11 +259,6 @@ public class VirtualFileSystem
    }
 
    public void move(String id, String parentId, String lockToken, Loader loader)
-   {
-
-   }
-
-   public void delete(String id, String lockToken)
    {
 
    }
@@ -231,18 +276,5 @@ public class VirtualFileSystem
    {
 
    }
-
-   private ExceptionThrownEvent getErrorEvent(String message)
-   {
-      return new ExceptionThrownEvent(message);
-   }
-   
-   /**
-    * @param url
-    * @return result of javaScript function <code>encodeURI(url)</code>
-    */
-   public static native String encodeURI(String url) /*-{
-       return encodeURI(url);
-     }-*/;
    
 }

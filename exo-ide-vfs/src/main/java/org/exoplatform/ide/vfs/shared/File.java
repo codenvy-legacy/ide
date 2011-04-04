@@ -65,10 +65,10 @@ public class File extends Item
     * @param properties other properties of file
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   public File(String id, String name, String path, long creationDate, long lastModificationDate, String versionId,
+   public File(String id, String name, String path, String parentId, long creationDate, long lastModificationDate, String versionId,
       String mimeType, long length, boolean locked, List properties, Map<String, Link> links)
    {
-      super(id, name, ItemType.FILE, mimeType, path, creationDate, properties, links);
+      super(id, name, ItemType.FILE, mimeType, path, parentId, creationDate, properties, links);
       this.lastModificationDate = lastModificationDate;
       this.locked = locked;
       this.versionId = versionId;
