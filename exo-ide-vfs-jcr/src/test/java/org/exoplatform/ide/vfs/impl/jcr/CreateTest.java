@@ -23,7 +23,9 @@ import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -62,11 +64,17 @@ public class CreateTest extends JcrFileSystemTest
          .append(CREATE_TEST_PATH) //
          .append("?") //
          .append("name=") //
-         .append(name) //
-         .append("&") //
-         .append("mediaType=") //
-         .append("text/plain;charset%3Dutf8").toString();
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), null);
+         .append(name).toString(); //
+//         .append("&") //
+//         .append("mediaType=") //
+//         .append("text/plain;charset%3Dutf8").toString();
+      
+      Map <String, List <String>> headers = new HashMap <String, List <String>> ();
+      List <String> contentType = new ArrayList<String>();
+      contentType.add("text/plain;charset=utf8");
+      headers.put("Content-Type", contentType);
+      
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
       
       assertEquals(201, response.getStatus());
       String expectedPath = CREATE_TEST_PATH + "/" + name;

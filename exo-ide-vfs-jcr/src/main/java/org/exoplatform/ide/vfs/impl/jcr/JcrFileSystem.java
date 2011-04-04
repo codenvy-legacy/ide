@@ -38,7 +38,6 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
@@ -68,9 +67,11 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -123,9 +124,11 @@ public class JcrFileSystem implements VirtualFileSystem
     *      java.lang.String, javax.ws.rs.core.MediaType, java.io.InputStream)
     */
    @Path("file/{parentId:.*}")
+   @Produces({MediaType.APPLICATION_JSON})
    public Response createFile(@PathParam("parentId") String parentId, //
       @QueryParam("name") String name, //
-      @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType, //
+      @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType,
+      //@DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType, //
       InputStream content //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
@@ -133,10 +136,12 @@ public class JcrFileSystem implements VirtualFileSystem
       ItemData parentData = getItemData(parentId);
       if (ItemType.FOLDER != parentData.getType())
          throw new InvalidArgumentException("Unable create file. Item specified as parent is not a folder. ");
+     
       FileData newfile =
          ((FolderData)parentData).createFile(name, itemType2NodeTypeResolver.getFileNodeType(mediaType),
             itemType2NodeTypeResolver.getFileContentNodeType(mediaType), mediaType, null, null, content);
-      return Response.created(createURI("item", newfile.getId())).build();
+      return Response.created(createURI("item", newfile.getId())).
+      entity(fromItemData(newfile, PropertyFilter.ALL_FILTER)).build();
    }
 
    /*
@@ -170,6 +175,7 @@ public class JcrFileSystem implements VirtualFileSystem
     *      java.lang.String)
     */
    @Path("folder/{parentId:.*}")
+   @Produces({MediaType.APPLICATION_JSON})
    public Response createFolder(@PathParam("parentId") String parentId, //
       @QueryParam("name") String name //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
@@ -180,7 +186,9 @@ public class JcrFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
       FolderData newfolder =
          ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeType(null), null, null);
-      return Response.created(createURI("item", newfolder.getId())).build();
+      
+      return Response.created(createURI("item", newfolder.getId())).
+      entity(fromItemData(newfolder, PropertyFilter.ALL_FILTER)).build();
    }
 
    /*
@@ -200,6 +208,7 @@ public class JcrFileSystem implements VirtualFileSystem
     */
    @Path("project/{parentId:.*}")
    @Consumes(MediaType.APPLICATION_JSON)
+   @Produces({MediaType.APPLICATION_JSON})
    public Response createProject(@PathParam("parentId") String parentId, @QueryParam("name") String name,
       @QueryParam("type") String type, List<ConvertibleProperty> properties) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
@@ -707,7 +716,8 @@ public class JcrFileSystem implements VirtualFileSystem
     */
    @Path("content/{id:.*}")
    public void updateContent(@PathParam("id") String id, //
-      @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType, //
+      //@DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @QueryParam("mediaType") MediaType mediaType, //
+      @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType,
       InputStream newcontent, //
       @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
@@ -716,6 +726,10 @@ public class JcrFileSystem implements VirtualFileSystem
       ItemData data = getItemData(id);
       if (ItemType.FILE != data.getType())
          throw new InvalidArgumentException("Object " + id + " is not file. ");
+      
+//      if(mediaType == null)
+//         mediaType = MediaType.APPLICATION_OCTET_STREAM_TYPE;
+      
       ((FileData)data).setContent(newcontent, mediaType, lockToken);
    }
 
@@ -747,7 +761,7 @@ public class JcrFileSystem implements VirtualFileSystem
       if (data.getType() == ItemType.FILE)
       {
          FileData fileData = (FileData)data;
-         return new File(fileData.getId(), fileData.getName(), fileData.getPath(), fileData.getCreationDate(),
+         return new File(fileData.getId(), fileData.getName(), fileData.getPath(), fileData.getParentId(), fileData.getCreationDate(),
             fileData.getLastModificationDate(), fileData.getVersionId(), fileData.getContenType(),
             fileData.getContenLength(), fileData.isLocked(), fileData.getProperties(propertyFilter),
             createFileLinks(fileData));
@@ -756,12 +770,12 @@ public class JcrFileSystem implements VirtualFileSystem
       if (data instanceof ProjectData)
       {
          ProjectData projectData = (ProjectData)data;
-         return new Project(data.getId(), data.getName(), "text/vnd.ideproject+directory", data.getPath(),
+         return new Project(data.getId(), data.getName(), "text/vnd.ideproject+directory", data.getPath(), data.getParentId(),
             data.getCreationDate(), data.getProperties(propertyFilter), createFolderLinks((FolderData)data),
-            projectData.getProjectType());
+            projectData.getProjectType()); 
       }
 
-      return new Folder(data.getId(), data.getName(), "text/directory", data.getPath(), data.getCreationDate(),
+      return new Folder(data.getId(), data.getName(), "text/directory", data.getPath(), data.getParentId(), data.getCreationDate(),
          data.getProperties(propertyFilter), createFolderLinks((FolderData)data));
    }
 
@@ -785,6 +799,13 @@ public class JcrFileSystem implements VirtualFileSystem
       String id = folder.getId();
       links.put(Folder.REL_CHILDREN, //
          new Link(createURI("children", id).toString(), Folder.REL_CHILDREN, MediaType.APPLICATION_JSON));
+      links.put(Folder.REL_CREATE_FOLDER, //
+         new Link(createURI("folder", id).toString(), Folder.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));
+      links.put(Folder.REL_CREATE_FILE, //
+         new Link(createURI("file", id).toString(), Folder.REL_CREATE_FILE, MediaType.APPLICATION_OCTET_STREAM));
+      links.put(Folder.REL_CREATE_PROJECT, //
+         new Link(createURI("project", id).toString(), Folder.REL_CREATE_PROJECT, MediaType.APPLICATION_JSON));
+
       return links;
    }
 
@@ -796,7 +817,10 @@ public class JcrFileSystem implements VirtualFileSystem
          new Link(createURI("item", id).toString(), Item.REL_SELF, MediaType.APPLICATION_JSON));
       links.put(Item.REL_ACL, //
          new Link(createURI("acl", id).toString(), Item.REL_ACL, MediaType.APPLICATION_JSON));
-      return links;
+      links.put(Item.REL_DELETE, //
+         new Link(createURI("delete", id).toString(), Item.REL_DELETE, MediaType.APPLICATION_JSON));
+
+      return links; 
    }
 
    private URI createURI(String rel, String id, String... query)

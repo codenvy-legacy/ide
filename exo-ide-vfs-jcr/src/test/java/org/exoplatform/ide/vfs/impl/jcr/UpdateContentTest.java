@@ -24,8 +24,10 @@ import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -78,11 +80,18 @@ public class UpdateContentTest extends JcrFileSystemTest
          .append(SERVICE_URI) //
          .append("content") //
          .append(filePath) //
-         .append("?") //
-         .append("mediaType=") //
-         .append("text/plain;charset=utf8") //
+//         .append("?") //
+//         .append("mediaType=") //
+//         .append("text/plain;charset=utf8") //
          .toString();
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), null);
+      
+      Map <String, List <String>> headers = new HashMap <String, List <String>> ();
+      List <String> contentType = new ArrayList<String>();
+      contentType.add("text/plain;charset=utf8");
+      headers.put("Content-Type", contentType);
+      
+      
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
       assertEquals(204, response.getStatus());
       Node file = (Node)session.getItem(filePath);
       assertEquals(content, file.getProperty("jcr:content/jcr:data").getString());
@@ -127,13 +136,19 @@ public class UpdateContentTest extends JcrFileSystemTest
          .append("content") //
          .append(filePath) //
          .append("?") //
-         .append("mediaType=") //
-         .append("text/plain;charset=utf8") //
-         .append("&") //
+//         .append("mediaType=") //
+//         .append("text/plain;charset=utf8") //
+//         .append("&") //
          .append("lockToken=") //
          .append(lock.getLockToken()) //
          .toString();
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), null);
+      
+      Map <String, List <String>> headers = new HashMap <String, List <String>> ();
+      List <String> contentType = new ArrayList<String>();
+      contentType.add("text/plain;charset=utf8");
+      headers.put("Content-Type", contentType);
+      
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
       assertEquals(204, response.getStatus());
       Node file = (Node)session.getItem(filePath);
       assertEquals(content, file.getProperty("jcr:content/jcr:data").getString());

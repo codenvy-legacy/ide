@@ -157,6 +157,22 @@ abstract class ItemData
          throw new VirtualFileSystemException(e.getMessage(), e);
       }
    }
+   
+   
+   String getParentId() throws VirtualFileSystemException
+   {
+      try
+      {
+         if(node.getDepth() == 0) // root
+            return "root";
+         else
+            return node.getParent().getPath();
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+   }
 
    /**
     * @return creation date of this item in long format
