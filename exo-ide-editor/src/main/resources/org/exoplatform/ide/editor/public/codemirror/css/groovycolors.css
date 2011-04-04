@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2009 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -21,11 +21,10 @@
 .editbox {
   margin: .4em;
   padding: 0;
-  font-family: "DejaVu Sans Mono", courier, monospace;
+  font-family: monospace;
   font-size: 10pt;
   color: black;
-  background-color: transparent;
-  line-height: 16px;
+  background-color: white;  
 }
 
 /* new style */
@@ -125,11 +124,16 @@ span.groovy-doc-directive {
 }
 
 span#parenCorrect {
-	font-weight: bold;
-	color: green;
+    font-weight: bold;
+    color: green;
 }
 
 span#parenIncorrect {
-	font-weight: bold;
-	color: red;
+    font-weight: bold;
+    color: red;
 }
+
+span.groovyDoc {
+  color: rgb(63,95,191);
+}
+

@@ -228,6 +228,24 @@ var tokenizeGroovy = (function() {
       return {type: "comment", style: "groovyComment"};
     }
 
+    // for reading javadoc
+    function readJavaDocComment(start){
+        var newInside = "/**";
+        var maybeEnd = (start == "*");
+        while (true) {
+            if (source.endOfLine())
+              break;
+            var next = source.next();
+            if (next == "/" && maybeEnd){
+              newInside = null;
+              break;
+            }
+            maybeEnd = (next == "*");
+          }
+          setInside(newInside);
+          return {type: "comment", style: "groovyDoc"};
+    }
+
     function readAnnotation(){
       source.nextWhileMatches(isAnnotationChar);  
       var word = source.get();
@@ -316,6 +334,9 @@ var tokenizeGroovy = (function() {
     if (inside == "/*")  // test if this is the start of Multiline Comment
       return readMultilineComment(ch);
       
+    else if(inside == "/**")
+        return readJavaDocComment(ch);
+
     else if (ch == "'" || ch == '"') {   // test if this is the start of String
       setInside(ch);
       return {type: "string", style: "groovyString"};
@@ -337,8 +358,14 @@ var tokenizeGroovy = (function() {
     else if (ch == "@")
       return readAnnotation();      
     else if (ch == "/"){
-      if (source.equals("*"))
-      { source.next(); return readMultilineComment(ch); }
+      if (source.equals("*")){
+         source.next(); 
+         if (source.equals("*"))
+             return readJavaDocComment(ch);
+
+         return readMultilineComment(ch);
+      }
+
       else if (source.equals("/"))
       { nextUntilUnescaped(source, null); return {type: "comment", style: "groovyComment"};}
       else if (inside == "=" || inside == "~" )   // read slashy string like (def winpathSlashy=/C:\windows\system32/) not def c = a / 5;
