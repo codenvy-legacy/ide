@@ -22,6 +22,11 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.exoplatform.ide.editor.api.CodeLine;
+import org.exoplatform.ide.editor.api.CodeLine.CodeType;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
@@ -30,6 +35,18 @@ import java.util.List;
  */
 public class JavaCodeValidator extends GroovyCodeValidator
 {
+   
+   @Override
+   public CodeLine getImportStatement(List<? extends Token> tokenList, String fqn)
+   {
+      if (shouldImportStatementBeInsterted((List<TokenBeenImpl>) tokenList, fqn))
+      {
+         int lineNumber = getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>)tokenList);         
+         return new CodeLine(CodeType.IMPORT_STATEMENT, "import " + fqn + ";\n", lineNumber);
+      }
+      
+      return null;
+   }   
    
    /**
     * Map of default packages which could be omitted within the import statements, like "String" from package "java.lang.String"

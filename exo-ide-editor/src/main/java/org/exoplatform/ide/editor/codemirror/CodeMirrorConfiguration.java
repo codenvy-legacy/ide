@@ -38,7 +38,10 @@ public class CodeMirrorConfiguration
 {
    private final boolean textWrapping = false;
 
-   private final int continuousScanning = 100;
+   /**
+    * "false" to turn off continuous scanning, or value like "100" in millisec 
+    */
+   private final String continuousScanning = "false";
 
    public final static String PATH = GWT.getModuleBaseURL() + "codemirror/";
 
@@ -242,7 +245,7 @@ public class CodeMirrorConfiguration
    /**
     * @return the continuousScanning
     */
-   public int getContinuousScanning()
+   public String getContinuousScanning()
    {
       return continuousScanning;
    }

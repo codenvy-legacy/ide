@@ -45,6 +45,7 @@ import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.outline.event.ShowOutlineEvent;
 import org.exoplatform.ide.client.outline.event.ShowOutlineHandler;
 import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
@@ -313,7 +314,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return false;
       }
 
-      return OutlineSupporting.isOutlineSupported(activeFile.getContentType());
+      return activeEditor.isCapable(EditorCapability.CAN_BE_OUTLINED);
    }
 
    private Timer refreshOutlineTimer = new Timer()

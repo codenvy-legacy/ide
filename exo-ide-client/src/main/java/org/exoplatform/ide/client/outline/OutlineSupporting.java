@@ -33,27 +33,28 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 public class OutlineSupporting
 {
 
-   private static List<String> mimeTypes = new ArrayList<String>();
-
-   static
-   {
-      mimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
-      mimeTypes.add(MimeType.APPLICATION_X_JAVASCRIPT);
-      mimeTypes.add(MimeType.GOOGLE_GADGET);
-      mimeTypes.add(MimeType.TEXT_JAVASCRIPT);
-      mimeTypes.add(MimeType.APPLICATION_XML);
-      mimeTypes.add(MimeType.TEXT_XML);
-      mimeTypes.add(MimeType.TEXT_HTML);
-      mimeTypes.add(MimeType.GROOVY_SERVICE);
-      mimeTypes.add(MimeType.APPLICATION_GROOVY);
-      mimeTypes.add(MimeType.GROOVY_TEMPLATE);
-      mimeTypes.add(MimeType.UWA_WIDGET);
-      mimeTypes.add(MimeType.CHROMATTIC_DATA_OBJECT);
-   }
-
-   public static boolean isOutlineSupported(String mimeType)
-   {
-      return mimeTypes.contains(mimeType);
-   }
+//   private static List<String> mimeTypes = new ArrayList<String>();
+//
+//   static
+//   {
+//      mimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
+//      mimeTypes.add(MimeType.APPLICATION_X_JAVASCRIPT);
+//      mimeTypes.add(MimeType.GOOGLE_GADGET);
+//      mimeTypes.add(MimeType.TEXT_JAVASCRIPT);
+//      mimeTypes.add(MimeType.APPLICATION_XML);
+//      mimeTypes.add(MimeType.TEXT_XML);
+//      mimeTypes.add(MimeType.TEXT_HTML);
+//      mimeTypes.add(MimeType.GROOVY_SERVICE);
+//      mimeTypes.add(MimeType.APPLICATION_GROOVY);
+//      mimeTypes.add(MimeType.GROOVY_TEMPLATE);
+//      mimeTypes.add(MimeType.UWA_WIDGET);
+//      mimeTypes.add(MimeType.CHROMATTIC_DATA_OBJECT);
+//      mimeTypes.add(MimeType.APPLICATION_JAVA);      
+//   }
+//
+//   public static boolean isOutlineSupported(String mimeType)
+//   {
+//      return mimeTypes.contains(mimeType);
+//   }
 
 }

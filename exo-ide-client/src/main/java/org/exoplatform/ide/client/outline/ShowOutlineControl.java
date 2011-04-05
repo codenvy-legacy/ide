@@ -79,14 +79,13 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || event.getEditor() == null
-         || !event.getEditor().isCapable(EditorCapability.CREATE_TOKEN_LIST))
+      if (event.getFile() == null || event.getEditor() == null)
       {
          setVisible(false);
          return;
       }
 
-      boolean visible = OutlineSupporting.isOutlineSupported(event.getFile().getContentType());
+      boolean visible = event.getEditor().isCapable(EditorCapability.CAN_BE_OUTLINED);
       setVisible(visible);
       if (visible)
       {

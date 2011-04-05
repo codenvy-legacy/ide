@@ -51,8 +51,17 @@ public enum EditorCapability {
    FIND_AND_REPLACE,
 
    /**
-    * Editor supports autocompletion and outline feature
+    * Editor and opened file type support autocompletion feature
     */
-   CREATE_TOKEN_LIST
+   CAN_BE_AUTOCOMPLETED,
 
+   /**
+    * Editor and opened file type support outline feature
+    */
+   CAN_BE_OUTLINED,
+   
+   /**
+    * Editor and opened file type support validation feature
+    */
+   CAN_BE_VALIDATED
 }

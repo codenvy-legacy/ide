@@ -175,7 +175,8 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
       String name = token.getName();
       boolean isDeprecated = isDeprecated(token);
       // add info about java type, parameters and annotations
-      if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()))
+      if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType())
+               || MimeType.APPLICATION_JAVA.equals(token.getMimeType()))
       {
          //icon, that displays in right bottom corner, if token is CLASS, 
          //and shows access modifier
@@ -269,7 +270,9 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
     */
    private String getTokenIcon(TokenBeenImpl token)
    {
-      if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()) && !TokenType.GROOVY_TAG.equals(token.getType()))
+      if ((MimeType.APPLICATION_GROOVY.equals(token.getMimeType()) && !TokenType.GROOVY_TAG.equals(token.getType()))
+          || MimeType.APPLICATION_JAVA.equals(token.getMimeType())
+         )
       {
          return getIconForJavaFiles(token);
       }
@@ -311,7 +314,7 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    }
 
    /**
-    * Forms the icon for java files (groovy, POJO, etc)
+    * Forms the icon for java files (groovy, POJO, java, etc)
     * 
     * @return {@link String} icon
     */
