@@ -18,25 +18,16 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.git.client.GitClientBundle;
 
 import com.google.gwt.user.client.ui.TreeItem;
 
@@ -219,32 +210,6 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          e.printStackTrace();
       }
 
-   }
-   
-   @Override
-   protected Widget createItemWidget(String icon, String text)
-   {
-      Grid grid = new Grid(1, 2);
-      grid.setWidth("100%");
-
-//      Image i = new Image(icon);
-//      i.setHeight("16px");
-      TreeIcon i = new TreeIcon(icon, GitClientBundle.INSTANCE.itemChanged().getURL(), null);
-//      i.setWidth("16px");
-      i.setHeight("18px");
-      grid.setWidget(0, 0, i);
-//      Label l = new Label(text, false);
-      HTMLPanel l = new HTMLPanel("div", text);
-      l.setStyleName("ide-Tree-label");
-      grid.setWidget(0, 1, l);
-
-      grid.getCellFormatter().setWidth(0, 0, "16px");
-      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setWidth(0, 1, "100%");
-//      grid.getCellFormatter().addStyleName(0, 1, "ide-Tree-label");
-      DOM.setStyleAttribute(grid.getElement(), "display", "block");
-      return grid;
    }
 
    /**
