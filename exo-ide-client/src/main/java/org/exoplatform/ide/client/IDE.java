@@ -20,12 +20,12 @@ package org.exoplatform.ide.client;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.GWTDialogs;
-import org.exoplatform.ide.client.app.IDEForm;
-import org.exoplatform.ide.client.app.IDEPresenter;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
+import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
+import org.exoplatform.ide.client.application.ui.IDEForm;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;

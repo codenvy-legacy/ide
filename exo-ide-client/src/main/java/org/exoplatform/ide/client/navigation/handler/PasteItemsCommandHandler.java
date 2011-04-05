@@ -22,7 +22,6 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.ide.client.event.edit.PasteItemsCompleteEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -45,6 +44,7 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
+import org.exoplatform.ide.client.navigation.event.PasteItemsCompleteEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsHandler;
 
@@ -144,7 +144,7 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
    {
       if (context.getItemsToCopy().size() == 0)
       {
-         copyComlited();
+         copyComleted();
          return;
       }
 
@@ -173,7 +173,7 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
       });
    }
 
-   private void copyComlited()
+   private void copyComleted()
    {
       eventBus.fireEvent(new PasteItemsCompleteEvent());
 

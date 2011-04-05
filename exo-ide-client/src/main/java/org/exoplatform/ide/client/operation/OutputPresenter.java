@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.operation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
@@ -92,7 +91,7 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
    {
       try
       {
-         eventBus.fireEvent(new RestorePerspectiveEvent());
+         //eventBus.fireEvent(new RestorePerspectiveEvent());
          if (display == null)
          {
             display = GWT.create(OutputView.class);

@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.component.AboutForm;
+import org.exoplatform.ide.client.about.AboutIDEPresenter;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -41,8 +41,6 @@ import org.exoplatform.ide.client.preferences.control.SelectWorkspaceCommand;
 import org.exoplatform.ide.client.preferences.control.ShowAboutCommand;
 import org.exoplatform.ide.client.preferences.event.CustomizeHotKeysEvent;
 import org.exoplatform.ide.client.preferences.event.CustomizeHotKeysHandler;
-import org.exoplatform.ide.client.preferences.event.ShowAboutDialogEvent;
-import org.exoplatform.ide.client.preferences.event.ShowAboutDialogHandler;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
 import org.exoplatform.ide.client.restdiscovery.control.RestServicesDiscoveryControl;
 import org.exoplatform.ide.client.toolbar.customize.CustomizeToolbarForm;
@@ -59,7 +57,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class PreferencesModule implements InitializeServicesHandler, ControlsUpdatedHandler, CustomizeToolbarHandler,
-   CustomizeHotKeysHandler, ShowAboutDialogHandler, ApplicationSettingsReceivedHandler
+   CustomizeHotKeysHandler, ApplicationSettingsReceivedHandler
 {
 
    private HandlerManager eventBus;
@@ -75,7 +73,6 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       this.eventBus = eventBus;
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
-      eventBus.addHandler(ShowAboutDialogEvent.TYPE, this);
       eventBus.addHandler(CustomizeToolbarEvent.TYPE, this);
       eventBus.addHandler(CustomizeHotKeysEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -88,6 +85,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
 
       new RestServicesDiscoveryPresenter(eventBus);
       new SelectWorkspacePresenter(eventBus);
+      new AboutIDEPresenter(eventBus);
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
@@ -115,11 +113,6 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
    public void onCustomizeHotKeys(CustomizeHotKeysEvent event)
    {
       new CustomizeHotKeysPanel(eventBus, applicationSettings, controls);
-   }
-
-   public void onShowAboutDialog(ShowAboutDialogEvent event)
-   {
-      new AboutForm(eventBus);
    }
 
    @Override

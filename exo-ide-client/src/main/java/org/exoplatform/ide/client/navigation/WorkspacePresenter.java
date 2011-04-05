@@ -31,7 +31,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
-import org.exoplatform.ide.client.event.perspective.RestorePerspectiveEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -391,7 +390,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
             display.getBrowserTree().setValue(folder);
 
-            eventBus.fireEvent(new RestorePerspectiveEvent());
+            //eventBus.fireEvent(new RestorePerspectiveEvent());
             
             //eventBus.fireEvent(new SelectViewEvent(Display.ID));
             display.asView().setViewVisible();

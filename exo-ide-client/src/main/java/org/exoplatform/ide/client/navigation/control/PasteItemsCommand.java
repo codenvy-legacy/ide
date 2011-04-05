@@ -19,13 +19,13 @@
 package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.event.edit.ItemsToPasteSelectedEvent;
-import org.exoplatform.ide.client.event.edit.ItemsToPasteSelectedHandler;
-import org.exoplatform.ide.client.event.edit.PasteItemsCompleteEvent;
-import org.exoplatform.ide.client.event.edit.PasteItemsCompleteHandler;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedEvent;
+import org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedHandler;
+import org.exoplatform.ide.client.navigation.event.PasteItemsCompleteEvent;
+import org.exoplatform.ide.client.navigation.event.PasteItemsCompleteHandler;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
