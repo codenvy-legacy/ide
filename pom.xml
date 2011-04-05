@@ -199,6 +199,12 @@
          </dependency>
 
          <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-editor-extension-java</artifactId>
+           <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-extension-chromattic</artifactId>
             <version>${project.version}</version>
@@ -634,6 +640,7 @@
       <module>exo-ide-editor-extension-gtmpl</module>
       <module>exo-ide-editor-extension-chromattic</module>
       <module>exo-ide-editor-extension-netvibes</module>
+      <module>exo-ide-editor-extension-java</module>
     
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>
