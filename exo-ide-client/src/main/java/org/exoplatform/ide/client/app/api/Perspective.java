@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.app.api;
 
-import org.exoplatform.ide.client.framework.ui.gwt.HasClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasViewVisibilityChangedHandler;
 
 /**
  * Created by The eXo Platform SAS .

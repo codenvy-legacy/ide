@@ -34,8 +34,8 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.Messages;
@@ -56,7 +56,7 @@ import java.util.List;
  */
 public class CommitPresenter implements ItemsSelectedHandler, CommitHandler
 {
-   public interface Display extends ViewDisplay
+   public interface Display extends IsView
    {
       /**
        * Get commit button handler.
@@ -148,7 +148,7 @@ public class CommitPresenter implements ItemsSelectedHandler, CommitHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(display.getView().getId());
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -249,6 +249,6 @@ public class CommitPresenter implements ItemsSelectedHandler, CommitHandler
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
-      IDE.getInstance().closeView(display.getView().getId());
+      IDE.getInstance().closeView(display.asView().getId());
    }
 }

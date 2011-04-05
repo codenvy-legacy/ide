@@ -24,7 +24,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.module.navigation.control.newitem.NewFileCommand;
+import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommand;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
 
 /**

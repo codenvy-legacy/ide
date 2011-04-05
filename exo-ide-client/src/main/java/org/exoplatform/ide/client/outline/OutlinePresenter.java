@@ -36,10 +36,10 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.outline.event.ShowOutlineEvent;
@@ -73,7 +73,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    /**
     * View for outline panel.
     */
-   public interface Display extends ViewDisplay
+   public interface Display extends IsView
    {
 
       String ID = "ideOutlineView";

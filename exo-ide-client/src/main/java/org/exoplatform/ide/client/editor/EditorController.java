@@ -71,12 +71,12 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.Version;
@@ -771,7 +771,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
     */
    @Override
    public void onViewClosed(ViewClosedEvent event)
@@ -784,7 +784,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
     */
    @Override
    public void onViewVisibilityChanged(final ViewVisibilityChangedEvent event)
@@ -816,7 +816,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler#onClosingView(org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler#onClosingView(org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent)
     */
    @Override
    public void onClosingView(ClosingViewEvent event)

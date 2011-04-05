@@ -42,10 +42,10 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -73,7 +73,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
    EditorFileOpenedHandler, EditorFileClosedHandler, DeleteItemHandler, ViewClosedHandler
 {
 
-   public interface Display extends ViewDisplay
+   public interface Display extends IsView
    {
 
       String ID = "ideDeleteItemsView";

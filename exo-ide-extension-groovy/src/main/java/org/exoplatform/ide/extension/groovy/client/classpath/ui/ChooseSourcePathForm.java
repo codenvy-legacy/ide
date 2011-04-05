@@ -18,15 +18,7 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import com.google.gwt.user.client.DOM;
-
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
@@ -34,7 +26,13 @@ import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.groovy.client.Images;
 
-import java.util.List;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Form for choosing sources for class path.
@@ -85,7 +83,7 @@ public class ChooseSourcePathForm extends DialogWindow implements ChooseSourcePa
     */
    public ChooseSourcePathForm(HandlerManager eventBus)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       setTitle(TITLE);
 
       VerticalPanel mainLayout = new VerticalPanel();

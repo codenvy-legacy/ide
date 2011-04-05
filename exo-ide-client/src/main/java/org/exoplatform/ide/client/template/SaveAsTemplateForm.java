@@ -85,7 +85,7 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
 
    public SaveAsTemplateForm(HandlerManager eventBus, File file)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       setTitle(TITLE);
 
       VerticalPanel centerLayout = new VerticalPanel();

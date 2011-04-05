@@ -19,16 +19,16 @@
 package org.exoplatform.ide.client.test;
 
 import org.exoplatform.ide.client.Log;
-import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewActivatedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 

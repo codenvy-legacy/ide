@@ -32,10 +32,10 @@ import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileCallback;
 import org.exoplatform.ide.client.framework.vfs.Version;
@@ -322,7 +322,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent)
     */
    @Override
    public void onViewOpened(ViewOpenedEvent event)
@@ -336,7 +336,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
     */
    @Override
    public void onViewClosed(ViewClosedEvent event)

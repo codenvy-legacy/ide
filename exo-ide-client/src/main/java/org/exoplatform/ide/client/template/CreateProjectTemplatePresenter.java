@@ -18,6 +18,21 @@
  */
 package org.exoplatform.ide.client.template;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FolderTemplate;
+import org.exoplatform.ide.client.model.template.ProjectTemplate;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
+import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
+import org.exoplatform.ide.client.navigation.CreateFolderDisplay;
+import org.exoplatform.ide.client.navigation.ui.AbstractCreateFolderForm;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -31,21 +46,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
-
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.FolderTemplate;
-import org.exoplatform.ide.client.model.template.ProjectTemplate;
-import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
-import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.module.navigation.action.AbstractCreateFolderForm;
-import org.exoplatform.ide.client.module.navigation.action.CreateFolderDisplay;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>

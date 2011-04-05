@@ -108,7 +108,7 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
     */
    public FindTextForm(HandlerManager eventBus, File activeFile)
    {
-      super(eventBus, WIDTH, HEIGHT, Search.FORM_ID);
+      super(WIDTH, HEIGHT, Search.FORM_ID);
       setTitle(TITLE);
       setModal(false);
 

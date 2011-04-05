@@ -105,7 +105,7 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
    public CustomizeHotKeysPanel(HandlerManager eventBus, ApplicationSettings applicationSettings, List<Control> controls)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
 
       setTitle(TITLE);
       setCanMaximize(true);

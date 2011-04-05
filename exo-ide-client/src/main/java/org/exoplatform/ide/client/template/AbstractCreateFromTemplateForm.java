@@ -80,9 +80,11 @@ implements CreateFromTemplateDisplay<T>
    
    private AbstractCreateFromTemplatePresenter<T> presenter;
    
+   private HandlerManager eventBus;
+   
    public AbstractCreateFromTemplateForm(HandlerManager eventBus, AbstractCreateFromTemplatePresenter<T> presenter)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       initForm(eventBus);
       this.presenter = presenter;
    }

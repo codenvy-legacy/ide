@@ -24,10 +24,10 @@ import java.util.List;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.navigation.event.GetFileURLEvent;
 import org.exoplatform.ide.client.navigation.event.GetFileURLHandler;
@@ -49,7 +49,7 @@ import com.google.gwt.user.client.ui.HasValue;
 public class GetItemURLPresenter implements GetFileURLHandler, ItemsSelectedHandler, ViewClosedHandler
 {
 
-   public interface Display extends ViewDisplay
+   public interface Display extends IsView
    {
 
       String ID = "ideGetItemURLForm";

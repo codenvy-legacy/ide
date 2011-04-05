@@ -91,18 +91,20 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    protected FileUploadInput fileUploadInput;
    
    private VerticalPanel mainLayout;
+   
+   private HandlerManager eventBus;
 
    public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, 
       IDEConfiguration applicationConfiguration)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       initialize(eventBus, selectedItems, path, applicationConfiguration);
    }
    
    public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, 
       IDEConfiguration applicationConfiguration, int width, int height)
    {
-      super(eventBus, width, height, ID);
+      super(width, height, ID);
       initialize(eventBus, selectedItems, path, applicationConfiguration);
    }
    

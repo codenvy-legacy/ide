@@ -91,7 +91,7 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
     */
    public ConfigureBuildPathForm(HandlerManager eventBus)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       setTitle(TITLE);
 
       VerticalPanel mainLayout = new VerticalPanel();

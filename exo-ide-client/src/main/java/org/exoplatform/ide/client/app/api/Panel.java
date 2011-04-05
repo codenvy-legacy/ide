@@ -21,7 +21,7 @@ package org.exoplatform.ide.client.app.api;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 
 /**
  * Created by The eXo Platform SAS .

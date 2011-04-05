@@ -18,23 +18,22 @@
  */
 package org.exoplatform.ide.client.editor.custom;
 
+import java.util.Map;
+
+import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.vfs.File;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
-import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
-import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.discovery.EntryPoint;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.vfs.File;
-
-import java.util.Map;
 
 public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresenter.Display
 {
@@ -65,8 +64,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    public OpenFileWithForm(HandlerManager eventBus, File selectedFile, Map<String, File> openedFiles,
       ApplicationSettings applicationSettings)
    {
-
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       setTitle(TITLE);
       
       VerticalPanel mainLayout = new VerticalPanel();

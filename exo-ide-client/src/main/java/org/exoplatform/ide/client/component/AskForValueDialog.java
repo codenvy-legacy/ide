@@ -80,7 +80,7 @@ public class AskForValueDialog extends DialogWindow
    public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback,
       ValueDiscardCallback discardCallback)
    {
-      super(null, dialogWidth, DIALOG_HEIGHT, ID);
+      super(dialogWidth, DIALOG_HEIGHT, ID);
       valueCallback = callback;
       valueDiscardCallback = discardCallback;
       setTitle(title);

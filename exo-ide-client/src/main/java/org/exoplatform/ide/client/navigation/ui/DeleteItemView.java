@@ -22,8 +22,8 @@ import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.ViewType;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;

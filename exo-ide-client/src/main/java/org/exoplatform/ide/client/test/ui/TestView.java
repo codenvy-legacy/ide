@@ -19,7 +19,7 @@
 package org.exoplatform.ide.client.test.ui;
 
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;

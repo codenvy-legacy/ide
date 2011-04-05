@@ -32,8 +32,8 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
@@ -51,7 +51,7 @@ import java.util.List;
  */
 public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSelectedHandler
 {
-   public interface Display extends ViewDisplay
+   public interface Display extends IsView
    {
       /**
        * Get's bare field.
@@ -121,7 +121,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(display.getView().getId());
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
    }
@@ -195,7 +195,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
-      IDE.getInstance().closeView(display.getView().getId());
+      IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**

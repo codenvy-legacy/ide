@@ -26,8 +26,8 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedH
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.navigation.WorkspacePresenter;
 import org.exoplatform.ide.client.navigation.event.GetFileURLEvent;
@@ -118,7 +118,7 @@ public class GetFileURLControl extends SimpleControl implements IDEControl, Item
 
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
     */
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)

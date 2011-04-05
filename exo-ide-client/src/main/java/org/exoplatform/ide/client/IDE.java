@@ -31,8 +31,8 @@ import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEv
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewHighlightManager;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.module.edit.TextEditModule;
 import org.exoplatform.ide.client.navigation.NavigationModule;

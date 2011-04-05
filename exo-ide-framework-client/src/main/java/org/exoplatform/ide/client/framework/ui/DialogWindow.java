@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.gwtframework.ui.client.window.Window;
 
@@ -33,11 +31,8 @@ import org.exoplatform.gwtframework.ui.client.window.Window;
 public class DialogWindow extends Window
 {
    
-   protected HandlerManager eventBus;
-
-   public DialogWindow(HandlerManager eventBus, int width, int height, String id)
+   public DialogWindow(int width, int height, String id)
    {
-      this.eventBus = eventBus;
       ClearFocusForm.getInstance().clearFocus();
 
       getElement().setId(id);

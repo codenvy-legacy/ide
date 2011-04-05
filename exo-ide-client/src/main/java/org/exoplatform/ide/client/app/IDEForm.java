@@ -44,7 +44,7 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
 
    private Menu menu;
 
-   private MyCustomPerspective perspective;
+   private DefaultPerspective perspective;
 
    private ToolbarsLayer toolbarsLayer;
 
@@ -80,7 +80,7 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
       toolbarsLayer = new ToolbarsLayer();
       addLayer(toolbarsLayer);
 
-      perspective = new MyCustomPerspective();
+      perspective = new DefaultPerspective();
       addLayer(perspective);
 
       //      DebugLayer debugController = new DebugLayer();

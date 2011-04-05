@@ -28,12 +28,12 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedH
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -58,7 +58,7 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
    EntryPointChangedHandler
 {
 
-   public interface Display extends ViewDisplay
+   public interface Display extends IsView
    {
 
       static final String ID = "ideSearchView";

@@ -35,8 +35,8 @@ import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ide.client.module.edit.control.DeleteCurrentLineControl;
 import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ide.client.module.edit.control.GoToLineControl;
-import org.exoplatform.ide.client.module.navigation.control.SaveFileCommand;
-import org.exoplatform.ide.client.module.navigation.control.newitem.CreateFileFromTemplateControl;
+import org.exoplatform.ide.client.navigation.control.SaveFileCommand;
+import org.exoplatform.ide.client.navigation.control.newitem.CreateFileFromTemplateControl;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledHandler;
 

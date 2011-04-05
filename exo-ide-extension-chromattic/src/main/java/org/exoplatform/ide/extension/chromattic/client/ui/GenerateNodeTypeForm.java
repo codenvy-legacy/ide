@@ -73,7 +73,7 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
     */
    public GenerateNodeTypeForm(HandlerManager eventBus)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       setTitle(TITLE);
       //TODO setCanDragResize(true);
 

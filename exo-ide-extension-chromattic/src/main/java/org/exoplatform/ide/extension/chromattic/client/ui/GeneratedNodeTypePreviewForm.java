@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.extension.chromattic.client.Images;

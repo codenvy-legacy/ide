@@ -23,22 +23,22 @@ import java.util.List;
 
 import org.exoplatform.ide.client.app.api.Panel;
 import org.exoplatform.ide.client.app.impl.LayerContainer;
-import org.exoplatform.ide.client.app.impl.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.app.impl.panel.PanelDirection;
 import org.exoplatform.ide.client.app.impl.panel.PanelImpl;
-import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -148,9 +148,6 @@ public class Layout extends LayerContainer implements ViewVisibilityChangedHandl
 
    public boolean closeView(String viewId)
    {
-      /*
-       * Search panel which contains specified View and then closing View 
-       */
       for (PanelImpl panel : panelsLayer.getPanels().values())
       {
          if (panel.getViewMap().get(viewId) != null)

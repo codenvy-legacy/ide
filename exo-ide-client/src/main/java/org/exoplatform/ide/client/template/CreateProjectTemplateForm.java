@@ -102,7 +102,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
 
    public CreateProjectTemplateForm(HandlerManager eventBus, List<Template> templateList)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
 
       setTitle("Create project template");
       //TODO

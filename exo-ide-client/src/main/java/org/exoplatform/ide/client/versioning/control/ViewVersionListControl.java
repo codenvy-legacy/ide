@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.versioning.control;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.versioning.VersionContentPresenter;
 import org.exoplatform.ide.client.versioning.event.ShowVersionListEvent;
 
@@ -53,7 +53,7 @@ public class ViewVersionListControl extends VersionControl
    }
    
    /**
-    * @see org.exoplatform.ide.client.versioning.control.VersionControl#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
+    * @see org.exoplatform.ide.client.versioning.control.VersionControl#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
     */
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)

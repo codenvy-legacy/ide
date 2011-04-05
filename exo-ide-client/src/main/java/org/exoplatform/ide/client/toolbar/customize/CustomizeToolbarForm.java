@@ -118,7 +118,7 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
 
    public CustomizeToolbarForm(HandlerManager eventBus, ApplicationSettings applicationSettings, List<Control> controls)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       setCanMaximize(true);
       setTitle(TITLE);
       //TODO setCanDragResize(true);

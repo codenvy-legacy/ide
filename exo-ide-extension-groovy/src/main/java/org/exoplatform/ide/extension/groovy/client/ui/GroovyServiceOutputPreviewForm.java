@@ -114,7 +114,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
    public GroovyServiceOutputPreviewForm(HandlerManager eventBus, WadlApplication wadlApplication,
       boolean undeloyOnCansel)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       setTitle(TITLE);
 
       vLayout = new VerticalPanel();

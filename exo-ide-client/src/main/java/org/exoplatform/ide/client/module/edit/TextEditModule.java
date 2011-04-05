@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.client.module.edit;
 
-import com.google.gwt.event.shared.HandlerManager;
-
+import org.exoplatform.ide.client.edit.ui.GoToLineForm;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -32,7 +31,6 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSa
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.client.module.edit.action.GoToLineForm;
 import org.exoplatform.ide.client.module.edit.control.DeleteCurrentLineControl;
 import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
 import org.exoplatform.ide.client.module.edit.control.FormatSourceCommand;
@@ -49,6 +47,8 @@ import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.search.text.FindTextForm;
 import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

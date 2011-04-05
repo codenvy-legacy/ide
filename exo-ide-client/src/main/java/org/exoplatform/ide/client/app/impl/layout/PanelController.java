@@ -71,9 +71,6 @@ public class PanelController extends AbsolutePanel implements RequiresResize
    @Override
    public void onResize()
    {
-      
-      System.out.println("resize controller for panel [" + panel.getPanelId() + "]");
-      
       if (!panel.isVisible())
       {
          return;

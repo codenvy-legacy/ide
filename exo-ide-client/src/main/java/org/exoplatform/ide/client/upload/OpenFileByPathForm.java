@@ -65,10 +65,12 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
    private String labelTitle;
 
    private VerticalPanel mainPanel;
+   
+   private HandlerManager eventBus;
 
    public OpenFileByPathForm(HandlerManager eventBus)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       this.eventBus = eventBus;
 
       title = "Open file by path";

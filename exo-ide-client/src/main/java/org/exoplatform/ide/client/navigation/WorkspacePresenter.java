@@ -44,14 +44,14 @@ import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -99,7 +99,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    ApplicationSettingsReceivedHandler, ViewOpenedHandler, ViewClosedHandler
 {
 
-   public interface Display extends ViewDisplay
+   public interface Display extends IsView
    {
 
       static final String ID = "ideWorkspaceView";
@@ -394,7 +394,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
             eventBus.fireEvent(new RestorePerspectiveEvent());
             
             //eventBus.fireEvent(new SelectViewEvent(Display.ID));
-            display.getView().setViewVisible();
+            display.asView().setViewVisible();
 
             if (itemToSelect != null)
             {
@@ -516,7 +516,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    {
       if (!viewOpened)
       {
-         IDE.getInstance().openView(display.getView());
+         IDE.getInstance().openView(display.asView());
       }
 
       entryPoint = null;
@@ -541,7 +541,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
             eventBus.fireEvent(new EntryPointChangedEvent(result.getHref()));
 
-            display.getView().setViewVisible();
+            display.asView().setViewVisible();
             //eventBus.fireEvent(new SelectViewEvent(Display.ID));
             
             eventBus.fireEvent(new ViewVisibilityChangedEvent((ViewEx)display));
@@ -646,7 +646,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
     */
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)

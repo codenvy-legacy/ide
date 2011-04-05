@@ -82,7 +82,7 @@ public class AboutForm extends DialogWindow
 
    public AboutForm(HandlerManager eventBus)//, String name, String version, String year, String info, String built)
    {
-      super(eventBus, WINDOW_WIDTH, WINDOW_HEIGHT, ID);
+      super(WINDOW_WIDTH, WINDOW_HEIGHT, ID);
 
       BuildNumber buildNumber = GWT.create(BuildNumber.class);
 

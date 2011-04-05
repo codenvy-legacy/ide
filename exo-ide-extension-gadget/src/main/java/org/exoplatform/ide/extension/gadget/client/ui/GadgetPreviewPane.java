@@ -27,8 +27,8 @@ import com.google.gwt.user.client.Window.Location;
 
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.PreviewFrame;
-import org.exoplatform.ide.client.framework.ui.ViewType;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 
 /**

@@ -83,7 +83,7 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
 
    public PermissionsManagerForm(HandlerManager eventBus, Item item, Map<String, String> lockTokens)
    {
-      super(eventBus, WIDTH, HEIGTH, ID);
+      super(WIDTH, HEIGTH, ID);
 
       setTitle("Permissions");
 

@@ -62,7 +62,7 @@ public class GetRestServiceURLForm extends DialogWindow
 
    public GetRestServiceURLForm(HandlerManager eventBus, String url)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
 
       setTitle(TITLE);
 

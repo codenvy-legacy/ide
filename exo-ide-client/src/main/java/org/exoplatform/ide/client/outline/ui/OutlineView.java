@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 
 import com.google.gwt.user.client.DOM;

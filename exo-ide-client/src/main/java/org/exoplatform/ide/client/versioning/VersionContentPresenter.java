@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.ImageUtil;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewDisplay;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
@@ -45,7 +45,7 @@ import java.util.Map;
 public class VersionContentPresenter implements ShowVersionContentHandler
 {
 
-   public interface Display extends ViewDisplay
+   public interface Display extends IsView
    {
       
       String ID ="ideVersionContentView";

@@ -75,7 +75,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
     */
    public RestServicesDiscoveryForm(HandlerManager eventBus)
    {
-      super(eventBus, WIDTH, HEIGTH, ID);
+      super(WIDTH, HEIGTH, ID);
       vLayout = new VerticalPanel();
       vLayout.setHeight("100%");
       vLayout.setSpacing(10);

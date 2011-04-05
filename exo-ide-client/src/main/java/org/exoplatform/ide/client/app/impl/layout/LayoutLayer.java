@@ -266,8 +266,6 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
    @Override
    public void onMaximizePanel(MaximizePanelEvent event)
    {
-      System.out.println("LayoutLayer.onMaximizePanel()");
-
       if (maximizedPanel != null)
       {
          Window.alert("Panel [" + maximizedPanel.getPanelId() + "] already maximized!");
@@ -296,8 +294,6 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
    @Override
    public void onRestorePanel(RestorePanelEvent event)
    {
-      System.out.println("LayoutLayer.onRestorePanel()");
-
       maximizedPanel = null;
       layoutWrapper.setVisible(true);
 
@@ -305,11 +301,9 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       {
          if (panel instanceof PanelImpl)
          {
-            System.out.println("checking panel > " + panel.getPanelId());
             PanelImpl pi = (PanelImpl)panel;
             if (!pi.getPanelId().equals(event.getPanel().getPanelId()))
             {
-               System.out.println("is hidden > " + pi.isPanelHidden());
                if (pi.isPanelHidden())
                {
                   pi.setPanelHidden(false);

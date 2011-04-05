@@ -75,7 +75,7 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
     */
    public ViewVersionsForm(HandlerManager eventBus, Item item, List<Version> versions)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       
       String title = ((item != null) && (item.getName() != null) && (item.getName().length() > 0)) ? TITLE+" for "+item.getName() : TITLE;
       

@@ -21,11 +21,11 @@ package org.exoplatform.ide.client.app.impl.layer;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.gwtframework.ui.client.window.Window;
 import org.exoplatform.ide.client.app.impl.Layer;
-import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 
 /**
  * Created by The eXo Platform SAS .

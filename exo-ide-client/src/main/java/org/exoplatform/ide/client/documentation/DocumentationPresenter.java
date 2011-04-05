@@ -34,10 +34,10 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 
@@ -169,7 +169,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.event.ViewOpenedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api.event.event.ViewOpenedEvent)
     */
    @Override
    public void onViewOpened(ViewOpenedEvent event)
@@ -184,7 +184,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.event.ViewClosedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.event.ViewClosedEvent)
     */
    @Override
    public void onViewClosed(ViewClosedEvent event)

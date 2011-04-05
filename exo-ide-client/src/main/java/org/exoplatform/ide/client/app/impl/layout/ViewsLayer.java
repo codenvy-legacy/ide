@@ -20,7 +20,7 @@
 package org.exoplatform.ide.client.app.impl.layout;
 
 import org.exoplatform.ide.client.app.impl.Layer;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;

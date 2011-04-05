@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
 
 /**

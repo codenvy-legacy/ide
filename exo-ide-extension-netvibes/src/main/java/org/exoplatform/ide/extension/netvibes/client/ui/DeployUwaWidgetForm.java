@@ -161,7 +161,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
     */
    public DeployUwaWidgetForm(HandlerManager eventBus)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       //TODO setCanDragResize(true);
 
       setTitle(TITLE);

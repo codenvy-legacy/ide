@@ -90,7 +90,7 @@ public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePr
     */
    public DeployNodeTypeForm(HandlerManager eventBus)
    {
-      super(eventBus, WIDTH, HEIGHT, ID);
+      super(WIDTH, HEIGHT, ID);
       setTitle(TITLE);
       //TODO setCanDragResize(true);
 

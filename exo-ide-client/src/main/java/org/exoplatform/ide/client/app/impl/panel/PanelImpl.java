@@ -32,24 +32,24 @@ import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.app.api.Panel;
 import org.exoplatform.ide.client.app.impl.layout.ViewsLayer;
-import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ChangeViewIconEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ChangeViewIconHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ChangeViewTitleEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.ChangeViewTitleHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.HasChangeViewIconHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.HasChangeViewTitleHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.HasSetViewVisibleHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.SetViewVisibleEvent;
-import org.exoplatform.ide.client.framework.ui.gwt.impl.SetViewVisibleHandler;
+import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconEvent;
+import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconHandler;
+import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewTitleEvent;
+import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewTitleHandler;
+import org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewIconHandler;
+import org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewTitleHandler;
+import org.exoplatform.ide.client.framework.ui.impl.event.HasSetViewVisibleHandler;
+import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleEvent;
+import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -122,14 +122,29 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
 
    private ClosingViewHandler closingViewHandler;
 
+   /**
+    * Layer for storing all opened views.
+    */
    private ViewsLayer viewsLayer;
 
+   /**
+    * Maximize button
+    */
    private TabControl maximizePanelControl;
 
+   /**
+    * Restore button
+    */
    private TabControl restorePanelControl;
 
+   /**
+    * Image for Maximize button
+    */
    private Image maximizeImage = new Image(IDEImageBundle.INSTANCE.maximize());
 
+   /**
+    * Image for Restore button
+    */
    private Image restoreImage = new Image(IDEImageBundle.INSTANCE.restore());
 
    public PanelImpl(String panelId, ViewsLayer viewsLayer)
@@ -327,17 +342,12 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
       public void onCloseTab(CloseTabEvent event)
       {
          String viewId = event.getTabId();
-
-         System.out.println("closing tab [view] [" + viewId + "]");
-
          ViewEx view = views.get(viewId);
 
          if (closingViewHandler != null)
          {
             ClosingViewEvent closingViewEvent = new ClosingViewEvent(view);
             closingViewHandler.onClosingView(closingViewEvent);
-            System.out.println("closing canceled > " + closingViewEvent.isClosingCanceled());
-
             if (closingViewEvent.isClosingCanceled())
             {
                event.cancelClosing();
@@ -604,7 +614,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
             ViewVisibilityChangedEvent viewVisibilityChangedEvent = new ViewVisibilityChangedEvent(selectedView);
             viewVisibilityChangedHandler.onViewVisibilityChanged(viewVisibilityChangedEvent);
          }
-         
+
       }
    }
 
