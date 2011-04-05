@@ -125,7 +125,7 @@ public class CodeMirror extends Editor
       String width = "";
       String height = "100%";
       boolean readOnly = (Boolean)params.get(EditorParameters.IS_READ_ONLY);
-      String continuousScanning = configuration.getContinuousScanning();
+      int continuousScanning = configuration.getContinuousScanning();
       boolean textWrapping = configuration.isTextWrapping();
 
       showLineNumbers = (Boolean)params.get(EditorParameters.IS_SHOW_LINE_NUMER);
@@ -142,7 +142,7 @@ public class CodeMirror extends Editor
 
    }
 
-   private native JavaScriptObject initCodeMirror(String id, String w, String h, boolean readOnly, String cs, boolean tr,
+   private native JavaScriptObject initCodeMirror(String id, String w, String h, boolean readOnly, int cs, boolean tr,
       boolean lineNumbers, String styleURLs, String parserNames, String jsDirectory) /*-{
         var instance = this;
         var changeFunction = function() {
@@ -178,7 +178,7 @@ public class CodeMirror extends Editor
             parserfile : eval(parserNames),
             stylesheet : eval(styleURLs),
             path : jsDirectory,
-            continuousScanning : cs,
+            continuousScanning : cs || false,
             undoDelay : 50, // decrease delay before calling 'onChange' callback
             lineNumbers : lineNumbers,
             readOnly : readOnly,
