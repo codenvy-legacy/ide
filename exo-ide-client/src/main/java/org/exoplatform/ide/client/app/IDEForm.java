@@ -22,14 +22,8 @@ import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
 import org.exoplatform.ide.client.app.api.Menu;
 import org.exoplatform.ide.client.app.api.Perspective;
 import org.exoplatform.ide.client.app.impl.LayerContainer;
-import org.exoplatform.ide.client.app.impl.PerspectiveImpl;
-import org.exoplatform.ide.client.app.impl.layers.LayoutLayer;
-import org.exoplatform.ide.client.app.impl.layers.MenuLayer;
-import org.exoplatform.ide.client.app.impl.layers.ModalWindowsLayer;
-import org.exoplatform.ide.client.app.impl.layers.PanelsLayer;
-import org.exoplatform.ide.client.app.impl.layers.PopupWindowsLayer;
-import org.exoplatform.ide.client.app.impl.layers.ToolbarsLayer;
-import org.exoplatform.ide.client.app.impl.layers.ViewsLayer;
+import org.exoplatform.ide.client.app.impl.layer.MenuLayer;
+import org.exoplatform.ide.client.app.impl.layer.ToolbarsLayer;
 
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -50,12 +44,13 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
 
    private Menu menu;
 
-   private Perspective perspective;
+   private MyCustomPerspective perspective;
 
    private ToolbarsLayer toolbarsLayer;
 
    public IDEForm()
    {
+      super("ide");
       AbsolutePanel ideRootPanel = new AbsolutePanel();
       DOM.setStyleAttribute(ideRootPanel.getElement(), "overflow", "hidden");
       DOM.setStyleAttribute(ideRootPanel.getElement(), "background", "#FFFFFF");
@@ -75,8 +70,8 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
 
    private void createLayers()
    {
-//      BackgroundLayer background = new BackgroundLayer();
-//      addLayer(background);
+      //      BackgroundLayer background = new BackgroundLayer();
+      //      addLayer(background);
 
       MenuLayer menuLayer = new MenuLayer();
       menu = menuLayer.getMenu();
@@ -85,25 +80,11 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
       toolbarsLayer = new ToolbarsLayer();
       addLayer(toolbarsLayer);
 
-      LayoutLayer layoutLayer = new LayoutLayer();
-      addLayer(layoutLayer);
-
-      PanelsLayer panelsLayer = new PanelsLayer();
-      addLayer(panelsLayer);
-
-      ViewsLayer viewsLayer = new ViewsLayer();
-      addLayer(viewsLayer);
-
-      PopupWindowsLayer popupWindowsLayer = new PopupWindowsLayer();
-      addLayer(popupWindowsLayer);
-
-      ModalWindowsLayer modalWindowsLayer = new ModalWindowsLayer();
-      addLayer(modalWindowsLayer);
+      perspective = new MyCustomPerspective();
+      addLayer(perspective);
 
       //      DebugLayer debugController = new DebugLayer();
       //      addLayer(debugController);
-
-      perspective = new PerspectiveImpl(layoutLayer, panelsLayer, viewsLayer, popupWindowsLayer, modalWindowsLayer);
    }
 
    @Override

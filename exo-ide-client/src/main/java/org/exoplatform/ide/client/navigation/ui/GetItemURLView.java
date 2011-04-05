@@ -84,6 +84,7 @@ public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.clie
          public void run()
          {
             urlField.selectValue();
+            urlField.focusInItem();
          }
 
       }.schedule(500);

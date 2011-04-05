@@ -73,8 +73,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       EVENT_BUS.fireEvent(new AddControlsFormatterEvent(new MainMenuControlsFormatter()));
       EVENT_BUS.fireEvent(new AddControlsFormatterEvent(new NewItemControlsFormatter()));
 
-      //new IDEForm(EVENT_BUS, context, controlsRegistration);
-
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(EVENT_BUS, ideForm, controlsRegistration);
       new ViewHighlightManager(EVENT_BUS);
@@ -85,9 +83,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       new ApplicationStateSnapshotListener(EVENT_BUS);
 
-      /*
-       * MODULES INITIALIZATION
-       */
+      // MODULES INITIALIZATION
       new NavigationModule(EVENT_BUS, context);
       new TextEditModule(EVENT_BUS);
       new OperationModule(EVENT_BUS);

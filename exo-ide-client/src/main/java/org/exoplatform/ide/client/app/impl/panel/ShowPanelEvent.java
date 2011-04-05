@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2011 eXo Platform SAS.
+/**
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -15,40 +15,48 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *
  */
-package org.exoplatform.ide.client.app.impl.layers;
 
-import org.exoplatform.ide.client.app.api.Menu;
-import org.exoplatform.ide.client.app.impl.Layer;
-import org.exoplatform.ide.client.app.impl.MenuImpl;
+package org.exoplatform.ide.client.app.impl.panel;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class MenuLayer extends Layer
+public class ShowPanelEvent extends GwtEvent<ShowPanelHandler>
 {
 
-   private MenuImpl menu;
+   public static final GwtEvent.Type<ShowPanelHandler> TYPE = new GwtEvent.Type<ShowPanelHandler>();
 
-   public MenuLayer()
+   private String panelId;
+
+   public ShowPanelEvent(String panelId)
    {
-      menu = new MenuImpl();
-      add(menu);
+      this.panelId = panelId;
+   }
+
+   public String getPanelId()
+   {
+      return panelId;
    }
 
    @Override
-   public void resize(int width, int height)
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowPanelHandler> getAssociatedType()
    {
-      super.resize(width, height);
-      menu.setWidth("" + width + "px");
+      return TYPE;
    }
-   
-   public Menu getMenu() {
-      return menu;
+
+   @Override
+   protected void dispatch(ShowPanelHandler handler)
+   {
+      handler.onShowPanel(this);
    }
 
 }

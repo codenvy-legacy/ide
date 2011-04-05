@@ -444,5 +444,15 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/documentation/documentation_Disabled.png")
    ImageResource documentation_Disabled();
 
+
+   /*
+    * Maximize, Restore for Panels
+    */
+   
+   @Source("../public/images/bundled/panel/maximize.png")
+   ImageResource maximize();
+   
+   @Source("../public/images/bundled/panel/minimize.png")
+   ImageResource restore();
    
 }

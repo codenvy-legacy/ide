@@ -16,13 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.api;
+package org.exoplatform.ide.client.app.impl;
 
-import org.exoplatform.ide.client.framework.ui.gwt.HasClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import java.util.List;
+
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,12 +30,23 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
  * @version $
  */
 
-public interface Perspective extends HasViewVisibilityChangedHandler, 
-HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
+public class ListBasedHandlerRegistration implements HandlerRegistration
 {
 
-   void openView(ViewEx view);
+   private List<?> handlerList;
 
-   void closeView(String viewId);
+   private EventHandler handler;
+
+   public ListBasedHandlerRegistration(List<?> handlerList, EventHandler handler)
+   {
+      this.handlerList = handlerList;
+      this.handler = handler;
+   }
+
+   @Override
+   public void removeHandler()
+   {
+      handlerList.remove(handler);
+   }
 
 }

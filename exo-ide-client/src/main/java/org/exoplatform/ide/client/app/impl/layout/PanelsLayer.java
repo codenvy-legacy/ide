@@ -16,39 +16,47 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.impl.layers;
+
+package org.exoplatform.ide.client.app.impl.layout;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.ide.client.app.impl.Layer;
-
-import com.google.gwt.user.client.ui.Image;
+import org.exoplatform.ide.client.app.impl.panel.PanelImpl;
 
 /**
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class BackgroundLayer extends Layer
+public class PanelsLayer extends Layer
 {
 
-   private Image backgroundImage;
+   private Map<String, PanelImpl> panels = new HashMap<String, PanelImpl>();
 
-   public BackgroundLayer()
+   public ViewsLayer viewsLayer;
+
+   public PanelsLayer(ViewsLayer viewsLayer)
    {
-      backgroundImage = new Image("ide-background.jpg");
-      backgroundImage.setWidth("100%");
-      backgroundImage.setHeight("100%");
-      add(backgroundImage);
+      super("panels");
+      this.viewsLayer = viewsLayer;
    }
 
-   @Override
-   public void resize(int width, int height)
+   public PanelImpl addPanel(String panelId)
    {
-      backgroundImage.setWidth(width + "px");
-      backgroundImage.setHeight(height + "px");
+      PanelImpl panel = new PanelImpl(panelId, viewsLayer);
+      add(panel);
+      panels.put(panel.getPanelId(), panel);
+      return panel;
+   }
 
-      super.resize(width, height);
+   public Map<String, PanelImpl> getPanels()
+   {
+      return panels;
    }
 
 }

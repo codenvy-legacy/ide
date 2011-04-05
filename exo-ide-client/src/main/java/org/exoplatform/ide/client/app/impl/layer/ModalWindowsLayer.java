@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.impl.layers;
+package org.exoplatform.ide.client.app.impl.layer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +53,10 @@ public class ModalWindowsLayer extends AbstractWindowsLayer
    private Map<String, WindowController> windowControllers = new HashMap<String, WindowController>();
 
    private Map<String, Window> windows = new HashMap<String, Window>();
+   
+   public ModalWindowsLayer() {
+      super("modal-windows");
+   }
 
    public boolean closeView(String viewId)
    {
@@ -76,9 +80,8 @@ public class ModalWindowsLayer extends AbstractWindowsLayer
       ViewEx view = views.get(viewId);
       views.remove(viewId);
 
-      ViewClosedEvent viewClosedEvent = new ViewClosedEvent(view);
-      for (ViewClosedHandler viewClosedHandler : viewClosedHandlers)
-      {
+      if (viewClosedHandler != null) {
+         ViewClosedEvent viewClosedEvent = new ViewClosedEvent(view);
          viewClosedHandler.onViewClosed(viewClosedEvent);
       }
 
@@ -125,9 +128,8 @@ public class ModalWindowsLayer extends AbstractWindowsLayer
       WindowController controller = new WindowController(view, window);
       windowControllers.put(view.getId(), controller);
 
-      ViewOpenedEvent viewOpenedEvent = new ViewOpenedEvent(view);
-      for (ViewOpenedHandler viewOpenedHandler : viewOpenedHandlers)
-      {
+      if (viewOpenedHandler != null) {
+         ViewOpenedEvent viewOpenedEvent = new ViewOpenedEvent(view);
          viewOpenedHandler.onViewOpened(viewOpenedEvent);
       }
    }

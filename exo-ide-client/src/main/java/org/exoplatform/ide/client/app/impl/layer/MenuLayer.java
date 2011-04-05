@@ -16,13 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.impl.layers;
+package org.exoplatform.ide.client.app.impl.layer;
 
-import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.app.api.Menu;
 import org.exoplatform.ide.client.app.impl.Layer;
-
-import com.google.gwt.user.client.DOM;
+import org.exoplatform.ide.client.app.impl.MenuImpl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,44 +29,27 @@ import com.google.gwt.user.client.DOM;
  * @version $
  */
 
-public class ToolbarsLayer extends Layer
+public class MenuLayer extends Layer
 {
 
-   private Toolbar toolbar;
+   private MenuImpl menu;
 
-   private Toolbar statusbar;
-
-   public ToolbarsLayer()
+   public MenuLayer()
    {
-      toolbar = new Toolbar("exoIDEToolbar");
-      add(toolbar, 0, 20);
-
-      statusbar = new Toolbar("exoIDEStatusbar");
-      statusbar.setHeight("30px");
-      String background =
-         UIHelper.getGadgetImagesURL() + "../eXoStyle/skin/default/images/component/toolbar/statusbar_Background.png";
-      statusbar.setBackgroundImage(background);
-      statusbar.setItemsTopPadding(3);
-      add(statusbar, 0, 100);
+      super("menu");
+      menu = new MenuImpl();
+      add(menu);
    }
 
    @Override
    public void resize(int width, int height)
    {
       super.resize(width, height);
-
-      toolbar.setWidth("" + width + "px");
-
-      statusbar.setWidth("" + width + "px");
-      DOM.setStyleAttribute(statusbar.getElement(), "top", "" + (height - 30) + "px");
+      menu.setWidth("" + width + "px");
    }
    
-   public Toolbar getToolbar() {
-      return toolbar;
-   }
-   
-   public Toolbar getStatusbar() {
-      return statusbar;
+   public Menu getMenu() {
+      return menu;
    }
 
 }

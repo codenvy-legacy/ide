@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.app.impl.panel;
 
+import com.google.gwt.event.shared.EventHandler;
+
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -26,7 +28,9 @@ package org.exoplatform.ide.client.app.impl.panel;
  * @version $
  */
 
-public interface MaximizePanelHandler
+public interface MaximizePanelHandler extends EventHandler
 {
+   
+   void onMaximizePanel(MaximizePanelEvent event);
 
 }

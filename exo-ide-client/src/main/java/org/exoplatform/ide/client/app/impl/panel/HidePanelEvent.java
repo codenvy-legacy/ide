@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2011 eXo Platform SAS.
+/**
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -15,28 +15,48 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *
  */
-package org.exoplatform.ide.client.app.api;
 
-import org.exoplatform.ide.client.framework.ui.gwt.HasClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+package org.exoplatform.ide.client.app.impl.panel;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface Perspective extends HasViewVisibilityChangedHandler, 
-HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
+public class HidePanelEvent extends GwtEvent<HidePanelHandler>
 {
 
-   void openView(ViewEx view);
+   public static final GwtEvent.Type<HidePanelHandler> TYPE = new GwtEvent.Type<HidePanelHandler>();
 
-   void closeView(String viewId);
+   private String panelId;
+
+   public HidePanelEvent(String panelId)
+   {
+      this.panelId = panelId;
+   }
+
+   public String getPanelId()
+   {
+      return panelId;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<HidePanelHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(HidePanelHandler handler)
+   {
+      handler.onHidePanel(this);
+   }
 
 }

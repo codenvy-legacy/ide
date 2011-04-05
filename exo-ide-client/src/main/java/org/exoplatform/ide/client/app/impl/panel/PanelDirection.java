@@ -16,13 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.api;
-
-import org.exoplatform.ide.client.framework.ui.gwt.HasClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+package org.exoplatform.ide.client.app.impl.panel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,12 +25,8 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
  * @version $
  */
 
-public interface Perspective extends HasViewVisibilityChangedHandler, 
-HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
-{
+public enum PanelDirection {
 
-   void openView(ViewEx view);
-
-   void closeView(String viewId);
+   EAST, WEST, SOUTH, NORTH, CENTER
 
 }

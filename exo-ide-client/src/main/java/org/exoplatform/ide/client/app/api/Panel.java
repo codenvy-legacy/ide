@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.client.app.api;
 
-import org.exoplatform.ide.client.framework.ui.gwt.HasClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
+import java.util.List;
+import java.util.Map;
+
 import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
 
 /**
@@ -31,12 +30,25 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
  * @version $
  */
 
-public interface Perspective extends HasViewVisibilityChangedHandler, 
-HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
+public interface Panel
 {
+   
+   String getPanelId();
 
    void openView(ViewEx view);
 
    void closeView(String viewId);
 
+   Map<String, ViewEx> getViewMap();
+   
+   boolean canOpenView(String viewType);
+   
+   List<String> getAcceptedTypes();
+   
+   void acceptType(String viewType);
+   
+   void setPanelHidden(boolean panelHidden);
+   
+   boolean isPanelHidden();
+   
 }

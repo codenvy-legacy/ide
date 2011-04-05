@@ -16,13 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.api;
+package org.exoplatform.ide.client.app;
 
-import org.exoplatform.ide.client.framework.ui.gwt.HasClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.app.api.Panel;
+import org.exoplatform.ide.client.app.impl.panel.PanelDirection;
+import org.exoplatform.ide.client.app.impl.perspective.BasePerspective;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,12 +29,23 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
  * @version $
  */
 
-public interface Perspective extends HasViewVisibilityChangedHandler, 
-HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
+public class MyCustomPerspective extends BasePerspective
 {
 
-   void openView(ViewEx view);
+   @Override
+   public void buildPerspective()
+   {
+      Panel navigationPanel = addPanel("navigation", PanelDirection.WEST, 300);
+      navigationPanel.acceptType("navigation");
 
-   void closeView(String viewId);
+      Panel informationPane = addPanel("information", PanelDirection.EAST, 200);
+      informationPane.acceptType("information");
+
+      Panel operationPanel = addPanel("operation", PanelDirection.SOUTH, 150);
+      operationPanel.acceptType("operation");
+
+      Panel editorPanel = addPanel("editor", PanelDirection.CENTER, 0);
+      editorPanel.acceptType("editor");
+   }
 
 }

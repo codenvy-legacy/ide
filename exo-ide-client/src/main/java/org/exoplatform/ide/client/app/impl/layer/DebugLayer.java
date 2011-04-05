@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.impl.layers;
+package org.exoplatform.ide.client.app.impl.layer;
 
 import org.exoplatform.gwtframework.ui.client.button.ext.IconButton;
 import org.exoplatform.ide.client.Log;
@@ -62,6 +62,7 @@ public class DebugLayer extends Layer
 
    public DebugLayer()
    {
+      super("debug");
       backgroundPanel = new AbsolutePanel();
       backgroundPanel.setVisible(false);
       DOM.setStyleAttribute(backgroundPanel.getElement(), "background", BACKGROUNG_COLOR);

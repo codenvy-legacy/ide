@@ -32,8 +32,13 @@ import com.google.gwt.user.client.ui.Widget;
 public class Layer extends AbsolutePanel
 {
 
-   public Layer()
+   private String layerId;
+
+   public Layer(String layerId)
    {
+      this.layerId = layerId;
+      DOM.setElementAttribute(getElement(), "layer-id", layerId);
+
       setWidth("0px");
       setHeight("0px");
       DOM.setStyleAttribute(getElement(), "overflow", "visible");
@@ -47,6 +52,11 @@ public class Layer extends AbsolutePanel
    public void add(Widget w)
    {
       super.add(w, 0, 0);
+   }
+
+   public String letLayerId()
+   {
+      return layerId;
    }
 
 }

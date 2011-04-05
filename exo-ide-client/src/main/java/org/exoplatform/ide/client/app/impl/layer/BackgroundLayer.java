@@ -16,13 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.api;
+package org.exoplatform.ide.client.app.impl.layer;
 
-import org.exoplatform.ide.client.framework.ui.gwt.HasClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.HasViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+import org.exoplatform.ide.client.app.impl.Layer;
+
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,12 +29,27 @@ import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
  * @version $
  */
 
-public interface Perspective extends HasViewVisibilityChangedHandler, 
-HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
+public class BackgroundLayer extends Layer
 {
 
-   void openView(ViewEx view);
+   private Image backgroundImage;
 
-   void closeView(String viewId);
+   public BackgroundLayer()
+   {
+      super("background");
+      backgroundImage = new Image("ide-background.jpg");
+      backgroundImage.setWidth("100%");
+      backgroundImage.setHeight("100%");
+      add(backgroundImage);
+   }
+
+   @Override
+   public void resize(int width, int height)
+   {
+      backgroundImage.setWidth(width + "px");
+      backgroundImage.setHeight(height + "px");
+
+      super.resize(width, height);
+   }
 
 }

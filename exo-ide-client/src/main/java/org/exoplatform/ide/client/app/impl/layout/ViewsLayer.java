@@ -16,21 +16,54 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.app.impl.layers;
+
+package org.exoplatform.ide.client.app.impl.layout;
 
 import org.exoplatform.ide.client.app.impl.Layer;
+import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
+
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class LoaderLayer extends Layer
+public class ViewsLayer extends Layer
 {
-   
-   public LoaderLayer() {
+
+   public class ViewContainer extends AbsolutePanel
+   {
+
+      public ViewContainer(ViewEx view)
+      {
+         DOM.setStyleAttribute(getElement(), "width", "100px");
+         DOM.setStyleAttribute(getElement(), "height", "100px");
+         DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+
+         if (view instanceof Widget)
+         {
+            add((Widget)view);
+         }
+      }
+
+   }
+
+   public ViewsLayer()
+   {
+      super("views");
+   }
+
+   public Widget addView(ViewEx view)
+   {
+      ViewContainer container = new ViewContainer(view);
+      add(container);
+      return container;
    }
 
 }

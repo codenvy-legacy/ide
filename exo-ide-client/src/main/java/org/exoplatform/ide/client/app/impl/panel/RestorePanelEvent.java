@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2011 eXo Platform SAS.
+/**
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -15,8 +15,14 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *
  */
+
 package org.exoplatform.ide.client.app.impl.panel;
+
+import org.exoplatform.ide.client.app.api.Panel;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * 
@@ -26,7 +32,33 @@ package org.exoplatform.ide.client.app.impl.panel;
  * @version $
  */
 
-public interface MinimizePanelHandler
+public class RestorePanelEvent extends GwtEvent<RestorePanelHandler>
 {
+
+   public static final GwtEvent.Type<RestorePanelHandler> TYPE = new GwtEvent.Type<RestorePanelHandler>();
+
+   private Panel panel;
+
+   public RestorePanelEvent(Panel panel)
+   {
+      this.panel = panel;
+   }
+
+   public Panel getPanel()
+   {
+      return panel;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<RestorePanelHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(RestorePanelHandler handler)
+   {
+      handler.onRestorePanel(this);
+   }
 
 }

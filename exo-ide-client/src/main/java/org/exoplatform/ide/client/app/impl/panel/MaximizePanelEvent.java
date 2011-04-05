@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2011 eXo Platform SAS.
+/**
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -15,15 +15,14 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *
  */
 
-package org.exoplatform.ide.client.app.impl.layers;
+package org.exoplatform.ide.client.app.impl.panel;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.exoplatform.ide.client.app.api.Panel;
 
-import org.exoplatform.ide.client.app.impl.Layer;
-import org.exoplatform.ide.client.app.impl.panel.PanelImpl;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * 
@@ -33,22 +32,33 @@ import org.exoplatform.ide.client.app.impl.panel.PanelImpl;
  * @version $
  */
 
-public class PanelsLayer extends Layer
+public class MaximizePanelEvent extends GwtEvent<MaximizePanelHandler>
 {
 
-   private Map<String, PanelImpl> panels = new HashMap<String, PanelImpl>();
+   public static final GwtEvent.Type<MaximizePanelHandler> TYPE = new GwtEvent.Type<MaximizePanelHandler>();
 
-   public PanelImpl addPanel(String panelId, String[] acceptableTypes)
+   private Panel panel;
+
+   public MaximizePanelEvent(Panel panel)
    {
-      PanelImpl panel = new PanelImpl(panelId, acceptableTypes);
-      add(panel);
-      panels.put(panel.getPanelId(), panel);
+      this.panel = panel;
+   }
+
+   public Panel getPanel()
+   {
       return panel;
    }
 
-   public Map<String, PanelImpl> getPanels()
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<MaximizePanelHandler> getAssociatedType()
    {
-      return panels;
+      return TYPE;
    }
 
+   @Override
+   protected void dispatch(MaximizePanelHandler handler)
+   {
+      handler.onMaximizePanel(this);
+   }
+   
 }

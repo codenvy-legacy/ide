@@ -16,15 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.exoplatform.ide.client.app.impl.panel;
 
-package org.exoplatform.ide.client.app.impl.layers;
-
-import org.exoplatform.ide.client.app.impl.Layer;
-import org.exoplatform.ide.client.framework.ui.gwt.ViewEx;
-
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * 
@@ -34,31 +28,9 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class ViewsLayer extends Layer
+public interface RestorePanelHandler extends EventHandler
 {
-
-   public class ViewWrapper extends AbsolutePanel
-   {
-
-      public ViewWrapper(ViewEx view)
-      {
-         DOM.setStyleAttribute(getElement(), "width", "100px");
-         DOM.setStyleAttribute(getElement(), "height", "100px");
-         DOM.setStyleAttribute(getElement(), "overflow", "hidden");
-
-         if (view instanceof Widget)
-         {
-            add((Widget)view);
-         }
-      }
-
-   }
-
-   public Widget openView(ViewEx view)
-   {
-      ViewWrapper wrapper = new ViewWrapper(view);
-      add(wrapper);
-      return wrapper;
-   }
+   
+   void onRestorePanel(RestorePanelEvent event);
 
 }

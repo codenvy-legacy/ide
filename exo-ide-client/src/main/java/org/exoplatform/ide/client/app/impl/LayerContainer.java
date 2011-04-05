@@ -33,8 +33,9 @@ public class LayerContainer extends Layer
 
    private List<Layer> layers = new ArrayList<Layer>();
 
-   public LayerContainer()
+   public LayerContainer(String layerId)
    {
+      super(layerId);
    }
 
    public void addLayer(Layer layer)
