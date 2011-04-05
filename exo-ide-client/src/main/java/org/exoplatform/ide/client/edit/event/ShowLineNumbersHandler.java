@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.edit.event;
+package org.exoplatform.ide.client.edit.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,33 +27,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class ShowLineNumbersEvent extends GwtEvent<ShowLineNumbersHandler>
+public interface ShowLineNumbersHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<ShowLineNumbersHandler> TYPE = new GwtEvent.Type<ShowLineNumbersHandler>();
-
-   private boolean showLineNumber;
-
-   public ShowLineNumbersEvent(boolean showLineNumber)
-   {
-      this.showLineNumber = showLineNumber;
-   }
-
-   @Override
-   protected void dispatch(ShowLineNumbersHandler handler)
-   {
-      handler.onShowLineNumbers(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowLineNumbersHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   public boolean isShowLineNumber()
-   {
-      return showLineNumber;
-   }
+   void onShowLineNumbers(ShowLineNumbersEvent event);
 
 }

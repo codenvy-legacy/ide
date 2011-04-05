@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.template;
+package org.exoplatform.ide.client.template.ui;
 
 import java.util.List;
 
@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.template.CreateProjectTemplatePresenter;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
@@ -118,7 +119,6 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
 
       createFileTemplateListLayout();
 
-
       createButtonsForm();
 
       show();
@@ -134,7 +134,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       fieldsLayout.setWidth("100%");
       fieldsLayout.getElement().setId(ID_NAME_FIELDS_FORM);
       fieldsLayout.setSpacing(1);
-      
+
       templateNameField = new TextField("TemplateName", "Name");
       templateNameField.setName(TEMPLATE_NAME_FIELD);
       templateNameField.setWidth(TEXT_FIELD_WIDTH);
@@ -163,7 +163,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       ScrollPanel treeWrapper = new ScrollPanel(templateTreeGrid);
       treeWrapper.setSize("360px", "150px");
       DOM.setStyleAttribute(treeWrapper.getElement(), "zIndex", "0");
-      DOM.setStyleAttribute(treeWrapper.getElement(), "border", "1px solid #A7ABB4") ;
+      DOM.setStyleAttribute(treeWrapper.getElement(), "border", "1px solid #A7ABB4");
 
       projectLayout.add(treeWrapper);
 

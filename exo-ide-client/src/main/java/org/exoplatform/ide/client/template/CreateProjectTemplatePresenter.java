@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.navigation.CreateFolderDisplay;
 import org.exoplatform.ide.client.navigation.ui.AbstractCreateFolderForm;
+import org.exoplatform.ide.client.template.ui.CreateFileFromTemplateForm;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -290,13 +291,13 @@ public class CreateProjectTemplatePresenter
          new CreateFileFromTemplateForm(eventBus, templateList, addFilePresenter)
          {
             @Override
-            String getCreateButtonTitle()
+            public String getCreateButtonTitle()
             {
                return "Add";
             }
 
             @Override
-            String getFormTitle()
+            public String getFormTitle()
             {
                return "Add file";
             }

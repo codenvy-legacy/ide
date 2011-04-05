@@ -16,40 +16,44 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.edit.event;
+package org.exoplatform.ide.client.edit.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs , when clients chooses to search text in editor.
+ * Created by The eXo Platform SAS .
  * 
- * Created by The eXo Platform SAS.
- *	
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   ${date} ${time}
- *
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public class FindTextEvent extends GwtEvent<FindTextHandler>
+
+public class ShowLineNumbersEvent extends GwtEvent<ShowLineNumbersHandler>
 {
-   
-   public static final GwtEvent.Type<FindTextHandler> TYPE = new GwtEvent.Type<FindTextHandler>();
-   
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(FindTextHandler handler)
+
+   public static final GwtEvent.Type<ShowLineNumbersHandler> TYPE = new GwtEvent.Type<ShowLineNumbersHandler>();
+
+   private boolean showLineNumber;
+
+   public ShowLineNumbersEvent(boolean showLineNumber)
    {
-      handler.onFindText(this);
+      this.showLineNumber = showLineNumber;
    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<FindTextHandler> getAssociatedType()
+   protected void dispatch(ShowLineNumbersHandler handler)
+   {
+      handler.onShowLineNumbers(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowLineNumbersHandler> getAssociatedType()
    {
       return TYPE;
+   }
+
+   public boolean isShowLineNumber()
+   {
+      return showLineNumber;
    }
 
 }

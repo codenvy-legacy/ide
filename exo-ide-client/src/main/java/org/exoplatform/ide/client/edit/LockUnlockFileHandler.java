@@ -16,13 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.edit;
+package org.exoplatform.ide.client.edit;
 
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.edit.event.LockFileEvent;
+import org.exoplatform.ide.client.edit.event.LockFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -39,8 +41,6 @@ import org.exoplatform.ide.client.framework.vfs.callback.ItemLockCallback;
 import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.module.edit.event.LockFileEvent;
-import org.exoplatform.ide.client.module.edit.event.LockFileHandler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -122,7 +122,7 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.edit.event.LockFileHandler#onLockFile(org.exoplatform.ide.client.module.edit.event.LockFileEvent)
+    * @see org.exoplatform.ide.client.edit.event.LockFileHandler#onLockFile(org.exoplatform.ide.client.edit.event.LockFileEvent)
     */
    public void onLockFile(LockFileEvent event)
    {

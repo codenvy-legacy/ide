@@ -18,16 +18,13 @@
  */
 package org.exoplatform.ide.client.project.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
-import org.exoplatform.ide.client.template.CreateProjectTemplateForm;
+import org.exoplatform.ide.client.template.ui.CreateProjectTemplateForm;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -41,7 +38,7 @@ public class CreateProjectTemplateCommandHandler implements CreateProjectTemplat
    public CreateProjectTemplateCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
+
       eventBus.addHandler(CreateProjectTemplateEvent.TYPE, this);
    }
 
@@ -52,21 +49,6 @@ public class CreateProjectTemplateCommandHandler implements CreateProjectTemplat
    {
       TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
       new CreateProjectTemplateForm(eventBus, defaultTemplates.getTemplates());
-      /*TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
-      {
-         
-         @Override
-         protected void onSuccess(TemplateList result)
-         {
-            new CreateProjectTemplateForm(eventBus, result.getTemplates());
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception));            
-         }
-      });*/
    }
-   
+
 }

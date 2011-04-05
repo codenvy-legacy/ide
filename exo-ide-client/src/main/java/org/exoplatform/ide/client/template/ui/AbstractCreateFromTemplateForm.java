@@ -16,9 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.template;
-
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
+package org.exoplatform.ide.client.template.ui;
 
 import java.util.List;
 
@@ -28,11 +26,14 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter;
+import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 

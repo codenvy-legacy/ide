@@ -16,20 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.edit.control;
+package org.exoplatform.ide.client.edit.control;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFormatTextEvent;
 import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
+import org.exoplatform.ide.editor.api.EditorCapability;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -40,22 +38,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class UndoTypingCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   EditorFileContentChangedHandler//, FileContentReceivedHandler
+public class FormatSourceCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "Edit/Undo Typing";
+   private static final String ID = "Edit/Format";
 
-   public static final String TITLE = "Undo Typing";
+   private static final String TITLE = "Format";
 
-   public UndoTypingCommand()
+   public FormatSourceCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setDelimiterBefore(true);
-      setImages(IDEImageBundle.INSTANCE.undo(), IDEImageBundle.INSTANCE.undoDisabled());
-      setEvent(new EditorUndoTypingEvent());
+      setImages(IDEImageBundle.INSTANCE.format(), IDEImageBundle.INSTANCE.formatDisabled());
+      setEvent(new EditorFormatTextEvent());
    }
    
    /**
@@ -64,38 +60,34 @@ public class UndoTypingCommand extends SimpleControl implements IDEControl, Edit
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
-//      eventBus.addHandler(FileContentReceivedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || (event.getFile() instanceof Version))
+      if (event.getFile() == null || event.getEditor() == null || (event.getFile() instanceof Version))
       {
          setVisible(false);
          setEnabled(false);
          return;
       }
 
-      setVisible(true);
-      if (event.getEditor() != null)
+      if (event.getEditor().isCapable(EditorCapability.FORMAT_SOURCE))
       {
-         setEnabled(event.getEditor().hasUndoChanges());
+         if (MimeType.TEXT_PLAIN.equals(event.getFile().getContentType()))
+         {
+            setVisible(false);
+            setEnabled(false);
+         }
+         else
+         {
+            setVisible(true);
+            setEnabled(true);
+         }
       }
       else
       {
+         setVisible(false);
          setEnabled(false);
       }
    }
-
-   public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
-   {
-      setEnabled(event.hasUndoChanges());
-   }
-
-//   public void onFileContentReceived(FileContentReceivedEvent event)
-//   {
-//      setVisible(true);
-//      setEnabled(false);
-//   }
 }

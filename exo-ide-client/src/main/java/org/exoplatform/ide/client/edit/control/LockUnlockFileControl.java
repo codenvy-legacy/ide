@@ -16,13 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.edit.control;
+package org.exoplatform.ide.client.edit.control;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.edit.event.LockFileEvent;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -37,7 +38,6 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEven
 import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
-import org.exoplatform.ide.client.module.edit.event.LockFileEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

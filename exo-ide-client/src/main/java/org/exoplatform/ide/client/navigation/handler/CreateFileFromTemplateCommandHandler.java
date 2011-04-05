@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -32,18 +33,14 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler;
-import org.exoplatform.ide.client.template.CreateFileFromTemplateForm;
 import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
+import org.exoplatform.ide.client.template.ui.CreateFileFromTemplateForm;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 

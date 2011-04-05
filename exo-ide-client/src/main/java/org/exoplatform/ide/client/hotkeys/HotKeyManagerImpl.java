@@ -28,13 +28,13 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
+import org.exoplatform.ide.client.edit.control.FindTextCommand;
+import org.exoplatform.ide.client.edit.control.GoToLineControl;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
-import org.exoplatform.ide.client.module.edit.control.DeleteCurrentLineControl;
-import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
-import org.exoplatform.ide.client.module.edit.control.GoToLineControl;
 import org.exoplatform.ide.client.navigation.control.SaveFileCommand;
 import org.exoplatform.ide.client.navigation.control.newitem.CreateFileFromTemplateControl;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;

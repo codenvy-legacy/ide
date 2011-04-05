@@ -16,23 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.edit.event;
+package org.exoplatform.ide.client.edit.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event occurs , when clients chooses to search text in editor.
+ * 
  * Created by The eXo Platform SAS.
  *	
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:   ${date} ${time}
  *
  */
-public interface FindTextHandler extends EventHandler
+public class FindTextEvent extends GwtEvent<FindTextHandler>
 {
    
-   /**
-    * @param event event
-    */
-   void onFindText(FindTextEvent event);
+   public static final GwtEvent.Type<FindTextHandler> TYPE = new GwtEvent.Type<FindTextHandler>();
    
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(FindTextHandler handler)
+   {
+      handler.onFindText(this);
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<FindTextHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
 }

@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -43,17 +46,14 @@ import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
-import org.exoplatform.ide.client.template.CreateFileFromTemplateForm;
 import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
-import org.exoplatform.ide.client.template.CreateProjectFromTemplateForm;
 import org.exoplatform.ide.client.template.CreateProjectFromTemplatePresenter;
-import org.exoplatform.ide.client.template.CreateProjectTemplateForm;
+import org.exoplatform.ide.client.template.ui.CreateFileFromTemplateForm;
+import org.exoplatform.ide.client.template.ui.CreateProjectFromTemplateForm;
+import org.exoplatform.ide.client.template.ui.CreateProjectTemplateForm;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 

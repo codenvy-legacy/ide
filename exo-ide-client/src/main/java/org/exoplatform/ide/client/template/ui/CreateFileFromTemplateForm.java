@@ -16,14 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.template;
+package org.exoplatform.ide.client.template.ui;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -58,7 +59,7 @@ public class CreateFileFromTemplateForm extends AbstractCreateFromTemplateForm<F
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#getCreateButtonTitle()
     */
    @Override
-   String getCreateButtonTitle()
+   public String getCreateButtonTitle()
    {
       return "Create";
    }
@@ -67,7 +68,7 @@ public class CreateFileFromTemplateForm extends AbstractCreateFromTemplateForm<F
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#getFormTitle()
     */
    @Override
-   String getFormTitle()
+   public String getFormTitle()
    {
       return "Create file";
    }

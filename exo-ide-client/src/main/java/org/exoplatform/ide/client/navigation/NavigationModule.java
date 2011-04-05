@@ -110,7 +110,7 @@ import org.exoplatform.ide.client.navigation.ui.RenameItemForm;
 import org.exoplatform.ide.client.project.control.CreateProjectFromTemplateControl;
 import org.exoplatform.ide.client.project.control.CreateProjectTemplateControl;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
-import org.exoplatform.ide.client.template.SaveAsTemplateForm;
+import org.exoplatform.ide.client.template.ui.SaveAsTemplateForm;
 import org.exoplatform.ide.client.upload.OpenFileByPathForm;
 import org.exoplatform.ide.client.upload.OpenLocalFileForm;
 import org.exoplatform.ide.client.upload.UploadFileForm;

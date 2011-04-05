@@ -16,8 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.module.edit;
+package org.exoplatform.ide.client.edit;
 
+import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
+import org.exoplatform.ide.client.edit.control.FindTextCommand;
+import org.exoplatform.ide.client.edit.control.FormatSourceCommand;
+import org.exoplatform.ide.client.edit.control.GoToLineControl;
+import org.exoplatform.ide.client.edit.control.LockUnlockFileControl;
+import org.exoplatform.ide.client.edit.control.RedoTypingCommand;
+import org.exoplatform.ide.client.edit.control.ShowLineNumbersCommand;
+import org.exoplatform.ide.client.edit.control.UndoTypingCommand;
+import org.exoplatform.ide.client.edit.event.FindTextEvent;
+import org.exoplatform.ide.client.edit.event.FindTextHandler;
+import org.exoplatform.ide.client.edit.event.GoToLineEvent;
+import org.exoplatform.ide.client.edit.event.GoToLineHandler;
+import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
+import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.edit.ui.GoToLineForm;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
@@ -31,20 +45,6 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSa
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.client.module.edit.control.DeleteCurrentLineControl;
-import org.exoplatform.ide.client.module.edit.control.FindTextCommand;
-import org.exoplatform.ide.client.module.edit.control.FormatSourceCommand;
-import org.exoplatform.ide.client.module.edit.control.GoToLineControl;
-import org.exoplatform.ide.client.module.edit.control.LockUnlockFileControl;
-import org.exoplatform.ide.client.module.edit.control.RedoTypingCommand;
-import org.exoplatform.ide.client.module.edit.control.ShowLineNumbersCommand;
-import org.exoplatform.ide.client.module.edit.control.UndoTypingCommand;
-import org.exoplatform.ide.client.module.edit.event.FindTextEvent;
-import org.exoplatform.ide.client.module.edit.event.FindTextHandler;
-import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
-import org.exoplatform.ide.client.module.edit.event.GoToLineHandler;
-import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersEvent;
-import org.exoplatform.ide.client.module.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.search.text.FindTextForm;
 import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
 

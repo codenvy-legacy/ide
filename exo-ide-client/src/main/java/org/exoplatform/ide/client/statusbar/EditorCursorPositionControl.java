@@ -20,13 +20,13 @@ package org.exoplatform.ide.client.statusbar;
 
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.text.TextButton.TextAlignment;
+import org.exoplatform.ide.client.edit.event.GoToLineEvent;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.module.edit.event.GoToLineEvent;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
