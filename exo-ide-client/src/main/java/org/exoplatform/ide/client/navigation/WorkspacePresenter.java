@@ -149,12 +149,12 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       void setLockTokens(Map<String, String> locktokens);
       
       /**
-       * 
+       * Add info icons to main item icon
        */
       void addItemsIcons(Map<Item, Map<TreeIconPosition, String>> itemsIcons);
       
       /**
-       * 
+       * Remove info icon from item
        */
       void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
 

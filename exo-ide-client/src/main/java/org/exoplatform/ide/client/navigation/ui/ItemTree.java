@@ -186,7 +186,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          if (!locktokens.containsKey(item.getHref()))
          {
             title +=
-               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-12px; margin-top:3px;\"  border=\"0\" suppress=\"TRUE\" src=\""
+               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-11px; margin-top:3px;\"  border=\"0\" suppress=\"TRUE\" src=\""
                   + UIHelper.getGadgetImagesURL() + "navigation/lock.png" + "\" />&nbsp;&nbsp;";
          }
       }
@@ -244,6 +244,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    }
 
    /**
+    * Select item by path
     * @param path
     */
    public void selectItem(String path)
@@ -257,7 +258,8 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    }
 
    /**
-    * @return
+    * Get all selected items
+    * @return  List of selected items
     */
    public List<Item> getSelectedItems()
    {
@@ -286,6 +288,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    }
 
    /**
+    * Set lock token map
     * @param locktokens
     */
    public void setLocktokens(Map<String, String> locktokens)
@@ -294,7 +297,8 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    }
 
    /**
-    * @param path
+    * Remove selection by Item path
+    * @param path Item path
     */
    public void deselectItem(String path)
    {
@@ -306,7 +310,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    }
 
    /**
-    * 
+    * Remove selection from all selected items
     */
    public void deselectAllRecords()
    {
@@ -314,6 +318,10 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          tree.getSelectedItem().setSelected(false);
    }
 
+   /**
+    * Add info icons to Item main icon
+    * @param itemsIcons Map of Item, info icon position and info icon URL
+    */
    public void addItemsIcons(Map<Item, Map<TreeIconPosition, String>> itemsIcons)
    {
       for (Item item : itemsIcons.keySet())
@@ -330,6 +338,10 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       }
    }
 
+   /**
+    * Remove info icon from Item main icon
+    * @param itemsIcons Map of item and position of info icon
+    */
    public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)
    {
       for (Item item : itemsIcons.keySet())
