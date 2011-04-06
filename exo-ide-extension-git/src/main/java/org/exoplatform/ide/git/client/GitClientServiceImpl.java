@@ -27,9 +27,14 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.git.client.marshaller.AddRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.BranchListRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.BranchListUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.CloneRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.CommitRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.InitRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.PushRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.RemoteListRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.RemoteListUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.RevisionUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.StatusRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
@@ -37,11 +42,19 @@ import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponseUnmarshaller;
 import org.exoplatform.ide.git.shared.AddRequest;
+import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
 import org.exoplatform.ide.git.shared.InitRequest;
+import org.exoplatform.ide.git.shared.PushRequest;
+import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.git.shared.RemoteListRequest;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.StatusRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of the {@link GitClientService}.
@@ -55,14 +68,20 @@ public class GitClientServiceImpl extends GitClientService
    public static final String ADD = "/ide/git/add";
 
    public static final String CLONE = "/ide/git/clone";
-   
+
    public static final String COMMIT = "/ide/git/commit";
+   
+   public static final String BRANCH_LIST = "/ide/git/branch-list";
 
    public static final String INIT = "/ide/git/init";
 
    public static final String STATUS = "/ide/git/status";
 
    public static final String GET_WORKDIR = "/ide/git-repo/workdir";
+   
+   public static final String PUSH = "/ide/git/push";
+
+   public static final String REMOTE_LIST = "/ide/git/remote-list";
 
    private HandlerManager eventBus;
 
@@ -177,7 +196,7 @@ public class GitClientServiceImpl extends GitClientService
       String url = restServiceContext + ADD;
       String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
-      
+
       AddRequest addRequest = new AddRequest(filePattern, update);
       AddRequestMarshaller marshaller = new AddRequestMarshaller(addRequest);
 
@@ -196,16 +215,92 @@ public class GitClientServiceImpl extends GitClientService
       String url = restServiceContext + COMMIT;
       String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
-      
+
       CommitRequest commitRequest = new CommitRequest(message);
       CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
-      
+
       Revision revision = new Revision(null, message, 0, null);
       RevisionUnmarshaller unmarshaller = new RevisionUnmarshaller(revision);
-      
+
       callback.setPayload(unmarshaller);
       callback.setResult(revision);
+
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#push(java.lang.String, java.lang.String[], java.lang.String, boolean)
+    */
+   @Override
+   public void push(String href, String[] refSpec, String remote, boolean force, AsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext + PUSH;
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+      PushRequest pushRequest = new PushRequest();
+      pushRequest.setRemote(remote);
+      pushRequest.setRefSpec(refSpec);
+      pushRequest.setForce(force);
       
+      PushRequestMarshaller marshaller = new PushRequestMarshaller(pushRequest);
+      
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#remoteList(java.lang.String, java.lang.String, boolean)
+    */
+   @Override
+   public void remoteList(String href, String remoteName, boolean verbose, AsyncRequestCallback<List<Remote>> callback)
+   {
+      String url = restServiceContext + REMOTE_LIST;
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+
+      List<Remote> remotes = new ArrayList<Remote>();
+      RemoteListRequest remoteListRequest = new RemoteListRequest(remoteName, verbose);
+      RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller(remotes);
+      RemoteListRequestMarshaller marshaller = new RemoteListRequestMarshaller(remoteListRequest);
+
+      callback.setPayload(unmarshaller);
+      callback.setResult(remotes);
+
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#branchList(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void branchList(String href, boolean remote, AsyncRequestCallback<List<Branch>> callback)
+   {
+      String url = restServiceContext + BRANCH_LIST;
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+
+      BranchListRequest branchListRequest = new BranchListRequest();
+      if (remote)
+      {
+         branchListRequest.setListMode(BranchListRequest.LIST_REMOTE);
+      }
+      
+      
+      BranchListRequestMarshaller marshaller = new BranchListRequestMarshaller(branchListRequest);
+      List<Branch> branches = new ArrayList<Branch>();
+      
+      BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller(branches);
+      callback.setPayload(unmarshaller);
+      callback.setResult(branches);
+
       String params = "workdir=" + workDir;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)

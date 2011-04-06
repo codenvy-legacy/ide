@@ -24,42 +24,41 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
+import org.exoplatform.ide.git.client.push.PushToRemoteEvent;
 
 /**
- * Control for showing the status of the Git working tree.
+ * Control for pushing changes from local repository to remote one.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 2:57:35 PM anya $
+ * @version $Id:  Apr 4, 2011 9:27:56 AM anya $
  *
  */
-public class ShowStatusControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class PushToRemoteControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
    /**
     * Control ID.
     */
-   public static final String ID = "Git/Status";
+   public static final String ID = "Git/Push";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Show Status";
+   public static final String TITLE = "Push";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Show the work tree status";
-
-   public ShowStatusControl()
+   public static final String PROMPT = "Push changes to remote repository.";
+   
+   
+   public PushToRemoteControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new ShowWorkTreeStatusEvent());
-      setImages(GitClientBundle.INSTANCE.status(), GitClientBundle.INSTANCE.statusDisabled());
-      setDelimiterBefore(true);
+      setEvent(new PushToRemoteEvent());
    }
+
 
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
@@ -67,9 +66,10 @@ public class ShowStatusControl extends SimpleControl implements IDEControl, Item
    @Override
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       setVisible(true);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
+
 
    /**
     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
@@ -84,4 +84,5 @@ public class ShowStatusControl extends SimpleControl implements IDEControl, Item
       }
       setEnabled(true);
    }
+
 }

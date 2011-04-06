@@ -32,8 +32,10 @@ import org.exoplatform.ide.git.client.control.AddToIndexControl;
 import org.exoplatform.ide.git.client.control.CloneRepositoryControl;
 import org.exoplatform.ide.git.client.control.CommitControl;
 import org.exoplatform.ide.git.client.control.InitRepositoryControl;
+import org.exoplatform.ide.git.client.control.PushToRemoteControl;
 import org.exoplatform.ide.git.client.control.ShowStatusControl;
 import org.exoplatform.ide.git.client.create.InitRepositoryPresenter;
+import org.exoplatform.ide.git.client.push.PushToRemotePresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
 
 /**
@@ -61,6 +63,8 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new CloneRepositoryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new AddToIndexControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CommitControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new PushToRemoteControl(), DockTarget.NONE, false);
+      
       IDE.getInstance().addControl(new ShowStatusControl(), DockTarget.NONE, false);
       
       //Create presenters:
@@ -69,6 +73,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new StatusCommandHandler(eventBus);
       new AddToIndexPresenter(eventBus);
       new CommitPresenter(eventBus);
+      new PushToRemotePresenter(eventBus);
    }
 
    /**

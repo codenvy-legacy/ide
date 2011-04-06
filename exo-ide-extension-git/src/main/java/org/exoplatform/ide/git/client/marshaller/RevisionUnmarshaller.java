@@ -23,7 +23,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.Revision;
 
@@ -32,14 +31,14 @@ import org.exoplatform.ide.git.shared.Revision;
  * @version $Id:  Mar 31, 2011 11:15:57 AM anya $
  *
  */
-public class RevisionUnmarshaller implements Unmarshallable, Constants
+public class RevisionUnmarshaller extends JSONUmarshaller
 {
-   
+
    /**
     * Represents revision info.
     */
    private Revision revision;
-   
+
    /**
     * @param revision revision information
     */
@@ -47,8 +46,7 @@ public class RevisionUnmarshaller implements Unmarshallable, Constants
    {
       this.revision = revision;
    }
-   
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
@@ -61,46 +59,32 @@ public class RevisionUnmarshaller implements Unmarshallable, Constants
       JSONObject revisionObject = new JSONObject(json);
       if (revisionObject == null)
          return;
-      
-      String id = (revisionObject.get(ID) != null && revisionObject.get(ID).isString() != null) ? revisionObject.get(ID).isString().stringValue() : "";
+
+      String id =
+         (revisionObject.get(ID) != null && revisionObject.get(ID).isString() != null) ? revisionObject.get(ID)
+            .isString().stringValue() : "";
       revision.setId(id);
-      String message = (revisionObject.get(MESSAGE) != null && revisionObject.get(MESSAGE).isString() != null) ? revisionObject.get(MESSAGE).isString().stringValue() : "";
+      String message =
+         (revisionObject.get(MESSAGE) != null && revisionObject.get(MESSAGE).isString() != null) ? revisionObject
+            .get(MESSAGE).isString().stringValue() : "";
       revision.setMessage(message);
-      long commitTime = (long)((revisionObject.get(COMMIT_TIME) != null && revisionObject.get(COMMIT_TIME).isNumber() != null) ? revisionObject.get(COMMIT_TIME).isNumber().doubleValue() : 0);
-      System.out.println("RevisionUnmarshaller.unmarshal()"+commitTime);
+      long commitTime =
+         (long)((revisionObject.get(COMMIT_TIME) != null && revisionObject.get(COMMIT_TIME).isNumber() != null)
+            ? revisionObject.get(COMMIT_TIME).isNumber().doubleValue() : 0);
+      System.out.println("RevisionUnmarshaller.unmarshal()" + commitTime);
       revision.setCommitTime(commitTime);
-      if (revisionObject.get(COMMITTER) != null && revisionObject.get(COMMITTER).isObject() != null) 
+      if (revisionObject.get(COMMITTER) != null && revisionObject.get(COMMITTER).isObject() != null)
       {
          JSONObject committerObject = revisionObject.get(COMMITTER).isObject();
-         String name = (committerObject.containsKey(NAME) && committerObject.get(NAME).isString() != null) ? committerObject.get(NAME).isString().stringValue() : "";
-         String email = (committerObject.containsKey(EMAIL) && committerObject.get(EMAIL).isString() != null) ? committerObject.get(EMAIL).isString().stringValue() : "";
-         
+         String name =
+            (committerObject.containsKey(NAME) && committerObject.get(NAME).isString() != null) ? committerObject
+               .get(NAME).isString().stringValue() : "";
+         String email =
+            (committerObject.containsKey(EMAIL) && committerObject.get(EMAIL).isString() != null) ? committerObject
+               .get(EMAIL).isString().stringValue() : "";
+
          GitUser gitUser = new GitUser(name, email);
          revision.setCommitter(gitUser);
       }
    }
-   
-   
-   
-   /**
-    * Build {@link JavaScriptObject} from string.
-    * 
-    * @param json string that contains object
-    * @return {@link JavaScriptObject}
-    */
-   private static native JavaScriptObject build(String json) /*-{
-      try 
-      {
-         var object = eval('(' + json + ')');
-         return object;
-      } catch (e)
-      {
-         return null;
-      }
-   }-*/;
-   
- /*  
-   {"id":"dd19fd2339ce8574c99e8714eb79f033ec75123a","message":"222","commitTime":1301564088000,"committer":{"email":"","name":"root"}}
-   */
-   
 }

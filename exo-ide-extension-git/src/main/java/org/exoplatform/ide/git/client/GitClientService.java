@@ -21,7 +21,11 @@ package org.exoplatform.ide.git.client;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
+import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.Revision;
+
+import java.util.List;
 
 /**
  * Service contains methods for working with Git repository from client side.
@@ -66,6 +70,29 @@ public abstract class GitClientService
    public abstract void add(String workDir, boolean update, String[] filePattern, AsyncRequestCallback<String> callback);
    
    /**
+    * Get the list of the branches.
+    * For now, all branches cannot be returned at once, so
+    * the parameter <code>remote</code> tells to get remote branches 
+    * if <code>true</code> or local ones (if <code>false</code>).
+    * 
+    * @param workDir location of Git repository working directory
+    * @param remote get remote branches
+    * @param callback callback
+    */ 
+   public abstract void branchList(String workDir, boolean remote, AsyncRequestCallback<List<Branch>> callback);
+   
+   /**
+    * Get the list of remote repositories for pointed by <code>workDir</code> parameter one.
+    * 
+    * @param workDir  location of Git repository working directory
+    * @param remoteName remote repository's name
+    * @param verbose If <code>true</code> show remote url and name otherwise show remote name
+    * @param callback callback
+    */
+   public abstract void remoteList(String workDir, String remoteName, boolean verbose, AsyncRequestCallback<List<Remote>> callback);
+   
+   
+   /**
     * Initializes new Git repository.
     * 
     * @param workDir working directory of the new repository
@@ -73,6 +100,20 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void init(String workDir, boolean bare, AsyncRequestCallback<String> callback);
+   
+   /**
+    * Push changes from local repository to remote one.
+    * 
+    * @param workDir location of Git repository working directory
+    * @param refSpec list of refspec to push
+    * @param remote remote repository name or url
+    * @param force  push refuses to update a remote ref that is not 
+    * an ancestor of the local ref used to overwrite it. If <code>true</code> disables the check. 
+    * This can cause the remote repository to lose commits
+    * @param callback callback
+    */
+   public abstract void push(String workDir, String[] refSpec, String remote, boolean force, AsyncRequestCallback<String> callback);
+   
    
    /**
     * Clones one remote repository to local one.

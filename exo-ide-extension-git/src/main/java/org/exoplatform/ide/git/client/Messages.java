@@ -34,6 +34,8 @@ public interface Messages
    public static final String ADD_SUCCESS = "Successfully added to index.";
 
    public static final String ADD_FAILED = "Failed on adding changes to index.";
+   
+   public static final String BRANCHES_LIST_FAILED = "Failed on getting branches list.";
 
    public static final String CLONE_SUCCESS = "Repository was successfully cloned.";
 
@@ -46,6 +48,12 @@ public interface Messages
    public static final String INIT_SUCCESS = "Repository was successfully initialized.";
 
    public static final String INIT_FAILED = "Init repository failed.";
+   
+   public static final String PUSH_SUCCESS = "Successfully pushed to remote repository.";
+   
+   public static final String PUSH_FAIL = "Push to remote repository failed.";
+   
+   public static final String REMOTE_LIST_FAILED = "No remote repositories are found.";
    
    public static final String REPOSITORY_ALREADY_EXISTS = "Git repository already exists in this folder or parent one.";
    

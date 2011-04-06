@@ -27,6 +27,8 @@ package org.exoplatform.ide.git.client.marshaller;
  */
 public interface Constants
 {
+   public static final String ACTIVE = "active";
+   
    public static final String ID = "id";
    
    public static final String COMMIT_TIME = "commitTime";
@@ -37,15 +39,25 @@ public interface Constants
    
    public static final String NAME = "name";
    
+   public static final String DISPLAY_NAME = "displayName";
+   
    public static final String WORKNG_DIR = "workingDir";
 
    public static final String BARE = "bare";
    
+   public static final String FORCE = "force";
+   
+   public static final String LIST_MODE = "listMode";
+   
    public static final String MESSAGE = "message";
+   
+   public static final String REMOTE = "remote";
 
    public static final String REMOTE_URI = "remoteUri";
    
    public static final String REMOTE_NAME = "remoteName";
+   
+   public static final String REF_SPEC = "refSpec";
    
    public static final String SHORT_FORMAT = "shortFormat";
    
@@ -54,5 +66,9 @@ public interface Constants
    public static final String FILE_PATTERN = "filepattern";
    
    public static final String UPDATE = "update";
+   
+   public static final String URL = "url";
+   
+   public static final String VERBOSE = "verbose";
    
 }

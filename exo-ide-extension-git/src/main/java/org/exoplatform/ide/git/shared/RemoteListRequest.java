@@ -38,7 +38,16 @@ public class RemoteListRequest extends GitRequest
     * remotes.
     */
    private String remote;
-
+   
+   /**
+    * "Empty" remote list request. Corresponding setters used to setup required
+    * parameters.
+    */
+   public RemoteListRequest()
+   {
+      
+   }
+   
    /**
     * @param remote remote name. May be <code>null</code> if need to get info
     *           about all remotes
