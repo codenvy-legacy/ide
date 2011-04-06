@@ -315,7 +315,7 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
    /**
     * Set the value to name field, based on selected template.
     */
-   abstract void setNewInstanceName();
+   protected abstract void setNewInstanceName();
    
    /**
     * Updates template list with new values.
@@ -324,12 +324,12 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
     * that they are interested in.
     * @param templates - the list of all templates.
     */
-   abstract void updateTemplateList(List<Template> templates);
+   protected abstract void updateTemplateList(List<Template> templates);
    
    /**
     * Call, when create button pressed (or when double clicked on template).
     * Create new instance of selected template.
     */
-   abstract void submitTemplate();
+   public abstract void submitTemplate();
 
 }

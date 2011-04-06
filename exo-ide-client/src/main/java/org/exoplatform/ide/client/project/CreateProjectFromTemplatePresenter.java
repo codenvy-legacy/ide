@@ -16,9 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.template;
+package org.exoplatform.ide.client.project;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -34,13 +35,13 @@ import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.util.ImageUtil;
+import org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter;
 import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
 import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -51,6 +52,7 @@ import java.util.List;
 
 public class CreateProjectFromTemplatePresenter extends AbstractCreateFromTemplatePresenter<ProjectTemplate>
 {
+   
    private List<FileTemplate> fileTemplateList = new ArrayList<FileTemplate>();
    
    private List<Folder> folderList = new ArrayList<Folder>();
@@ -89,7 +91,7 @@ public class CreateProjectFromTemplatePresenter extends AbstractCreateFromTempla
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#updateTemplateList(java.util.List)
     */
    @Override
-   void updateTemplateList(List<Template> templates)
+   protected void updateTemplateList(List<Template> templates)
    {
       templateList.clear();
       fileTemplateList.clear();
@@ -150,7 +152,7 @@ public class CreateProjectFromTemplatePresenter extends AbstractCreateFromTempla
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#setNewInstanceName()
     */
    @Override
-   void setNewInstanceName()
+   protected void setNewInstanceName()
    {
       display.getNameField().setValue(selectedTemplates.get(0).getName());
    }
@@ -159,7 +161,7 @@ public class CreateProjectFromTemplatePresenter extends AbstractCreateFromTempla
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#submitTemplate()
     */
    @Override
-   void submitTemplate()
+   public void submitTemplate()
    {
       String projectName = display.getNameField().getValue();
 

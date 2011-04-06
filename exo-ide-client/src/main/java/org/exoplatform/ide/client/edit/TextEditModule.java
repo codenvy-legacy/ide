@@ -19,13 +19,13 @@
 package org.exoplatform.ide.client.edit;
 
 import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
-import org.exoplatform.ide.client.edit.control.FindTextCommand;
-import org.exoplatform.ide.client.edit.control.FormatSourceCommand;
+import org.exoplatform.ide.client.edit.control.FindTextControl;
+import org.exoplatform.ide.client.edit.control.FormatSourceControl;
 import org.exoplatform.ide.client.edit.control.GoToLineControl;
 import org.exoplatform.ide.client.edit.control.LockUnlockFileControl;
-import org.exoplatform.ide.client.edit.control.RedoTypingCommand;
-import org.exoplatform.ide.client.edit.control.ShowLineNumbersCommand;
-import org.exoplatform.ide.client.edit.control.UndoTypingCommand;
+import org.exoplatform.ide.client.edit.control.RedoTypingControl;
+import org.exoplatform.ide.client.edit.control.ShowLineNumbersControl;
+import org.exoplatform.ide.client.edit.control.UndoTypingControl;
 import org.exoplatform.ide.client.edit.event.FindTextEvent;
 import org.exoplatform.ide.client.edit.event.FindTextHandler;
 import org.exoplatform.ide.client.edit.event.GoToLineEvent;
@@ -45,7 +45,6 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSa
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.client.search.text.FindTextForm;
 import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -55,8 +54,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class TextEditModule implements FindTextHandler, GoToLineHandler,
-   ShowLineNumbersHandler, ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler
+public class TextEditModule implements GoToLineHandler, ShowLineNumbersHandler,
+   ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler
 {
    private HandlerManager eventBus;
 
@@ -68,27 +67,27 @@ public class TextEditModule implements FindTextHandler, GoToLineHandler,
    {
       this.eventBus = eventBus;
 
-      eventBus.fireEvent(new RegisterControlEvent(new UndoTypingCommand(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new RedoTypingCommand(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new FormatSourceCommand(), DockTarget.TOOLBAR));
+      eventBus.fireEvent(new RegisterControlEvent(new UndoTypingControl(), DockTarget.TOOLBAR));
+      eventBus.fireEvent(new RegisterControlEvent(new RedoTypingControl(), DockTarget.TOOLBAR));
+      eventBus.fireEvent(new RegisterControlEvent(new FormatSourceControl(), DockTarget.TOOLBAR));
 
-      eventBus.fireEvent(new RegisterControlEvent(new FindTextCommand(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new ShowLineNumbersCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new FindTextControl(), DockTarget.TOOLBAR));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowLineNumbersControl()));
       eventBus.fireEvent(new RegisterControlEvent(new DeleteCurrentLineControl()));
       eventBus.fireEvent(new RegisterControlEvent(new GoToLineControl()));
 
       eventBus.fireEvent(new RegisterControlEvent(new EditorCursorPositionControl(), DockTarget.STATUSBAR, true));
-      
+
       eventBus.fireEvent(new RegisterControlEvent(new LockUnlockFileControl(), DockTarget.TOOLBAR));
 
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      
+
       eventBus.addHandler(ShowLineNumbersEvent.TYPE, this);
-      eventBus.addHandler(FindTextEvent.TYPE, this);
       eventBus.addHandler(GoToLineEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      
+
       new LockUnlockFileHandler(eventBus);
+      new FindTextPresenter(eventBus);
    }
 
    /**
@@ -102,14 +101,6 @@ public class TextEditModule implements FindTextHandler, GoToLineHandler,
        * fire event for show-hide line numbers command be able to update state.
        */
       eventBus.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.event.edit.FindTextHandler#onFindText(org.exoplatform.ide.client.event.edit.FindTextEvent)
-    */
-   public void onFindText(FindTextEvent event)
-   {
-      new FindTextForm(eventBus, activeFile);
    }
 
    public void onGoToLine(GoToLineEvent event)

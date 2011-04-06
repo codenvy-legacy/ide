@@ -16,24 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.search.text;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+package org.exoplatform.ide.client.edit.ui;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.search.Search;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS.
@@ -42,14 +43,14 @@ import org.exoplatform.ide.client.search.Search;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextForm extends DialogWindow implements FindTextPresenter.Display
+public class FindTextView extends ViewImpl implements org.exoplatform.ide.client.edit.FindTextPresenter.Display
 {
 
-   private static final int WIDTH = 470;
+   private static final int DEFAULT_WIDTH = 470;
 
-   private static final int HEIGHT = 240;
+   private static final int DEFAULT_HEIGHT = 220;
 
-   private final int BUTTON_WIDTH = 90;
+   private final int BUTTON_WIDTH = 100;
 
    private final int BUTTON_HEIGHT = 22;
 
@@ -67,8 +68,6 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
 
    private final String CASE_SENSITIVE_FIELD = "ideFindReplaceTextFormCaseSensitiveField";
 
-   private final String ID_DYNAMIC_FORM = "ideFindReplaceTextFormDynamicForm";
-
    private final String ID_FIND_BUTTON = "ideFindReplaceTextFormFindButton";
 
    private final String ID_REPLACE_FIND_BUTTON = "ideFindReplaceTextFormReplaceFindButton";
@@ -78,8 +77,6 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
    private final String ID_REPLACE_ALL_BUTTON = "ideFindReplaceTextFormReplaceAllButton";
 
    private final String ID_CANCEL_BUTTON = "ideFindReplaceTextFormCancelButton";
-
-   private final String TITLE = "Find/Replace";
 
    private IButton findButton;
 
@@ -99,65 +96,46 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
 
    private Label findResultLabel;
 
-   private FindTextPresenter presenter;
+   private VerticalPanel layout;
 
-   /**
-    * @param eventBus
-    * @param width
-    * @param height
-    */
-   public FindTextForm(HandlerManager eventBus, File activeFile)
+   public FindTextView()
    {
-      super(WIDTH, HEIGHT, Search.FORM_ID);
-      setTitle(TITLE);
-      setModal(false);
+      super(ID, "popup", "Find/Replace", new Image(IDEImageBundle.INSTANCE.findText()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
-      VerticalPanel mainLayout = new VerticalPanel();
-      mainLayout.setWidth("100%");
-      mainLayout.setHeight("100%");
-      mainLayout.setVerticalAlignment(VerticalPanel.ALIGN_MIDDLE);
-      mainLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
-      DOM.setStyleAttribute(mainLayout.getElement(), "padding", "10");
+      layout = new VerticalPanel();
+      layout.setSize("100%", "100%");
+      layout.setVerticalAlignment(VerticalPanel.ALIGN_MIDDLE);
+      layout.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+      layout.setSpacing(BUTTONS_SPACE);
+      add(layout);
 
-      VerticalPanel inputForm = createFindForm();
-      mainLayout.add(inputForm);
-      mainLayout.setCellHorizontalAlignment(inputForm, HorizontalPanel.ALIGN_CENTER);
-      mainLayout.add(createButtonsLayout());
-
-      HorizontalPanel hLayout = new HorizontalPanel();
-      hLayout.setSpacing(BUTTONS_SPACE);
-      hLayout.setHeight(BUTTON_HEIGHT + "px");
-      hLayout.add(createFindResultLabel());
-      hLayout.add(cancelButton);
-
-      mainLayout.add(hLayout);
-
-      setWidget(mainLayout);
-
-      show();
-
-      presenter = new FindTextPresenter(eventBus, activeFile);
-      presenter.bindDisplay(this);
-
-      findField.focusInItem();
+      createTextFields();
+      createButtons();
+      createBottomPanel();
    }
 
-   private Label createFindResultLabel()
+   private Widget getDelimiter()
    {
-      findResultLabel = new Label();
-      findResultLabel.setID(ID_FIND_RESULT);
-      findResultLabel.setHeight("" + BUTTON_HEIGHT);
-      findResultLabel.setWidth("319px");
-      findResultLabel.setValue("");
-      return findResultLabel;
+      FlowPanel delimiter = new FlowPanel();
+      delimiter.setSize("5px", "5px");
+      return delimiter;
    }
 
-   /**
-    * Create layout for buttons
-    * 
-    * @return {@link VerticalPanel}
-    */
-   protected VerticalPanel createButtonsLayout()
+   private void createTextFields()
+   {
+      findField = createTextField("Find", FIND_FIELD);
+      replaceField = createTextField("Replace with", REPLACE_FIELD);
+
+      caseSensitiveField = createCheckBoxItem("Case sensitive", CASE_SENSITIVE_FIELD);
+      DOM.setStyleAttribute(caseSensitiveField.getElement(), "marginLeft", "76px");
+
+      layout.add(findField);
+      layout.add(replaceField);
+      layout.add(caseSensitiveField);
+      layout.setCellHorizontalAlignment(caseSensitiveField, HorizontalPanel.ALIGN_LEFT);
+   }
+
+   private void createButtons()
    {
       findButton = createButton("Find", "", ID_FIND_BUTTON);
       cancelButton = createButton("Cancel", Images.Buttons.CANCEL, ID_CANCEL_BUTTON);
@@ -165,42 +143,53 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
       replaceFindButton = createButton("Replace/Find", "", ID_REPLACE_FIND_BUTTON);
       replaceAllButton = createButton("Replace All", "", ID_REPLACE_ALL_BUTTON);
 
-      VerticalPanel buttonsLayout = new VerticalPanel();
       HorizontalPanel upPanel = new HorizontalPanel();
       upPanel.setHeight(BUTTON_HEIGHT + "px");
-      upPanel.setSpacing(BUTTONS_SPACE);
+
       upPanel.add(findButton);
+      upPanel.add(getDelimiter());
       upPanel.add(replaceFindButton);
+      upPanel.add(getDelimiter());
+      layout.add(upPanel);
 
       HorizontalPanel downPanel = new HorizontalPanel();
       downPanel.setHeight(BUTTON_HEIGHT + "px");
-      downPanel.setSpacing(BUTTONS_SPACE);
-      downPanel.add(replaceButton);
-      downPanel.add(replaceAllButton);
 
-      buttonsLayout.add(upPanel);
-      buttonsLayout.add(downPanel);
-      return buttonsLayout;
+      downPanel.add(replaceButton);
+      downPanel.add(getDelimiter());
+      downPanel.add(replaceAllButton);
+      downPanel.add(getDelimiter());
+      layout.add(downPanel);
    }
 
-   private VerticalPanel createFindForm()
+   private void createBottomPanel()
    {
-      VerticalPanel form = new VerticalPanel();
-      form.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
-      form.getElement().setId(ID_DYNAMIC_FORM);
-      form.setSpacing(3);
+      HorizontalPanel hLayout = new HorizontalPanel();
+      hLayout.setWidth("100%");
+      hLayout.setHeight(BUTTON_HEIGHT + "px");
 
-      findField = createTextField("Find", FIND_FIELD);
-      replaceField = createTextField("Replace with", REPLACE_FIELD);
+      createFindResultLabel();
 
-      caseSensitiveField = createCheckBoxItem("Case sensitive", CASE_SENSITIVE_FIELD);
-      DOM.setStyleAttribute(caseSensitiveField.getElement(), "marginLeft", "76px");
+      hLayout.add(findResultLabel);
+      hLayout.setCellHorizontalAlignment(findResultLabel, HorizontalPanel.ALIGN_LEFT);
+      hLayout.setCellWidth(findResultLabel, "100%");
 
-      form.add(findField);
-      form.add(replaceField);
-      form.add(caseSensitiveField);
-      form.setCellHorizontalAlignment(caseSensitiveField, HorizontalPanel.ALIGN_LEFT);
-      return form;
+      hLayout.add(cancelButton);
+      hLayout.setCellHorizontalAlignment(cancelButton, HorizontalPanel.ALIGN_RIGHT);
+
+      hLayout.add(getDelimiter());
+
+      layout.add(hLayout);
+   }
+
+   private Label createFindResultLabel()
+   {
+      findResultLabel = new Label();
+      findResultLabel.setID(ID_FIND_RESULT);
+      findResultLabel.setHeight("" + BUTTON_HEIGHT);
+      findResultLabel.setWidth("100%");
+      findResultLabel.setValue("");
+      return findResultLabel;
    }
 
    private TextField createTextField(String title, String id)
@@ -238,24 +227,6 @@ public class FindTextForm extends DialogWindow implements FindTextPresenter.Disp
       button.setWidth(BUTTON_WIDTH);
       button.setHeight(BUTTON_HEIGHT);
       return button;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.search.text.FindTextPresenter.Display#closeForm()
-    */
-   public void closeForm()
-   {
-      destroy();
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.window.Window#destroy()
-    */
-   @Override
-   public void destroy()
-   {
-      presenter.destroy();
-      super.destroy();
    }
 
    /**

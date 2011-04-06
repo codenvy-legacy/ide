@@ -40,7 +40,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class UndoTypingCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
+public class UndoTypingControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    EditorFileContentChangedHandler//, FileContentReceivedHandler
 {
 
@@ -48,7 +48,7 @@ public class UndoTypingCommand extends SimpleControl implements IDEControl, Edit
 
    public static final String TITLE = "Undo Typing";
 
-   public UndoTypingCommand()
+   public UndoTypingControl()
    {
       super(ID);
       setTitle(TITLE);

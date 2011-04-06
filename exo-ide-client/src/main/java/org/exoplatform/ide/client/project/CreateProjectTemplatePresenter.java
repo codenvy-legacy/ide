@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.template;
+package org.exoplatform.ide.client.project;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,9 @@ import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.navigation.CreateFolderDisplay;
 import org.exoplatform.ide.client.navigation.ui.AbstractCreateFolderForm;
+import org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter;
+import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
+import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
 import org.exoplatform.ide.client.template.ui.CreateFileFromTemplateForm;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -271,7 +274,7 @@ public class CreateProjectTemplatePresenter
          new CreateFileFromTemplatePresenter(eventBus, null, templateList, null)
          {
             @Override
-            void submitTemplate()
+            public void submitTemplate()
             {
                final String fileName = display.getNameField().getValue().trim();
                if ("".equals(fileName))

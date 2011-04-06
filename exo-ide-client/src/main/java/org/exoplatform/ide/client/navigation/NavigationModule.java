@@ -107,8 +107,6 @@ import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.TemplateCommandHandler;
 import org.exoplatform.ide.client.navigation.ui.CreateFolderForm;
 import org.exoplatform.ide.client.navigation.ui.RenameItemForm;
-import org.exoplatform.ide.client.project.control.CreateProjectFromTemplateControl;
-import org.exoplatform.ide.client.project.control.CreateProjectTemplateControl;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.ui.SaveAsTemplateForm;
 import org.exoplatform.ide.client.upload.OpenFileByPathForm;
@@ -164,7 +162,7 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
 
       eventBus.fireEvent(new RegisterControlEvent(newFilePopupMenuControl, DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new NewFileCommandMenuGroup()));
-      eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
+      //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl()));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl()));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML", "XML", "Create New XML File",
@@ -209,7 +207,7 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
       eventBus.fireEvent(new RegisterControlEvent(new GoToFolderControl()));
       eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl()));
       eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(), DockTarget.STATUSBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
+      //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);

@@ -16,13 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.template.ui;
+package org.exoplatform.ide.client.project.ui;
 
 import java.util.List;
 
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter;
+import org.exoplatform.ide.client.template.ui.AbstractCreateFromTemplateForm;
+import org.exoplatform.ide.client.template.ui.TemplateListGrid;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -46,7 +48,7 @@ public class CreateProjectFromTemplateForm extends AbstractCreateFromTemplateFor
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#createTypeLayout()
     */
    @Override
-   void createTypeLayout()
+   protected void createTypeLayout()
    {
       templateListGrid = new TemplateListGrid<ProjectTemplate>();
       // templateListGrid.setCanFocus(false);  // to fix bug IDE-258 "Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility."
@@ -59,7 +61,7 @@ public class CreateProjectFromTemplateForm extends AbstractCreateFromTemplateFor
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#getCreateButtonTitle()
     */
    @Override
-   String getCreateButtonTitle()
+   protected String getCreateButtonTitle()
    {
       return "Create";
    }
@@ -68,7 +70,7 @@ public class CreateProjectFromTemplateForm extends AbstractCreateFromTemplateFor
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#getFormTitle()
     */
    @Override
-   String getFormTitle()
+   protected String getFormTitle()
    {
       return "Create project";
    }
@@ -77,7 +79,7 @@ public class CreateProjectFromTemplateForm extends AbstractCreateFromTemplateFor
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#getNameFieldLabel()
     */
    @Override
-   String getNameFieldLabel()
+   protected String getNameFieldLabel()
    {
       return "Project name";
    }

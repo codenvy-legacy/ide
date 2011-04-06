@@ -16,13 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.handler;
+package org.exoplatform.ide.client.project;
 
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
-import org.exoplatform.ide.client.template.ui.CreateProjectTemplateForm;
+import org.exoplatform.ide.client.project.ui.CreateProjectTemplateForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 

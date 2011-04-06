@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.handler;
+package org.exoplatform.ide.client.project;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +29,11 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
+import org.exoplatform.ide.client.project.CreateProjectFromTemplatePresenter;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
+import org.exoplatform.ide.client.project.ui.CreateProjectFromTemplateForm;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
-import org.exoplatform.ide.client.template.CreateProjectFromTemplatePresenter;
-import org.exoplatform.ide.client.template.ui.CreateProjectFromTemplateForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -80,6 +80,7 @@ ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
       CreateFromTemplateDisplay<ProjectTemplate> createProjectDisplay =
          new CreateProjectFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createProjectPresenter);
       createProjectPresenter.bindDisplay(createProjectDisplay);
+      
      /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
          

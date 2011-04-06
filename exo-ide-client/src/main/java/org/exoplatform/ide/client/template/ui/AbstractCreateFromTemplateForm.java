@@ -126,7 +126,7 @@ implements CreateFromTemplateDisplay<T>
    /**
     * Create list grid for templates.
     */
-   abstract void createTypeLayout();
+   protected abstract void createTypeLayout();
 
    /**
     * Create form with name field and action buttons.
@@ -152,19 +152,19 @@ implements CreateFromTemplateDisplay<T>
     * Get the title of button, that create new instance
     * @return {@link String}
     */
-   abstract String getCreateButtonTitle();
+   protected abstract String getCreateButtonTitle();
    
    /**
     * Get the name of field for typing new instance name.
     * @return {@link String}
     */
-   abstract String getNameFieldLabel();
+   protected abstract String getNameFieldLabel();
    
    /**
     * Get the title of form (window).
     * @return {@link String}
     */
-   abstract String getFormTitle();
+   protected abstract String getFormTitle();
    
    /**
     * Create the horizontal panel with action buttons:

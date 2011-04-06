@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.template.ui;
+package org.exoplatform.ide.client.project.ui;
 
 import java.util.List;
 
@@ -27,7 +27,8 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.template.CreateProjectTemplatePresenter;
+import org.exoplatform.ide.client.project.CreateProjectTemplatePresenter;
+import org.exoplatform.ide.client.template.ui.TemplateTree;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;

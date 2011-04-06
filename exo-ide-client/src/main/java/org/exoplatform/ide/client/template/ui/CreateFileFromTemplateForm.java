@@ -46,7 +46,7 @@ public class CreateFileFromTemplateForm extends AbstractCreateFromTemplateForm<F
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#createTypeLayout()
     */
    @Override
-   void createTypeLayout()
+   protected void createTypeLayout()
    {
       templateListGrid = new TemplateListGrid<FileTemplate>();
       templateListGrid.setWidth("100%");
@@ -77,7 +77,7 @@ public class CreateFileFromTemplateForm extends AbstractCreateFromTemplateForm<F
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplateForm#getNameFieldLabel()
     */
    @Override
-   String getNameFieldLabel()
+   protected String getNameFieldLabel()
    {
       return "File Name";
    }

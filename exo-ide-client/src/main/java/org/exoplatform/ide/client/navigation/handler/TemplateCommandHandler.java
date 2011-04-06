@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -36,22 +34,13 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler;
-import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
-import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
-import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
-import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
 import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
-import org.exoplatform.ide.client.template.CreateProjectFromTemplatePresenter;
 import org.exoplatform.ide.client.template.ui.CreateFileFromTemplateForm;
-import org.exoplatform.ide.client.template.ui.CreateProjectFromTemplateForm;
-import org.exoplatform.ide.client.template.ui.CreateProjectTemplateForm;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -68,17 +57,16 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class TemplateCommandHandler implements CreateFileFromTemplateHandler, ItemsSelectedHandler, 
-EditorFileOpenedHandler, EditorFileClosedHandler, CreateProjectFromTemplateHandler, ConfigurationReceivedSuccessfullyHandler,
-CreateProjectTemplateHandler
+public class TemplateCommandHandler implements CreateFileFromTemplateHandler, ItemsSelectedHandler,
+   EditorFileOpenedHandler, EditorFileClosedHandler, ConfigurationReceivedSuccessfullyHandler
 {
 
    private HandlerManager eventBus;
 
    private List<Item> selectedItems = new ArrayList<Item>();
-   
+
    private Map<String, File> openedFiles = new HashMap<String, File>();
-   
+
    private String restContext;
 
    public TemplateCommandHandler(HandlerManager eventBus)
@@ -86,8 +74,6 @@ CreateProjectTemplateHandler
       this.eventBus = eventBus;
 
       eventBus.addHandler(CreateFileFromTemplateEvent.TYPE, this);
-      eventBus.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
-      eventBus.addHandler(CreateProjectTemplateEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
@@ -122,7 +108,7 @@ CreateProjectTemplateHandler
    {
       restContext = event.getConfiguration().getContext();
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler#onCreateFileFromTemplate(org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent)
     */
@@ -134,78 +120,25 @@ CreateProjectTemplateHandler
       CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
          new CreateFileFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createFilePresenter);
       createFilePresenter.bindDisplay(createFileDisplay);
-     /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
-      {
-         
-         @Override
-         protected void onSuccess(TemplateList result)
-         {
-            CreateFileFromTemplatePresenter createFilePresenter =
-               new CreateFileFromTemplatePresenter(eventBus, selectedItems, result.getTemplates(), openedFiles);
-            CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
-               new CreateFileFromTemplateForm(eventBus, result.getTemplates(), createFilePresenter);
-            createFilePresenter.bindDisplay(createFileDisplay);
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });*/
+      /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
+       {
+          
+          @Override
+          protected void onSuccess(TemplateList result)
+          {
+             CreateFileFromTemplatePresenter createFilePresenter =
+                new CreateFileFromTemplatePresenter(eventBus, selectedItems, result.getTemplates(), openedFiles);
+             CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
+                new CreateFileFromTemplateForm(eventBus, result.getTemplates(), createFilePresenter);
+             createFilePresenter.bindDisplay(createFileDisplay);
+          }
+          
+          @Override
+          protected void onFailure(Throwable exception)
+          {
+             eventBus.fireEvent(new ExceptionThrownEvent(exception));
+          }
+       });*/
    }
 
-
-   /**
-    * @see org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler#onCreateProjectFromTemplate(org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent)
-    */
-   public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
-   {
-      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
-      CreateProjectFromTemplatePresenter createProjectPresenter =
-         new CreateProjectFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), restContext);
-      CreateFromTemplateDisplay<ProjectTemplate> createProjectDisplay =
-         new CreateProjectFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createProjectPresenter);
-      createProjectPresenter.bindDisplay(createProjectDisplay);
-     /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
-      {
-         @Override
-         protected void onSuccess(TemplateList result)
-         {
-            CreateProjectFromTemplatePresenter createProjectPresenter =
-               new CreateProjectFromTemplatePresenter(eventBus, selectedItems, result.getTemplates(), restContext);
-            CreateFromTemplateDisplay<ProjectTemplate> createProjectDisplay =
-               new CreateProjectFromTemplateForm(eventBus, result.getTemplates(), createProjectPresenter);
-            createProjectPresenter.bindDisplay(createProjectDisplay);
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });*/
-   }
-   
-   /**
-    * @see org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler#onCreateProjectTemplate(org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent)
-    */
-   public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
-   {
-      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
-      {
-         @Override
-         protected void onSuccess(TemplateList result)
-         {
-            new CreateProjectTemplateForm(eventBus, result.getTemplates());
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });
-   }
-   
 }

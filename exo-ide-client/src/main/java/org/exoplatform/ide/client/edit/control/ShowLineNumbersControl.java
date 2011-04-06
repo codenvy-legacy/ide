@@ -40,7 +40,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class ShowLineNumbersCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
+public class ShowLineNumbersControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ApplicationSettingsSavedHandler
 {
 
@@ -56,7 +56,7 @@ public class ShowLineNumbersCommand extends SimpleControl implements IDEControl,
 
    private boolean showLineNumbers = true;
 
-   public ShowLineNumbersCommand()
+   public ShowLineNumbersControl()
    {
       super(ID);
       setTitle(TITLE_HIDE);
@@ -125,4 +125,5 @@ public class ShowLineNumbersCommand extends SimpleControl implements IDEControl,
 
       updateState();
    }
+   
 }

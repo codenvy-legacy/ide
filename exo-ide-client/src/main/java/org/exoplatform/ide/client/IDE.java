@@ -38,6 +38,7 @@ import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.navigation.NavigationModule;
 import org.exoplatform.ide.client.operation.OperationModule;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
+import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 /**
@@ -78,13 +79,13 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new ViewHighlightManager(EVENT_BUS);
 
       //new TestPresenter(EVENT_BUS);
-      //new ViewActionsLogger(EVENT_BUS);
       //new ViewManagerPresenter(EVENT_BUS);
 
       new ApplicationStateSnapshotListener(EVENT_BUS);
 
       // MODULES INITIALIZATION
       new NavigationModule(EVENT_BUS, context);
+      new ProjectSupportingModule(EVENT_BUS);
       new TextEditModule(EVENT_BUS);
       new OperationModule(EVENT_BUS);
       new PreferencesModule(EVENT_BUS);

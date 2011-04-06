@@ -20,16 +20,16 @@ package org.exoplatform.ide.client.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.edit.FindTextPresenter;
 import org.exoplatform.ide.client.edit.event.FindTextEvent;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.form.FormClosedEvent;
-import org.exoplatform.ide.client.framework.form.FormClosedHandler;
-import org.exoplatform.ide.client.framework.form.FormOpenedEvent;
-import org.exoplatform.ide.client.framework.form.FormOpenedHandler;
-import org.exoplatform.ide.client.search.Search;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.editor.api.EditorCapability;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -42,17 +42,17 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 @RolesAllowed({"administrators", "developers"})
-public class FindTextCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, FormOpenedHandler,
-   FormClosedHandler
+public class FindTextControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
+   ViewOpenedHandler, ViewClosedHandler
 {
    //   public static final String ID = "Edit/Find&#47Replace...";
    public static final String ID = "Edit/Find-Replace...";
 
    private static final String TITLE = "Find/Replace...";
 
-   private boolean findTextFormOpened = false;
+   private boolean findTextViewOpened = false;
 
-   public FindTextCommand()
+   public FindTextControl()
    {
       super(ID);
       setTitle(TITLE);
@@ -61,15 +61,15 @@ public class FindTextCommand extends SimpleControl implements IDEControl, Editor
       setImages(IDEImageBundle.INSTANCE.findText(), IDEImageBundle.INSTANCE.findTextDisabled());
       setEvent(new FindTextEvent());
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(FormOpenedEvent.TYPE, this);
-      eventBus.addHandler(FormClosedEvent.TYPE, this);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -77,7 +77,8 @@ public class FindTextCommand extends SimpleControl implements IDEControl, Editor
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || event.getEditor() == null || !event.getEditor().isCapable(EditorCapability.FIND_AND_REPLACE))
+      if (event.getFile() == null || event.getEditor() == null
+         || !event.getEditor().isCapable(EditorCapability.FIND_AND_REPLACE))
       {
          setVisible(false);
          setEnabled(false);
@@ -87,34 +88,37 @@ public class FindTextCommand extends SimpleControl implements IDEControl, Editor
       {
          setVisible(true);
       }
-      
+
       if (event.getEditor().isReadOnly())
       {
          setEnabled(false);
          return;
       }
-      
+
       boolean canFindReplace = event.getEditor().isCapable(EditorCapability.FIND_AND_REPLACE);
       //boolean isOpened = openedForms.contains(FindTextForm.ID); 
-      boolean enableSearch = canFindReplace && !findTextFormOpened;
+      boolean enableSearch = canFindReplace && !findTextViewOpened;
       setEnabled(enableSearch);
    }
 
-   public void onFormOpened(FormOpenedEvent event)
+   @Override
+   public void onViewOpened(ViewOpenedEvent event)
    {
-      if (Search.FORM_ID.equals(event.getFormId()))
+      if (event.getView() instanceof FindTextPresenter.Display)
       {
-         findTextFormOpened = true;
+         findTextViewOpened = true;
          setEnabled(false);
       }
    }
 
-   public void onFormClosed(FormClosedEvent event)
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
    {
-      if (Search.FORM_ID.equals(event.getFormId()))
+      if (event.getView() instanceof FindTextPresenter.Display)
       {
-         findTextFormOpened = false;
+         findTextViewOpened = false;
          setEnabled(true);
       }
    }
+
 }

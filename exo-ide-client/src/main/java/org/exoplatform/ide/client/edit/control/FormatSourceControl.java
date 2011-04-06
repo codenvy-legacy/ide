@@ -38,14 +38,14 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class FormatSourceCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class FormatSourceControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    private static final String ID = "Edit/Format";
 
    private static final String TITLE = "Format";
 
-   public FormatSourceCommand()
+   public FormatSourceControl()
    {
       super(ID);
       setTitle(TITLE);

@@ -87,7 +87,7 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#updateTemplateList(java.util.List)
     */
    @Override
-   void updateTemplateList(List<Template> templates)
+   protected void updateTemplateList(List<Template> templates)
    {
       templateList.clear();
       projectTemplateList.clear();
@@ -109,7 +109,7 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#setNewInstanceName()
     */
    @Override
-   void setNewInstanceName()
+   protected void setNewInstanceName()
    {
       FileTemplate selectedTemplate = (FileTemplate)selectedTemplates.get(0);
       String extension = IDEMimeTypes.getExtensionsMap().get(selectedTemplate.getMimeType());
@@ -143,7 +143,7 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
     * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#submitTemplate()
     */
    @Override
-   void submitTemplate()
+   public void submitTemplate()
    {
       String fileName = display.getNameField().getValue();
 
