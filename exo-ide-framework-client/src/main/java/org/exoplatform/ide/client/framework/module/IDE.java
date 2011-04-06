@@ -86,6 +86,12 @@ public abstract class IDE
     */
    public abstract void addEditor(EditorProducer editorProducer);
    
+   /**
+    * Get EditorProducer for mimeType
+    * @param mimeType of file
+    * @return {@link EditorProducer} for mimeType
+    * @throws EditorNotFoundException if {@link EditorProducer} not found for mimeType
+    */
    public abstract EditorProducer getEditor(String mimeType) throws EditorNotFoundException;
 
 }

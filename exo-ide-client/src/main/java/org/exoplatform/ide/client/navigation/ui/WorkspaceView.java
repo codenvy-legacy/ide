@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -78,6 +79,24 @@ public class WorkspaceView extends ViewImpl implements org.exoplatform.ide.clien
    public void deselectItem(String path)
    {
       treeGrid.deselectItem(path);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.navigation.WorkspacePresenter.Display#addItemsIcons(java.util.Map)
+    */
+   @Override
+   public void addItemsIcons(Map<Item, Map<TreeIconPosition, String>> itemsIcons)
+   {
+      treeGrid.addItemsIcons(itemsIcons);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.navigation.WorkspacePresenter.Display#removeItemIcons(java.util.Map)
+    */
+   @Override
+   public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)
+   {
+      treeGrid.removeItemIcons(itemsIcons);
    }
 
 }

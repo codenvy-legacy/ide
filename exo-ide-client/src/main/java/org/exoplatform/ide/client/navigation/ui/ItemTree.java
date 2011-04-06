@@ -18,10 +18,15 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
+import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -29,7 +34,9 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 
-import com.google.gwt.user.client.ui.TreeItem;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -40,6 +47,30 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 {
 
    private Map<String, String> locktokens;
+
+   @Override
+   protected Widget createItemWidget(String icon, String text)
+   {
+      Grid grid = new Grid(1, 2);
+      grid.setWidth("100%");
+
+      //      Image i = new Image(icon);
+      TreeIcon i = new TreeIcon(icon);
+      i.setHeight("16px");
+      grid.setWidget(0, 0, i);
+      //      Label l = new Label(text, false);
+      HTMLPanel l = new HTMLPanel("div", text);
+      l.setStyleName("ide-Tree-label");
+      grid.setWidget(0, 1, l);
+
+      grid.getCellFormatter().setWidth(0, 0, "16px");
+      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+      grid.getCellFormatter().setWidth(0, 1, "100%");
+      //      grid.getCellFormatter().addStyleName(0, 1, "ide-Tree-label");
+      DOM.setStyleAttribute(grid.getElement(), "display", "block");
+      return grid;
+   }
 
    /**
     * @param item
@@ -281,6 +312,33 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    {
       if (tree.getSelectedItem() != null)
          tree.getSelectedItem().setSelected(false);
+   }
+
+   public void addItemsIcons(Map<Item, Map<TreeIconPosition, String>> itemsIcons)
+   {
+      for (Item item : itemsIcons.keySet())
+      {
+         TreeItem node = getNodeByHref(item.getHref());
+         Grid grid = (Grid)node.getWidget();
+         TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
+         Map<TreeIconPosition, String> map = itemsIcons.get(item);
+         for (TreeIconPosition position : map.keySet())
+         {
+            treeIcon.addIcon(position, map.get(position));
+         }
+
+      }
+   }
+
+   public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)
+   {
+      for (Item item : itemsIcons.keySet())
+      {
+         TreeItem node = getNodeByHref(item.getHref());
+         Grid grid = (Grid)node.getWidget();
+         TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
+         treeIcon.removeIcon(itemsIcons.get(item));
+      }
    }
 
 }

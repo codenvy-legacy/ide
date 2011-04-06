@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.resources.client.ClientBundle.Source;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
@@ -29,7 +31,7 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface GitClientBundle extends ClientBundle
 {
-   public static final GitClientBundle INSTANCE = GWT.create(GitClientBundle.class);
+   GitClientBundle INSTANCE = GWT.<GitClientBundle>create(GitClientBundle.class);
    
    
    @Source("org/exoplatform/ide/git/images/buttons/ok.png")
@@ -73,4 +75,13 @@ public interface GitClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/git/images/controls/status_Disabled.png")
    ImageResource statusDisabled();
+
+   @Source("org/exoplatform/ide/git/images/items/item_in_repository.png")
+   ImageResource itemInRepoditory();
+   
+   @Source("org/exoplatform/ide/git/images/items/item_in_repository_star.png")
+   ImageResource itemNew();
+   
+   @Source("org/exoplatform/ide/git/images/items/item_in_repository_question.png")
+   ImageResource itemChanged();
 }
