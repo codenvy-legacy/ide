@@ -2,9 +2,6 @@
 	"name" : "abstract",
 	"type" : "KEYWORD"
 }, {
-	"name" : "as",
-	"type" : "KEYWORD"
-}, {
 	"name" : "assert",
 	"type" : "KEYWORD"
 }, {
@@ -33,9 +30,6 @@
 	"type" : "KEYWORD"
 }, {
 	"name" : "continue",
-	"type" : "KEYWORD"
-}, {
-	"name" : "def",
 	"type" : "KEYWORD"
 }, {
 	"name" : "default",
@@ -71,9 +65,6 @@
 	"name" : "for",
 	"type" : "KEYWORD"
 }, {
-	"name" : "goto",
-	"type" : "KEYWORD"
-}, {
 	"name" : "if",
 	"type" : "KEYWORD"
 }, {
@@ -81,9 +72,6 @@
 	"type" : "KEYWORD"
 }, {
 	"name" : "import",
-	"type" : "KEYWORD"
-}, {
-	"name" : "in",
 	"type" : "KEYWORD"
 }, {
 	"name" : "instanceof",

@@ -18,31 +18,32 @@
  */
 package org.exoplatform.ide.editor.codeassistant.groovytemplate;
 
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
-import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.groovy.GroovyCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
+import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyTamplateCodeAssistant Mar 3, 2011 5:06:09 PM evgen $
  *
  */
-public class GroovyTemplateCodeAssistant extends JavaCodeAssistant
+public class GroovyTemplateCodeAssistant extends GroovyCodeAssistant
 {
 
    /**
     * @param factory
     * @param errorHandler
     */
-   public GroovyTemplateCodeAssistant(TokenWidgetFactory factory, JavaCodeAssistantErrorHandler errorHandler)
+   public GroovyTemplateCodeAssistant(CodeAssistantService service, TokenWidgetFactory factory, JavaCodeAssistantErrorHandler errorHandler)
    {
-      super(factory, errorHandler);
+      super(service, factory, errorHandler);
    }
 
    /**

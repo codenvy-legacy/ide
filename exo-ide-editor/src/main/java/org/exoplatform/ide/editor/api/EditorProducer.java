@@ -48,34 +48,53 @@ public abstract class EditorProducer
       this.icon = icon;
    }
 
+   /**
+    * @return mime type associated with this editor
+    */
    public String getMimeType()
    {
       return mimeType;
    }
 
+   /**
+    * @return Editor description
+    */
    public String getDescription()
    {
       return description;
    }
 
+   /**
+    * @return file extension(i.e. "java", "xml" etc.)
+    */
    public String getDefaultFileExtension()
    {
       return exstension;
    }
 
+   /**
+    * @return true if editor default for current mime type 
+    */
    public boolean isDefault()
    {
       return isDefault;
    }
 
    /**
-    * @return the icon
+    * @return the icon URL to image associated with current mime type
     */
    public String getIcon()
    {
       return icon;
    }
 
+   /**
+    * Create new {@link Editor} widget
+    * @param content
+    * @param eventBus
+    * @param params editor configuration parameters
+    * @return instance of {@link Editor} class
+    */
    public abstract Editor createEditor(String content, HandlerManager eventBus, HashMap<String, Object> params);
 
 }

@@ -43,21 +43,21 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
 
    protected int modifieres;
 
-   protected String restContext;
+   protected String docContext;
 
    /**
     * @param token
     */
    @SuppressWarnings("unchecked")
-   public JavaTokenWidgetBase(Token token, String restContext)
+   public JavaTokenWidgetBase(Token token, String docContext)
    {
       super(token);
-      this.restContext = restContext;
+      this.docContext = docContext;
       if (token.hasProperty(TokenProperties.MODIFIERS))
       {
          TokenProperty mod = token.getProperty(TokenProperties.MODIFIERS);
-         if(mod.isNumericProperty() != null)
-          modifieres = mod.isNumericProperty().numberValue().intValue();
+         if (mod.isNumericProperty() != null)
+            modifieres = mod.isNumericProperty().numberValue().intValue();
          else
          {
             modifieres = getModifires((List<Modifier>)mod.isObjectProperty().objectValue());
@@ -79,7 +79,7 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
       span += "</span>";
       return span;
    }
-   
+
    /**
     * @param modifiers
     * @return
@@ -136,8 +136,8 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
    @Override
    public Widget getTokenDecription()
    {
-      return new Frame(restContext + "/ide/code-assistant/class-doc?fqn="
-         + token.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue() + "." + getTokenValue());
+      return new Frame(docContext + token.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue()
+         + "." + getTokenValue());
    }
 
 }

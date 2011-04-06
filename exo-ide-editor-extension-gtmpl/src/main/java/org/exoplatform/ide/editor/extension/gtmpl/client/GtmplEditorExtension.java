@@ -31,11 +31,11 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.editor.codeassistant.groovy.service.GroovyCodeAssistantService;
 import org.exoplatform.ide.editor.codeassistant.groovytemplate.GroovyTemplateCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
-import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantServiceImpl;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyTemplateAutocompleteHelper;
@@ -73,9 +73,17 @@ public class GtmplEditorExtension extends Extension implements InitializeService
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
+      CodeAssistantService service;
+      if (GroovyCodeAssistantService.get() == null)
+         service =
+            new GroovyCodeAssistantService(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
+               event.getLoader());
+      else
+         service = GroovyCodeAssistantService.get();
+
       templateCodeAssistant =
-         new GroovyTemplateCodeAssistant(new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()),
-            this);
+         new GroovyTemplateCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration()
+            .getContext() + "/ide/code-assistant/class-doc?fqn="), this);
 
       IDE.getInstance()
          .addEditor(
@@ -97,9 +105,6 @@ public class GtmplEditorExtension extends Extension implements InitializeService
                   true, // can be validated
                   new GroovyTemplateCodeValidator(), templateCodeAssistant, true)));
 
-      if (CodeAssistantService.getInstance() == null)
-         new CodeAssistantServiceImpl(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
-            event.getLoader());
    }
 
    /**

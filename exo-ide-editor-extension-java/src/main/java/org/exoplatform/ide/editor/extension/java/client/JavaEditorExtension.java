@@ -35,7 +35,7 @@ import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
-import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantServiceImpl;
+import org.exoplatform.ide.editor.codeassistant.java.service.JavaCodeAssistantService;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaAutocompleteHelper;
@@ -73,9 +73,18 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
+      CodeAssistantService service;
+      if (JavaCodeAssistantService.get() == null)
+         service =
+            new JavaCodeAssistantService(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
+               event.getLoader());
+      else
+         service = JavaCodeAssistantService.get();
+
       javaCodeAssistant =
-         new JavaCodeAssistant(new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()), this);
-      
+         new JavaCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
+            + "/ide/code-assistant/java/class-doc?fqn="), this);
+
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java", Images.JAVA, true,
             new CodeMirrorConfiguration("['parsejava.js', 'tokenizejava.js']", // generic code parsers
@@ -87,9 +96,6 @@ public class JavaEditorExtension extends Extension implements InitializeServices
                true, // can be validated
                new JavaCodeValidator(), javaCodeAssistant)));
 
-      if (CodeAssistantService.getInstance() == null)
-         new CodeAssistantServiceImpl(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
-            event.getLoader());
    }
 
    /**

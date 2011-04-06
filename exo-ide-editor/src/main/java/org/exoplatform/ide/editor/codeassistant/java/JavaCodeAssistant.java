@@ -100,9 +100,11 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
    }
 
-   private static List<Token> keywords;
+   protected List<Token> keywords;
 
    private String activeFileHref;
+   
+   private CodeAssistantService service;
 
    private TokenWidgetFactory factory;
 
@@ -119,11 +121,12 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
    /**
     * @param factory
     */
-   public JavaCodeAssistant(TokenWidgetFactory factory, JavaCodeAssistantErrorHandler errorHandler)
+   public JavaCodeAssistant(CodeAssistantService service, TokenWidgetFactory factory, JavaCodeAssistantErrorHandler errorHandler)
    {
       super();
       this.factory = factory;
       this.errorHandler = errorHandler;
+      this.service = service;
    }
 
    /**
@@ -136,7 +139,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       this.editor = editor;
       try
       {
-         CodeAssistantService.getInstance().findClass(codeErrorList.get(0).getLineContent(), activeFileHref,
+         service.findClass(codeErrorList.get(0).getLineContent(), activeFileHref,
             new AsyncRequestCallback<List<Token>>()
             {
 
@@ -229,7 +232,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
             curentFqn = currentToken.getProperty(TokenProperties.FQN).isStringProperty().stringValue();
 
-            CodeAssistantService.getInstance().getClassDescription(curentFqn, activeFileHref,
+            service.getClassDescription(curentFqn, activeFileHref,
                new AsyncRequestCallback<JavaClass>()
                {
 
@@ -267,7 +270,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                action = Action.ANNOTATION;
                beforeToken += "@";
                tokenToComplete = tokenToComplete.substring(1);
-               CodeAssistantService.getInstance().fintType(Types.ANNOTATION, tokenToComplete,
+               service.fintType(Types.ANNOTATION, tokenToComplete,
                   new AsyncRequestCallback<List<Token>>()
                   {
 
@@ -286,7 +289,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                return;
             }
 
-            CodeAssistantService.getInstance().findClassesByPrefix(tokenToComplete, activeFileHref,
+            service.findClassesByPrefix(tokenToComplete, activeFileHref,
                new AsyncRequestCallback<List<Token>>()
                {
 
@@ -478,8 +481,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                      @Override
                      public void onSuccess(TextResource resource)
                      {
-                        JSONTokenParser parser = new JSONTokenParser();
-                        keywords = parser.getTokens(new JSONArray(parseJson(resource.getText())));
+                        parseKeyWords(resource);
                         token.addAll(keywords);
                         Collections.sort(token, JavaCodeAssistant.this);
                         openForm(token, factory, JavaCodeAssistant.this);
@@ -517,6 +519,16 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
          name = parent.getName();
       }
       return new StringProperty(name);
+   }
+   
+   /**
+    * Parse JSON token to {@link Token} beens
+    * @param resource JSON
+    */
+   protected void parseKeyWords(TextResource resource)
+   {
+      JSONTokenParser parser = new JSONTokenParser();
+      keywords = parser.getTokens(new JSONArray(parseJson(resource.getText())));
    }
 
    /**

@@ -31,11 +31,12 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.editor.codeassistant.groovy.GroovyCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.groovy.service.GroovyCodeAssistantService;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
-import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantServiceImpl;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
@@ -51,7 +52,7 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    JavaCodeAssistantErrorHandler, EditorActiveFileChangedHandler
 {
 
-   private JavaCodeAssistant javaCodeAssistant;
+   private JavaCodeAssistant groovyCodeAssistant;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -77,8 +78,15 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      javaCodeAssistant =
-         new JavaCodeAssistant(new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()), this);
+      CodeAssistantService service;
+      if (GroovyCodeAssistantService.get() == null)
+         service = new GroovyCodeAssistantService(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
+            event.getLoader());
+      else
+        service = GroovyCodeAssistantService.get();
+      
+      groovyCodeAssistant =
+         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext() + "/ide/code-assistant/class-doc?fqn="), this);
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", Images.GROOVY, true,
             new CodeMirrorConfiguration("['parsegroovy.js', 'tokenizegroovy.js']", // generic code parsers
@@ -88,7 +96,7 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
                new GroovyParser(), // exoplatform code parser 
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
-               new GroovyCodeValidator(), javaCodeAssistant)));
+               new GroovyCodeValidator(), groovyCodeAssistant)));
 
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", Images.GROOVY, true,
@@ -99,11 +107,9 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
                new GroovyParser(), // exoplatform code parser 
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
-               new GroovyCodeValidator(), javaCodeAssistant)));
+               new GroovyCodeValidator(), groovyCodeAssistant)));
 
-      if (CodeAssistantService.getInstance() == null)
-         new CodeAssistantServiceImpl(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
-            event.getLoader());
+    
    }
 
    /**
@@ -137,7 +143,7 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() != null)
-         javaCodeAssistant.setactiveFileHref(event.getFile().getHref());
+         groovyCodeAssistant.setactiveFileHref(event.getFile().getHref());
    }
 
 }

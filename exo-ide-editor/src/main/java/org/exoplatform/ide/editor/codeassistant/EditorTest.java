@@ -40,12 +40,14 @@ import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
+import org.exoplatform.ide.editor.codeassistant.groovy.GroovyCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.groovy.service.GroovyCodeAssistantService;
 import org.exoplatform.ide.editor.codeassistant.groovytemplate.GroovyTemplateCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
-import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantServiceImpl;
+import org.exoplatform.ide.editor.codeassistant.java.service.JavaCodeAssistantService;
 import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -132,7 +134,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       });
 
       
-      JavaCodeAssistant javaCodeAssistant = new JavaCodeAssistant(new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private"), new JavaCodeAssistantErrorHandler()
+      GroovyCodeAssistant groovyCodeAssistant = new GroovyCodeAssistant(new GroovyCodeAssistantService(eventBus, "", new EmptyLoader()) ,new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private" + "/ide/code-assistant/class-doc?fqn="), new JavaCodeAssistantErrorHandler()
       {
          
          @Override
@@ -146,9 +148,20 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             else exception.printStackTrace();
          }
       });
+      groovyCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
+      
+      JavaCodeAssistant javaCodeAssistant = new JavaCodeAssistant(new JavaCodeAssistantService(eventBus, "", new EmptyLoader()), new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
+      {
+         
+         @Override
+         public void handleError(Throwable exception)
+         {
+            
+         }
+      });
       javaCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
       
-      GroovyTemplateCodeAssistant templateCodeAssistant = new GroovyTemplateCodeAssistant(new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private"), new JavaCodeAssistantErrorHandler()
+      GroovyTemplateCodeAssistant templateCodeAssistant = new GroovyTemplateCodeAssistant(new GroovyCodeAssistantService(eventBus, "", new EmptyLoader()),new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private"), new JavaCodeAssistantErrorHandler()
       {
          
          @Override
@@ -267,7 +280,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyCodeValidator(),
-               javaCodeAssistant
+               groovyCodeAssistant
               )));
 
       addEditor(new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs","", true,
@@ -280,7 +293,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyCodeValidator(),
-               javaCodeAssistant)));      
+               groovyCodeAssistant)));      
 
       addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy","", true,
          new CodeMirrorConfiguration(
@@ -292,7 +305,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyCodeValidator(),
-               javaCodeAssistant)));
+               groovyCodeAssistant)));
       
       addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl","", true,
          new CodeMirrorConfiguration(
@@ -354,7 +367,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
    @Override
    public void onModuleLoad()
    {
-      new CodeAssistantServiceImpl(eventBus, "http://127.0.0.1:8888/rest/private", new EmptyLoader());
+      new JavaCodeAssistantService(eventBus, "http://127.0.0.1:8888/rest/private", new EmptyLoader());
       FlowPanel toolbar = new FlowPanel();
       toolbar.setWidth("100%");
       toolbar.setHeight("25px");

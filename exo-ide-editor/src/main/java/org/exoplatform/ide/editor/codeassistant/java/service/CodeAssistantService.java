@@ -18,10 +18,20 @@
  */
 package org.exoplatform.ide.editor.codeassistant.java.service;
 
+import com.google.gwt.http.client.RequestBuilder;
+
+import com.google.gwt.event.shared.HandlerManager;
+
+import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.codeassistant.java.service.marshal.ClassDescriptionUnmarshaller;
+import org.exoplatform.ide.editor.codeassistant.java.service.marshal.FindClassesUnmarshaller;
 import org.exoplatform.ide.editor.codeassistant.java.service.marshal.JavaClass;
 
 /**
@@ -37,21 +47,33 @@ import org.exoplatform.ide.editor.codeassistant.java.service.marshal.JavaClass;
 public abstract class CodeAssistantService
 {
 
-   private static CodeAssistantService instance;
-   
-   protected CodeAssistantService()
+   protected String FIND_URL;
+
+   protected String GET_CLASS_URL;
+
+   protected String FIND_CLASS_BY_PREFIX;
+
+   protected String FIND_TYPE;
+
+   protected HandlerManager eventBus;
+
+   protected Loader loader;
+
+   protected String restServiceContext;
+
+   protected CodeAssistantService(HandlerManager eventBus, String restServiceContext, Loader loader, String findUrl,
+      String getClassUrl, String findClassByPrefix, String findType)
    {
-      instance = this;
+      this.eventBus = eventBus;
+      this.loader = loader;
+      this.restServiceContext = restServiceContext;
+
+      this.FIND_URL = findUrl;
+      this.GET_CLASS_URL = getClassUrl;
+      this.FIND_CLASS_BY_PREFIX = findClassByPrefix;
+      this.FIND_TYPE = findType;
    }
 
-   /**
-    * @return the instance of service
-    */
-   public static CodeAssistantService getInstance()
-   {
-      return instance;
-   }
-     
    /**
     * Get Classes FQN by name.
     *   
@@ -59,8 +81,27 @@ public abstract class CodeAssistantService
     * @param fileHref for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
     */
-   public abstract void findClass(String className, String fileHref, AsyncRequestCallback<List<Token>> callback);
-   
+   public void findClass(String className, String fileHref, AsyncRequestCallback<List<Token>> callback)
+   {
+      String url = restServiceContext + FIND_URL + className;
+
+      List<Token> tokens = new ArrayList<Token>();
+      callback.setResult(tokens);
+
+      FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
+
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
+      if (fileHref == null)
+      {
+         AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      }
+      else
+      {
+         AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
+      }
+   }
+
    /**
     * Get Class description (methods, fields etc.) by class FQN
     * 
@@ -68,17 +109,45 @@ public abstract class CodeAssistantService
     * @param fileHref for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
     */
-   public abstract void getClassDescription(String fqn, String fileHref, AsyncRequestCallback<JavaClass> callback);
-   
-   
+   public void getClassDescription(String fqn, String fileHref, AsyncRequestCallback<JavaClass> callback)
+   {
+      String url = restServiceContext + GET_CLASS_URL + fqn;
+
+      JavaClass classInfo = new JavaClass();
+      callback.setResult(classInfo);
+      ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller(classInfo);
+
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
+   }
+
    /**
     * Find classes by prefix
     * @param prefix the first letters of class name
     * @param fileHref for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
     */
-   public abstract void findClassesByPrefix(String prefix, String fileHref, AsyncRequestCallback<List<Token>> callback);
-   
+   public void findClassesByPrefix(String prefix, String fileHref, AsyncRequestCallback<List<Token>> callback)
+   {
+      String url = restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className";
+
+      List<Token> tokens = new ArrayList<Token>();
+      callback.setResult(tokens);
+      FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
+
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
+      if (fileHref == null)
+      {
+         AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      }
+      else
+      {
+         AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
+      }
+   }
+
    /**
     * Find all classes or annotations or interfaces
     * 
@@ -86,6 +155,20 @@ public abstract class CodeAssistantService
     * @param prefix the prefix with type name starts (can be null)
     * @param callback - the callback which client has to implement
     */
-   public abstract void fintType(Types type, String prefix, AsyncRequestCallback<List<Token>> callback);
-   
+   public void fintType(Types type, String prefix, AsyncRequestCallback<List<Token>> callback)
+   {
+      String url = restServiceContext + FIND_TYPE + type.toString();
+      if (prefix != null && !prefix.isEmpty())
+      {
+         url += "?prefix=" + prefix;
+      }
+      List<Token> tokens = new ArrayList<Token>();
+      callback.setResult(tokens);
+      FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
+
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   }
+
 }

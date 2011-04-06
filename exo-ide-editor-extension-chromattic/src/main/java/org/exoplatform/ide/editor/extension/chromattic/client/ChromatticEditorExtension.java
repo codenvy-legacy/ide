@@ -31,11 +31,12 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.editor.codeassistant.groovy.GroovyCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.groovy.service.GroovyCodeAssistantService;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
-import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantServiceImpl;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
@@ -51,7 +52,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    JavaCodeAssistantErrorHandler, EditorActiveFileChangedHandler
 {
 
-   private JavaCodeAssistant javaCodeAssistant;
+   private JavaCodeAssistant groovyCodeAssistant;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -72,8 +73,14 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      javaCodeAssistant =
-         new JavaCodeAssistant(new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()), this);
+      CodeAssistantService service;
+      if (GroovyCodeAssistantService.get() == null)
+         service = new GroovyCodeAssistantService(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
+            event.getLoader());
+      else
+      service = GroovyCodeAssistantService.get();
+      groovyCodeAssistant =
+         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext() + "/ide/code-assistant/class-doc?fqn="), this);
       
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", Images.CHROMATTIC, true,
          new CodeMirrorConfiguration(
@@ -85,11 +92,8 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
                new GroovyAutocompleteHelper(), // autocomplete helper
                true, // can be validated
                new GroovyCodeValidator(),
-               javaCodeAssistant)));
+               groovyCodeAssistant)));
 
-      if (CodeAssistantService.getInstance() == null)
-         new CodeAssistantServiceImpl(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
-            event.getLoader());
    }
 
    /**
@@ -122,7 +126,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      javaCodeAssistant.setactiveFileHref(event.getFile().getHref());
+      groovyCodeAssistant.setactiveFileHref(event.getFile().getHref());
    }
 
 }

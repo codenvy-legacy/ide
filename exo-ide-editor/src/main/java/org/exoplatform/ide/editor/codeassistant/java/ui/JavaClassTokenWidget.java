@@ -118,7 +118,7 @@ public class JavaClassTokenWidget extends JavaTokenWidgetBase
    @Override
    public Widget getTokenDecription()
    {
-      return new Frame(restContext + "/ide/code-assistant/class-doc?fqn=" + token.getProperty(TokenProperties.FQN));
+      return new Frame(docContext + "/ide/code-assistant/class-doc?fqn=" + token.getProperty(TokenProperties.FQN));
    }
 
 }

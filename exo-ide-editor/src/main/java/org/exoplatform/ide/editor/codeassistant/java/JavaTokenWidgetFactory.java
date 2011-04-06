@@ -39,6 +39,7 @@ public class JavaTokenWidgetFactory implements TokenWidgetFactory
 {
 
    private String restContext;
+   
 
    /**
     * @param context

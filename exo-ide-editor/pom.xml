@@ -161,6 +161,11 @@
                <scope>test</scope>
             </dependency>
             <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-java</artifactId>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
                <groupId>org.exoplatform.kernel</groupId>
                <artifactId>exo.kernel.commons</artifactId>
                <scope>test</scope>
