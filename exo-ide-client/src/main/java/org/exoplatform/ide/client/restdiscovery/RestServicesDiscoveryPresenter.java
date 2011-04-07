@@ -31,6 +31,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Param;
+import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -90,7 +91,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
       void setParametersListGridEnabled(boolean enabled);
 
-      void setPathFieldVisible(boolean visible);
    }
 
    private HandlerManager eventBus;
@@ -188,6 +188,14 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
             }
             else
             {
+               if(event.getSelectedItem() instanceof RestService)
+               {
+                  dispaly.getPathField().setValue(((RestService)event.getSelectedItem()).getFullPath());
+               }
+               else if(event.getSelectedItem() instanceof Resource)
+               {
+                  dispaly.getPathField().setValue(((Resource)event.getSelectedItem()).getPath());
+               }
                clearMethodInfo();
             }
          }
@@ -195,7 +203,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    }
 
    /**
-    * 
+    * Hide method info
     */
    private void clearMethodInfo()
    {
@@ -205,15 +213,17 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       dispaly.setParametersListGridVisible(false);
       dispaly.setRequestFieldVisible(false);
       dispaly.setResponseFieldVisible(false);
-      dispaly.setPathFieldVisible(false);
+//      dispaly.setPathFieldVisible(false);
    }
 
+
    /**
-    * @param selectedItem
+    * Update method info
+    * @param method
     */
    private void updateMethodInfo(Method method)
    {
-      dispaly.setPathFieldVisible(true);
+//      dispaly.setPathFieldVisible(true);
       dispaly.getPathField().setValue(method.getHref());
 
       if (method.getRequest() != null)
@@ -374,6 +384,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       try
       {
          dispaly.getTreeGrid().setRootValue(list2Tree.values().iterator().next(), services.keySet());
+         
       }
       catch (Exception e)
       {

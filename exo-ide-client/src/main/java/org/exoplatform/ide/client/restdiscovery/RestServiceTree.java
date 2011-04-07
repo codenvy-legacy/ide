@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import com.google.gwt.user.client.ui.TreeItem;
 
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Request;
@@ -29,9 +27,8 @@ import org.exoplatform.gwtframework.ui.client.component.Tree;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.discovery.RestService;
 
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,6 +38,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
 {
 
+   
    private Set<String> restClassPaths;
 
    /**
@@ -49,6 +47,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
    @Override
    public void setRootValue(RestService item, Set<String> restClassPath)
    {
+      
       this.restClassPaths = restClassPath;
       tree.removeItems();
       for (RestService rs : item.getChildServices().values())
@@ -57,7 +56,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
       }
       if(tree.getItemCount() > 0)
       {
-         tree.getItem(0).setSelected(true);
+         tree.setSelectedItem(tree.getItem(0));
       }
    }
    
@@ -76,7 +75,6 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
       {
          hiPanel.setWidth("100%");
       }
-      ((ScrollPanel)getParent()).scrollToLeft();
    }
 
    private void addRestService(TreeItem parentNode, RestService children)

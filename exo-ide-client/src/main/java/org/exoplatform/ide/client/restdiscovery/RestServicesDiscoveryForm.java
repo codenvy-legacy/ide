@@ -78,6 +78,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       super(WIDTH, HEIGTH, ID);
       vLayout = new VerticalPanel();
       vLayout.setHeight("100%");
+      vLayout.setWidth("100%");
       vLayout.setSpacing(10);
       vLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       
@@ -109,6 +110,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
 
       VerticalPanel vL = new VerticalPanel();
       vL.setSpacing(3);
+      vL.setWidth("100%");
       VerticalPanel form = new VerticalPanel();
       form.getElement().setAttribute("id", "ideRestServiceDiscoveryForm");
       form.setWidth("100%");
@@ -116,6 +118,7 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       form.setSpacing(3);
 
       pathField = createTextField("ideMethodPathField", "<nobr>Path</nobr>", width);
+      pathField.setVisible(true);
 
       requestType = createTextField("ideRequestType", "<nobr>Request media type</nobr>", width);
 
@@ -310,12 +313,4 @@ public class RestServicesDiscoveryForm extends DialogWindow implements RestServi
       return pathField;
    }
 
-   /**
-    * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#setPathFieldVisible(boolean)
-    */
-   public void setPathFieldVisible(boolean visible)
-   {
-      pathField.setVisible(visible);
-      UIHelper.setAsReadOnly(pathField.getName());
-   }
 }
