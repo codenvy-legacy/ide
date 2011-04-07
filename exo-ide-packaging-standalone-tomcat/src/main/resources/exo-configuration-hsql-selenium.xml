@@ -195,7 +195,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
    </component>
 
    <component>
@@ -263,7 +263,7 @@
 
 
    <component>
-      <type>org.exoplatform.ide.shindig.oauth.RestSecurityTokenGenerator</type>
+      <type>org.exoplatform.ide.extension.gadget.server.shindig.oauth.RestSecurityTokenGenerator</type>
    </component>
 
 
@@ -306,7 +306,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptService</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type>
       <init-params>
          <object-param>
             <name>observation.config</name>
@@ -327,7 +327,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.chromattic.ChromatticServiceApplication</type>
+      <type>org.exoplatform.ide.extension.chromattic.server.ChromatticServiceApplication</type>
    </component>
 
    <component>
