@@ -443,7 +443,6 @@ public class GroovyServiceOutputPreviewPresenter
          //String fullPath = base.substring(base.lastIndexOf("/")) + methoPath;
          String fullPath = base + methoPath;
 
-         display.closeForm();
 
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers, queryParams,
             display.getRequestBody().getValue(), new AsyncRequestCallback<RestServiceOutput>()
@@ -470,6 +469,7 @@ public class GroovyServiceOutputPreviewPresenter
                   }
                }
             });
+         display.closeForm();
       }
       catch (IllegalArgumentException e)
       {

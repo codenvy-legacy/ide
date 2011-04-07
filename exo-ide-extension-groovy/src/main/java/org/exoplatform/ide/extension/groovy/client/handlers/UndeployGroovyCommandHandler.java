@@ -88,7 +88,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
       
       String outputContent = "<b>" + href + "</b> undeployed successfully.";
       eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-      eventBus.fireEvent(new GroovyUndeployResultReceivedEvent(href));
+//      eventBus.fireEvent(new GroovyUndeployResultReceivedEvent(href));
    }
    
    private void undeployFail(Throwable exc, String href)
