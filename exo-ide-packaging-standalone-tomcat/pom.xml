@@ -279,7 +279,7 @@
                            <property>exo.projects.app.tomcat.version</property>
                            <message>You must define the property exo.projects.app.tomcat.version to
                               give the name of the directory where is stored tomcat</message>
-                            <regex>tomcat-${tomcat.version}</regex>
+                            <regex>[a-z-]+-${tomcat.version}</regex>
                             <regexMessage>Tomcat version must be: ${tomcat.version}</regexMessage>
                         </requireProperty>
                         <requireFilesExist>
@@ -538,7 +538,7 @@
       <profile>
          <id>pkg</id>
          <activation>
-            <activeByDefault>true</activeByDefault>
+            <activeByDefault>false</activeByDefault>
          </activation>
          <build>
             <plugins>
