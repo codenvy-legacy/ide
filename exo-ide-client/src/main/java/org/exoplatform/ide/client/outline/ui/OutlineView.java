@@ -116,6 +116,11 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
       }
    }
 
+   public void deselectAllTokens()
+   {
+      treeGrid.deselectAllTokens();
+   }
+
    //   public void setFocus()
    //   {
    //      activate();

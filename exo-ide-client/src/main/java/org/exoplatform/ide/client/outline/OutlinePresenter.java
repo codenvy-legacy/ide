@@ -19,8 +19,11 @@
 package org.exoplatform.ide.client.outline;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -105,6 +108,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
        */
       void setOutlineAvailable(boolean available);
 
+      /**
+       * Remove selection from any token
+       */
+      void deselectAllTokens();
+
    }
 
    private HandlerManager eventBus;
@@ -115,16 +123,16 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private int currentRow;
 
-   private boolean goToLine;
-
    private TokenBeenImpl currentToken;
 
    private File activeFile;
 
    private Editor activeEditor;
 
-   private boolean afterChangineCursorFromOutline = false;
+   private boolean onItemClicked = false;
 
+   JavaScriptObject lastFocusedElement;
+   
    private ApplicationSettings applicationSettings;
 
    public OutlinePresenter(HandlerManager eventBus)
@@ -217,8 +225,16 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          }
       });
 
+      display.getOutlineTree().addKeyPressHandler(new KeyPressHandler()
+      {
+         public void onKeyPress(KeyPressEvent event)
+         {
+            onItemClicked();
+         }     
+      });
+      
+      
       currentRow = 0;
-      goToLine = true;
 
       if (canShowOutline())
       {
@@ -234,19 +250,18 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private void onItemSelected(TokenBeenImpl selectedItem)
    {
-      if (currentToken != null && selectedItem.getName().equals(currentToken.getName())
-         && selectedItem.getLineNumber() == currentToken.getLineNumber())
+      if (!onItemClicked ||
+               currentToken != null && selectedItem.getName().equals(currentToken.getName())
+               && selectedItem.getLineNumber() == currentToken.getLineNumber())
       {
          return;
       }
 
       currentToken = selectedItem;
 
-      if (goToLine)
-      {
-         setEditorCursorPosition(selectedItem.getLineNumber());
-      }
-      goToLine = true;
+      setEditorCursorPosition(selectedItem.getLineNumber());
+      
+      onItemClicked = false;
    }
 
    /**
@@ -254,6 +269,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
     */
    private void onItemClicked()
    {
+      onItemClicked = true;
+      
       if (display.getSelectedTokens().size() > 0)
       {
          currentToken = display.getSelectedTokens().get(0);
@@ -279,7 +296,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       display.getOutlineTree().setValue(token);
       currentRow = activeEditor.getCursorRow();
       currentToken = null;
-      selectTokenByRow(tokens);
+      
+      if (!selectTokenByRow(tokens))
+      {
+         display.deselectAllTokens();
+      }
    }
 
    /**
@@ -290,7 +311,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       int maxLineNumber = activeFile.getContent().split("\n").length;
 
-      afterChangineCursorFromOutline = true;
+      // restore focus on OutlinePanel
+      lastFocusedElement = getActiveElement();
       eventBus.fireEvent(new EditorGoToLineEvent(lineNumber < maxLineNumber ? lineNumber : maxLineNumber));
    }
 
@@ -451,7 +473,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       if (!isCurrentTokenSelected(token))
       {
-         goToLine = false;
          display.selectToken(token);
       }
    }
@@ -482,27 +503,34 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
     */
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
+
       if (display == null)
       {
          return;
       }
 
-      if (currentRow == event.getRow())
-      {
-         return;
+      if (!onItemClicked)
+      {   
+         if (currentRow == event.getRow())
+         {
+            return;
+         }
+   
+         currentRow = event.getRow();
+
+         selectOutlineTimer.cancel();
+         selectOutlineTimer.schedule(1000);
       }
-
-      currentRow = event.getRow();
-
-      selectOutlineTimer.cancel();
-
-      // return focus to the outline panel after the setting of cursor position in the Editor
-      if (afterChangineCursorFromOutline)
+      else 
       {
-         afterChangineCursorFromOutline = false;
+         // restore focus on OutlinePanel
+         if (lastFocusedElement != null)
+         {
+            setElementFocus(lastFocusedElement);   
+         }
+         
+         onItemClicked = false;
       }
-
-      selectOutlineTimer.schedule(1000);
    }
 
    private Timer selectOutlineTimer = new Timer()
@@ -510,8 +538,18 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       @Override
       public void run()
       {
+         // restore focus of FileTab
+         JavaScriptObject lastFocusedElement = getActiveElement();
          selectTokenByRow(tokens);
+         setElementFocus(lastFocusedElement);
       }
    };
-
+   
+   private native JavaScriptObject getActiveElement() /*-{
+      return $doc.activeElement;
+   }-*/;
+   
+   private native void setElementFocus(JavaScriptObject element) /*-{
+      element.focus();
+   }-*/;
 }

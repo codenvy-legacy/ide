@@ -475,6 +475,15 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    }
 
    /**
+    * Deselect all tokens in the tree.
+    */
+   public void deselectAllTokens()
+   {
+      tree.setSelectedItem(null);
+      hideHighlighter();
+   }
+   
+   /**
     * Get the the list of selected tokens in outline tree.
     * 
     * @return {@link List}
