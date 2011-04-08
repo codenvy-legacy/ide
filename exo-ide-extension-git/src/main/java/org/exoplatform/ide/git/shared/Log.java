@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.git.shared;
 
-import org.exoplatform.ide.git.server.InfoPage;
-
 import java.util.List;
 
 /**
