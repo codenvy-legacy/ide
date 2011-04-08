@@ -315,8 +315,8 @@ public class GitService
    @Path("log")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput __jsonLog(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, LogRequest request)
+   @Produces(MediaType.APPLICATION_JSON)
+   public StreamingOutput jsonLog(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, LogRequest request)
       throws GitException
    {
       GitConnection gitConnection = getGitConnection(workDir, sctx);

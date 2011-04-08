@@ -35,7 +35,6 @@ public class Log
 
    public Log()
    {
-      super();
    }
 
    public List<Revision> getCommits()
