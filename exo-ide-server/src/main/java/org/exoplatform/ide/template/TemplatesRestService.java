@@ -153,11 +153,11 @@ public class TemplatesRestService
    }
    
    /**
-    * Create the project from one of sample templates.
+    * Create the project or file from one of sample templates.
     * 
     * @param uriInfo - the uri info
     * @param templateName - the name of template
-    * @param projectLocation - the location of new project, where the word after the last slash - is new project name 
+    * @param itemLocation - the location of new item, where the word after the last slash - is new name 
     *    (e.g. <code>http://localhost/jcr/db1/dev-monit/newProjectName</code>)
     * @throws ParserConfigurationException
     * @throws SAXException
@@ -168,12 +168,12 @@ public class TemplatesRestService
     */
    @GET
    @Path("/create")
-   public void createProject(@Context UriInfo uriInfo, @HeaderParam("template-name") String templateName,
-      @HeaderParam("location") String projectLocation, @HeaderParam("type") String type) throws TemplateServiceException
+   public void createFromTemplate(@Context UriInfo uriInfo, @HeaderParam("template-name") String templateName,
+      @HeaderParam("location") String itemLocation, @HeaderParam("type") String type) throws TemplateServiceException
    {
       try
       {
-         String location = cropLocation(projectLocation, uriInfo);
+         String location = cropLocation(itemLocation, uriInfo);
 
          /*
           * the name of new project or file
@@ -200,6 +200,9 @@ public class TemplatesRestService
 
          if ("project".equals(type))
          {
+            /*
+             * Path to project folder with sources
+             */
             String templateSource = getPathToProjectManifest(templateName);
 
             if (templateSource == null)
@@ -212,6 +215,9 @@ public class TemplatesRestService
          }
          else if ("file".equals(type))
          {
+            /*
+             * Node from Templates.xml file
+             */
             Node fileNode = getFileTemplateNode(templateName);
             if (fileNode == null)
             {
