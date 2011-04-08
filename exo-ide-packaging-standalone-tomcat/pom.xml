@@ -45,221 +45,257 @@
          </plugin>
 
 
-	<plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-dependency-plugin</artifactId>
-		<executions>
-		
-			<execution>
-				<id>copy-dependencies2</id>
-				<phase>process-resources</phase>
-				<goals>
-					<goal>copy</goal>
-				</goals>
-				
-				<configuration>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
 
-					<artifactItems>
+               <execution>
+                  <id>copy-dependencies2</id>
+                  <phase>process-resources</phase>
+                  <goals>
+                     <goal>copy</goal>
+                  </goals>
 
-						<artifactItem>
-							<groupId>javax.jcr</groupId>
-							<artifactId>jcr</artifactId>
-							<version>${javax.jcr.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                  <configuration>
 
-					   <artifactItem>
-			               <groupId>org.chromattic</groupId>
-			               <artifactId>chromattic.apt</artifactId>
-			               <version>${version.chromattic}</version>
-			               <type>java-source</type>
-                       </artifactItem>
+                     <artifactItems>
 
-                       <artifactItem>
-			               <groupId>org.chromattic</groupId>
-			               <artifactId>chromattic.api</artifactId>
-			               <version>${version.chromattic}</version>
-			               <type>java-source</type>
-                       </artifactItem>
+                        <artifactItem>
+                           <groupId>javax.jcr</groupId>
+                           <artifactId>jcr</artifactId>
+                           <version>${javax.jcr.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-                       <artifactItem>
-			               <groupId>org.chromattic</groupId>
-			               <artifactId>chromattic.spi</artifactId>
-			               <version>${version.chromattic}</version>
-			               <type>java-source</type>
-                       </artifactItem>
+                        <artifactItem>
+                           <groupId>org.chromattic</groupId>
+                           <artifactId>chromattic.apt</artifactId>
+                           <version>${version.chromattic}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-                       <artifactItem>
-			               <groupId>org.chromattic</groupId>
-			               <artifactId>chromattic.core</artifactId>
-			               <version>${version.chromattic}</version>
-			               <type>java-source</type>
-                       </artifactItem>
+                        <artifactItem>
+                           <groupId>org.chromattic</groupId>
+                           <artifactId>chromattic.api</artifactId>
+                           <version>${version.chromattic}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-                       <artifactItem>
-			               <groupId>org.chromattic</groupId>
-			               <artifactId>chromattic.ext</artifactId>
-			               <version>${version.chromattic}</version>
-			               <type>java-source</type>
-                       </artifactItem>
+                        <artifactItem>
+                           <groupId>org.chromattic</groupId>
+                           <artifactId>chromattic.spi</artifactId>
+                           <version>${version.chromattic}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-                       <artifactItem>
-					        <groupId>javax.annotation</groupId>
-					        <artifactId>jsr250-api</artifactId>
-					        <version>${javax.annotation.version}</version>
-			               <type>java-source</type>
-                       </artifactItem>
+                        <artifactItem>
+                           <groupId>org.chromattic</groupId>
+                           <artifactId>chromattic.core</artifactId>
+                           <version>${version.chromattic}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-						<artifactItem>
-							<groupId>javax.ws.rs</groupId>
-							<artifactId>jsr311-api</artifactId>
-							<version>${javax.ws.rs.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>org.chromattic</groupId>
+                           <artifactId>chromattic.ext</artifactId>
+                           <version>${version.chromattic}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.ws</groupId>
-							<artifactId>exo.ws.commons</artifactId>
-							<version>${org.exoplatform.ws.version}</version>
-							<type>java-source</type>
-						</artifactItem>
-						
-	   					<artifactItem>
-							<groupId>org.exoplatform.ws</groupId>
-						    <artifactId>exo.ws.frameworks.json</artifactId>
-							<version>${org.exoplatform.ws.version}</version>
-							<type>java-source</type>
-						</artifactItem>
-						
-	   					<artifactItem>
-							<groupId>org.exoplatform.ws</groupId>
-						    <artifactId>exo.ws.rest.core</artifactId>
-							<version>${org.exoplatform.ws.version}</version>
-							<type>java-source</type>
-						</artifactItem>
-						
-	   					<artifactItem>
-							<groupId>org.exoplatform.ws</groupId>
-						    <artifactId>exo.ws.rest.ext</artifactId>
-							<version>${org.exoplatform.ws.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>javax.annotation</groupId>
+                           <artifactId>jsr250-api</artifactId>
+                           <version>${javax.annotation.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.kernel</groupId>
-						    <artifactId>exo.kernel.commons</artifactId>
-							<version>${org.exoplatform.kernel.version}</version>
-							<type>java-source</type>
-						</artifactItem>
-						
-	   					<artifactItem>
-							<groupId>org.exoplatform.kernel</groupId>
-						    <artifactId>exo.kernel.component.command</artifactId>
-							<version>${org.exoplatform.kernel.version}</version>
-							<type>java-source</type>
-						</artifactItem>
-					
-	   					<artifactItem>
-							<groupId>org.exoplatform.kernel</groupId>
-						    <artifactId>exo.kernel.component.common</artifactId>
-							<version>${org.exoplatform.kernel.version}</version>
-							<type>java-source</type>
-						</artifactItem>
-						
-	   					<artifactItem>
-							<groupId>org.exoplatform.kernel</groupId>
-						    <artifactId>exo.kernel.container</artifactId>
-							<version>${org.exoplatform.kernel.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>javax.ws.rs</groupId>
+                           <artifactId>jsr311-api</artifactId>
+                           <version>${javax.ws.rs.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.core</groupId>
-						    <artifactId>exo.core.component.database</artifactId>
-							<version>${org.exoplatform.core.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>org.exoplatform.ws</groupId>
+                           <artifactId>exo.ws.commons</artifactId>
+                           <version>${org.exoplatform.ws.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.core</groupId>
-						    <artifactId>exo.core.component.document</artifactId>
-							<version>${org.exoplatform.core.version}</version>
-							<type>java-source</type>
-						</artifactItem>
-						
-	   					<artifactItem>
-							<groupId>org.exoplatform.core</groupId>
-						    <artifactId>exo.core.component.organization.api</artifactId>
-							<version>${org.exoplatform.core.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>org.exoplatform.ws</groupId>
+                           <artifactId>exo.ws.frameworks.json</artifactId>
+                           <version>${org.exoplatform.ws.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.core</groupId>
-						    <artifactId>exo.core.component.script.groovy</artifactId>
-							<version>${org.exoplatform.core.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>org.exoplatform.ws</groupId>
+                           <artifactId>exo.ws.rest.core</artifactId>
+                           <version>${org.exoplatform.ws.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.core</groupId>
-						    <artifactId>exo.core.component.security.core</artifactId>
-							<version>${org.exoplatform.core.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>org.exoplatform.ws</groupId>
+                           <artifactId>exo.ws.rest.ext</artifactId>
+                           <version>${org.exoplatform.ws.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.core</groupId>
-						    <artifactId>exo.core.component.xml-processing</artifactId>
-							<version>${org.exoplatform.core.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>org.exoplatform.kernel</groupId>
+                           <artifactId>exo.kernel.commons</artifactId>
+                           <version>${org.exoplatform.kernel.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.jcr</groupId>
-						    <artifactId> exo.jcr.component.core</artifactId>
-							<version>${org.exoplatform.jcr.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>org.exoplatform.kernel</groupId>
+                           <artifactId>exo.kernel.component.command</artifactId>
+                           <version>${org.exoplatform.kernel.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.jcr</groupId>
-						    <artifactId>exo.jcr.component.ext</artifactId>
-							<version>${org.exoplatform.jcr.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>org.exoplatform.kernel</groupId>
+                           <artifactId>exo.kernel.component.common</artifactId>
+                           <version>${org.exoplatform.kernel.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.jcr</groupId>
-						    <artifactId>exo.jcr.component.webdav</artifactId>
-							<version>${org.exoplatform.jcr.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>org.exoplatform.kernel</groupId>
+                           <artifactId>exo.kernel.container</artifactId>
+                           <version>${org.exoplatform.kernel.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.jcr</groupId>
-						    <artifactId>exo.jcr.framework.command</artifactId>
-							<version>${org.exoplatform.jcr.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>org.exoplatform.core</groupId>
+                           <artifactId>exo.core.component.database</artifactId>
+                           <version>${org.exoplatform.core.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-	   					<artifactItem>
-							<groupId>org.exoplatform.jcr</groupId>
-						    <artifactId>exo.jcr.framework.web</artifactId>
-							<version>${org.exoplatform.jcr.version}</version>
-							<type>java-source</type>
-						</artifactItem>
+                        <artifactItem>
+                           <groupId>org.exoplatform.core</groupId>
+                           <artifactId>exo.core.component.document</artifactId>
+                           <version>${org.exoplatform.core.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-					</artifactItems>
+                        <artifactItem>
+                           <groupId>org.exoplatform.core</groupId>
+                           <artifactId>exo.core.component.organization.api</artifactId>
+                           <version>${org.exoplatform.core.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-					<outputDirectory>${project.build.directory}/tomcat-ide/lib-docs</outputDirectory>
+                        <artifactItem>
+                           <groupId>org.exoplatform.core</groupId>
+                           <artifactId>exo.core.component.script.groovy</artifactId>
+                           <version>${org.exoplatform.core.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
 
-				</configuration>
-			</execution>
-		</executions>
-	</plugin>         
-         
-         
+                        <artifactItem>
+                           <groupId>org.exoplatform.core</groupId>
+                           <artifactId>exo.core.component.security.core</artifactId>
+                           <version>${org.exoplatform.core.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.exoplatform.core</groupId>
+                           <artifactId>exo.core.component.xml-processing</artifactId>
+                           <version>${org.exoplatform.core.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.exoplatform.jcr</groupId>
+                           <artifactId> exo.jcr.component.core</artifactId>
+                           <version>${org.exoplatform.jcr.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.exoplatform.jcr</groupId>
+                           <artifactId>exo.jcr.component.ext</artifactId>
+                           <version>${org.exoplatform.jcr.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.exoplatform.jcr</groupId>
+                           <artifactId>exo.jcr.component.webdav</artifactId>
+                           <version>${org.exoplatform.jcr.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.exoplatform.jcr</groupId>
+                           <artifactId>exo.jcr.framework.command</artifactId>
+                           <version>${org.exoplatform.jcr.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.exoplatform.jcr</groupId>
+                           <artifactId>exo.jcr.framework.web</artifactId>
+                           <version>${org.exoplatform.jcr.version}</version>
+                           <type>java-source</type>
+                        </artifactItem>
+
+                     </artifactItems>
+
+                     <outputDirectory>${project.build.directory}/tomcat-ide/lib-docs</outputDirectory>
+
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>check-environment-ready</id>
+                  <goals>
+                     <goal>enforce</goal>
+                  </goals>
+                  <configuration>
+                     <rules>
+                        <requireProperty>
+                           <property>exo.projects.directory.dependencies</property>
+                           <message>You must define the property exo.projects.directory.dependencies to
+                              give the path to the directory where you store your applications servers</message>
+                        </requireProperty>
+                        <requireProperty>
+                           <property>exo.projects.app.tomcat.version</property>
+                           <message>You must define the property exo.projects.app.tomcat.version to
+                              give the name of the directory where is stored tomcat</message>
+                            <regex>tomcat-${tomcat.version}</regex>
+                            <regexMessage>Tomcat version must be: ${tomcat.version}</regexMessage>
+                        </requireProperty>
+                        <requireFilesExist>
+                           <files>
+                              <file>${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}/</file>
+                           </files>
+                           <message>The following Tomcat directory doesn't exist :
+                              ${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}</message>
+                        </requireFilesExist>
+                     </rules>
+                     <fail>true</fail>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+
          <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
@@ -282,7 +318,7 @@
       </plugins>
    </build>
    <profiles>
-     <profile>
+      <profile>
          <id>pkg-demo-site</id>
          <activation>
             <activeByDefault>false</activeByDefault>
@@ -297,11 +333,11 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" >
-                               <patternset>
-                                  <exclude name="**/exo-configuration.xml"/>
-                                  <exclude name="**/exo-jcr-config.xml"/>
-                               </patternset>
+                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar">
+                                 <patternset>
+                                    <exclude name="**/exo-configuration.xml" />
+                                    <exclude name="**/exo-jcr-config.xml" />
+                                 </patternset>
                               </unwar>
                            </tasks>
                         </configuration>
@@ -317,25 +353,24 @@
                               <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/ide-war-demo">
                                     <exclude name="**/conf/exo-jcr-config-mysql.xml" />
-                                    <exclude name="**/exo-configuration.xml"/>
-                                    <exclude name="**/exo-jcr-config.xml"/>
+                                    <exclude name="**/exo-configuration.xml" />
+                                    <exclude name="**/exo-jcr-config.xml" />
                                  </fileset>
                               </copy>
                               <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat/demo-site" />
                               </copy>
-                              <copy file="${basedir}/src/main/resources/exo-configuration-hsql.xml" tofile="${project.build.directory}/tomcat-ide/exo-configuration.xml"/>
-                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x"   includes="**/*.sh"/>
+                              <copy file="${basedir}/src/main/resources/exo-configuration-hsql.xml" tofile="${project.build.directory}/tomcat-ide/exo-configuration.xml" />
+                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh" />
                               <move todir="${project.build.directory}/tomcat-ide/lib">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
                               </move>
-                              <!-- war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
-                                 <fileset dir="${project.build.directory}/packager-conf/unwar" />
-                              </war-->
-                               <copy todir="${project.build.directory}/tomcat-ide/webapps/IDE" >
+                              <!-- war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false"> <fileset dir="${project.build.directory}/packager-conf/unwar" 
+                                 /> </war -->
+                              <copy todir="${project.build.directory}/tomcat-ide/webapps/IDE">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar" />
                               </copy>
-                              
+
                            </tasks>
                         </configuration>
                         <goals>
@@ -387,13 +422,12 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war"
-                               dest="${project.build.directory}/packager-conf/unwar" >
-                               <patternset>
-                                  <exclude name="**/exo-configuration.xml"/>
-                                  <exclude name="**/exo-jcr-config.xml"/>
-                               </patternset>
-                               </unwar>
+                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar">
+                                 <patternset>
+                                    <exclude name="**/exo-configuration.xml" />
+                                    <exclude name="**/exo-jcr-config.xml" />
+                                 </patternset>
+                              </unwar>
                            </tasks>
                         </configuration>
                         <goals>
@@ -406,25 +440,23 @@
                         <configuration>
                            <tasks>
                               <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
-                                  <fileset dir="${basedir}/src/main/resources/ide-war-demo">
+                                 <fileset dir="${basedir}/src/main/resources/ide-war-demo">
                                     <exclude name="**/conf/exo-jcr-config-hsql.xml" />
-                                    <exclude name="**/exo-configuration.xml"/>
-                                    <exclude name="**/exo-jcr-config.xml"/>
+                                    <exclude name="**/exo-configuration.xml" />
+                                    <exclude name="**/exo-jcr-config.xml" />
                                  </fileset>
                               </copy>
                               <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat/demo-site" />
                               </copy>
-                              <copy file="${basedir}/src/main/resources/exo-configuration-mysql.xml" 
-                              tofile="${project.build.directory}/tomcat-ide/exo-configuration.xml"/>
-                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x"   includes="**/*.sh"/>
+                              <copy file="${basedir}/src/main/resources/exo-configuration-mysql.xml" tofile="${project.build.directory}/tomcat-ide/exo-configuration.xml" />
+                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh" />
                               <move todir="${project.build.directory}/tomcat-ide/lib">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
                               </move>
-                              <!-- war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
-                                 <fileset dir="${project.build.directory}/packager-conf/unwar" />
-                              </war-->
-                               <copy todir="${project.build.directory}/tomcat-ide/webapps/IDE" >
+                              <!-- war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false"> <fileset dir="${project.build.directory}/packager-conf/unwar" 
+                                 /> </war -->
+                              <copy todir="${project.build.directory}/tomcat-ide/webapps/IDE">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar" />
                               </copy>
                            </tasks>
@@ -453,11 +485,11 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" >
-                               <patternset>
-                                  <exclude name="**/exo-configuration.xml"/>
-                               </patternset>
-                               </unwar>
+                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar">
+                                 <patternset>
+                                    <exclude name="**/exo-configuration.xml" />
+                                 </patternset>
+                              </unwar>
                            </tasks>
                         </configuration>
                         <goals>
@@ -473,16 +505,15 @@
                                  <fileset dir="${basedir}/src/main/resources/ide-war-selenium">
                                     <exclude name="**/conf/exo-jcr-config-hsql.xml" />
                                     <exclude name="**/conf/exo-jcr-config-mysql.xml" />
-                                    <exclude name="**/exo-jcr-config.xml"/>
-                                    <exclude name="**/exo-configuration.xml"/>
+                                    <exclude name="**/exo-jcr-config.xml" />
+                                    <exclude name="**/exo-configuration.xml" />
                                  </fileset>
                               </copy>
                               <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat/selenium" />
                               </copy>
-                                <copy file="${basedir}/src/main/resources/exo-configuration-hsql-selenium.xml" 
-                              tofile="${project.build.directory}/tomcat-ide/exo-configuration.xml"/>
-                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x"   includes="**/*.sh"/>
+                              <copy file="${basedir}/src/main/resources/exo-configuration-hsql-selenium.xml" tofile="${project.build.directory}/tomcat-ide/exo-configuration.xml" />
+                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh" />
                               <move todir="${project.build.directory}/tomcat-ide/lib">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
                               </move>
@@ -504,39 +535,38 @@
             </plugins>
          </build>
       </profile>
-      <profile>                                                                                                                                                                                                
-         <id>pkg</id>                                                                                                                                                                                         
-         <activation>                                                                                                                                                                                          
-            <activeByDefault>true</activeByDefault>                                                                                                                                                           
-         </activation>                                                                                                                                                                                         
-         <build>                                                                                                                                                                                               
-            <plugins>                                                                                                                                                                                          
-               <plugin>                                                                                                                                                                                        
-                  <artifactId>maven-antrun-plugin</artifactId>                                                                                                                                                 
-                  <executions>                                                                                                                                                                                 
-                     <execution>                                                                                                                                                                               
-                        <id>copy-war</id>                                                                                                                                                                      
-                        <phase>install</phase>                                                                                                                                                                 
-                        <configuration>                                                                                                                                                                        
-                           <tasks>                                                                                                                                                                             
-                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war"
-                               tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" />
-                              <copy todir="${project.build.directory}/tomcat-ide" overwrite="true" >                                                                                                                             
+      <profile>
+         <id>pkg</id>
+         <activation>
+            <activeByDefault>true</activeByDefault>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <artifactId>maven-antrun-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>copy-war</id>
+                        <phase>install</phase>
+                        <configuration>
+                           <tasks>
+                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" />
+                              <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat/demo-site">
-                                   <exclude name="**/server.xml"/>
-                                 </fileset> 
+                                    <exclude name="**/server.xml" />
+                                 </fileset>
                               </copy>
-                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x"   includes="**/*.sh"/>                                                                                                                                                                          
-                           </tasks>                                                                                                                                                                            
-                        </configuration>                                                                                                                                                                       
-                        <goals>                                                                                                                                                                                
-                           <goal>run</goal>                                                                                                                                                                    
-                        </goals>                                                                                                                                                                               
-                     </execution>                                                                                                                                                                              
-                  </executions>                                                                                                                                                                                
-               </plugin>                                                                                                                                                                                       
-            </plugins>                                                                                                                                                                                         
-         </build>                                                                                                                                                                                              
-      </profile>         
+                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh" />
+                           </tasks>
+                        </configuration>
+                        <goals>
+                           <goal>run</goal>
+                        </goals>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
    </profiles>
 </project>
