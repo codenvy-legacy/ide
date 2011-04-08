@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.permissions.event;
 
-import org.exoplatform.ide.client.permissions.control.ShowPermissionsControl;
+import org.exoplatform.ide.client.permissions.ShowPermissionsControl;
 
 import com.google.gwt.event.shared.GwtEvent;
 

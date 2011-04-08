@@ -23,6 +23,8 @@ import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * This event generates after changing of view visibility.
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -32,27 +34,49 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ViewVisibilityChangedEvent extends GwtEvent<ViewVisibilityChangedHandler>
 {
 
+   /**
+    * Type of this event.
+    */
    public static final GwtEvent.Type<ViewVisibilityChangedHandler> TYPE =
       new GwtEvent.Type<ViewVisibilityChangedHandler>();
 
+   /**
+    * View which visibility was changed.
+    */
    private ViewEx view;
 
+   /**
+    * Creates a new instance of this event.
+    * 
+    * @param view view which visibility was changed
+    */
    public ViewVisibilityChangedEvent(ViewEx view)
    {
       this.view = view;
    }
 
+   /**
+    * Gets view which visibility was changed.
+    * 
+    * @return view instance of view which visibility was changed 
+    */
    public ViewEx getView()
    {
       return view;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<ViewVisibilityChangedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
    @Override
    protected void dispatch(ViewVisibilityChangedHandler handler)
    {

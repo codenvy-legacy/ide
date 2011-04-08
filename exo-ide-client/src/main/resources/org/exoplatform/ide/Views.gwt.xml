@@ -65,4 +65,8 @@
 		<when-type-is class="org.exoplatform.ide.client.edit.FindTextPresenter.Display" />
 	</replace-with>
 
+	<replace-with class="org.exoplatform.ide.client.project.CreateProjectFromTemplateForm">
+		<when-type-is class="org.exoplatform.ide.client.project.CreateProjectFromTemplatePresenter.Display" />
+	</replace-with>
+
 </module>

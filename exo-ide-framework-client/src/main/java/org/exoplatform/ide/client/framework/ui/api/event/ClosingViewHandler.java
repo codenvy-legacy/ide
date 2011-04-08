@@ -21,6 +21,8 @@ package org.exoplatform.ide.client.framework.ui.api.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * This is an Handler of ClosingView Event.
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -30,6 +32,11 @@ import com.google.gwt.event.shared.EventHandler;
 public interface ClosingViewHandler extends EventHandler
 {
 
+   /**
+    * Handle the event before closing the View.
+    * 
+    * @param event ClosingView Event
+    */
    void onClosingView(ClosingViewEvent event);
    
 }

@@ -23,6 +23,8 @@ import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * This event fired before closing View.
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -32,38 +34,71 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ClosingViewEvent extends GwtEvent<ClosingViewHandler>
 {
 
+   /**
+    * Type of this event.
+    */
    public static final GwtEvent.Type<ClosingViewHandler> TYPE = new GwtEvent.Type<ClosingViewHandler>();
 
+   /**
+    * View to be closed.
+    */
    private ViewEx view;
 
+   /**
+    * Revoked or not closing the View.
+    */
    private boolean closingCanceled = false;
 
+   /**
+    * Creates a new instance of this Event.
+    * 
+    * @param view view to be closed
+    */
    public ClosingViewEvent(ViewEx view)
    {
       this.view = view;
    }
 
+   /**
+    * Gets View to be closed.
+    * 
+    * @return View to be closed.
+    */
    public ViewEx getView()
    {
       return view;
    }
 
+   /**
+    * Revoke closing View.
+    */
    public void cancelClosing()
    {
       closingCanceled = true;
    }
 
+   /**
+    * Gets is closing was revoked.
+    * 
+    * @return
+    */
    public boolean isClosingCanceled()
    {
       return closingCanceled;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<ClosingViewHandler> getAssociatedType()
    {
       return TYPE;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
    @Override
    protected void dispatch(ClosingViewHandler handler)
    {

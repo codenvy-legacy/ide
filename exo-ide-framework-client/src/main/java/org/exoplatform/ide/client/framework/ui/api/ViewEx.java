@@ -21,6 +21,8 @@ package org.exoplatform.ide.client.framework.ui.api;
 import com.google.gwt.user.client.ui.Image;
 
 /**
+ * This interfaces describes View used in IDE.
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>

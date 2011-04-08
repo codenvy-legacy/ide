@@ -21,6 +21,8 @@ package org.exoplatform.ide.client.framework.ui.api.event;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
+ * This interface means that his implementation has ClosingViewHandler.
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>

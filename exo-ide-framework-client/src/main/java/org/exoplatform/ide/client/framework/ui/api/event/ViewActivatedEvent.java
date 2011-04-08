@@ -23,6 +23,7 @@ import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * This event generates after activating of any View.
  * 
  * Created by The eXo Platform SAS .
  * 
@@ -33,26 +34,48 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ViewActivatedEvent extends GwtEvent<ViewActivatedHandler>
 {
 
+   /**
+    * Type of this Event.
+    */
    public static final GwtEvent.Type<ViewActivatedHandler> TYPE = new GwtEvent.Type<ViewActivatedHandler>();
 
+   /**
+    * View which was activated.
+    */
    private ViewEx view;
 
+   /**
+    * Creates a new instance of this Event.
+    * 
+    * @param view View which was activated
+    */
    public ViewActivatedEvent(ViewEx view)
    {
       this.view = view;
    }
 
+   /**
+    * Gets a view which was activated.
+    * 
+    * @return view which was activated
+    */
    public ViewEx getView()
    {
       return view;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<ViewActivatedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
    @Override
    protected void dispatch(ViewActivatedHandler handler)
    {

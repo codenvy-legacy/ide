@@ -21,6 +21,8 @@ package org.exoplatform.ide.client.framework.ui.api.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * This is an Handler of ViewActivated Event.
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -30,6 +32,11 @@ import com.google.gwt.event.shared.EventHandler;
 public interface ViewActivatedHandler extends EventHandler
 {
    
+   /**
+    * Handle the event after View was activated.
+    * 
+    * @param event ViewActivated event
+    */
    void onViewActivated(ViewActivatedEvent event);
 
 }

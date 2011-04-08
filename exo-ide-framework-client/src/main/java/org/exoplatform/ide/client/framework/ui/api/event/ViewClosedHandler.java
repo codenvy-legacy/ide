@@ -21,6 +21,8 @@ package org.exoplatform.ide.client.framework.ui.api.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler of ViewClosed event
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -30,6 +32,11 @@ import com.google.gwt.event.shared.EventHandler;
 public interface ViewClosedHandler extends EventHandler
 {
    
+   /**
+    * Handle the event after view was closed.
+    * 
+    * @param event instance of ViewClosed Event
+    */
    void onViewClosed(ViewClosedEvent event);
 
 }

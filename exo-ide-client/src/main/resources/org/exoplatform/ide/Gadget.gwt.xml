@@ -32,7 +32,6 @@
    <inherits name='com.google.gwt.xml.XML' />
    <inherits name="com.google.gwt.i18n.I18N" />
 
-
    <script src="applicationInitializer.js" />
 
    <!-- load GWT Commons Libraries -->

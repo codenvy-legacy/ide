@@ -26,16 +26,11 @@ import org.exoplatform.ide.client.framework.configuration.event.ConfigurationRec
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.model.template.ProjectTemplate;
-import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.project.CreateProjectFromTemplatePresenter;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
-import org.exoplatform.ide.client.project.ui.CreateProjectFromTemplateForm;
-import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 
 /**
  * 
@@ -74,12 +69,17 @@ ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
     */
    public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
    {
+      /*
       TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
       CreateProjectFromTemplatePresenter createProjectPresenter =
          new CreateProjectFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), restContext);
       CreateFromTemplateDisplay<ProjectTemplate> createProjectDisplay =
          new CreateProjectFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createProjectPresenter);
       createProjectPresenter.bindDisplay(createProjectDisplay);
+      */
+
+      Window.alert("Asking for Create Project From Template!!!");
+      
       
      /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {

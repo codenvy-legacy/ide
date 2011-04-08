@@ -28,19 +28,34 @@ package org.exoplatform.ide.client.framework.ui.api;
 public interface ViewType
 {
 
-   /*
-    * for Views
+   /**
+    * View type "navigation". All views of this type will be opened in the left part of IDE.
     */
-   String NAVIGATION  = "navigation";
-   
-   String EDITOR  = "editor";
-   
-   String INFORMATION  = "information";
-   
-   String OPERATION  = "operation";
-   
-   String POPUP  = "popup";
-   
-   String MODAL  = "modal";
-   
+   String NAVIGATION = "navigation";
+
+   /**
+    * View type "editor". All views of this type will be opened in the editor panel.
+    */
+   String EDITOR = "editor";
+
+   /**
+    * View type "information". All views of this type will be opened in the right part of IDE.
+    */
+   String INFORMATION = "information";
+
+   /**
+    * View type "operation". All views of this type will be opened in the bottom part of IDE.
+    */
+   String OPERATION = "operation";
+
+   /**
+    * View type "popup". All views of this type will be opened in window.
+    */
+   String POPUP = "popup";
+
+   /**
+    * View type "modal". All views of this type will be opened in modal window.
+    */
+   String MODAL = "modal";
+
 }

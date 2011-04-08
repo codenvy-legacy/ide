@@ -39,11 +39,10 @@ import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
-import org.exoplatform.ide.client.project.ui.CreateProjectFromTemplateForm;
-import org.exoplatform.ide.client.project.ui.CreateProjectTemplateForm;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -52,7 +51,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class ProjectSupportingModule implements CreateProjectFromTemplateHandler, ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler, CreateProjectTemplateHandler
+public class ProjectSupportingModule implements ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler, CreateProjectTemplateHandler
 {
    
    private HandlerManager eventBus;
@@ -71,7 +70,8 @@ public class ProjectSupportingModule implements CreateProjectFromTemplateHandler
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       
       eventBus.addHandler(CreateProjectTemplateEvent.TYPE, this);
-      eventBus.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
+      
+      new CreateProjectFromTemplatePresenter(eventBus);
    }
    
    /**
@@ -87,17 +87,6 @@ public class ProjectSupportingModule implements CreateProjectFromTemplateHandler
    {
       selectedItems = event.getSelectedItems();
    }   
-
-   @Override
-   public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
-   {
-      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
-      CreateProjectFromTemplatePresenter createProjectPresenter =
-         new CreateProjectFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), restServiceContext);
-      CreateFromTemplateDisplay<ProjectTemplate> createProjectDisplay =
-         new CreateProjectFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createProjectPresenter);
-      createProjectPresenter.bindDisplay(createProjectDisplay);   
-   }
 
    @Override
    public void onCreateProjectTemplate(CreateProjectTemplateEvent event)

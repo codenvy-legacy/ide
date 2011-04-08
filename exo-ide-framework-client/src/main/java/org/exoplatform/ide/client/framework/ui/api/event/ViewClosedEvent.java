@@ -23,6 +23,7 @@ import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * This event generates after closing of any View.
  * 
  * Created by The eXo Platform SAS .
  * 
@@ -33,26 +34,48 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ViewClosedEvent extends GwtEvent<ViewClosedHandler>
 {
 
+   /**
+    * Type of this event.
+    */
    public static final GwtEvent.Type<ViewClosedHandler> TYPE = new GwtEvent.Type<ViewClosedHandler>();
 
+   /**
+    * View which was closed.
+    */
    private ViewEx view;
 
+   /**
+    * Creates a new instance of this event
+    * 
+    * @param view view which was closed
+    */
    public ViewClosedEvent(ViewEx view)
    {
       this.view = view;
    }
 
+   /**
+    * Gets view which was closed.
+    * 
+    * @return view instance which was closed
+    */
    public ViewEx getView()
    {
       return view;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<ViewClosedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
    @Override
    protected void dispatch(ViewClosedHandler handler)
    {
