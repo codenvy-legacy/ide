@@ -36,7 +36,7 @@ import java.util.TimeZone;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class LogPage extends Log
+public class LogPage extends Log implements InfoPage
 {
    // The same as C git does.
    private static final String DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy ZZZZZ";

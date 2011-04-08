@@ -26,7 +26,7 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public abstract class Log implements InfoPage
+public class Log
 {
    protected List<Revision> commits;
 
