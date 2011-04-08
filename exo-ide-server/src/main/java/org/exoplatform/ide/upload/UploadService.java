@@ -45,6 +45,7 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.apache.tika.sax.SecureContentHandler;
 import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.zip.ZipUtils;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
@@ -230,7 +231,7 @@ public class UploadService
 
          Session session = null;
          session = getSession(repositoryName, repoPath);
-         ZipUtils.putFile(session, getResourcePath(repoPath), getFileName(repoPath), inputStream, mimeType, nodeType,
+         Utils.putFile(session, getResourcePath(repoPath), getFileName(repoPath), inputStream, mimeType, nodeType,
             jcrContentNodeType);
          session.save();
 

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
+    <head>
+        <!-- Widget Infos -->
+        <title>Sample blog post widget</title>
+        <meta name="author" content="Exposition Libraries" />
+        <meta name="description" content="Displays latest post from a feed" />
+        <meta name="apiVersion" content="1.2" />
+        <meta name="debugMode" content="true" />
+
+        <!-- UWA Environment -->
+        <link rel="stylesheet" type="text/css" href="http://uwa.netvibes.com/css/lib/UWA/uwa-standalone.css" />
+        <script type="text/javascript"> var UWA_SERVER = 'http://uwa.netvibes.com'; </script>
+        <script type="text/javascript" src="http://uwa.netvibes.com/js/c/UWA/UWA_Standalone.js?v=preview3"></script>
+        <script type="text/javascript" src="http://uwa.netvibes.com/js/c/UWA/UWA_Controls_Chart.js?v=preview3"></script>
+        <script type="text/javascript" src="http://uwa.netvibes.com/js/c/UWA/raphael.js?v=preview3"></script>
+
+        <!-- Widget Preferences -->
+
+        <widget:preferences>
+        </widget:preferences>
+
+        <!-- Widget Styles -->
+        <style type="text/css">
+        </style>
+
+        <!-- Widget Source -->
+        <script type="text/javascript">
+        //<![CDATA[
+
+          widget.onLoad = function() {
+
+              var widgetDim = widget.body.getDimensions();
+              widget.body.empty();
+
+              //
+              // Float data example
+              //
+
+              var chartFloatData = [["Jan",0.25], ["Feb",-0.25], ["Mar",0.33], ["Mar",-0.33], ["Mar",0.75], ["Mar",-0.75]]
+              var chartFloat = new UWA.Controls.Chart({
+                  height: widgetDim.width / 2,
+                  width: widgetDim.width,
+                  effect: 'elastic',
+                  type: 'bar',
+                  data: chartFloatData
+              });
+
+              //
+              // Empty data example
+              //
+
+              var chartEmptyData = [["Jan",0], ["Feb",0], ["Mar",0], ["Mar",0], ["Mar",0], ["Mar",0]];
+              var chartEmpty = new UWA.Controls.Chart({
+                  height: widgetDim.width / 2,
+                  width: widgetDim.width,
+                  effect: 'elastic',
+                  type: 'bar',
+                  data: chartEmptyData
+              });
+
+              //
+              // Multiple data Set example
+              //
+
+              var chartMultiSetData = [
+                {
+                    options: {
+                        type: 'line',
+                        opacity: 1
+                    },
+                    values: [["Jan",0], ["Feb",3], ["Mar",6], ["Avr",3], ["Mai",9], ["Jun",2], ["Jul",5], ["Aug",2], ["Sept",5]]
+                },
+                {
+                    options: {
+                        join: false,
+                        color: '#92D146',
+                        legend: "Quarter 1",
+                        type: 'bar',
+                        effect: 'backOut'
+                    },
+                    values: [["Jan",1], ["Feb",2], ["Mar",3]]
+                },
+                {
+                    options: {
+                        join: true,
+                        color: '90-#D31200-#EE9B93',
+                        opacity: 1,
+                        legend: "Quarter 2",
+                        type: 'bar',
+                        effect: 'elastic'
+                    },
+                    values: [["Avr",4], ["Mai",5], ["Jun",6]]
+                },
+                {
+                    options: {
+                        join: true,
+                        color: '#4081D0',
+                        legend: "Quarter 3",
+                        type: 'bar',
+                        effect: 'bounce'
+                    },
+                    values: [["Jul",7], ["Aug",8], ["Sept",9]]
+                }
+              ];
+
+              var chartMultiSet = new UWA.Controls.Chart({
+                  height: widgetDim.width / 2,
+                  width: widgetDim.width,
+                  data: chartMultiSetData
+              });
+
+              //
+              // Big Data example
+              //
+              var chartBigData = [["Jan",10333], ["Feb",-2200], ["Mar",5255], ["Mar",-1150]];
+              var chartBig = new UWA.Controls.Chart({
+                  height: widgetDim.width / 2,
+                  width: widgetDim.width,
+                  type: 'bar line',
+                  effect: 'bounce',
+                  data: chartBigData,
+                  legend: "Quarter 3",
+              });
+
+              widget.addBody(UWA.createElement('h2', {text: 'Float'}));
+              widget.addBody(chartFloat.getContent());
+
+              widget.addBody(UWA.createElement('h2', {text: 'Empty'}));
+              widget.addBody(chartEmpty.getContent());
+
+              widget.addBody(UWA.createElement('h2', {text: 'Small Numbers'}));
+              widget.addBody(chartMultiSet.getContent());
+
+              widget.addBody(UWA.createElement('h2', {text: 'Big Numbers'}));
+              widget.addBody(chartBig.getContent());
+          }
+
+          widget.onRefresh = widget.onResize = widget.onLoad;
+
+        //]]>
+
+        </script>
+    </head>
+    <body>
+        <p>Loading...</p>
+    </body>
+</html>

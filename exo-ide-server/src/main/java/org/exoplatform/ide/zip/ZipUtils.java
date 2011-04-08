@@ -21,6 +21,7 @@ package org.exoplatform.ide.zip;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.exoplatform.commons.utils.MimeTypeResolver;
+import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.download.NodeTypeUtil;
 
 import java.io.ByteArrayInputStream;
@@ -28,7 +29,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Calendar;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -37,7 +37,6 @@ import javax.jcr.InvalidItemStateException;
 import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.lock.LockException;
@@ -54,10 +53,6 @@ import javax.jcr.version.VersionException;
  */
 public class ZipUtils
 {
-   private static final String DEFAULT_FILE_NODE_TYPE = "nt:file";
-   
-   public static final String DEFAULT_JCR_CONTENT_NODE_TYPE = "nt:resource";
-   
    /**
     * Unzip folder and creates structure of folders and files.
     * 
@@ -96,7 +91,7 @@ public class ZipUtils
          String entryName = zipentry.getName();
          if (zipentry.isDirectory())
          {
-            putFolder(session, parentFolderPath, entryName);
+            Utils.putFolder(session, parentFolderPath, entryName);
          }
          else
          {
@@ -112,7 +107,7 @@ public class ZipUtils
             outS.close();
 
             MimeTypeResolver resolver = new MimeTypeResolver();
-            putFile(session, parentFolderPath, entryName, data, resolver.getMimeType(entryName), null, null);
+            Utils.putFile(session, parentFolderPath, entryName, data, resolver.getMimeType(entryName), null, null);
 
          }
          zin.closeEntry();
@@ -217,84 +212,6 @@ public class ZipUtils
          }
          zipOutputStream.write(buffer, 0, readed);
       }
-   }
-   
-   /**
-    * Creates new folder node.
-    * 
-    * @param session - the session 
-    * @param parentFolderPath - path to the parent node
-    * @param folderPath - path to the new folder node (from parent node)
-    * 
-    * @throws ItemExistsException
-    * @throws PathNotFoundException
-    * @throws NoSuchNodeTypeException
-    * @throws LockException
-    * @throws VersionException
-    * @throws ConstraintViolationException
-    * @throws RepositoryException
-    */
-   private static void putFolder(Session session, String parentFolderPath, String folderPath) throws ItemExistsException,
-      PathNotFoundException, NoSuchNodeTypeException, LockException, VersionException, ConstraintViolationException,
-      RepositoryException
-   {
-      Node base;
-      if (parentFolderPath != null)
-      {
-         base = session.getRootNode().getNode(parentFolderPath);
-      }
-      else
-      {
-         base = session.getRootNode();
-      }
-
-      base.addNode(folderPath, "nt:folder");
-
-   }
-
-   /**
-    * Creates new file node.
-    * 
-    * @param session - the session
-    * @param resourcePath - path to parent node.
-    * @param filePath - path to new file (from parent node)
-    * @param data - file's data
-    * @param mimeType - mime type of file
-    * @param fileNodeType - file node type
-    * @param jcrContentNodeType - jcr:content node type
-    * 
-    * @throws PathNotFoundException
-    * @throws RepositoryException
-    */
-   public static void putFile(Session session, String resourcePath, String filePath, InputStream data, String mimeType,
-      String fileNodeType, String jcrContentNodeType)
-      throws PathNotFoundException, RepositoryException
-   {
-      Node base;
-      if (resourcePath != null)
-      {
-         base = session.getRootNode().getNode(resourcePath);
-      }
-      else
-      {
-         base = session.getRootNode();
-      }
-      
-      if (fileNodeType == null)
-      {
-         fileNodeType = DEFAULT_FILE_NODE_TYPE;
-      }
-      
-      if (jcrContentNodeType == null)
-      {
-         jcrContentNodeType = DEFAULT_JCR_CONTENT_NODE_TYPE;
-      }
-      
-      base = base.addNode(filePath, fileNodeType);
-      base = base.addNode("jcr:content", jcrContentNodeType);
-      base.setProperty("jcr:data", data);
-      base.setProperty("jcr:lastModified", Calendar.getInstance());
-      base.setProperty("jcr:mimeType", mimeType);
    }
 
 }

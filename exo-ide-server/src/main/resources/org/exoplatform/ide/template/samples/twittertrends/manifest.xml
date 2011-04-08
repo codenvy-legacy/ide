@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+   <name>twitter-trends-project</name>
+   <items>
+      <file>
+         <name>TwitterTrendsGadget.xml</name>
+         <src>TwitterTrendsGadget.xml</src>
+         <mime-type>application/x-google-gadget</mime-type>
+         <jcr-content-node-type>exo:googleGadget</jcr-content-node-type>
+      </file>
+      <file>
+         <name>readme_twitter_flicker.txt</name>
+         <src>readme_twitter_flicker.txt</src>
+         <mime-type>text/plain</mime-type>
+      </file>
+      <file>
+         <name>TwitterTrendsService.grs</name>
+         <src>TwitterTrendsService.grs</src>
+         <mime-type>application/x-jaxrs+groovy</mime-type>
+         <jcr-content-node-type>exo:groovyResourceContainer</jcr-content-node-type>
+      </file>
+   </items>
+</project>

@@ -1,0 +1,170 @@
+package logic;
+
+import javax.ws.rs.Path
+import javax.ws.rs.GET
+import javax.ws.rs.PathParam
+import javax.ws.rs.POST
+import javax.ws.rs.Consumes
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.QueryParam
+import javax.ws.rs.Produces
+import javax.ws.rs.core.SecurityContext
+import javax.ws.rs.core.Context
+
+import org.chromattic.api.ChromatticBuilder
+import org.chromattic.api.Chromattic
+import org.chromattic.api.ChromatticSession
+import org.chromattic.api.annotations.Id
+import org.chromattic.api.annotations.Name
+import org.chromattic.api.annotations.OneToMany
+import org.chromattic.core.api.ChromatticSessionImpl
+import data.Product
+import data.ShoppingCart
+import data.ItemToPurchase
+import data.Shop
+
+@Path("shop")
+public class ShoppingCartRestService {
+
+  def String name
+  @javax.inject.Inject def ChromatticSession session;
+  
+  public ShoppingCartRestService(@Context SecurityContext sctx) {
+     name = sctx.userPrincipal.name
+  }
+
+  @POST
+  @Path("add-product")
+  @Produces("application/json")
+  public HashMap<String,String> add(HashMap<String,String> map) {
+     addProduct(map)
+     return map;
+  }
+
+  @POST
+  @Path("products")
+  @Produces("application/json")
+  public Collection<HashMap<String,String>> get() {
+     def col = []
+     def products = getProducts();
+     products.each { product ->
+       def row = [:]
+       row["price"] = "" + product.price;
+       row["name"] = product.getName();
+       row["description"] = product.getDescription();
+       row["id"] = product.getId();
+       col << row;
+     }
+     return col;
+  }
+
+  @POST
+  @Path("make-shoping/{product}/{num}")
+  @Produces("application/json")
+  public HashMap<String,String> makeShop(@PathParam("product") String prod,
+                                         @PathParam("num") Integer num) {
+     ItemToPurchase item = makeShop(name,prod,num)
+     def row = [:];
+     row["quantity"] = "" + item.quantity
+     row["id"] = item.id
+     row["name"] = item.product.name
+     row["price"] = "" + item.product.price;
+     row["sum"] = "" + item.value;
+     return row;
+  }
+
+  @POST
+  @Path("get-cart")
+  @Produces("application/json")
+  public Collection<HashMap<String,String>> getCart() {
+     def col = [];
+     ShoppingCart cart = getCart(name)
+     if (cart != null) {
+       cart.items.each { ItemToPurchase item ->
+         def row = [:];
+         row["id"] = item.id;
+         row["quantity"] = "" + item.quantity;
+         row["name"] = item.product.name;
+         row["price"] = "" + item.product.price;
+         row["sum"] = "" + item.value;
+         col << row;
+       }
+     }
+     return col;
+  }
+
+  @POST
+  @Path("remove-purchase/{id}")
+  public String getRemovePurchase(@PathParam("id") String id) {
+    return removePurchase(id)
+  }
+
+  @POST
+  @Path("total-money")
+  String getTotalMoney() {
+    return getTotalMoney(name)
+  }
+  
+  private Shop getShop() {
+    def shop = session.findByPath(Shop, "applestore")
+    if (shop == null) {
+      shop = session.insert(Shop, "applestore");
+      def macbookpro = session.create(Product)
+      shop.products["The MacBook Pro"] = macbookpro
+      macbookpro.description = "The new MacBook Pro. State-of-the-art processors. All-new graphics. Breakthrough high-speed I/O. Three very big leaps forward."
+      macbookpro.price = 2500;
+      def macpro = session.create(Product)
+      shop.products["The Mac Pro"] = macpro
+      macpro.description = "The new Mac Pro. With up to 12 cores of processing power, it’s the fastest Mac ever."
+      macpro.price = 3000;
+      def macbookair = session.create(Product)
+      shop.products["The MacBook Air"] = macbookair
+      macbookair.description = "Every millimeter a Mac. Underneath all that thinness is a full-size, fully capable Mac that can do practically everything its larger siblings can do. Minus a pound or two."
+      macbookair.price = 1000;
+      session.save()
+    }
+    return shop
+  }
+  
+  private void addProduct(HashMap<String,String> map) {
+    def product = session.create(Product)
+    Shop shop = getShop()
+    shop.products[map["name"]] = product
+    product.description = map["description"]
+    product.price = Integer.parseInt(map["price"])
+    session.save(); 
+  }
+
+  private Collection<Product> getProducts() {
+    return getShop().products.values()
+  }
+  
+  private ItemToPurchase makeShop(String name, String prod, Integer quantity) {
+    Product product = session.findById(Product, prod)
+    ShoppingCart cart = session.findByPath(ShoppingCart, name)
+    if (cart == null)
+      cart = session.insert(ShoppingCart, name);
+    def purchase = session.create(ItemToPurchase, "" + System.currentTimeMillis())
+    cart.items << purchase
+    purchase.product = product
+    purchase.quantity = quantity;
+    session.save()
+    return purchase;
+  }
+
+  private ShoppingCart getCart(String name) {
+    return session.findByPath(ShoppingCart, name);
+  }
+  
+  private String removePurchase(String id) {
+    ItemToPurchase line = session.findById(ItemToPurchase, id);
+    session.remove(line)
+    session.save();
+    return id;
+  }
+
+  private int getTotalMoney(String name) {
+    ShoppingCart cart = session.findByPath(ShoppingCart, name);
+    return cart != null ? cart.totalMoney : 0;
+  }
+}

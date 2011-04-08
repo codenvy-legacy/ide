@@ -1,0 +1,61 @@
+body 
+{
+  font-family: Arial, Tahoma, Verdana, Sans-serif;
+}
+.TblPr
+{
+  border-collapse: collapse;
+} 
+.TblPr td
+{
+  border: 1px solid #d2c4c2;
+  font-size: 14px;
+  padding: 4px;
+} 
+
+.TblSh
+{
+  border-collapse: collapse;
+} 
+.TblSh td
+{
+  color: #3e3e3d;
+  height:30px;
+  border: 1px solid #D2C4C2;
+  font-size: 14px;
+  padding: 4px;
+}     
+
+.text-head-cells
+{
+  font-size: 16px;
+  font-weight:bold;
+  color: #3e3e3d;
+  height:30px;
+  padding:6 6 6 6;
+  background-color: #b9e67f;
+  border: 1px solid #305007;
+}
+
+.text-head-cells-sale
+{
+  font-size: 16px;
+  font-weight:bold;
+  color: #3e3e3d;
+  height:30px;
+  padding:6 6 6 6;
+  background-color: #86bef8;
+  border: 1px solid #305007;
+}
+
+.ex1 tr:nth-child(2n-1) {
+  background: none repeat scroll 0 0 #e9f3dc;
+  color: #000000;
+}
+
+.ex2 tr:nth-child(2n-1) {
+  background: none repeat scroll 0 0 #dff2ff;
+  color: #000000;
+}
+
+

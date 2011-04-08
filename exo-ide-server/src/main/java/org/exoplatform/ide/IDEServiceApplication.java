@@ -28,6 +28,7 @@ import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.conversationstate.RestConversationState;
 import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.download.DownloadContentService;
+import org.exoplatform.ide.template.TemplatesRestService;
 import org.exoplatform.ide.upload.LoopbackContentService;
 import org.exoplatform.ide.upload.UploadService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
@@ -69,6 +70,7 @@ public class IDEServiceApplication extends Application
       classes.add(DownloadContentService.class);
       classes.add(RestConversationState.class);
       classes.add(UploadService.class);
+      classes.add(TemplatesRestService.class);
    }
    
    /**
