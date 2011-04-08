@@ -20,10 +20,10 @@ package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
-import org.exoplatform.ide.git.server.jgit.GitFile;
-import org.exoplatform.ide.git.server.jgit.StatusPage;
-import org.exoplatform.ide.git.server.jgit.GitFile.FileStatus;
+import org.exoplatform.ide.git.server.jgit.JGitStatus;
+import org.exoplatform.ide.git.shared.GitFile;
 import org.exoplatform.ide.git.shared.StatusRequest;
+import org.exoplatform.ide.git.shared.GitFile.FileStatus;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -83,17 +83,17 @@ public class StatusTest extends BaseTest
 
    public void testStatus() throws Exception
    {
-      StatusPage statusPage = (StatusPage)getDefaultConnection().status(new StatusRequest());
+      JGitStatus statusPage = (JGitStatus)getDefaultConnection().status(new StatusRequest());
 
       statusPage.writeTo(System.out);
 
-      assertEquals("master", statusPage.branchName);
+      assertEquals("master", statusPage.getBranchName());
 
-      List<GitFile> untracked = statusPage.untracked;
+      List<GitFile> untracked = statusPage.getUntracked();
       assertEquals(1, untracked.size());
       assertEquals(calculateRelativePath(repository.getWorkTree(), bbb), untracked.get(0).getPath());
 
-      List<GitFile> changedNotCommited = statusPage.changedNotCommited;
+      List<GitFile> changedNotCommited = statusPage.getChangedNotCommited();
       assertEquals(2, changedNotCommited.size());
       List<String> l = new ArrayList<String>(2);
       for (GitFile f : changedNotCommited)
@@ -101,7 +101,7 @@ public class StatusTest extends BaseTest
       assertTrue(l.contains("new file:" + calculateRelativePath(repository.getWorkTree(), aaa)));
       assertTrue(l.contains("deleted:" + calculateRelativePath(repository.getWorkTree(), remove)));
 
-      List<GitFile> changedNotUpdated = statusPage.changedNotUpdated;
+      List<GitFile> changedNotUpdated = statusPage.getChangedNotUpdated();
       assertEquals(1, changedNotUpdated.size());
       assertEquals(calculateRelativePath(repository.getWorkTree(), readme), changedNotUpdated.get(0).getPath());
       assertEquals(FileStatus.MODIFIED, changedNotUpdated.get(0).getStatus());
@@ -114,13 +114,13 @@ public class StatusTest extends BaseTest
       git.add().addFilepattern(".").call();
       git.commit().setMessage("commit all changes").call();
 
-      StatusPage statusPage = (StatusPage)getDefaultConnection().status(new StatusRequest());
+      JGitStatus statusPage = (JGitStatus)getDefaultConnection().status(new StatusRequest());
       statusPage.writeTo(System.out);
    }
 
    public void testShortStatus() throws Exception
    {
-      StatusPage statusPage = (StatusPage)getDefaultConnection().status(new StatusRequest(new String[]{"a/b/c/d"}, true));
+      JGitStatus statusPage = (JGitStatus)getDefaultConnection().status(new StatusRequest(new String[]{"a/b/c/d"}, true));
       statusPage.writeTo(System.out);
    }
 }

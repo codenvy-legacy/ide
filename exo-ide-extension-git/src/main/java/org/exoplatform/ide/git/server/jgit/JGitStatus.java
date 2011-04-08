@@ -19,6 +19,8 @@
 package org.exoplatform.ide.git.server.jgit;
 
 import org.exoplatform.ide.git.server.InfoPage;
+import org.exoplatform.ide.git.shared.GitFile;
+import org.exoplatform.ide.git.shared.GitStatus;
 import org.exoplatform.ide.git.shared.StatusRequest;
 
 import java.io.IOException;
@@ -30,15 +32,9 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: StatusPage.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-class StatusPage implements InfoPage
+class JGitStatus extends GitStatus implements InfoPage
 {
    private final StatusRequest request;
-
-   final String branchName;
-
-   final List<GitFile> changedNotUpdated;
-   final List<GitFile> changedNotCommited;
-   final List<GitFile> untracked;
 
    /**
     * @param branchName
@@ -47,13 +43,10 @@ class StatusPage implements InfoPage
     * @param untracked
     * @param request
     */
-   StatusPage(String branchName, List<GitFile> changedNotUpdated, List<GitFile> changedNotCommited,
+   JGitStatus(String branchName, List<GitFile> changedNotUpdated, List<GitFile> changedNotCommited,
       List<GitFile> untracked, StatusRequest request)
    {
-      this.branchName = branchName;
-      this.changedNotUpdated = changedNotUpdated;
-      this.changedNotCommited = changedNotCommited;
-      this.untracked = untracked;
+      super(branchName, changedNotUpdated, changedNotCommited, untracked);
       this.request = request;
    }
 

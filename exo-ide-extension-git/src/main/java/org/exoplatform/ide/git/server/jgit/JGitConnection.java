@@ -101,6 +101,7 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.FetchRequest;
+import org.exoplatform.ide.git.shared.GitFile;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.LogRequest;
@@ -117,6 +118,7 @@ import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
+import org.exoplatform.ide.git.shared.GitStatus;
 import org.exoplatform.ide.git.shared.StatusRequest;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
@@ -1344,7 +1346,7 @@ public class JGitConnection implements GitConnection
     * @see org.exoplatform.ide.git.server.GitConnection#status(org.exoplatform.ide.git.shared.StatusRequest)
     */
    @Override
-   public InfoPage status(StatusRequest request) throws GitException
+   public GitStatus status(StatusRequest request) throws GitException
    {
       try
       {
@@ -1435,7 +1437,7 @@ public class JGitConnection implements GitConnection
             treeWalk.release();
          }
 
-         return new StatusPage(currentBranch, changedNotUpdated, changedNotCommited, untracked, request);
+         return new JGitStatus(currentBranch, changedNotUpdated, changedNotCommited, untracked, request);
       }
       catch (MissingObjectException e)
       {

@@ -53,6 +53,10 @@ public class Revision
       this.committer = committer;
    }
 
+   public Revision()
+   {
+   }
+
    /**
     * @return commit id
     */

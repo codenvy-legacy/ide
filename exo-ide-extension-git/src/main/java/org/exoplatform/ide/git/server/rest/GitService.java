@@ -32,6 +32,7 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.FetchRequest;
+import org.exoplatform.ide.git.shared.GitStatus;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.LogRequest;
@@ -222,8 +223,27 @@ public class GitService
    @Path("diff")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.TEXT_PLAIN)
    public StreamingOutput diff(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, DiffRequest request)
+      throws GitException
+   {
+      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      try
+      {
+         InfoPage diffPage = gitConnection.diff(request);
+         return new InfoPageWrapper(diffPage);
+      }
+      finally
+      {
+         gitConnection.close();
+      }
+   }
+
+   @Path("diff")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.TEXT_PLAIN)
+   public StreamingOutput __jsonDiff(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, DiffRequest request)
       throws GitException
    {
       GitConnection gitConnection = getGitConnection(workDir, sctx);
@@ -275,8 +295,27 @@ public class GitService
    @Path("log")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.TEXT_PLAIN)
    public StreamingOutput log(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, LogRequest request)
+      throws GitException
+   {
+      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      try
+      {
+         InfoPage logPage = gitConnection.log(request);
+         return new InfoPageWrapper(logPage);
+      }
+      finally
+      {
+         gitConnection.close();
+      }
+   }
+
+   @Path("log")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.TEXT_PLAIN)
+   public StreamingOutput __jsonLog(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, LogRequest request)
       throws GitException
    {
       GitConnection gitConnection = getGitConnection(workDir, sctx);
@@ -465,7 +504,7 @@ public class GitService
    @Path("status")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.TEXT_PLAIN)
    public StreamingOutput status(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
       StatusRequest request) throws GitException
    {
@@ -474,6 +513,24 @@ public class GitService
       {
          InfoPage statusPage = gitConnection.status(request);
          return new InfoPageWrapper(statusPage);
+      }
+      finally
+      {
+         gitConnection.close();
+      }
+   }
+
+   @Path("status")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public GitStatus jsonStatus(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
+      StatusRequest request) throws GitException
+   {
+      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      try
+      {
+         return gitConnection.status(request);
       }
       finally
       {

@@ -16,11 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.jgit;
+package org.exoplatform.ide.git.shared;
 
-class GitFile
+public class GitFile
 {
-   enum FileStatus {
+   public enum FileStatus {
       NEW("new file", "A"), //
       DELETED("deleted", "D"), //
       MODIFIED("modified", "M"), //
@@ -53,7 +53,7 @@ class GitFile
     * @param status
     * @param path
     */
-   GitFile(String path, FileStatus status)
+   public GitFile(String path, FileStatus status)
    {
       this.path = path;
       this.status = status;
