@@ -35,18 +35,19 @@ import org.exoplatform.ws.frameworks.json.impl.JsonException;
  */
 public class ClassPathUsageTest extends TestCase
 {
-
+   private static String REPOSITORY_NAME = "repository";
+   
    private final String correctClassPathFile =
-      "{\"entries\": [{\"kind\": \"file\",\"path\": \"jcr://repository/dev-monit#/Test.groovy\"},"
-         + "{\"kind\": \"dir\",\"path\": \"jcr://repository/dev-monit#/test/\"}]}";
+      "{\"entries\": [{\"kind\": \"file\",\"path\": \"dev-monit#/Test.groovy\"},"
+         + "{\"kind\": \"dir\",\"path\": \"/dev-monit#/test/\"}]}";
 
    private final String emptyEntriesClassPathFile = "{\"entries\": []}";
 
    private final String wrongTypeClassPathFile =
-      "{\"entries\": [{\"kind\": \"file\",\"path\": \"jcr://repository/dev-monit#/Test.groovy\"},"
-         + "{\"kind\": \"\",\"path\": \"jcr://repository/dev-monit#/test1/\"},"
-         + "{\"kind\": \"filee\",\"path\": \"jcr://repository/dev-monit#/test2/\"},"
-         + "{\"kind\": \"dir\",\"path\": \"jcr://repository/dev-monit#/test3/\"}" + "]}";
+      "{\"entries\": [{\"kind\": \"file\",\"path\": \"dev-monit#/Test.groovy\"},"
+         + "{\"kind\": \"\",\"path\": \"dev-monit#/test1/\"},"
+         + "{\"kind\": \"filee\",\"path\": \"dev-monit#/test2/\"},"
+         + "{\"kind\": \"dir\",\"path\": \"dev-monit#/test3/\"}" + "]}";
 
    public void testClassPathFileCorrect() throws JsonException
    {
@@ -55,12 +56,12 @@ public class ClassPathUsageTest extends TestCase
       assertEquals(classPath.getEntries().length, 2);
       GroovyClassPathEntry entry = classPath.getEntries()[0];
       assertEquals(entry.getKind(), "file");
-      assertEquals(entry.getPath(), "jcr://repository/dev-monit#/Test.groovy");
+      assertEquals(entry.getPath(), "dev-monit#/Test.groovy");
       entry = classPath.getEntries()[1];
       assertEquals(entry.getKind(), "dir");
-      assertEquals(entry.getPath(), "jcr://repository/dev-monit#/test/");
+      assertEquals(entry.getPath(), "/dev-monit#/test/");
 
-      DependentResources dependentResources = new DependentResources(classPath);
+      DependentResources dependentResources = new DependentResources(REPOSITORY_NAME, classPath);
       assertEquals(dependentResources.getFileSources().size(), 1);
       assertEquals(dependentResources.getFolderSources().size(), 1);
    }
@@ -71,7 +72,7 @@ public class ClassPathUsageTest extends TestCase
          GroovyScriptServiceUtil.json2ClassPath(new ByteArrayInputStream(wrongTypeClassPathFile.getBytes()));
       assertEquals(classPath.getEntries().length, 4);
 
-      DependentResources dependentResources = new DependentResources(classPath);
+      DependentResources dependentResources = new DependentResources(REPOSITORY_NAME, classPath);
       assertEquals(dependentResources.getFileSources().size(), 1);
       assertEquals(dependentResources.getFileSources().get(0), "jcr://repository/dev-monit#/Test.groovy");
 
@@ -85,7 +86,7 @@ public class ClassPathUsageTest extends TestCase
          GroovyScriptServiceUtil.json2ClassPath(new ByteArrayInputStream(emptyEntriesClassPathFile.getBytes()));
       assertEquals(classPath.getEntries().length, 0);
 
-      DependentResources dependentResources = new DependentResources(classPath);
+      DependentResources dependentResources = new DependentResources(REPOSITORY_NAME, classPath);
       assertEquals(dependentResources.getFileSources().size(), 0);
       assertEquals(dependentResources.getFolderSources().size(), 0);
    }

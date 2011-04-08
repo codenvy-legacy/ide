@@ -18,6 +18,24 @@
  */
 package org.exoplatform.ide.extension.groovy.server.codeassistant;
 
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
+import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
+import org.exoplatform.ide.extension.groovy.server.Base;
+import org.exoplatform.services.rest.impl.ContainerResponse;
+import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
+import org.exoplatform.ws.frameworks.json.JsonHandler;
+import org.exoplatform.ws.frameworks.json.JsonParser;
+import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
+import org.exoplatform.ws.frameworks.json.impl.JsonException;
+import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
+import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
+import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
+import org.exoplatform.ws.frameworks.json.value.JsonValue;
+import org.junit.Test;
+
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -38,23 +56,6 @@ import javax.jcr.version.VersionException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
-import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
-import org.exoplatform.ide.extension.groovy.server.Base;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
-import org.exoplatform.ws.frameworks.json.JsonHandler;
-import org.exoplatform.ws.frameworks.json.JsonParser;
-import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
-import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
-import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
-import org.exoplatform.ws.frameworks.json.value.JsonValue;
-import org.junit.Test;
 
 /**
  * Created by The eXo Platform SAS.
@@ -78,8 +79,8 @@ public class CodeAssitantTest extends Base
 
    private int decMethods;
 
-   private static final String CLASSPATH = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"jcr://db1/ws#/project/\"},"
-      + "                        {\"kind\":\"file\", \"path\":\"jcr://db1/ws#/project/testClass.gg\"}]}";
+   private static final String CLASSPATH = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"ws#/project/\"},"
+      + "                        {\"kind\":\"file\", \"path\":\"ws#/project/testClass.gg\"}]}";
 
    public void setUp() throws Exception
    {

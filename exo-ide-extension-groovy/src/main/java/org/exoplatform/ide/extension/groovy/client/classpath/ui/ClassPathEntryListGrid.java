@@ -86,7 +86,7 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
                   }
                   Image image = new Image(imageSrc);
                   String imageHTML = ImageUtil.getHTML(image);
-                  String path = getDisplayPath(item.getPath());
+                  String path = item.getPath();
                   return "<span>" + imageHTML + "&nbsp;&nbsp;" + path + "</span>";
                }
             };
@@ -110,15 +110,4 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
       currentRepository = repository;
    }
    
-   private String getDisplayPath(String path)
-   {
-      if (currentRepository == null)
-      {
-         return path.replaceFirst(GroovyClassPathUtil.JCR_PROTOCOL, "");
-      } else 
-      {
-         path = path.replaceFirst(GroovyClassPathUtil.JCR_PROTOCOL, "");
-         return (path.startsWith(currentRepository)) ? path.replaceFirst(currentRepository, "") :path;
-      }
-   }
 }

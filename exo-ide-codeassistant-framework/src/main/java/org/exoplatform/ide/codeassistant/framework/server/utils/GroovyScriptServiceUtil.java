@@ -160,8 +160,8 @@ public class GroovyScriptServiceUtil
     * @param baseUri base URI
     * @return {@link InputStream} the content of proper groovy class path file
     */
-    protected static InputStream getClassPathContent(String location, String baseUri, RepositoryService repositoryService,
-      ThreadLocalSessionProviderService sessionProviderService)
+   protected static InputStream getClassPathContent(String location, String baseUri,
+      RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService)
    {
       String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(baseUri, location);
       try
@@ -201,6 +201,7 @@ public class GroovyScriptServiceUtil
       //Get content of groovy class path file:
       InputStream classPathFileContent =
          getClassPathContent(scriptLocation, baseUri, repositoryService, sessionProviderService);
+
       if (classPathFileContent != null)
       {
          try
@@ -209,11 +210,26 @@ public class GroovyScriptServiceUtil
             GroovyClassPath groovyClassPath = GroovyScriptServiceUtil.json2ClassPath(classPathFileContent);
             if (groovyClassPath != null)
             {
-               return new DependentResources(groovyClassPath);
+               //Get current repository name, if not null or default repository's name.
+               String repositoryName =
+                  (repositoryService.getCurrentRepository() != null) ? repositoryService.getCurrentRepository()
+                     .getConfiguration().getName() : repositoryService.getDefaultRepository().getConfiguration()
+                     .getName();
+               return new DependentResources(repositoryName, groovyClassPath);
             }
          }
          catch (JsonException e)
          {
+            return null;
+         }
+         catch (RepositoryException e)
+         {
+            e.printStackTrace();
+            return null;
+         }
+         catch (RepositoryConfigurationException e)
+         {
+            e.printStackTrace();
             return null;
          }
       }

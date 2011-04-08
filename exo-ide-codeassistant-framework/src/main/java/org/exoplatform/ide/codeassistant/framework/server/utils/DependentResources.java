@@ -44,21 +44,23 @@ public class DependentResources
    /**
     * @param groovyClassPath
     */
-   public DependentResources(GroovyClassPath groovyClassPath)
+   public DependentResources(String repositoryName, GroovyClassPath groovyClassPath)
    {
       fileSources = new ArrayList<String>();
       folderSources = new ArrayList<String>();
+      String pathPrefix = "jcr://" + repositoryName;
 
       //Separate files and folders:
       for (GroovyClassPathEntry entry : groovyClassPath.getEntries())
       {
+         String path = entry.getPath().startsWith("/") ? pathPrefix + entry.getPath() : pathPrefix +  "/" + entry.getPath();
          if (entry.getKind().equals("dir"))
          {
-            folderSources.add(entry.getPath());
+            folderSources.add(path);
          }
          else if (entry.getKind().equals("file"))
          {
-            fileSources.add(entry.getPath());
+            fileSources.add(path);
          }
       }
    }

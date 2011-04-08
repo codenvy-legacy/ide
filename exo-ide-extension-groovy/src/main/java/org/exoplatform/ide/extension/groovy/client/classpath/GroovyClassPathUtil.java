@@ -43,8 +43,6 @@ public class GroovyClassPathUtil
    
    public static final String WEBDAV_CONTEXT = "/jcr/";
 
-   public static final String JCR_PROTOCOL = "jcr://";
-
    /**
     * Get the list of {@link GroovyClassPathEntry} elements from classpath file's content.
     * 
@@ -109,9 +107,9 @@ public class GroovyClassPathUtil
       //Add sybol "#" after workspace name (the second part of the path):
       if (parts.length > 2)
       {
-         path = path.replaceFirst(parts[0] + "/" + parts[1], parts[0] + "/" + parts[1] + "#");
+         //Start path from workspace:
+         path = path.replaceFirst(parts[0] + "/" + parts[1], parts[1] + "#");
       }
-      path = JCR_PROTOCOL + path;
       return URL.encode(path);
    }
    
