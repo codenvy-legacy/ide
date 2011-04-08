@@ -146,11 +146,16 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
     * Image for Restore button
     */
    private Image restoreImage = new Image(IDEImageBundle.INSTANCE.restore());
+   
+   private boolean panelMaximized = false;
 
    public PanelImpl(String panelId, ViewsLayer viewsLayer)
    {
       this.panelId = panelId;
       this.viewsLayer = viewsLayer;
+      
+      getElement().setAttribute("panel-id", panelId);
+      setPanelMaximized(false);
 
       setWidth("100px");
       setHeight("100px");
@@ -166,7 +171,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
       tabPanel.addSelectionHandler(tabSelectionHandler);
       tabPanel.addCloseTabHandler(closeTabHandler);
 
-      maximizePanelControl = new TabControl(maximizeImage, maximizeImage);
+      maximizePanelControl = new TabControl(panelId + "-maximize", maximizeImage, maximizeImage);
       maximizePanelControl.addClickHandler(new ClickHandler()
       {
          @Override
@@ -176,7 +181,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          }
       });
 
-      restorePanelControl = new TabControl(restoreImage, restoreImage);
+      restorePanelControl = new TabControl(panelId + "-restore", restoreImage, restoreImage);
       restorePanelControl.setVisible(false);
       restorePanelControl.addClickHandler(new ClickHandler()
       {
@@ -602,6 +607,8 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
       }
 
       this.panelHidden = panelHidden;
+      
+      getElement().setAttribute("panel-hidden", "" + panelHidden);
 
       setVisible(!panelHidden);
       if (selectedViewId != null)
@@ -622,6 +629,17 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
    public boolean isPanelHidden()
    {
       return panelHidden;
+   }
+
+   public boolean isPanelMaximized()
+   {
+      return panelMaximized;
+   }
+
+   public void setPanelMaximized(boolean panelMaximized)
+   {
+      this.panelMaximized = panelMaximized;
+      getElement().setAttribute("panel-maximized", "" + panelMaximized);      
    }
 
 }

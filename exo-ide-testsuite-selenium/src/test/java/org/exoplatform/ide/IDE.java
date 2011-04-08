@@ -23,6 +23,7 @@ import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigator;
 import org.exoplatform.ide.core.Outline;
+import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Toolbar;
 
 import com.thoughtworks.selenium.Selenium;
@@ -38,30 +39,29 @@ import com.thoughtworks.selenium.Selenium;
 public class IDE
 {
 
-   private Selenium selenium;
-
    private Menu menu;
 
    private Toolbar toolbar;
 
    private Editor editor;
-   
+
    private Outline outline;
-   
+
    private Dialogs dialogs;
-   
+
    private Navigator navigator;
+
+   private Perspective perspective;
 
    public IDE(Selenium selenium)
    {
-      this.selenium = selenium;
-
       menu = new Menu(selenium);
       toolbar = new Toolbar(selenium);
       editor = new Editor(selenium, this);
       outline = new Outline(selenium);
       dialogs = new Dialogs(selenium);
       navigator = new Navigator(selenium);
+      perspective = new Perspective(selenium);
    }
 
    public Menu menu()
@@ -78,7 +78,7 @@ public class IDE
    {
       return editor;
    }
-   
+
    /**
     * Get the code outline.
     * 
@@ -88,12 +88,12 @@ public class IDE
    {
       return outline;
    }
-   
+
    public Dialogs dialogs()
    {
       return dialogs;
    }
-   
+
    /**
     * Get the navigator element.
     * 
@@ -102,6 +102,11 @@ public class IDE
    public Navigator navigator()
    {
       return navigator;
+   }
+
+   public Perspective perspective()
+   {
+      return perspective;
    }
 
 }

@@ -294,7 +294,11 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
    @Override
    public void onRestorePanel(RestorePanelEvent event)
    {
-      maximizedPanel = null;
+      if (maximizedPanel != null) {
+         maximizedPanel.setPanelMaximized(false);
+         maximizedPanel = null;
+      }
+
       layoutWrapper.setVisible(true);
 
       for (Panel panel : panels.values())
@@ -368,6 +372,7 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
             newTop = startY + (int)(dy * progress);
             newWidth = startWidth + (int)(dWidth * progress);
             newHeight = startHeight + (int)(dHeight * progress);
+            panel.setPanelMaximized(true);
          }
 
          panel.setPosition(newLeft, newTop);

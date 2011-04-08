@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
+import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconEvent;
@@ -66,29 +67,33 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       }
    }
 
-   private String id;
-
-   private String type;
-
-   private String tiltle;
-
-   private Image icon;
-
-   private boolean hasCloseButton = true;
-
-   protected int defaultWidth = 300;
-
-   protected int defaultHeight = 200;
+   private boolean activated = false;
 
    private boolean canResize = true;
 
-   private boolean activated = false;
+   private List<ChangeViewIconHandler> changeViewIconHandlers = new ArrayList<ChangeViewIconHandler>();
 
    private List<ChangeViewTitleHandler> changeViewTitleHandlers = new ArrayList<ChangeViewTitleHandler>();
 
-   private List<ChangeViewIconHandler> changeViewIconHandlers = new ArrayList<ChangeViewIconHandler>();
+   protected int defaultHeight = 200;
+
+   protected int defaultWidth = 300;
+
+   private boolean hasCloseButton = true;
+
+   private Image icon;
+
+   private String id;
+
+   private ViewScrollPanel scrollPanel;
 
    private List<SetViewVisibleHandler> setViewVisibleHandlers = new ArrayList<SetViewVisibleHandler>();
+
+   private String tiltle;
+
+   private String type;
+
+   private Wrapper wrapper;
 
    public ViewImpl(String id, String type, String title)
    {
@@ -108,12 +113,135 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       this.icon = icon;
       this.defaultWidth = defaultWidth;
       this.defaultHeight = defaultHeight;
+      getElement().setAttribute("view-id", id);
 
       wrapper = new Wrapper(3);
       wrapper.setSize("100%", "100%");
       super.add((Widget)wrapper);
 
       sinkEvents(Event.ONMOUSEDOWN);
+   }
+
+   @Override
+   public void activate()
+   {
+      if (isViewVisible())
+      {
+         setViewVisible();
+      }
+
+      ViewHighlightManager.getInstance().selectView(this);
+   }
+
+   @Override
+   public final void add(Widget w)
+   {
+      add(w, false);
+   }
+
+   public final void add(Widget w, boolean contentScrollable)
+   {
+      if (contentScrollable)
+      {
+         if (scrollPanel == null)
+         {
+            scrollPanel = new ViewScrollPanel();
+            DOM.setStyleAttribute(scrollPanel.getElement(), "zIndex", "0");
+            wrapper.add(scrollPanel);
+         }
+         scrollPanel.add(w);
+         w.setSize("100%", "100%");
+      }
+      else
+      {
+         wrapper.add(w);
+      }
+   }
+
+   @Override
+   public HandlerRegistration addChangeViewIconHandler(ChangeViewIconHandler changeViewIconHandler)
+   {
+      changeViewIconHandlers.add(changeViewIconHandler);
+      return new ListBasedHandlerRegistration(changeViewIconHandlers, changeViewIconHandler);
+   }
+
+   @Override
+   public HandlerRegistration addChangeViewTitleHandler(ChangeViewTitleHandler changeViewTitleHandler)
+   {
+      changeViewTitleHandlers.add(changeViewTitleHandler);
+      return new ListBasedHandlerRegistration(changeViewTitleHandlers, changeViewTitleHandler);
+   }
+
+   @Override
+   public HandlerRegistration addSetViewVisibleHandler(SetViewVisibleHandler setViewVisibleHandler)
+   {
+      setViewVisibleHandlers.add(setViewVisibleHandler);
+      return new ListBasedHandlerRegistration(setViewVisibleHandlers, setViewVisibleHandler);
+   }
+
+   @Override
+   public ViewEx asView()
+   {
+      return this;
+   }
+
+   @Override
+   public boolean canResize()
+   {
+      return canResize;
+   }
+
+   @Override
+   public int getDefaultHeight()
+   {
+      return defaultHeight;
+   }
+
+   @Override
+   public int getDefaultWidth()
+   {
+      return defaultWidth;
+   }
+
+   @Override
+   public Image getIcon()
+   {
+      return icon;
+   }
+
+   @Override
+   public String getId()
+   {
+      return id;
+   }
+
+   public ScrollPanel getScrollPanel()
+   {
+      return scrollPanel;
+   }
+
+   @Override
+   public String getTitle()
+   {
+      return tiltle;
+   }
+
+   @Override
+   public String getType()
+   {
+      return type;
+   }
+
+   @Override
+   public boolean hasCloseButton()
+   {
+      return hasCloseButton;
+   }
+
+   @Override
+   public boolean isViewVisible()
+   {
+      return isVisible();
    }
 
    @Override
@@ -137,80 +265,15 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       ViewHighlightManager.getInstance().selectView(this);
    }
 
-   private Wrapper wrapper;
-
-   private ViewScrollPanel scrollPanel;
-
-   public ScrollPanel getScrollPanel()
+   public void setActivated(boolean activated)
    {
-      return scrollPanel;
+      this.activated = activated;
+      wrapper.setHighlited(activated);
    }
 
-   public final void add(Widget w, boolean contentScrollable)
+   public void setHasCloseButton(boolean hasCloseButton)
    {
-      if (contentScrollable)
-      {
-         if (scrollPanel == null)
-         {
-            scrollPanel = new ViewScrollPanel();
-            DOM.setStyleAttribute(scrollPanel.getElement(), "zIndex", "0");
-            wrapper.add(scrollPanel);
-         }
-         scrollPanel.add(w);
-         w.setSize("100%", "100%");
-      }
-      else
-      {
-         wrapper.add(w);
-      }
-   }
-
-   @Override
-   public final void add(Widget w)
-   {
-      add(w, false);
-   }
-
-   @Override
-   public ViewEx asView()
-   {
-      return this;
-   }
-
-   @Override
-   public String getId()
-   {
-      return id;
-   }
-
-   @Override
-   public String getType()
-   {
-      return type;
-   }
-
-   @Override
-   public String getTitle()
-   {
-      return tiltle;
-   }
-
-   @Override
-   public void setTitle(String title)
-   {
-      this.tiltle = title;
-
-      ChangeViewTitleEvent changeViewTitleEvent = new ChangeViewTitleEvent(getId(), title);
-      for (ChangeViewTitleHandler changeViewTitleHandler : changeViewTitleHandlers)
-      {
-         changeViewTitleHandler.onChangeViewTitle(changeViewTitleEvent);
-      }
-   }
-
-   @Override
-   public Image getIcon()
-   {
-      return icon;
+      this.hasCloseButton = hasCloseButton;
    }
 
    @Override
@@ -226,130 +289,15 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
    }
 
    @Override
-   public boolean hasCloseButton()
+   public void setTitle(String title)
    {
-      return hasCloseButton;
-   }
-
-   public void setHasCloseButton(boolean hasCloseButton)
-   {
-      this.hasCloseButton = hasCloseButton;
-   }
-
-   @Override
-   public boolean canResize()
-   {
-      return canResize;
-   }
-
-   @Override
-   public void activate()
-   {
-      if (isViewVisible())
+      this.tiltle = title;
+      
+      ChangeViewTitleEvent changeViewTitleEvent = new ChangeViewTitleEvent(getId(), title);
+      for (ChangeViewTitleHandler changeViewTitleHandler : changeViewTitleHandlers)
       {
-         setViewVisible();
+         changeViewTitleHandler.onChangeViewTitle(changeViewTitleEvent);
       }
-
-      ViewHighlightManager.getInstance().selectView(this);
-   }
-
-   public void setActivated(boolean activated)
-   {
-      this.activated = activated;
-      wrapper.setHighlited(activated);
-   }
-
-   @Override
-   public int getDefaultWidth()
-   {
-      return defaultWidth;
-   }
-
-   @Override
-   public int getDefaultHeight()
-   {
-      return defaultHeight;
-   }
-
-   @Override
-   public boolean isViewVisible()
-   {
-      return isVisible();
-   }
-
-   @Override
-   public HandlerRegistration addSetViewVisibleHandler(SetViewVisibleHandler setViewVisibleHandler)
-   {
-      setViewVisibleHandlers.add(setViewVisibleHandler);
-      return new SetViewVisibleHandlerRegistration(setViewVisibleHandler);
-   }
-
-   private class SetViewVisibleHandlerRegistration implements HandlerRegistration
-   {
-
-      private SetViewVisibleHandler handler;
-
-      public SetViewVisibleHandlerRegistration(SetViewVisibleHandler handler)
-      {
-         this.handler = handler;
-      }
-
-      @Override
-      public void removeHandler()
-      {
-         setViewVisibleHandlers.remove(handler);
-      }
-
-   }
-
-   @Override
-   public HandlerRegistration addChangeViewIconHandler(ChangeViewIconHandler changeViewIconHandler)
-   {
-      changeViewIconHandlers.add(changeViewIconHandler);
-      return new ChangeViewIconHandlerRegistration(changeViewIconHandler);
-   }
-
-   private class ChangeViewIconHandlerRegistration implements HandlerRegistration
-   {
-
-      private ChangeViewIconHandler handler;
-
-      public ChangeViewIconHandlerRegistration(ChangeViewIconHandler handler)
-      {
-         this.handler = handler;
-      }
-
-      @Override
-      public void removeHandler()
-      {
-         changeViewIconHandlers.remove(handler);
-      }
-
-   }
-
-   @Override
-   public HandlerRegistration addChangeViewTitleHandler(ChangeViewTitleHandler changeViewTitleHandler)
-   {
-      changeViewTitleHandlers.add(changeViewTitleHandler);
-      return new ChangeViewTitleHandlerRegistration(changeViewTitleHandler);
-   }
-
-   private class ChangeViewTitleHandlerRegistration implements HandlerRegistration
-   {
-
-      private ChangeViewTitleHandler handler;
-
-      public ChangeViewTitleHandlerRegistration(ChangeViewTitleHandler handler)
-      {
-         this.handler = handler;
-      }
-
-      @Override
-      public void removeHandler()
-      {
-         changeViewTitleHandlers.remove(handler);
-      }
-
    }
 
    @Override
