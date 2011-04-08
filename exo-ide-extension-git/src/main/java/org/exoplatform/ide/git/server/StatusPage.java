@@ -16,11 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.jgit;
+package org.exoplatform.ide.git.server;
 
-import org.exoplatform.ide.git.server.InfoPage;
 import org.exoplatform.ide.git.shared.GitFile;
-import org.exoplatform.ide.git.shared.GitStatus;
+import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.git.shared.StatusRequest;
 
 import java.io.IOException;
@@ -30,9 +29,9 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: StatusPage.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * @version $Id$
  */
-class JGitStatus extends GitStatus implements InfoPage
+public class StatusPage extends Status implements InfoPage
 {
    private final StatusRequest request;
 
@@ -43,7 +42,7 @@ class JGitStatus extends GitStatus implements InfoPage
     * @param untracked
     * @param request
     */
-   JGitStatus(String branchName, List<GitFile> changedNotUpdated, List<GitFile> changedNotCommited,
+   public StatusPage(String branchName, List<GitFile> changedNotUpdated, List<GitFile> changedNotCommited,
       List<GitFile> untracked, StatusRequest request)
    {
       super(branchName, changedNotUpdated, changedNotCommited, untracked);

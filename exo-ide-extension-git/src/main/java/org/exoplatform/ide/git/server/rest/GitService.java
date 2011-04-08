@@ -22,6 +22,7 @@ import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.InfoPage;
+import org.exoplatform.ide.git.server.StatusPage;
 import org.exoplatform.ide.git.shared.AddRequest;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
@@ -32,7 +33,7 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.FetchRequest;
-import org.exoplatform.ide.git.shared.GitStatus;
+import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.LogRequest;
@@ -511,7 +512,7 @@ public class GitService
       GitConnection gitConnection = getGitConnection(workDir, sctx);
       try
       {
-         InfoPage statusPage = gitConnection.status(request);
+         StatusPage statusPage = (StatusPage)gitConnection.status(request);
          return new InfoPageWrapper(statusPage);
       }
       finally
@@ -524,7 +525,7 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public GitStatus jsonStatus(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
+   public Status jsonStatus(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
       StatusRequest request) throws GitException
    {
       GitConnection gitConnection = getGitConnection(workDir, sctx);

@@ -16,35 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.jgit;
+package org.exoplatform.ide.git.server;
 
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.exoplatform.ide.git.server.InfoPage;
+import org.exoplatform.ide.git.shared.GitUser;
+import org.exoplatform.ide.git.shared.Log;
+import org.exoplatform.ide.git.shared.Revision;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: LogPage.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * @version $Id$
  */
-class LogPage implements InfoPage
+public class LogPage extends Log
 {
    // The same as C git does.
    private static final String DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy ZZZZZ";
 
-   private final Iterator<RevCommit> commits;
-
-   LogPage(Iterator<RevCommit> commits)
+   public LogPage(List<Revision> commits)
    {
-      this.commits = commits;
+      super(commits);
    }
 
    /**
@@ -59,23 +58,22 @@ class LogPage implements InfoPage
       TimeZone timeZone = TimeZone.getDefault();
       dateFormat.setTimeZone(timeZone);
 
-      while (commits.hasNext())
+      for (Revision commit : commits)
       {
-         RevCommit commit = commits.next();
+         writer.format("commit %1s\n", commit.getId());
 
-         writer.format("commit %1s\n", commit.getId().name());
-
-         PersonIdent commiter = commit.getCommitterIdent();
+         GitUser commiter = commit.getCommitter();
          if (commiter != null)
-         {
-            writer.format("Author: %1s <%2s>\n", commiter.getName(), commiter.getEmailAddress());
-            writer.format("Date:   %1s\n", dateFormat.format(commiter.getWhen()));
-         }
+            writer.format("Author: %1s <%2s>\n", commiter.getName(), commiter.getEmail());
+
+         long commitTime = commit.getCommitTime();
+         if (commitTime > 0)
+            writer.format("Date:   %1s\n", dateFormat.format(new Date(commitTime)));
 
          writer.println();
 
          // Message with indent.
-         String[] lines = commit.getFullMessage().split("\n");
+         String[] lines = commit.getMessage().split("\n");
          for (String line : lines)
             writer.format("    %1s\n", line);
 

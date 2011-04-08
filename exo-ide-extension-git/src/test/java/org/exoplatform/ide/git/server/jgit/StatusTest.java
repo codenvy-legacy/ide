@@ -20,10 +20,10 @@ package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
-import org.exoplatform.ide.git.server.jgit.JGitStatus;
+import org.exoplatform.ide.git.server.StatusPage;
 import org.exoplatform.ide.git.shared.GitFile;
-import org.exoplatform.ide.git.shared.StatusRequest;
 import org.exoplatform.ide.git.shared.GitFile.FileStatus;
+import org.exoplatform.ide.git.shared.StatusRequest;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -83,7 +83,7 @@ public class StatusTest extends BaseTest
 
    public void testStatus() throws Exception
    {
-      JGitStatus statusPage = (JGitStatus)getDefaultConnection().status(new StatusRequest());
+      StatusPage statusPage = getDefaultConnection().status(new StatusRequest());
 
       statusPage.writeTo(System.out);
 
@@ -114,13 +114,13 @@ public class StatusTest extends BaseTest
       git.add().addFilepattern(".").call();
       git.commit().setMessage("commit all changes").call();
 
-      JGitStatus statusPage = (JGitStatus)getDefaultConnection().status(new StatusRequest());
+      StatusPage statusPage = getDefaultConnection().status(new StatusRequest());
       statusPage.writeTo(System.out);
    }
 
    public void testShortStatus() throws Exception
    {
-      JGitStatus statusPage = (JGitStatus)getDefaultConnection().status(new StatusRequest(new String[]{"a/b/c/d"}, true));
+      StatusPage statusPage = getDefaultConnection().status(new StatusRequest(new String[]{"a/b/c/d"}, true));
       statusPage.writeTo(System.out);
    }
 }

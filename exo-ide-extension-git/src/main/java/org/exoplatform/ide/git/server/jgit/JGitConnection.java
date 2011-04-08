@@ -91,6 +91,8 @@ import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.InfoPage;
+import org.exoplatform.ide.git.server.LogPage;
+import org.exoplatform.ide.git.server.StatusPage;
 import org.exoplatform.ide.git.shared.AddRequest;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
@@ -118,7 +120,6 @@ import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
-import org.exoplatform.ide.git.shared.GitStatus;
 import org.exoplatform.ide.git.shared.StatusRequest;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
@@ -131,6 +132,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -718,12 +720,22 @@ public class JGitConnection implements GitConnection
     * @see org.exoplatform.ide.git.server.GitConnection#log(org.exoplatform.ide.git.shared.LogRequest)
     */
    @Override
-   public InfoPage log(LogRequest request) throws GitException
+   public LogPage log(LogRequest request) throws GitException
    {
       LogCommand logCommand = new Git(repository).log();
       try
       {
-         return new LogPage(logCommand.call().iterator());
+         Iterator<RevCommit> revIterator = logCommand.call().iterator();
+         List<Revision> commits = new ArrayList<Revision>();
+         while (revIterator.hasNext())
+         {
+            RevCommit commit = revIterator.next();
+            PersonIdent committerIdent = commit.getCommitterIdent();
+            commits.add(new Revision(commit.getId().getName(), commit.getFullMessage(),
+               (long)commit.getCommitTime() * 1000, new GitUser(committerIdent.getName(), committerIdent
+                  .getEmailAddress())));
+         }
+         return new LogPage(commits);
       }
       catch (NoHeadException e)
       {
@@ -1346,7 +1358,7 @@ public class JGitConnection implements GitConnection
     * @see org.exoplatform.ide.git.server.GitConnection#status(org.exoplatform.ide.git.shared.StatusRequest)
     */
    @Override
-   public GitStatus status(StatusRequest request) throws GitException
+   public StatusPage status(StatusRequest request) throws GitException
    {
       try
       {
@@ -1437,7 +1449,7 @@ public class JGitConnection implements GitConnection
             treeWalk.release();
          }
 
-         return new JGitStatus(currentBranch, changedNotUpdated, changedNotCommited, untracked, request);
+         return new StatusPage(currentBranch, changedNotUpdated, changedNotCommited, untracked, request);
       }
       catch (MissingObjectException e)
       {

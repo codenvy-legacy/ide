@@ -18,22 +18,20 @@
  */
 package org.exoplatform.ide.git.shared;
 
-import org.exoplatform.ide.git.server.InfoPage;
-
 import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public abstract class GitStatus implements InfoPage
+public class Status
 {
-   protected final String branchName;
-   protected final List<GitFile> changedNotUpdated;
-   protected final List<GitFile> changedNotCommited;
-   protected final List<GitFile> untracked;
+   protected String branchName;
+   protected List<GitFile> changedNotUpdated;
+   protected List<GitFile> changedNotCommited;
+   protected List<GitFile> untracked;
 
-   public GitStatus(String branchName, List<GitFile> changedNotUpdated, List<GitFile> changedNotCommited,
+   public Status(String branchName, List<GitFile> changedNotUpdated, List<GitFile> changedNotCommited,
       List<GitFile> untracked)
    {
       this.branchName = branchName;
@@ -42,9 +40,18 @@ public abstract class GitStatus implements InfoPage
       this.untracked = untracked;
    }
 
+   public Status()
+   {
+   }
+
    public String getBranchName()
    {
       return branchName;
+   }
+
+   public void setBranchName(String branchName)
+   {
+      this.branchName = branchName;
    }
 
    public List<GitFile> getChangedNotUpdated()
@@ -52,13 +59,28 @@ public abstract class GitStatus implements InfoPage
       return changedNotUpdated;
    }
 
+   public void setChangedNotUpdated(List<GitFile> changedNotUpdated)
+   {
+      this.changedNotUpdated = changedNotUpdated;
+   }
+
    public List<GitFile> getChangedNotCommited()
    {
       return changedNotCommited;
    }
 
+   public void setChangedNotCommited(List<GitFile> changedNotCommited)
+   {
+      this.changedNotCommited = changedNotCommited;
+   }
+
    public List<GitFile> getUntracked()
    {
       return untracked;
+   }
+
+   public void setUntracked(List<GitFile> untracked)
+   {
+      this.untracked = untracked;
    }
 }

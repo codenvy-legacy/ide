@@ -43,7 +43,6 @@ import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
-import org.exoplatform.ide.git.shared.GitStatus;
 import org.exoplatform.ide.git.shared.StatusRequest;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
@@ -203,7 +202,7 @@ public interface GitConnection
     * @throws GitException if any error occurs
     * @see LogRequest
     */
-   InfoPage log(LogRequest request) throws GitException;
+   LogPage log(LogRequest request) throws GitException;
 
    /**
     * Merge commits.
@@ -327,7 +326,7 @@ public interface GitConnection
     * @throws GitException if any error occurs
     * @see StatusRequest
     */
-   GitStatus status(StatusRequest request) throws GitException;
+   StatusPage status(StatusRequest request) throws GitException;
 
    /**
     * Create new tag.
