@@ -502,11 +502,11 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       {
          if (template instanceof ProjectTemplate)
          {
-            templateList.add((ProjectTemplate)template);
+            this.templateList.add((ProjectTemplate)template);
          }
          else if (template instanceof FileTemplate)
          {
-            fileTemplateList.add((FileTemplate)template);
+            this.fileTemplateList.add((FileTemplate)template);
          }
       }
    }
