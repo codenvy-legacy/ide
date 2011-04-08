@@ -105,10 +105,10 @@ public class TemplatesRestService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/list")
-   public List<String> getTemplatesList(@Context UriInfo uriInfo, @HeaderParam("type") String type)
+   public List<TemplateDescription> getTemplatesList(@Context UriInfo uriInfo, @HeaderParam("type") String type)
       throws TemplateServiceException
    {
-      List<String> templates = new ArrayList<String>();
+      List<TemplateDescription> templateDescList = new ArrayList<TemplateDescription>();
 
       try
       {
@@ -122,10 +122,10 @@ public class TemplatesRestService
             Node templateNode = templateNodes.item(i);
             if (templateNode.getNodeName().equals("template"))
             {
-               String templateName = getTemplateName(templateNode, type);
-               if (templateName != null)
+               TemplateDescription template = getTemplateDescription(templateNode, type);
+               if (template != null)
                {
-                  templates.add(templateName);
+                  templateDescList.add(template);
                }
             }
          }
@@ -149,7 +149,7 @@ public class TemplatesRestService
          throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
 
-      return templates;
+      return templateDescList;
    }
    
    /**
@@ -492,6 +492,41 @@ public class TemplatesRestService
          return null;
 
       return name;
+   }
+   
+   private TemplateDescription getTemplateDescription(Node node, String type)
+   {
+      NodeList nodeList = node.getChildNodes();
+
+      String typeNode = null;
+
+      String name = null;
+      
+      String description = null;
+
+      for (int i = 0; i < nodeList.getLength(); i++)
+      {
+         Node childNode = nodeList.item(i);
+         if (childNode.getNodeName().equals("name"))
+         {
+            name = childNode.getChildNodes().item(0).getNodeValue();
+         }
+
+         if (childNode.getNodeName().equals("type"))
+         {
+            typeNode = childNode.getChildNodes().item(0).getNodeValue();
+         }
+         
+         if (childNode.getNodeName().equals("description"))
+         {
+            description = childNode.getChildNodes().item(0).getNodeValue();
+         }
+      }
+
+      if (!typeNode.equals(type))
+         return null;
+
+      return new TemplateDescription(name, description);
    }
 
    /**

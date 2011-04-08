@@ -3,28 +3,33 @@
    <!-- project templates -->
    <template>
       <name>linkedin-contacts-project</name>
+      <description>Linkedin Contacts Demo Project</description>
       <type>project</type>
       <src>org/exoplatform/ide/template/samples/linkedin</src>
    </template>
    <template>
       <name>shopping-cart-project</name>
+      <description>Shopping Cart Demo Project</description>
       <type>project</type>
       <src>org/exoplatform/ide/template/samples/sc</src>
    </template>
    <template>
       <name>twitter-trends-project</name>
+      <description>Twitter trend as images sample project</description>
       <type>project</type>
       <src>org/exoplatform/ide/template/samples/twittertrends</src>
    </template>
    <!-- base file templates -->
    <template>
       <name>chromattic-do.groovy</name>
+      <description>Sample of Chromattic data object</description>
       <type>file</type>
       <src>base/chromattic-do.groovy</src>
       <mime-type>application/x-chromattic+groovy</mime-type>
    </template>
    <template>
       <name>gadget.xml</name>
+      <description>Sample of Google Gadget</description>
       <type>file</type>
       <src>base/gadget.xml</src>
       <mime-type>application/x-google-gadget</mime-type>
@@ -32,24 +37,28 @@
    </template>
    <template>
       <name>GTMPL.gtmpl</name>
+      <description>Sample of Template</description>
       <type>file</type>
       <src>base/GTMPL.gtmpl</src>
       <mime-type>application/x-groovy+html</mime-type>
    </template>
    <template>
       <name>html.html</name>
+      <description>Create empty HTML file</description>
       <type>file</type>
       <src>base/html.html</src>
       <mime-type>text/html</mime-type>
    </template>
    <template>
       <name>netvibes.html</name>
+      <description>Netvibes Widget Skeleton</description>
       <type>file</type>
       <src>base/netvibes.html</src>
       <mime-type>application/x-uwa-widget</mime-type>
    </template>
    <template>
       <name>rest-service.grs</name>
+      <description>Sample of Groovy REST service</description>
       <type>file</type>
       <src>base/rest-service.grs</src>
       <mime-type>application/x-jaxrs+groovy</mime-type>
@@ -58,24 +67,28 @@
    <!-- netvibes file templates -->
    <template>
       <name>SampleBlogPostWidget.html</name>
+      <description>Netvibes Sample Blog Post Widget</description>
       <type>file</type>
       <src>netvibes/SampleBlogPostWidget.html</src>
       <mime-type>application/x-uwa-widget</mime-type>
    </template>
    <template>
       <name>SampleChartWidget.html</name>
+      <description>Netvibes Widget Tabview</description>
       <type>file</type>
       <src>netvibes/SampleChartWidget.html</src>
       <mime-type>application/x-uwa-widget</mime-type>
    </template>
    <template>
       <name>SampleFlashWidget.html</name>
+      <description>Netvibes Widget Flash</description>
       <type>file</type>
       <src>netvibes/SampleFlashWidget.html</src>
       <mime-type>application/x-uwa-widget</mime-type>
    </template>
    <template>
       <name>SampleTabbedWidget.html</name>
+      <description>Netvibes Widget Tabview</description>
       <type>file</type>
       <src>netvibes/SampleTabbedWidget.html</src>
       <mime-type>application/x-uwa-widget</mime-type>

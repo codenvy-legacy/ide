@@ -92,7 +92,7 @@ public class TestTemplatesRestService extends BaseTest
       assertEquals(3, templates.size());
       for (Object obj : templates)
       {
-         assertTrue(obj instanceof String);
+         assertTrue(obj instanceof TemplateDescription);
       }
       
    }
