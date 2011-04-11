@@ -27,13 +27,20 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.FolderCreateCallback;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.model.template.FileTemplate;
@@ -72,15 +79,12 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version @version $Id: $
  */
 
-public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemplateHandler
+public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemplateHandler,
+   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, ViewClosedHandler
 {
 
    /**
     * Display interface, that templates view have to implement. 
-    * 
-    * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
-    * @version $Id:
-    *
     */
    public interface Display extends IsView
    {
@@ -123,6 +127,11 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
        */
       ListGridItem<ProjectTemplate> getTemplateListGrid();
 
+      /**
+       * Select the last template in list grid.
+       */
+      void selectLastTemplate();
+
       /*
        * Enables or disables Create button.
        */
@@ -142,91 +151,69 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
        */
       void setNameFieldEnabled(boolean enabled);
 
-      /**
-       * Select the last template in list grid.
-       */
-      void selectLastTemplate();
-
    }
+   
+   private String baseHref;
+   
+   
+   protected Display display;
+   
+   
+   protected HandlerManager eventBus;
+   
+   private List<File> fileList = new ArrayList<File>();
+   
+   
 
-   private List<FileTemplate> fileTemplateList = new ArrayList<FileTemplate>();
+
+   private List<FileTemplate> fileTemplates = new ArrayList<FileTemplate>();
 
    private List<Folder> folderList = new ArrayList<Folder>();
 
-   private List<File> fileList = new ArrayList<File>();
-
    private int itemsCreated = 0;
 
-   private String baseHref;
-
    private Folder projectFolder;
-
-   private String restContext;
-
-   protected HandlerManager eventBus;
-
-   protected Display display;
-
-   /**
-    * The list of templates, that selected.
-    */
-   protected List<ProjectTemplate> selectedTemplates;
 
    /**
     * The list of templates to display.
     * This list must be initialized by subclasses,
     * because it depends on type of template (file of project).
     */
-   protected List<ProjectTemplate> templateList = new ArrayList<ProjectTemplate>();
+   protected List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
+
+   
+
+   private String restServiceContext;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
+
+   
+
+   /**
+    * The list of templates, that selected in list of templates.
+    */
+   protected List<ProjectTemplate> selectedTemplates;
 
    public CreateProjectFromTemplatePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
+
+      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
-      
-      initFileAndProjectTemplates(null);
-   }
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
 
-   @Override
-   public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
-   {
-      if (display == null) {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView(d.asView());
-         bindDisplay(d);
-      }
+      splitFileAndProjectTemplates(null);
    }
-
-   /*
-   public CreateProjectFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList, String restContext)
-   {
-      super(eventBus, selectedItems);
-      this.restContext = restContext;
-      this.templateList 
-      
-      if (selectedItems != null && selectedItems.size() != 0)
-      {
-         Item item = selectedItems.get(0);
-
-         baseHref = item.getHref();
-         if (item instanceof File)
-         {
-            baseHref = baseHref.substring(0, baseHref.lastIndexOf("/") + 1);
-         }
-      }
-      
-      
-   }
-   */
 
    /**
-    * @param d
+    * 
     */
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      display = d;
-
+      folderList.clear();
+      fileList.clear();
+      
       /*
        * If name field is empty - disable create button
        */
@@ -254,7 +241,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       {
          public void onClick(ClickEvent event)
          {
-            submitTemplate();
+            doCreateProjectFromTemplate();
          }
       });
 
@@ -265,7 +252,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       {
          public void onDoubleClick(DoubleClickEvent event)
          {
-            submitTemplate();
+            doCreateProjectFromTemplate();
          }
       });
 
@@ -305,16 +292,16 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       });
 
       /*
-       * Initialize template list grid with template list
-       */
-      display.getTemplateListGrid().setValue(templateList);
-
-      /*
        * Disable buttons and name field, because no template is selected
        */
       display.setCreateButtonEnabled(false);
       display.setDeleteButtonEnabled(false);
       display.setNameFieldEnabled(false);
+
+      /*
+       * Refresh template list grid
+       */
+      refreshTemplateList();
    }
 
    private void build(List<Template> templates, String href)
@@ -347,7 +334,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
    private File createFileFromTemplate(FileTemplate fileTemplate, String href)
    {
-      for (FileTemplate fTemplate : fileTemplateList)
+      for (FileTemplate fTemplate : fileTemplates)
       {
          if (fTemplate.getName().equals(fileTemplate.getName()))
          {
@@ -392,25 +379,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
       deleteTemplate(selectedTemplates.get(0));
    }
-
-   /**
-    * Call template service to delete template.
-    * If success, call method, that will delete next template from selected list.
-    * @param template
-    */
-   protected void deleteTemplate(ProjectTemplate template)
-   {
-      TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback()
-      {
-         @Override
-         protected void onSuccess(Template result)
-         {
-            selectedTemplates.remove(result);
-            deleteNextTemplate();
-         }
-      });
-   }
-
+   
    /**
     * Executes, when delete button pressed.
     * Show ask dialog.
@@ -447,15 +416,53 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          }
       });
    }
+   
+   /**
+    * Call template service to delete template.
+    * If success, call method, that will delete next template from selected list.
+    * @param template
+    */
+   protected void deleteTemplate(ProjectTemplate template)
+   {
+      TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback()
+      {
+         @Override
+         protected void onSuccess(Template result)
+         {
+            selectedTemplates.remove(result);
+            deleteNextTemplate();
+         }
+      });
+   }
+   
+   /**
+    * Call, when create button pressed (or when double clicked on template).
+    * Create new instance of selected template.
+    */
+   public void doCreateProjectFromTemplate()
+   {
+      String projectName = display.getNameField().getValue();
+
+      ProjectTemplate selectedTemplate = selectedTemplates.get(0);
+
+      FileTemplate classPathTemplate = new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
+      selectedTemplate.getChildren().add(classPathTemplate);
+
+      build(selectedTemplate.getChildren(), baseHref + projectName + "/");
+      projectFolder = new Folder(baseHref + projectName + "/");
+      fileList.add(getClasspathFile(baseHref + projectName + "/"));
+
+      createFolder(projectFolder);
+   }
 
    /**
     * Do actions when project is created.
     */
    private void finishProjectCreation()
    {
-      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
       IDE.getInstance().closeView(Display.ID);
-
+      
+      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
       eventBus.fireEvent(new ConfigureBuildPathEvent(projectFolder.getHref()));
    }
 
@@ -475,8 +482,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       newFile.setIcon(ImageUtil.getIcon(contentType));
       newFile.setNewFile(true);
 
-      System.out.println("CreateProjectFromTemplatePresenter.getClasspathFile()" + restContext);
-      String path = GroovyClassPathUtil.formPathFromHref(href, restContext);
+      String path = GroovyClassPathUtil.formPathFromHref(href, restServiceContext);
       GroovyClassPathEntry projectClassPathEntry = GroovyClassPathEntry.build(EnumSourceType.DIR.getValue(), path);
       List<GroovyClassPathEntry> groovyClassPathEntries = new ArrayList<GroovyClassPathEntry>();
       groovyClassPathEntries.add(projectClassPathEntry);
@@ -487,27 +493,33 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    }
 
    /**
-    * Split list of templates on two lists: 
-    * list of project templates and file templates.
-    * 
-    * @param templates
+    * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)
     */
-   private void initFileAndProjectTemplates(List<Template> templateList)
+   @Override
+   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
-      if (templateList == null) {
-         templateList = TemplateServiceImpl.getDefaultTemplates().getTemplates();
-      }
-      
-      for (Template template : templateList)
+      restServiceContext = event.getConfiguration().getContext();
+   }
+
+   @Override
+   public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
+   {
+      if (display == null)
       {
-         if (template instanceof ProjectTemplate)
+         if (selectedItems.size() > 0)
          {
-            this.templateList.add((ProjectTemplate)template);
+            Item item = selectedItems.get(0);
+
+            baseHref = item.getHref();
+            if (item instanceof File)
+            {
+               baseHref = baseHref.substring(0, baseHref.lastIndexOf("/") + 1);
+            }
          }
-         else if (template instanceof FileTemplate)
-         {
-            this.fileTemplateList.add((FileTemplate)template);
-         }
+
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+         bindDisplay();
       }
    }
 
@@ -519,6 +531,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          itemsCreated++;
          return;
       }
+      
       if (fileList.size() == 0)
       {
          finishProjectCreation();
@@ -529,6 +542,25 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       itemsCreated = 1;
    }
 
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
+   }   
+
    /**
     * Refresh List of the templates, after deleting
     */
@@ -536,20 +568,20 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    {
       TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
-
          @Override
          protected void onFailure(Throwable exception)
          {
+            exception.printStackTrace();
             eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
 
          @Override
          protected void onSuccess(TemplateList result)
          {
-            updateTemplateList(result.getTemplates());
+            splitFileAndProjectTemplates(result.getTemplates());
 
-            display.getTemplateListGrid().setValue(templateList);
-            if (templateList.size() > 0)
+            display.getTemplateListGrid().setValue(projectTemplates);
+            if (projectTemplates != null && projectTemplates.size() > 0)
             {
                display.selectLastTemplate();
             }
@@ -570,37 +602,38 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
                itemsCreated++;
                return;
             }
+            
             finishProjectCreation();
          }
       });
    }
 
    /**
-    * Set the value to name field, based on selected template.
+    * Split list of templates on list of project templates and file templates.
+    * 
+    * @param templates
     */
-   protected void setNewInstanceName()
+   private void splitFileAndProjectTemplates(List<Template> templateList)
    {
-      display.getNameField().setValue(selectedTemplates.get(0).getName());
-   }
+      if (templateList == null)
+      {
+         templateList = TemplateServiceImpl.getDefaultTemplates().getTemplates();
+      }
+      
+      this.projectTemplates.clear();
+      this.fileTemplates.clear();      
 
-   /**
-    * Call, when create button pressed (or when double clicked on template).
-    * Create new instance of selected template.
-    */
-   public void submitTemplate()
-   {
-      String projectName = display.getNameField().getValue();
-
-      ProjectTemplate selectedTemplate = selectedTemplates.get(0);
-
-      FileTemplate classPathTemplate = new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
-      selectedTemplate.getChildren().add(classPathTemplate);
-
-      build(selectedTemplate.getChildren(), baseHref + projectName + "/");
-      projectFolder = new Folder(baseHref + projectName + "/");
-      fileList.add(getClasspathFile(baseHref + projectName + "/"));
-
-      createFolder(projectFolder);
+      for (Template template : templateList)
+      {
+         if (template instanceof ProjectTemplate)
+         {
+            this.projectTemplates.add((ProjectTemplate)template);
+         }
+         else if (template instanceof FileTemplate)
+         {
+            this.fileTemplates.add((FileTemplate)template);
+         }
+      }
    }
 
    /**
@@ -646,28 +679,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          display.setDeleteButtonEnabled(true);
       }
 
-      setNewInstanceName();
-   }
-
-   /**
-    * Updates template list with new values.
-    * Pass the list of all templates (projects and files),
-    * subclasses have to filter this list and save only thos templates,
-    * that they are interested in.
-    * @param templates - the list of all templates.
-    */
-   protected void updateTemplateList(List<Template> templates)
-   {
-      templateList.clear();
-      fileTemplateList.clear();
-
-      initFileAndProjectTemplates(templates);
-
-      display.getTemplateListGrid().setValue(templateList);
-      if (templateList != null && templateList.size() > 0)
-      {
-         display.selectLastTemplate();
-      }
+      display.getNameField().setValue(selectedTemplates.get(0).getName());
    }
 
 }

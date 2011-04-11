@@ -52,7 +52,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
    
    public void selectLastItem()
    {
-      T item = items.get(items.size());
+      T item = items.get(items.size() - 1);
       getCellTable().getSelectionModel().setSelected(item, true);
    }
    

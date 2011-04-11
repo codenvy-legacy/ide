@@ -73,7 +73,7 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements org.exopl
 
    public CreateProjectFromTemplateForm()
    {
-      super("", "popup", "Create project", new Image(IDEImageBundle.INSTANCE.createFromTemplate()), DEFAULT_WIDTH,
+      super(ID, "popup", "Create project", new Image(IDEImageBundle.INSTANCE.createFromTemplate()), DEFAULT_WIDTH,
          DEFAULT_HEIGHT);
 
       layout = new VerticalPanel();
