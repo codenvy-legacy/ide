@@ -22,7 +22,6 @@ import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.InfoPage;
-import org.exoplatform.ide.git.server.LogPage;
 import org.exoplatform.ide.git.server.StatusPage;
 import org.exoplatform.ide.git.shared.AddRequest;
 import org.exoplatform.ide.git.shared.Branch;
@@ -34,10 +33,9 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.FetchRequest;
-import org.exoplatform.ide.git.shared.Log;
-import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
+import org.exoplatform.ide.git.shared.Log;
 import org.exoplatform.ide.git.shared.LogRequest;
 import org.exoplatform.ide.git.shared.MergeRequest;
 import org.exoplatform.ide.git.shared.MergeResult;
@@ -51,6 +49,7 @@ import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
+import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.git.shared.StatusRequest;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
@@ -242,25 +241,6 @@ public class GitService
       }
    }
 
-//   @Path("diff")
-//   @POST
-//   @Consumes(MediaType.APPLICATION_JSON)
-//   @Produces(MediaType.APPLICATION_JSON)
-//   public StreamingOutput jsonDiff(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, DiffRequest request)
-//      throws GitException
-//   {
-//      GitConnection gitConnection = getGitConnection(workDir, sctx);
-//      try
-//      {
-//         InfoPage diffPage = gitConnection.diff(request);
-//         return new InfoPageWrapper(diffPage);
-//      }
-//      finally
-//      {
-//         gitConnection.close();
-//      }
-//   }
-
    @Path("fetch")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
@@ -305,7 +285,7 @@ public class GitService
       GitConnection gitConnection = getGitConnection(workDir, sctx);
       try
       {
-         LogPage logPage = gitConnection.log(request);
+         InfoPage logPage = gitConnection.log(request);
          return new InfoPageWrapper(logPage);
       }
       finally

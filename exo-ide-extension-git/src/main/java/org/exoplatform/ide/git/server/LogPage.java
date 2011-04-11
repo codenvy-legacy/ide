@@ -47,7 +47,7 @@ public class LogPage extends Log implements InfoPage
    }
 
    /**
-    * @see org.exoplatform.ide.git.LogPage#writeTo(java.io.OutputStream)
+    * @see org.exoplatform.ide.git.server.InfoPage#writeTo(java.io.OutputStream)
     */
    @Override
    public void writeTo(OutputStream out) throws IOException

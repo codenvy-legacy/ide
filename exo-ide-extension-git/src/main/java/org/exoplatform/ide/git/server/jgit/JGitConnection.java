@@ -88,9 +88,9 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
+import org.exoplatform.ide.git.server.DiffPage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.server.InfoPage;
 import org.exoplatform.ide.git.server.LogPage;
 import org.exoplatform.ide.git.server.StatusPage;
 import org.exoplatform.ide.git.shared.AddRequest;
@@ -518,7 +518,7 @@ public class JGitConnection implements GitConnection
     * @see org.exoplatform.ide.git.server.GitConnection#diff(org.exoplatform.ide.git.shared.DiffRequest)
     */
    @Override
-   public InfoPage diff(DiffRequest request) throws GitException
+   public DiffPage diff(DiffRequest request) throws GitException
    {
       try
       {
@@ -573,7 +573,7 @@ public class JGitConnection implements GitConnection
          // See also org.eclipse.jgit.lib.Repository.close().
          repository.incrementOpen();
 
-         return new DiffPage(diff, request, repository);
+         return new JGitDiffPage(diff, request, repository);
       }
       catch (MissingObjectException e)
       {

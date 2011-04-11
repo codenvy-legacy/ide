@@ -20,6 +20,7 @@ package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
+import org.exoplatform.ide.git.server.DiffPage;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 
@@ -83,7 +84,7 @@ public class DiffTest extends BaseTest
 
    private List<String> readDiff(DiffRequest request) throws Exception
    {
-      DiffPage diffPage = (DiffPage)getDefaultConnection().diff(request);
+      DiffPage diffPage = getDefaultConnection().diff(request);
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       diffPage.writeTo(out);
       BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(out.toByteArray())));

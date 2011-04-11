@@ -165,12 +165,12 @@ public interface GitConnection
     * 
     * @param request diff request
     * @return diff page. Diff info can be serialized to stream by using method
-    *         {@link InfoPage#writeTo(java.io.OutputStream)}
+    *         {@link DiffPage#writeTo(java.io.OutputStream)}
     * @throws GitException if any error occurs
-    * @see InfoPage
+    * @see DiffPage
     * @see DiffRequest
     */
-   InfoPage diff(DiffRequest request) throws GitException;
+   DiffPage diff(DiffRequest request) throws GitException;
 
    /**
     * Fetch data from remote repository.
@@ -198,7 +198,7 @@ public interface GitConnection
     * 
     * @param request log request
     * @return log page. Logs can be serialized to stream by using method
-    *         {@link InfoPage#writeTo(java.io.OutputStream)}
+    *         {@link DiffPage#writeTo(java.io.OutputStream)}
     * @throws GitException if any error occurs
     * @see LogRequest
     */
@@ -322,7 +322,7 @@ public interface GitConnection
     * 
     * @param request status request
     * @return status. It can be serialized to stream by using method
-    *         {@link InfoPage#writeTo(java.io.OutputStream)}
+    *         {@link DiffPage#writeTo(java.io.OutputStream)}
     * @throws GitException if any error occurs
     * @see StatusRequest
     */

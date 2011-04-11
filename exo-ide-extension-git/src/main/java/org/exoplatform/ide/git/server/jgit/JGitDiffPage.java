@@ -22,7 +22,7 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.Repository;
-import org.exoplatform.ide.git.server.InfoPage;
+import org.exoplatform.ide.git.server.DiffPage;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 
@@ -36,7 +36,7 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: DiffPage.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-class DiffPage implements InfoPage
+class JGitDiffPage extends DiffPage
 {
    private final List<DiffEntry> diff;
    private final DiffRequest request;
@@ -47,7 +47,7 @@ class DiffPage implements InfoPage
     * @param request
     * @param repository
     */
-   DiffPage(List<DiffEntry> diff, DiffRequest request, Repository repository)
+   JGitDiffPage(List<DiffEntry> diff, DiffRequest request, Repository repository)
    {
       this.diff = diff;
       this.request = request;
