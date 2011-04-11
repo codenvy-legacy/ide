@@ -35,14 +35,14 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class SelectWorkspaceCommand extends SimpleControl implements IDEControl, IsDiscoverableResultReceivedHandler
+public class SelectWorkspaceControl extends SimpleControl implements IDEControl, IsDiscoverableResultReceivedHandler
 {
 
    public static final String ID = "Window/Workspace...";
 
    public static final String TITLE = "Select Workspace...";
 
-   public SelectWorkspaceCommand()
+   public SelectWorkspaceControl()
    {
       super(ID);
       setTitle(TITLE);
@@ -64,6 +64,9 @@ public class SelectWorkspaceCommand extends SimpleControl implements IDEControl,
       eventBus.addHandler(IsDiscoverableResultReceivedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedHandler#isDiscoverableResultReceived(org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent)
+    */
    @Override
    public void isDiscoverableResultReceived(IsDiscoverableResultReceivedEvent event)
    {

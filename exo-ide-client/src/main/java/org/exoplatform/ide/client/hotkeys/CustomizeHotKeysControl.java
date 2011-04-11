@@ -16,12 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.about;
+package org.exoplatform.ide.client.hotkeys;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -32,22 +33,22 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class ShowAboutCommand extends SimpleControl implements IDEControl
+public class CustomizeHotKeysControl extends SimpleControl implements IDEControl
 {
 
-   public static final String ID = "Help/About...";
+   public static final String ID = "Window/HotKeys...";
 
-   public static final String TITLE = "About...";
+   public static final String TITLE = "Customize Hotkeys...";
 
-   public ShowAboutCommand(HandlerManager eventBus)
+   public CustomizeHotKeysControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setEnabled(true);
       setVisible(true);
-      setImages(IDEImageBundle.INSTANCE.about(), IDEImageBundle.INSTANCE.aboutDisabled());
-      setEvent(new ShowAboutDialogEvent());
+      setImages(IDEImageBundle.INSTANCE.customizeHotKeys(), IDEImageBundle.INSTANCE.customizeHotKeysDisabled());
+      setEvent(new CustomizeHotKeysEvent());
    }
 
    /**

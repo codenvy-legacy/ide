@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
+import org.exoplatform.ide.client.hotkeys.HotKeyManagementModule;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.navigation.NavigationModule;
 import org.exoplatform.ide.client.operation.OperationModule;
@@ -57,10 +58,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
    public IDE()
    {
-
       new GWTDialogs();
 
-      //HandlerManager eventBus = new HandlerManager(null);
       context = new ApplicationContext();
 
       new ExceptionThrownEventHandler(EVENT_BUS);
@@ -78,9 +77,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       presenter = new IDEPresenter(EVENT_BUS, ideForm, controlsRegistration);
       new ViewHighlightManager(EVENT_BUS);
 
-      //new TestPresenter(EVENT_BUS);
-      //new ViewManagerPresenter(EVENT_BUS);
-
       new ApplicationStateSnapshotListener(EVENT_BUS);
 
       // MODULES INITIALIZATION
@@ -88,7 +84,10 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new ProjectSupportingModule(EVENT_BUS);
       new TextEditModule(EVENT_BUS);
       new OperationModule(EVENT_BUS);
+
       new PreferencesModule(EVENT_BUS);
+
+      new HotKeyManagementModule(EVENT_BUS);
 
       //initialize extensions
       for (Extension ext : extensions)

@@ -30,6 +30,9 @@
    <inherits name='com.google.gwt.json.JSON' />
    <inherits name="com.google.gwt.resources.Resources" />
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
+   <!-- 
+   <inherits name='org.exoplatform.gwtframework.ui.UI' />
+    -->
    <inherits name='org.exoplatform.ide.editor.Editor'/>
    
    <generate-with class="org.exoplatform.ide.generator.ControlAnnotationMapGenerator">
@@ -51,4 +54,5 @@
    <source path="ui" />
    <source path="userinfo" />
    <source path="vfs" />
+   
 </module>

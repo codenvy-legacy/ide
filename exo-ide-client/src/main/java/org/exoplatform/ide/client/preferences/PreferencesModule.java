@@ -23,7 +23,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.about.AboutIDEPresenter;
-import org.exoplatform.ide.client.about.ShowAboutCommand;
+import org.exoplatform.ide.client.about.ShowAboutControl;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -33,11 +33,8 @@ import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysCommand;
-import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPanel;
+import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysControl;
 import org.exoplatform.ide.client.hotkeys.HotKeyManagerImpl;
-import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysEvent;
-import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysHandler;
 import org.exoplatform.ide.client.model.discovery.DiscoveryServiceImpl;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
 import org.exoplatform.ide.client.restdiscovery.control.RestServicesDiscoveryControl;
@@ -45,7 +42,7 @@ import org.exoplatform.ide.client.toolbar.CustomizeToolbarCommand;
 import org.exoplatform.ide.client.toolbar.CustomizeToolbarForm;
 import org.exoplatform.ide.client.toolbar.event.CustomizeToolbarEvent;
 import org.exoplatform.ide.client.toolbar.event.CustomizeToolbarHandler;
-import org.exoplatform.ide.client.workspace.SelectWorkspaceCommand;
+import org.exoplatform.ide.client.workspace.SelectWorkspaceControl;
 import org.exoplatform.ide.client.workspace.SelectWorkspacePresenter;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -57,7 +54,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class PreferencesModule implements InitializeServicesHandler, ControlsUpdatedHandler, CustomizeToolbarHandler,
-   CustomizeHotKeysHandler, ApplicationSettingsReceivedHandler
+   ApplicationSettingsReceivedHandler
 {
 
    private HandlerManager eventBus;
@@ -74,13 +71,11 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
       eventBus.addHandler(CustomizeToolbarEvent.TYPE, this);
-      eventBus.addHandler(CustomizeHotKeysEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
-      eventBus.fireEvent(new RegisterControlEvent(new SelectWorkspaceCommand()));
+      eventBus.fireEvent(new RegisterControlEvent(new SelectWorkspaceControl()));
       eventBus.fireEvent(new RegisterControlEvent(new CustomizeToolbarCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new CustomizeHotKeysCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new ShowAboutCommand(eventBus)));
+      eventBus.fireEvent(new RegisterControlEvent(new ShowAboutControl(eventBus)));
       eventBus.fireEvent(new RegisterControlEvent(new RestServicesDiscoveryControl()));
 
       new RestServicesDiscoveryPresenter(eventBus);
@@ -110,10 +105,6 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       new CustomizeToolbarForm(eventBus, applicationSettings, controls);
    }
 
-   public void onCustomizeHotKeys(CustomizeHotKeysEvent event)
-   {
-      new CustomizeHotKeysPanel(eventBus, applicationSettings, controls);
-   }
 
    @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

@@ -16,26 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.control;
+package org.exoplatform.ide.client.hotkeys;
 
-import org.exoplatform.gwtframework.ui.client.command.Control;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
- * Impement it to create any formatter for controls order.
+ * Created by The eXo Platform SAS .
  * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jan 19, 2011 5:05:29 PM anya $
- *
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface ControlsFormatter
+
+public class HotKeyManagementModule
 {
-   /**
-    * Performs formatting controls.
-    * 
-    * @param controls controls to format
-    */
-   void format(List<Control> controls);
    
+   private HandlerManager eventBus;
+   
+   public HotKeyManagementModule(HandlerManager eventBus) {
+      this.eventBus = eventBus;
+
+      eventBus.fireEvent(new RegisterControlEvent(new CustomizeHotKeysControl()));
+      
+      
+   }
+
+   /*
+   public void onCustomizeHotKeys(CustomizeHotKeysEvent event)
+   {
+      new CustomizeHotKeysPanel(eventBus, applicationSettings, controls);
+   }
+   */
+
 }

@@ -57,7 +57,7 @@
 		<when-type-is class="org.exoplatform.ide.client.preview.PreviewHTMLPresenter.Display" />
 	</replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.about.ui.AboutIDEView">
+	<replace-with class="org.exoplatform.ide.client.about.AboutIDEView">
 		<when-type-is class="org.exoplatform.ide.client.about.AboutIDEPresenter.Display" />
 	</replace-with>
 
