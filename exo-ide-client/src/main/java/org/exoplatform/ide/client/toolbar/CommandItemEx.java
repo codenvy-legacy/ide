@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.toolbar.customize.event;
+package org.exoplatform.ide.client.toolbar;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.gwtframework.ui.client.command.Control;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,9 +27,39 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface CustomizeToolbarHandler extends EventHandler
+public class CommandItemEx
 {
 
-   void onCustomizeToolBar(CustomizeToolbarEvent event);
+   private String title;
+
+   private Control command;
+
+   private boolean group = false;
+
+   public CommandItemEx(Control command)
+   {
+      this.command = command;
+   }
+
+   public CommandItemEx(String title)
+   {
+      this.title = title;
+      group = true;
+   }
+
+   public String getTitle()
+   {
+      return title;
+   }
+
+   public Control getCommand()
+   {
+      return command;
+   }
+
+   public boolean isGroup()
+   {
+      return group;
+   }
 
 }

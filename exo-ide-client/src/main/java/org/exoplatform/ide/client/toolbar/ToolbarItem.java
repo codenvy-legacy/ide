@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.preferences.event;
+package org.exoplatform.ide.client.toolbar;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.gwtframework.ui.client.command.Control;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,9 +27,47 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface CustomizeHotKeysHandler extends EventHandler
+public class ToolbarItem
 {
 
-   void onCustomizeHotKeys(CustomizeHotKeysEvent event);
+   public static enum Type 
+   {
+
+      COMMAND, DELIMITER, SPACER
+
+   }
+
+   private Type type;
+
+   private String id;
+
+   private Control command;
+
+   public ToolbarItem(Type type)
+   {
+      this.type = type;
+   }
+
+   public ToolbarItem(Type type, String id, Control command)
+   {
+      this.type = type;
+      this.id = id;
+      this.command = command;
+   }
+
+   public Type getType()
+   {
+      return type;
+   }
+
+   public String getId()
+   {
+      return id;
+   }
+
+   public Control getCommand()
+   {
+      return command;
+   }
 
 }

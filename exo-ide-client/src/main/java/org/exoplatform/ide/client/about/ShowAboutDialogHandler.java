@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.preferences.event;
+package org.exoplatform.ide.client.about;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -27,9 +27,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface SelectWorkspaceHandler extends EventHandler
+public interface ShowAboutDialogHandler extends EventHandler
 {
 
-   void onSelectWorkspace(SelectWorkspaceEvent event);
+   void onShowAboutDialog(ShowAboutDialogEvent event);
 
 }

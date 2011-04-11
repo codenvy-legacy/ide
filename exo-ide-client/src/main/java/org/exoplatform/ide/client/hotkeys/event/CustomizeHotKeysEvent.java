@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.toolbar.customize.event;
+package org.exoplatform.ide.client.hotkeys.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -27,19 +27,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class CustomizeToolbarEvent extends GwtEvent<CustomizeToolbarHandler>
+public class CustomizeHotKeysEvent extends GwtEvent<CustomizeHotKeysHandler>
 {
 
-   public static final GwtEvent.Type<CustomizeToolbarHandler> TYPE = new GwtEvent.Type<CustomizeToolbarHandler>();
+   public static final GwtEvent.Type<CustomizeHotKeysHandler> TYPE = new GwtEvent.Type<CustomizeHotKeysHandler>();
 
    @Override
-   protected void dispatch(CustomizeToolbarHandler handler)
+   protected void dispatch(CustomizeHotKeysHandler handler)
    {
-      handler.onCustomizeToolBar(this);
+      handler.onCustomizeHotKeys(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CustomizeToolbarHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<CustomizeHotKeysHandler> getAssociatedType()
    {
       return TYPE;
    }

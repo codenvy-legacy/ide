@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.toolbar.customize;
+package org.exoplatform.ide.client.toolbar;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.dom.client.Style.Unit;
@@ -35,48 +35,36 @@ import org.exoplatform.ide.client.ImageUtil;
  * @version $
  */
 
-public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
+public class CommandItemExListGrid extends ListGrid<CommandItemEx>
 {
 
-   public static interface Style
+   public interface Style
    {
 
-      final static String TOOLBAR_SPACER = "exo-customizeToolbar-spacer";
-
-      final static String TOOLBAR_DELIMITER = "exo-customizeToolbar-delimiter";
+      final static String GROUP = "exo-customizeToolbar-commandGroup";
 
    }
 
-   public final static String TOOLBAR = "Toolbar";
+   private final static String TITLE = "Command";
 
-   public final static String COMMAND_ID = "CommandId";
+   private final static String ID = "ideCommandItemExListGrid";
 
-   public final static String ID = "ideToolbarItemListGrid";
-
-   public ToolbarItemListGrid()
+   public CommandItemExListGrid()
    {
+      super();
       setID(ID);
-      
-      initColumns();
-   }
-   
-   private String getDivider(String title, String style)
-   {
-      String divider =
-         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:20px;\">"
-            + "<tr><td><hr></td><td class=\"" + style + "\">&nbsp;" + title + "&nbsp;</td><td><hr></td></tr>"
-            + "</table>";
 
-      return divider;
+      initColumns();
+
    }
    
    private void initColumns()
    {
-      Column<ToolbarItem, SafeHtml> titleColumn = new Column<ToolbarItem, SafeHtml>(new SafeHtmlCell())
+      Column<CommandItemEx, SafeHtml> titleColumn = new Column<CommandItemEx, SafeHtml>(new SafeHtmlCell())
       {
 
          @Override
-         public SafeHtml getValue(final ToolbarItem item)
+         public SafeHtml getValue(final CommandItemEx item)
          {
             SafeHtml html = new SafeHtml()
             {
@@ -92,51 +80,63 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
          }
 
       };
-      getCellTable().addColumn(titleColumn, TOOLBAR);
+      getCellTable().addColumn(titleColumn, TITLE);
       getCellTable().setColumnWidth(titleColumn, 60, Unit.PX);
-      
    }
 
-   private String getItemTitle(ToolbarItem item)
+   private String getDivider(String title, String style)
    {
-      if (item.getType() == ToolbarItem.Type.COMMAND)
+      String divider =
+         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:20px;\">"
+            + "<tr><td><hr></td><td class=\"" + style + "\">&nbsp;" + title + "&nbsp;</td><td><hr></td></tr>"
+            + "</table>";
+
+      return divider;
+   }
+   
+   private String getItemTitle(CommandItemEx item)
+   {
+      if (item.isGroup())
       {
-         String title = item.getCommand().getId();
-         if (title.indexOf("/") >= 0)
+         String title = item.getTitle();
+         title = title.replace("/", "&nbsp;/&nbsp;");
+         title = getDivider(title, Style.GROUP);
+         return title;
+      }
+      else
+      {
+         String title = "";
+         String commandName = item.getCommand().getId();
+         if (commandName.indexOf("/") >= 0)
          {
-            title = title.substring(title.lastIndexOf("/") + 1);
+            commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
          }
-         while (title.indexOf("\\") >= 0)
+
+         while (commandName.indexOf("\\") >= 0)
          {
-            title = title.replace("\\", "/");
+            commandName = commandName.replace("\\", "/");
          }
 
          if (item.getCommand() instanceof PopupMenuControl)
          {
-            title += "&nbsp;[Popup]";
+            commandName += "&nbsp;[Popup]";
          }
 
          if (item.getCommand().getNormalImage() != null)
          {
             Image image = new Image(item.getCommand().getNormalImage());
             String imageHTML = ImageUtil.getHTML(image);
-            title = "<span>" + imageHTML + "&nbsp;" + title + "</span>";
+            title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
+         }
+         else if (item.getCommand().getIcon() != null)
+         {
+            title = "<span><img src = \"" + item.getCommand().getIcon() + "\"/>&nbsp;" + commandName + "</span>";
          }
          else
          {
-            title = "<span><img src=\"" + item.getCommand().getIcon() + "\"/>&nbsp;" + title + "</span>";
+            title = "<span>" + commandName + "</span>";
          }
 
-         return title;
-      }
-      else if (item.getType() == ToolbarItem.Type.DELIMITER)
-      {
-         String title = getDivider("Delimiter", Style.TOOLBAR_DELIMITER);
-         return title;
-      }
-      else
-      {
-         String title = getDivider("Spacer", Style.TOOLBAR_SPACER);
          return title;
       }
    }

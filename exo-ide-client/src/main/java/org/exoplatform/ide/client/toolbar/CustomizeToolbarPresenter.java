@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.toolbar.customize;
+package org.exoplatform.ide.client.toolbar;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -36,7 +36,7 @@ import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.client.toolbar.customize.ToolbarItem.Type;
+import org.exoplatform.ide.client.toolbar.ToolbarItem.Type;
 
 import java.util.ArrayList;
 import java.util.HashMap;

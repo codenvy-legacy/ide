@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.toolbar.customize;
+package org.exoplatform.ide.client.toolbar;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
@@ -296,7 +296,7 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
       return commandItemListGrid;
    }
 
-   public ListGridItem<org.exoplatform.ide.client.toolbar.customize.ToolbarItem> getToolbarItemsListGrid()
+   public ListGridItem<org.exoplatform.ide.client.toolbar.ToolbarItem> getToolbarItemsListGrid()
    {
       return toolbarItemListGrid;
    }
@@ -356,7 +356,7 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
       return defaultsButton;
    }
 
-   public void toolbarItemsListGridSelectItem(org.exoplatform.ide.client.toolbar.customize.ToolbarItem item)
+   public void toolbarItemsListGridSelectItem(org.exoplatform.ide.client.toolbar.ToolbarItem item)
    {
       toolbarItemListGrid.selectItem(item);
    }

@@ -16,13 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.preferences.control;
+package org.exoplatform.ide.client.hotkeys;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.toolbar.customize.event.CustomizeToolbarEvent;
+import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -33,22 +33,22 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class CustomizeToolbarCommand extends SimpleControl implements IDEControl
+public class CustomizeHotKeysCommand extends SimpleControl implements IDEControl
 {
 
-   public static final String ID = "Window/Customize Toolbar...";
+   public static final String ID = "Window/HotKeys...";
 
-   public static final String TITLE = "Customize Toolbar...";
+   public static final String TITLE = "Customize Hotkeys...";
 
-   public CustomizeToolbarCommand()
+   public CustomizeHotKeysCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.customizeToolbar(), IDEImageBundle.INSTANCE.customizeToolbarDisabled());
-      setEvent(new CustomizeToolbarEvent());
-      setVisible(true);
       setEnabled(true);
+      setVisible(true);
+      setImages(IDEImageBundle.INSTANCE.customizeHotKeys(), IDEImageBundle.INSTANCE.customizeHotKeysDisabled());
+      setEvent(new CustomizeHotKeysEvent());
    }
 
    /**

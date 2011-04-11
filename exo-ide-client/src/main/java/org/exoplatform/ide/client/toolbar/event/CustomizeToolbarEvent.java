@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.toolbar.customize;
+package org.exoplatform.ide.client.toolbar.event;
 
-import org.exoplatform.gwtframework.ui.client.command.Control;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,39 +27,21 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
  * @version $
  */
 
-public class CommandItemEx
+public class CustomizeToolbarEvent extends GwtEvent<CustomizeToolbarHandler>
 {
 
-   private String title;
+   public static final GwtEvent.Type<CustomizeToolbarHandler> TYPE = new GwtEvent.Type<CustomizeToolbarHandler>();
 
-   private Control command;
-
-   private boolean group = false;
-
-   public CommandItemEx(Control command)
+   @Override
+   protected void dispatch(CustomizeToolbarHandler handler)
    {
-      this.command = command;
+      handler.onCustomizeToolBar(this);
    }
 
-   public CommandItemEx(String title)
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<CustomizeToolbarHandler> getAssociatedType()
    {
-      this.title = title;
-      group = true;
-   }
-
-   public String getTitle()
-   {
-      return title;
-   }
-
-   public Control getCommand()
-   {
-      return command;
-   }
-
-   public boolean isGroup()
-   {
-      return group;
+      return TYPE;
    }
 
 }

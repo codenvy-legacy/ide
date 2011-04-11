@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.preferences.event;
+package org.exoplatform.ide.client.about;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -27,19 +27,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class SelectWorkspaceEvent extends GwtEvent<SelectWorkspaceHandler>
+public class ShowAboutDialogEvent extends GwtEvent<ShowAboutDialogHandler>
 {
 
-   public static final GwtEvent.Type<SelectWorkspaceHandler> TYPE = new GwtEvent.Type<SelectWorkspaceHandler>();
+   public static final GwtEvent.Type<ShowAboutDialogHandler> TYPE = new GwtEvent.Type<ShowAboutDialogHandler>();
 
    @Override
-   protected void dispatch(SelectWorkspaceHandler handler)
+   protected void dispatch(ShowAboutDialogHandler handler)
    {
-      handler.onSelectWorkspace(this);
+      handler.onShowAboutDialog(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SelectWorkspaceHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowAboutDialogHandler> getAssociatedType()
    {
       return TYPE;
    }

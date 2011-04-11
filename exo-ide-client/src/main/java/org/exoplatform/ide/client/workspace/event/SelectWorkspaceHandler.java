@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.toolbar.customize;
+package org.exoplatform.ide.client.workspace.event;
 
-import org.exoplatform.gwtframework.ui.client.command.Control;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,47 +27,9 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
  * @version $
  */
 
-public class ToolbarItem
+public interface SelectWorkspaceHandler extends EventHandler
 {
 
-   public static enum Type 
-   {
-
-      COMMAND, DELIMITER, SPACER
-
-   }
-
-   private Type type;
-
-   private String id;
-
-   private Control command;
-
-   public ToolbarItem(Type type)
-   {
-      this.type = type;
-   }
-
-   public ToolbarItem(Type type, String id, Control command)
-   {
-      this.type = type;
-      this.id = id;
-      this.command = command;
-   }
-
-   public Type getType()
-   {
-      return type;
-   }
-
-   public String getId()
-   {
-      return id;
-   }
-
-   public Control getCommand()
-   {
-      return command;
-   }
+   void onSelectWorkspace(SelectWorkspaceEvent event);
 
 }

@@ -55,8 +55,8 @@ import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.model.discovery.Scheme;
 import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.client.preferences.event.SelectWorkspaceEvent;
-import org.exoplatform.ide.client.preferences.event.SelectWorkspaceHandler;
+import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
+import org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
 import java.util.ArrayList;
@@ -212,7 +212,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler,
    /**
     *Handler of selection of the workspace from the list of workspaces.
     * 
-    * @see org.exoplatform.ide.client.preferences.event.SelectWorkspaceHandler#onSelectWorkspace(org.exoplatform.ide.client.preferences.event.SelectWorkspaceEvent)
+    * @see org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler#onSelectWorkspace(org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent)
     */
    public void onSelectWorkspace(SelectWorkspaceEvent event)
    {
