@@ -39,7 +39,11 @@ import com.google.gwt.user.client.ui.Image;
 
 public class WorkspaceView extends ViewImpl implements org.exoplatform.ide.client.navigation.WorkspacePresenter.Display
 {
-
+ 
+   private static final String TREE_ID = "ideNavigatorItemTreeGrid";
+   
+   private static final String TREE_PREFIX_ID = "navigation";
+   
    private ItemTree treeGrid;
 
    public WorkspaceView()
@@ -47,7 +51,8 @@ public class WorkspaceView extends ViewImpl implements org.exoplatform.ide.clien
       super(ID, "navigation", "Workspace", new Image(IDEImageBundle.INSTANCE.workspace()));
       setHasCloseButton(false);
       
-      treeGrid = new ItemTree();
+      treeGrid = new ItemTree(TREE_ID, TREE_PREFIX_ID);
+      
       add(treeGrid, true);
    }
 

@@ -38,6 +38,10 @@ public class SearchResultsView extends ViewImpl implements
    org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display
 {
 
+   private static final String TREE_ID = "ideSearchResultItemTreeGrid";
+
+   private static final String TREE_PREFIX_ID = "search";
+
    private ItemTree searchItemTreeGrid;
 
    private final String FILE_NOT_FOUND_MESSAGE = "No results found!";
@@ -46,7 +50,7 @@ public class SearchResultsView extends ViewImpl implements
    {
       super(ID, "navigation", "Search", new Image(IDEImageBundle.INSTANCE.search()));
 
-      searchItemTreeGrid = new ItemTree();
+      searchItemTreeGrid = new ItemTree(TREE_ID, TREE_PREFIX_ID);
       add(searchItemTreeGrid, true);
    }
 

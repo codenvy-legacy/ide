@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -44,9 +45,20 @@ import java.util.Map;
  *
  */
 public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.Tree<Item>
-{
-
+{   
    private Map<String, String> locktokens;
+   
+   private String prefixId; 
+   
+   /**
+    * @param id of UI component
+    * @param prefixId prefix for child element ID
+    */
+   public ItemTree(String id, String prefixId)
+   {
+      getElement().setId(id);
+      this.prefixId = prefixId + "-";
+   }
 
    @Override
    protected Widget createItemWidget(String icon, String text)
@@ -169,6 +181,9 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          // TODO fix this 
          node.addItem("");
       }
+      
+      node.getElement().setId(prefixId+Utils.md5(item.getHref()));
+      
       return node;
    }
 
