@@ -30,7 +30,10 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -106,6 +109,36 @@ public class Utils
       }
       reader.close();
       return fileData.toString();
+   }
+   
+   /**
+    * Encode string in md5 hash
+    * @param string to encode
+    * @return md5 hash of string
+    */
+   public static String md5(String string)
+   {
+      MessageDigest m;
+      try
+      {
+         m = MessageDigest.getInstance("MD5");
+         m.reset();
+         m.update(string.getBytes());
+         byte[] digest = m.digest();
+         BigInteger bigInt = new BigInteger(1,digest);
+         String hashtext = bigInt.toString(16);
+         // Now we need to zero pad it if you actually want the full 32 chars.
+         while(hashtext.length() < 32 ){
+           hashtext = "0"+hashtext;
+         }
+         return hashtext;
+      }
+      catch (NoSuchAlgorithmException e)
+      {
+         e.printStackTrace();
+         return null;
+      }
+   
    }
 
 }
