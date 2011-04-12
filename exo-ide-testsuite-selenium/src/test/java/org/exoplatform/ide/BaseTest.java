@@ -525,28 +525,28 @@ public abstract class BaseTest
       //      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
 
       //Check creation form elements
+      assertTrue(selenium.isElementPresent("ideCreateFolderForm"));
       assertTrue(selenium.isTextPresent("Name of new folder:"));
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]//input"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCancelButton\"]"));
+      assertTrue(selenium.isElementPresent("ideCreateFolderFormNameField"));
+      assertTrue(selenium.isElementPresent("ideCreateFolderFormCreateButton"));
+      assertTrue(selenium.isElementPresent("ideCreateFolderFormCancelButton"));
 
       //clearFocus();
 
       String locator =
-         "scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element";
+         "ideCreateFolderFormNameField";
 
       //selenium.select(locator, optionLocator)
 
       AbstractTextUtil.getInstance().typeToInput(locator, folderName, true);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      selenium.click("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]/");
+      selenium.click("ideCreateFolderFormCreateButton");
 
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //Check creation form is not shown
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
-      assertElementPresentInWorkspaceTree(folderName);
+      assertFalse(selenium.isElementPresent("ideCreateFolderForm"));
+      //assertElementPresentInWorkspaceTree(folderName);
    }
 
    /**
@@ -1220,8 +1220,8 @@ public abstract class BaseTest
          "http://127.0.0.1:8888/IDE/Shell.html?gwt.codesvr=127.0.0.1:9997"), 
       PORTAL("http://127.0.0.1:8080/", 
          "http://127.0.0.1:8080/portal/private/default/ide"), 
-      STANDALONE("http://127.0.0.1:8080/", 
-         "http://127.0.0.1:8080/IDE/Application.html");
+      STANDALONE("http://localhost:8080/", 
+         "http://localhost:8080/IDE/Application.html");
 
       private String baseUrl;
 

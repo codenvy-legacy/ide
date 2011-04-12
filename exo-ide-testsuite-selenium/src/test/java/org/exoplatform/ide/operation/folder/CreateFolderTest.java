@@ -43,6 +43,8 @@ public class CreateFolderTest extends BaseTest
 
    private static String FOLDER_NAME_TOOLBAR = CreateFolderTest.class.getSimpleName();
 
+   private static String FOLDER_NAME_DEFOLT = "New Folder";
+
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/";
 
@@ -58,26 +60,17 @@ public class CreateFolderTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       //****************
-
-      //      selenium.mouseDownAt("//div[@title='New']//img", "");
-      //      selenium.mouseUpAt("//div[@title='New']//img", "");
-      //      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
-      //      checkCreateFolderFormElements();
       selenium.focus("//input[@name='ideCreateFolderFormNameField']");
-
       // clear dafault name in textfield
       selenium.type("ideCreateFolderFormNameField", "");
-
       //type name folder
       selenium.typeKeys("ideCreateFolderFormNameField", FOLDER_NAME_TOOLBAR);
-
       selenium.keyPress("ideCreateFolderFormNameField", "\\13");
       //Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("ideCreateFolderFormNameField"));
       assertTrue(selenium.isTextPresent(FOLDER_NAME_TOOLBAR));
       IDE.navigator().assertItemPresent(URL + FOLDER_NAME_TOOLBAR);
       assertEquals(200, VirtualFileSystemUtils.get(URL + FOLDER_NAME_TOOLBAR).getStatusCode());
-
    }
 
    /**
@@ -85,40 +78,29 @@ public class CreateFolderTest extends BaseTest
     * 
     * @throws Exception
     */
-   //  @Test
+   @Test
    public void testCreateFolderMenu() throws Exception
    {
+      //refresh page
       selenium.refresh();
+      //wait...
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-
-      IDE.menu().runCommand(MenuCommands.File.FILE, "New", "Folder...");
-
-      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'New')]", "");
-      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Folder...']", "");
-
-      checkCreateFolderFormElements();
-      selenium.click("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
-      assertElementPresentInWorkspaceTree("New Folder");
+      //run command for create folder
+      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
+      //create folder
+      selenium.click("ideCreateFolderFormCreateButton");
+      //check disapear menu after create of folder
+      assertFalse(selenium.isElementPresent("ideCreateFolderForm"));
+      //check folder in tread menu
+      //TODO Change URL path to folder another (using WS_URL)  
+      IDE.navigator().assertItemPresent(URL + FOLDER_NAME_DEFOLT + "/");
       assertEquals(200, VirtualFileSystemUtils.get(URL + URLEncoder.encode("New Folder", "UTF-8")).getStatusCode());
    }
 
    /**
     * Checks the present of create folder form elements.
     */
-   private void checkCreateFolderFormElements()
-   {
-      assertTrue(selenium.isTextPresent("Name of new folder:"));
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]//input"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCancelButton\"]"));
-   }
-
    @AfterClass
    public static void tearDown()
    {
