@@ -641,4 +641,10 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
       }
       return null;
    }
+   
+   @Override
+   public void setValue(T value) {
+      super.setValue(value);
+      hideHighlighter();
+   };
 }
