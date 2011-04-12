@@ -27,8 +27,12 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.git.client.marshaller.AddRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.BranchCheckoutRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.BranchCreateRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.BranchDeleteRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.BranchListRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.BranchListUnmarshaller;
+import org.exoplatform.ide.git.client.marshaller.BranchUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.CloneRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.CommitRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.InitRequestMarshaller;
@@ -43,6 +47,9 @@ import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponseUnmarshaller;
 import org.exoplatform.ide.git.shared.AddRequest;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
+import org.exoplatform.ide.git.shared.BranchCreateRequest;
+import org.exoplatform.ide.git.shared.BranchDeleteRequest;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
@@ -70,15 +77,21 @@ public class GitClientServiceImpl extends GitClientService
    public static final String CLONE = "/ide/git/clone";
 
    public static final String COMMIT = "/ide/git/commit";
-   
+
    public static final String BRANCH_LIST = "/ide/git/branch-list";
+
+   public static final String BRANCH_CHECKOUT = "/ide/git/branch-checkout";
+
+   public static final String BRANCH_CREATE = "/ide/git/branch-create";
+
+   public static final String BRANCH_DELETE = "/ide/git/branch-delete";
 
    public static final String INIT = "/ide/git/init";
 
    public static final String STATUS = "/ide/git/status";
 
    public static final String GET_WORKDIR = "/ide/git-repo/workdir";
-   
+
    public static final String PUSH = "/ide/git/push";
 
    public static final String REMOTE_LIST = "/ide/git/remote-list";
@@ -149,7 +162,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void status(String href, boolean shortFormat, String[] fileFilter,
+   public void statusText(String href, boolean shortFormat, String[] fileFilter,
       AsyncRequestCallback<StatusResponse> callback)
    {
       String url = restServiceContext + STATUS;
@@ -160,7 +173,7 @@ public class GitClientServiceImpl extends GitClientService
       StatusRequestMarshaller marshaller = new StatusRequestMarshaller(statusRequest);
 
       StatusResponse statusResponse = new StatusResponse();
-      StatusResponseUnmarshaller unmarshaller = new StatusResponseUnmarshaller(statusResponse);
+      StatusResponseUnmarshaller unmarshaller = new StatusResponseUnmarshaller(statusResponse, true);
       callback.setResult(statusResponse);
       callback.setPayload(unmarshaller);
 
@@ -244,9 +257,9 @@ public class GitClientServiceImpl extends GitClientService
       pushRequest.setRemote(remote);
       pushRequest.setRefSpec(refSpec);
       pushRequest.setForce(force);
-      
+
       PushRequestMarshaller marshaller = new PushRequestMarshaller(pushRequest);
-      
+
       String params = "workdir=" + workDir;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
@@ -292,11 +305,10 @@ public class GitClientServiceImpl extends GitClientService
       {
          branchListRequest.setListMode(BranchListRequest.LIST_REMOTE);
       }
-      
-      
+
       BranchListRequestMarshaller marshaller = new BranchListRequestMarshaller(branchListRequest);
       List<Branch> branches = new ArrayList<Branch>();
-      
+
       BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller(branches);
       callback.setPayload(unmarshaller);
       callback.setResult(branches);
@@ -307,4 +319,92 @@ public class GitClientServiceImpl extends GitClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void status(String href, AsyncRequestCallback<StatusResponse> callback)
+   {
+      String url = restServiceContext + STATUS;
+
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+      StatusRequest statusRequest = new StatusRequest(null, true);
+      StatusRequestMarshaller marshaller = new StatusRequestMarshaller(statusRequest);
+
+      StatusResponse statusResponse = new StatusResponse();
+      StatusResponseUnmarshaller unmarshaller = new StatusResponseUnmarshaller(statusResponse, false);
+      callback.setResult(statusResponse);
+      callback.setPayload(unmarshaller);
+
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#branchDelete(java.lang.String, java.lang.String, boolean)
+    */
+   @Override
+   public void branchDelete(String href, String name, boolean force, AsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext + BRANCH_DELETE;
+
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+      BranchDeleteRequest branchDeleteRequest = new BranchDeleteRequest(name, force);
+      BranchDeleteRequestMarshaller marshaller = new BranchDeleteRequestMarshaller(branchDeleteRequest);
+
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#branchCreate(java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   public void branchCreate(String href, String name, String startPoint, AsyncRequestCallback<Branch> callback)
+   {
+      String url = restServiceContext + BRANCH_CREATE;
+
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+      BranchCreateRequest branchCreateRequest = new BranchCreateRequest(name, startPoint);
+      BranchCreateRequestMarshaller marshaller = new BranchCreateRequestMarshaller(branchCreateRequest);
+
+      Branch branch = new Branch();
+      BranchUnmarshaller unmarshaller = new BranchUnmarshaller(branch);
+      callback.setResult(branch);
+      callback.setPayload(unmarshaller);
+
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#branchCheckout(java.lang.String, java.lang.String, java.lang.String, boolean)
+    */
+   @Override
+   public void branchCheckout(String href, String name, String startPoint, boolean createNew,
+      AsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext + BRANCH_CHECKOUT;
+
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+      BranchCheckoutRequest branchCheckoutRequest = new BranchCheckoutRequest(name, startPoint, createNew);
+      BranchCheckoutRequestMarshaller marshaller = new BranchCheckoutRequestMarshaller(branchCheckoutRequest);
+
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
 }

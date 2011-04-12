@@ -39,4 +39,8 @@
    <replace-with class="org.exoplatform.ide.git.client.push.PushToRemoteView">
       <when-type-is class="org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display" />
    </replace-with>
+   
+    <replace-with class="org.exoplatform.ide.git.client.branch.BranchView">
+      <when-type-is class="org.exoplatform.ide.git.client.branch.BranchPresenter.Display" />
+   </replace-with>
 </module>

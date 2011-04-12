@@ -57,7 +57,7 @@ public abstract class GitClientService
    {
       instance = this;
    }
-   
+
    /**
     * Add changes to Git index (temporary storage).
     * 
@@ -68,7 +68,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void add(String workDir, boolean update, String[] filePattern, AsyncRequestCallback<String> callback);
-   
+
    /**
     * Get the list of the branches.
     * For now, all branches cannot be returned at once, so
@@ -78,9 +78,42 @@ public abstract class GitClientService
     * @param workDir location of Git repository working directory
     * @param remote get remote branches
     * @param callback callback
-    */ 
+    */
    public abstract void branchList(String workDir, boolean remote, AsyncRequestCallback<List<Branch>> callback);
-   
+
+   /**
+    * Delete branch.
+    * 
+    * @param workDir location of Git repository working directory
+    * @param name name of the branch to delete
+    * @param force force if <code>true</code> delete branch {@link #name} even if it is not fully merged
+    * @param callback callback
+    */
+   public abstract void branchDelete(String workDir, String name, boolean force, AsyncRequestCallback<String> callback);
+
+   /**
+    * Create new branch with pointed name.
+    * 
+    * @param workDir location of Git repository working directory
+    * @param name new branch's name
+    * @param startPoint name of a commit at which to start the new branch
+    * @param callback callback
+    */
+   public abstract void branchCreate(String workDir, String name, String startPoint,
+      AsyncRequestCallback<Branch> callback);
+
+   /**
+    * Checkout the branch with pointed name.
+    * 
+    * @param workDir location of Git repository working directory
+    * @param name branch's name
+    * @param startPoint if {@link #createNew} is <code>true</code> then the name of a commit at which to start the new branch
+    * @param createNew if <code>true</code> then create a new branch
+    * @param callback callback
+    */
+   public abstract void branchCheckout(String workDir, String name, String startPoint, boolean createNew,
+      AsyncRequestCallback<String> callback);
+
    /**
     * Get the list of remote repositories for pointed by <code>workDir</code> parameter one.
     * 
@@ -89,9 +122,9 @@ public abstract class GitClientService
     * @param verbose If <code>true</code> show remote url and name otherwise show remote name
     * @param callback callback
     */
-   public abstract void remoteList(String workDir, String remoteName, boolean verbose, AsyncRequestCallback<List<Remote>> callback);
-   
-   
+   public abstract void remoteList(String workDir, String remoteName, boolean verbose,
+      AsyncRequestCallback<List<Remote>> callback);
+
    /**
     * Initializes new Git repository.
     * 
@@ -100,7 +133,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void init(String workDir, boolean bare, AsyncRequestCallback<String> callback);
-   
+
    /**
     * Push changes from local repository to remote one.
     * 
@@ -112,9 +145,9 @@ public abstract class GitClientService
     * This can cause the remote repository to lose commits
     * @param callback callback
     */
-   public abstract void push(String workDir, String[] refSpec, String remote, boolean force, AsyncRequestCallback<String> callback);
-   
-   
+   public abstract void push(String workDir, String[] refSpec, String remote, boolean force,
+      AsyncRequestCallback<String> callback);
+
    /**
     * Clones one remote repository to local one.
     * 
@@ -123,8 +156,9 @@ public abstract class GitClientService
     * @param remoteName remote name instead of "origin"
     * @param callback callback
     */
-   public abstract void cloneRepository(String workDir, String remoteUri, String remoteName, AsyncRequestCallback<String> callback);
-   
+   public abstract void cloneRepository(String workDir, String remoteUri, String remoteName,
+      AsyncRequestCallback<String> callback);
+
    /**
     * Performs commit changes from index to repository.
     * The result of the commit is represented by {@link Revision}, which is returned
@@ -135,7 +169,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void commit(String workDir, String message, AsyncRequestCallback<Revision> callback);
-   
+
    /**
     * Gets the working tree status. The status of added, modified or deleted files is shown is written in {@link String}.
     * The format may be short or not.
@@ -160,7 +194,10 @@ public abstract class GitClientService
     * @param fileFilter file filter to show status. It may be either list of file names to show status or name of directory to show all files under them.
     * @param callback callback
     */
-   public abstract void status(String workDir, boolean shortFormat, String[] fileFilter, AsyncRequestCallback<StatusResponse> callback);
+   public abstract void statusText(String workDir, boolean shortFormat, String[] fileFilter,
+      AsyncRequestCallback<StatusResponse> callback);
+
+   public abstract void status(String workDir, AsyncRequestCallback<StatusResponse> callback);
 
    /**
     * Get the Git work directory (where ".git" folder is located) 
@@ -169,6 +206,6 @@ public abstract class GitClientService
     * @param href item's location
     * @param callback
     */
-   public abstract void getWorkDir(String href,  AsyncRequestCallback<WorkDirResponse> callback);
+   public abstract void getWorkDir(String href, AsyncRequestCallback<WorkDirResponse> callback);
 
 }

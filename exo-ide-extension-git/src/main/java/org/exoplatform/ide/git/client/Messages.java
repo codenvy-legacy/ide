@@ -36,6 +36,12 @@ public interface Messages
    public static final String ADD_FAILED = "Failed on adding changes to index.";
    
    public static final String BRANCHES_LIST_FAILED = "Failed on getting branches list.";
+   
+   public static final String BRANCH_CREATE_FAILED = "Create new branch failed.";
+   
+   public static final String BRANCH_CHECKOUT_FAILED = "Branch checkout failed.";
+   
+   public static final String BRANCH_DELETE_FAILED = "Branch delete failed.";
 
    public static final String CLONE_SUCCESS = "Repository was successfully cloned.";
 

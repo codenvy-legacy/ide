@@ -40,11 +40,23 @@ public interface GitClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/git/images/buttons/ok_Disabled.png")
    ImageResource okDisabled();
    
+   @Source("org/exoplatform/ide/git/images/buttons/add.png")
+   ImageResource add();
+   
+   @Source("org/exoplatform/ide/git/images/buttons/add_Disabled.png")
+   ImageResource addDisabled();
+   
    @Source("org/exoplatform/ide/git/images/buttons/cancel.png")
    ImageResource cancel();
    
    @Source("org/exoplatform/ide/git/images/buttons/cancel_Disabled.png")
    ImageResource cancelDisabled();
+   
+   @Source("org/exoplatform/ide/git/images/buttons/remove.png")
+   ImageResource remove();
+   
+   @Source("org/exoplatform/ide/git/images/buttons/remove_Disabled.png")
+   ImageResource removeDisabled();
    
    @Source("org/exoplatform/ide/git/images/controls/cloneRepo.png")
    ImageResource cloneRepo();
@@ -70,6 +82,18 @@ public interface GitClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/git/images/controls/commit_Disabled.png")
    ImageResource commitDisabled();
    
+   @Source("org/exoplatform/ide/git/images/controls/push.png")
+   ImageResource push();
+   
+   @Source("org/exoplatform/ide/git/images/controls/push_Disabled.png")
+   ImageResource pushDisabled();
+   
+   /*@Source("org/exoplatform/ide/git/images/controls/pull.png")
+   ImageResource pull();
+   
+   @Source("org/exoplatform/ide/git/images/controls/pull_Disabled.png")
+   ImageResource pullDisabled();*/
+   
    @Source("org/exoplatform/ide/git/images/controls/status.png")
    ImageResource status();
    
@@ -79,9 +103,18 @@ public interface GitClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/git/images/items/item_in_repository.png")
    ImageResource itemInRepoditory();
    
-   @Source("org/exoplatform/ide/git/images/items/item_in_repository_star.png")
+   @Source("org/exoplatform/ide/git/images/items/item_in_repository_question.png")
    ImageResource itemNew();
    
-   @Source("org/exoplatform/ide/git/images/items/item_in_repository_question.png")
+   @Source("org/exoplatform/ide/git/images/items/item_in_repository_star.png")
    ImageResource itemChanged();
+   
+   @Source("org/exoplatform/ide/git/images/items/item_not_commited.png")
+   ImageResource itemNotCommited();
+   
+   @Source("org/exoplatform/ide/git/images/items/repository_root.png")
+   ImageResource repositoryRoot();
+   
+   @Source("org/exoplatform/ide/git/images/branch/current.png")
+   ImageResource currentBranch();
 }

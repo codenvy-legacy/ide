@@ -26,9 +26,11 @@ import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.D
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
+import org.exoplatform.ide.git.client.branch.BranchPresenter;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
 import org.exoplatform.ide.git.client.commit.CommitPresenter;
 import org.exoplatform.ide.git.client.control.AddToIndexControl;
+import org.exoplatform.ide.git.client.control.BranchesControl;
 import org.exoplatform.ide.git.client.control.CloneRepositoryControl;
 import org.exoplatform.ide.git.client.control.CommitControl;
 import org.exoplatform.ide.git.client.control.InitRepositoryControl;
@@ -63,6 +65,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new CloneRepositoryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new AddToIndexControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CommitControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new BranchesControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new PushToRemoteControl(), DockTarget.NONE, false);
       
       IDE.getInstance().addControl(new ShowStatusControl(), DockTarget.NONE, false);
@@ -74,6 +77,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new AddToIndexPresenter(eventBus);
       new CommitPresenter(eventBus);
       new PushToRemotePresenter(eventBus);
+      new BranchPresenter(eventBus);
    }
 
    /**

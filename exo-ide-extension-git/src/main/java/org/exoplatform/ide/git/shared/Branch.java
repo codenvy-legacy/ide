@@ -55,6 +55,13 @@ public class Branch
    }
 
    /**
+    * Corresponding setters used to setup required fields.
+    */
+   public Branch()
+   {
+   }
+
+   /**
     * @return full name of branch, e.g. 'refs/heads/master'
     */
    public String getName()
@@ -76,6 +83,30 @@ public class Branch
    public String getDisplayName()
    {
       return displayName;
+   }
+
+   /**
+    * @param name full name of branch, e.g. 'refs/heads/master'
+    */
+   public void setName(String name)
+   {
+      this.name = name;
+   }
+
+   /**
+    * @param displayName name of branch, e.g. 'refs/heads/master' -> 'master'
+    */
+   public void setDisplayName(String displayName)
+   {
+      this.displayName = displayName;
+   }
+
+   /**
+    * @param active <code>true</code> if branch is checked out and false otherwise
+    */
+   public void setActive(boolean active)
+   {
+      this.active = active;
    }
 
    /**
