@@ -111,7 +111,6 @@ public class RESTServiceResponseHeadersTest extends BaseTest
 
       assertTrue(mess.contains("200 OK"));
       assertTrue(mess.contains("Content-Type : */*"));
-      assertTrue(mess.contains("Transfer-Encoding : chunked"));
       assertTrue(mess.contains("- -Text - - - - - - - - -"));
       assertTrue(mess.contains("Hello Evgen"));
    }
