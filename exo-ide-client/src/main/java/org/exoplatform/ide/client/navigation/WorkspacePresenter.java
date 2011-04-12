@@ -49,6 +49,7 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconEvent;
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
@@ -400,6 +401,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
          protected void onSuccess(Folder result)
          {
             final Folder folder = result;
+            eventBus.fireEvent(new FolderRefreshedEvent(folder));
             foldersToRefresh.remove(folder);
             //TODO if will be some value - display system items or not, then add check here:
             removeSystemItemsFromView(folder.getChildren());
