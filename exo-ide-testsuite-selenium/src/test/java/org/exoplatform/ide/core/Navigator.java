@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.core;
 
-import org.exoplatform.ide.TestConstants;
-
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import com.thoughtworks.selenium.Selenium;
+
+import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.Utils;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -34,6 +37,8 @@ public class Navigator
       public static final String SC_NAVIGATION_TREE = "scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]";
       
       public static final String SC_ROOT_OF_NAVIGATION_TREE = SC_NAVIGATION_TREE + "/body/row[0]/col[1]";
+      
+      String TREE_PREFIX_ID = "navigation-";
    }
 
    private Selenium selenium;
@@ -87,13 +92,49 @@ public class Navigator
     * If folder is closed, it will be opened,
     * if it is opened, it will be closed.
     * 
-    * @param folderName - the folder name.
+    * @param folderHref - the folder href.
     * @throws Exception
     */
-   public void clickOpenIconOfFolder(String folderName) throws Exception
+   public void clickOpenIconOfFolder(String folderHref) throws Exception
    {
-      selenium.click(getScLocator(folderName, 0) + "/open");
+//      selenium.click(getScLocator(folderHref, 0) + "/open");
+      selenium.clickAt("//div[@id='"+getItemId(folderHref)+"']/table/tbody/tr/td[1]/img","0");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
+   
+   private String getItemId(String href)
+   {
+      if(!href.endsWith("/"))
+         href += "/";
+      return Locators.TREE_PREFIX_ID +  Utils.md5(href);
+   }
+   
+   /**
+    * Select item in workspace tree
+    * @param itemHref Href of item
+    */
+   public void selectItem(String itemHref)
+   {
+      selenium.clickAt(getItemId(itemHref), "0");
+   }
+   
+   /**
+    * Check navigation workspace tree contains item.
+    * @param itemHref Href of item
+    */
+   public void assertItemPresent(String itemHref)
+   {
+      assertTrue(selenium.isElementPresent(getItemId(itemHref)));
+   }
+   
+   /**
+    * Check navigation workspace tree doesn't contain item.
+    * @param itemHref Href of item
+    */
+   public void assertItemNotPresent(String itemHref)
+   {
+      assertFalse(selenium.isElementPresent(getItemId(itemHref)));
+   }
+   
 
 }

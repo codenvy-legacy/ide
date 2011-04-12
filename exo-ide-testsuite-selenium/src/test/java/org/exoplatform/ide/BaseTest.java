@@ -362,7 +362,7 @@ public abstract class BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-
+   
    /**
     * Select the item in the search results tree. 
     * 
@@ -397,7 +397,7 @@ public abstract class BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name="
          + name + "]/col[0]"));
    }
-
+   
    /**
     * Check item is shown in search results tree.
     * 
@@ -433,7 +433,7 @@ public abstract class BaseTest
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name="
          + name + "]/col[0]"));
    }
-
+   
    /**
     * Get name of item in workspace tree by it's index.
     * 
