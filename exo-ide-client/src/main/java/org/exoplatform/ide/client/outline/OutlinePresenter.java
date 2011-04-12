@@ -55,6 +55,8 @@ import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +72,7 @@ import java.util.List;
  *
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler
+   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler, EditorInitializedHandler
 {
 
    /**
@@ -145,6 +147,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EditorContentChangedEvent.TYPE, this);
       eventBus.addHandler(EditorCursorActivityEvent.TYPE, this);
+      eventBus.addHandler(EditorInitializedEvent.TYPE, this);      
    }
 
    @Override
@@ -290,6 +293,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return;
       }
 
+      // restore focus of FileTab
+      JavaScriptObject lastFocusedElement = getActiveElement();        
+
       tokens = (List<TokenBeenImpl>)activeEditor.getTokenList();
       TokenBeenImpl token = new TokenBeenImpl();
       token.setSubTokenList(tokens);
@@ -301,6 +307,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          display.deselectAllTokens();
       }
+
+      // restore focus of FileTab
+      setElementFocus(lastFocusedElement);
    }
 
    /**
@@ -384,75 +393,24 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          return false;
       }
-
-      //if one token in list
-      if (tokens.size() == 1)
-      {
-         TokenBeenImpl token = tokens.get(0);
-         if (token.getType().equals(TokenType.TAG_BREAK))
-         {
-            return false;
-         }
-         else
-         {
-            if (selectTokenByRow(token.getSubTokenList()))
-            {
-               return true;
-            }
-            else
-            {
-               selectToken(token);
-               return true;
-            }
-         }
-      }
-
-      //if more then one token in list
-      for (int i = 0; i < tokens.size() - 1; i++)
+      
+      for (int i = 0; i < tokens.size(); i++)
       {
          TokenBeenImpl token = tokens.get(i);
-         TokenBeenImpl next = tokens.get(i + 1);
-
-         if (currentRow == token.getLineNumber())
+         if (currentRow < token.getLineNumber()
+               || ! shouldBeDisplayed(token)
+             )
          {
-            selectToken(token);
-            return true;
-         }
-         if (currentRow == next.getLineNumber())
-         {
-            if (next.getType().equals(TokenType.TAG_BREAK))
-            {
-               return false;
-            }
-            else
-            {
-               selectToken(next);
-               return true;
-            }
+            continue;
          }
 
-         //check is to select last token or may be it has subtokens
-         if (currentRow > next.getLineNumber() && (i + 1 == tokens.size() - 1))
+         TokenBeenImpl next = null;
+         if ((i + 1) != tokens.size())
          {
-            if (next.getType().equals(TokenType.TAG_BREAK))
-            {
-               return false;
-            }
-            else
-            {
-               if (selectTokenByRow(next.getSubTokenList()))
-               {
-                  return true;
-               }
-               else
-               {
-                  selectToken(next);
-                  return true;
-               }
-            }
+            next = tokens.get(i + 1);
          }
 
-         if (currentRow > token.getLineNumber() && currentRow < next.getLineNumber())
+         if (isCurrentToken(currentRow, token, next))
          {
             if (selectTokenByRow(token.getSubTokenList()))
             {
@@ -465,8 +423,49 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
             }
          }
       }
-
+         
       return false;
+   }
+
+   /**
+    * Test if current line within the token's area (currentLineNumber >= token.lineNumber) and (currentLineNumber <= token.lastLineNumber)
+    * or current line is before nextToken
+    * or current line is after last token 
+    * @param currentLineNumber 
+    * @param token
+    * @return
+    */
+   private boolean isCurrentToken(int currentLineNumber, TokenBeenImpl token, TokenBeenImpl nextToken)
+   {      
+      if (currentLineNumber == token.getLineNumber())
+      {
+         return true;
+      }
+      
+      if (token.getLastLineNumber() != 0)
+      {
+         return currentLineNumber > token.getLineNumber()
+                  && currentLineNumber <= token.getLastLineNumber();         
+      }
+         
+      // test if currentLineNumber before nextToken
+      if (nextToken != null)
+      {
+         return currentLineNumber < nextToken.getLineNumber();
+      }
+
+      return currentLineNumber > token.getLineNumber();
+   }
+   
+   /**
+    * Test should token be displayed in outline tree.
+    * @param token
+    * @return true only if token should be displayed in outline tree
+    */
+   private boolean shouldBeDisplayed(TokenBeenImpl token)
+   {
+      return ! (token.getType().equals(TokenType.IMPORT)
+               || token.getType().equals(TokenType.TAG_BREAK));
    }
 
    private void selectToken(TokenBeenImpl token)
@@ -503,7 +502,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
     */
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
-
       if (display == null)
       {
          return;
@@ -519,7 +517,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          currentRow = event.getRow();
 
          selectOutlineTimer.cancel();
-         selectOutlineTimer.schedule(1000);
+         selectOutlineTimer.schedule(500);
       }
       else 
       {
@@ -538,10 +536,26 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       @Override
       public void run()
       {
-         // restore focus of FileTab
-         JavaScriptObject lastFocusedElement = getActiveElement();
-         selectTokenByRow(tokens);
-         setElementFocus(lastFocusedElement);
+         if (tokens.size() != 0)
+         {
+            // restore focus of FileTab
+            JavaScriptObject lastFocusedElement = getActiveElement();
+            
+            if (!selectTokenByRow(tokens))
+            {
+               display.deselectAllTokens();
+            }
+            else
+            {
+               setElementFocus(lastFocusedElement);
+            }
+         }
+         
+         // refresh outline just after the opening file tab 
+         else if (activeEditor.getTokenList().size() != 0)
+         {
+            refreshOutlineTree();
+         }
       }
    };
    
@@ -552,4 +566,14 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    private native void setElementFocus(JavaScriptObject element) /*-{
       element.focus();
    }-*/;
+
+   public void onEditorInitialized(EditorInitializedEvent event)
+   {
+      if (canShowOutline())
+      {
+         display.setOutlineAvailable(true);
+         refreshOutlineTree();
+      }
+   }
 }
+

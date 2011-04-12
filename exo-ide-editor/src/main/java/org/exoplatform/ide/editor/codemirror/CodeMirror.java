@@ -65,7 +65,7 @@ public class CodeMirror extends Editor
 
    private final Browser currentBrowser = BrowserResolver.CURRENT_BROWSER;
 
-   private boolean needUpdateTokenList = false; // update token list only after the "initCallback" handler has been called
+   private boolean needUpdateTokenList = true; // update token list only after the "initCallback" handler has been called
 
    private boolean needRevalidateCode = false; // revalidate code
 
@@ -736,7 +736,7 @@ public class CodeMirror extends Editor
    }
 
    private native void setFocus(JavaScriptObject editor)/*-{
-        if (editor != null) {
+        if (editor) {
             editor.focus();
         }
    }-*/;
@@ -1113,13 +1113,5 @@ public class CodeMirror extends Editor
       if (editor != null)
          editor.setLineNumbers(showLineNumbers);
    }-*/;
-   
-   @Override
-   protected void onUnload()
-   {
-      // to remove codemirror.js:sizeBar timer from memory
-      setLineNumbers(false);
-   
-      super.onUnload();
-   }
+
 }
