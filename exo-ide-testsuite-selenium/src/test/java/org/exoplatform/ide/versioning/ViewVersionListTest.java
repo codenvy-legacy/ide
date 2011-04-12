@@ -78,7 +78,7 @@ public class ViewVersionListTest extends VersioningTest
    public void testViewVersionList() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -194,7 +194,7 @@ public class ViewVersionListTest extends VersioningTest
    public void testViewVersionListWithNavigateVersions() throws Exception
    {
       refresh();
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);

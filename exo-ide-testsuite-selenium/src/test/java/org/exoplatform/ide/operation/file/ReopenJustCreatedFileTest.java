@@ -88,9 +88,9 @@ public class ReopenJustCreatedFileTest extends BaseTest
    public void testReopenJustCreatedFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
       

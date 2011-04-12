@@ -61,7 +61,7 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      assertElementNotPresentInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/");
       assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME,"UTF-8")).getStatusCode());
    }
    

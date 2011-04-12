@@ -103,14 +103,14 @@ public class CloseSelectedItemTest extends BaseTest
       openOrCloseFolder(ROOT_FOLDER);
 
       //Select one first sub folder
-      selectItemInWorkspaceTree(FOLDER1);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/");
       //Check status bar displays path to selected folder:
       String statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith(WS_NAME + "/" + ROOT_FOLDER + "/" + FOLDER1));
       //Select second folder
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selectItemInWorkspaceTree(FOLDER2);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/");
       selenium.controlKeyUp();
       //Check status bar number of selected folders:
       statusBarText = getStatusbarText();
@@ -125,7 +125,7 @@ public class CloseSelectedItemTest extends BaseTest
       checkCreateFolderButtonDisabled();
 
       //Select sub folder
-      selectItemInWorkspaceTree(ROOT_FOLDER);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/");
       statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith(WS_NAME + "/" + ROOT_FOLDER));
       //Close workspace node
@@ -161,10 +161,10 @@ public class CloseSelectedItemTest extends BaseTest
       openOrCloseFolder(FOLDER1);
       openOrCloseFolder(FOLDER2);
       //Select files
-      selectItemInWorkspaceTree(FILE1);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FILE1);
       selenium.controlKeyDown();
-      selectItemInWorkspaceTree(FILE2);
-      selectItemInWorkspaceTree(FILE3);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/" + FILE2);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FILE3);
       selenium.controlKeyUp();
 
       //Check status bar number of selected folders:
@@ -211,26 +211,26 @@ public class CloseSelectedItemTest extends BaseTest
       openOrCloseFolder(FOLDER2);
 
       //Select one first sub folder
-      selectItemInWorkspaceTree(FOLDER1_1);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_1+"/");
       //Check status bar displays path to selected folder:
       String statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith(WS_NAME + "/" + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_1));
       //Select second folder
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selectItemInWorkspaceTree(FOLDER1_2);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_2 + "/");
       //Check status bar number of selected folders:
       statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith("Selected: 2 items"));
 
       //Select third folder
-      selectItemInWorkspaceTree(FOLDER2_1);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/" + FOLDER2_1 + "/");
       //Check status bar number of selected folders:
       statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith("Selected: 3 items"));
 
       //Select fourth folder
-      selectItemInWorkspaceTree(FOLDER2_2);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/" + FOLDER2_2 + "/");
       //Check status bar number of selected folders:
       statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith("Selected: 4 items"));
@@ -253,10 +253,11 @@ public class CloseSelectedItemTest extends BaseTest
       //Select parent folder and subfolders:
       //Open parent folder
       openOrCloseFolder(FOLDER1);
-      selectItemInWorkspaceTree(FOLDER1);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/");
       selenium.controlKeyDown();
-      selectItemInWorkspaceTree(FOLDER1_1);
-      selectItemInWorkspaceTree(FOLDER1_2);
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_1 + "/");
+      
+      IDE.navigator().selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_2 + "/");
       selenium.controlKeyUp();
 
       //Check status bar number of selected folders:

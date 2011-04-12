@@ -72,11 +72,12 @@ public class HighlightBottomTabSetTest extends BaseTest
    public void testHighlightBottopTabSet() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP);
       
-      selectItemInWorkspaceTree(FILE_NAME);
+//      selectItemInWorkspaceTree(FILE_NAME);
+      IDE.navigator().selectItem(URL +FOLDER_NAME+ "/" + FILE_NAME);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       //Thread.sleep(TestConstants.SLEEP_SHORT);

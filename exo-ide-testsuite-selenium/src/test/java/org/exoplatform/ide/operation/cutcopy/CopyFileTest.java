@@ -43,6 +43,8 @@ public class CopyFileTest extends BaseTest
    
    private static final String FOLDER_1 = CopyFileTest.class.getSimpleName() + "-1";
    
+   private static final String FOLDER_1_URL = WS_URL + FOLDER_1 + "/"; 
+   
    private static final String FILE_GROOVY = "test.groovy";
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
@@ -133,9 +135,10 @@ public class CopyFileTest extends BaseTest
    {
       waitForRootElement();
       
-      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.navigator().selectItem(FOLDER_1_URL);
+      
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FILE_GROOVY);
+      IDE.navigator().selectItem(FOLDER_1_URL + FILE_GROOVY); 
 
       /*
        * Check Cut and Copy commands must be enabled
@@ -185,7 +188,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Open "Test 1" folder
        */
-      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.navigator().selectItem(FOLDER_1_URL);
 
       /*
        * Open file "/Test 1/test.groovy"
@@ -212,7 +215,7 @@ public class CopyFileTest extends BaseTest
        */
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand(MenuCommands.File.REFRESH_TOOLBAR);
-      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.navigator().selectItem(FOLDER_1_URL);
       IDE.toolbar().runCommand(MenuCommands.File.REFRESH_TOOLBAR);
       
       /*

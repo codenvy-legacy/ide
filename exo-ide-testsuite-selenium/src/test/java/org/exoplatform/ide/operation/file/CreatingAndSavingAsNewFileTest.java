@@ -95,10 +95,10 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    {
 
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       testFileSaveAs(MenuCommands.New.REST_SERVICE_FILE, "grs", REST_SERVICE_FILE_NAME);
       testFileSaveAs(MenuCommands.New.TEXT_FILE, "txt", TXT_FILE_NAME);
@@ -136,7 +136,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
-      assertElementPresentInWorkspaceTree(fileName);
+      IDE.navigator().assertItemPresent(STORAGE_URL + fileName);
    }
 
    private void testFilesCreatedOnServer()

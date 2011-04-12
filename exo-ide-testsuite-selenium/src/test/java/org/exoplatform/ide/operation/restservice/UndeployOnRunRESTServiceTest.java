@@ -98,7 +98,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
    {
     //open file
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_NAME);
@@ -132,7 +132,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       //open file
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_NAME);

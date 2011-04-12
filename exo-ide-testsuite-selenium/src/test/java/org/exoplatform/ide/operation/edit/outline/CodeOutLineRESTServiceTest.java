@@ -102,7 +102,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
    {
       // Open groovy file with content
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);

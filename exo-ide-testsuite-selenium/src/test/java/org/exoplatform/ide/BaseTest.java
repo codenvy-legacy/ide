@@ -88,6 +88,11 @@ public abstract class BaseTest
    public static final String WS_NAME = "dev-monit";
    
    /**
+    * Default workspace URL.
+    */
+   public static final String WS_URL = ENTRY_POINT_URL + WS_NAME + "/";
+   
+   /**
     * Second workspace. Needed in some tests.
     */
    protected static final String WS_NAME_2 = "production";
@@ -352,18 +357,6 @@ public abstract class BaseTest
    }
 
    /**
-    * Select the item in the workspace navigation tree. 
-    * 
-    * @param name item name
-    * @throws Exception
-    */
-   protected void selectItemInWorkspaceTree(String name) throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-   
-   /**
     * Select the item in the search results tree. 
     * 
     * @param name item's name
@@ -386,17 +379,6 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
-   /**
-    * Check navigation workspace tree contains pointed item.
-    * 
-    * @param name name of item in the navigation tree
-    * @throws Exception
-    */
-   protected void assertElementPresentInWorkspaceTree(String name) throws Exception
-   {
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name="
-         + name + "]/col[0]"));
-   }
    
    /**
     * Check item is shown in search results tree.
@@ -421,18 +403,6 @@ public abstract class BaseTest
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[name="
          + name + "]/col[0]"));
    }
-
-   /**
-    * Check navigation workspace tree doesn't contain pointed item.
-    * 
-    * @param name name of item in the navigation tree
-    * @throws Exception
-    */
-   protected void assertElementNotPresentInWorkspaceTree(String name) throws Exception
-   {
-      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name="
-         + name + "]/col[0]"));
-   }
    
    /**
     * Get name of item in workspace tree by it's index.
@@ -445,7 +415,7 @@ public abstract class BaseTest
       return selenium.getText("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[" + index + "]/col[0]");
    }
 
-   /*
+   /**
    * Get name of item in search tree by it's index.
    * 
    * @param index starting from 0
@@ -546,7 +516,7 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //Check creation form is not shown
       assertFalse(selenium.isElementPresent("ideCreateFolderForm"));
-      //assertElementPresentInWorkspaceTree(folderName);
+//      assertElementPresentInWorkspaceTree(folderName);
    }
 
    /**
@@ -667,7 +637,7 @@ public abstract class BaseTest
    protected void openFileFromNavigationTreeWithCkEditor(String fileName, boolean checkDefault) throws Exception
    {
       //TODO add check form
-      selectItemInWorkspaceTree(fileName);
+      IDE.navigator().selectItem(fileName);
       //      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
 //      Thread.sleep(TestConstants.SLEEP_SHORT);
 //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");

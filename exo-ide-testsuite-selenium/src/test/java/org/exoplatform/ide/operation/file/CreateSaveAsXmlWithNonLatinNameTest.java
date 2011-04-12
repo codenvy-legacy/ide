@@ -115,7 +115,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
    {
 
       Thread.sleep(TestConstants.SLEEP*2);
-      assertElementPresentInWorkspaceTree("dev-monit");
+      IDE.navigator().assertItemPresent(WS_URL);
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -141,7 +141,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       //check file on server
       checkFileExists(URL + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
 
-      assertElementPresentInWorkspaceTree(XML_FILE);
+      IDE.navigator().assertItemPresent(WS_URL + XML_FILE);
 
       openFileFromNavigationTreeWithCodeEditor(XML_FILE, false);
 
@@ -166,8 +166,8 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       checkFileExists(URL + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
       checkFileExists(URL + URLEncoder.encode(NEW_XML_FILE, "UTF-8"), XML_CONTENT_2);
 
-      assertElementPresentInWorkspaceTree(XML_FILE);
-      assertElementPresentInWorkspaceTree(NEW_XML_FILE);
+      IDE.navigator().assertItemPresent(WS_URL + XML_FILE);
+      IDE.navigator().assertItemPresent(WS_URL + NEW_XML_FILE);
 
    }
    

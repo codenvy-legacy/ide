@@ -69,7 +69,7 @@ public class CreateFolderTest extends BaseTest
       //Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("ideCreateFolderFormNameField"));
       assertTrue(selenium.isTextPresent(FOLDER_NAME_TOOLBAR));
-      IDE.navigator().assertItemPresent(URL + FOLDER_NAME_TOOLBAR);
+      IDE.navigator().assertItemPresent(URL + FOLDER_NAME_TOOLBAR + "/");
       assertEquals(200, VirtualFileSystemUtils.get(URL + FOLDER_NAME_TOOLBAR).getStatusCode());
    }
 

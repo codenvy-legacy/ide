@@ -108,7 +108,7 @@ public class SaveFileAsTemplateTest extends BaseTest
       //open file with text
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       

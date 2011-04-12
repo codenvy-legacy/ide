@@ -448,7 +448,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       IDE.outline().checkOutlineVisibility(false);
 
       // remove jsFile from workspace panel
-      selectItemInWorkspaceTree(jsFile);
+      IDE.navigator().selectItem(WS_URL + jsFile); 
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
 

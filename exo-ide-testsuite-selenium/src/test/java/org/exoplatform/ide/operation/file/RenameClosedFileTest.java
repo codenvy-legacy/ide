@@ -104,13 +104,13 @@ public class RenameClosedFileTest extends BaseTest
    public void testRenameClosedFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      selectItemInWorkspaceTree(ORIG_FILE_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
@@ -126,8 +126,8 @@ public class RenameClosedFileTest extends BaseTest
       selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      assertElementPresentInWorkspaceTree(RENAMED_FILE_NAME);
-      assertElementNotPresentInWorkspaceTree(ORIG_FILE_NAME);
+      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
@@ -137,12 +137,12 @@ public class RenameClosedFileTest extends BaseTest
    public void testChangeMimeType() throws Exception
    {
       refresh();
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      selectItemInWorkspaceTree(ORIG_FILE_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
@@ -167,12 +167,12 @@ public class RenameClosedFileTest extends BaseTest
    public void testRenameAndChangeMimeType() throws Exception
    {
       refresh();
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      selectItemInWorkspaceTree(ORIG_FILE_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
@@ -184,8 +184,8 @@ public class RenameClosedFileTest extends BaseTest
       selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
       
-      assertElementPresentInWorkspaceTree(RENAMED_FILE_NAME);
-      assertElementNotPresentInWorkspaceTree(ORIG_FILE_NAME);
+      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
       openFileFromNavigationTreeWithCodeEditor(RENAMED_FILE_NAME, false);
       

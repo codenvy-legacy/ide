@@ -58,7 +58,7 @@ public class GadgetDevelopmentTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
@@ -95,7 +95,7 @@ public class GadgetDevelopmentTest extends BaseTest
       
       IDE.editor().closeTab(0);
 
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
 
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);

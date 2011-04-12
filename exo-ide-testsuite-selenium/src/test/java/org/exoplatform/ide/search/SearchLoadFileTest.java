@@ -81,12 +81,12 @@ public class SearchLoadFileTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
       saveAsByTopMenu(restFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentInWorkspaceTree(restFileName);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
       IDE.editor().closeTab(0);
       selectRootOfWorkspaceTree();
 
@@ -119,7 +119,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      assertElementPresentInWorkspaceTree(restFileName);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
       //TODO check selected
 
       IDE.toolbar().assertButtonEnabled("Delete Item(s)...", true);
@@ -152,7 +152,7 @@ public class SearchLoadFileTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, gadgetFileContent);
       saveAsByTopMenu(gadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentInWorkspaceTree(gadgetFileName);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
       IDE.editor().closeTab(0);
       selectRootOfWorkspaceTree();
 
@@ -185,7 +185,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      assertElementPresentInWorkspaceTree(restFileName);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
       //TODO check selected
 
       IDE.toolbar().assertButtonEnabled("Delete Item(s)...", true);
@@ -209,13 +209,13 @@ public class SearchLoadFileTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
 
       selenium.controlKeyDown();
-      selectItemInWorkspaceTree(restFileName);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/" + restFileName);
       selenium.controlKeyUp();
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
 
-      assertElementNotPresentInWorkspaceTree(restFileName);
-      assertElementNotPresentInWorkspaceTree(gadgetFileName);
+      IDE.navigator().assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.navigator().assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + gadgetFileContent);
 
       Thread.sleep(TestConstants.SLEEP);
    }

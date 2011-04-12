@@ -84,7 +84,7 @@ public abstract class RestoreVersionTest extends VersioningTest
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
@@ -238,7 +238,7 @@ public abstract class RestoreVersionTest extends VersioningTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);

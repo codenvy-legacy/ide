@@ -94,7 +94,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       //****************************************
       IDE.editor().closeTab(0);
 
-      selectItemInWorkspaceTree(FILE_NAME);
+      IDE.navigator().assertItemPresent(URL);
 
       deleteSelectedItems();
    }

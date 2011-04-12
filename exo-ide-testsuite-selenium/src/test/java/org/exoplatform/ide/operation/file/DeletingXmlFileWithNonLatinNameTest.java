@@ -77,11 +77,11 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
    public void testDeletingXmlFileWithNonLatinName() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      selectItemInWorkspaceTree(FILE_NAME);
+      IDE.navigator().selectItem(WS_URL + FILE_NAME);
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" + FILE_NAME

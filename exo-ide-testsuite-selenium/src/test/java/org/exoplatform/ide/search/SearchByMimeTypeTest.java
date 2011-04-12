@@ -71,7 +71,7 @@ public class SearchByMimeTypeTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, jsFileContent);
       saveAsByTopMenu(jsFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentInWorkspaceTree(jsFileName);
+      IDE.navigator().assertItemPresent(WS_URL + jsFileName);
 
       selectRootOfWorkspaceTree();
       createFolder(folder2Name);
@@ -80,7 +80,7 @@ public class SearchByMimeTypeTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.editor().closeTab(0);
 
-      selectItemInWorkspaceTree(folder2Name);
+      IDE.navigator().selectItem(WS_URL + folder2Name + "/");
 
       performSearch("/" + folder2Name + "/", "", jsFileMimeType);
 
@@ -94,15 +94,15 @@ public class SearchByMimeTypeTest extends BaseTest
 
       //Clear created items
       selectWorkspaceTab();
-      selectItemInWorkspaceTree(folder1Name);
+      IDE.navigator().selectItem(WS_URL + folder1Name + "/");
       selenium.controlKeyDown();
-      selectItemInWorkspaceTree(folder2Name);
+      IDE.navigator().selectItem(WS_URL + folder2Name + "/");
       selenium.controlKeyUp();
       deleteSelectedItems();
 
       Thread.sleep(TestConstants.SLEEP);
-      assertElementNotPresentInWorkspaceTree(folder1Name);
-      assertElementNotPresentInWorkspaceTree(folder2Name);
+      IDE.navigator().assertItemNotPresent(WS_URL + folder1Name + "/");
+      IDE.navigator().assertItemNotPresent(WS_URL + folder2Name + "/");
    }
    
    @AfterClass

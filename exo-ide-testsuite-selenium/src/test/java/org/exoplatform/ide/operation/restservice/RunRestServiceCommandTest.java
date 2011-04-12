@@ -108,7 +108,7 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 -----------------
       //open file
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_NAME);
@@ -173,7 +173,7 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 -----------------
       //open file
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       openOrCloseFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
@@ -230,7 +230,7 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 -----------------
       //open file
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       openOrCloseFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
@@ -282,7 +282,7 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 -----------------
       //open file
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_NAME);
@@ -295,7 +295,7 @@ public class RunRestServiceCommandTest extends BaseTest
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
       //---- 3 -----------------
       //call Run Groovy Service command
       IDE.toolbar().runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);

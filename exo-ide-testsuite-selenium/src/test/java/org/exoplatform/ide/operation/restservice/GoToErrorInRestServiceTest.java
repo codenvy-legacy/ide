@@ -169,7 +169,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 2 -----------------
       //delete file
-      selectItemInWorkspaceTree(FILE_WITH_ERROR);
+      IDE.navigator().assertItemPresent(WS_URL + FILE_WITH_ERROR);
       deleteSelectedItems();
 
       //---- 3 -----------------
@@ -206,7 +206,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //open file    
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR_FOR_CHANGING, false);
@@ -326,7 +326,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //open file
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR, false);

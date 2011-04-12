@@ -72,7 +72,7 @@ public class UploadingHtmlFileTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
       
       uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.TEXT_HTML);
       Thread.sleep(TestConstants.SLEEP);

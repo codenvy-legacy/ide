@@ -62,13 +62,13 @@ public class OpeningFilesTest extends BaseTest
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
       IDE.editor().closeTab(0);
-      assertElementPresentInWorkspaceTree(file2Name);
+      IDE.navigator().assertItemPresent(WS_URL + folderName + "/" + file2Name); 
 
       // Delete one file  
-      selectItemInWorkspaceTree(file2Name);
+      IDE.navigator().selectItem(WS_URL + folderName + "/" + file2Name);
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
-      assertElementNotPresentInWorkspaceTree(file2Name);
+      IDE.navigator().assertItemNotPresent(WS_URL + folderName + "/" + file2Name);
 
       //Open another file from the same folder
       openFileFromNavigationTreeWithCodeEditor(file1Name, false);
@@ -78,13 +78,13 @@ public class OpeningFilesTest extends BaseTest
       assertEquals(file1Content, text);
       
       //Delete folder with file
-      selectItemInWorkspaceTree(folderName);
+      IDE.navigator().selectItem(WS_URL + folderName + "/");
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
       
       //Check items not present in navigation tree
-      assertElementNotPresentInWorkspaceTree(folderName);
-      assertElementNotPresentInWorkspaceTree(file1Name);
+      IDE.navigator().assertItemPresent(WS_URL + folderName + "/");
+      IDE.navigator().assertItemPresent(WS_URL + folderName + "/" + file1Name);
    }
 
 }

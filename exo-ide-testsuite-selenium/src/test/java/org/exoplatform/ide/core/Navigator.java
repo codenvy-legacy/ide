@@ -104,14 +104,13 @@ public class Navigator
    
    private String getItemId(String href)
    {
-      if(!href.endsWith("/"))
-         href += "/";
       return Locators.TREE_PREFIX_ID +  Utils.md5(href);
    }
    
    /**
     * Select item in workspace tree
     * @param itemHref Href of item
+    * <h1>Folder href MUST ends with "/"</h1>
     */
    public void selectItem(String itemHref)
    {

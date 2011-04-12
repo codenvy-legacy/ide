@@ -112,7 +112,8 @@ public class NavigateVersionsTest extends VersioningTest
       waitForElementPresent(Menu.getMenuLocator(MenuCommands.View.VIEW));
       
       IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
+      
       /*
        * 1. Open new file
        */
@@ -321,7 +322,7 @@ public class NavigateVersionsTest extends VersioningTest
       /*
        * 1. Create new file in TEST_FOLDER
        */
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       typeTextIntoEditor(0, version1Text);
       saveAsUsingToolbarButton(FILE_2);
@@ -477,7 +478,7 @@ public class NavigateVersionsTest extends VersioningTest
       waitForElementPresent(Menu.getMenuLocator(MenuCommands.View.VIEW));
 
       checkViewVersionHistoryButtonPresent(false);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       //Create new file, add text and save file:
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       typeTextIntoEditor(0, version1Text);
@@ -587,7 +588,7 @@ public class NavigateVersionsTest extends VersioningTest
       refresh();
 
       checkViewVersionHistoryButtonPresent(false);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       //Create new file, add text and save file:
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       typeTextIntoEditor(0, version1Text);

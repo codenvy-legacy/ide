@@ -88,14 +88,14 @@ public class OpenFileByPathTest extends BaseTest
       
       // open folder
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().assertItemPresent(WS_URL+ TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);   
 
       // create file 
       createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME, 0);     
       
       // get file's url
-      selectItemInWorkspaceTree(FILE_NAME);
+      IDE.navigator().assertItemPresent(WS_URL+ TEST_FOLDER + "/" + FILE_NAME);
       fileUrl = getSelectedItemUrl();
       
       // switch on to second workspace

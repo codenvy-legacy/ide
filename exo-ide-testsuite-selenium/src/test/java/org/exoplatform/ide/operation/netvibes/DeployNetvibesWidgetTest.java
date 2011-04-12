@@ -70,7 +70,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
    public void testDeployFormSteps() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
 
       //Create new UWA widget
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
@@ -180,7 +180,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
 
       //Create new UWA widget
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);

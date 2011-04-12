@@ -59,7 +59,7 @@ public class SearchAdvancedTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, googleGadgetFileContent);
       saveAsByTopMenu(googleGadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentInWorkspaceTree(googleGadgetFileName);
+      IDE.navigator().selectItem(WS_URL + googleGadgetFileName);
       selectRootOfWorkspaceTree();
       //Step 5
       performSearch("/", "text", "");
@@ -99,10 +99,10 @@ public class SearchAdvancedTest extends BaseTest
 
       //Clear test items
       selectWorkspaceTab();
-      selectItemInWorkspaceTree(googleGadgetFileName);
+      IDE.navigator().selectItem(WS_URL + googleGadgetFileName);
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
-      assertElementNotPresentInWorkspaceTree(googleGadgetFileName);
+      IDE.navigator().assertItemNotPresent(WS_URL + googleGadgetFileName);
    }
    
    @AfterClass

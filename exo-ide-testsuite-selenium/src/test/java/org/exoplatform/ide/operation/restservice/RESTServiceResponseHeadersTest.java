@@ -75,7 +75,7 @@ public class RESTServiceResponseHeadersTest extends BaseTest
    public void testResponseHeaders() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       selectFolder(FOLDER_NAME);

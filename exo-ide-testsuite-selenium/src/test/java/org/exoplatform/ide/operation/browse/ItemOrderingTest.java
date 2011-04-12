@@ -95,22 +95,22 @@ public class ItemOrderingTest extends BaseTest
 
    private void checkItemOrderingInNavigationPanel() throws Exception
    {
-      assertElementPresentInWorkspaceTree(UPPERCASE_TEST_FOLDER_1);
+      IDE.navigator().assertItemPresent(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/"); 
       assertEquals(UPPERCASE_TEST_FOLDER_1, getItemNameFromWorkspaceTree(1));
       
-      assertElementPresentInWorkspaceTree(TEST_FOLDER_1);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER_1 + "/"); 
       assertEquals(TEST_FOLDER_1, getItemNameFromWorkspaceTree(2));
       
-      assertElementPresentInWorkspaceTree(TEST_FOLDER_1_2);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER_1_2 + "/");
       assertEquals(TEST_FOLDER_1_2, getItemNameFromWorkspaceTree(3));
       
-      assertElementPresentInWorkspaceTree(UPPERCASE_TEST_FILE_1);
+      IDE.navigator().assertItemPresent(WS_URL + UPPERCASE_TEST_FILE_1);
       assertEquals(UPPERCASE_TEST_FILE_1, getItemNameFromWorkspaceTree(4));
       
-      assertElementPresentInWorkspaceTree(TEST_FILE_1);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FILE_1);
       assertEquals(TEST_FILE_1, getItemNameFromWorkspaceTree(5));
       
-      assertElementPresentInWorkspaceTree(TEST_FILE_1_2);
+      IDE.navigator().assertItemPresent(WS_URL + TEST_FILE_1_2);
       assertEquals(TEST_FILE_1_2, getItemNameFromWorkspaceTree(6));
    }
    

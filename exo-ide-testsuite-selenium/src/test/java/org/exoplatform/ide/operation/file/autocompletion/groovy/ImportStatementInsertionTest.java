@@ -81,7 +81,7 @@ public class ImportStatementInsertionTest extends BaseTest
       // Open groovy file with test content
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(SERVICE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);   
@@ -156,7 +156,7 @@ public class ImportStatementInsertionTest extends BaseTest
       // Open ECM template file with test content
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(TEMPLATE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);   

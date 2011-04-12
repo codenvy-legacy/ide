@@ -45,12 +45,12 @@ public class HighlightOutlineTest extends BaseTest
 {
 
    private final static String FILE_NAME = "RESTCodeOutline.groovy";
-   
+
    private final static String FOLDER_NAME = HighlightOutlineTest.class.getName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" +  FOLDER_NAME;
-   
+      + "/" + FOLDER_NAME;
+
    @BeforeClass
    public static void setUp()
    {
@@ -70,30 +70,30 @@ public class HighlightOutlineTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testHighlightOutline() throws Exception
-   {      
+   {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(URL + "/");
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       // open outline panel
       IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-      
+
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_OutlineForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      
+
       String content = getTextFromCodeEditor(0);
-      
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_F);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_O);
@@ -102,16 +102,16 @@ public class HighlightOutlineTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_B);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_R);
-      
+
       assertEquals(content, getTextFromCodeEditor(0));
 
    }
-   
+
    @AfterClass
    public static void tearDown() throws Exception
    {
       deleteCookies();
       cleanDefaultWorkspace();
    }
-   
+
 }

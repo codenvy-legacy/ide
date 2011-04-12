@@ -166,18 +166,18 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
 
       //----- 3 ----------------
       //check new project created
-      assertElementPresentInWorkspaceTree(PROJECT_NAME);
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + "/"); 
 
       clickOpenIconOfFolder(PROJECT_NAME);
-      assertElementPresentInWorkspaceTree(FOLDER_ORG);
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
 
       clickOpenIconOfFolder(FOLDER_ORG);
-      assertElementPresentInWorkspaceTree(FOLDER_EXOPLATFORM);
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
 
       clickOpenIconOfFolder(FOLDER_EXOPLATFORM);
-      assertElementPresentInWorkspaceTree(FILE_GROOVY);
-      assertElementPresentInWorkspaceTree(FILE_HTML);
-      assertElementNotPresentInWorkspaceTree(UNEXISTING_FILE_HTML);
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
+      IDE.navigator().assertItemNotPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + UNEXISTING_FILE_HTML);
    }
 
    private void clickOpenIconOfFolder(String folderName) throws Exception

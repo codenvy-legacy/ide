@@ -32,6 +32,43 @@ import org.junit.Test;
 public class ExploringWorkspacePanelTest extends BaseTest
 {
    /**
+    * 
+    */
+   private static final String FOLDER_2_2 = "folder-2-2";
+   /**
+    * 
+    */
+   private static final String FOLDER_2_1 = "folder-2-1";
+   /**
+    * 
+    */
+   private static final String FOLDER_2 = "folder-2";
+   /**
+    * 
+    */
+   private static final String FOLDER_1_2 = "folder-1-2";
+   /**
+    * 
+    */
+   private static final String FOLDER_1_1 = "folder-1-1";
+   /**
+    * 
+    */
+   private static final String FOLDER_1 = "folder-1";
+   
+   private static final String FOLDER_1_URL = WS_URL +  "folder-1" + "/";
+ 
+   private static final String FOLDER_1_2_URL = FOLDER_1_URL +  "folder-1-2" + "/";
+   
+   private static final String FOLDER_1_1_URL = FOLDER_1_URL + "folder-1-1" + "/";
+   
+   private static final String FOLDER_2_URL =  WS_URL + "folder-2" + "/";
+   
+   private static final String FOLDER_2_2_URL = FOLDER_2_URL +  "folder-2-2" + "/";
+   
+   private static final String FOLDER_2_1_URL = FOLDER_2_URL + "folder-2-1" + "/";
+
+   /**
     *  IDE-2 Exploring "Workspace" panel
     * 
     * @throws Exception
@@ -40,74 +77,74 @@ public class ExploringWorkspacePanelTest extends BaseTest
    public void testExplodeCollapseFolder() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFolder("folder-1");
-      createFolder("folder-1-1");
-      selectItemInWorkspaceTree("folder-1");
-      createFolder("folder-1-2");
+      createFolder(FOLDER_1);
+      createFolder(FOLDER_1_1);
+      IDE.navigator().selectItem(FOLDER_1_URL);
+      createFolder(FOLDER_1_2);
 
-      assertElementPresentInWorkspaceTree("folder-1");
-      assertElementPresentInWorkspaceTree("folder-1-1");
-      assertElementPresentInWorkspaceTree("folder-1-2");
+      IDE.navigator().assertItemPresent(FOLDER_1_URL);
+      IDE.navigator().assertItemPresent(FOLDER_1_1_URL);
+      IDE.navigator().assertItemPresent(FOLDER_1_2_URL);
 
       selectRootOfWorkspaceTree();
-      createFolder("folder-2");
-      createFolder("folder-2-1");
-      selectItemInWorkspaceTree("folder-2");
-      createFolder("folder-2-2");
+      createFolder(FOLDER_2);
+      createFolder(FOLDER_2_1);
+      IDE.navigator().selectItem(FOLDER_2_URL);
+      createFolder(FOLDER_2_2);
       //Sub folders of folder "folder-1" are hidden
-      assertElementPresentInWorkspaceTree("folder-1");
-      assertElementNotPresentInWorkspaceTree("folder-1-1");
-      assertElementNotPresentInWorkspaceTree("folder-1-2");
+      IDE.navigator().assertItemPresent(FOLDER_1_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_1_1_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_1_2_URL);
 
-      assertElementPresentInWorkspaceTree("folder-2");
-      assertElementPresentInWorkspaceTree("folder-2-1");
-      assertElementPresentInWorkspaceTree("folder-2-2");
+      IDE.navigator().assertItemPresent(FOLDER_2_URL);
+      IDE.navigator().assertItemPresent(FOLDER_2_1_URL);
+      IDE.navigator().assertItemPresent(FOLDER_2_2_URL);
 
       //Close folder "folder-2"
-      openOrCloseFolder("folder-2");
+      openOrCloseFolder(FOLDER_2);
       Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentInWorkspaceTree("folder-1");
-      assertElementPresentInWorkspaceTree("folder-2");
-      //Sub folders of folder "folder-2" are hidden 
-      assertElementNotPresentInWorkspaceTree("folder-2-1");
-      assertElementNotPresentInWorkspaceTree("folder-2-2");
+      IDE.navigator().assertItemPresent(FOLDER_1_URL);
+      IDE.navigator().assertItemPresent(FOLDER_2_URL);
+      //Sub folders of folder "folder-2" are hidden
+      IDE.navigator().assertItemNotPresent(FOLDER_2_1_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
       
       //Open "folder-1"
-      openOrCloseFolder("folder-1");
+      openOrCloseFolder(FOLDER_1);
       Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentInWorkspaceTree("folder-1");
-      assertElementPresentInWorkspaceTree("folder-1-1");
-      assertElementPresentInWorkspaceTree("folder-1-2");
-      assertElementPresentInWorkspaceTree("folder-2");
+      IDE.navigator().assertItemPresent(FOLDER_1_URL);
+      IDE.navigator().assertItemPresent(FOLDER_1_1_URL);
+      IDE.navigator().assertItemPresent(FOLDER_1_2_URL);
+      IDE.navigator().assertItemPresent(FOLDER_2_URL);
       //Sub folders of folder "folder-2" are hidden 
-      assertElementNotPresentInWorkspaceTree("folder-2-1");
-      assertElementNotPresentInWorkspaceTree("folder-2-2");
+      IDE.navigator().assertItemNotPresent(FOLDER_2_1_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
       Thread.sleep(TestConstants.SLEEP);
 
       //Close workspace item
       openCloseRootWorkspace();
       Thread.sleep(TestConstants.SLEEP);
       //All sub folders hide
-      assertElementNotPresentInWorkspaceTree("folder-2");
-      assertElementNotPresentInWorkspaceTree("folder-2-2");
-      assertElementNotPresentInWorkspaceTree("folder-2-1");
-      assertElementNotPresentInWorkspaceTree("folder-1");
-      assertElementNotPresentInWorkspaceTree("folder-1-1");
-      assertElementNotPresentInWorkspaceTree("folder-1-2");
+      IDE.navigator().assertItemNotPresent(FOLDER_1_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_1_1_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_1_2_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_2_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_2_1_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
 
       //Open workspace item
       openCloseRootWorkspace();
       Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentInWorkspaceTree("folder-1");
-      assertElementNotPresentInWorkspaceTree("folder-1-1");
-      assertElementNotPresentInWorkspaceTree("folder-1-2");
-      assertElementPresentInWorkspaceTree("folder-2");
-      assertElementNotPresentInWorkspaceTree("folder-2-1");
-      assertElementNotPresentInWorkspaceTree("folder-2-2");
+      IDE.navigator().assertItemPresent(FOLDER_1_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_1_1_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_1_2_URL);
+      IDE.navigator().assertItemPresent(FOLDER_2_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_2_1_URL);
+      IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
       
-      selectItemInWorkspaceTree("folder-1");
+      IDE.navigator().selectItem(FOLDER_1_URL);
       deleteSelectedItems();
-      selectItemInWorkspaceTree("folder-2");
+      IDE.navigator().selectItem(FOLDER_2_URL);
       deleteSelectedItems();
    }
 }

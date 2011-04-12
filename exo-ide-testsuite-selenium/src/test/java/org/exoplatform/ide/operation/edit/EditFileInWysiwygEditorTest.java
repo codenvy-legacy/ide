@@ -61,7 +61,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
             + "\t</body>\n" + "</html>";
       
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(URL);
       Thread.sleep(TestConstants.SLEEP);
       //------ 1 ---------------
       createSaveAndCloseFile(MenuCommands.New.HTML_FILE, HTML_FILE, 0);

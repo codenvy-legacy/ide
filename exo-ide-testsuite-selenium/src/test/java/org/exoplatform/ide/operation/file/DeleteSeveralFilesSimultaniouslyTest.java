@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -29,7 +31,6 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -90,32 +91,32 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
    public void testDeleteSeveralFilesSimultaniously() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
       openOrCloseFolder(FOLDER_NAME);  
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(GROOVY_FILE_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selectItemInWorkspaceTree(CUR_TIME + ".groovy");
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".groovy");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selectItemInWorkspaceTree(CUR_TIME + ".html");
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".html");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selectItemInWorkspaceTree(CUR_TIME + ".xml");
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".xml");
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, false);
       
             
-      selectItemInWorkspaceTree(GROOVY_FILE_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selectItemInWorkspaceTree(HTML_FILE_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selectItemInWorkspaceTree(XML_FILE_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
@@ -143,14 +144,14 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
      
       
       
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selectItemInWorkspaceTree(CUR_TIME + ".groovy");
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".groovy");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selectItemInWorkspaceTree(CUR_TIME + ".html");
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".html");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selectItemInWorkspaceTree(CUR_TIME + ".xml");
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".xml");
       selenium.controlKeyUp();
             
       Thread.sleep(TestConstants.SLEEP_SHORT);

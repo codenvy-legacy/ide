@@ -94,11 +94,11 @@ public class ViewVersionHistoryTest extends VersioningTest
 
       // open folder
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       //Open new file:
-      selectItemInWorkspaceTree(TEST_FOLDER);      
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");  
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
       //Check there is no "View Version History" button
       checkViewVersionHistoryButtonPresent(false);
@@ -181,14 +181,14 @@ public class ViewVersionHistoryTest extends VersioningTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       
       //Open new file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkViewVersionHistoryButtonPresent(false);
       //Save file
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       saveAsUsingToolbarButton(FILE_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
@@ -249,7 +249,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       // open folder
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
       
@@ -335,7 +335,7 @@ public class ViewVersionHistoryTest extends VersioningTest
 
       // open folder
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
       

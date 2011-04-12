@@ -91,7 +91,7 @@ public class UploadingZippedFolderTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
       
       uploadZippedFolder(FILE_PATH);
       
@@ -103,21 +103,22 @@ public class UploadingZippedFolderTest extends BaseTest
       final String sampleFile = "sample.txt";
       final String mineFile = "mine.xml";
       
-      selectItemInWorkspaceTree(FOLDER_NAME);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      assertElementPresentInWorkspaceTree(testFolder);
-      assertElementPresentInWorkspaceTree(folder);
-      assertElementPresentInWorkspaceTree(sampleFile);
-      assertElementPresentInWorkspaceTree(settingsFile);
       
-      selectItemInWorkspaceTree(folder);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      assertElementPresentInWorkspaceTree(projectFolder);
       
-      selectItemInWorkspaceTree(testFolder);
+      IDE.navigator().assertItemPresent(URL + "/" + testFolder + "/");
+      IDE.navigator().assertItemPresent(URL + "/" + folder + "/");
+      IDE.navigator().assertItemPresent(URL + "/" + sampleFile);
+      IDE.navigator().assertItemPresent(URL + "/" + settingsFile);
+      
+      IDE.navigator().selectItem(URL + "/" + folder + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      assertElementPresentInWorkspaceTree(exoFolder);
-      assertElementPresentInWorkspaceTree(mineFile);
+      IDE.navigator().assertItemPresent(URL + "/" + folder + "/" + projectFolder + "/");
+      
+      IDE.navigator().selectItem(URL + "/" + testFolder + "/");
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.navigator().assertItemPresent(URL + "/" + testFolder + "/" + exoFolder + "/");      
+      IDE.navigator().assertItemPresent(URL + "/" + mineFile);
       
       openFileFromNavigationTreeWithCodeEditor(settingsFile, false);
       checkCodeEditorOpened(0);

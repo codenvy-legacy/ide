@@ -41,8 +41,9 @@ import org.junit.Test;
  */
 public class GoToFolderTest extends BaseTest
 {
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
+
    private final static String FOLDER_1 = "GoToFolderTest1";
 
    private final static String FOLDER_2 = "GoToFolderTest2";
@@ -50,18 +51,18 @@ public class GoToFolderTest extends BaseTest
    private final static String FILE_1 = "GoToFolderTestFile1.xml";
 
    private final static String FILE_2 = "GoToFolderTestFile2.xml";
-   
+
    @BeforeClass
    public static void setUp()
    {
-      String filePath ="src/test/resources/org/exoplatform/ide/operation/file/empty.xml";
+      String filePath = "src/test/resources/org/exoplatform/ide/operation/file/empty.xml";
       try
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
          VirtualFileSystemUtils.mkcol(URL + FOLDER_2);
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_XML, URL + FOLDER_1 + "/" + FILE_1);
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_XML, URL + FOLDER_2 + "/" + FILE_2);
-         
+
       }
       catch (IOException e)
       {
@@ -78,11 +79,11 @@ public class GoToFolderTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
-//      openCloseRootWorkspace();
-      selectItemInWorkspaceTree(WS_NAME);
+      //      openCloseRootWorkspace();
+      IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP);
-      
+
       //Open first folder and file in it
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_1);
@@ -91,21 +92,20 @@ public class GoToFolderTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //Close first folder
       openOrCloseFolder(FOLDER_1);
-      assertElementNotPresentInWorkspaceTree(FILE_1);
+      IDE.navigator().assertItemNotPresent(URL + FOLDER_1 + "/" + FILE_1);
 
       Thread.sleep(TestConstants.SLEEP);
       openOrCloseFolder(FOLDER_2);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //Select second file
-      selectItemInWorkspaceTree(FILE_2);
-
+      IDE.navigator().selectItem(URL + FOLDER_2 + "/" + FILE_2);
       //Go to folder with first file
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       //Thread.sleep(TestConstants.SLEEP);
 
       //Check file is shown in tree
       //TODO check selected state
-      assertElementPresentInWorkspaceTree(FILE_1);
+      IDE.navigator().assertItemPresent(URL + FOLDER_1 + "/" + FILE_1);
 
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand("Refresh Selected Folder");
@@ -118,7 +118,7 @@ public class GoToFolderTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       //Thread.sleep(TestConstants.SLEEP);
       //TODO check selected state
-      assertElementPresentInWorkspaceTree(FILE_2);
+      IDE.navigator().assertItemPresent(URL + FOLDER_2 + "/" + FILE_2);
 
       //Close opened tabs
       IDE.editor().closeTab(0);
@@ -136,62 +136,63 @@ public class GoToFolderTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
       //Close root workspace folder
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       openOrCloseFolder(WS_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertElementNotPresentInWorkspaceTree(FILE_1);
-      assertElementNotPresentInWorkspaceTree(FILE_2);
-      assertElementNotPresentInWorkspaceTree(FOLDER_1);
-      assertElementNotPresentInWorkspaceTree(FOLDER_2);
+      IDE.navigator().assertItemNotPresent(URL + FOLDER_1 + "/" + FILE_1);
+      IDE.navigator().assertItemNotPresent(URL + FOLDER_2 + "/" + FILE_2);
+      IDE.navigator().assertItemNotPresent(URL + FOLDER_1 + "/");
+      IDE.navigator().assertItemNotPresent(URL + FOLDER_2 + "/");
 
-//      IDE.toolbar().runCommand("Search...");
-//      Thread.sleep(TestConstants.SLEEP);
-      
+      //      IDE.toolbar().runCommand("Search...");
+      //      Thread.sleep(TestConstants.SLEEP);
+
       //Check search form appears
-//      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSearchForm\"]"));
-//      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormPathField]/element"));
-//      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element"));
-//      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element"));
-//      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]"));
-//      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormCancelButton\"]"));
-      
+      //      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSearchForm\"]"));
+      //      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormPathField]/element"));
+      //      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element"));
+      //      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element"));
+      //      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]"));
+      //      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormCancelButton\"]"));
+
       //Check form inputs
-//      assertEquals("/", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormPathField]/element"));
-//      assertEquals("", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element"));
-//      assertEquals("", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element"));
+      //      assertEquals("/", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormPathField]/element"));
+      //      assertEquals("", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element"));
+      //      assertEquals("", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element"));
       //Click "Search" button
-//      selenium.click("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]");
+      //      selenium.click("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]");
       performSearch("/", "", "");
       Thread.sleep(TestConstants.SLEEP);
       //Check files are found
       assertElementPresentSearchResultsTree(FILE_1);
       assertElementPresentSearchResultsTree(FILE_2);
       //Open second file
-//      selectItemInSearchResultsTree(FILE_2);
+      //      selectItemInSearchResultsTree(FILE_2);
       openFileFromSearchResultsWithCodeEditor(FILE_2);
       //Go to folder with second file
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, true);
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       //Thread.sleep(TestConstants.SLEEP);
-      
+
       //TODO check selected
-      assertElementPresentInWorkspaceTree(FILE_2);
-      assertElementNotPresentInWorkspaceTree(FILE_1);
-      assertElementPresentInWorkspaceTree(FOLDER_1);
-      assertElementPresentInWorkspaceTree(FOLDER_2);
+      IDE.navigator().assertItemPresent(URL + FOLDER_2 + "/" + FILE_2);
+      
+      IDE.navigator().assertItemNotPresent(URL + FOLDER_1 + "/" + FILE_1);
+      IDE.navigator().assertItemPresent(URL + FOLDER_1 + "/");
+      IDE.navigator().assertItemPresent(URL + FOLDER_2 + "/");
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL +FOLDER_1);
-         VirtualFileSystemUtils.delete(URL +FOLDER_2);
+         VirtualFileSystemUtils.delete(URL + FOLDER_1);
+         VirtualFileSystemUtils.delete(URL + FOLDER_2);
       }
       catch (IOException e)
       {
@@ -201,6 +202,6 @@ public class GoToFolderTest extends BaseTest
       {
          e.printStackTrace();
       }
-     
+
    }
 }

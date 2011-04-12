@@ -111,7 +111,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       //----- 1 -------------

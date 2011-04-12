@@ -117,11 +117,11 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       // Refresh Workspace:
       Thread.sleep(TestConstants.SLEEP);
       
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
@@ -438,7 +438,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    public void openXML() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
@@ -448,7 +448,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    public void openTXT() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(TXT_FILE_NAME, false);
@@ -458,7 +458,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    public void openJavaScript() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(JS_FILE_NAME, false);
@@ -468,7 +468,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    public void openHtml() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       //    runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
@@ -478,7 +478,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    public void openGroovy() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       //runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
@@ -487,7 +487,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    public void openGooglegadget() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(GADGET_FILE_NAME, false);

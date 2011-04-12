@@ -120,10 +120,10 @@ public class UseOfClasspathEntriesTest extends BaseTest
        * 1. Check, that project folder and folder with resources are present.
        * Open REST Service. 
        */
-      assertElementPresentInWorkspaceTree(PROJECT_NAME);
-      assertElementPresentInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().assertItemPresent(WS_URL + PROJECT_NAME + "/");
+      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/");
       
-      selectItemInWorkspaceTree(PROJECT_NAME);
+      IDE.navigator().selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       openFileFromNavigationTreeWithCodeEditor(REST_SERVICE_FILE_NAME, false);

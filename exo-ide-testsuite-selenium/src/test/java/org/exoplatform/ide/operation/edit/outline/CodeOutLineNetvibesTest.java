@@ -95,7 +95,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       //------ 1-3 ------------
       //open file with text
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(URL + FOLDER_NAME +"/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 

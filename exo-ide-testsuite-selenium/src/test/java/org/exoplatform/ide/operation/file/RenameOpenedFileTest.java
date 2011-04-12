@@ -99,10 +99,10 @@ public class RenameOpenedFileTest extends BaseTest
    {
 
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
@@ -126,8 +126,8 @@ public class RenameOpenedFileTest extends BaseTest
       selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
       
-      assertElementPresentInWorkspaceTree(RENAMED_FILE_NAME);
-      assertElementNotPresentInWorkspaceTree(ORIG_FILE_NAME);
+      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());

@@ -46,8 +46,12 @@ public class CopyFolderTest extends BaseTest
   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    private final static String FOLDER_1 = "Test 1";
+   
+   private final static String FOLDER_1_URL = WS_URL + FOLDER_1 + "/";
 
    private final static String FOLDER_1_1 = "Test 1.1";
+   
+   private final static String FOLDER_1_1_URL = FOLDER_1_URL + FOLDER_1_1 + "/";
    
    private static final String FILE_CONTENT_1 = "file content";
    
@@ -128,10 +132,11 @@ public class CopyFolderTest extends BaseTest
    {
       waitForRootElement();
      
-      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.navigator().selectItem(FOLDER_1_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      selectItemInWorkspaceTree(FOLDER_1_1);
+      IDE.navigator().selectItem(FOLDER_1_1_URL);
+      
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
@@ -139,7 +144,7 @@ public class CopyFolderTest extends BaseTest
       /* 
       * Select folder "/Test 1/Test 1.1"
       */
-      selectItemInWorkspaceTree(FOLDER_1_1);
+      IDE.navigator().selectItem(FOLDER_1_1_URL);
 
       /*
        * Check Copy must be enabled
@@ -177,8 +182,8 @@ public class CopyFolderTest extends BaseTest
        */
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      assertElementPresentInWorkspaceTree(FOLDER_1);
-      assertElementPresentInWorkspaceTree(FOLDER_1_1);
+      IDE.navigator().assertItemPresent(FOLDER_1_URL);      
+      IDE.navigator().assertItemPresent(FOLDER_1_1_URL);
 
       /*
        * Change text in file.
@@ -198,7 +203,7 @@ public class CopyFolderTest extends BaseTest
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      selectItemInWorkspaceTree(FOLDER_1_1);
+      IDE.navigator().selectItem(FOLDER_1_1_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       openFileFromNavigationTreeWithCodeEditor(FILE_1, false);

@@ -66,7 +66,7 @@ public class GeItemUrlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
      
       IDE.editor().closeTab(0);
-      assertElementPresentInWorkspaceTree(file1Name);
+      IDE.navigator().assertItemPresent(WS_URL + file1Name);
 
       createFolder(folderName);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
@@ -76,8 +76,7 @@ public class GeItemUrlTest extends BaseTest
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
       IDE.editor().closeTab(0);
-      assertElementPresentInWorkspaceTree(file2Name);
-
+      IDE.navigator().assertItemPresent(WS_URL + file2Name);
       //Refresh root item
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand("Refresh Selected Folder");
@@ -97,13 +96,13 @@ public class GeItemUrlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //Check get URL for file in root of the tree
-      selectItemInWorkspaceTree(file1Name);
+      IDE.navigator().selectItem(WS_URL + file1Name);
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + file1Name));
 
       //Check get URL for folder in root of the tree
-      selectItemInWorkspaceTree(folderName);
+      IDE.navigator().selectItem(WS_URL + folderName + "/");
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/"));
@@ -118,7 +117,7 @@ public class GeItemUrlTest extends BaseTest
       //Check get URL for the file in the folder
       openOrCloseFolder(folderName);
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(file2Name);
+      IDE.navigator().selectItem(WS_URL + file2Name);
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
@@ -168,9 +167,9 @@ public class GeItemUrlTest extends BaseTest
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
       
       selectWorkspaceTab();
-      selectItemInWorkspaceTree(folderName);
+      IDE.navigator().selectItem(WS_URL + folderName + "/");
       selenium.controlKeyDown();
-      selectItemInWorkspaceTree(file1Name);
+      IDE.navigator().selectItem(WS_URL + file1Name);
       selenium.controlKeyUp();
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);

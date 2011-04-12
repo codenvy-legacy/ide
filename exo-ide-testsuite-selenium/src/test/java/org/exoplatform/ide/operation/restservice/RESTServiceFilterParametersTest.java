@@ -79,7 +79,7 @@ public class RESTServiceFilterParametersTest extends BaseTest
    public void testFilterParameters() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       //TODO*************change

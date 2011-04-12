@@ -42,7 +42,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       
       // select root folder
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
@@ -71,7 +71,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       
       // select root folder
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH); 
       
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
@@ -96,7 +96,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       
       // select root folder
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
        
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);

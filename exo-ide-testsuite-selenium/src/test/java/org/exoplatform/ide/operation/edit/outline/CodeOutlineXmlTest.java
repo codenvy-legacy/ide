@@ -96,7 +96,7 @@ public class CodeOutlineXmlTest extends BaseTest
    {
       waitForRootElement();
       
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(URL + TEST_FOLDER +"/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       /*

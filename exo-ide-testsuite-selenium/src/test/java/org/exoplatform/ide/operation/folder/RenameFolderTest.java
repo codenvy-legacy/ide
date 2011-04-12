@@ -78,9 +78,9 @@ public class RenameFolderTest extends BaseTest
    public void testRenameFolder() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
 
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
 
@@ -98,8 +98,8 @@ public class RenameFolderTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
       
-      assertElementNotPresentInWorkspaceTree(FOLDER_NAME);
-      assertElementPresentInWorkspaceTree(NEW_FOLDER_NAME);
+      IDE.navigator().assertItemNotPresent(ORIG_URL + "/");
+      IDE.navigator().assertItemPresent(RENAME_URL + "/");
 
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());

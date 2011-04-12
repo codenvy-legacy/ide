@@ -75,7 +75,7 @@ public class RESTServiceOutputTest extends BaseTest
    public void testOutput() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //TODO***********change************
       Thread.sleep(TestConstants.SLEEP);

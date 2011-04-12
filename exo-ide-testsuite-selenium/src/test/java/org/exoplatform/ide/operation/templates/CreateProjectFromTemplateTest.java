@@ -158,17 +158,19 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 3. Check new project created
        */
-      assertElementPresentInWorkspaceTree(PROJECT_NAME);
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/");
       
-      IDE.navigator().clickOpenIconOfFolder(PROJECT_NAME);
-      assertElementPresentInWorkspaceTree(FOLDER_ORG);
+      IDE.navigator().clickOpenIconOfFolder(PROJECT_NAME);      
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
+      
       
       IDE.navigator().clickOpenIconOfFolder(FOLDER_ORG);
-      assertElementPresentInWorkspaceTree(FOLDER_EXOPLATFORM);
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
       
       IDE.navigator().clickOpenIconOfFolder(FOLDER_EXOPLATFORM);
-      assertElementPresentInWorkspaceTree(FILE_GROOVY);
-      assertElementPresentInWorkspaceTree(FILE_HTML);
+      
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
    }
    
    /**
@@ -193,22 +195,22 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 3. Check sample project created
        */
-      assertElementPresentInWorkspaceTree(PROJECT_FROM_DEFAULT_TEMPLATE);
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
       
-      IDE.navigator().clickOpenIconOfFolder(PROJECT_FROM_DEFAULT_TEMPLATE);
-      assertElementPresentInWorkspaceTree("data");
-      assertElementPresentInWorkspaceTree("logic");
-      assertElementPresentInWorkspaceTree("UI");
+      IDE.navigator().clickOpenIconOfFolder(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
       
       IDE.navigator().clickOpenIconOfFolder("logic");
-      assertElementPresentInWorkspaceTree("GreetingRESTService.grs");
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/" + "GreetingRESTService.grs");
       
       IDE.navigator().clickOpenIconOfFolder("UI");
-      assertElementPresentInWorkspaceTree("GreetingGoogleGadget.xml");
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/" + "GreetingGoogleGadget.xml");
       
       IDE.navigator().clickOpenIconOfFolder("data");
-      assertElementPresentInWorkspaceTree("DataObject.groovy");
-      assertElementPresentInWorkspaceTree("Pojo.groovy");
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"DataObject.groovy"); 
+      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"Pojo.groovy");
    }
    
    /**
@@ -233,7 +235,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 3. Check new project created
        */
-      assertElementPresentInWorkspaceTree(EMPTY_PROJECT);
+      IDE.navigator().assertItemNotPresent(PROJECT_FOLDER_URL + EMPTY_PROJECT + "/");
    }
    
    /**

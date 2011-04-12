@@ -86,10 +86,11 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
    {
       {
          Thread.sleep(TestConstants.SLEEP);
-         selectItemInWorkspaceTree(WS_NAME);
-         IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+         IDE.navigator().selectItem(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+         IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);         
          Thread.sleep(TestConstants.SLEEP);
-         selectItemInWorkspaceTree(FOLDER_NAME);
+         
+         IDE.navigator().selectItem(URL);
          IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, true);
          IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER);
          Thread.sleep(TestConstants.SLEEP);

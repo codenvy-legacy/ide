@@ -67,7 +67,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selectItemInWorkspaceTree(FolderName);
+      IDE.navigator().selectItem(URL);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       createSaveAndCloseFile(MenuCommands.New.HTML_FILE, htmlFile, 0);
@@ -333,7 +333,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       saveCurrentFile();
       IDE.editor().closeTabWithNonSaving(0);
-      selectItemInWorkspaceTree(htmlFile);
+      IDE.navigator().selectItem(WS_URL + htmlFile);
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
 
@@ -346,7 +346,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
       IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
 
-      selectItemInWorkspaceTree(googleGadgetFile);
+      IDE.navigator().selectItem(WS_URL + googleGadgetFile);
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
    }

@@ -84,7 +84,7 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
    {
 
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
@@ -117,10 +117,10 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
 
-      assertElementNotPresentInWorkspaceTree(FOLDER_NAME_1);
-      assertElementNotPresentInWorkspaceTree(FOLDER_NAME_2);
-      assertElementNotPresentInWorkspaceTree(FOLDER_NAME_3);
-      assertElementNotPresentInWorkspaceTree("test.groovy");
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_1 + "/" + FOLDER_NAME_2 + "/");
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_3 + "/");
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_3 + "/" + "test.groovy");
 
       assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_1, "UTF-8")).getStatusCode());
       assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_3, "UTF-8")).getStatusCode());

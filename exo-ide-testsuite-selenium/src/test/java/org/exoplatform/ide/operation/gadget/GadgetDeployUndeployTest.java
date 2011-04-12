@@ -66,7 +66,7 @@ public class GadgetDeployUndeployTest extends BaseTest
       VirtualFileSystemUtils.mkcol(URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //***********************
       

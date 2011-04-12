@@ -70,7 +70,7 @@ public class CursorPositionStatusBarTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
 
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
        
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);

@@ -124,16 +124,16 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       //select another workspace
       selectWorkspace(secondWorkspaceName);
       
-      selectItemInWorkspaceTree(secondWorkspaceName);
+      IDE.navigator().selectItem(SECOND_WORKSPACE_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      selectItemInWorkspaceTree(TEST_FOLDER_TO_DELETE);
+      IDE.navigator().selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/");
       
       //create txt file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       saveAsUsingToolbarButton(TEXT_FILE);
       
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
       
       //create html file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
@@ -192,11 +192,11 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.editor().closeTabWithNonSaving(0);
       
       //open folder to select html file
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      assertElementPresentInWorkspaceTree(GADGET_FILE);
-      assertElementPresentInWorkspaceTree(HTML_FILE);
+      IDE.navigator().assertItemPresent(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
+      IDE.navigator().assertItemPresent(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
    }
    
    /**

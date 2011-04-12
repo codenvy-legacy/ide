@@ -48,6 +48,8 @@ public class CopyFoldersAndFilesTest extends BaseTest
    
    private static final String FOLDER_1 = CopyFoldersAndFilesTest.class.getSimpleName() + "-1";
    
+   private static final String FOLDER_1_URL = WS_URL + FOLDER_1 + "/";
+   
    private static final String FOLDER_1_1 = CopyFoldersAndFilesTest.class.getSimpleName() + "-1-1";
    
    private static final String FOLDER_1_2 = CopyFoldersAndFilesTest.class.getSimpleName() + "-1-2";
@@ -57,6 +59,10 @@ public class CopyFoldersAndFilesTest extends BaseTest
    private static final String FILE_GROOVY = "test_groovy";
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+
+   private static final String FOLDER_1_2_URL = URL + FOLDER_1 + "/" + FOLDER_1_2 + "/";
+
+   private static final String FOLDER_1_1_URL = URL + FOLDER_1 + "/" + FOLDER_1_1 + "/";
    
    private static final String RANDOM_CONTENT_1 = UUID.randomUUID().toString();
    
@@ -77,8 +83,8 @@ public class CopyFoldersAndFilesTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1 + "/" + FOLDER_1_1);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1 + "/" + FOLDER_1_2);
+         VirtualFileSystemUtils.mkcol(FOLDER_1_1_URL);
+         VirtualFileSystemUtils.mkcol(FOLDER_1_2_URL);
          VirtualFileSystemUtils.put(RANDOM_CONTENT_1.getBytes(), MimeType.GOOGLE_GADGET, URL + FOLDER_1 + "/" + FILE_GADGET);
          VirtualFileSystemUtils.put(RANDOM_CONTENT_2.getBytes(), MimeType.APPLICATION_GROOVY, URL + FOLDER_1 + "/" + FILE_GROOVY);
       }
@@ -160,7 +166,7 @@ public class CopyFoldersAndFilesTest extends BaseTest
    public void testCopyFoldersAndFiles() throws Exception
    {
       waitForRootElement();
-      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.navigator().selectItem(FOLDER_1_URL);
 
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
@@ -171,10 +177,10 @@ public class CopyFoldersAndFilesTest extends BaseTest
       //Select "test 1/gadget.xml", "test 1/test.groovy", "test 1/test 1.1",  "test 1/test 1.2" items in the Workspace Panel.
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selectItemInWorkspaceTree(FILE_GADGET);
-      selectItemInWorkspaceTree(FILE_GROOVY);
-      selectItemInWorkspaceTree(FOLDER_1_1);
-      selectItemInWorkspaceTree(FOLDER_1_2);
+      IDE.navigator().selectItem(FOLDER_1_URL + FILE_GADGET);
+      IDE.navigator().selectItem(FOLDER_1_URL + FILE_GROOVY);
+      IDE.navigator().selectItem(FOLDER_1_1_URL);
+      IDE.navigator().selectItem(FOLDER_1_2_URL);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
@@ -186,10 +192,10 @@ public class CopyFoldersAndFilesTest extends BaseTest
       IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
-      selectItemInWorkspaceTree(FOLDER_1_1);
+      IDE.navigator().selectItem(FOLDER_1_1_URL);
       deleteSelectedItems();
 
-      selectItemInWorkspaceTree(FILE_GADGET);
+      IDE.navigator().selectItem(FOLDER_1_URL + FILE_GADGET);
       deleteSelectedItems();
 
       //Delete "test 1/test 1.1" folder and "test 1/gadget.xml" file. Select root item. Click on "Paste" button.
@@ -220,7 +226,7 @@ public class CopyFoldersAndFilesTest extends BaseTest
       assertEquals(RANDOM_CONTENT_2, new String(fileResponse1.getData()));
       
       //children of FOLDER_1
-      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FOLDER_1 + "/" + FOLDER_1_2).getStatusCode());
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(FOLDER_1_2_URL).getStatusCode());
       final HTTPResponse fileResponse2 = VirtualFileSystemUtils.get(URL + FOLDER_1 + "/" + FILE_GROOVY);
       assertEquals(HTTPStatus.OK, fileResponse2.getStatusCode());
       assertEquals(RANDOM_CONTENT_2, new String(fileResponse2.getData()));

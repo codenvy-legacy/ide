@@ -73,12 +73,12 @@ public class UploadingGoogleGadgetTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
       
       uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);
       Thread.sleep(TestConstants.SLEEP);
       
-      selectItemInWorkspaceTree(FILE_NAME);
+      IDE.navigator().assertItemPresent(URL + "/" + FILE_NAME);
       String url = getSelectedItemUrl();
       
       assertEquals(URL + "/" + FILE_NAME, url);

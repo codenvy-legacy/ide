@@ -110,9 +110,9 @@ public class CutFoldersAndFilesTest extends BaseTest
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/"); 
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_2);
+      IDE.navigator().selectItem(WS_URL + FOLDER_2 + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       //Open Gadget window, open all created files.

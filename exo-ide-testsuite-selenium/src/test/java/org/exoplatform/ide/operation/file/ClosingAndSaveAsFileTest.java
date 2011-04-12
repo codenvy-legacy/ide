@@ -91,7 +91,7 @@ public class ClosingAndSaveAsFileTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       
       //----- 1 ----------
       //open 2 new files
@@ -124,7 +124,7 @@ public class ClosingAndSaveAsFileTest extends BaseTest
    public void testSaveAsFileAfterTryingToCloseNewFile() throws Exception
    {
       refresh();
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       
       //----- 1 ----------
       //open new file

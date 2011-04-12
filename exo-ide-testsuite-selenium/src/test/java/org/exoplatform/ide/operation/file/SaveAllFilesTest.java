@@ -92,7 +92,7 @@ public class SaveAllFilesTest extends BaseTest
       
       //---- 3 ----------------
       //Create file "Saved File.xml" in "Test", "Saved File.groovy" in the "Test 2" folder.
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //create new xml file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
@@ -107,7 +107,7 @@ public class SaveAllFilesTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //create new groovy file
-      selectItemInWorkspaceTree(FOLDER_NAME_2);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME_2 + "/");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
@@ -122,7 +122,7 @@ public class SaveAllFilesTest extends BaseTest
       
       //---- 4 ----------------
       //Click on "Test 2" folder in "Workspace" panel.
-      selectItemInWorkspaceTree(FOLDER_NAME_2);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME_2 + "/");
       //Save All command is disabled
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
       
@@ -202,11 +202,11 @@ public class SaveAllFilesTest extends BaseTest
       assertEquals(NEW_HTML_FILE_NAME, IDE.editor().getTabTitle(3));
       
       //end
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
       
-      selectItemInWorkspaceTree(FOLDER_NAME_2);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME_2 + "/");
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
    }

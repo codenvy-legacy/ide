@@ -84,7 +84,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
       //Select file newHtmlFile.html in the Workspace Panel and then call 
       //the "File->Open with.." topmenu command.
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       

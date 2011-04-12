@@ -90,7 +90,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       //----- 1 ----------
@@ -113,7 +113,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       //Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      selectItemInWorkspaceTree(FILE_NAME);
+      IDE.navigator().selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
       
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE, false);

@@ -50,6 +50,11 @@ public class CutFileTest extends BaseTest
    private static final String FOLDER_NAME_1 = CutFileTest.class.getSimpleName() + "-1";
    
    private static final String FOLDER_NAME_2 = CutFileTest.class.getSimpleName() + "-2";
+   
+  private static final String FOLDER_NAME_1_URL = WS_URL + FOLDER_NAME_1 + "/";
+   
+   private static final String FOLDER_NAME_2_URL = WS_URL + FOLDER_NAME_2 + "/";
+   
 
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
@@ -109,10 +114,10 @@ public class CutFileTest extends BaseTest
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      selectItemInWorkspaceTree(FOLDER_NAME_1);
+      IDE.navigator().selectItem(FOLDER_NAME_1_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      selectItemInWorkspaceTree(FOLDER_NAME_2);
+      IDE.navigator().selectItem(FOLDER_NAME_2_URL);
 
       //Open files "test 1/gadget.xml".
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
@@ -120,18 +125,18 @@ public class CutFileTest extends BaseTest
       checkPasteCommands(false);
       checkCutCopyCommands(true);
 
-      selectItemInWorkspaceTree(FILE_NAME_1);
+      IDE.navigator().selectItem(FOLDER_NAME_1_URL + FILE_NAME_1);
 
       checkPasteCommands(false);
       checkCutCopyCommands(true);
 
-      selectItemInWorkspaceTree(FILE_NAME_1);
+      IDE.navigator().selectItem(FOLDER_NAME_1_URL + FILE_NAME_1);
 
       //Call the "Edit->Cut Items" topmenu command.
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
       checkPasteCommands(true);
 
-      selectItemInWorkspaceTree(FOLDER_NAME_1);
+      IDE.navigator().selectItem(FOLDER_NAME_1_URL);
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
       
       assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
@@ -144,7 +149,7 @@ public class CutFileTest extends BaseTest
 
       openOrCloseFolder(FOLDER_NAME_1);
 
-      selectItemInWorkspaceTree(FOLDER_NAME_2);
+      IDE.navigator().selectItem(FOLDER_NAME_2_URL);
 
       //Select "test 2" folder item in the Workspace Panel and then select "Edit->Paste Items" topmenu command.
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
@@ -165,7 +170,7 @@ public class CutFileTest extends BaseTest
       
       assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(URL + FOLDER_NAME_1 + "/" + FILE_NAME_1).getStatusCode());
       assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FILE_NAME_1).getStatusCode());
-      selectItemInWorkspaceTree(FILE_NAME_1);
+      IDE.navigator().selectItem(WS_URL + FILE_NAME_1);
 
       assertEquals(RANDOM_CONTENT, getTextFromCodeEditor(0));
 

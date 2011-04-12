@@ -50,7 +50,7 @@ public class DownloadFileToLocalDriveTest extends BaseTest
 
    private static final String FILE_NAME = String.valueOf(System.currentTimeMillis());
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME 
       + "/";
 
    @BeforeClass
@@ -79,10 +79,11 @@ public class DownloadFileToLocalDriveTest extends BaseTest
    public void testDownloadFileToLocalDrive() throws Exception
    {
       waitForRootElement();
-      selectItemInWorkspaceTree(WS_NAME);
+
+      IDE.navigator().selectItem(URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      selectItemInWorkspaceTree(FILE_NAME);
+      IDE.navigator().selectItem(URL + FILE_NAME);
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
       /*

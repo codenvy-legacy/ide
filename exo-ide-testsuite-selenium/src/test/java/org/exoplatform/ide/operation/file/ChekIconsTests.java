@@ -115,9 +115,9 @@ public class ChekIconsTests extends BaseTest
 //      //------------3---------------------    
       // Refresh Workspace:
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       // check icons
@@ -128,7 +128,7 @@ public class ChekIconsTests extends BaseTest
    public void checkIcons() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertTrue(selenium.isElementPresent("//table[@class='listTable']/tbody/tr[3]//img[contains(@src, 'css.png')]"));
       assertTrue(selenium.isTextPresent(CSS_FILE_NAME));

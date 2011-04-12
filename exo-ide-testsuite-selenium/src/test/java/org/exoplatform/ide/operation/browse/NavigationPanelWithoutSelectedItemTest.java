@@ -50,7 +50,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       
       // create and select folder
       createFolder(TEST_FOLDER_NAME);
-      selectItemInWorkspaceTree(TEST_FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER_NAME + "/");
       
       // check command accessibility in top menu and main toolbar when Content Panel is empty
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
@@ -94,7 +94,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       
       // un-select folder item "test" in the navigation panel
       selenium.controlKeyDown();
-      selectItemInWorkspaceTree(TEST_FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER_NAME + "/");
       selenium.controlKeyUp();
       
       Thread.sleep(TestConstants.SLEEP);
@@ -190,9 +190,9 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       
       // save and change new file
-      selectItemInWorkspaceTree(TEST_FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER_NAME + "/");
       saveAsUsingToolbarButton(TEST_FILE_NAME);
-      selectItemInWorkspaceTree(TEST_FILE_NAME);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER_NAME + "/");
       
       // change file content
       typeTextIntoEditor(0, "Sample text");
@@ -239,7 +239,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       
       // un-select item "test.groovy" in the navigation panel
       selenium.controlKeyDown();
-      selectItemInWorkspaceTree(TEST_FILE_NAME);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER_NAME + "/");
       selenium.controlKeyUp();
       
       Thread.sleep(TestConstants.SLEEP);

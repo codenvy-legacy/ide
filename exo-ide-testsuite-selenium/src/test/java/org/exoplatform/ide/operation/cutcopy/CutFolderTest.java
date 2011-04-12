@@ -52,10 +52,17 @@ public class CutFolderTest extends BaseTest
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    private final static String FOLDER_1 = "test 1";
+   
+   private final static String FOLDER_1_URL = WS_URL + FOLDER_1 + "/";
 
    private final static String FOLDER_2 = "test 2";
+   
+   private final static String FOLDER_2_URL = WS_URL + FOLDER_2 + "/";
     
    private final static String FILE_1 = "test.groovy";
+
+   private static final String FILE_URL = URL + FOLDER_1 + "/" 
+               + FOLDER_2 + "/" + FILE_1;
    
    private static final String FILE_CONTENT = "file content";
    
@@ -75,8 +82,7 @@ public class CutFolderTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
          VirtualFileSystemUtils.mkcol(URL + FOLDER_1 + "/" + FOLDER_2);
-         VirtualFileSystemUtils.put(FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY, URL + FOLDER_1 + "/" 
-            + FOLDER_2 + "/" + FILE_1);
+         VirtualFileSystemUtils.put(FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY, FILE_URL);
          VirtualFileSystemUtils.mkcol(URL + FOLDER_2);
       }
       catch (IOException e)
@@ -116,17 +122,17 @@ public class CutFolderTest extends BaseTest
        */
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      assertElementPresentInWorkspaceTree(FOLDER_1);
+      IDE.navigator().assertItemPresent(FOLDER_1_URL);
       
-      selectItemInWorkspaceTree(FOLDER_1);
+      
+      IDE.navigator().selectItem(FOLDER_1_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      assertElementPresentInWorkspaceTree(FOLDER_2);
+      IDE.navigator().assertItemPresent(FOLDER_2_URL);
       
-      selectItemInWorkspaceTree(FOLDER_2);
+      IDE.navigator().selectItem(FOLDER_2_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      assertElementPresentInWorkspaceTree(FILE_1);
+      IDE.navigator().assertItemPresent(FILE_URL);
       
-      assertElementPresentInWorkspaceTree(FOLDER_2);
 
       /*
        * 2.Open file "test 1/test 2/test.groovy".
@@ -160,7 +166,7 @@ public class CutFolderTest extends BaseTest
       /*
        * 4. Select file "test 1/test 2/test.groovy" in the Workspace Panel.
        */
-      selectItemInWorkspaceTree(FILE_1);
+      IDE.navigator().selectItem(FILE_URL);
 
       /*
        * Paste commands are enabled.
@@ -212,10 +218,10 @@ public class CutFolderTest extends BaseTest
       /*
        * 7. Select folders "test 1" and "test 2".
        */
-      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.navigator().selectItem(FOLDER_1_URL);
 
       selenium.keyPressNative("" + KeyEvent.VK_CONTROL);
-      selectItemInWorkspaceTree(FOLDER_2);
+      IDE.navigator().selectItem(FOLDER_2_URL);
       selenium.keyUpNative("" + KeyEvent.VK_CONTROL);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
@@ -230,11 +236,11 @@ public class CutFolderTest extends BaseTest
        */
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_1);
+      IDE.navigator().selectItem(FOLDER_1_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_2);
+      IDE.navigator().selectItem(FOLDER_2_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FILE_1);
+      IDE.navigator().selectItem(FILE_URL);
 
       /*
        * "Paste" commands should be enabled.
@@ -254,7 +260,7 @@ public class CutFolderTest extends BaseTest
        * Check, that file name stays the same (IDE-225 issue).
        */
       assertEquals(FILE_1, IDE.editor().getTabTitle(0));
-      assertElementPresentInWorkspaceTree(FOLDER_1);
+      IDE.navigator().assertItemNotPresent(FOLDER_1_URL);
       checkItemsOnWebDav();
 
       /*

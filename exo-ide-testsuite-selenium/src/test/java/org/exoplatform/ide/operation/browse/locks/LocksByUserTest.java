@@ -72,7 +72,7 @@ public class LocksByUserTest extends LockFileAbstract
    public void testLocksByUser() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       //----- 1 --------
@@ -93,7 +93,7 @@ public class LocksByUserTest extends LockFileAbstract
       Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
       
       //----- 5 --------
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       checkFileLocking(FILE_NAME, true);

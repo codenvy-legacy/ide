@@ -78,10 +78,10 @@ public class DeleteFolderTest extends BaseTest
    {
     
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(FOLDER_NAME_TOOLBAR);
+      IDE.navigator().selectItem(URL_TOOLBAR + "/");
       IDE.toolbar().runCommand("Delete Item(s)...");
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
@@ -90,7 +90,7 @@ public class DeleteFolderTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      assertElementNotPresentInWorkspaceTree(FOLDER_NAME_TOOLBAR);
+      IDE.navigator().assertItemNotPresent(URL_TOOLBAR + "/");
       assertEquals(404, VirtualFileSystemUtils.get(URL_TOOLBAR).getStatusCode());
    }
    
@@ -105,10 +105,10 @@ public class DeleteFolderTest extends BaseTest
    {
     
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(FOLDER_NAME_MENU);
+      IDE.navigator().selectItem(URL_MENU + "/");
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
@@ -117,7 +117,7 @@ public class DeleteFolderTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      assertElementNotPresentInWorkspaceTree(FOLDER_NAME_MENU);
+      IDE.navigator().selectItem(URL_MENU + "/");
       assertEquals(404, VirtualFileSystemUtils.get(URL_MENU).getStatusCode());
    }
    

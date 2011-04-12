@@ -81,13 +81,13 @@ public class UsingKeyboardTest extends BaseTest
       }
 
       createFolder(TEST_FOLDER);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/"); 
       createFolder(TEST_SUBFOLDER);
 
       Thread.sleep(TestConstants.SLEEP);
 
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
-      selectItemInWorkspaceTree(TEST_SUBFOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
@@ -96,7 +96,7 @@ public class UsingKeyboardTest extends BaseTest
          + TEST_SUBFOLDER + "]/col[fieldName=title]"));
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/"); 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -108,7 +108,7 @@ public class UsingKeyboardTest extends BaseTest
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
 
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
-      selectItemInWorkspaceTree(TEST_SUBFOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
@@ -134,7 +134,7 @@ public class UsingKeyboardTest extends BaseTest
       }
 
       createFolder(TEST_FOLDER);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/"); 
 
       createSaveAndCloseFile(MenuCommands.New.GOOGLE_GADGET_FILE, TEST_FILE, 0);
 
@@ -150,7 +150,7 @@ public class UsingKeyboardTest extends BaseTest
       assertElementNotPresentSearchResultsTree(TEST_FILE);
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
-      selectItemInWorkspaceTree(WS_NAME);
+      IDE.navigator().selectItem(WS_URL); 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -190,7 +190,7 @@ public class UsingKeyboardTest extends BaseTest
       // refresh page and open test file
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(TEST_FOLDER);
+      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/"); 
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
 
       openFileFromNavigationTreeWithCodeEditor(TEST_FILE, false);

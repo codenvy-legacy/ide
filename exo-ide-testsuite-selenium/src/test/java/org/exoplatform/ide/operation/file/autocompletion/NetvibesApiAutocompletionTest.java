@@ -89,7 +89,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
    public void testNetvibesApiAutocompletions() throws Exception
    {
       waitForRootElement();
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       /*
@@ -173,11 +173,11 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       waitForRootElement();
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       waitForRootElement();
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       /*

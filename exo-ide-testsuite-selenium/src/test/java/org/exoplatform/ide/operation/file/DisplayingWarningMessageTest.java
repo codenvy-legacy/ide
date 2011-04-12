@@ -89,7 +89,7 @@ public class DisplayingWarningMessageTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       //--------- 1 -------------------
       //Click on "New->XML File" toolbar button to open new file on Content Panel
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
@@ -126,7 +126,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       //After the step 6: new file will be saved, and file tab should be closed.
       
       //check is file appeared in workspace tree
-      assertElementPresentInWorkspaceTree(XML_FILE_NAME);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
       
       //check is file closed
       IDE.editor().checkIsTabPresentInEditorTabset(XML_FILE_NAME, false);

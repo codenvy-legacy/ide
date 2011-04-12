@@ -16,7 +16,6 @@
    
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <user.extension.dir>src/test/resources/org/exoplatform/ide/user-extensions.js</user.extension.dir>
       <firefox.profile.dir>target/firefoxProfile</firefox.profile.dir>
    </properties>
    <dependencies>

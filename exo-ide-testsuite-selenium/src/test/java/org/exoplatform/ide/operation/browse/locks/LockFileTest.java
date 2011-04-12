@@ -95,7 +95,7 @@ public class LockFileTest extends LockFileAbstract
    {
       Thread.sleep(TestConstants.SLEEP*2);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
       IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
       
       IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, false);
@@ -214,7 +214,8 @@ public class LockFileTest extends LockFileAbstract
       refresh();
       
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      selectItemInWorkspaceTree(FOLDER_NAME);
+      
+      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       //----- 1 ------------

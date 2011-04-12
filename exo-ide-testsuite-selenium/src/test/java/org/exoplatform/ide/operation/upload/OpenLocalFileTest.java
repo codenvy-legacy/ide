@@ -44,7 +44,7 @@ public class OpenLocalFileTest extends BaseTest
    public void testOpenFileWithoutExtention() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectItemInWorkspaceTree(WS_NAME);
+       IDE.navigator().selectItem(WS_URL);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       //call Open Local File form
