@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -232,6 +233,7 @@ public class AddToIndexPresenter implements AddToIndexHandler, ItemsSelectedHand
          protected void onSuccess(String result)
          {
             eventBus.fireEvent(new OutputEvent(ADD_SUCCESS));
+            eventBus.fireEvent(new RefreshBrowserEvent());
          }
 
          @Override

@@ -18,10 +18,17 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.git.shared.GitFile;
+import org.exoplatform.ide.git.shared.GitFile.FileStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Unmarshaller for the Git work tree status response.
@@ -30,7 +37,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * @version $Id:  Mar 29, 2011 11:11:27 AM anya $
  *
  */
-public class StatusResponseUnmarshaller implements Unmarshallable
+public class StatusResponseUnmarshaller extends JSONUmarshaller
 {
    /**
     * The status response.
@@ -38,11 +45,18 @@ public class StatusResponseUnmarshaller implements Unmarshallable
    private StatusResponse statusResponse;
 
    /**
-    * @param statusResponse status response
+    * Indicates whether response is in text format.
     */
-   public StatusResponseUnmarshaller(StatusResponse statusResponse)
+   private boolean textFormat;
+
+   /**
+    * @param statusResponse status response
+    * @param textFormat text format of the response or not
+    */
+   public StatusResponseUnmarshaller(StatusResponse statusResponse, boolean textFormat)
    {
       this.statusResponse = statusResponse;
+      this.textFormat = textFormat;
    }
 
    /**
@@ -51,6 +65,56 @@ public class StatusResponseUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      statusResponse.setWorkTreeStatus(response.getText());
+      if (textFormat)
+      {
+         statusResponse.setWorkTreeStatus(response.getText());
+         return;
+      }
+
+      JavaScriptObject json = build(response.getText());
+      if (json == null)
+         return;
+      JSONObject statusObject = new JSONObject(json);
+      if (statusObject == null)
+         return;
+
+      statusResponse.setChangedNotCommited(getValuesByKey(CHANGED_NOT_COMMITED, statusObject));
+      statusResponse.setChangedNotUpdated(getValuesByKey(CHANGED_NOT_UPDATED, statusObject));
+      statusResponse.setUntracked(getValuesByKey(UNTRACKED, statusObject));
+
+   }
+
+   /**
+    * Parse JSON object's property of array type to list, by given property name.
+    * 
+    * @param key 
+    * @param jsonObject
+    * @return {@link List}
+    */
+   private List<GitFile> getValuesByKey(String key, JSONObject jsonObject)
+   {
+      List<GitFile> values = new ArrayList<GitFile>();
+      if (jsonObject.containsKey(key))
+      {
+         JSONArray array = jsonObject.get(key).isArray();
+         if (array == null || array.size() <= 0)
+            return values;
+
+         for (int i = 0; i < array.size(); i++)
+         {
+            JSONObject fileObject = array.get(i).isObject();
+            if (fileObject != null)
+            {
+               String path =
+                  (fileObject.containsKey(PATH) && fileObject.get(PATH).isString() != null) ? fileObject.get(PATH)
+                     .isString().stringValue() : "";
+               FileStatus status =
+                  (fileObject.containsKey(STATUS) && fileObject.get(STATUS).isString() != null) ? FileStatus
+                     .valueOf(fileObject.get(STATUS).isString().stringValue()) : null;
+               values.add(new GitFile(path, status));
+            }
+         }
+      }
+      return values;
    }
 }

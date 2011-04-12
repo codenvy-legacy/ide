@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -184,6 +185,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
          protected void onSuccess(String result)
          {
             Dialogs.getInstance().showInfo("Repository initialization", Messages.INIT_SUCCESS);
+            eventBus.fireEvent(new RefreshBrowserEvent());
          }
 
          @Override
@@ -191,7 +193,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
          {
             String errorMessage =
                (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : Messages.CLONE_FAILED;
+                  : Messages.INIT_FAILED;
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });

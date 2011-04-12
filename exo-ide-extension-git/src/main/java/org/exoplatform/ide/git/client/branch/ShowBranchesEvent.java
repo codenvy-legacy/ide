@@ -16,44 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.marshaller;
+package org.exoplatform.ide.git.client.branch;
 
-import org.exoplatform.ide.git.shared.Status;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * The bean representing a status of the working tree (changed, untracked files).
+ * Event occurs, when user tries to view the list f branches.
+ * Implement {@link ShowBranchesHandler} handler to process this event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 11:02:10 AM anya $
+ * @version $Id:  Apr 8, 2011 12:12:37 PM anya $
  *
  */
-public class StatusResponse extends Status
+public class ShowBranchesEvent extends GwtEvent<ShowBranchesHandler>
 {
    /**
-    * The string notion of the GIT work tree status.
-    * It contains the information of the modified, added, deleted files.
-    * Example for short format:<br>
-    *   <pre>
-    *   M README.txt
-    *   A  test/abc/
-    *   </pre>
+    * Type used to register this event.
     */
-   private String workTreeStatus;
+   public static final GwtEvent.Type<ShowBranchesHandler> TYPE = new GwtEvent.Type<ShowBranchesHandler>();
 
    /**
-    * @return the workTreeStatus
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
-   public String getWorkTreeStatus()
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowBranchesHandler> getAssociatedType()
    {
-      return workTreeStatus;
+      return TYPE;
    }
 
    /**
-    * @param workTreeStatus the workTreeStatus to set
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
-   public void setWorkTreeStatus(String workTreeStatus)
+   @Override
+   protected void dispatch(ShowBranchesHandler handler)
    {
-      this.workTreeStatus = workTreeStatus;
+      handler.onShowBranches(this);
    }
 
 }

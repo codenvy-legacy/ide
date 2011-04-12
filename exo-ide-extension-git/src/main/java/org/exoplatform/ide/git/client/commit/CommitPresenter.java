@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -238,6 +239,7 @@ public class CommitPresenter implements ItemsSelectedHandler, CommitHandler
                (result.getCommitter() != null && result.getCommitter().getName() != null && result.getCommitter()
                   .getName().length() > 0) ? " by user " + result.getCommitter().getName() : "";
             eventBus.fireEvent(new OutputEvent(message, Type.INFO));
+            eventBus.fireEvent(new RefreshBrowserEvent());
          }
 
          @Override

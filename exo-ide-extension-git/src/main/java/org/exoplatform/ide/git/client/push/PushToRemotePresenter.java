@@ -43,6 +43,7 @@ import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -141,6 +142,8 @@ public class PushToRemotePresenter implements ItemsSelectedHandler, PushToRemote
     */
    private String workDir;
 
+   public List<Branch> remoteBranches;
+
    /**
     * @param eventBus events handler
     */
@@ -181,6 +184,16 @@ public class PushToRemotePresenter implements ItemsSelectedHandler, PushToRemote
          }
       });
 
+      display.getRemoteValue().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            setRemoteBranches(event.getValue());
+         }
+      });
+
       display.getRemoteBranchesValue().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
@@ -191,6 +204,36 @@ public class PushToRemotePresenter implements ItemsSelectedHandler, PushToRemote
             display.enablePushButton(!empty);
          }
       });
+   }
+
+   /**
+    * Set values of remote branches: filter remote branches due to 
+    * selected remote repository.
+    * 
+    * @param remoteName
+    */
+   private void setRemoteBranches(String remoteName)
+   {
+      if (remoteBranches == null || remoteBranches.size() <= 0 || remoteName == null)
+      {
+         return;
+      }
+      List<String> branchesToDisplay = new ArrayList<String>();
+      String compareString = "refs/remotes/" + remoteName + "/";
+      for (Branch branch : remoteBranches)
+      {
+         if (branch.getName().startsWith(compareString))
+         {
+            branchesToDisplay.add(branch.getName().replaceFirst(compareString, "refs/heads/"));
+         }
+      }
+      String[] branches = branchesToDisplay.toArray(new String[branchesToDisplay.size()]);
+      display.setRemoteBranches(branches);
+
+      if (branches.length > 0)
+      {
+         display.getRemoteBranchesValue().setValue(branches[0]);
+      }
    }
 
    /**
@@ -283,7 +326,7 @@ public class PushToRemotePresenter implements ItemsSelectedHandler, PushToRemote
    /**
     * Get the list of branches.
     * 
-    * @param workDir Gi repository work tree location
+    * @param workDir Git repository work tree location
     * @param remote get remote branches if <code>true</code>
     */
    public void getBranches(String workDir, final boolean remote)
@@ -296,22 +339,19 @@ public class PushToRemotePresenter implements ItemsSelectedHandler, PushToRemote
          {
             if (result.size() <= 0)
                return;
+            if (remote)
+            {
+               remoteBranches = result;
+               setRemoteBranches(display.getRemoteValue().getValue());
+               return;
+            }
 
             String[] branches = new String[result.size()];
             for (int i = 0; i < result.size(); i++)
             {
                branches[i] = result.get(i).getName();
             }
-
-            if (remote)
-            {
-               display.setRemoteBranches(branches);
-               display.getRemoteBranchesValue().setValue(branches[0], true);
-            }
-            else
-            {
-               display.setLocalBranches(branches);
-            }
+            display.setLocalBranches(branches);
          }
 
          @Override

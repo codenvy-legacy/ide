@@ -24,44 +24,40 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.push.PushToRemoteEvent;
+import org.exoplatform.ide.git.client.branch.ShowBranchesEvent;
 
 /**
- * Control for pushing changes from local repository to remote one.
+ * Control is responsible to open view with branches, 
+ * where user can create new, checkout or delete.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 4, 2011 9:27:56 AM anya $
+ * @version $Id:  Apr 7, 2011 5:39:13 PM anya $
  *
  */
-public class PushToRemoteControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class BranchesControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
    /**
     * Control ID.
     */
-   public static final String ID = "Git/Push";
+   public static final String ID = "Git/Branches";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Push";
+   public static final String TITLE = "Branches...";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Push changes to remote repository.";
-   
-   
-   public PushToRemoteControl()
+   public static final String PROMPT = "Work with branches";
+
+   public BranchesControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(GitClientBundle.INSTANCE.push(), GitClientBundle.INSTANCE.pushDisabled());
-      setEvent(new PushToRemoteEvent());
-      setDelimiterBefore(true);
+      setEvent(new ShowBranchesEvent());
    }
-
 
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
@@ -72,7 +68,6 @@ public class PushToRemoteControl extends SimpleControl implements IDEControl, It
       setVisible(true);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
-
 
    /**
     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)

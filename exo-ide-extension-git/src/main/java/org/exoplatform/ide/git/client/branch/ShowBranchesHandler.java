@@ -16,44 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.marshaller;
+package org.exoplatform.ide.git.client.branch;
 
-import org.exoplatform.ide.git.shared.Status;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * The bean representing a status of the working tree (changed, untracked files).
+ * Handler for {@link ShowBranchesEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 11:02:10 AM anya $
+ * @version $Id:  Apr 8, 2011 12:13:12 PM anya $
  *
  */
-public class StatusResponse extends Status
+public interface ShowBranchesHandler extends EventHandler
 {
    /**
-    * The string notion of the GIT work tree status.
-    * It contains the information of the modified, added, deleted files.
-    * Example for short format:<br>
-    *   <pre>
-    *   M README.txt
-    *   A  test/abc/
-    *   </pre>
+    * Perform actions, when user tries to view the branches of the repository.
+    * 
+    * @param event
     */
-   private String workTreeStatus;
-
-   /**
-    * @return the workTreeStatus
-    */
-   public String getWorkTreeStatus()
-   {
-      return workTreeStatus;
-   }
-
-   /**
-    * @param workTreeStatus the workTreeStatus to set
-    */
-   public void setWorkTreeStatus(String workTreeStatus)
-   {
-      this.workTreeStatus = workTreeStatus;
-   }
-
+   void onShowBranches(ShowBranchesEvent event);
 }

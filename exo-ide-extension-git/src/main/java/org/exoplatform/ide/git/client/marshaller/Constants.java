@@ -35,6 +35,14 @@ public interface Constants
    
    public static final String COMMITTER = "committer";
    
+   public static final String CREATE_NEW = "createNew";
+   
+   public static final String  CHANGED_NOT_COMMITED = "changedNotCommited";
+   
+   public static final String  CHANGED_NOT_UPDATED= "changedNotUpdated";
+   
+   public static final String UNTRACKED = "untracked";
+   
    public static final String EMAIL = "email";
    
    public static final String NAME = "name";
@@ -52,6 +60,8 @@ public interface Constants
    public static final String MESSAGE = "message";
    
    public static final String REMOTE = "remote";
+   
+   public static final String PATH = "path";
 
    public static final String REMOTE_URI = "remoteUri";
    
@@ -60,6 +70,10 @@ public interface Constants
    public static final String REF_SPEC = "refSpec";
    
    public static final String SHORT_FORMAT = "shortFormat";
+   
+   public static final String START_POINT = "startPoint";
+   
+   public static final String STATUS = "status";
    
    public static final String FILE_FILTER = "fileFilter";
    

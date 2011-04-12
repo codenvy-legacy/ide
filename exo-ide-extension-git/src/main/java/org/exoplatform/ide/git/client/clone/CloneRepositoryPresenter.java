@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -104,6 +105,8 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
    private Display display;
 
    private HandlerManager eventBus;
+   
+   private static final String DEFAULT_REPO_NAME = "origin";
 
    /**
     * Selected items in browser tree.
@@ -174,6 +177,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
       IDE.getInstance().openView((ViewEx)d);
       bindDisplay(d);
       display.getWorkDirValue().setValue(selectedItems.get(0).getHref(), true);
+      display.getRemoteNameValue().setValue(DEFAULT_REPO_NAME);
       display.enableCloneButton(false);
    }
 
@@ -202,6 +206,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
          protected void onSuccess(String result)
          {
             Dialogs.getInstance().showInfo("Clone remote repository", Messages.CLONE_SUCCESS);
+            eventBus.fireEvent(new RefreshBrowserEvent());
          }
 
          @Override
