@@ -339,6 +339,19 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          HidePanelEvent hidePanelEvent = new HidePanelEvent(panelId);
          hidePanelHandler.onHidePanel(hidePanelEvent);
       }
+      
+      updateViewTabIndex();
+   }
+   
+   private void updateViewTabIndex() {
+      int tabs = tabPanel.getTabBar().getTabCount();
+      for (int i = 0; i < tabs; i++) {
+         String viewId = tabPanel.getTabIdByIndex(i);
+
+         ViewEx view = views.get(viewId);
+         Widget viewWidget = (Widget)view;
+         DOM.setElementAttribute(viewWidget.getElement(), "tab-index", "" + i);
+      }
    }
 
    private CloseTabHandler closeTabHandler = new CloseTabHandler()
@@ -533,6 +546,14 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
       final ViewController controller = new ViewController(view, viewWrapper);
       viewControllers.put(view.getId(), controller);
       tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, view.hasCloseButton());
+      
+      /*
+       * Set element attribute "panel-id" which is points to Panel with this ID.
+       */
+      if (view instanceof Widget) {
+         Widget viewWidget = (Widget)view;
+         DOM.setElementAttribute(viewWidget.getElement(), "panel-id", panelId);
+      }
 
       // add handlers to view
       if (view instanceof HasChangeViewTitleHandler)
@@ -556,6 +577,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          viewOpenedHandler.onViewOpened(viewOpenedEvent);
       }
 
+      updateViewTabIndex();
       tabPanel.selectTab(view.getId());
    }
 
