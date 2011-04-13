@@ -1,0 +1,71 @@
+ <?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns">
+    <head>
+        <!-- Widget Infos -->
+        <title>Sample blog post widget</title>
+        <meta name="author" content="Exposition Libraries" />
+        <meta name="description" content="Displays latest post from a feed" />
+        <meta name="apiVersion" content="1.2" />
+        <meta name="debugMode" content="true" />
+        <!-- UWA Environment -->
+        <link rel="stylesheet" type="text/css" href="http://uwa.preview.netvibes.com/css/lib/UWA/standalone.css" />
+        <script type="text/javascript"> var UWA_SERVER = 'http://uwa.preview.netvibes.com'; </script>
+        <script type="text/javascript" src="http://uwa.preview.netvibes.com/js/c/UWA/UWA_Standalone.js?v=preview3"></script>
+        <!-- Widget Preferences -->
+        <widget:preferences>
+          <preference type="text" name="feed_url" label="RSS/Atom feed to use" defaultValue="http://feeds.feedburner.com/NetvibesDevBlog" />
+
+        </widget:preferences>
+
+        <!-- Widget Styles -->
+        <style type="text/css">
+        </style>
+
+        <!-- Widget Source -->
+        <script type="text/javascript">
+        //<![CDATA[
+
+            /*
+                We create the global MyWidget object (it could be any other name).
+                This object will be used to store variables and function.
+            */
+            var MyWidget = {
+
+                /*
+                    The onLoad() function is the first one, triggered by widget.onLoad.
+                */
+                onLoad: function() {
+                    UWA.Data.getFeed(widget.getValue('feed_url'), MyWidget.displayFeed);
+                },
+
+                /*
+                    The displayFeed() function is call be UWA.Data.getFeed when feed is loaded.
+                */
+                displayFeed: function(feed) {
+
+                    widget.setTitle('<a href="' + feed.htmlUrl + '">' + feed.title + '</a>');
+                    widget.setIcon(feed.htmlUrl);
+                    var latestPost = feed.items[0],
+                       contentHtml = '<h2><a href="' + latestPost.link + '">' + latestPost.title + '</a></h2>'
+                                    + 'Posted on ' + latestPost.date + '<br />'
+                                    + latestPost.content
+                                    + '<em>Read all the previous posts by '
+                                   + '<a href="' + feed.htmlUrl + '">visiting the blog</a>!</em>';
+
+                    widget.setBody(contentHtml);
+                }
+            }
+
+            /*
+                widget.onLoad() is the very first function triggered when the widget is loaded.
+                Here, we make it trigger the MyWidget.onLoad() method.
+            */
+            widget.onLoad = MyWidget.onLoad;
+        //]]>
+
+        </script>
+    </head>
+    <body>
+        <p>Loading...</p>
+    </body>
+</html>

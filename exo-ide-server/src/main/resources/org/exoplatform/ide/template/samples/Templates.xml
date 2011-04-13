@@ -33,6 +33,20 @@
    </template>
    <!-- base file templates -->
    <template>
+      <name>xml-file.xml</name>
+      <description>Create empty XML file.</description>
+      <type>file</type>
+      <src>base/xml-file.xml</src>
+      <mime-type>application/xml</mime-type>
+   </template>
+   <template>
+      <name>text-file.txt</name>
+      <description>Create empty TXT file.</description>
+      <type>file</type>
+      <src>base/text-file.txt</src>
+      <mime-type>text/plain</mime-type>
+   </template>
+   <template>
       <name>chromattic-do.groovy</name>
       <description>Sample of Chromattic data object</description>
       <type>file</type>
@@ -86,7 +100,7 @@
    </template>
    <template>
       <name>SampleChartWidget.html</name>
-      <description>Netvibes Widget Tabview</description>
+      <description>Netvibes Widget Chart</description>
       <type>file</type>
       <src>netvibes/SampleChartWidget.html</src>
       <mime-type>application/x-uwa-widget</mime-type>
@@ -103,6 +117,13 @@
       <description>Netvibes Widget Tabview</description>
       <type>file</type>
       <src>netvibes/SampleTabbedWidget.html</src>
+      <mime-type>application/x-uwa-widget</mime-type>
+   </template>
+   <template>
+      <name>SampleW3CWidget.html</name>
+      <description>Netvibes Widget W3C</description>
+      <type>file</type>
+      <src>netvibes/SampleW3CWidget.html</src>
       <mime-type>application/x-uwa-widget</mime-type>
    </template>
 </templates>
