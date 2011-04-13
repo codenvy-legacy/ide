@@ -32,10 +32,22 @@ public class TemplateDescription
    
    private String description;
    
+   /**
+    * Only for file templates.
+    */
+   private String mimeType;
+   
    public TemplateDescription(String name, String description)
    {
       this.name = name;
       this.description = description;
+   }
+   
+   public TemplateDescription(String name, String description, String mimeType)
+   {
+      this.name = name;
+      this.description = description;
+      this.mimeType = mimeType;
    }
    
    /**
@@ -56,6 +68,15 @@ public class TemplateDescription
    public String getDescription()
    {
       return description;
+   }
+   
+   /**
+    * Get the mime type of file template.
+    * @return the mimeType
+    */
+   public String getMimeType()
+   {
+      return mimeType;
    }
 
 }

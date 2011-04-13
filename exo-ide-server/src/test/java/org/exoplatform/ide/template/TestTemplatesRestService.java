@@ -89,12 +89,32 @@ public class TestTemplatesRestService extends BaseTest
       assertTrue(cres.getEntity() instanceof List<?>);
       
       List<?>templates = (List<?>)cres.getEntity();
-      assertEquals(3, templates.size());
+      assertEquals(5, templates.size());
       for (Object obj : templates)
       {
          assertTrue(obj instanceof TemplateDescription);
       }
       
+   }
+   
+   @Test
+   public void testCreateEmptyProject() throws Exception
+   {
+      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+      
+      headers.add("template-name", "new-project");
+      
+      headers.add("type", "project");
+      
+      headers.add("location", "http://localhost/jcr/db1/dev-monit/newProject");
+      
+      ContainerResponse cres =
+         launcher.service("GET", "/ide/templates/create", "http://localhost", headers, null, null, null);
+      
+      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
+      
+      Node rootNode = session.getRootNode();
+      assertTrue(rootNode.hasNode("newProject"));
    }
    
    /**

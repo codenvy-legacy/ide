@@ -18,8 +18,18 @@
  */
 package org.exoplatform.ide.client.project;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -49,8 +59,8 @@ import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateDeletedCallback;
 import org.exoplatform.ide.client.model.template.TemplateList;
+import org.exoplatform.ide.client.model.template.TemplateNative;
 import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
@@ -59,18 +69,8 @@ import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntr
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
 import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathEvent;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -152,19 +152,14 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       void setNameFieldEnabled(boolean enabled);
 
    }
-   
-   private String baseHref;
-   
-   
-   protected Display display;
-   
-   
-   protected HandlerManager eventBus;
-   
-   private List<File> fileList = new ArrayList<File>();
-   
-   
 
+   private String baseHref;
+
+   protected Display display;
+
+   protected HandlerManager eventBus;
+
+   private List<File> fileList = new ArrayList<File>();
 
    private List<FileTemplate> fileTemplates = new ArrayList<FileTemplate>();
 
@@ -181,13 +176,9 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     */
    protected List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
 
-   
-
    private String restServiceContext;
 
    private List<Item> selectedItems = new ArrayList<Item>();
-
-   
 
    /**
     * The list of templates, that selected in list of templates.
@@ -213,7 +204,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    {
       folderList.clear();
       fileList.clear();
-      
+
       /*
        * If name field is empty - disable create button
        */
@@ -379,7 +370,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
       deleteTemplate(selectedTemplates.get(0));
    }
-   
+
    /**
     * Executes, when delete button pressed.
     * Show ask dialog.
@@ -416,7 +407,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          }
       });
    }
-   
+
    /**
     * Call template service to delete template.
     * If success, call method, that will delete next template from selected list.
@@ -434,26 +425,69 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          }
       });
    }
-   
+
    /**
     * Call, when create button pressed (or when double clicked on template).
     * Create new instance of selected template.
     */
    public void doCreateProjectFromTemplate()
    {
-      String projectName = display.getNameField().getValue();
+      final String projectName = display.getNameField().getValue();
 
       ProjectTemplate selectedTemplate = selectedTemplates.get(0);
 
-      FileTemplate classPathTemplate = new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
-      selectedTemplate.getChildren().add(classPathTemplate);
+      final FileTemplate classPathTemplate =
+         new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
 
-      build(selectedTemplate.getChildren(), baseHref + projectName + "/");
-      projectFolder = new Folder(baseHref + projectName + "/");
-      fileList.add(getClasspathFile(baseHref + projectName + "/"));
+      /*
+       * if project template was created by user, than
+       * it is stored in registry and must be created by client
+       */
+      if (!selectedTemplate.isDefault())
+      {
+         selectedTemplate.getChildren().add(classPathTemplate);
+         build(selectedTemplate.getChildren(), baseHref + projectName + "/");
+         projectFolder = new Folder(baseHref + projectName + "/");
+         fileList.add(getClasspathFile(baseHref + projectName + "/"));
 
-      createFolder(projectFolder);
+         createFolder(projectFolder);
+      }
+      else
+      {
+         final String href = encodeURI(baseHref + projectName);
+         TemplateService.getInstance().createProject(selectedTemplate.getName(), href,
+            new AsyncRequestCallback<String>()
+            {
+
+               @Override
+               protected void onSuccess(String result)
+               {
+                  //create .groovyclasspath file
+                  File newFile = getClasspathFile(baseHref + projectName + "/");
+                  
+                  VirtualFileSystem.getInstance().saveContent(newFile, null, new FileContentSaveCallback()
+                  {
+                     @Override
+                     protected void onSuccess(FileData result)
+                     {
+                        projectFolder = new Folder(baseHref + projectName + "/");
+                        finishProjectCreation();
+                     }
+                  });
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
    }
+
+   public static native String encodeURI(String url) /*-{
+                                                     return encodeURI(url);
+                                                     }-*/;
 
    /**
     * Do actions when project is created.
@@ -461,7 +495,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    private void finishProjectCreation()
    {
       IDE.getInstance().closeView(Display.ID);
-      
+
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
       eventBus.fireEvent(new ConfigureBuildPathEvent(projectFolder.getHref()));
    }
@@ -531,7 +565,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          itemsCreated++;
          return;
       }
-      
+
       if (fileList.size() == 0)
       {
          finishProjectCreation();
@@ -541,7 +575,6 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       saveFileContent(fileList.get(0));
       itemsCreated = 1;
    }
-
 
    /**
     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
@@ -559,7 +592,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       {
          display = null;
       }
-   }   
+   }
 
    /**
     * Refresh List of the templates, after deleting
@@ -578,13 +611,34 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          @Override
          protected void onSuccess(TemplateList result)
          {
-            splitFileAndProjectTemplates(result.getTemplates());
-
-            display.getTemplateListGrid().setValue(projectTemplates);
-            if (projectTemplates != null && projectTemplates.size() > 0)
+            final List<Template> templateList = result.getTemplates();
+            //get default project templates
+            TemplateService.getInstance().getTemplateList("project", new AsyncRequestCallback<List<TemplateNative>>()
             {
-               display.selectLastTemplate();
-            }
+
+               @Override
+               protected void onSuccess(List<TemplateNative> result)
+               {
+                  for (TemplateNative tempNative : result)
+                  {
+                     templateList.add(new ProjectTemplate(tempNative.getName(), tempNative.getDescription(), true));
+                  }
+                  splitFileAndProjectTemplates(templateList);
+
+                  display.getTemplateListGrid().setValue(projectTemplates);
+                  if (projectTemplates != null && projectTemplates.size() > 0)
+                  {
+                     display.selectLastTemplate();
+                  }
+
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
          }
       });
    }
@@ -602,7 +656,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
                itemsCreated++;
                return;
             }
-            
+
             finishProjectCreation();
          }
       });
@@ -615,14 +669,13 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     */
    private void splitFileAndProjectTemplates(List<Template> templateList)
    {
+      this.projectTemplates.clear();
+      this.fileTemplates.clear();
+
       if (templateList == null)
       {
-         templateList = TemplateServiceImpl.getDefaultTemplates().getTemplates();
+         return;
       }
-      
-      this.projectTemplates.clear();
-      this.fileTemplates.clear();      
-
       for (Template template : templateList)
       {
          if (template instanceof ProjectTemplate)

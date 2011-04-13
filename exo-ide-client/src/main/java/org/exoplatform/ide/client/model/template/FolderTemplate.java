@@ -47,6 +47,11 @@ public class FolderTemplate extends Template
       this.children = children;
    }
    
+   public FolderTemplate(String name, String description, boolean isDefault)
+   {
+      super(name, description, isDefault);
+   }
+   
    /**
     * @return children on template
     */

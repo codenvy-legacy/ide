@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -35,14 +34,18 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
+import org.exoplatform.ide.client.model.template.TemplateNative;
+import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler;
 import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
 import org.exoplatform.ide.client.template.ui.CreateFileFromTemplateForm;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -114,12 +117,50 @@ public class TemplateCommandHandler implements CreateFileFromTemplateHandler, It
     */
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
    {
-      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
-      CreateFileFromTemplatePresenter createFilePresenter =
-         new CreateFileFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), openedFiles);
-      CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
-         new CreateFileFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createFilePresenter);
-      createFilePresenter.bindDisplay(createFileDisplay);
+      final TemplateList defaultTemplates = new TemplateList();
+//      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
+      TemplateService.getInstance().getTemplateList("file", new AsyncRequestCallback<List<TemplateNative>>()
+         {
+
+            @Override
+            protected void onSuccess(List<TemplateNative> result)
+            {
+               for (TemplateNative tn : result)
+               {
+                  defaultTemplates.getTemplates().add(new FileTemplate(
+                     tn.getName(), tn.getDescription(), tn.getMimeType(), true));
+               }
+               
+               TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
+                  {
+
+                     @Override
+                     protected void onSuccess(TemplateList result)
+                     {
+                        defaultTemplates.getTemplates().addAll(result.getTemplates());
+                        CreateFileFromTemplatePresenter createFilePresenter =
+                           new CreateFileFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), openedFiles);
+                        CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
+                           new CreateFileFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createFilePresenter);
+                        createFilePresenter.bindDisplay(createFileDisplay);
+                     }
+
+                     @Override
+                     protected void onFailure(Throwable exception)
+                     {
+                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                     }
+                  });
+               
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+      
       /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
        {
           

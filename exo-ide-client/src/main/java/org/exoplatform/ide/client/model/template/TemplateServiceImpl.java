@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshalle
 import org.exoplatform.ide.client.model.template.marshal.TemplateMarshaller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 
 public class TemplateServiceImpl extends TemplateService
 {
+   private static final String TEMPLATE_REST_URL = "/ide/templates";
 
    private interface DefaultFileTemplates
    {
@@ -77,12 +79,16 @@ public class TemplateServiceImpl extends TemplateService
    private HandlerManager eventBus;
 
    private Loader loader;
+   
+   private String restServiceContext;
 
-   public TemplateServiceImpl(HandlerManager eventBus, Loader loader, String restContext)
+   public TemplateServiceImpl(HandlerManager eventBus, Loader loader, String restContext, 
+      String restServiceContext)
    {
       this.eventBus = eventBus;
       this.loader = loader;
       this.restContext = restContext;
+      this.restServiceContext = restServiceContext;
 
    }
 
@@ -114,8 +120,8 @@ public class TemplateServiceImpl extends TemplateService
    public void getTemplates(AsyncRequestCallback<TemplateList> callback)
    {
       String url = restContext + CONTEXT + "/?noCache=" + Random.nextInt();
-      TemplateList templateList = getDefaultTemplates();
-
+      TemplateList templateList = new TemplateList();
+      
       TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
       int[] acceptStatus = new int[]{HTTPStatus.OK, HTTPStatus.NOT_FOUND};
 
@@ -124,6 +130,50 @@ public class TemplateServiceImpl extends TemplateService
       callback.setPayload(unmarshaller);
       callback.setSuccessCodes(acceptStatus);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   }
+   
+   @Override
+   public void getTemplateList(String type, AsyncRequestCallback<List<TemplateNative>> callback)
+   {
+      List<TemplateNative> templateList = new ArrayList<TemplateNative>();
+      callback.setResult(templateList);
+      
+      DefaultTemplatesUnmarshaller unmarshal =
+         new DefaultTemplatesUnmarshaller(templateList);
+      
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshal);
+      
+      final String url = restServiceContext + TEMPLATE_REST_URL + "/list";
+      
+      AsyncRequest.build(RequestBuilder.GET, url, loader)
+      .header("type", type).send(callback);
+   }
+   
+   @Override
+   public void createProject(String templateName, String location, AsyncRequestCallback<String> callback)
+   {
+      final String url = restServiceContext + TEMPLATE_REST_URL + "/create";
+      
+      callback.setResult(url);
+      
+      AsyncRequest.build(RequestBuilder.GET, url, loader)
+      .header("type", "project").header("template-name", templateName)
+      .header("location", location).send(callback);
+   }
+   
+   @Override
+   public void getFileContent(String templateName, AsyncRequestCallback<String> callback)
+   {
+      final String url = restServiceContext + TEMPLATE_REST_URL + "/file-content";
+
+      TemplateContentUnmarshaller unmarshal = new TemplateContentUnmarshaller(callback);
+      
+      callback.setPayload(unmarshal);
+      
+      AsyncRequest.build(RequestBuilder.GET, url, loader)
+      .header("template-name", templateName)
+      .send(callback);
    }
 
    public static TemplateList getDefaultTemplates()
@@ -179,8 +229,8 @@ public class TemplateServiceImpl extends TemplateService
       templateList.getTemplates().add(createPojoForSampleProject());
       templateList.getTemplates().add(createChromatticForSampleProject());
 
-      templateList.getTemplates().add(getSampleProject());
-      templateList.getTemplates().add(getEmptyProject());
+//      templateList.getTemplates().add(getSampleProject());
+//      templateList.getTemplates().add(getEmptyProject());
       return templateList;
    }
 
@@ -313,4 +363,5 @@ public class TemplateServiceImpl extends TemplateService
 
       return template;
    }
+   
 }

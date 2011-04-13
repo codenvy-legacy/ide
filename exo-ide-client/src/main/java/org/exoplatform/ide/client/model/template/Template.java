@@ -33,6 +33,13 @@ public abstract class Template
    private String description;
    
    private String nodeName;
+   
+   /**
+    * If template is default, than it must be created by server.
+    * If not default (user template), than it must be crated
+    * by client.
+    */
+   private boolean isDefault;
 
    public Template()
    {
@@ -49,6 +56,29 @@ public abstract class Template
       this.name = name;
       this.description = description;
       this.nodeName = nodeName;
+   }
+   
+   public Template(String name, String description, boolean isDefault)
+   {
+      this.name = name;
+      this.description = description;
+      this.isDefault = isDefault;
+   }
+   
+   /**
+    * @return the isDefault
+    */
+   public boolean isDefault()
+   {
+      return isDefault;
+   }
+   
+   /**
+    * @param isDefault the isDefault to set
+    */
+   public void setDefault(boolean isDefault)
+   {
+      this.isDefault = isDefault;
    }
 
    /**

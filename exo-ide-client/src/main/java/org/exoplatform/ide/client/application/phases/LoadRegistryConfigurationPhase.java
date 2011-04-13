@@ -75,7 +75,8 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
          new ConversationServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext());
 
          new TemplateServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL() + "/"
-            + RegistryConstants.EXO_APPLICATIONS + "/" + IDEConfigurationLoader.APPLICATION_NAME);
+            + RegistryConstants.EXO_APPLICATIONS + "/" + IDEConfigurationLoader.APPLICATION_NAME,
+            applicationConfiguration.getContext());
          
          new LoadUserInfoPhase(eventBus, applicationConfiguration, controls);
       }

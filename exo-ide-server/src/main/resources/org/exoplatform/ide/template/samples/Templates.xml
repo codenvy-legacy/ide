@@ -2,6 +2,18 @@
 <templates>
    <!-- project templates -->
    <template>
+      <name>new-project</name>
+      <description>Empty Project</description>
+      <type>project</type>
+      <src>org/exoplatform/ide/template/samples/empty</src>
+   </template>
+   <template>
+      <name>ide-project</name>
+      <description>Sample project with REST script and Google Gadget</description>
+      <type>project</type>
+      <src>org/exoplatform/ide/template/samples/ide</src>
+   </template>
+   <template>
       <name>linkedin-contacts-project</name>
       <description>Linkedin Contacts Demo Project</description>
       <type>project</type>

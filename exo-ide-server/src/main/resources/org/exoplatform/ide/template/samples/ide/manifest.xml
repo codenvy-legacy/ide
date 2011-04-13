@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+   <name>ide-project</name>
+   <items>
+      <folder>
+         <name>data</name>
+         <items>
+            <file>
+               <name>Pojo.groovy</name>
+               <src>data/Pojo.groovy</src>
+               <mime-type>application/x-groovy</mime-type>
+            </file>
+            <file>
+               <name>DataObject.groovy</name>
+               <src>data/DataObject.groovy</src>
+               <mime-type>application/x-chromattic+groovy</mime-type>
+            </file>
+         </items>
+      </folder>
+      <folder>
+         <name>logic</name>
+         <items>
+            <file>
+               <name>GreetingRESTService.grs</name>
+               <src>logic/GreetingRESTService.grs</src>
+               <mime-type>application/x-jaxrs+groovy</mime-type>
+               <jcr-content-node-type>exo:groovyResourceContainer</jcr-content-node-type>
+            </file>
+         </items>
+      </folder>
+      <folder>
+         <name>UI</name>
+         <items>
+            <file>
+               <name>GreetingGoogleGadget.xml</name>
+               <src>UI/GreetingGoogleGadget.xml</src>
+               <mime-type>application/x-google-gadget</mime-type>
+               <jcr-content-node-type>exo:googleGadget</jcr-content-node-type>
+            </file>
+         </items>
+      </folder>
+   </items>
+</project>

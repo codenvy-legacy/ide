@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.model.template;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -30,7 +31,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 
 public abstract class TemplateService
 {
-
    private static TemplateService instance;
 
    public static TemplateService getInstance()
@@ -59,5 +59,11 @@ public abstract class TemplateService
     * @param callback
     */
    public abstract void deleteTemplate(Template template, TemplateDeletedCallback callback);
+
+   public abstract void getTemplateList(String type, AsyncRequestCallback<List<TemplateNative>> callback);
+   
+   public abstract void createProject(String templateName, String location, AsyncRequestCallback<String> callback);
+   
+   public abstract void getFileContent(String templateName, AsyncRequestCallback<String> callback);
 
 }

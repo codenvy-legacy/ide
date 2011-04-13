@@ -49,6 +49,11 @@ public class ProjectTemplate extends FolderTemplate
       super(name, description, nodeName, templates);
    }
    
+   public ProjectTemplate(String name, String description, boolean isDefault)
+   {
+      super(name, description, isDefault);
+   }
+   
    /**
     * @see org.exoplatform.ide.client.model.template.Template#getIcon()
     */

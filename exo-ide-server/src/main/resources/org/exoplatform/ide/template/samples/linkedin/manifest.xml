@@ -72,10 +72,5 @@
          <src>cache.manifest</src>
          <mime-type>text/plain</mime-type>
       </file>
-      <file>
-         <name>.groovyclasspath</name>
-         <src>.groovyclasspath</src>
-         <mime-type>application/json</mime-type>
-      </file>
    </items>
 </project>

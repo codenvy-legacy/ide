@@ -30,9 +30,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +78,7 @@ import javax.xml.parsers.ParserConfigurationException;
 public class TemplatesRestService
 {
    private static final String TEMPLATES_PATH = "org/exoplatform/ide/template/samples";
-   
+
    private static final String TEMPLATES_FILE = "Templates.xml";
 
    public static final String WEBDAV_SCHEME = "jcr-webdav";
@@ -151,7 +156,7 @@ public class TemplatesRestService
 
       return templateDescList;
    }
-   
+
    /**
     * Create the project or file from one of sample templates.
     * 
@@ -312,8 +317,75 @@ public class TemplatesRestService
 
    }
 
+   @GET
+   @Path("/file-content")
+   public String getFileTemplateContent(@Context UriInfo uriInfo, @HeaderParam("template-name") String templateName) throws TemplateServiceException
+   {
+      try
+      {
+         Node node = getFileTemplateNode(templateName);
+
+         if (node == null)
+         {
+            throw new TemplateServiceException("Can't find file template" + templateName);
+         }
+
+         String src = null;
+
+         NodeList nodeList = node.getChildNodes();
+
+         for (int i = 0; i < nodeList.getLength(); i++)
+         {
+            Node childNode = nodeList.item(i);
+            if (childNode.getNodeName().equals("src"))
+            {
+               src = childNode.getChildNodes().item(0).getNodeValue();
+            }
+         }
+
+         InputStream fileData =
+            Thread.currentThread().getContextClassLoader().getResourceAsStream(TEMPLATES_PATH + "/" + src);
+         if (fileData != null) {
+            Writer writer = new StringWriter();
+ 
+            char[] buffer = new char[1024];
+            try {
+                Reader reader = new BufferedReader(
+                        new InputStreamReader(fileData, "UTF-8"));
+                int n;
+                while ((n = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, n);
+                }
+            } finally {
+               fileData.close();
+            }
+            return writer.toString();
+        } else {       
+            return "";
+        }
+      }
+      catch (ParserConfigurationException e)
+      {
+         if (log.isDebugEnabled())
+            e.printStackTrace();
+         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (SAXException e)
+      {
+         if (log.isDebugEnabled())
+            e.printStackTrace();
+         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+      catch (IOException e)
+      {
+         if (log.isDebugEnabled())
+            e.printStackTrace();
+         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+      }
+   }
+
    //--------- Implementation -----------------------
-   
+
    /**
     * Find file template node by name in <code>Templates.xml</code> file
     * @param templateName
@@ -343,7 +415,7 @@ public class TemplatesRestService
 
       return null;
    }
-   
+
    private void createFileFromTemplate(Session session, Node node, String location, String templateSource,
       String fileName) throws PathNotFoundException, RepositoryException
    {
@@ -395,8 +467,8 @@ public class TemplatesRestService
       /*
        * Source of file which containts information about all default templates
        */
-      InputStream templatesStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(TEMPLATES_PATH 
-         + "/" + TEMPLATES_FILE);
+      InputStream templatesStream =
+         Thread.currentThread().getContextClassLoader().getResourceAsStream(TEMPLATES_PATH + "/" + TEMPLATES_FILE);
 
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
@@ -499,7 +571,7 @@ public class TemplatesRestService
 
       return name;
    }
-   
+
    private TemplateDescription getTemplateDescription(Node node, String type)
    {
       NodeList nodeList = node.getChildNodes();
@@ -507,8 +579,10 @@ public class TemplatesRestService
       String typeNode = null;
 
       String name = null;
-      
+
       String description = null;
+
+      String mimeType = null;
 
       for (int i = 0; i < nodeList.getLength(); i++)
       {
@@ -522,17 +596,22 @@ public class TemplatesRestService
          {
             typeNode = childNode.getChildNodes().item(0).getNodeValue();
          }
-         
+
          if (childNode.getNodeName().equals("description"))
          {
             description = childNode.getChildNodes().item(0).getNodeValue();
+         }
+
+         if (childNode.getNodeName().equals("mime-type"))
+         {
+            mimeType = childNode.getChildNodes().item(0).getNodeValue();
          }
       }
 
       if (!typeNode.equals(type))
          return null;
 
-      return new TemplateDescription(name, description);
+      return new TemplateDescription(name, description, mimeType);
    }
 
    /**
@@ -658,6 +737,7 @@ public class TemplatesRestService
    private void createFile(Session session, Node node, String location, String templateSource)
       throws PathNotFoundException, RepositoryException
    {
+
       String name = null;
       String src = null;
       String mimeType = null;
@@ -735,17 +815,20 @@ public class TemplatesRestService
          location += "/" + projectName;
       }
 
-      NodeList childNodeList = templateDoc.getElementsByTagName("items").item(0).getChildNodes();
-      for (int i = 0; i < childNodeList.getLength(); i++)
+      if (templateDoc.getElementsByTagName("items").item(0) != null)
       {
-         Node child = childNodeList.item(i);
-         if ("folder".equals(child.getNodeName()))
+         NodeList childNodeList = templateDoc.getElementsByTagName("items").item(0).getChildNodes();
+         for (int i = 0; i < childNodeList.getLength(); i++)
          {
-            createFolder(session, child, location, templateSource);
-         }
-         if ("file".equals(child.getNodeName()))
-         {
-            createFile(session, child, location, templateSource);
+            Node child = childNodeList.item(i);
+            if ("folder".equals(child.getNodeName()))
+            {
+               createFolder(session, child, location, templateSource);
+            }
+            if ("file".equals(child.getNodeName()))
+            {
+               createFile(session, child, location, templateSource);
+            }
          }
       }
       session.save();
