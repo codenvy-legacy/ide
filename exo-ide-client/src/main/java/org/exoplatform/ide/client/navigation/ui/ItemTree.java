@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -58,6 +64,22 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    {
       getElement().setId(id);
       this.prefixId = prefixId + "-";
+      tree.addCloseHandler(new CloseHandler<TreeItem>()
+      {
+
+         @Override
+         public void onClose(CloseEvent<TreeItem> event)
+         {
+            // Close event don't remove child TtreeItem, just set display:node CSS property
+            // so for Selenium test remove id attribute in invisible TreeItem, and remove all child TreeItem
+            TreeItem treeItem = event.getTarget();
+            for(int i = 0; i< treeItem.getChildCount(); i++)
+            {
+               treeItem.getChild(i).getElement().removeAttribute("id");
+               treeItem.getChild(i).removeItems();
+            }
+         }
+      });
    }
 
    @Override
