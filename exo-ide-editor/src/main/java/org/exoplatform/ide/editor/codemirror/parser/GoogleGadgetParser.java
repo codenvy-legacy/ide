@@ -68,7 +68,7 @@ public class GoogleGadgetParser extends CodeMirrorParserImpl
       // recognize CDATA close tag "]]>" within the CDATA content
       else if (XmlParser.isCDATACloseNode(nodeContent) && !MimeType.TEXT_XML.equals(currentContentMimeType))
       {
-         currentToken = XmlParser.addTagBreak(lineNumber, currentToken, MimeType.TEXT_XML);
+         currentToken = XmlParser.closeTag(lineNumber, currentToken);
 
          currentContentMimeType = MimeType.TEXT_XML;
          CodeMirrorParserImpl.getParser(currentContentMimeType).init();

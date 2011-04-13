@@ -3,53 +3,27 @@
 	"type" : "TAG",
 	"subTokenList" : [ {
 		"name" : "display-name",
-		"type" : "TAG",
-		"subTokenList" : [ {
-			"name" : null,
-			"type" : "TAG_BREAK"
-		} ]
+		"type" : "TAG"
 	}, {
 		"name" : "context-param",
 		"type" : "TAG",
 		"subTokenList" : [ {
 			"name" : "param-name",
-			"type" : "TAG",
-			"subTokenList" : [ {
-				"name" : null,
-				"type" : "TAG_BREAK"
-			} ]
+			"type" : "TAG"
 		}, {
 			"name" : "param-value",
-			"type" : "TAG",
-			"subTokenList" : [ {
-				"name" : null,
-				"type" : "TAG_BREAK"
-			} ]
-		}, {
-			"name" : null,
-			"type" : "TAG_BREAK"
-		} ]
+			"type" : "TAG"
+		}]
 	}, {
 		"name" : "context-param",
 		"type" : "TAG",
 		"subTokenList" : [ {
 			"name" : "param-name",
-			"type" : "TAG",
-			"subTokenList" : [ {
-				"name" : null,
-				"type" : "TAG_BREAK"
-			} ]
+			"type" : "TAG"
 		}, {
 			"name" : "param-value",
-			"type" : "TAG",
-			"subTokenList" : [ {
-				"name" : null,
-				"type" : "TAG_BREAK"
-			} ]
-		}, {
-			"name" : null,
-			"type" : "TAG_BREAK"
-		} ]
+			"type" : "TAG"
+		}]
 	}, {
 		"name" : "CDATA",
 		"type" : "CDATA"
@@ -58,24 +32,10 @@
 		"type" : "TAG",
 		"subTokenList" : [ {
 			"name" : "filter-name",
-			"type" : "TAG",
-			"subTokenList" : [ {
-				"name" : null,
-				"type" : "TAG_BREAK"
-			} ]
+			"type" : "TAG"
 		}, {
 			"name" : "filter-class",
-			"type" : "TAG",
-			"subTokenList" : [ {
-				"name" : null,
-				"type" : "TAG_BREAK"
-			} ]
-		}, {
-			"name" : null,
-			"type" : "TAG_BREAK"
-		} ]
-	}, {
-		"name" : null,
-		"type" : "TAG_BREAK"
-	} ]
+			"type" : "TAG"
+		}]
+	}]
 } ]

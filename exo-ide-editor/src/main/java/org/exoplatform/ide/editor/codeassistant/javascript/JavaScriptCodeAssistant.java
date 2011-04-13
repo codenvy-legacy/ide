@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -324,37 +325,6 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
          tokenToComplete = tokenLine;
       }
 
-   }
-
-   /**
-    * @param tokenFromParser
-    */
-   @SuppressWarnings("unchecked")
-   private List<Token> getTokenJavaScript(List<Token> tokenFromParser)
-   {
-      List<Token> tokens = new ArrayList<Token>();
-
-      String tagName = "script";
-
-      for (int i = 0; i < tokenFromParser.size(); i++)
-      {
-         Token token = tokenFromParser.get(i);
-         if (token.getName() == null)
-            continue;
-
-         if (token.getName().equals(tagName))
-         {
-            tokens.addAll(token.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue());
-         }
-         else if (token.hasProperty(TokenProperties.SUB_TOKEN_LIST)
-            && token.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
-         {
-            tokens.addAll(getTokenJavaScript((List<Token>)token.getProperty(TokenProperties.SUB_TOKEN_LIST)
-               .isArrayProperty().arrayValue()));
-         }
-      }
-
-      return tokens;
    }
 
    private void printTokens(List<? extends Token> tokens, int i)

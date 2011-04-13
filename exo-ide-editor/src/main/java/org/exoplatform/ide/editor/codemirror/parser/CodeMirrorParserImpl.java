@@ -126,15 +126,14 @@ public class CodeMirrorParserImpl extends Parser
     * Recognize mimeType of line with lineNumber.  
     * @param targetLineNumber
     * @param tokenList
-    * @return Returns mimeType of closes token.START_DELIMITER with token.lineNumber <= lineNumber. If there is no such START_DELIMITER in the tokenList, then returns mimeType of last token.FINISH_DELIMITER with token.lineNumber > lineNumber, or MimeType of firstToken, or null if TokenList is empty.
+    * @return 
     */
    public static String getLineMimeType(int targetLineNumber, List<TokenBeenImpl> tokenList)
    {
       if (tokenList == null || tokenList.size() == 0)
          return null;
 
-      possibleMimeType = tokenList.get(0).getMimeType();
-      nearestTokenLineNumber = tokenList.get(0).getLineNumber();
+      possibleMimeType = null;
 
       for (TokenBeenImpl token : tokenList)
       {
@@ -149,6 +148,18 @@ public class CodeMirrorParserImpl extends Parser
 
    private static void searchLineMimeType(int targetLineNumber, TokenBeenImpl currentToken)
    {
+      if (targetLineNumber == currentToken.getLineNumber())
+      {
+         possibleMimeType = currentToken.getMimeType();
+      }
+      
+      // taking in mind the last token among them in the line
+      else if (currentToken.getLastLineNumber() != 0 
+               && targetLineNumber <= currentToken.getLastLineNumber())
+      {
+         possibleMimeType = currentToken.getMimeType(); 
+      }
+
       // search appropriate token among the sub token
       List<TokenBeenImpl> subTokenList = currentToken.getSubTokenList();
 
@@ -156,19 +167,11 @@ public class CodeMirrorParserImpl extends Parser
       {
          for (TokenBeenImpl token : subTokenList)
          {
-            if (token.getLineNumber() > targetLineNumber)
+            if (targetLineNumber < token.getLineNumber())
                break;
-
+            
             searchLineMimeType(targetLineNumber, token);
          }
-      }
-
-      int currentTokenLineNumber = currentToken.getLineNumber();
-      if ((currentTokenLineNumber <= targetLineNumber) && (currentTokenLineNumber >= nearestTokenLineNumber) // taking in mind the last token among them in the line
-      )
-      {
-         nearestTokenLineNumber = currentTokenLineNumber;
-         possibleMimeType = currentToken.getMimeType();
       }
    }
 }

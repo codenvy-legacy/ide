@@ -78,14 +78,14 @@ public class XmlParser extends CodeMirrorParserImpl
          // recognize close tag starting with "</"
          else if (isCloseStartTagNode(lastNodeType, lastNodeContent))
          {
-            currentToken = addTagBreak(lineNumber, currentToken, MimeType.TEXT_XML);
+            currentToken = closeTag(lineNumber, currentToken);
          }
       }
 
       // recognize close tag starting with "/>" out of 
       else if (isCloseFinishTagNode(nodeType, nodeContent))
       {
-         currentToken = addTagBreak(lineNumber, currentToken, MimeType.TEXT_XML);
+         currentToken = closeTag(lineNumber, currentToken);
       }
 
       lastNodeContent = nodeContent;
@@ -164,21 +164,14 @@ public class XmlParser extends CodeMirrorParserImpl
       return newToken;
    }   
    
-   // it is required for the correct recognizing of currentLineMimeType and selection of current token in the outline panel   
-   static TokenBeenImpl addTagBreak(int lineNumber, TokenBeenImpl currentToken, String nextContentMimeType)
+   // close tag
+   static TokenBeenImpl closeTag(int lineNumber, TokenBeenImpl currentToken)
    {
-      TokenBeenImpl newToken = new TokenBeenImpl(null, TokenType.TAG_BREAK, lineNumber, nextContentMimeType);      
-
       if (currentToken != null) 
       {
-         currentToken.addSubToken(newToken);
          currentToken.setLastLineNumber(lineNumber);
          currentToken = currentToken.getParentToken();
       } 
-      else
-      {
-         currentToken = newToken;
-      }
       
       return currentToken;
    }     

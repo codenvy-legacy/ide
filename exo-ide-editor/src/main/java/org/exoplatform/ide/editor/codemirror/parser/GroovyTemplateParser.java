@@ -69,7 +69,7 @@ public class GroovyTemplateParser extends CodeMirrorParserImpl
       // recognize "%>" close tag
       else if (isGroovyCloseNode(nodeType, nodeContent) && !MimeType.TEXT_HTML.equals(currentContentMimeType))
       {
-         currentToken = XmlParser.addTagBreak(lineNumber, currentToken, MimeType.TEXT_HTML);
+         currentToken = XmlParser.closeTag(lineNumber, currentToken);
 
          currentContentMimeType = MimeType.TEXT_HTML;
          CodeMirrorParserImpl.getParser(currentContentMimeType).init();

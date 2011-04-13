@@ -96,7 +96,7 @@ public class HtmlParser extends CodeMirrorParserImpl
                // recognize autoSelfClosers tags and add tag break
                if (autoSelfClosers.contains(nodeContent))
                {
-                  currentToken = XmlParser.addTagBreak(lineNumber, currentToken, MimeType.TEXT_HTML);                  
+                  currentToken = XmlParser.closeTag(lineNumber, currentToken);                  
                }
             }            
          }
@@ -106,7 +106,7 @@ public class HtmlParser extends CodeMirrorParserImpl
                      && ! (lastSubTokenIsAutoSelfClosersTag(currentToken))  // filter autoSelfClosers tag 
                  )
          {
-            currentToken = XmlParser.addTagBreak(lineNumber, currentToken, MimeType.TEXT_HTML);
+            currentToken = XmlParser.closeTag(lineNumber, currentToken);
             init();
          }
       }
@@ -116,7 +116,7 @@ public class HtmlParser extends CodeMirrorParserImpl
                && ! (lastSubTokenIsAutoSelfClosersTag(currentToken))  // filter autoSelfClosers tag 
               )
       {
-         currentToken = XmlParser.addTagBreak(lineNumber, currentToken, MimeType.TEXT_HTML);
+         currentToken = XmlParser.closeTag(lineNumber, currentToken);
          init();         
       }
       

@@ -464,8 +464,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
     */
    private boolean shouldBeDisplayed(TokenBeenImpl token)
    {
-      return ! (token.getType().equals(TokenType.IMPORT)
-               || token.getType().equals(TokenType.TAG_BREAK));
+      return ! (token.getType().equals(TokenType.IMPORT));
    }
 
    private void selectToken(TokenBeenImpl token)
