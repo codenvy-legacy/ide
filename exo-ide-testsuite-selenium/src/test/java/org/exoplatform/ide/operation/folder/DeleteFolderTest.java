@@ -40,15 +40,17 @@ import java.io.IOException;
 */
 public class DeleteFolderTest extends BaseTest
 {
-  
+
    private final static String FOLDER_NAME_TOOLBAR = "deleteFolderToolBarTest";
-   
+
    private final static String FOLDER_NAME_MENU = "deleteFolderMenuTest";
 
-   private final static String URL_TOOLBAR = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME_TOOLBAR;
-   
-   private final static String URL_MENU = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME_MENU;
-   
+   private final static String URL_TOOLBAR = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+      + WS_NAME + "/" + FOLDER_NAME_TOOLBAR;
+
+   private final static String URL_MENU = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+      + WS_NAME + "/" + FOLDER_NAME_MENU;
+
    @BeforeClass
    public static void setUp()
    {
@@ -66,8 +68,7 @@ public class DeleteFolderTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
-   
+
    /**
     * Test to delete folder using ToolBar button. (TestCase IDE-18)
     * 
@@ -76,25 +77,22 @@ public class DeleteFolderTest extends BaseTest
    @Test
    public void testDeleteFolderFromToolbar() throws Exception
    {
-    
-      Thread.sleep(TestConstants.SLEEP);
-       IDE.navigator().selectItem(WS_URL);
+      waitForRootElement();
+      //select workspace and refresh
+      IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
+      //select folder
       IDE.navigator().selectItem(URL_TOOLBAR + "/");
-      IDE.toolbar().runCommand("Delete Item(s)...");
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
-      assertTrue(selenium.isTextPresent("exact:Do you want to delete " + FOLDER_NAME_TOOLBAR +" ?"));
-      selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
+      //run delete
+      deleteSelectedItems();
+      //chek create form
+      //chek Disappear Form
+      chekDisappearDeleteItemForm();
+      //chek Disappear in menu of navigator
       IDE.navigator().assertItemNotPresent(URL_TOOLBAR + "/");
       assertEquals(404, VirtualFileSystemUtils.get(URL_TOOLBAR).getStatusCode());
    }
-   
-   
+
    /**
     * Test to delete folder using Main Menu. (TestCase IDE-18)
     * 
@@ -103,24 +101,45 @@ public class DeleteFolderTest extends BaseTest
    @Test
    public void testDeleteFolderFromMainMenu() throws Exception
    {
-    
-      Thread.sleep(TestConstants.SLEEP);
-       IDE.navigator().selectItem(WS_URL);
+
+      waitForRootElement();
+      //select workspace and refresh
+      IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
+      //select folder
       IDE.navigator().selectItem(URL_MENU + "/");
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
-      assertTrue(selenium.isTextPresent("exact:Do you want to delete " + FOLDER_NAME_MENU +" ?"));
-      selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      IDE.navigator().selectItem(URL_MENU + "/");
+      //run command through menicommands
+      //delete item
+      deleteSelectedItems();
+      //and chek delete
+      chekDisappearDeleteItemForm();
+      //chek Disappear in menu of navigator
+      IDE.navigator().assertItemNotPresent(URL_MENU + FOLDER_NAME_MENU + "/");
       assertEquals(404, VirtualFileSystemUtils.get(URL_MENU).getStatusCode());
    }
-   
+
+   public void chekCreateDeleteItemForm()
+   {
+      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideDeleteItemsView\"]"));
+      assertTrue(selenium.isElementPresent("//div[@class=\"Caption\"]/span[\"IDE\"]"));
+      assertTrue(selenium.isElementPresent("//img[contains(@src,'http://localhost:8080/IDE/images/dialog/ask.png')]"));
+      assertTrue(selenium
+         .isElementPresent("//div[@class=\"gwt-Label\"]/br[\"Do you want to delete  \"]|/b[\"New Folder\"]"));
+      assertTrue(selenium.isElementPresent("ideDeleteItemFormOkButton"));
+      assertTrue(selenium.isElementPresent("ideDeleteItemFormCancelButton"));
+   }
+
+   public void chekDisappearDeleteItemForm()
+   {
+      assertFalse(selenium.isElementPresent("//div[@view-id=\"ideDeleteItemsView\"]"));
+      assertFalse(selenium.isElementPresent("//div[@class=\"Caption\"]/span[\"IDE\"]"));
+      assertFalse(selenium.isElementPresent("//img[contains(@src,'http://localhost:8080/IDE/images/dialog/ask.png')]"));
+      assertFalse(selenium
+         .isElementPresent("//div[@class=\"gwt-Label\"]/br[\"Do you want to delete  \"]|/b[\"New Folder\"]"));
+      assertFalse(selenium.isElementPresent("ideDeleteItemFormOkButton"));
+      assertFalse(selenium.isElementPresent("ideDeleteItemFormCancelButton"));
+   }
+
    @AfterClass
    public static void tearDown()
    {
