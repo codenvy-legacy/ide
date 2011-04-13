@@ -124,26 +124,7 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
             eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
-//      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
       //TODO removed the getting templates from registry:
-     /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
-      {
-         @Override
-         protected void onSuccess(TemplateList result)
-         {
-            CreateFileFromTemplatePresenter createFilePresenter =
-               new CreateFileFromTemplatePresenter(eventBus, selectedItems, result.getTemplates(), openedFiles);
-            CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
-               new CreateFileFromTemplateForm(eventBus, result.getTemplates(), createFilePresenter);
-            createFilePresenter.bindDisplay(createFileDisplay);            
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });*/
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)

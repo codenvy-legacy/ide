@@ -18,12 +18,18 @@
  */
 package org.exoplatform.ide.client.project;
 
+import com.google.gwt.event.shared.HandlerManager;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
+import org.exoplatform.ide.client.model.template.TemplateNative;
+import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -46,8 +52,45 @@ public class CreateProjectTemplateCommandHandler implements CreateProjectTemplat
     */
    public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
    {
-      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
-      new CreateProjectTemplateForm(eventBus, defaultTemplates.getTemplates());
+      final TemplateList defaultTemplates = new TemplateList();
+      //get default file templates
+      TemplateService.getInstance().getTemplateList("file", new AsyncRequestCallback<List<TemplateNative>>()
+      {
+
+         @Override
+         protected void onSuccess(List<TemplateNative> result)
+         {
+            for (TemplateNative tn : result)
+            {
+               defaultTemplates.getTemplates().add(new FileTemplate(
+                  tn.getName(), tn.getDescription(), tn.getMimeType(), true));
+            }
+            //get users file templates
+            TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
+            {
+
+               @Override
+               protected void onSuccess(TemplateList result)
+               {
+                  defaultTemplates.getTemplates().addAll(result.getTemplates());
+                  new CreateProjectTemplateForm(eventBus, defaultTemplates.getTemplates());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+             
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(exception));
+         }
+      });
    }
 
 }
