@@ -403,6 +403,8 @@ public class CodeMirror extends Editor
       var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
       if (editor == null) return;   
 
+      var cursorRow = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCursorRow()();
+
       // calculate cursorOffsetY
       var cursorOffsetY = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getAbsoluteTop()() + this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCursorOffsetY(I)(0);
 
@@ -430,7 +432,7 @@ public class CodeMirror extends Editor
 
       var token = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getTokenBeforeCursor(Lcom/google/gwt/core/client/JavaScriptObject;II)(
          currentNode, 
-         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCursorRow()(),
+         cursorRow,
          cursorCol         
       );
 
@@ -443,25 +445,11 @@ public class CodeMirror extends Editor
          cursorOffsetY,
          lineContent,
          cursorCol,
-         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCursorRow()(),
+         cursorRow,
          this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getTokenList()(),
-         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCurrentLineMimeType()(),
+         mimeType,
          token
       );
-//      var editorAutoCompleteCalledEventInstance = @org.exoplatform.ide.editor.api.event.EditorAutoCompleteCalledEvent::new(Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;IILjava/util/List;Ljava/lang/String;Lorg/exoplatform/ide/editor/api/codeassitant/Token;)(
-//         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getEditorId()(),
-//         mimeType,
-//         cursorOffsetX,
-//         cursorOffsetY,
-//         lineContent,
-//         cursorCol,
-//         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCursorRow()(),
-//         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getTokenList()(),
-//         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCurrentLineMimeType()(),
-//         token
-//      );
-//      var eventBus = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getEventBus()();
-//      eventBus.@com.google.gwt.event.shared.HandlerManager::fireEvent(Lcom/google/gwt/event/shared/GwtEvent;)(editorAutoCompleteCalledEventInstance);
    }-*/;
 
    private native void addScrollAndResizeListener(CodeMirror instance) /*-{
