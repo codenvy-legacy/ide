@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.Autocomplete;
 import org.junit.Test;
 
 /**
@@ -212,7 +213,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
-      openAutoCompleteForm();
+      Autocomplete.openForm();
 
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'topFunc')]"));
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'localVarOfTopFunc')]"));
@@ -241,7 +242,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
 //      selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
 //      selenium.typeKeys("//body[@class='editbox']", "topVar");
 //      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
-//      openAutoCompleteForm();
+//      Autocomplete.openForm();
 //
 //      assertTrue(selenium.isElementPresent("//div[contains(text(), 'method1')]"));
 //      assertTrue(selenium.isElementPresent("//div[contains(text(), 'property1')]"));
@@ -274,7 +275,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.typeKeys("//body[@class='editbox']", "};");
       selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
 
-      openAutoCompleteForm();
+      Autocomplete.openForm();
 
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]"));
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'b')]"));
@@ -300,9 +301,9 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "a");
 
-      openAutoCompleteForm();
+      Autocomplete.openForm();
 
-      openAutoCompleteForm();
+      Autocomplete.openForm();
 
       selenium.focus("//input[@class='exo-autocomplete-edit']");
 

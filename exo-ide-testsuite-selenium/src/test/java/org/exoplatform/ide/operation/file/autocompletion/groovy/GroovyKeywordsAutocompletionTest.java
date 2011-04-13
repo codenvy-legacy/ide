@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.Autocomplete;
 import org.junit.Test;
 
 /**
@@ -53,7 +54,7 @@ public class GroovyKeywordsAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       typeTextIntoEditor(0, "n");
       
-      openAutoCompleteForm();
+      Autocomplete.openForm();
       
       assertTrue(selenium.isElementPresent("//div[text()='name:String']"));
       assertTrue(selenium.isElementPresent("//div[text()='native']"));

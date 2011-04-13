@@ -37,16 +37,14 @@ public class Autocomplete
       /**
        * XPath autocompletion panel locator.
        */
-      public static final String PANEL = "//table[@class='exo-autocomplete-panel']";
+      public static final String PANEL = "exo-ide-autocomplete-panel";
       
       /**
        * Xpath autocompletion input locator.
        */
-      public static final String INPUT = "//input[@class='exo-autocomplete-edit']";
-      
-      public static final String JAVADOC_IFRAME = "//iframe[@class='exo-autocomplete-description']";
-      
-      public static final String JAVADOC_DIV = "//div[@class='exo-autocomplete-description']";
+      public static final String INPUT = "exo-ide-autocomplete-edit";
+            
+      public static final String JAVADOC_DIV = "exo-ide-autocomplete-doc-panel";
    }
    
    private static final Selenium selenium;

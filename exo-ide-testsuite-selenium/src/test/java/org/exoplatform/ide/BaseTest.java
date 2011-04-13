@@ -575,7 +575,8 @@ public abstract class BaseTest
    {
       //TODO add check form
       //select file in navigation tree
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
+//      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
+      IDE.navigator().selectItem(fileName);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
       openSelectedFileWithCodeEditor(checkDefault);
@@ -596,18 +597,22 @@ public abstract class BaseTest
    {
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       
-      selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[0]/col[0]");
+      waitForElementPresent("ideOpenFileWithListGrid");
+//      selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[0]/col[0]");
+//      selenium.click("//table[@id='ideOpenFileWithListGrid']/tbody[1]/tr/td/div");
+   
+
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       if (checkDefault)
       {
          //click on checkbox Use as default editor
-         selenium
-            .click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
+         selenium.click("//span[@id='ideOpenFileWithDefaulCheckbox']/input");
+
          Thread.sleep(TestConstants.ANIMATION_PERIOD);
       }
 
-      selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
+      selenium.click("ideOpenFileWithOkButton");
       //time remaining to open editor
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
@@ -1212,14 +1217,15 @@ public abstract class BaseTest
     */
    protected static String getContentPanelLocator(int tabIndex)
    {
-      String divIndex = String.valueOf(tabIndex + 2);
+//      String divIndex = String.valueOf(tabIndex + 2);
       if (BROWSER_COMMAND.equals(EnumBrowserCommand.IE_EXPLORE_PROXY))
       {
-         return "//div[@class='tabSetContainer']/div[" + divIndex + "]";
+         return "//div[@class='tabSetContainer']/div[" + tabIndex + "]";
       }
       else
       {
-         return "//div[@class='tabSetContainer']/div/div[" + divIndex + "]";
+         return "//div[@panel-id='editor' and @tab-index='" + tabIndex + "' ]";
+//         return "//div[@class='tabSetContainer']/div/div[" + divIndex + "]";
       }
    }
    
@@ -1446,7 +1452,7 @@ public abstract class BaseTest
    public void waitForRootElement() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      waitForElementPresent(Navigator.Locators.SC_ROOT_OF_NAVIGATION_TREE);
+      waitForElementPresent(Navigator.Locators.NAVIGATION_TREE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
@@ -1484,14 +1490,14 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
-   /**
-    * @throws Exception 
-    */
-   protected void openAutoCompleteForm() throws Exception
-   {
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//table[@class='exo-autocomplete-panel']"));
-   }
+//   /**
+//    * @throws Exception 
+//    */
+//   protected void openAutoCompleteForm() throws Exception
+//   {
+//      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
+//      Thread.sleep(TestConstants.SLEEP);
+//      assertTrue(selenium.isElementPresent("//table[@class='exo-autocomplete-panel']"));
+//   }
 
 }

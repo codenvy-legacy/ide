@@ -34,9 +34,13 @@ public class Navigator
 {
    public interface Locators
    {
+      @Deprecated
       public static final String SC_NAVIGATION_TREE = "scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]";
       
+      @Deprecated
       public static final String SC_ROOT_OF_NAVIGATION_TREE = SC_NAVIGATION_TREE + "/body/row[0]/col[1]";
+      
+      String NAVIGATION_TREE = "ideNavigatorItemTreeGrid";
       
       String TREE_PREFIX_ID = "navigation-";
    }

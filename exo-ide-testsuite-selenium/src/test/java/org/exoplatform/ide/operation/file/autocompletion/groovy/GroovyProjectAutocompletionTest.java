@@ -118,7 +118,7 @@ public class GroovyProjectAutocompletionTest extends BaseTest
 
       typeTextIntoEditor(0, "Po");
       
-      openAutoCompleteForm();
+      Autocomplete.openForm();
       
       Autocomplete.checkElementPresent("Pojo");
       
@@ -134,7 +134,7 @@ public class GroovyProjectAutocompletionTest extends BaseTest
       
       typeTextIntoEditor(0, "p.");
       
-      openAutoCompleteForm();
+      Autocomplete.openForm();
       
       Autocomplete.checkElementPresent("getName():String");
       Autocomplete.checkElementPresent("printText(String):void");

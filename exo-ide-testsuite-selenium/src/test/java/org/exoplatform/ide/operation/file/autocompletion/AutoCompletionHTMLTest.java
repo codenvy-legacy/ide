@@ -24,6 +24,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.core.Autocomplete;
 import org.junit.Test;
 
 /**
@@ -143,7 +144,7 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       selenium.keyDown("//body[@class='editbox']", "\\36");
 
-      openAutoCompleteForm();
+      Autocomplete.openForm();
 
       assertTrue(selenium.isElementPresent("//div[contains(text(), '!DOCTYPE')]"));
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'acronym')]"));
@@ -163,8 +164,8 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       selenium.typeKeys("//body[@class='editbox']", "<t");
 
-      //openAutoCompleteForm();
-      openAutoCompleteForm();
+      //Autocomplete.openForm();
+      Autocomplete.openForm();
 
       selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -177,7 +178,7 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       selenium.typeKeys("//body[@class='editbox']", "<p ");
 
-      openAutoCompleteForm();
+      Autocomplete.openForm();
 
       selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -189,7 +190,7 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
 
-      openAutoCompleteForm();
+      Autocomplete.openForm();
       selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
 
@@ -213,8 +214,8 @@ public class AutoCompletionHTMLTest extends BaseTest
       }
       selenium.typeKeys("//body[@class='editbox']", "<t");
 
-      //openAutoCompleteForm();
-      openAutoCompleteForm();
+      //Autocomplete.openForm();
+      Autocomplete.openForm();
 
       selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -227,7 +228,7 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       selenium.typeKeys("//body[@class='editbox']", "<p ");
 
-      openAutoCompleteForm();
+      Autocomplete.openForm();
 
       selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -239,7 +240,7 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
 
-      openAutoCompleteForm();
+      Autocomplete.openForm();
       selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
 

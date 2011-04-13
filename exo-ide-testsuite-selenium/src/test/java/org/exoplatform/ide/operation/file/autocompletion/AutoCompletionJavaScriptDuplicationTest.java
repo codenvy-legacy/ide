@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.Autocomplete;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
@@ -49,7 +50,7 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       
       Thread.sleep(10000);
       
-      openAutoCompleteForm();
+      Autocomplete.openForm();
       Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]") && selenium.isElementPresent("//div[contains(text(), 'VARIABLE')]"));
@@ -61,7 +62,7 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       
-      openAutoCompleteForm();
+      Autocomplete.openForm();
       Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'a()')]") && selenium.isElementPresent("//div[contains(text(), 'FUNCTION')]"));
