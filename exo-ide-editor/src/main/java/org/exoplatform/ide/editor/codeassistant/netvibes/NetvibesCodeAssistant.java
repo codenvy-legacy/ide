@@ -111,7 +111,7 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
             NetvibesBundle bundle = GWT.create(NetvibesBundle.class);
             this.lineContent = lineContent;
             this.cursorPositionX = cursorPositionX;
-            this.cursorPositionY = cursorPositionX;
+            this.cursorPositionY = cursorPositionY;
             this.tokenFromParser = tokenFromParser;
             this.currentToken = currentToken;
             bundle.netvibesTokens().getText(this);
