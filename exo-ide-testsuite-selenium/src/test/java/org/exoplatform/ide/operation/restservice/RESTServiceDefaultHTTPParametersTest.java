@@ -84,7 +84,7 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
        IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(TEST_FOLDER);
+      IDE.navigator().clickOpenIconOfFolder(URL);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       launchRestService();

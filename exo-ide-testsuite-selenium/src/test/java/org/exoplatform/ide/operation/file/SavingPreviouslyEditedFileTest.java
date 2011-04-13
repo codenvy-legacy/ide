@@ -120,10 +120,11 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       //is file saved
       IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      openOrCloseFolder(FOLDER_NAME);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      
       IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
 
-      openOrCloseFolder(FOLDER_NAME);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertEquals(FILE_NAME, IDE.editor().getTabTitle(0));
       IDE.editor().closeTab(0);
@@ -154,7 +155,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       //Test folder is closed, no file in navigation tree
       IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       //open Test folder
-      openOrCloseFolder(FOLDER_NAME);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       //see xml file in navigation tree
       IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
 

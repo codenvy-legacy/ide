@@ -111,7 +111,7 @@ public class RunRestServiceCommandTest extends BaseTest
        IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(FOLDER_NAME);
+      IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       
       openFileFromNavigationTreeWithCodeEditor(SIMPLE_FILE_NAME, false);
@@ -175,8 +175,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //open file
        IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openOrCloseFolder(FOLDER_NAME);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(NON_VALID_FILE_NAME, false);
 
@@ -232,7 +231,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //open file
        IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openOrCloseFolder(FOLDER_NAME);
+      IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_FOR_CHANGE_CONTENT_NAME, false);
@@ -285,7 +284,7 @@ public class RunRestServiceCommandTest extends BaseTest
        IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(FOLDER_NAME);
+      IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
 

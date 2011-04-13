@@ -84,7 +84,7 @@ public class RESTServiceFilterParametersTest extends BaseTest
 
       //TODO*************change
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(TEST_FOLDER);
+      IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       //****************************
 

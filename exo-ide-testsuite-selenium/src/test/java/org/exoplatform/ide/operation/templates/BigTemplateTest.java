@@ -72,7 +72,7 @@ public class BigTemplateTest extends BaseTest
       selectRootOfWorkspaceTree();
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      openOrCloseFolder(FOLDER);
+      IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.REDRAW_PERIOD);

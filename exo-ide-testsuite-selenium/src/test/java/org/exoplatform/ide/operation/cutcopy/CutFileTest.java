@@ -147,8 +147,7 @@ public class CutFileTest extends BaseTest
 
       checkPasteCommands(true);
 
-      openOrCloseFolder(FOLDER_NAME_1);
-
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME_1_URL);
       IDE.navigator().selectItem(FOLDER_NAME_2_URL);
 
       //Select "test 2" folder item in the Workspace Panel and then select "Edit->Paste Items" topmenu command.

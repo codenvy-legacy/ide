@@ -115,7 +115,7 @@ public class GeItemUrlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //Check get URL for the file in the folder
-      openOrCloseFolder(folderName);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + folderName + "/");
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().selectItem(WS_URL + file2Name);
       url = getSelectedItemUrl();

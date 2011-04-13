@@ -375,7 +375,8 @@ public abstract class BaseTest
     */
    protected void selectRootOfWorkspaceTree() throws Exception
    {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
+      IDE.navigator().selectItem(WS_URL);
+//      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
@@ -684,32 +685,6 @@ public abstract class BaseTest
       selenium.mouseDownAt(hoverLocator, "");
       //time to wait while gadget open new file
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }
-
-
-   /**
-    * Opens folder in Workspace tree (if folder is closed)
-    * or closes folder (if it is opened)
-    * 
-    * Clicks on open sign of folder.
-    * 
-    * If folderName doesn't present in Workspace tree, test fails.
-    * 
-    * @param folderName
-    */
-   protected void openOrCloseFolder(String folderName) throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
-         + "]/col[0]/open");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-
-   /**
-    * 
-    */
-   protected void openCloseRootWorkspace()
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[0]/open");
    }
 
    /**

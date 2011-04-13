@@ -114,7 +114,7 @@ public class PreviewHtmlFileTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      openOrCloseFolder(TEST_FOLDER);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       Thread.sleep(TestConstants.SLEEP);

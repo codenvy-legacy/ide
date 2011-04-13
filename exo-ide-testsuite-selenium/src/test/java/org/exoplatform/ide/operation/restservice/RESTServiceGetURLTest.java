@@ -77,7 +77,7 @@ public class RESTServiceGetURLTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //TODO**********change************
-      openOrCloseFolder(TEST_FOLDER);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.SLEEP);
       //****************************
 

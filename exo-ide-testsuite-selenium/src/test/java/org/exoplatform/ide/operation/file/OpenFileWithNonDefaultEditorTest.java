@@ -88,7 +88,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      openOrCloseFolder(FOLDER_NAME);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.SLEEP);
       callOpenWithWindow(CUR_TIME + HTML_FILE_NAME);
       //gadget displayed "Open File with" dialog window with second items in the central column: 
@@ -182,7 +182,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
       
       //---- 10 -------------------------
       //Reopen file newHtmlFile.html.
-      openOrCloseFolder(FOLDER_NAME);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       checkCkEditorOpened(0);
@@ -206,7 +206,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
       selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD+"");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       closeFileTab(0);
-      openOrCloseFolder(FOLDER_NAME);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       checkCodeEditorOpened(0);

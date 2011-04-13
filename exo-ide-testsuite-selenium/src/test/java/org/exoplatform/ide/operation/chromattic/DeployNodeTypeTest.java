@@ -108,7 +108,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
    public void testGenerateNodeTypeForm() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(TEST_FOLDER);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:
@@ -159,7 +159,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(TEST_FOLDER);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:
@@ -199,7 +199,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(TEST_FOLDER);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:

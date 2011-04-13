@@ -95,7 +95,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      openOrCloseFolder(FOLDER_NAME);  
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
       selenium.controlKeyDown();

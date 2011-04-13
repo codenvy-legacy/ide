@@ -93,7 +93,7 @@ public class CodeOutLineHtmlTest extends BaseTest
       //---- 1-3 -----------------
       //open file with text
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(FOLDER_NAME);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 

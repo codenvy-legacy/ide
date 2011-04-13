@@ -79,23 +79,23 @@ public class GoToFolderTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
-      //      openCloseRootWorkspace();
+      //       IDE.navigator().selectItem(WS_URL);
       IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP);
 
       //Open first folder and file in it
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(FOLDER_1);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_1 + "/");
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
       Thread.sleep(TestConstants.SLEEP);
       //Close first folder
-      openOrCloseFolder(FOLDER_1);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_1 + "/");
       IDE.navigator().assertItemNotPresent(URL + FOLDER_1 + "/" + FILE_1);
 
       Thread.sleep(TestConstants.SLEEP);
-      openOrCloseFolder(FOLDER_2);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //Select second file
       IDE.navigator().selectItem(URL + FOLDER_2 + "/" + FILE_2);
@@ -110,7 +110,7 @@ public class GoToFolderTest extends BaseTest
       selectRootOfWorkspaceTree();
       IDE.toolbar().runCommand("Refresh Selected Folder");
 
-      openOrCloseFolder(FOLDER_2);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_2, false);
       Thread.sleep(TestConstants.SLEEP);
@@ -140,7 +140,7 @@ public class GoToFolderTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      openOrCloseFolder(WS_NAME);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.navigator().assertItemNotPresent(URL + FOLDER_1 + "/" + FILE_1);
       IDE.navigator().assertItemNotPresent(URL + FOLDER_2 + "/" + FILE_2);

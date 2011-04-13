@@ -101,7 +101,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.navigator().assertItemPresent(FOLDER_2_2_URL);
 
       //Close folder "folder-2"
-      openOrCloseFolder(FOLDER_2);
+      IDE.navigator().clickOpenIconOfFolder(FOLDER_2_URL);
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().assertItemPresent(FOLDER_1_URL);
       IDE.navigator().assertItemPresent(FOLDER_2_URL);
@@ -110,7 +110,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
       
       //Open "folder-1"
-      openOrCloseFolder(FOLDER_1);
+      IDE.navigator().clickOpenIconOfFolder(FOLDER_1_URL);
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().assertItemPresent(FOLDER_1_URL);
       IDE.navigator().assertItemPresent(FOLDER_1_1_URL);
@@ -122,7 +122,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //Close workspace item
-      openCloseRootWorkspace();
+      IDE.navigator().clickOpenIconOfFolder(WS_URL);
       Thread.sleep(TestConstants.SLEEP);
       //All sub folders hide
       IDE.navigator().assertItemNotPresent(FOLDER_1_URL);
@@ -133,7 +133,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
 
       //Open workspace item
-      openCloseRootWorkspace();
+      IDE.navigator().clickOpenIconOfFolder(WS_URL);
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().assertItemPresent(FOLDER_1_URL);
       IDE.navigator().assertItemNotPresent(FOLDER_1_1_URL);

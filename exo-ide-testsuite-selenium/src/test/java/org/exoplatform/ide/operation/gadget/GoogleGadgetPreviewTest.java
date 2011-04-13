@@ -76,7 +76,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       //TODO*********change****
-      openOrCloseFolder(FOLDER);
+      IDE.navigator().clickOpenIconOfFolder(FOLDER);
       //*********************
       Thread.sleep(TestConstants.SLEEP);
       openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
