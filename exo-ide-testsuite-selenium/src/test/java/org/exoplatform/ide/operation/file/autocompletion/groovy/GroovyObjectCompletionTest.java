@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion.groovy;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.Test;
 
 /**
@@ -43,36 +41,33 @@ public class GroovyObjectCompletionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      
-      for(int i = 0; i<10; i++)
+
+      for (int i = 0; i < 10; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
-      
+
       selenium.keyDown("//body[@class='editbox']", "\\35");
       typeTextIntoEditor(0, ".");
-      
+
       IDE.codeAssistant().openForm();
-     
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
-      
-      selenium.typeKeys("//input[@class='exo-autocomplete-edit']", "con");
+
+      IDE.codeAssistant().typeToInput("con");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      assertTrue(selenium.isElementPresent("//div[text()='concat(String):String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='contains(CharSequence):boolean']"));
-      assertTrue(selenium.isElementPresent("//div[text()='contentEquals(StringBuffer):boolean']"));
-      assertTrue(selenium.isElementPresent("//div[text()='contentEquals(CharSequence):boolean']"));
-      
+
+      IDE.codeAssistant().checkElementPresent("concat(String):String");
+      IDE.codeAssistant().checkElementPresent("contains(CharSequence):boolean");
+      IDE.codeAssistant().checkElementPresent("contentEquals(StringBuffer):boolean");
+      IDE.codeAssistant().checkElementPresent("contentEquals(CharSequence):boolean");
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);  
-      
-      assertFalse(selenium.isElementPresent("//table[@class='exo-autocomplete-panel']"));
+
+      IDE.codeAssistant().insertSelectedItem();
+
       assertTrue(getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }

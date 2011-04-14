@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion.groovy;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -46,22 +45,21 @@ public class GroovyAnnotationAutocompleteTest extends BaseTest
       for (int i = 0; i < 8; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       typeTextIntoEditor(0, "@");
       
       IDE.codeAssistant().openForm();
-      
-      assertFalse(selenium.isElementPresent("//div[text()='hello(String):String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='Deprecated']"));
-      assertTrue(selenium.isElementPresent("//div[text()='Documented']"));
-      assertTrue(selenium.isElementPresent("//div[text()='Inherited']"));
-      assertTrue(selenium.isElementPresent("//div[text()='Override']"));
-      assertTrue(selenium.isElementPresent("//div[text()='Retention']"));
-      assertTrue(selenium.isElementPresent("//div[text()='SuppressWarnings']"));
-      assertTrue(selenium.isElementPresent("//div[text()='Target']"));
+      IDE.codeAssistant().checkElementNotPresent("hello(String):String");
+      IDE.codeAssistant().checkElementPresent("Deprecated");
+      IDE.codeAssistant().checkElementPresent("Documented");
+      IDE.codeAssistant().checkElementPresent("Inherited");
+      IDE.codeAssistant().checkElementPresent("Override");
+      IDE.codeAssistant().checkElementPresent("Retention");
+      IDE.codeAssistant().checkElementPresent("SuppressWarnings");
+      IDE.codeAssistant().checkElementPresent("Target");
       
       for (int i = 0; i < 3; i++)
       {

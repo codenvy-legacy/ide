@@ -147,4 +147,9 @@ public class CodeAssistant
       assertTrue(selenium.isElementPresent(Locators.PANEL_ID));
       selenium.focus(Locators.INPUT);
    }
+   
+   public void checDocFormPresent()
+   {
+      assertTrue(selenium.isElementPresent(Locators.JAVADOC_DIV));
+   }
 }

@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion.groovy;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -75,84 +72,84 @@ public class GroovyLocalVariableTest extends BaseTest
    @Test
    public void testLocalVariable() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.navigator().selectItem(WS_URL);
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       moveCursorDown(15);
-      
+
       IDE.codeAssistant().openForm();
-      
-      assertTrue(selenium.isElementPresent("//div[text()='hello(String):String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
-      assertFalse(selenium.isElementPresent("//div[text()='s:String']"));
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
+
+      IDE.codeAssistant().checkElementPresent("hello(String):String");
+      IDE.codeAssistant().checkElementPresent("getInt(Double):Integer");
+      IDE.codeAssistant().checkElementNotPresent("s:String");
+      IDE.codeAssistant().closeForm();
       
       moveCursorDown(5);
       IDE.codeAssistant().openForm();
-      assertTrue(selenium.isElementPresent("//div[text()='hello(String):String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
-      assertTrue(selenium.isElementPresent("//div[text()='s:String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='name:String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='e:Exception']"));
-      assertFalse(selenium.isElementPresent("//div[text()='stream:PrintStream']"));
-      assertFalse(selenium.isElementPresent("//div[text()='d']"));
-      assertFalse(selenium.isElementPresent("//div[text()='ii']"));
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
-      
+      IDE.codeAssistant().checkElementPresent("hello(String):String");
+      IDE.codeAssistant().checkElementPresent("getInt(Double):Integer");
+      IDE.codeAssistant().checkElementPresent("s:String");
+      IDE.codeAssistant().checkElementPresent("name:String");
+      IDE.codeAssistant().checkElementPresent("e:Exception");
+      IDE.codeAssistant().checkElementNotPresent("stream:PrintStream");
+      IDE.codeAssistant().checkElementNotPresent("d");
+      IDE.codeAssistant().checkElementNotPresent("ii");
+      IDE.codeAssistant().closeForm();
+
       moveCursorDown(2);
       IDE.codeAssistant().openForm();
-      assertTrue(selenium.isElementPresent("//div[text()='hello(String):String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
-      assertTrue(selenium.isElementPresent("//div[text()='s:String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='name:String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='e:Exception']"));
-      assertTrue(selenium.isElementPresent("//div[text()='stream:PrintStream']"));
-      assertFalse(selenium.isElementPresent("//div[text()='d:Double']"));
-      assertFalse(selenium.isElementPresent("//div[text()='ii:Integer']"));
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
-      
+      IDE.codeAssistant().checkElementPresent("hello(String):String");
+      IDE.codeAssistant().checkElementPresent("getInt(Double):Integer");
+      IDE.codeAssistant().checkElementPresent("s:String");
+      IDE.codeAssistant().checkElementPresent("name:String");
+      IDE.codeAssistant().checkElementPresent("e:Exception");
+      IDE.codeAssistant().checkElementPresent("stream:PrintStream");
+      IDE.codeAssistant().checkElementNotPresent("d:Double");
+      IDE.codeAssistant().checkElementNotPresent("ii:Integer");
+      IDE.codeAssistant().closeForm();
+
       moveCursorDown(7);
       IDE.codeAssistant().openForm();
-      assertTrue(selenium.isElementPresent("//div[text()='hello(String):String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
-      assertTrue(selenium.isElementPresent("//div[text()='s:String']"));
-      assertFalse(selenium.isElementPresent("//div[text()='name:String']"));
-      assertFalse(selenium.isElementPresent("//div[text()='e:Exception']"));
-      assertFalse(selenium.isElementPresent("//div[text()='stream:PrintStream']"));
-      assertTrue(selenium.isElementPresent("//div[text()='d:Double']"));
-      assertTrue(selenium.isElementPresent("//div[text()='ii:Integer']"));
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
-      
+      IDE.codeAssistant().checkElementPresent("hello(String):String");
+      IDE.codeAssistant().checkElementPresent("getInt(Double):Integer");
+      IDE.codeAssistant().checkElementPresent("s:String");
+      IDE.codeAssistant().checkElementNotPresent("name:String");
+      IDE.codeAssistant().checkElementNotPresent("e:Exception");
+      IDE.codeAssistant().checkElementNotPresent("stream:PrintStream");
+      IDE.codeAssistant().checkElementPresent("d:Double");
+      IDE.codeAssistant().checkElementPresent("ii:Integer");
+      IDE.codeAssistant().closeForm();
+
       moveCursorDown(2);
       IDE.codeAssistant().openForm();
-      
-      assertTrue(selenium.isElementPresent("//div[text()='hello(String):String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
-      assertFalse(selenium.isElementPresent("//div[text()='s:String']"));
-      assertFalse(selenium.isElementPresent("//div[text()='name:String']"));
-      assertFalse(selenium.isElementPresent("//div[text()='e:Exception']"));
-      assertFalse(selenium.isElementPresent("//div[text()='stream:PrintStream']"));
-      assertFalse(selenium.isElementPresent("//div[text()='d:Double']"));
-      assertFalse(selenium.isElementPresent("//div[text()='ii:Integer']"));
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
+
+      IDE.codeAssistant().checkElementPresent("hello(String):String");
+      IDE.codeAssistant().checkElementPresent("getInt(Double):Integer");
+      IDE.codeAssistant().checkElementNotPresent("s:String");
+      IDE.codeAssistant().checkElementNotPresent("name:String");
+      IDE.codeAssistant().checkElementNotPresent("e:Exception");
+      IDE.codeAssistant().checkElementNotPresent("stream:PrintStream");
+      IDE.codeAssistant().checkElementNotPresent("d:Double");
+      IDE.codeAssistant().checkElementNotPresent("ii:Integer");
+      IDE.codeAssistant().closeForm();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
 
       IDE.codeAssistant().openForm();
-      assertFalse(selenium.isElementPresent("//div[text()='hello(String):String']"));
-      assertFalse(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
-      assertFalse(selenium.isElementPresent("//div[text()='s:String']"));
-      assertFalse(selenium.isElementPresent("//div[text()='name:String']"));
-      assertFalse(selenium.isElementPresent("//div[text()='e:Exception']"));
-      assertFalse(selenium.isElementPresent("//div[text()='stream:PrintStream']"));
-      assertFalse(selenium.isElementPresent("//div[text()='d:Double']"));
-      assertFalse(selenium.isElementPresent("//div[text()='ii:Integer']"));
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
+      IDE.codeAssistant().checkElementNotPresent("hello(String):String");
+      IDE.codeAssistant().checkElementNotPresent("getInt(Double):Integer");
+      IDE.codeAssistant().checkElementNotPresent("s:String");
+      IDE.codeAssistant().checkElementNotPresent("name:String");
+      IDE.codeAssistant().checkElementNotPresent("e:Exception");
+      IDE.codeAssistant().checkElementNotPresent("stream:PrintStream");
+      IDE.codeAssistant().checkElementNotPresent("d:Double");
+      IDE.codeAssistant().checkElementNotPresent("ii:Integer");
+      IDE.codeAssistant().closeForm();
       IDE.editor().closeTab(0);
    }
 

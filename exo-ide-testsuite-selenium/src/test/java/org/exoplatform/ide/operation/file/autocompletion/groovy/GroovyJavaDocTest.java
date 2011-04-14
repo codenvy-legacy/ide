@@ -19,11 +19,11 @@
 package org.exoplatform.ide.operation.file.autocompletion.groovy;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.Test;
 
 /**
@@ -53,11 +53,7 @@ public abstract class GroovyJavaDocTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       typeTextIntoEditor(0, "Collections.");
 
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//table[@class='exo-autocomplete-panel']"));
-
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
+     IDE.codeAssistant().openForm();
       
       for (int i = 0; i < 4; i++)
       {
@@ -65,15 +61,15 @@ public abstract class GroovyJavaDocTest extends BaseTest
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//iframe[@class='exo-autocomplete-description']"));
+      IDE.codeAssistant().checDocFormPresent();
       Thread.sleep(TestConstants.SLEEP);
-      selenium.selectFrame("//iframe[@class='exo-autocomplete-description']");
+      selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
       assertFalse(selenium.isElementPresent("//body/pre[text()='Not found']"));
       selectMainFrame();
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP);
-      selenium.selectFrame("//iframe[@class='exo-autocomplete-description']");
+      selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
       assertFalse(selenium.isElementPresent("//body/pre[text()=\"Not found\"]"));
       selectMainFrame();
       

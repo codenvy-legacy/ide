@@ -48,28 +48,28 @@ public class GroovyKeywordsAutocompletionTest extends BaseTest
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
-      
+
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       typeTextIntoEditor(0, "n");
-      
+
       IDE.codeAssistant().openForm();
-      
-      assertTrue(selenium.isElementPresent("//div[text()='name:String']"));
-      assertTrue(selenium.isElementPresent("//div[text()='native']"));
-      assertTrue(selenium.isElementPresent("//div[text()='new']"));
-      assertTrue(selenium.isElementPresent("//div[text()='null']"));
-      
+
+      IDE.codeAssistant().checkElementPresent("name:String");
+      IDE.codeAssistant().checkElementPresent("native");
+      IDE.codeAssistant().checkElementPresent("new");
+      IDE.codeAssistant().checkElementPresent("null");
+
       for (int i = 0; i < 3; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
-      
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(getTextFromCodeEditor(0).contains("null"));
-      
+
    }
-   
+
 }

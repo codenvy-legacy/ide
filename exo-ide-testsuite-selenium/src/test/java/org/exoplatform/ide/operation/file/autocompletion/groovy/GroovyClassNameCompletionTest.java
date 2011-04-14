@@ -50,21 +50,19 @@ public class GroovyClassNameCompletionTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       typeTextIntoEditor(0, "Colle");
-      
+
       //open autocomplete form
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//table[@class='exo-autocomplete-panel']"));
-      
-      assertTrue(selenium.isElementPresent("//div[text()='Collections']"));
-      assertTrue(selenium.isElementPresent("//div[text()='Collection']"));
-      
+      IDE.codeAssistant().openForm();
+
+      IDE.codeAssistant().checkElementPresent("Collections");
+      IDE.codeAssistant().checkElementPresent("Collection");
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      
+
+      IDE.codeAssistant().insertSelectedItem();
+
       assertTrue(getTextFromCodeEditor(0).contains("Collections"));
    }
-   
+
 }

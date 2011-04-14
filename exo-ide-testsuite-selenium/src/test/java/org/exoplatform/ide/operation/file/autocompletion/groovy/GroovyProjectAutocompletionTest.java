@@ -55,7 +55,7 @@ public class GroovyProjectAutocompletionTest extends BaseTest
    private static final String REST_SERVICE_FILE_NAME = "Sample.grs";
 
    private static final String CLASSPATH_FILE_CONTENT = "{\"entries\":[{\"kind\":\"dir\", \"path\":\""
-      + ClasspathUtils.CLASSPATH_RESOURCE_PREFIX + FOLDER_NAME + "/\"}]}";;
+      + BaseTest.WS_NAME + "#/" + FOLDER_NAME + "/\"}]}";;
 
    private static final String CLASSPATH_FILE_NAME = ".groovyclasspath";
 
@@ -112,7 +112,8 @@ public class GroovyProjectAutocompletionTest extends BaseTest
       IDE.navigator().selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      openFileFromNavigationTreeWithCodeEditor(REST_SERVICE_FILE_NAME, false);
+      openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL
+         + PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME, false);
 
       IDE.codeAssistant().moveCursorDown(12);
 
@@ -149,22 +150,22 @@ public class GroovyProjectAutocompletionTest extends BaseTest
       
    }
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + PROJECT_NAME);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-   }
+//   @AfterClass
+//   public static void tearDown()
+//   {
+//      try
+//      {
+//         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
+//         VirtualFileSystemUtils.delete(WORKSPACE_URL + PROJECT_NAME);
+//      }
+//      catch (IOException e)
+//      {
+//         e.printStackTrace();
+//      }
+//      catch (ModuleException e)
+//      {
+//         e.printStackTrace();
+//      }
+//   }
 
 }
