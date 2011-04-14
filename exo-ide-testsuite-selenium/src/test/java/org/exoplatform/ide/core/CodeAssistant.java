@@ -134,7 +134,8 @@ public class CodeAssistant
    public void openForm() throws Exception
    {
       BaseTest.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
-      Thread.sleep(TestConstants.SLEEP);
+      selenium.waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID
+         + "\"); value != null", "10000");
       assertTrue(selenium.isElementPresent(Locators.PANEL_ID));
       selenium.focus(Locators.INPUT);
    }

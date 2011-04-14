@@ -218,8 +218,8 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
             token.add(t);
 
             Token t1 = new TokenImpl(tag, TokenType.TAG);
-            t.setProperty(TokenProperties.SHORT_HINT, new StringProperty(" close tag with '>'"));
-            t.setProperty(TokenProperties.CODE, new StringProperty(">"));
+            t1.setProperty(TokenProperties.SHORT_HINT, new StringProperty(" close tag with '>'"));
+            t1.setProperty(TokenProperties.CODE, new StringProperty(">"));
             token.add(t1);
          }
          beforeToken += tokenToComplete;

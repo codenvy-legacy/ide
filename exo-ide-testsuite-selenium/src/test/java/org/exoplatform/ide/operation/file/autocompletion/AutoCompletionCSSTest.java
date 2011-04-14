@@ -24,7 +24,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.event.KeyEvent;
@@ -59,7 +58,6 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
-//      Thread.sleep(3000);
 
       //************fixed**********
       for (int i = 0; i < 16; i++)

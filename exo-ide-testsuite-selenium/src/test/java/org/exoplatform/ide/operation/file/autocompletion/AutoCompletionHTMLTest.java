@@ -24,7 +24,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
-import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.Test;
 
 /**
@@ -104,33 +103,20 @@ public class AutoCompletionHTMLTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.editor().deleteFileContent();
 
-      selenium.typeKeys("//body[@class='editbox']", "<div class=\"ItemDetail\" st");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
-      selenium.typeKeys("//body[@class='editbox']", "le=\"displa");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
-      selenium.typeKeys("//body[@class='editbox']", ":block\">");
+      
+      typeTextIntoEditor(0, "<div class=\"ItemDetail\" style=\"display:block\">");
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
-      selenium.typeKeys("//body[@class='editbox']", "<div class=\"NoneAppsMessage\" st");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
-      selenium.typeKeys("//body[@class='editbox']", "le=\"displa");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
-      selenium.typeKeys("//body[@class='editbox']", ":block\">");
+      typeTextIntoEditor(0,"<div class=\"NoneAppsMessage\" style=\"display:block\">");
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
-      selenium.typeKeys("//body[@class='editbox']", "<%=_ctx");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
-      selenium.typeKeys("//body[@class='editbox']", "appRes(\"UIAddNewApplication");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
-      selenium.typeKeys("//body[@class='editbox']", "label");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
-      selenium.typeKeys("//body[@class='editbox']", "NoneApp\")%>");
+      typeTextIntoEditor(0, "<%=_ctx.appRes(\"UIAddNewApplication.label.NoneApp\")%>");
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
-      selenium.typeKeys("//body[@class='editbox']", "</div>");
+      typeTextIntoEditor(0, "</div>");
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
-      selenium.typeKeys("//body[@class='editbox']", "</div>");
+      typeTextIntoEditor(0,"</div>");
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
@@ -146,11 +132,10 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       IDE.codeAssistant().openForm();
 
-      assertTrue(selenium.isElementPresent("//div[contains(text(), '!DOCTYPE')]"));
-      assertTrue(selenium.isElementPresent("//div[contains(text(), 'acronym')]"));
-      assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]"));
-
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\27");
+      IDE.codeAssistant().checkElementPresent("!DOCTYPE");
+      IDE.codeAssistant().checkElementPresent("acronym");
+      IDE.codeAssistant().checkElementPresent("a");
+      IDE.codeAssistant().closeForm();
 
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
@@ -160,92 +145,77 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
-      Thread.sleep(20000);
-
       selenium.typeKeys("//body[@class='editbox']", "<t");
 
-      //Autocomplete.openForm();
       IDE.codeAssistant().openForm();
 
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
-
-      String textAfter = selenium.getText("//body[@class='editbox']");
+      IDE.codeAssistant().insertSelectedItem();
+      
+      String textAfter = getTextFromCodeEditor(0);
       assertTrue(textAfter.contains("<textarea></textarea>"));
 
-      selenium.typeKeys("//body[@class='editbox']", "<p ");
+      typeTextIntoEditor(0, "<p ");
 
       IDE.codeAssistant().openForm();
 
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
-
-      String textA = selenium.getText("//body[@class='editbox']");
+     IDE.codeAssistant().insertSelectedItem();
+     
+      String textA = getTextFromCodeEditor(0);
       assertTrue(textA.contains("<p class=\"\""));
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
 
       IDE.codeAssistant().openForm();
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
+      IDE.codeAssistant().insertSelectedItem();
 
-      String text = selenium.getText("//body[@class='editbox']");
+      String text = getTextFromCodeEditor(0);
       assertTrue(text.contains("<p class=\"\"></p>"));
    }
 
- //************fixed**********
    private void GoogleGadgetTest() throws Exception
    {
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyDown("//body[@class='editbox']", "\\13");
-
-      Thread.sleep(5000);
-
       
       for (int i = 0; i < 16; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
-         Thread.sleep(500);
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
-      selenium.typeKeys("//body[@class='editbox']", "<t");
+      typeTextIntoEditor(0, "<t");
 
-      //Autocomplete.openForm();
       IDE.codeAssistant().openForm();
 
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
-
-      String textAfter = selenium.getText("//body[@class='editbox']");
+      IDE.codeAssistant().insertSelectedItem();
+      
+      String textAfter = getTextFromCodeEditor(0);
       assertTrue(textAfter.contains("<textarea></textarea>"));
 
-      selenium.typeKeys("//body[@class='editbox']", "<p ");
-
+      typeTextIntoEditor(0, "<p ");
+      
       IDE.codeAssistant().openForm();
 
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
-
-      String textA = selenium.getText("//body[@class='editbox']");
+      IDE.codeAssistant().insertSelectedItem();
+      
+      String textA = getTextFromCodeEditor(0);
       assertTrue(textA.contains("<p class=\"\""));
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
 
       IDE.codeAssistant().openForm();
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
+      IDE.codeAssistant().insertSelectedItem();
 
-      String text = selenium.getText("//body[@class='editbox']");
+      String text = getTextFromCodeEditor(0);
       assertTrue(text.contains("<p class=\"\"></p>"));
-      //****************************
    }
 }
