@@ -105,6 +105,14 @@ public class CodeMirrorConfiguration
       this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
          new DefaultCodeValidator());
    }
+   
+   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
+      boolean canBeAutocompleted, Parser parser, AutocompleteHelper autocompleteHelper, boolean canBeValidated, boolean canHaveSeveralMimeTypes)
+   {
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
+         new DefaultCodeValidator());
+      this.canHaveSeveralMimeTypes = canHaveSeveralMimeTypes;
+   }
 
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
       boolean canBeAutocompleted, Parser parser, AutocompleteHelper autocompleteHelper, boolean canBeValidated,

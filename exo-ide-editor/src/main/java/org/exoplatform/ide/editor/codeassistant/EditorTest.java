@@ -57,6 +57,7 @@ import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyTemplateAutocomp
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
+import org.exoplatform.ide.editor.codemirror.autocomplete.JspAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 import org.exoplatform.ide.editor.codemirror.parser.GoogleGadgetParser;
 import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
@@ -64,6 +65,7 @@ import org.exoplatform.ide.editor.codemirror.parser.GroovyTemplateParser;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
+import org.exoplatform.ide.editor.codemirror.parser.JspParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
 import org.exoplatform.ide.editor.codevalidator.GroovyTemplateCodeValidator;
@@ -332,6 +334,18 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                javaCodeAssistant
               )));      
       
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JSP, "CodeMirror JSP file editor", "jsp","", true,
+         new CodeMirrorConfiguration(
+               "['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']",  // generic code parsers
+               "['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" + CodeMirrorConfiguration.PATH + "css/javacolors.css']", // code styles               
+               true, // can be outlined
+               true, // can be autocompleted
+               new JspParser(), // exoplatform code parser 
+               new JspAutocompleteHelper(), // autocomplete helper
+               false, // canBeValidated
+               true //  canHaveSeveralMimeTypes
+//               jspCodeAssistant
+              )));    
       
       // ckeditor
       addEditor(new CKEditorProducer(MimeType.TEXT_HTML, "CKEditor HTML editor", "html","", false,
@@ -661,6 +675,27 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       });
       
       
+      Button jspButton = new Button();
+      jspButton.setTitle("Create JSPCodeMirror Editor");
+      jspButton.setText("JSP");
+      jspButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JSP);
+
+            editor =
+               codeEditors.get(MimeType.APPLICATION_JSP).createEditor(ExamplesBundle.INSTANCE.jspExample().getText(),
+                  eventBus, params);
+            panel.clear();
+            panel.add(editor);
+         }
+      });      
+            
+      
+      
       Button showLineNumbersButton =
          new Button();
       showLineNumbersButton.setTitle("Show LineNumbers");
@@ -700,7 +735,8 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       toolbar.add(groovyServiceButton);   
       toolbar.add(dataObjectButton);      
       toolbar.add(groovyTemplateButton);  
-      toolbar.add(javaButton);      
+      toolbar.add(javaButton);
+      toolbar.add(jspButton);      
       
       toolbar.add(htmlCKEditorButton);
       toolbar.add(googleGadgetCKEditorButton);      

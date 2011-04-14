@@ -45,5 +45,8 @@ public enum TokenType {
    BLOCK, 
    
    /** Property type for Groovy code */
-   GROOVY_TAG, PACKAGE, IMPORT, PARAMETER, TYPE;
+   GROOVY_TAG, PACKAGE, IMPORT, PARAMETER, TYPE,
+   
+   /** Property type for Java code */
+   JSP_TAG;
 }

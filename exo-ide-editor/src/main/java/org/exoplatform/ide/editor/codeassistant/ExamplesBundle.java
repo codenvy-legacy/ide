@@ -59,5 +59,8 @@ public interface ExamplesBundle extends ClientBundle
    TextResource groovyTemplateExample();
 
    @Source("org/exoplatform/ide/editor/public/example/java.txt")   
-   TextResource javaExample();   
+   TextResource javaExample();
+   
+   @Source("org/exoplatform/ide/editor/public/example/jsp.txt")   
+   TextResource jspExample();
 }
