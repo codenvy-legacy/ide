@@ -25,6 +25,8 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
+import java.awt.event.KeyEvent;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -32,59 +34,49 @@ import org.junit.Test;
  */
 public class AutoCompletionXMLTest extends BaseTest
 {
-   
+
    @Test
    public void openForm() throws Throwable
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      String text = selenium.getText("//body[@class='editbox']");
+      String text = getTextFromCodeEditor(0);
       assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
-     
-      selenium.mouseDownAt("//body[@class='editbox']//span[2]", "");
-      selenium.mouseUpAt("//body[@class='editbox']//span[2]", "");
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.typeKeys("//body[@class='editbox']", "<root>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.typeKeys("//body[@class='editbox']", "</root>");
-      selenium.keyPressNative("38");
-      
-      selenium.typeKeys("//body[@class='editbox']", "<rot>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.typeKeys("//body[@class='editbox']", "</rot>");
-      selenium.keyPressNative("38");
-      
-      
-      selenium.typeKeys("//body[@class='editbox']", "<rt>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.typeKeys("//body[@class='editbox']", "</rt>");
-      
-      selenium.keyPressNative("38");
-      
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']//span[6]", "\\32");
-      selenium.keyUp("//body[@class='editbox']//span[6]", "\\32");
-      selenium.controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
-      selenium.typeKeys("//input[@class='exo-autocomplete-edit']", "ro");
-      selenium.keyPress("//input[@class='exo-autocomplete-edit']", "\\8");
-      assertTrue(selenium.isElementPresent("//div[contains(text(), 'rot')]"));
-      
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      selenium.keyPressNative(""+java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+
+      runHotkeyWithinEditor(0, false, false, KeyEvent.VK_HOME);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      //      selenium.keyDown("//body[@class='editbox']", "\\35");
+      IDE.editor().pressEnter();
+      typeTextIntoEditor(0, "<root>");
+      IDE.editor().pressEnter();
+      IDE.editor().pressEnter();
+      typeTextIntoEditor(0, "</root>");
+      selenium.keyPressNative("" + KeyEvent.VK_UP);
+
+      typeTextIntoEditor(0, "<rot>");
+      IDE.editor().pressEnter();
+      IDE.editor().pressEnter();
+      typeTextIntoEditor(0, "</rot>");
+      selenium.keyPressNative("" + KeyEvent.VK_UP);
+
+      typeTextIntoEditor(0, "<rt>");
+      IDE.editor().pressEnter();
+      IDE.editor().pressEnter();
+      typeTextIntoEditor(0, "</rt>");
+
+      selenium.keyPressNative("" + KeyEvent.VK_UP);
+
+      IDE.codeAssistant().openForm();
+
+      IDE.codeAssistant().typeToInput("ro");
+      IDE.codeAssistant().checkElementPresent("rot");
+      IDE.codeAssistant().insertSelectedItem();
+
       String textAfter = getTextFromCodeEditor(0);
       assertTrue(textAfter.contains("<root></root>"));
 
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);      
+      IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
 }
