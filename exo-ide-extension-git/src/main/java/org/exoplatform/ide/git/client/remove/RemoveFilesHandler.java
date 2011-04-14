@@ -16,23 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.add;
+package org.exoplatform.ide.git.client.remove;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link AddToIndexEvent} event.
+ * Handler for {@link RemoveFilesEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 4:26:27 PM anya $
+ * @version $Id:  Apr 12, 2011 3:55:03 PM anya $
  *
  */
-public interface AddToIndexHandler extends EventHandler
+public interface RemoveFilesHandler extends EventHandler
 {
    /**
-    * Perform action on adding changes to index.
+    * Perform actions on remove files from commit.
     * 
-    * @param event 
+    * @param event
     */
-   void onAddToIndex(AddToIndexEvent event);
+   void onRemoveFiles(RemoveFilesEvent event);
 }

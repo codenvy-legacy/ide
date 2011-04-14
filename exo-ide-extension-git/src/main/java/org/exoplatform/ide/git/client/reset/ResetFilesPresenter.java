@@ -16,17 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.add;
+package org.exoplatform.ide.git.client.reset;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -35,59 +35,59 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.ViewEx;
-import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitClientUtil;
 import org.exoplatform.ide.git.client.Messages;
+import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
+import org.exoplatform.ide.git.client.remove.IndexFile;
+import org.exoplatform.ide.git.shared.GitFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Presenter for add changes to index view.
- * The view must implement  {@link AddToIndexPresenter.Display}.
- * Add view to View.gwt.xml.
+ * Presenter for view for reseting files from index.
+ * The view must be pointed in Views.gwt.xml file.
+ * 
+ * When user tries to reset files from index:
+ * 1. Find Git work directory by selected item in browser tree.
+ * 2. Get status for found work directory.
+ * 3. Display files ready for commit in grid.
+ * (Checked items will be reseted from index).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 4:35:16 PM anya $
+ * @version $Id:  Apr 13, 2011 4:52:42 PM anya $
  *
  */
-public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandler, Messages
+public class ResetFilesPresenter implements ItemsSelectedHandler, ResetFilesHandler
 {
-   public interface Display extends IsView
+   interface Display extends IsView
    {
       /**
-       * Get add button click handler.
+       * Get reset files button click handler.
        * 
-       * @return {@link HasClickHandlers}
+       * @return {@link HasClickHandlers} click handler
        */
-      HasClickHandlers getAddButton();
+      HasClickHandlers getResetButton();
 
       /**
        * Get cancel button click handler.
        * 
-       * @return {@link HasClickHandlers}
+       * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getCancelButton();
 
       /**
-       * Get update field value.
+       * Get grid with Git files.
        * 
-       * @return {@link HasValue}
+       * @return {@link ListGrid}
        */
-      HasValue<Boolean> getUpdateValue();
-
-      /**
-       * Get message label value.
-       * 
-       *  @return {@link HasValue} 
-       */
-      HasValue<String> getMessage();
+      ListGrid<IndexFile> getIndexFilesGrid();
    }
 
    /**
-    * Presenter's display.
+    * Presenter' display.
     */
    private Display display;
 
@@ -102,34 +102,37 @@ public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandle
    private List<Item> selectedItems;
 
    /**
-    * Working directory location.
+    * Git repository working directory.
     */
    private String workDir;
 
    /**
     * @param eventBus events handler
     */
-   public AddToIndexPresenter(HandlerManager eventBus)
+   public ResetFilesPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      eventBus.addHandler(AddFilesEvent.TYPE, this);
+
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ResetFilesEvent.TYPE, this);
    }
 
    /**
+    * Bind pointed display with presenter.
+    * 
     * @param d display
     */
    public void bindDisplay(Display d)
    {
       this.display = d;
 
-      display.getAddButton().addClickHandler(new ClickHandler()
+      display.getResetButton().addClickHandler(new ClickHandler()
       {
 
          @Override
          public void onClick(ClickEvent event)
          {
-            doAdd();
+            doReset();
          }
       });
 
@@ -145,16 +148,13 @@ public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandle
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.add.AddFilesHandler#onAddFiles(org.exoplatform.ide.git.client.add.AddFilesEvent)
+    * @see org.exoplatform.ide.git.client.reset.ResetFilesHandler#onResetFiles(org.exoplatform.ide.git.client.reset.ResetFilesEvent)
     */
    @Override
-   public void onAddFiles(AddFilesEvent event)
+   public void onResetFiles(ResetFilesEvent event)
    {
       if (selectedItems == null || selectedItems.size() <= 0)
-      {
-         Dialogs.getInstance().showInfo(SELECTED_ITEMS_FAIL);
          return;
-      }
 
       GitClientService.getInstance().getWorkDir(selectedItems.get(0).getHref(),
          new AsyncRequestCallback<WorkDirResponse>()
@@ -165,88 +165,57 @@ public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandle
             {
                workDir = result.getWorkDir();
                workDir = workDir.endsWith("/.git") ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-               Display d = GWT.create(Display.class);
-               IDE.getInstance().openView((ViewEx)d);
-               bindDisplay(d);
 
-               display.getMessage().setValue(formMessage(), true);
+               getStatus(workDir);
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               Dialogs.getInstance().showInfo(NOT_GIT_REPOSITORY);
+               Dialogs.getInstance().showInfo(Messages.NOT_GIT_REPOSITORY);
             }
          });
    }
 
    /**
-    * Form the message to display for adding to index, telling the user what 
-    * is gonna to be added.
+    * Get the information about git files' states.
     * 
-    * @return {@link String} message to display
+    * @param workDir
     */
-   private String formMessage()
+   private void getStatus(final String workDir)
    {
-      if (selectedItems == null || selectedItems.size() <= 0)
-         return "";
-      Item selectedItem = selectedItems.get(0);
-
-      String message = "Add ";
-      String pattern = GitClientUtil.getFilePatternByHref(selectedItem.getHref(), workDir);
-
-      //Root of the working tree:
-      if (pattern.length() == 0 || "/".equals(pattern))
+      GitClientService.getInstance().status(workDir, new AsyncRequestCallback<StatusResponse>()
       {
-         message += "all changes in repository to index.";
-         return message;
-      }
 
-      if (selectedItem instanceof Folder)
-      {
-         message += "content of folder";
-      }
-      else
-      {
-         message += "file";
-      }
-      message += " <b>" + pattern + "</b> ";
-      message += "to index.";
-      return message;
-   }
-
-   /**
-    * Perform adding to index.
-    */
-   private void doAdd()
-   {
-      if (workDir == null || selectedItems == null || selectedItems.size() <= 0)
-         return;
-      boolean update = display.getUpdateValue().getValue();
-      String pattern = GitClientUtil.getFilePatternByHref(selectedItems.get(0).getHref(), workDir);
-      String[] filePatterns =
-         (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
-
-      GitClientService.getInstance().add(workDir, update, filePatterns, new AsyncRequestCallback<String>()
-      {
          @Override
-         protected void onSuccess(String result)
+         protected void onSuccess(StatusResponse result)
          {
-            eventBus.fireEvent(new OutputEvent(ADD_SUCCESS));
-            eventBus.fireEvent(new RefreshBrowserEvent());
+            if (result.getChangedNotCommited() == null || result.getChangedNotCommited().size() <= 0)
+            {
+               Dialogs.getInstance().showInfo(Messages.NOTHING_TO_COMMIT);
+               return;
+            }
+
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView((ViewEx)d);
+            bindDisplay(d);
+
+            List<IndexFile> values = new ArrayList<IndexFile>();
+            for (GitFile file : result.getChangedNotCommited())
+            {
+               values.add(new IndexFile(file, true));
+            }
+
+            display.getIndexFilesGrid().setValue(values);
          }
 
          @Override
          protected void onFailure(Throwable exception)
          {
-            String errorMessage =
-               (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : ADD_FAILED;
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            String errorMassage = (exception.getMessage() != null) ? exception.getMessage() : Messages.STATUS_FAILED;
+            eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
          }
       });
-
-      IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**
@@ -256,5 +225,41 @@ public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandle
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
+   }
+
+   /**
+    * Reset checked files from index.
+    */
+   private void doReset()
+   {
+      List<String> files = new ArrayList<String>();
+      for (IndexFile file : display.getIndexFilesGrid().getValue())
+      {
+         if (!file.isIndexed())
+         {
+            files.add(file.getPath());
+         }
+      }
+
+      GitClientService.getInstance().reset(workDir, files.toArray(new String[files.size()]), "HEAD", null,
+         new AsyncRequestCallback<String>()
+         {
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               IDE.getInstance().closeView(display.asView().getId());
+               eventBus.fireEvent(new OutputEvent(Messages.RESET_FILES_SUCCESSFULLY, Type.INFO));
+               eventBus.fireEvent(new RefreshBrowserEvent());
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               String errorMassage =
+                  (exception.getMessage() != null) ? exception.getMessage() : Messages.RESET_FILES_FAILED;
+               eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+            }
+         });
    }
 }

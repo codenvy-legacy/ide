@@ -25,40 +25,40 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.add.AddToIndexEvent;
+import org.exoplatform.ide.git.client.remove.RemoveFilesEvent;
 
 /**
- * Control for adding changes to index (temporary storage).
+ * Control is used to remove files from commit (added by add command) and work tree.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 4:23:20 PM anya $
+ * @version $Id:  Apr 12, 2011 3:33:56 PM anya $
  *
  */
-public class AddToIndexControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class RemoveFilesControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
+
    /**
     * Control ID.
     */
-   public static final String ID = "Git/Add to index";
+   public static final String ID = "Git/Remove...";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Add to index";
+   public static final String TITLE = "Remove ...";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Add changes to index";
+   public static final String PROMPT = "Remove changes from index";
 
-   public AddToIndexControl()
+   public RemoveFilesControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new AddToIndexEvent());
-      setImages(GitClientBundle.INSTANCE.addToIndex(), GitClientBundle.INSTANCE.addToIndexDisabled());
-      setDelimiterBefore(true);
+      setImages(GitClientBundle.INSTANCE.removeFiles(), GitClientBundle.INSTANCE.removeFilesDisabled());
+      setEvent(new RemoveFilesEvent());
    }
 
    /**

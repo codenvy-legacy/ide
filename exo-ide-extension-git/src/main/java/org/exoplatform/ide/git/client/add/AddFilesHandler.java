@@ -18,40 +18,21 @@
  */
 package org.exoplatform.ide.git.client.add;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Event is fired, when user tries to add changes to Git index.
- * Implement {@link AddToIndexHandler} handler for processing event.
+ * Handler for {@link AddFilesEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 4:26:18 PM anya $
+ * @version $Id:  Mar 29, 2011 4:26:27 PM anya $
  *
  */
-public class AddToIndexEvent extends GwtEvent<AddToIndexHandler>
+public interface AddFilesHandler extends EventHandler
 {
-   
    /**
-    * Type used to register this event.
+    * Perform action on adding changes to index.
+    * 
+    * @param event 
     */
-   public static final GwtEvent.Type<AddToIndexHandler> TYPE = new GwtEvent.Type<AddToIndexHandler>();
-   
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<AddToIndexHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(AddToIndexHandler handler)
-   {
-      handler.onAddToIndex(this);
-   }
-
+   void onAddFiles(AddFilesEvent event);
 }

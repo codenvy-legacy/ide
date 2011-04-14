@@ -29,15 +29,19 @@ import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.branch.BranchPresenter;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
 import org.exoplatform.ide.git.client.commit.CommitPresenter;
-import org.exoplatform.ide.git.client.control.AddToIndexControl;
+import org.exoplatform.ide.git.client.control.AddFilesControl;
 import org.exoplatform.ide.git.client.control.BranchesControl;
 import org.exoplatform.ide.git.client.control.CloneRepositoryControl;
 import org.exoplatform.ide.git.client.control.CommitControl;
 import org.exoplatform.ide.git.client.control.InitRepositoryControl;
 import org.exoplatform.ide.git.client.control.PushToRemoteControl;
+import org.exoplatform.ide.git.client.control.RemoveFilesControl;
+import org.exoplatform.ide.git.client.control.ResetFilesControl;
 import org.exoplatform.ide.git.client.control.ShowStatusControl;
 import org.exoplatform.ide.git.client.create.InitRepositoryPresenter;
 import org.exoplatform.ide.git.client.push.PushToRemotePresenter;
+import org.exoplatform.ide.git.client.remove.RemoveFilesPresenter;
+import org.exoplatform.ide.git.client.reset.ResetFilesPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
 
 /**
@@ -63,7 +67,9 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       //Add controls:
       IDE.getInstance().addControl(new InitRepositoryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CloneRepositoryControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new AddToIndexControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new AddFilesControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ResetFilesControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new RemoveFilesControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CommitControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new BranchesControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new PushToRemoteControl(), DockTarget.NONE, false);
@@ -75,6 +81,9 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new InitRepositoryPresenter(eventBus);
       new StatusCommandHandler(eventBus);
       new AddToIndexPresenter(eventBus);
+      new RemoveFilesPresenter(eventBus);
+      new ResetFilesPresenter(eventBus);
+      
       new CommitPresenter(eventBus);
       new PushToRemotePresenter(eventBus);
       new BranchPresenter(eventBus);

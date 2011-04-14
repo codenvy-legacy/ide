@@ -31,6 +31,8 @@ public interface Constants
    
    public static final String ID = "id";
    
+   public static final String COMMIT = "commit";
+   
    public static final String COMMIT_TIME = "commitTime";
    
    public static final String COMMITTER = "committer";
@@ -55,6 +57,8 @@ public interface Constants
    
    public static final String FORCE = "force";
    
+   public static final String FILES = "files";
+   
    public static final String LIST_MODE = "listMode";
    
    public static final String MESSAGE = "message";
@@ -62,6 +66,8 @@ public interface Constants
    public static final String REMOTE = "remote";
    
    public static final String PATH = "path";
+   
+   public static final String PATHS = "paths";
 
    public static final String REMOTE_URI = "remoteUri";
    
@@ -74,6 +80,8 @@ public interface Constants
    public static final String START_POINT = "startPoint";
    
    public static final String STATUS = "status";
+   
+   public static final String TYPE = "type";
    
    public static final String FILE_FILTER = "fileFilter";
    

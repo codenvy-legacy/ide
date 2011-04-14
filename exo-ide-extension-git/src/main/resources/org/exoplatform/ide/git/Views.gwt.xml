@@ -43,4 +43,12 @@
     <replace-with class="org.exoplatform.ide.git.client.branch.BranchView">
       <when-type-is class="org.exoplatform.ide.git.client.branch.BranchPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.git.client.remove.RemoveFilesView">
+      <when-type-is class="org.exoplatform.ide.git.client.remove.RemoveFilesPresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.git.client.reset.ResetFilesView">
+      <when-type-is class="org.exoplatform.ide.git.client.reset.ResetFilesPresenter.Display" />
+   </replace-with>
 </module>

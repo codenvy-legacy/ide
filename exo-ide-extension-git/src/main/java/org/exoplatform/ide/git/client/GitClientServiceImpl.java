@@ -39,6 +39,8 @@ import org.exoplatform.ide.git.client.marshaller.InitRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.PushRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.RemoteListRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.RemoteListUnmarshaller;
+import org.exoplatform.ide.git.client.marshaller.RemoveRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.ResetRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.RevisionUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.StatusRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
@@ -57,7 +59,10 @@ import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.PushRequest;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.ResetRequest;
+import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.git.shared.RmRequest;
 import org.exoplatform.ide.git.shared.StatusRequest;
 
 import java.util.ArrayList;
@@ -95,6 +100,10 @@ public class GitClientServiceImpl extends GitClientService
    public static final String PUSH = "/ide/git/push";
 
    public static final String REMOTE_LIST = "/ide/git/remote-list";
+
+   public static final String REMOVE = "/ide/git/rm";
+   
+   public static final String RESET = "/ide/git/reset";
 
    private HandlerManager eventBus;
 
@@ -180,7 +189,7 @@ public class GitClientServiceImpl extends GitClientService
       String params = "workdir=" + workDir;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).send(callback);
    }
 
    /**
@@ -406,5 +415,48 @@ public class GitClientServiceImpl extends GitClientService
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#remove(java.lang.String, java.lang.String[], org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void remove(String href, String[] files, AsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext + REMOVE;
+
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+      RmRequest rmRequest = new RmRequest(files);
+      RemoveRequestMarshaller marshaller = new RemoveRequestMarshaller(rmRequest);
+
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#reset(java.lang.String, java.lang.String[], java.lang.String, org.exoplatform.ide.git.shared.ResetRequest.ResetType, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void reset(String href, String[] paths, String commit, ResetType resetType,
+      AsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext + RESET;
+
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+      ResetRequest resetRequest = new ResetRequest();
+      resetRequest.setPaths(paths);
+      resetRequest.setCommit(commit);
+      resetRequest.setType(resetType);
+      
+      ResetRequestMarshaller marshaller = new ResetRequestMarshaller(resetRequest);
+
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);      
    }
 }

@@ -23,6 +23,7 @@ import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
 
 import java.util.List;
@@ -124,7 +125,34 @@ public abstract class GitClientService
     */
    public abstract void remoteList(String workDir, String remoteName, boolean verbose,
       AsyncRequestCallback<List<Remote>> callback);
-
+   
+   /**
+    * Remove files from the working tree and the index.
+    * 
+    * @param workDir  location of Git repository working directory
+    * @param files files to remove
+    * @param callback callback
+    */
+   public abstract void remove(String workDir, String[] files, AsyncRequestCallback<String> callback);
+   
+   /**
+    * Reset current HEAD to the specified state.
+    * There two types of the reset: <br>
+    * 1. Reset files in index -  content of files is untouched. Typically it is
+    * useful to remove from index mistakenly added files.<br>
+    * <code>git reset [paths]</code> is the opposite of <code>git add [paths]</code>.
+    * 2. Reset the current branch head to [commit] and possibly 
+    * updates the index (resetting it to the tree of [commit]) 
+    * and the working tree depending on [mode].
+    * 
+    * @param workDir location of Git repository working directory
+    * @param paths paths to reset
+    * @param commit commit to which current head should be reset
+    * @param resetType type of the reset
+    * @param callback callback
+    */
+   public abstract void reset(String workDir, String[] paths, String commit, ResetRequest.ResetType resetType, AsyncRequestCallback<String> callback);
+   
    /**
     * Initializes new Git repository.
     * 

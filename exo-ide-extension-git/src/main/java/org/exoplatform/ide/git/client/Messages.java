@@ -50,6 +50,8 @@ public interface Messages
    public static final String COMMIT_SUCCESS = "Successfully commited.";
 
    public static final String COMMIT_FAILED = "Commit failed.";
+   
+   public static final String NOTHING_TO_COMMIT = "Nothing to commit.";
 
    public static final String INIT_SUCCESS = "Repository was successfully initialized.";
 
@@ -60,6 +62,12 @@ public interface Messages
    public static final String PUSH_FAIL = "Push to remote repository failed.";
    
    public static final String REMOTE_LIST_FAILED = "No remote repositories are found.";
+   
+   public static final String REMOVE_FILES_FAILED = "Remove files failed.";
+   
+   public static final String RESET_FILES_FAILED = "Reset files failed.";
+   
+   public static final String RESET_FILES_SUCCESSFULLY = "Successfully reseted files.";
    
    public static final String REPOSITORY_ALREADY_EXISTS = "Git repository already exists in this folder or parent one.";
    
