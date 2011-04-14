@@ -19,6 +19,7 @@
 package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
@@ -86,6 +87,11 @@ public class CodeAssistant
    {
       assertTrue(selenium.isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
    }
+   
+   public void checkElementNotPresent(String elementTitle)
+   {
+      assertFalse(selenium.isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
+   }
 
    /**
     * Move cursor down
@@ -117,6 +123,8 @@ public class CodeAssistant
    public void closeForm()
    {
       selenium.keyPressNative("" + KeyEvent.VK_ESCAPE);
+      selenium.waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID
+         + "\"); value == null", "5000");
    }
    
    /**

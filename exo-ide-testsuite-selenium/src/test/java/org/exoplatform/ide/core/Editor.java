@@ -402,5 +402,13 @@ public class Editor
       int y = selenium.getElementPositionTop("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaY;
       return y;
    }
+   
+   /**
+    * Press Enter key in editor.
+    */
+   public void pressEnter()
+   {
+      selenium.keyDown("//body[@class='editbox']", "\\13");
+   }
 
 }
