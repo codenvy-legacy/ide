@@ -106,7 +106,12 @@ public class Navigator
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
-   private String getItemId(String href)
+   /**
+    * Generate item id 
+    * @param href of item 
+    * @return id of item
+    */
+   public String getItemId(String href)
    {
       return Locators.TREE_PREFIX_ID +  Utils.md5(href);
    }
