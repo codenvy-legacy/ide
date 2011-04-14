@@ -20,18 +20,17 @@ package org.exoplatform.ide.operation.file.autocompletion;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -95,7 +94,8 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       /*
        * 1. Open netvibes file.
        */
-      openFileFromNavigationTreeWithCodeEditor(NETVIBES_NAME, false);
+      openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/"
+         + NETVIBES_NAME, false);
 
       /*
        * 2. Go inside <code><script></code> tag.
@@ -162,9 +162,6 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       assertTrue(getTextFromCodeEditor(0).contains("UWA.Data.getFeed(url, callback)"));
-      
-      IDE.editor().closeFileTabIgnoreChanges(0);
-
    }
    
    @Test
@@ -183,7 +180,8 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       /*
        * 1. Open netvibes file.
        */
-      openFileFromNavigationTreeWithCodeEditor(NETVIBES_NAME, false);
+      openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/"
+         + NETVIBES_NAME, false);
 
       /*
        * 2. Go inside <code><script></code> tag.
