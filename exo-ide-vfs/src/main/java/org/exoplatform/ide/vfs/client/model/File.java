@@ -22,6 +22,7 @@ package org.exoplatform.ide.vfs.client.model;
 import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Property;
 
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 
 
@@ -87,8 +89,13 @@ public class File extends org.exoplatform.ide.vfs.shared.File implements ItemCon
             (boolean)itemObject.get("locked").isBoolean().booleanValue(),                
             JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties")),     
             JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links")));
-      
       this.newFile = false;
+   }
+   
+   public void init(JSONObject itemObject)
+   {
+      super.init(itemObject);
+      setLength((long)itemObject.get("length").isNumber().doubleValue());
    }
 
    /**
@@ -154,7 +161,7 @@ public class File extends org.exoplatform.ide.vfs.shared.File implements ItemCon
 
    public boolean isLocked() 
    {
-      return lockToken == null;
+      return lockToken != null;
    }
 
 

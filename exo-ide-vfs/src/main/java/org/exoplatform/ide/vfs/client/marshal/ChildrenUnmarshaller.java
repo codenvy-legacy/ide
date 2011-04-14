@@ -67,7 +67,6 @@ public class ChildrenUnmarshaller implements Unmarshallable
       {
          JSONValue jsonValue = JSONParser.parseLenient(response.getText());
          parseItems(jsonValue.isObject().get("items").isArray());
-
       }
       catch (Exception exc)
       {

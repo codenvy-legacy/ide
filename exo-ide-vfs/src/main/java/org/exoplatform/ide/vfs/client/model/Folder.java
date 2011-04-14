@@ -29,6 +29,7 @@ import org.exoplatform.ide.vfs.shared.Property;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 
 
@@ -50,6 +51,12 @@ public class Folder extends org.exoplatform.ide.vfs.shared.Folder implements Ite
    {
       super(null, name, FOLDER_MIME_TYPE, path, parentId, new Date().getTime(), 
     		new ArrayList<Property>(), new HashMap<String, Link>());
+   }
+   
+   public Folder(String name, String path, String parentId,Map<String, Link> links)
+   {
+      super(null, name, FOLDER_MIME_TYPE, path, parentId, new Date().getTime(), 
+         new ArrayList<Property>(), links);
    }
 
 

@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.vfs.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -40,88 +37,97 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
+
+/**
+ * Class provide communication with server side of VirtualFileSystem via REST.
+ * @author vetal
+ *
+ */
 public class VirtualFileSystem
 {
-   public interface Messages
-   {
-
-      static final String GET_FILE_CONTENT = "Reading file content...";
-
-      static final String GET_FOLDER_CONTENT = "Reading folder content...";
-
-      static final String CREATE_FOLDER = "Creating folder...";
-
-      static final String DELETE_FOLDER = "Deleting folder...";
-
-      static final String DELETE_FILE = "Deleting file...";
-
-      static final String SAVE_FILE_CONTENT = "Saving file...";
-
-      static final String GET_PROPERTIES = "Reading properties...";
-
-      static final String SAVE_PROPERTIES = "Saving properties...";
-
-      static final String SEARCH = "Searching...";
-
-      static final String MOVE_FILE = "Moving file...";
-
-      static final String MOVE_FOLDER = "Moving folder...";
-
-      static final String COPY_FILE = "Copying file...";
-
-      static final String COPY_FOLDER = "Copying folder...";
-
-      static final String LOCK = "Locking...";
-
-   }
-
+   /**
+    * VFS instance 
+    */
    private static VirtualFileSystem instance;
 
    private final HandlerManager eventBus;
 
+   /**
+    * Fully qualified URL to root folder of VFS
+    */
    private String workspaceURL;
-   
-   private VirtualFileSystemInfo info;
 
-   //private Loader loader;
+   /**
+    * @see org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo
+    */
+   private VirtualFileSystemInfo info;
 
    public static VirtualFileSystem getInstance()
    {
       return instance;
    }
 
+   /**
+    * @param eventBus
+    * @param workspaceURL
+    */
    private VirtualFileSystem(HandlerManager eventBus, String workspaceURL)
    {
       instance = this;
 
       this.eventBus = eventBus;
-      this.workspaceURL = workspaceURL;     
-   } 
+      this.workspaceURL = workspaceURL;
+   }
 
+   /**
+    * Set information about server virtual file system and its capabilities via REST.
+    * And initialize VFS instance. 
+    * 
+    * @param callback the callback for HTTP request  
+    * @param loader the 
+    * @param eventBus
+    * @param workspaceURL
+    */
    public static void init(AsyncRequestCallback<VirtualFileSystemInfo> callback, Loader loader,
-         HandlerManager eventBus, String workspaceURL)
+      HandlerManager eventBus, String workspaceURL)
    {
-      
       VirtualFileSystem fs = new VirtualFileSystem(eventBus, workspaceURL);
-
       fs.info = new VirtualFileSystemInfo();
-
       VFSInfoUnmarshaller unmarshaller = new VFSInfoUnmarshaller(fs.info);
-     
       callback.setResult(fs.info);
-
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
-
       AsyncRequest.build(RequestBuilder.GET, workspaceURL, loader).send(callback);
    }
-   
+
+   /**
+    * Set information about server virtual file system and its capabilities.
+    * And initialize VFS instance.
+    * 
+    * @param info
+    * @param eventBus
+    * @param workspaceURL
+    */
+   public static void init(VirtualFileSystemInfo info, HandlerManager eventBus, String workspaceURL)
+   {
+      VirtualFileSystem fs = new VirtualFileSystem(eventBus, workspaceURL);
+      fs.info = info;
+   }
+
+   /**
+    * @return information about server virtual file system and its capabilities.
+    */
    public VirtualFileSystemInfo getInfo()
    {
       return info;
    }
-   
-   public String getURL() 
+
+   /**
+    * @return url to root folder of vfs
+    */
+   public String getURL()
    {
       return workspaceURL;
    }
@@ -135,14 +141,15 @@ public class VirtualFileSystem
    {
       ItemList<Item> items = new ItemList<Item>();
       folder.setChildren(items);
-      
+
       callback.setResult(items);
       ChildrenUnmarshaller unmarshaller = new ChildrenUnmarshaller(folder);
 
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
-      
-      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Folder.REL_CHILDREN).getHref(), loader).send(callback);
+
+      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Folder.REL_CHILDREN).getHref(), loader).send(
+         callback);
 
    }
 
@@ -153,64 +160,50 @@ public class VirtualFileSystem
     */
    public void createFolder(Folder parent, String name, AsyncRequestCallback<Folder> callback, Loader loader)
    {
-      
-      String url = parent.getLinkByRelation(Folder.REL_CREATE_FOLDER).getHref()+"?name="+name;
+      String url = parent.getLinkByRelation(Folder.REL_CREATE_FOLDER).getHref() + "?name=" + name;
 
       Folder newFolder = new Folder();
-      
+
       callback.setResult(newFolder);
       callback.setPayload(new ItemUnmarshaller(newFolder));
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
-   
-   
+
    /**
     * Create new project
     * 
     * @param path
     */
-   public void createProject(Folder parent, String name, String type, 
-         List<Property> properties, AsyncRequestCallback<Project> callback, 
-         Loader loader)
+   public void createProject(Folder parent, String name, String type, List<Property> properties,
+      AsyncRequestCallback<Project> callback, Loader loader)
    {
-      
-      String url = parent.getLinkByRelation(Folder.REL_CREATE_PROJECT).getHref()+
-      "?name="+name+"&type="+type;
+
+      String url = parent.getLinkByRelation(Folder.REL_CREATE_PROJECT).getHref() + "?name=" + name + "&type=" + type;
 
       Project newProject = new Project();
-      
+
       callback.setResult(newProject);
       callback.setPayload(new ItemUnmarshaller(newProject));
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).
-      data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(properties).toString()).
-      send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader)
+         .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(properties).toString()).send(callback);
    }
-   
+
    /**
     * Create new folder
     * 
     * @param path
     */
-   public void createFile(File newFile,
-         AsyncRequestCallback<File> callback, Loader loader)
+   public void createFile(File newFile, AsyncRequestCallback<File> callback, Loader loader)
    {
-      
- //     System.out.println("createFile "+
- //           newFile.getParent().getLinkByRelation(Folder.REL_CREATE_FILE)+" "+newFile.getContent());
-      
-      String url = newFile.getParent().getLinkByRelation(Folder.REL_CREATE_FILE).getHref()+
-      "?name="+newFile.getName();
-      
-       File file = new File();
-      
+      String url =
+         newFile.getParent().getLinkByRelation(Folder.REL_CREATE_FILE).getHref() + "?name=" + newFile.getName();
+      File file = new File();
       callback.setResult(file);
       callback.setPayload(new ItemUnmarshaller(file));
-      
- 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).data(newFile.getContent()).
-      header(HTTPHeader.CONTENT_TYPE, newFile.getMimeType()).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader).data(newFile.getContent())
+         .header(HTTPHeader.CONTENT_TYPE, newFile.getMimeType()).send(callback);
    }
 
    /**
@@ -220,47 +213,76 @@ public class VirtualFileSystem
     */
    public void getContent(File file, AsyncRequestCallback<String> callback, Loader loader)
    {
-      //System.out.println("getContent "+ file.getPath());
-      
       String url = file.getLinkByRelation(File.REL_CONTENT).getHref();
-      
       callback.setResult(file.getContent());
       callback.setPayload(new FileContentUnmarshaller(callback));
-     
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
-      
+
    }
 
+   /**
+    * Update content of file 
+    * 
+    * @param file
+    * @param callback
+    * @param loader
+    */
    public void updateContent(File file, AsyncRequestCallback<String> callback, Loader loader)
    {
-
-      String url = file.getLinkByRelation(File.REL_CONTENT).getHref()+
-      //"?mediaType="+file.getMimeType()+
-      ((file.isLocked())?"?lockToken="+file.getLockToken():"");
-
-      AsyncRequest.build(RequestBuilder.POST, url, loader).
-      header(HTTPHeader.CONTENT_TYPE, file.getMimeType()).
-      data(file.getContent()).send(callback);
+      String url = file.getLinkByRelation(File.REL_CONTENT).getHref() +
+         ((file.isLocked()) ? "?lockToken=" + file.getLockToken().getLockToken() : "");
+      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, file.getMimeType())
+         .data(file.getContent()).send(callback);
    }
-   
+
+   /**
+    * Delete item (file or folder)
+    * 
+    * @param item
+    * @param callback
+    * @param loader
+    */
    public void delete(Item item, AsyncRequestCallback<String> callback, Loader loader)
    {
       String lockStr = "";
-      if(item.getItemType() == ItemType.FILE && ((File)item).isLocked())
-         lockStr = "?lockToken="+((File)item).getLockToken();
+      if (item.getItemType() == ItemType.FILE && ((File)item).isLocked())
+         lockStr = "?lockToken=" + ((File)item).getLockToken();
 
-      String url = item.getLinkByRelation(Item.REL_DELETE).getHref()+lockStr;
+      String url = item.getLinkByRelation(Item.REL_DELETE).getHref() + lockStr;
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
-   public void copy(String source, String destination, Loader loader)
+   /**
+    * Copy item (file or folder) 
+    * 
+    * @param source the source item
+    * @param destination id of destination file folder
+    * @param callback
+    * @param loader
+    */
+   public void copy(Item source, String destination, AsyncRequestCallback<String> callback, Loader loader)
    {
+      String url = source.getLinkByRelation(Item.REL_COPY).getHref() +  (destination != null ? "?parentId=" + destination : "") ;
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
-   public void move(String id, String parentId, String lockToken, Loader loader)
+   /**
+    * Move item (file or folder)
+    * 
+    * @param source the source item
+    * @param destination id of destination file folder
+    * @param lockToken
+    * @param callback
+    * @param loader
+    */
+   public void move(Item source, String destination, String lockToken, AsyncRequestCallback<String> callback, Loader loader)
    {
-
+      String lockStr = "";
+      if (source.getItemType() == ItemType.FILE && ((File)source).isLocked())
+         lockStr = "?lockToken=" + ((File)source).getLockToken();
+      String url = source.getLinkByRelation(Item.REL_MOVE).getHref() +  "?parentId=" + destination + lockStr;
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
    public void rename(String id, String mediaType, String newname, String lockToken, Loader loader)
@@ -276,5 +298,5 @@ public class VirtualFileSystem
    {
 
    }
-   
+
 }

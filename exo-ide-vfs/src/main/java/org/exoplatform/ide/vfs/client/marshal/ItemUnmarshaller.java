@@ -50,7 +50,7 @@ public class ItemUnmarshaller implements Unmarshallable
    public void unmarshal(Response response) throws UnmarshallerException
    {
       try
-      {         
+      {        
          item.init(JSONParser.parseLenient(response.getText()).isObject());
       }
       catch (Exception exc)
