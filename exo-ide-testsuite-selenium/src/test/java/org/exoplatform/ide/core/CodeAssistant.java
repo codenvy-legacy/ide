@@ -118,6 +118,14 @@ public class CodeAssistant
    {
       selenium.keyPressNative("" + KeyEvent.VK_ESCAPE);
    }
+   
+   /**
+    *Press Enter key to close form and paste selected item in to the editor 
+    */
+   public void insertSelectedItem()
+   {
+      selenium.keyPressNative("" + KeyEvent.VK_ENTER);
+   }
 
    /**
     * Open Autocompletion Form

@@ -180,9 +180,9 @@ public class Locators
          "scLocator=//IButton[ID=\"ideAskForValueDialogOkButton\"]/";
 
       public static final String ASK_FOR_VALUE_NO_BUTTON_LOCATOR =
-         "scLocator=//IButton[ID=\"ideAskForValueDialogNoButton\"]/";
+         "ideAskForValueDialogNoButton";
 
-      public static final String ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR = "ideAskForValueDialogNoButton";
+      public static final String ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR = "ideAskForValueDialogCancelButton";
 
       public static final String ASK_FOR_VALUE_TEXT_FIELD_LOCATOR = ASK_FOR_VALUE_DIALOG_LOCATOR
          + "item[0][Class=\"DynamicForm\"]/item[name=ideAskForValueDialogValueField]/element";

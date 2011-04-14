@@ -23,9 +23,11 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.awt.event.KeyEvent;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -35,26 +37,20 @@ import org.junit.Test;
 public class AutoCompletionCSSTest extends BaseTest
 {
 
-      @Test
+   @Test
    public void testPlainCSS() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
-      Thread.sleep(TestConstants.SLEEP);
 
       cssTest();
-
-//      closeTab("0");
-//      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton");
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
    public void testGoogleGadget() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -63,13 +59,13 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
-      Thread.sleep(3000);
+//      Thread.sleep(3000);
 
-     //************fixed**********
+      //************fixed**********
       for (int i = 0; i < 16; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
-         Thread.sleep(500);
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
       //****************************
       selenium.keyDown("//body[@class='editbox']", "\\35");
@@ -88,7 +84,7 @@ public class AutoCompletionCSSTest extends BaseTest
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 
-      @Test
+   @Test
    public void testHTML() throws Exception
    {
       selenium.refresh();
@@ -125,27 +121,22 @@ public class AutoCompletionCSSTest extends BaseTest
    private void cssTest() throws Exception
    {
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
-      selenium.typeKeys("//body[@class='editbox']", "main{");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      typeTextIntoEditor(0, "main{");
+      runHotkeyWithinEditor(0, false, false, KeyEvent.VK_ENTER);
 
       IDE.codeAssistant().openForm();
-//      Autocomplete.openForm();
-      //      Autocomplete.openForm();
 
-      selenium.focus("//input[@class='exo-autocomplete-edit']");
-      selenium.typeKeys("//input[@class='exo-autocomplete-edit']", "list-st");
+      IDE.codeAssistant().typeToInput("list-st");
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.keyDown("//input[@class='exo-autocomplete-edit']", "\\13");
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      IDE.codeAssistant().insertSelectedItem();
 
-      String text = selenium.getText("//body[@class='editbox']");
+      String text = getTextFromCodeEditor(0);
 
       assertTrue(text.contains("list-style-type:"));
 
