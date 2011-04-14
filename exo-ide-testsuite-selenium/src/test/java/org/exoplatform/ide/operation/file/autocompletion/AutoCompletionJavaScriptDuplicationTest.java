@@ -18,12 +18,9 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion;
 
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
@@ -37,7 +34,8 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
    @Test
    public void testDuplication() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
+      
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -47,13 +45,11 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.SLEEP);
-      
-      Thread.sleep(10000);
-      
+            
       IDE.codeAssistant().openForm();
       Thread.sleep(TestConstants.SLEEP);
       
-      assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]") && selenium.isElementPresent("//div[contains(text(), 'VARIABLE')]"));
+      IDE.codeAssistant().checkElementPresent("a");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -65,7 +61,7 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       IDE.codeAssistant().openForm();
       Thread.sleep(TestConstants.SLEEP);
       
-      assertTrue(selenium.isElementPresent("//div[contains(text(), 'a()')]") && selenium.isElementPresent("//div[contains(text(), 'FUNCTION')]"));
+      IDE.codeAssistant().checkElementPresent("a()");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
