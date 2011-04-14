@@ -385,7 +385,10 @@
          </object-param>
       </init-params>
    </component>
-   
+
+   <component>
+      <type>org.exoplatform.ide.extension.netvibes.server.NetvibesServiceApplication</type>
+   </component>
 
   <component>
       <type>org.exoplatform.ide.chromattic.RestDataObjectService</type>
@@ -393,6 +396,10 @@
 
    <component>
       <type>org.chromattic.dataobject.DataObjectService</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
    </component>
 
    <component>

@@ -39,6 +39,10 @@
    </component>
 
    <component>
+      <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
+   </component>
+
+   <component>
       <type>org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyClassLoaderProvider</type>
    </component>
 

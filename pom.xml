@@ -45,6 +45,7 @@
       <javax.ws.rs.version>1.0</javax.ws.rs.version>
       <version.failsafe.plugin>2.6</version.failsafe.plugin>
       <tomcat.version>6.0.32</tomcat.version>
+      <gwt.test.skip>true</gwt.test.skip>
    </properties>
 
 
@@ -557,7 +558,7 @@
          </plugins>
       </pluginManagement>
       <plugins>
-         <!--plugin>
+         <plugin>
             <inherited>false</inherited>
             <groupId>com.mycila.maven-license-plugin</groupId>
             <artifactId>maven-license-plugin</artifactId>
@@ -568,7 +569,7 @@
                   <validHeader>dev-resources/src/main/resources/licences/header2010.txt</validHeader>
                   <validHeader>dev-resources/src/main/resources/licences/header2010_now.txt</validHeader>
                </validHeaders>
-               <failIfMissing>true</failIfMissing>
+               <failIfMissing>false</failIfMissing>
                <aggregate>true</aggregate>
                <strictCheck>true</strictCheck>
                <properties>
@@ -577,6 +578,7 @@
                <excludes>
                   <exclude>**/firefoxProfile/**</exclude>
                   <exclude>dev-resources/**</exclude>
+                  <exclude>**/template/samples/**</exclude>
                   <exclude>**/src/test/resources/**</exclude>
                   <exclude>**/*.log</exclude>
                   <exclude>**/*.txt</exclude>
@@ -621,7 +623,7 @@
                   </goals>
                </execution>
             </executions>
-         </plugin-->
+         </plugin>
       </plugins>
    </build>
    <modules>
@@ -632,6 +634,8 @@
       <module>exo-ide-framework-client</module>
 
       <module>exo-ide-vfs-webdav-client</module>
+
+      <module>exo-ide-vfs</module>
      
       <module>exo-ide-codeassistant-framework</module>
       
