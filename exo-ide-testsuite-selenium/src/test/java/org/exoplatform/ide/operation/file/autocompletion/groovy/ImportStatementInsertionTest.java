@@ -26,7 +26,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Autocomplete;
+import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -90,7 +90,7 @@ public class ImportStatementInsertionTest extends BaseTest
       // goto line 14, type "B" symbol and then click on Ctrl+Space. Then select "Base64" class item from non-default package and press "Enter" key.
       goToLine(14);
       typeTextIntoEditor(0, "B"); 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
@@ -111,7 +111,7 @@ public class ImportStatementInsertionTest extends BaseTest
       goToLine(14);
       IDE.editor().deleteLinesInEditor(1);
       typeTextIntoEditor(0, "B"); 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
@@ -132,7 +132,7 @@ public class ImportStatementInsertionTest extends BaseTest
       goToLine(14);
       IDE.editor().deleteLinesInEditor(1);
       typeTextIntoEditor(0, " "); 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("HelloWorld"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
@@ -165,7 +165,7 @@ public class ImportStatementInsertionTest extends BaseTest
       // goto line 15, type "B" symbol and then click on Ctrl+Space. Then select "Base64" class item from non-default package and press "Enter" key.
       goToLine(15);
       typeTextIntoEditor(1, "B"); 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
@@ -188,7 +188,7 @@ public class ImportStatementInsertionTest extends BaseTest
       goToLine(15);
       IDE.editor().deleteLinesInEditor(1);
       typeTextIntoEditor(1, "B"); 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);

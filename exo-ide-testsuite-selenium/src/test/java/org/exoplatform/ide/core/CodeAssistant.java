@@ -32,7 +32,7 @@ import com.thoughtworks.selenium.Selenium;
  * @version $Id: Jan 17, 2011 2:27:36 PM vereshchaka $
  *
  */
-public class Autocomplete
+public class CodeAssistant
 {
    public interface Locators
    {
@@ -51,11 +51,11 @@ public class Autocomplete
       public static final String JAVADOC_DIV = "exo-ide-autocomplete-doc-panel";
    }
 
-   private static final Selenium selenium;
+   private final Selenium selenium;
 
-   static
+   public CodeAssistant(Selenium selenium)
    {
-      selenium = BaseTest.selenium;
+      this.selenium = selenium;
    }
 
    /**
@@ -64,13 +64,13 @@ public class Autocomplete
     * @param text - text to type
     * @throws Exception
     */
-   public static void typeToInput(String text) throws Exception
+   public  void typeToInput(String text) throws Exception
    {
-      selenium.typeKeys(Autocomplete.Locators.INPUT, text);
+      selenium.typeKeys(CodeAssistant.Locators.INPUT, text);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
-   public static void typeToInput(String text, boolean clearInput) throws Exception
+   public  void typeToInput(String text, boolean clearInput) throws Exception
    {
       if (clearInput)
          clearInput();
@@ -82,7 +82,7 @@ public class Autocomplete
     *  
     * @param elementTitle - the title of element
     */
-   public static void checkElementPresent(String elementTitle)
+   public void checkElementPresent(String elementTitle)
    {
       assertTrue(selenium.isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
    }
@@ -92,7 +92,7 @@ public class Autocomplete
     * @param row Number of rows to move down
     * @throws InterruptedException
     */
-   public static void moveCursorDown(int row) throws InterruptedException
+   public  void moveCursorDown(int row) throws InterruptedException
    {
       Thread.sleep(TestConstants.SLEEP_SHORT);
       for (int i = 0; i < row; i++)
@@ -105,7 +105,7 @@ public class Autocomplete
    /**
     * Clear input field of Autocompletion form
     */
-   public static void clearInput()
+   public void clearInput()
    {
       selenium.focus(Locators.INPUT);
       selenium.controlKeyDown();
@@ -114,7 +114,7 @@ public class Autocomplete
       selenium.keyPressNative("" + KeyEvent.VK_DELETE);
    }
 
-   public static void closeForm()
+   public void closeForm()
    {
       selenium.keyPressNative("" + KeyEvent.VK_ESCAPE);
    }
@@ -123,7 +123,7 @@ public class Autocomplete
     * Open Autocompletion Form
     * @throws Exception
     */
-   public static void openForm() throws Exception
+   public void openForm() throws Exception
    {
       BaseTest.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
       Thread.sleep(TestConstants.SLEEP);

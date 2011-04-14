@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide;
 
+import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.Dialogs;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.Menu;
@@ -52,6 +53,8 @@ public class IDE
    private Navigator navigator;
 
    private Perspective perspective;
+   
+   private CodeAssistant codeAssistant;
 
    public IDE(Selenium selenium)
    {
@@ -62,6 +65,7 @@ public class IDE
       dialogs = new Dialogs(selenium);
       navigator = new Navigator(selenium);
       perspective = new Perspective(selenium);
+      codeAssistant = new CodeAssistant(selenium);
    }
 
    public Menu menu()
@@ -109,4 +113,12 @@ public class IDE
       return perspective;
    }
 
+   /**
+    * Get code assistant 
+    * @return {@link CodeAssistant}
+    */
+   public CodeAssistant codeAssistant()
+   {
+      return codeAssistant;
+   }
 }

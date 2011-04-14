@@ -28,7 +28,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Autocomplete;
+import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -121,63 +121,63 @@ public class AutocompleteNetvibesJsTest extends BaseTest
        * 4. Press ctrl+enter to call autocomplete form.
        */
 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
 
       /*
        * Check, that all UWA snippets are present.
        */
-      Autocomplete.checkElementPresent("name");
-      Autocomplete.checkElementPresent("flash");
-      Autocomplete.checkElementPresent("jsonrequest");
-      Autocomplete.checkElementPresent("pager");
-      Autocomplete.checkElementPresent("tabs");
-      Autocomplete.checkElementPresent("thumbnailed");
+      IDE.codeAssistant().checkElementPresent("name");
+      IDE.codeAssistant().checkElementPresent("flash");
+      IDE.codeAssistant().checkElementPresent("jsonrequest");
+      IDE.codeAssistant().checkElementPresent("pager");
+      IDE.codeAssistant().checkElementPresent("tabs");
+      IDE.codeAssistant().checkElementPresent("thumbnailed");
 
       /*
        * 5. Move down, and check, that javadoc form appeared with hint.
        */
       //      Autocomplete.moveCursorDown(1+11);
-      Autocomplete.typeToInput("flash");
-      waitForElementPresent(Autocomplete.Locators.JAVADOC_DIV);
+      IDE.codeAssistant().typeToInput("flash");
+      waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
 
       /*
        * Check, that javadoc (description) panel appeared.
        */
 
-      assertTrue(selenium.isElementPresent(Autocomplete.Locators.JAVADOC_DIV));
-      assertEquals(FLASH_CONTENT, selenium.getText(Autocomplete.Locators.JAVADOC_DIV));
+      assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
+      assertEquals(FLASH_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
 
       //      Autocomplete.moveCursorDown(4);
       //      Thread.sleep(TestConstants.SLEEP);
-      Autocomplete.typeToInput("jsonrequest", true);
+      IDE.codeAssistant().typeToInput("jsonrequest", true);
 
-      waitForElementPresent(Autocomplete.Locators.JAVADOC_DIV);
+      waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
 
-      assertTrue(selenium.isElementPresent(Autocomplete.Locators.JAVADOC_DIV));
-      assertEquals(JSON_REQUEST_CONTENT, selenium.getText(Autocomplete.Locators.JAVADOC_DIV));
+      assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
+      assertEquals(JSON_REQUEST_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
 
-      Autocomplete.typeToInput("pager", true);
+      IDE.codeAssistant().typeToInput("pager", true);
 
-      waitForElementPresent(Autocomplete.Locators.JAVADOC_DIV);
+      waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
 
-      assertTrue(selenium.isElementPresent(Autocomplete.Locators.JAVADOC_DIV));
-      assertEquals(PAGER_CONTENT, selenium.getText(Autocomplete.Locators.JAVADOC_DIV));
+      assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
+      assertEquals(PAGER_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
 
-      Autocomplete.typeToInput("tabs", true);
+      IDE.codeAssistant().typeToInput("tabs", true);
 
-      waitForElementPresent(Autocomplete.Locators.JAVADOC_DIV);
+      waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
 
-      assertTrue(selenium.isElementPresent(Autocomplete.Locators.JAVADOC_DIV));
-      assertEquals(TABS_CONTENT, selenium.getText(Autocomplete.Locators.JAVADOC_DIV));
+      assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
+      assertEquals(TABS_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
 
-      Autocomplete.typeToInput("thumbnailed", true);
+      IDE.codeAssistant().typeToInput("thumbnailed", true);
 
-      waitForElementPresent(Autocomplete.Locators.JAVADOC_DIV);
+      waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
       
-      assertTrue(selenium.isElementPresent(Autocomplete.Locators.JAVADOC_DIV));
-      assertEquals(THUMBNAILED_CONTENT, selenium.getText(Autocomplete.Locators.JAVADOC_DIV));
+      assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
+      assertEquals(THUMBNAILED_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
       
-      Autocomplete.closeForm();
+      IDE.codeAssistant().closeForm();
    }
 
    /**
@@ -269,12 +269,12 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       /*
        * 4. Press ctrl+enter to call autocomplete form.
        */
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
 
       /*
        * 5. Move down, and click enter
        */
-      Autocomplete.typeToInput(name);
+      IDE.codeAssistant().typeToInput(name);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);

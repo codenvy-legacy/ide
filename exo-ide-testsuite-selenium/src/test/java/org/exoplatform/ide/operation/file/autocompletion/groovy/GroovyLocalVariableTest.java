@@ -27,7 +27,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Autocomplete;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -86,7 +85,7 @@ public class GroovyLocalVariableTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       moveCursorDown(15);
       
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       
       assertTrue(selenium.isElementPresent("//div[text()='hello(String):String']"));
       assertTrue(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
@@ -94,7 +93,7 @@ public class GroovyLocalVariableTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
       moveCursorDown(5);
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       assertTrue(selenium.isElementPresent("//div[text()='hello(String):String']"));
       assertTrue(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
       assertTrue(selenium.isElementPresent("//div[text()='s:String']"));
@@ -106,7 +105,7 @@ public class GroovyLocalVariableTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
       moveCursorDown(2);
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       assertTrue(selenium.isElementPresent("//div[text()='hello(String):String']"));
       assertTrue(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
       assertTrue(selenium.isElementPresent("//div[text()='s:String']"));
@@ -118,7 +117,7 @@ public class GroovyLocalVariableTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
       moveCursorDown(7);
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       assertTrue(selenium.isElementPresent("//div[text()='hello(String):String']"));
       assertTrue(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
       assertTrue(selenium.isElementPresent("//div[text()='s:String']"));
@@ -130,7 +129,7 @@ public class GroovyLocalVariableTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
       moveCursorDown(2);
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       
       assertTrue(selenium.isElementPresent("//div[text()='hello(String):String']"));
       assertTrue(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
@@ -144,7 +143,7 @@ public class GroovyLocalVariableTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       assertFalse(selenium.isElementPresent("//div[text()='hello(String):String']"));
       assertFalse(selenium.isElementPresent("//div[text()='getInt(Double):Integer']"));
       assertFalse(selenium.isElementPresent("//div[text()='s:String']"));

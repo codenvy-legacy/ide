@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.Autocomplete;
+import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
@@ -128,7 +128,7 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium.typeKeys("//body[@class='editbox']", "main{");
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
 //      Autocomplete.openForm();
       //      Autocomplete.openForm();
 

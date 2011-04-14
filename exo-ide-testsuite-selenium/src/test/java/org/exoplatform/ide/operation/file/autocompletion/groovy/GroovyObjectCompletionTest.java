@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.Autocomplete;
+import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.Test;
 
 /**
@@ -53,7 +53,7 @@ public class GroovyObjectCompletionTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']", "\\35");
       typeTextIntoEditor(0, ".");
       
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
      
       selenium.focus("//input[@class='exo-autocomplete-edit']");
       

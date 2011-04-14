@@ -28,7 +28,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Autocomplete;
+import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -103,41 +103,41 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
 
-      Autocomplete.checkElementPresent("widget");
-      Autocomplete.checkElementPresent("UWA");
+      IDE.codeAssistant().checkElementPresent("widget");
+      IDE.codeAssistant().checkElementPresent("UWA");
 
-      Autocomplete.typeToInput("w");
+      IDE.codeAssistant().typeToInput("w");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       typeTextIntoEditor(0, ".");
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
 
-      Autocomplete.checkElementPresent("addBody(content)");
-      Autocomplete.checkElementPresent("createElement(tagName,options) : Element");
+      IDE.codeAssistant().checkElementPresent("addBody(content)");
+      IDE.codeAssistant().checkElementPresent("createElement(tagName,options) : Element");
 
-      Autocomplete.typeToInput("getE");
+      IDE.codeAssistant().typeToInput("getE");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       assertTrue(getTextFromCodeEditor(0).contains("widget.getElement(selector)"));
       
-      Autocomplete.moveCursorDown(1);
+      IDE.codeAssistant().moveCursorDown(1);
       
       typeTextIntoEditor(0, "UWA.");
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       
-      Autocomplete.checkElementPresent("Array");
-      Autocomplete.checkElementPresent("Data");
-      Autocomplete.checkElementPresent("Element");
-      Autocomplete.checkElementPresent("Json");
-      Autocomplete.checkElementPresent("String");
-      Autocomplete.checkElementPresent("Utils");
-      Autocomplete.checkElementPresent("Widget");
+      IDE.codeAssistant().checkElementPresent("Array");
+      IDE.codeAssistant().checkElementPresent("Data");
+      IDE.codeAssistant().checkElementPresent("Element");
+      IDE.codeAssistant().checkElementPresent("Json");
+      IDE.codeAssistant().checkElementPresent("String");
+      IDE.codeAssistant().checkElementPresent("Utils");
+      IDE.codeAssistant().checkElementPresent("Widget");
       
-      Autocomplete.typeToInput("Data");
+      IDE.codeAssistant().typeToInput("Data");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
@@ -145,18 +145,18 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       
       typeTextIntoEditor(0, ".");
       
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       
-      Autocomplete.checkElementPresent("domainMatch(url, options) : Boolean");
-      Autocomplete.checkElementPresent("getFeed(url, callback)");
-      Autocomplete.checkElementPresent("getOfflineCache()");
-      Autocomplete.checkElementPresent("getText(url, callback)");
-      Autocomplete.checkElementPresent("getXml(url, callback)");
-      Autocomplete.checkElementPresent("proxifyUrl(url, options)");
-      Autocomplete.checkElementPresent("request(url, options)");
-      Autocomplete.checkElementPresent("storeInCache(url, callbackArguments)");
+      IDE.codeAssistant().checkElementPresent("domainMatch(url, options) : Boolean");
+      IDE.codeAssistant().checkElementPresent("getFeed(url, callback)");
+      IDE.codeAssistant().checkElementPresent("getOfflineCache()");
+      IDE.codeAssistant().checkElementPresent("getText(url, callback)");
+      IDE.codeAssistant().checkElementPresent("getXml(url, callback)");
+      IDE.codeAssistant().checkElementPresent("proxifyUrl(url, options)");
+      IDE.codeAssistant().checkElementPresent("request(url, options)");
+      IDE.codeAssistant().checkElementPresent("storeInCache(url, callbackArguments)");
       
-      Autocomplete.typeToInput("getF");
+      IDE.codeAssistant().typeToInput("getF");
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -192,36 +192,36 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       typeTextIntoEditor(0, "var a = new Array(); \n var b = new UWA.Element(); \n a.");
-      Autocomplete.openForm();
-      Autocomplete.checkElementPresent("concat(array2, array3, ...): Array");
-      Autocomplete.checkElementPresent("detect(iterator): Boolean");
-      Autocomplete.checkElementPresent("equals(compare): Boolean");
-      Autocomplete.checkElementPresent("every(fn, bind)");
-      Autocomplete.checkElementPresent("filter(fn, bind)");
-      Autocomplete.checkElementPresent("forEach(fn, bind)");
-      Autocomplete.checkElementPresent("length:Number");
-      Autocomplete.typeToInput("som");
+      IDE.codeAssistant().openForm();
+      IDE.codeAssistant().checkElementPresent("concat(array2, array3, ...): Array");
+      IDE.codeAssistant().checkElementPresent("detect(iterator): Boolean");
+      IDE.codeAssistant().checkElementPresent("equals(compare): Boolean");
+      IDE.codeAssistant().checkElementPresent("every(fn, bind)");
+      IDE.codeAssistant().checkElementPresent("filter(fn, bind)");
+      IDE.codeAssistant().checkElementPresent("forEach(fn, bind)");
+      IDE.codeAssistant().checkElementPresent("length:Number");
+      IDE.codeAssistant().typeToInput("som");
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       assertTrue(getTextFromCodeEditor(0).contains("a.some(fn, bind)"));
       
-      Autocomplete.moveCursorDown(1);
+      IDE.codeAssistant().moveCursorDown(1);
       
       typeTextIntoEditor(0, "b.");
       
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       
-      Autocomplete.checkElementPresent("addClassName(className) : Object");
-      Autocomplete.checkElementPresent("getPosition() : Object");
-      Autocomplete.checkElementPresent("hide() : Object");
-      Autocomplete.checkElementPresent("show() : Object");
-      Autocomplete.checkElementPresent("setHTML(html) : Object");
-      Autocomplete.checkElementPresent("setContent(content) : Object");
-      Autocomplete.checkElementPresent("inject(el, where) : Object");
+      IDE.codeAssistant().checkElementPresent("addClassName(className) : Object");
+      IDE.codeAssistant().checkElementPresent("getPosition() : Object");
+      IDE.codeAssistant().checkElementPresent("hide() : Object");
+      IDE.codeAssistant().checkElementPresent("show() : Object");
+      IDE.codeAssistant().checkElementPresent("setHTML(html) : Object");
+      IDE.codeAssistant().checkElementPresent("setContent(content) : Object");
+      IDE.codeAssistant().checkElementPresent("inject(el, where) : Object");
       
-      Autocomplete.typeToInput("setOpa");
+      IDE.codeAssistant().typeToInput("setOpa");
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);

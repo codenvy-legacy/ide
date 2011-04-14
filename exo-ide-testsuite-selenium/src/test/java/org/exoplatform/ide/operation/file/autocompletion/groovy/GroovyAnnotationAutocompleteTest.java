@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.Autocomplete;
 import org.junit.Test;
 
 /**
@@ -53,7 +52,7 @@ public class GroovyAnnotationAutocompleteTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       typeTextIntoEditor(0, "@");
       
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
       
       assertFalse(selenium.isElementPresent("//div[text()='hello(String):String']"));
       assertTrue(selenium.isElementPresent("//div[text()='Deprecated']"));

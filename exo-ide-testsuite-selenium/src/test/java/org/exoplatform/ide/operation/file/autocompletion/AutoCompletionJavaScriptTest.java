@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.Autocomplete;
+import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.Test;
 
 /**
@@ -213,7 +213,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
 
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'topFunc')]"));
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'localVarOfTopFunc')]"));
@@ -275,7 +275,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.typeKeys("//body[@class='editbox']", "};");
       selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
 
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'a')]"));
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'b')]"));
@@ -301,9 +301,9 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.keyDown("//body[@class='editbox']", "\\" + (java.awt.event.KeyEvent.VK_ENTER + 3));
       selenium.typeKeys("//body[@class='editbox']", "a");
 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
 
-      Autocomplete.openForm();
+      IDE.codeAssistant().openForm();
 
       selenium.focus("//input[@class='exo-autocomplete-edit']");
 
