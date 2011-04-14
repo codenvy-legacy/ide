@@ -53,10 +53,11 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
    private final static String FOLDER_NAME_2 = "test 2";
 
    private final static String FOLDER_NAME_3 = "test 3";
-   
+
    private final static String FILE_NAME = "test.groovy";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
 
    @BeforeClass
    public static void setUp()
@@ -88,51 +89,57 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       waitForRootElement();
       IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      
-      
-      IDE.navigator().clickOpenIconOfFolder(URL+FOLDER_NAME_1+"/");
-      Thread.sleep(TestConstants.SLEEP*4);
-      
-      IDE.navigator().selectItem(URL+FOLDER_NAME_1+"/");
+
+      IDE.navigator().clickOpenIconOfFolder(URL + FOLDER_NAME_1 + "/");
+      Thread.sleep(TestConstants.SLEEP * 4);
+
+      IDE.navigator().selectItem(URL + FOLDER_NAME_1 + "/");
       selenium.controlKeyDown();
-      IDE.navigator().selectItem(URL+FOLDER_NAME_2+"/");
+      IDE.navigator().selectItem(URL + FOLDER_NAME_2 + "/");
       selenium.controlKeyUp();
-      
+
       // TODO After of capability select the few elements in IDE navigator
       //  assertTrue(selenium.isTextPresent("exact:Selected: 2 items"));
 
-//      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
-//      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, false);
-//
-      IDE.navigator().selectItem(URL+FOLDER_NAME_1+"/");
+      //      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
+      //      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, false);
+
+      IDE.navigator().selectItem(URL + FOLDER_NAME_1 + "/");
       selenium.controlKeyDown();
-      IDE.navigator().selectItem(URL+FOLDER_NAME_3+"/");
+      IDE.navigator().selectItem(URL + FOLDER_NAME_3 + "/");
       selenium.controlKeyUp();
-      
+
       // TODO After of capability select the few elements in IDE navigator
       //assertTrue(selenium.isTextPresent("exact:Selected: 2 items"));
-      
-//      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
-//      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, true);
-      
-//      IDE.toolbar().runCommand(ToolbarCommands.File.DELETE);
-//      
-//      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-//      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
-//      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
-//      assertTrue(selenium.isTextPresent("exact:Do you want to delete 2 items?"));
-//      selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
-//      Thread.sleep(TestConstants.SLEEP);
-//      
-//      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-//
-//      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_1 + "/");
-//      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_1 + "/" + FOLDER_NAME_2 + "/");
-//      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_3 + "/");
-//      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_3 + "/" + "test.groovy");
-//
-//      assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_1, "UTF-8")).getStatusCode());
-//      assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_3, "UTF-8")).getStatusCode());
+
+      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
+      //      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, true);
+
+      deleteSelectedItems();
+
+      // TODO After of capability select the few elements in IDE navigator
+      // assertTrue(selenium.isTextPresent("exact:Do you want to delete 2 items?"));
+
+      chekDisappearDeleteItemForm();
+
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_1 + "/" + FOLDER_NAME_2 + "/");
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_3 + "/");
+      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME_3 + "/" + "test.groovy");
+
+      assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_1, "UTF-8")).getStatusCode());
+      assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_3, "UTF-8")).getStatusCode());
+   }
+
+   public void chekDisappearDeleteItemForm()
+   {
+      assertFalse(selenium.isElementPresent("//div[@view-id=\"ideDeleteItemsView\"]"));
+      assertFalse(selenium.isElementPresent("//div[@class=\"Caption\"]/span[\"IDE\"]"));
+      assertFalse(selenium.isElementPresent("//img[contains(@src,'http://localhost:8080/IDE/images/dialog/ask.png')]"));
+      assertFalse(selenium
+         .isElementPresent("//div[@class=\"gwt-Label\"]/br[\"Do you want to delete  \"]|/b[\"New Folder\"]"));
+      assertFalse(selenium.isElementPresent("ideDeleteItemFormOkButton"));
+      assertFalse(selenium.isElementPresent("ideDeleteItemFormCancelButton"));
    }
 
    @AfterClass

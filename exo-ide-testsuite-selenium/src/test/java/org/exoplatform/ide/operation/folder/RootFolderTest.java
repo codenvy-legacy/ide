@@ -37,27 +37,27 @@ import java.net.URLEncoder;
 */
 public class RootFolderTest extends BaseTest
 {
-   
-   private static final String URL =
-      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
+
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
+
    private static String folderName;
-   
+
    @Before
    public void setUp()
    {
       folderName = getClass().getSimpleName();
    }
-   
+
    @Test
    public void testRootFolder() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       selectRootOfWorkspaceTree();
-      
+
       //create folder
       createFolder(folderName);
-      
+
       //check new folder appeared in navigation tree
       IDE.navigator().assertItemPresent(WS_URL + folderName + "/");
       //refresh workspace folder
@@ -66,7 +66,7 @@ public class RootFolderTest extends BaseTest
       //check new folder is present in navigation tree
       IDE.navigator().assertItemPresent(WS_URL + folderName + "/");
    }
-   
+
    @AfterClass
    public static void tearDown()
    {

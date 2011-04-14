@@ -46,11 +46,11 @@ public class RenameFolderTest extends BaseTest
 
    private final static String NEW_FOLDER_NAME = "FolderRenamed";
 
-   private final static String ORIG_URL =
-      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
+   private final static String ORIG_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+      + WS_NAME + "/" + FOLDER_NAME;
 
-   private final static String RENAME_URL =
-      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + NEW_FOLDER_NAME;
+   private final static String RENAME_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+      + WS_NAME + "/" + NEW_FOLDER_NAME;
 
    @BeforeClass
    public static void setUp()
@@ -77,32 +77,34 @@ public class RenameFolderTest extends BaseTest
    @Test
    public void testRenameFolder() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-       IDE.navigator().selectItem(WS_URL);
+      waitForRootElement();
+      //select and refresh workspace for appper folder
+      IDE.navigator().selectItem(WS_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      
-
+      //select folder and run rename command
+      IDE.navigator().selectItem(ORIG_URL + "/");
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
-
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR));
-      assertFalse(selenium.isElementPresent(Locators.RenameItemForm.MIME_TYPE_FIELD_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_CANCEL_BUTTON_LOCATOR));
-      
-      selenium.click(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR);
-      
-      assertEquals(FOLDER_NAME,selenium.getValue(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
-      selenium.type(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR, NEW_FOLDER_NAME);
-      selenium.keyPress(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR, "\\13");
-      
-      Thread.sleep(TestConstants.SLEEP);
-      
+      chekAppearRenameForm();
+      //set cursor on rename field
+      selenium.click("ideRenameItemFormRenameField");
+      //check default name folder in rename field
+      assertEquals(FOLDER_NAME, selenium.getValue("ideRenameItemFormRenameField"));
+      //type new name and press "enter"
+      selenium.type("ideRenameItemFormRenameField", NEW_FOLDER_NAME);
+      selenium.keyPress("ideRenameItemFormRenameField", "\\13");
+      // check appear folder with new name
+      waitForElementPresent(IDE.navigator().getItemId(RENAME_URL + "/"));
       IDE.navigator().assertItemNotPresent(ORIG_URL + "/");
       IDE.navigator().assertItemPresent(RENAME_URL + "/");
-
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
+   }
+
+   public void chekAppearRenameForm()
+   {
+      assertTrue(selenium.isElementPresent("ideRenameItemForm"));
+      assertTrue(selenium.isElementPresent("ideRenameItemFormRenameField"));
+      assertTrue(selenium.isElementPresent("ideRenameItemFormRenameField"));
    }
 
    @AfterClass

@@ -118,16 +118,7 @@ public class DeleteFolderTest extends BaseTest
       assertEquals(404, VirtualFileSystemUtils.get(URL_MENU).getStatusCode());
    }
 
-   public void chekCreateDeleteItemForm()
-   {
-      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideDeleteItemsView\"]"));
-      assertTrue(selenium.isElementPresent("//div[@class=\"Caption\"]/span[\"IDE\"]"));
-      assertTrue(selenium.isElementPresent("//img[contains(@src,'http://localhost:8080/IDE/images/dialog/ask.png')]"));
-      assertTrue(selenium
-         .isElementPresent("//div[@class=\"gwt-Label\"]/br[\"Do you want to delete  \"]|/b[\"New Folder\"]"));
-      assertTrue(selenium.isElementPresent("ideDeleteItemFormOkButton"));
-      assertTrue(selenium.isElementPresent("ideDeleteItemFormCancelButton"));
-   }
+   
 
    public void chekDisappearDeleteItemForm()
    {
@@ -135,7 +126,7 @@ public class DeleteFolderTest extends BaseTest
       assertFalse(selenium.isElementPresent("//div[@class=\"Caption\"]/span[\"IDE\"]"));
       assertFalse(selenium.isElementPresent("//img[contains(@src,'http://localhost:8080/IDE/images/dialog/ask.png')]"));
       assertFalse(selenium
-         .isElementPresent("//div[@class=\"gwt-Label\"]/br[\"Do you want to delete  \"]|/b[\"New Folder\"]"));
+      .isElementPresent("//div[@class=\"gwt-Label\"]/br[\"Do you want to delete  \"]|/b[\"New Folder\"]"));
       assertFalse(selenium.isElementPresent("ideDeleteItemFormOkButton"));
       assertFalse(selenium.isElementPresent("ideDeleteItemFormCancelButton"));
    }
