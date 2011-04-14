@@ -72,7 +72,7 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
        */
       runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent(Autocomplete.Locators.PANEL));
+      assertTrue(selenium.isElementPresent(Autocomplete.Locators.PANEL_ID));
 
       /*
        * 5. Type to the input field text "so".
@@ -103,7 +103,7 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
       /*
        * Check, that autocomplete form dissapeared, and new text in editor appeared.
        */
-      assertFalse(selenium.isElementPresent(Autocomplete.Locators.PANEL));
+      assertFalse(selenium.isElementPresent(Autocomplete.Locators.PANEL_ID));
       assertTrue(getTextFromCodeEditor(0).contains("Collections.sort(List, Comparator)"));
       
       /*

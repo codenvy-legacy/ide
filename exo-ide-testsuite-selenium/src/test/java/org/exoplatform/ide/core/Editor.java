@@ -69,7 +69,7 @@ public class Editor
     */
    public String getTabTitle(int index)
    {
-      return selenium.getText(getEditorTabScLocator(index) + "/title");
+      return selenium.getText(getEditorTabScLocator(index) + "//span");
    }
 
    /**
@@ -80,7 +80,7 @@ public class Editor
     */
    public String getEditorTabScLocator(int tabIndex)
    {
-      return Locators.SC_EDITOR_TABSET_LOCATOR + "/tab[index=" + tabIndex + "]";
+      return Locators.EDITOR_TABSET_LOCATOR + "//td[@tab-bar-index='" + tabIndex + "']";
    }
 
    /**
@@ -165,18 +165,18 @@ public class Editor
        * SmartGWT not destroy warning dialog(only hide, maybe set smoller z-index property ),
        * so need check is warning dialogs is visible
        */
-      if (selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]")
-         && selenium.isVisible("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"))
+      if (selenium.isElementPresent("exoAskDialog")
+         && selenium.isVisible("exoAskDialog"))
       {
          //check is warning dialog appears
          assertTrue(selenium
-            .isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));
+            .isElementPresent("//div[@id='exoAskDialog']//div[@class='Caption']/span[contains(text(), 'Close file')]"));
 
-         assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
-         assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
+         assertTrue(selenium.isElementPresent("exoAskDialogYesButton"));
+         assertTrue(selenium.isElementPresent("exoAskDialogNoButton"));
 
          //click No button
-         selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+         selenium.click("exoAskDialogNoButton");
       }
       //close new file
       else if (selenium.isElementPresent(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR)

@@ -1414,7 +1414,7 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.SLEEP);
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+//      Thread.sleep(TestConstants.SLEEP_SHORT);
       
       //Wait while "dev-monit" appears in navigation tree.
       //
@@ -1422,7 +1422,7 @@ public abstract class BaseTest
       //elements are appears in SLEEP tile.
       //Thats why, wait for WAIT_PERIOD for root element
       //of navigation tree.
-      waitForElementPresent(Navigator.Locators.SC_ROOT_OF_NAVIGATION_TREE);
+      waitForElementPresent(Navigator.Locators.NAVIGATION_TREE);
       Thread.sleep(TestConstants.SLEEP);
    }
    

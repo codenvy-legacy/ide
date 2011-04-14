@@ -23,6 +23,8 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 
+import java.awt.event.KeyEvent;
+
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -37,23 +39,25 @@ public class Autocomplete
       /**
        * XPath autocompletion panel locator.
        */
-      public static final String PANEL = "exo-ide-autocomplete-panel";
-      
+      public static final String PANEL_ID = "exo-ide-autocomplete-panel";
+
+      public static final String PANEL = "//table[@id='exo-ide-autocomplete-panel']";
+
       /**
        * Xpath autocompletion input locator.
        */
       public static final String INPUT = "exo-ide-autocomplete-edit";
-            
+
       public static final String JAVADOC_DIV = "exo-ide-autocomplete-doc-panel";
    }
-   
+
    private static final Selenium selenium;
-   
+
    static
    {
       selenium = BaseTest.selenium;
    }
-   
+
    /**
     * Type text to input field of autocompletion form.
     * 
@@ -65,7 +69,14 @@ public class Autocomplete
       selenium.typeKeys(Autocomplete.Locators.INPUT, text);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
+   public static void typeToInput(String text, boolean clearInput) throws Exception
+   {
+      if (clearInput)
+         clearInput();
+      typeToInput(text);
+   }
+
    /**
     * Check, that element <code>elementTitle</code> is present in autocomplete panel.
     *  
@@ -90,11 +101,33 @@ public class Autocomplete
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
    }
-   
+
+   /**
+    * Clear input field of Autocompletion form
+    */
+   public static void clearInput()
+   {
+      selenium.focus(Locators.INPUT);
+      selenium.controlKeyDown();
+      selenium.keyPress(Locators.INPUT, "97");
+      selenium.controlKeyUp();
+      selenium.keyPressNative("" + KeyEvent.VK_DELETE);
+   }
+
+   public static void closeForm()
+   {
+      selenium.keyPressNative("" + KeyEvent.VK_ESCAPE);
+   }
+
+   /**
+    * Open Autocompletion Form
+    * @throws Exception
+    */
    public static void openForm() throws Exception
    {
       BaseTest.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent(Locators.PANEL));
+      assertTrue(selenium.isElementPresent(Locators.PANEL_ID));
+      selenium.focus(Locators.INPUT);
    }
 }

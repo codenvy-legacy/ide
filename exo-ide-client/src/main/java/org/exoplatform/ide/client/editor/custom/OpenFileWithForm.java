@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.editor.custom;
 
 import java.util.Map;
 
+import org.apache.tomcat.util.buf.UDecoder;
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
@@ -48,6 +49,8 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
    private static final String OPEN_BUTTON_ID = "ideOpenFileWithOkButton";
    
    private static final String CANCEL_BUTTON_ID = "ideOpenFileWithCancelButton";
+   
+   private static final String CHECK_BOX_ID = "ideOpenFileWithDefaulCheckbox";
 
    private static final String TITLE = "Open File With";
 
@@ -76,6 +79,7 @@ public class OpenFileWithForm extends DialogWindow implements OpenFileWithPresen
       mainLayout.add(createEditorListGrid());
       
       useAsDef = new CheckboxItem("Default", "Use as default editor");
+      useAsDef.getElement().setId(CHECK_BOX_ID);
       mainLayout.add(useAsDef);
       mainLayout.setCellHorizontalAlignment(useAsDef, HasHorizontalAlignment.ALIGN_LEFT);
       

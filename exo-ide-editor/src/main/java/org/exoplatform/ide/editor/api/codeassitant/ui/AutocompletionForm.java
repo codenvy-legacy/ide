@@ -70,6 +70,11 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class AutocompletionForm extends Composite implements ChangeHandler, ResizeHandler
 {
+   private static final String PANEL_ID = "exo-ide-autocomplete-panel";
+   
+   private static final String INPUT_ID = "exo-ide-autocomplete-edit";
+   
+   private static final String DOC_ID = "exo-ide-autocomplete-doc-panel";
 
    private AbsolutePanel absolutePanel;
 
@@ -134,6 +139,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
       textBox.setWidth("100%");
       textBox.setText(prefix);
       textBox.setStyleName(CodeAssistantClientBundle.INSTANCE.css().edit());
+      textBox.getElement().setId(INPUT_ID);
 
       textBox.addFocusHandler(new FocusHandler()
       {
@@ -168,6 +174,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
       scrollPanel.setWidth("300px");
 
       panel = new VerticalPanel();
+      panel.getElement().setId(PANEL_ID);
 
       int clientHeight = Window.getClientHeight();
       if (top + 220 < clientHeight)
@@ -340,13 +347,6 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
 
       selectedWidget = widget;
 
-      //      if (widget.equals(overedWidget))
-      //      {
-      //         selectedWidget.setOveredStyle();
-      //      }
-      //      else
-      //      {
-      //      }
       selectedWidget.setSelectedStyle();
 
       timer.cancel();
@@ -381,6 +381,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
             }
 
             int width = 300;
+            descriptionPanel.getElement().setId(DOC_ID);
             descriptionPanel.setWidth(width + "px");
             descriptionPanel.setHeight("" + (panel.getOffsetHeight() - 2));
 

@@ -57,7 +57,10 @@ public class HtmlTokenWidget extends TokenWidget
       String name = token.getName();
       if (token.hasProperty(TokenProperties.SHORT_HINT)  && token.getType()!= TokenType.TEMPLATE)
       {
-         name += token.getProperty(TokenProperties.SHORT_HINT).isStringProperty().stringValue();
+         String hint = token.getProperty(TokenProperties.SHORT_HINT).isStringProperty().stringValue();
+         Label hintLabel = new Label(hint, false);
+         grid.setWidget(0, 2, hintLabel);
+         
       }
 
       Label nameLabel = new Label(name, false);
