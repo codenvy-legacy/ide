@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs;
+package org.exoplatform.ide.vfs.client;
 
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -40,7 +40,7 @@ import java.util.Map;
  * @version $Id: GwtTestVfsSerializer.java 65773 2011-02-02 13:46:50Z andrew00x
  *          $
  */
-public class GwtTestVfsSerializer extends GWTTestCase
+public class GwtTstVfsSerializer extends GWTTestCase
 {
    @Override
    protected void gwtSetUp() throws Exception
