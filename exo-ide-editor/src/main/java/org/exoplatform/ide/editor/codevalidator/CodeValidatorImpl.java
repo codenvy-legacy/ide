@@ -95,6 +95,14 @@ public abstract class CodeValidatorImpl extends CodeValidator
             }
          }
          
+         if (MimeType.APPLICATION_JAVA.equals(mimeType))
+         {
+            if (!TokenType.JSP_TAG.equals(currentToken.getType()))
+            {
+               return;
+            }
+         }
+         
          for (TokenBeenImpl subtoken : currentToken.getSubTokenList())
          {
             if (mimeType.equals(subtoken.getMimeType())) 
