@@ -24,6 +24,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.CodeAssistant;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -34,10 +35,11 @@ import org.junit.Test;
  *
  */
 
-public abstract class GroovyJavaDocTest extends BaseTest
+public class GroovyJavaDocTest extends BaseTest
 {
    
    @Test
+   @Ignore
    public void testGroovyJavaDoc() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);

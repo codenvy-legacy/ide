@@ -157,6 +157,10 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
             break;
       }
       editor.replaceTextAtCurrentLine(tokenToPaste, newCursorPos);
+      if(value.getToken().hasProperty(TokenProperties.FQN))
+      {
+         editor.insertImportStatement(value.getToken().getProperty(TokenProperties.FQN).isStringProperty().stringValue());
+      }
    }
 
    /**

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.file.autocompletion;
 
+import org.exoplatform.ide.operation.file.autocompletion.groovy.ChrommaticImportAssistantTest;
 import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyAnnotationAutocompleteTest;
 import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyClassMethodsCompletionTest;
 import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyClassNameCompletionTest;
@@ -39,10 +40,10 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({AutoCompletionCSSTest.class, AutoCompletionHTMLTest.class,
    AutoCompletionJavaScriptDuplicationTest.class, AutoCompletionJavaScriptTest.class, AutoCompletionXMLTest.class,
-   AutocompleteNetvibesJsTest.class,
-   GroovyObjectCompletionTest.class, GroovyClassMethodsCompletionTest.class, GroovyClassNameCompletionTest.class,
-   GroovyLocalVariableTest.class, GroovyAnnotationAutocompleteTest.class, GroovyKeywordsAutocompletionTest.class,
-   ImportStatementInsertionTest.class, GroovyJavaDocTest.class, GroovyProjectAutocompletionTest.class})
+   AutocompleteNetvibesJsTest.class, GroovyObjectCompletionTest.class, GroovyClassMethodsCompletionTest.class,
+   GroovyClassNameCompletionTest.class, GroovyLocalVariableTest.class, GroovyAnnotationAutocompleteTest.class,
+   GroovyKeywordsAutocompletionTest.class, ImportStatementInsertionTest.class, GroovyJavaDocTest.class,
+   GroovyProjectAutocompletionTest.class, ChrommaticImportAssistantTest.class, NetvibesApiAutocompletionTest.class})
 public class AutoCompletionTestSuite
 {
 
