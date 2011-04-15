@@ -34,6 +34,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.thoughtworks.selenium.Wait;
+
 /**
  * Created by The eXo Platform SAS .
  *
@@ -48,8 +50,8 @@ public class CookiesTest extends BaseTest
 
    private final static String TEST_FOLDER = CookiesTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL +REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
-      + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + TEST_FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -74,17 +76,21 @@ public class CookiesTest extends BaseTest
    @Test
    public void testCookies() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(BASE_URL +REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" );
+      //wait
+      waitForRootElement();
+      //select
+      IDE.navigator()
+         .selectItem(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      //refresh
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.navigator().selectItem(TEST_FOLDER);
+      waitForRootElement();
+      //select and open file
+      IDE.navigator().selectItem(URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      waitForRootElement();
+      openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
+      //Chek cookies
       String[] cookies = selenium.getCookie().split("; ");
 
       assertTrue(cookies.length > 0);
@@ -97,7 +103,7 @@ public class CookiesTest extends BaseTest
             listUserCookies.add(true);
          }
       }
-      
+
       assertTrue(listUserCookies.size() >= 4);
    }
 
