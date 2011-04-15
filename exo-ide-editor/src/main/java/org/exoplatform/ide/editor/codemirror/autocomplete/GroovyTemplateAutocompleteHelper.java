@@ -38,11 +38,19 @@ public class GroovyTemplateAutocompleteHelper extends AutocompleteHelper
     
    List<TokenBeenImpl> groovyCode;
 
-   @Override
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList)
+   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
    {          
-      groovyCode = CodeValidatorImpl.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
-
-      return AutocompleteHelper.getAutocompleteHelper(MimeType.APPLICATION_GROOVY).getTokenBeforeCursor(node, lineNumber, cursorPosition, groovyCode);
+      if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
+      {
+         return AutocompleteHelper.getAutocompleteHelper(MimeType.TEXT_HTML).getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList, currentLineMimeType);
+      }
+      
+      else if (MimeType.APPLICATION_GROOVY.equals(currentLineMimeType))
+      {
+         groovyCode = CodeValidatorImpl.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
+         return AutocompleteHelper.getAutocompleteHelper(MimeType.APPLICATION_GROOVY).getTokenBeforeCursor(node, lineNumber, cursorPosition, groovyCode, currentLineMimeType);
+      }
+      
+      return null;
    }
 }

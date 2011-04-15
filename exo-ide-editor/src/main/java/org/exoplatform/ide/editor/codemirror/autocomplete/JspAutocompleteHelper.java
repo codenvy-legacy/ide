@@ -38,11 +38,17 @@ public class JspAutocompleteHelper extends AutocompleteHelper
     
    List<TokenBeenImpl> javaCode;
 
-   @Override
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList)
+   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
    {          
-      javaCode = CodeValidatorImpl.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVA);
+      if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
+         return AutocompleteHelper.getAutocompleteHelper(MimeType.TEXT_HTML).getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList, currentLineMimeType);
 
-      return AutocompleteHelper.getAutocompleteHelper(MimeType.APPLICATION_JAVA).getTokenBeforeCursor(node, lineNumber, cursorPosition, javaCode);
+      else if (MimeType.APPLICATION_JAVA.equals(currentLineMimeType))
+      {
+         javaCode = CodeValidatorImpl.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVA);
+         return AutocompleteHelper.getAutocompleteHelper(MimeType.APPLICATION_JAVA).getTokenBeforeCursor(node, lineNumber, cursorPosition, javaCode, currentLineMimeType);
+      }
+      
+      return null;
    }
 }

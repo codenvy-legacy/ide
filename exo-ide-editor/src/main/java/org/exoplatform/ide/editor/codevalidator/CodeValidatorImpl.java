@@ -87,6 +87,7 @@ public abstract class CodeValidatorImpl extends CodeValidator
 
       if (currentToken.getSubTokenList() != null)
       {
+         // pass tag "<%"
          if (MimeType.APPLICATION_GROOVY.equals(mimeType))
          {
             if (!TokenType.GROOVY_TAG.equals(currentToken.getType()))
@@ -95,9 +96,19 @@ public abstract class CodeValidatorImpl extends CodeValidator
             }
          }
          
+         // pass tag "<%" 
          if (MimeType.APPLICATION_JAVA.equals(mimeType))
          {
             if (!TokenType.JSP_TAG.equals(currentToken.getType()))
+            {
+               return;
+            }
+         }
+         
+         // pass tag "<script>"
+         if (MimeType.APPLICATION_JAVASCRIPT.equals(mimeType))
+         {
+            if (!TokenType.TAG.equals(currentToken.getType()))
             {
                return;
             }

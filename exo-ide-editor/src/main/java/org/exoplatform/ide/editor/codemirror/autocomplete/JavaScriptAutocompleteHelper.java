@@ -34,10 +34,14 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class JavaScriptAutocompleteHelper extends AutocompleteHelper
 {
 
+   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
+   {
+      return getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList);
+   }   
+   
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper#getTokenBeforeCursor(com.google.gwt.core.client.JavaScriptObject, int, int, java.util.List)
     */
-   @Override
    public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList)
    {
       // interrupt at the end of the line or content

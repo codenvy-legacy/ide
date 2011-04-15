@@ -38,6 +38,11 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class JavaAutocompleteHelper extends GroovyAutocompleteHelper
 {
 
+   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
+   {
+      return getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList);
+   }
+   
    /**
     * 
     * @param node

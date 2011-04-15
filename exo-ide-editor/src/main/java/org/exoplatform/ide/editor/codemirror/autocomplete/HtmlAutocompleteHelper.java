@@ -39,12 +39,17 @@ public class HtmlAutocompleteHelper extends AutocompleteHelper
 
    List<TokenBeenImpl> javaScriptCode;
 
-   @Override
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList)
+   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
    {          
-      javaScriptCode = CodeValidatorImpl.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVASCRIPT);
+      if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
+      {
+         javaScriptCode = CodeValidatorImpl.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVASCRIPT);
 
-      return AutocompleteHelper.getAutocompleteHelper(MimeType.APPLICATION_JAVASCRIPT).getTokenBeforeCursor(node, lineNumber, cursorPosition, javaScriptCode);
+         return AutocompleteHelper.getAutocompleteHelper(MimeType.APPLICATION_JAVASCRIPT).getTokenBeforeCursor(node, lineNumber, cursorPosition, javaScriptCode, currentLineMimeType);
+
+      }
+      
+      return null;      
    }
 
 }

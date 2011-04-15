@@ -37,7 +37,11 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class GroovyAutocompleteHelper extends AutocompleteHelper
 {
-
+   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
+   {
+      return getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList);
+   }
+   
    /**
     * 
     * @param node
@@ -146,10 +150,17 @@ public class GroovyAutocompleteHelper extends AutocompleteHelper
          else if (TokenType.METHOD.equals(nearestToken.getType()))
          {
             // search among the parameters of method
-            // search among the parameters of method
             genericToken = searchGenericTokenAmongParameters(nodeContent, nearestToken.getParameters());
             if (genericToken != null) return genericToken;
             
+            // search among the properties (fields) of class
+            genericToken = searchGenericTokenAmongProperties(nodeContent, nearestToken.getParentToken());
+            if (genericToken != null) return genericToken;
+         }
+         
+         // trying to search generic token whitin the scriptlets of JSP, or Groovy Template files
+         else 
+         {
             // search among the properties (fields) of class
             genericToken = searchGenericTokenAmongProperties(nodeContent, nearestToken.getParentToken());
             if (genericToken != null) return genericToken;

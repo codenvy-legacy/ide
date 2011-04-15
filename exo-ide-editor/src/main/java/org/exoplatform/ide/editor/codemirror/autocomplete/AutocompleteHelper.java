@@ -41,8 +41,12 @@ import com.google.gwt.core.client.JavaScriptObject;
 public abstract class AutocompleteHelper
 {
    private static HashMap<String, AutocompleteHelper> factory = new HashMap<String, AutocompleteHelper>() {{
-//      put(MimeType.APPLICATION_GROOVY, new GroovyAutocompleteHelper());
+      put(MimeType.APPLICATION_GROOVY, new GroovyAutocompleteHelper());
+      put(MimeType.GROOVY_TEMPLATE, new GroovyTemplateAutocompleteHelper());
+      put(MimeType.TEXT_HTML, new HtmlAutocompleteHelper());
+      put(MimeType.APPLICATION_JAVA, new JavaAutocompleteHelper());      
       put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptAutocompleteHelper());
+      put(MimeType.APPLICATION_JSP, new JspAutocompleteHelper());
    }};  
    
    protected static AutocompleteHelper getAutocompleteHelper(String mimeType)
@@ -55,7 +59,7 @@ public abstract class AutocompleteHelper
       return new DefaultAutocompleteHelper();
    }  
    
-   public abstract Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList); 
+   public abstract Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType);
    
    /**
     * 

@@ -517,7 +517,7 @@ public class CodeMirror extends Editor
       {
          validateCode(); // to update token's FQNs        
          return configuration.getAutocompleteHelper().getTokenBeforeCursor(node, lineNumber, cursorPosition,
-            (List<Token>) getTokenList());
+            (List<Token>) getTokenList(), getCurrentLineMimeType());
       }
 
       return null;
