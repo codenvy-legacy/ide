@@ -116,10 +116,10 @@ public class Locators
    public interface GoToLineWindow
    {
       public static final String GOTO_LINE_FORM_TEXT_FIELD_LOCATOR =
-         "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element";
+         "ideGoToLineFormLineNumberField";
 
       public static final String GOTO_LINE_FORM_GO_BUTTON_LOCATOR =
-         "scLocator=//IButton[ID=\"ideGoToLineFormGoButton\"]/";
+         "ideGoToLineFormGoButton";
    }
 
    /**

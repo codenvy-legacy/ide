@@ -233,11 +233,6 @@ public class Editor
       if (saveFile)
       {
          SaveFileUtils.checkSaveAsDialogAndSave(fileName, true);
-         //          if(fileName != null)
-         //          {
-         //             AbstractTextUtil.getInstance().typeToInput(ASK_FOR_VALUE_TEXT_FIELD_LOCATOR, fileName, true);
-         //          }
-         //          selenium.click(ASK_FOR_VALUE_OK_BUTTON_LOCATOR);
       }
       else
       {
@@ -385,7 +380,8 @@ public class Editor
       // Get the delta between of toolbar browser area
       int deltaX = Integer.parseInt(selenium.getEval("window.outerWidth-window.innerWidth"));
       // Get the position on screen of the editor
-      int x = selenium.getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
+//      int x = selenium.getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
+      int x = selenium.getElementPositionLeft("//div[@panel-id='editor' and @tab-index='0' ]//iframe").intValue() + deltaX;
       return x;
    }
 
@@ -399,7 +395,7 @@ public class Editor
       // Get the delta between of toolbar browser area
       int deltaY = Integer.parseInt(selenium.getEval("window.outerHeight-window.innerHeight"));
       // Get the position on screen of the editor
-      int y = selenium.getElementPositionTop("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaY;
+      int y = selenium.getElementPositionTop("//div[@panel-id='editor' and @tab-index='0']//iframe").intValue() + deltaY;
       return y;
    }
    

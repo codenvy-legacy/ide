@@ -150,22 +150,22 @@ public class GroovyProjectAutocompletionTest extends BaseTest
       
    }
 
-//   @AfterClass
-//   public static void tearDown()
-//   {
-//      try
-//      {
-//         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
-//         VirtualFileSystemUtils.delete(WORKSPACE_URL + PROJECT_NAME);
-//      }
-//      catch (IOException e)
-//      {
-//         e.printStackTrace();
-//      }
-//      catch (ModuleException e)
-//      {
-//         e.printStackTrace();
-//      }
-//   }
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WORKSPACE_URL + PROJECT_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
 
 }
