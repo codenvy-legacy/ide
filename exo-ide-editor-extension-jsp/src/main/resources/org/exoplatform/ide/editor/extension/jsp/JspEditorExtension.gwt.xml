@@ -32,5 +32,5 @@
 
    <source path="client" />
 
-   <entry-point class="org.exoplatform.ide.editor.extension.jsp.client.JSPEditorExtension" />
+   <entry-point class="org.exoplatform.ide.editor.extension.jsp.client.JspEditorExtension" />
 </module>

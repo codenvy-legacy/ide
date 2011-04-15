@@ -18,9 +18,11 @@
  */
 package org.exoplatform.ide.editor.codeassistant.jsp;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
@@ -32,7 +34,7 @@ import java.util.List;
  * @version $Id: JSPCodeAssistant Apr 15, 2011 12:34:45 PM evgen $
  *
  */
-public class JSPCodeAssistant extends JavaCodeAssistant
+public class JspCodeAssistant extends JavaCodeAssistant
 {
 
    /**
@@ -40,7 +42,7 @@ public class JSPCodeAssistant extends JavaCodeAssistant
     * @param factory
     * @param errorHandler
     */
-   public JSPCodeAssistant(CodeAssistantService service, TokenWidgetFactory factory,
+   public JspCodeAssistant(CodeAssistantService service, TokenWidgetFactory factory,
       JavaCodeAssistantErrorHandler errorHandler)
    {
       super(service, factory, errorHandler);
@@ -54,9 +56,16 @@ public class JSPCodeAssistant extends JavaCodeAssistant
       String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
       Token currentToken)
    {
-//    if(lineMimeType.)
-      
-      super.autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX, cursorPositionY,
-         tokenList, lineMimeType, currentToken);
+      if (MimeType.APPLICATION_JAVA.equals(lineMimeType))
+      {
+         super.autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX,
+            cursorPositionY, tokenList, lineMimeType, currentToken);
+         return;
+      }
+      else
+      {
+         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, mimeType, cursorOffsetX,
+            cursorOffsetY, lineContent, cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+      }
    }
 }

@@ -35,22 +35,23 @@ import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandl
 import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
 import org.exoplatform.ide.editor.codeassistant.java.service.JavaCodeAssistantService;
-import org.exoplatform.ide.editor.codeassistant.jsp.JSPCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.jsp.JspCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JspAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.JspParser;
+import org.exoplatform.ide.editor.codevalidator.JspCodeValidator;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyEditorExtension Mar 10, 2011 3:48:59 PM evgen $
  *
  */
-public class JSPEditorExtension extends Extension implements InitializeServicesHandler, JavaCodeAssistantErrorHandler,
+public class JspEditorExtension extends Extension implements InitializeServicesHandler, JavaCodeAssistantErrorHandler,
    EditorActiveFileChangedHandler
 {
 
-   private JSPCodeAssistant jspCodeAssistant;
+   private JspCodeAssistant jspCodeAssistant;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -62,8 +63,8 @@ public class JSPEditorExtension extends Extension implements InitializeServicesH
       IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New JSP File", "JSP", "Create JSP", Images.JSP,
-            MimeType.APPLICATION_JSP), DockTarget.NONE, false);
+         new NewItemControl("File/New/New JSP File", "JSP", "Create JSP", Images.JSP, MimeType.APPLICATION_JSP),
+         DockTarget.NONE, false);
    }
 
    /**
@@ -81,21 +82,29 @@ public class JSPEditorExtension extends Extension implements InitializeServicesH
          service = JavaCodeAssistantService.get();
 
       jspCodeAssistant =
-         new JSPCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
+         new JspCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
             + "/ide/code-assistant/java/class-doc?fqn="), this);
 
-      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JSP, "CodeMirror JSP file editor", "jsp",Images.JSP, true,
-         new CodeMirrorConfiguration(
-            "['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']",  // generic code parsers
-            "['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" + CodeMirrorConfiguration.PATH + "css/javacolors.css']", // code styles               
-            true, // can be outlined
-            true, // can be autocompleted
-            new JspParser(), // exoplatform code parser 
-            new JspAutocompleteHelper(), // autocomplete helper
-            false, // canBeValidated
-            true //  canHaveSeveralMimeTypes
-//            jspCodeAssistant
-           )));    
+      IDE.getInstance()
+         .addEditor(
+            new CodeMirrorProducer(
+               MimeType.APPLICATION_JSP,
+               "CodeMirror JSP file editor",
+               "jsp",
+               Images.JSP,
+               true,
+               new CodeMirrorConfiguration(
+                  "['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']", // generic code parsers
+                  "['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH
+                     + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
+                     + CodeMirrorConfiguration.PATH + "css/javacolors.css']", // code styles               
+                  true, // can be outlined
+                  true, // can be autocompleted
+                  new JspParser(), // exoplatform code parser 
+                  new JspAutocompleteHelper(), // autocomplete helper
+                  false, // canBeValidated
+                  new JspCodeValidator(), jspCodeAssistant, true //  canHaveSeveralMimeTypes
+               )));
 
    }
 
