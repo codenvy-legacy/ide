@@ -93,7 +93,7 @@ public class Editor
     */
    public void selectTab(int tabIndex) throws Exception
    {
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + String.valueOf(tabIndex) + "]/");
+      selenium.clickAt("//div[@panel-id='editor']//td[@tab-bar-index="+ String.valueOf(tabIndex)+"]" + "/table","");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
