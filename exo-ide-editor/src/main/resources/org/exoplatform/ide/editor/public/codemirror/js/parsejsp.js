@@ -166,8 +166,6 @@ var XMLParser = Editor.Parser = (function() {
         var context = baseContext;
         if (context && context.noIndent)
           return current;
-        if (alignCDATA && /<!\[CDATA\[/.test(nextChars))
-          return 0;
         if (context && /^<\//.test(nextChars))
           context = context.prev;
         while (context && !context.startOfLine)
