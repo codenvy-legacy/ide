@@ -1,15 +1,17 @@
-The _Netvibes widget_ provides the Universal Widget API (UWA) - a powerful framework for the Web widgets development - for both Netvibes widgets and many various environments.
+The _Netvibes widget_ uses Universal Widget API (UWA) - a powerful framework for Web widgets development - for both Netvibes widgets and many various environments.
 
-The UWA widget consists of combinations of XHTML/XML, JavaScript/Ajax, CSS code with the MIME type *application/x-uwa-widget*.
+The UWA widget consists of combinations from XHTML/XML, JavaScript/Ajax, CSS code with the MIME type *application/x-uwa-widget*.
 In eXo IDE, you can create the Netvibes widget, preview it and deploy to [Netvibes Ecosystem|http://eco.netvibes.com].
 
 {info}
-If you want to get acquainted with writing your own widgets, refer [here|http://dev.netvibes.com/doc/].
+If you want to get acquainted with writing your own widgets, refer page http://dev.netvibes.com/doc/.
 {info}
 
 h1. Create Netvibes Widget
 
-To create a Netvibes widget, click the *New* icon on the toolbar and then select *Netvibes Widget* from the drop-down menu, or go to *File > New > Netvibes Widget* on the top menu. The new Netvibes Widget file is opened in the editor, enabling you to edit and save it.
+To create a Netvibes widget, click the *New* icon on the toolbar and then select *Netvibes Widget* from the drop-down menu, or go to *File > New > Netvibes Widget* on the top menu.
+
+The new Netvibes Widget file is opened in the editor, enabling you to edit and save it.
 
 !createNetvibesWidget.png|border=1!
 
@@ -26,25 +28,41 @@ The selected widget is opened in the _Preview Tab_.
 h1. Deploy Netvibes Widget To Netvibes Ecosystem
 
 Netvibes widgets are placed in the remote system called [Netvibes Ecosystem|http://eco.netvibes.com]. This is the location where such widgets can be found and compiled for other platforms.
-In eXo IDE, you can deploy your widget to Netvibes Ecosystem easily as follows: 
 
-* *Step 1:* Open your desired Netvibes widget in the _Content Panel_.
+There are a couple of ways to deploy a _Netvibes widget_. You can do it manually, or use the deploy mechanism. Manual deployment is easier because you don’t need to get an API key from Netvibes.
 
-* *Step 2:* Click the *Deploy UWA widget to Ecosystem* button on the toolbar; or go to *Run > Deploy UWA widget* on the top menu to open the *Deploy UWA widget to Ecosystem* window as below:
+*Manual deployment:*
+* *Step 1:* Get the url of your _Netvibes widget_. To do this, select your widget and click on the menu *View > Get URL*. Copy the url.
+
+* *Step 2:* Go to the [netvibes ecosystem|http://eco.netvibes.com/widgets], click on *Create or submit* and *Submit Widget*.
+
+* *Step 3:* Paste the url of your gadget, and don’t forget to remove the “*/private*” part from it. If you do not do this, _Netvibes_ will not be able to access it.
+
+* *Step 4:* Fill-in the form and finish the process. The widget is now available in the ecosystem.
+
+
+*For deployment using our wizard, you need to contact Netvibes at [business@netvibes.com|mailto:business@netvibes.com] and ask for your API key.*
+
+
+* *Step 1:* Get the url of your netvibes widget. To do this, select your widget and click on the menu *View > Get URL*. Copy the url..
+
+* *Step 2:* Click on *Deploy UWA widget to Ecosystem* button on the toolbar; or go to *Run > Deploy UWA widget* on the top menu to open the *Deploy UWA widget to Ecosystem*:
 
 !deployNetvibesWidget.png|border=1!
 
 *Illustration. Deploy UWA widget to Netvibes Ecosystem*
 
-* *Step 3:* Enter the public widget URL in the *Step 1* form, and then click *Next*.
+* *Step 3:* Paste the url of your gadget, and don’t forget to remove the "/*private*" part from it, or netvibes will not be able to access it
 
-* *Step 4:* Enter detailed information about the widget in the fields in the *Step 2* form. The fields marked with the asterisk (*), including "Title", "Description", "Main language", "Most appropriate region" and "Most appropriate category" are required. Click *Next* after completing your details.
+* *Step 4:* Enter the information about the widget in the fields in the *Step 2* form. The fields marked with asterisks (*\**), including "*Title*", "*Description*", "*Main language*", "*Most appropriate region*" and "*Most appropriate category*" are required.
+
+Click *Next* after completing your details.
 
 !step2.png|border=1!
 
 *Illustration. Dialog "Step 2. Detailed Information"*
 
-* *Step 4:* Set private data in all fields of the *Step 3* form. All these fields are mandatory.
+* *Step 5:* Enter your netvibes credentials and the API key/secret that netvibes gave you by email. All these fields are mandatory.
 
 !step3.png|border=1!
 
@@ -62,18 +80,28 @@ Details:
 Click the "Back" button to return to the previous step to edit your entered information.
 {tip}
 
-* *Step 5:* Click the *Deploy* button to start deploying the widget to _Netvibes Ecosystem_.
+* *Step 6:* Click the *Deploy* button to start deploying the widget to the _Netvibes Ecosystem_.
 
-The result is displayed in the _Output Panel_. If the deployment is successful, you will receive the message as below:
+The result is displayed in the _Output Panel_. If the deployment is successful, you will receive the message below:
 
 {screen}
 \[INFO\]*[http://78.137.4.16:53081/rest/ide-vfs-webdav/repository/dev-monit/TestWidget.html] deployed successfully.
 {screen}
 
-If failed, you will receive the error message which varies, depending on each case.
+If unsuccessful, you will receive the error message which varies, depending on each case.
 
 {screen}\[ERROR\] Error: The link already exists.{screen}
 
 {info}
 The deployed widget can be found at the Ecosystem page (http://eco.netvibes.com/mine/widgets) on the "My creations" tab.
 {info}
+
+h1. View Netvibes Documentation
+
+There is a convenient way to view the developer's documentation, while creating your widget in eXo IDE. When opening Netvibes widget in editor, click *Show Documentation* Toolbar item or select *View > Documentation*.
+
+Top menu item and a panel with loaded documentation will be opened at the right part of the application.
+
+!netvibes-documentation.png|border=1,width=949,height=338!
+
+*Illustration. View Netvibes Documentation*
