@@ -38,10 +38,15 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.RestService;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryEvent;
 import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryHandler;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -59,11 +64,13 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id: Dec 22, 2010 9:39:28 AM evgen $
  *
  */
-public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscoveryHandler, InitializeServicesHandler
+public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscoveryHandler, InitializeServicesHandler, ViewClosedHandler
 {
 
-   public interface Display
+   public interface Display extends IsView
    {
+      
+      String ID = "ideResrServicesDiscoveryView";
 
       HasClickHandlers getOkButton();
 
@@ -72,22 +79,23 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       ListGridItem<ParamExt> getParametersListGrid();
 
       HasValue<String> getPathField();
+      
+      HasValue<String> getRequestTypeField();
 
-      void setRequestType(String value);
-
-      void setResponseType(String value);
-
-      void closeView();
-
-      void setResponseFieldVisible(boolean b);
+      HasValue<String> getResponseTypeField();
+      
+      
+      void setResponseFieldVisible(boolean visible);
 
       void setResponseFieldEnabled(boolean enabled);
 
-      void setRequestFieldVisible(boolean b);
+      
+      void setRequestFieldVisible(boolean visible);
 
       void setRequestFieldEnabled(boolean enabled);
 
-      void setParametersListGridVisible(boolean b);
+      
+      void setParametersListGridVisible(boolean visible);
 
       void setParametersListGridEnabled(boolean enabled);
 
@@ -95,7 +103,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
    private HandlerManager eventBus;
 
-   private Display dispaly;
+   private Display display;
 
    private RestService currentRestService;
 
@@ -109,6 +117,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
       eventBus.addHandler(ShowRestServicesDiscoveryEvent.TYPE, this);
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -116,53 +125,35 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
     */
    public void onShowRestServicesDiscovery(ShowRestServicesDiscoveryEvent event)
    {
-      if (dispaly != null)
-      {
-         dispaly.closeView();
+      if (display == null) {
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+         bindDisplay();
+         loadRestServices();
       }
-
-      Display d = new RestServicesDiscoveryForm(eventBus);
-
-      bindDisplay(d);
-
-      DiscoveryService.getInstance().getRestServices(new AsyncRequestCallback<List<RestService>>()
-      {
-
-         @Override
-         protected void onSuccess(List<RestService> result)
-         {
-            restServicesReceived(result);
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
-         }
-      });
    }
-
-   /**
-    * @param d
-    */
-   private void bindDisplay(Display d)
+   
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
    {
+      if (event.getView() instanceof Display) {
+         display = null;
+      }
+   }
+   
 
-      dispaly = d;
-
-      dispaly.getOkButton().addClickHandler(new ClickHandler()
+   private void bindDisplay()
+   {
+      display.getOkButton().addClickHandler(new ClickHandler()
       {
-
          public void onClick(ClickEvent event)
          {
-            dispaly.closeView();
-            dispaly = null;
+            IDE.getInstance().closeView(Display.ID);
          }
       });
 
-      dispaly.getTreeGrid().addOpenHandler(new OpenHandler<Object>()
+      display.getTreeGrid().addOpenHandler(new OpenHandler<Object>()
       {
-
          public void onOpen(OpenEvent<Object> event)
          {
             if (event.getTarget() instanceof RestService)
@@ -177,9 +168,8 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          }
       });
 
-      dispaly.getTreeGrid().addSelectionHandler(new SelectionHandler<Object>()
+      display.getTreeGrid().addSelectionHandler(new SelectionHandler<Object>()
       {
-
          public void onSelection(SelectionEvent<Object> event)
          {
             if (event.getSelectedItem() instanceof Method)
@@ -190,11 +180,11 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
             {
                if(event.getSelectedItem() instanceof RestService)
                {
-                  dispaly.getPathField().setValue(((RestService)event.getSelectedItem()).getFullPath());
+                  display.getPathField().setValue(((RestService)event.getSelectedItem()).getFullPath());
                }
                else if(event.getSelectedItem() instanceof Resource)
                {
-                  dispaly.getPathField().setValue(((Resource)event.getSelectedItem()).getPath());
+                  display.getPathField().setValue(((Resource)event.getSelectedItem()).getPath());
                }
                clearMethodInfo();
             }
@@ -207,12 +197,12 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
     */
    private void clearMethodInfo()
    {
-      dispaly.setRequestType("");
-      dispaly.setResponseType("");
-      dispaly.getParametersListGrid().setValue(new ArrayList<ParamExt>());
-      dispaly.setParametersListGridVisible(false);
-      dispaly.setRequestFieldVisible(false);
-      dispaly.setResponseFieldVisible(false);
+      display.getRequestTypeField().setValue("");
+      display.getResponseTypeField().setValue("");
+      display.getParametersListGrid().setValue(new ArrayList<ParamExt>());
+      display.setParametersListGridVisible(false);
+      display.setRequestFieldVisible(false);
+      display.setResponseFieldVisible(false);
 //      dispaly.setPathFieldVisible(false);
    }
 
@@ -224,49 +214,48 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    private void updateMethodInfo(Method method)
    {
 //      dispaly.setPathFieldVisible(true);
-      dispaly.getPathField().setValue(method.getHref());
+      display.getPathField().setValue(method.getHref());
 
       if (method.getRequest() != null)
       {
          if (!method.getRequest().getRepresentation().isEmpty())
          {
-            dispaly.setRequestFieldVisible(true);
-            dispaly.setRequestFieldEnabled(true);
-            dispaly.setRequestType(method.getRequest().getRepresentation().get(0).getMediaType());
+            display.setRequestFieldVisible(true);
+            display.setRequestFieldEnabled(true);
+            display.getRequestTypeField().setValue(method.getRequest().getRepresentation().get(0).getMediaType());
          }
          else
          {
-            dispaly.setRequestType("n/a");
-            dispaly.setRequestFieldVisible(true);
-            dispaly.setRequestFieldEnabled(false);
+            display.getRequestTypeField().setValue("n/a");
+            display.setRequestFieldVisible(true);
+            display.setRequestFieldEnabled(false);
          }
-         dispaly.setParametersListGridVisible(true);
-         dispaly.setParametersListGridEnabled(!method.getRequest().getParam().isEmpty());
+         display.setParametersListGridVisible(true);
+         display.setParametersListGridEnabled(!method.getRequest().getParam().isEmpty());
          List<ParamExt> paramsExt = convertParamList(method.getRequest().getParam());
-         dispaly.getParametersListGrid().setValue(paramsExt);
-
+         display.getParametersListGrid().setValue(paramsExt);
       }
       else
       {
-         dispaly.setRequestType("n/a");
-         dispaly.getParametersListGrid().setValue(new ArrayList<ParamExt>());
-         dispaly.setParametersListGridVisible(true);
-         dispaly.setParametersListGridEnabled(false);
-         dispaly.setRequestFieldVisible(true);
-         dispaly.setRequestFieldEnabled(false);
+         display.getRequestTypeField().setValue("n/a");
+         display.getParametersListGrid().setValue(new ArrayList<ParamExt>());
+         display.setParametersListGridVisible(true);
+         display.setParametersListGridEnabled(false);
+         display.setRequestFieldVisible(true);
+         display.setRequestFieldEnabled(false);
       }
 
       if (method.getResponse() != null && !method.getResponse().getRepresentationOrFault().isEmpty())
       {
-         dispaly.setResponseFieldVisible(true);
-         dispaly.setResponseFieldEnabled(true);
-         dispaly.setResponseType(method.getResponse().getRepresentationOrFault().get(0).getMediaType());
+         display.setResponseFieldVisible(true);
+         display.setResponseFieldEnabled(true);
+         display.getResponseTypeField().setValue(method.getResponse().getRepresentationOrFault().get(0).getMediaType());
       }
       else
       {
-         dispaly.setResponseType("n/a");
-         dispaly.setResponseFieldVisible(true);
-         dispaly.setResponseFieldEnabled(false);
+         display.getResponseTypeField().setValue("n/a");
+         display.setResponseFieldVisible(true);
+         display.setResponseFieldEnabled(false);
       }
    }
 
@@ -355,7 +344,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          @Override
          protected void onSuccess(WadlApplication result)
          {
-            dispaly.getTreeGrid().setPaths(currentRestService,
+            display.getTreeGrid().setPaths(currentRestService,
                result.getResources().getResource().get(0).getMethodOrResource());
          }
 
@@ -367,10 +356,27 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       });
    }
 
+   private void loadRestServices() {
+      DiscoveryService.getInstance().getRestServices(new AsyncRequestCallback<List<RestService>>()
+         {
+            @Override
+            protected void onSuccess(List<RestService> result)
+            {
+               refreshRestServices(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+            }
+         });      
+   }
+   
    /**
     * @see org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedHandler#onRestServicesReceived(org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedEvent)
     */
-   private void restServicesReceived(List<RestService> restServices)
+   private void refreshRestServices(List<RestService> restServices)
    {
       services.clear();
       for (RestService rs : restServices)
@@ -383,8 +389,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       Map<String, RestService> list2Tree = list2Tree(services.values());
       try
       {
-         dispaly.getTreeGrid().setRootValue(list2Tree.values().iterator().next(), services.keySet());
-         
+         display.getTreeGrid().setRootValue(list2Tree.values().iterator().next(), services.keySet());
       }
       catch (Exception e)
       {
@@ -467,5 +472,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          restContext = restContext.substring(0, restContext.length());
       }
    }
+
 
 }

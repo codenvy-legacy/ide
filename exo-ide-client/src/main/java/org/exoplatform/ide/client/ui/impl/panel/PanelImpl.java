@@ -349,6 +349,10 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          String viewId = tabPanel.getTabIdByIndex(i);
 
          ViewEx view = views.get(viewId);
+         if (view == null) {
+            continue;
+         }
+         
          Widget viewWidget = (Widget)view;
          DOM.setElementAttribute(viewWidget.getElement(), "tab-index", "" + i);
       }
@@ -362,16 +366,23 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          String viewId = event.getTabId();
          ViewEx view = views.get(viewId);
 
-         if (closingViewHandler != null)
-         {
-            ClosingViewEvent closingViewEvent = new ClosingViewEvent(view);
-            closingViewHandler.onClosingView(closingViewEvent);
-            if (closingViewEvent.isClosingCanceled())
+         try {
+            
+            if (closingViewHandler != null)
             {
-               event.cancelClosing();
-               return;
+               ClosingViewEvent closingViewEvent = new ClosingViewEvent(view);
+               closingViewHandler.onClosingView(closingViewEvent);
+               if (closingViewEvent.isClosingCanceled())
+               {
+                  event.cancelClosing();
+                  return;
+               }
             }
+
+         } catch (Exception e) {
+            e.printStackTrace();
          }
+         
 
          doCloseView(viewId);
       }

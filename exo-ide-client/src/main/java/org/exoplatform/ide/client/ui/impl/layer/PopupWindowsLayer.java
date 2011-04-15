@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.ui.impl.layer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.ui.client.window.ResizeableWindow;
 import org.exoplatform.gwtframework.ui.client.window.Window;
 import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -54,11 +55,13 @@ public class PopupWindowsLayer extends AbstractWindowsLayer
    {
       views.put(view.getId(), view);
 
-      Window window = new Window(view.getTitle());
+      Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
+
       DOM.setStyleAttribute(window.getElement(), "zIndex", "auto");
       window.setWidth(view.getDefaultWidth());
       window.setHeight(view.getDefaultHeight());
       window.center();
+      window.setCanMaximize(true);
       window.show();
 
       windows.put(view.getId(), window);
@@ -72,7 +75,8 @@ public class PopupWindowsLayer extends AbstractWindowsLayer
 
       if (view instanceof Widget)
       {
-         window.add((Widget)view);
+         Widget viewWidget = (Widget)view;
+         window.add(viewWidget);
       }
 
       WindowController controller = new WindowController(view, window);

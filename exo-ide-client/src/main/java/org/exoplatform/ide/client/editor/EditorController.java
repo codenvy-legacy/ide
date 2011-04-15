@@ -559,7 +559,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
             editorView.add(editor);
             editors.put(file.getHref(), editor);
             editorsViews.put(editor.getEditorId(), editorView);
-
          }
          else
          {
@@ -795,17 +794,17 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
             activeFile = editorView.getFile();
             Timer timer = new Timer()
             {
-
                @Override
                public void run()
                {
                   eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, editorView.getEditor()));
                }
             };
+            
             if(waitForEditorInitialized)
             {
                waitForEditorInitialized = false;
-               timer.schedule(500);
+               timer.schedule(1000);
             }
             else
             {

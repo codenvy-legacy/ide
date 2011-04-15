@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.framework.ui.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.ui.client.Resizeable;
 import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -50,8 +51,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeViewTitleHandler,
-   HasChangeViewIconHandler, HasSetViewVisibleHandler
+public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeViewTitleHandler, HasChangeViewIconHandler,
+   HasSetViewVisibleHandler, Resizeable
 {
 
    protected class ViewScrollPanel extends ScrollPanel
@@ -94,6 +95,8 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
    private String type;
 
    private Wrapper wrapper;
+
+   private Widget viewWidget;
 
    public ViewImpl(String id, String type, String title)
    {
@@ -139,8 +142,10 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       add(w, false);
    }
 
-   public final void add(Widget w, boolean contentScrollable)
+   public final void add(Widget viewWidget, boolean contentScrollable)
    {
+      this.viewWidget = viewWidget;
+
       if (contentScrollable)
       {
          if (scrollPanel == null)
@@ -149,12 +154,12 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
             DOM.setStyleAttribute(scrollPanel.getElement(), "zIndex", "0");
             wrapper.add(scrollPanel);
          }
-         scrollPanel.add(w);
-         w.setSize("100%", "100%");
+         scrollPanel.add(viewWidget);
+         viewWidget.setSize("100%", "100%");
       }
       else
       {
-         wrapper.add(w);
+         wrapper.add(viewWidget);
       }
    }
 
@@ -292,7 +297,7 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
    public void setTitle(String title)
    {
       this.tiltle = title;
-      
+
       ChangeViewTitleEvent changeViewTitleEvent = new ChangeViewTitleEvent(getId(), title);
       for (ChangeViewTitleHandler changeViewTitleHandler : changeViewTitleHandlers)
       {
@@ -308,6 +313,16 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       for (SetViewVisibleHandler setViewVisibleHandler : setViewVisibleHandlers)
       {
          setViewVisibleHandler.onSetViewVisible(event);
+      }
+   }
+
+   @Override
+   public void resize(int width, int height)
+   {
+      setSize(width + "px", height + "px");
+      if (viewWidget != null && viewWidget instanceof Resizeable)
+      {
+         ((Resizeable)viewWidget).resize(width - 6, height - 6);
       }
    }
 

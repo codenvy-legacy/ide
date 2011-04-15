@@ -21,12 +21,11 @@ package org.exoplatform.ide.client.ui.impl.layer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.ui.client.window.ResizeableWindow;
 import org.exoplatform.gwtframework.ui.client.window.Window;
 import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -53,8 +52,9 @@ public class ModalWindowsLayer extends AbstractWindowsLayer
    private Map<String, WindowController> windowControllers = new HashMap<String, WindowController>();
 
    private Map<String, Window> windows = new HashMap<String, Window>();
-   
-   public ModalWindowsLayer() {
+
+   public ModalWindowsLayer()
+   {
       super("modal-windows");
    }
 
@@ -80,7 +80,8 @@ public class ModalWindowsLayer extends AbstractWindowsLayer
       ViewEx view = views.get(viewId);
       views.remove(viewId);
 
-      if (viewClosedHandler != null) {
+      if (viewClosedHandler != null)
+      {
          ViewClosedEvent viewClosedEvent = new ViewClosedEvent(view);
          viewClosedHandler.onViewClosed(viewClosedEvent);
       }
@@ -104,7 +105,8 @@ public class ModalWindowsLayer extends AbstractWindowsLayer
       lockPanels.put(view.getId(), lockPanel);
       resizeLockPanels();
 
-      Window window = new Window(view.getTitle());
+      Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
+      
       DOM.setStyleAttribute(window.getElement(), "zIndex", "auto");
       window.setWidth(view.getDefaultWidth());
       window.setHeight(view.getDefaultHeight());
@@ -128,7 +130,8 @@ public class ModalWindowsLayer extends AbstractWindowsLayer
       WindowController controller = new WindowController(view, window);
       windowControllers.put(view.getId(), controller);
 
-      if (viewOpenedHandler != null) {
+      if (viewOpenedHandler != null)
+      {
          ViewOpenedEvent viewOpenedEvent = new ViewOpenedEvent(view);
          viewOpenedHandler.onViewOpened(viewOpenedEvent);
       }

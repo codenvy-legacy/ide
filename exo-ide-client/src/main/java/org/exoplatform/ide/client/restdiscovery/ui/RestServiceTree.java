@@ -16,9 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.restdiscovery;
+package org.exoplatform.ide.client.restdiscovery.ui;
 
-import com.google.gwt.user.client.ui.TreeItem;
+import java.util.List;
+import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Request;
@@ -26,9 +27,9 @@ import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.ui.client.component.Tree;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.discovery.RestService;
+import org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid;
 
-import java.util.List;
-import java.util.Set;
+import com.google.gwt.user.client.ui.TreeItem;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -37,9 +38,12 @@ import java.util.Set;
  */
 public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
 {
-
    
    private Set<String> restClassPaths;
+   
+   public RestServiceTree() {
+      getElement().getStyle().setZIndex(0);
+   }
 
    /**
     * @see org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid#setRootValue(org.exoplatform.ide.client.framework.discovery.RestService, java.util.Set)

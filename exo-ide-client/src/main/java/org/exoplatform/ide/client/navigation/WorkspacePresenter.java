@@ -206,7 +206,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    {
       removeHandlers();
    }
-   
+
    /**
     * Remove handlers, that are no longer needed.
     */

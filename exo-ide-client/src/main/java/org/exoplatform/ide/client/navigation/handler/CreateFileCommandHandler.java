@@ -134,8 +134,6 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
 //         Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
          EditorProducer producer = EditorFactory.getEditorProducer(event.getMimeType(), defaultEditorDescription); 
          eventBus.fireEvent(new EditorOpenFileEvent(newFile, producer));
-
-
       }
       catch (EditorNotFoundException e)
       {

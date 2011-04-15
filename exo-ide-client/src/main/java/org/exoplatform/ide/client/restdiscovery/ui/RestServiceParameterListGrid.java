@@ -16,21 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.restdiscovery;
+package org.exoplatform.ide.client.restdiscovery.ui;
+
+import org.exoplatform.gwtframework.ui.client.Resizeable;
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.restdiscovery.ParamExt;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
-
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class RestServiceParameterListGrid extends ListGrid<ParamExt>
+public class RestServiceParameterListGrid extends ListGrid<ParamExt> implements Resizeable
 {
+   
    private static final String NAME = "Name";
 
    private static final String TYPE = "Type";
@@ -127,6 +130,12 @@ public class RestServiceParameterListGrid extends ListGrid<ParamExt>
    private String getDivider(String title)
    {
       return "<b><font color=\"#3764A3\">" + title + "</font></b>";
+   }
+
+   @Override
+   public void resize(int width, int height)
+   {
+      setSize(width + "px", height + "px");
    }
 
 }

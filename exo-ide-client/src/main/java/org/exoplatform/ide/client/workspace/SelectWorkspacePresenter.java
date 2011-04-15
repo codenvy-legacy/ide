@@ -18,15 +18,11 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -47,7 +43,6 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -59,11 +54,15 @@ import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -117,7 +116,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler,
    }
 
    /**
-    * Instanse of Display
+    * Instance of Display
     */
    private Display display;
 
@@ -224,9 +223,9 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler,
             workspaceList = result;
             if (display == null)
             {
-               Display d = GWT.create(Display.class);
-               IDE.getInstance().openView((ViewEx)d);
-               bindDisplay(d);
+               display = GWT.create(Display.class);
+               IDE.getInstance().openView(display.asView());
+               bindDisplay();
             }
          }
       });
@@ -238,10 +237,8 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler,
     * 
     * @param d
     */
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      display = d;
-
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent arg0)
