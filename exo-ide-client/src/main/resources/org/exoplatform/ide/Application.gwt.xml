@@ -42,6 +42,7 @@
    <inherits name="org.exoplatform.ide.editor.extension.chromattic.ChromatticEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.extension.netvibes.NetvibesEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.extension.java.JavaEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.extension.jsp.JSPEditorExtension" />
    
    <!-- EXTENSIONS -->
    <inherits name='org.exoplatform.ide.extension.netvibes.NetvibesExtension' />
