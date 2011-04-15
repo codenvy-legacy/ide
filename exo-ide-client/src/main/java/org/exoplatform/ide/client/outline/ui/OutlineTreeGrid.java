@@ -270,8 +270,8 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
     */
    private String getTokenIcon(TokenBeenImpl token)
    {
-      if ((MimeType.APPLICATION_GROOVY.equals(token.getMimeType()) && !TokenType.GROOVY_TAG.equals(token.getType()))
-          || MimeType.APPLICATION_JAVA.equals(token.getMimeType())
+      if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()) && !TokenType.GROOVY_TAG.equals(token.getType())
+          || MimeType.APPLICATION_JAVA.equals(token.getMimeType()) && !TokenType.JSP_TAG.equals(token.getType())
          )
       {
          return getIconForJavaFiles(token);
@@ -296,9 +296,10 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
          case CDATA :
             return CDATA_ICON;
 
+         case JSP_TAG :            
          case GROOVY_TAG :
             return GROOVY_TAG_ICON;
-
+            
          case CLASS :
             return CLASS_ICON;
 
