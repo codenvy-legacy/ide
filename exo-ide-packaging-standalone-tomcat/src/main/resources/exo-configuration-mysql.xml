@@ -470,6 +470,9 @@
                <property name="url" value="jdbc:mysql://mysql.exoplatform.com.ua:3306/demo_ide" />
                <property name="username" value="demo_ide" />
                <property name="password" value="demoIdE" />
+               <property name="validationQuery" value="select 1"/>
+               <property name="testOnReturn" value="true"/>
+               <property name="timeBetweenEvictionRunsMillis" value="300000"/>
             </properties-param>
          </init-params>
       </component-plugin>
