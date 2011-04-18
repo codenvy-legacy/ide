@@ -53,25 +53,27 @@ public class DialogAboutTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.Help.HELP, MenuCommands.Help.ABOUT);
 //      Thread.sleep(TestConstants.SLEEP);
       //check About form
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideAboutForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideAboutFormOkButton\"]"));
+      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]"));
+      assertTrue(selenium.isElementPresent("ideAboutFormOkButton"));
+      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]//td//img[@class=\"gwt-Image\"]"));
       assertTrue(selenium.isTextPresent(PRODUCT_NAME));
-//      assertTrue(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
       assertTrue(selenium.isTextPresent(COMPANY));
-      assertTrue(selenium.isTextPresent("Revision"));
-      assertTrue(selenium.isTextPresent("Build Time"));
+      assertTrue(selenium.isTextPresent("Revision:"));
+      assertTrue(selenium.isTextPresent("Build Time:"));
       
       //click Ok button
-      selenium.click("scLocator=//IButton[ID=\"ideAboutFormOkButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
+      selenium.click("ideAboutFormOkButton");
+      waitForElementNotPresent("ideAboutFormOkButton");
       
       //check About form dissapeared
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideAboutForm\"]"));
+      assertFalse(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]"));
+      assertFalse(selenium.isElementPresent("ideAboutFormOkButton"));
+      assertFalse(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]//td//img[@class=\"gwt-Image\"]"));
       assertFalse(selenium.isTextPresent("About"));
       assertFalse(selenium.isTextPresent(PRODUCT_NAME));
 //      assertFalse(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
       assertFalse(selenium.isTextPresent(COMPANY));
-      assertFalse(selenium.isTextPresent("Revision"));
-      assertFalse(selenium.isTextPresent("Build Time"));
+      assertFalse(selenium.isTextPresent("Revision:"));
+      assertFalse(selenium.isTextPresent("Build Time:"));
    }
 }
