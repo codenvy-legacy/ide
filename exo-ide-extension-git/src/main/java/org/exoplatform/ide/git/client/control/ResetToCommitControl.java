@@ -18,40 +18,40 @@
  */
 package org.exoplatform.ide.git.client.control;
 
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.remove.RemoveFilesEvent;
+import org.exoplatform.ide.git.client.reset.ResetToCommitEvent;
 
 /**
- * Control is used to remove files from commit (added by add command) and work tree.
+ * Control for reseting the branch's head to commit.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 12, 2011 3:33:56 PM anya $
+ * @version $Id:  Apr 14, 2011 5:58:58 PM anya $
  *
  */
-public class RemoveFilesControl extends GitControl
+public class ResetToCommitControl extends GitControl
 {
-
    /**
     * Control ID.
     */
-   public static final String ID = "Git/Remove...";
+   public static final String ID = "Git/Reset...";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Remove ...";
+   public static final String TITLE = "Reset...";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Remove changes from index";
+   public static final String PROMPT = "Reset to revision...";
 
-   public RemoveFilesControl()
+   /**
+    * @param id
+    */
+   public ResetToCommitControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(GitClientBundle.INSTANCE.removeFiles(), GitClientBundle.INSTANCE.removeFilesDisabled());
-      setEvent(new RemoveFilesEvent());
+      setEvent(new ResetToCommitEvent());
    }
 }

@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.git.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.add.AddFilesEvent;
 
@@ -34,7 +28,7 @@ import org.exoplatform.ide.git.client.add.AddFilesEvent;
  * @version $Id:  Mar 29, 2011 4:23:20 PM anya $
  *
  */
-public class AddFilesControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class AddFilesControl extends GitControl
 {
    /**
     * Control ID.
@@ -59,29 +53,5 @@ public class AddFilesControl extends SimpleControl implements IDEControl, ItemsS
       setEvent(new AddFilesEvent());
       setImages(GitClientBundle.INSTANCE.addToIndex(), GitClientBundle.INSTANCE.addToIndexDisabled());
       setDelimiterBefore(true);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
-    */
-   @Override
-   public void initialize(HandlerManager eventBus)
-   {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      setVisible(true);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
-      setEnabled(true);
    }
 }

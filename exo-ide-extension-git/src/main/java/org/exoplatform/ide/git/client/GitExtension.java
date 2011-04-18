@@ -37,11 +37,13 @@ import org.exoplatform.ide.git.client.control.InitRepositoryControl;
 import org.exoplatform.ide.git.client.control.PushToRemoteControl;
 import org.exoplatform.ide.git.client.control.RemoveFilesControl;
 import org.exoplatform.ide.git.client.control.ResetFilesControl;
+import org.exoplatform.ide.git.client.control.ResetToCommitControl;
 import org.exoplatform.ide.git.client.control.ShowStatusControl;
 import org.exoplatform.ide.git.client.create.InitRepositoryPresenter;
 import org.exoplatform.ide.git.client.push.PushToRemotePresenter;
 import org.exoplatform.ide.git.client.remove.RemoveFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetFilesPresenter;
+import org.exoplatform.ide.git.client.reset.ResetToCommitPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
 
 /**
@@ -69,6 +71,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new CloneRepositoryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new AddFilesControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ResetFilesControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ResetToCommitControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new RemoveFilesControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CommitControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new BranchesControl(), DockTarget.NONE, false);
@@ -83,6 +86,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new AddToIndexPresenter(eventBus);
       new RemoveFilesPresenter(eventBus);
       new ResetFilesPresenter(eventBus);
+      new ResetToCommitPresenter(eventBus);
       
       new CommitPresenter(eventBus);
       new PushToRemotePresenter(eventBus);

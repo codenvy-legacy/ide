@@ -19,36 +19,40 @@
 
 -->
 <module>
-	<inherits name='com.google.gwt.user.User' />
-	<replace-with class="org.exoplatform.ide.git.client.clone.CloneRepositoryView">
-		<when-type-is class="org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display" />
-	</replace-with> 
-   
+   <inherits name='com.google.gwt.user.User' />
+   <replace-with class="org.exoplatform.ide.git.client.clone.CloneRepositoryView">
+      <when-type-is class="org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display" />
+   </replace-with>
+
    <replace-with class="org.exoplatform.ide.git.client.create.InitRepositoryView">
       <when-type-is class="org.exoplatform.ide.git.client.create.InitRepositoryPresenter.Display" />
-   </replace-with>  
-   
-    <replace-with class="org.exoplatform.ide.git.client.add.AddToIndexView">
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.git.client.add.AddToIndexView">
       <when-type-is class="org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.git.client.commit.CommitView">
       <when-type-is class="org.exoplatform.ide.git.client.commit.CommitPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.git.client.push.PushToRemoteView">
       <when-type-is class="org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display" />
    </replace-with>
-   
-    <replace-with class="org.exoplatform.ide.git.client.branch.BranchView">
+
+   <replace-with class="org.exoplatform.ide.git.client.branch.BranchView">
       <when-type-is class="org.exoplatform.ide.git.client.branch.BranchPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.git.client.remove.RemoveFilesView">
       <when-type-is class="org.exoplatform.ide.git.client.remove.RemoveFilesPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.git.client.reset.ResetFilesView">
       <when-type-is class="org.exoplatform.ide.git.client.reset.ResetFilesPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.git.client.reset.ResetToCommitView">
+      <when-type-is class="org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display" />
    </replace-with>
 </module>

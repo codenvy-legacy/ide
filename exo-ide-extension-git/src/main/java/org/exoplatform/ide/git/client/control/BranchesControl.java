@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.git.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.git.client.branch.ShowBranchesEvent;
 
 /**
@@ -34,7 +28,7 @@ import org.exoplatform.ide.git.client.branch.ShowBranchesEvent;
  * @version $Id:  Apr 7, 2011 5:39:13 PM anya $
  *
  */
-public class BranchesControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class BranchesControl extends GitControl
 {
    /**
     * Control ID.
@@ -58,29 +52,4 @@ public class BranchesControl extends SimpleControl implements IDEControl, ItemsS
       setPrompt(PROMPT);
       setEvent(new ShowBranchesEvent());
    }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
-    */
-   @Override
-   public void initialize(HandlerManager eventBus)
-   {
-      setVisible(true);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
-      setEnabled(true);
-   }
-
 }

@@ -36,6 +36,9 @@ import org.exoplatform.ide.git.client.marshaller.BranchUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.CloneRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.CommitRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.InitRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.LogRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.LogResponse;
+import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.PushRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.RemoteListRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.RemoteListUnmarshaller;
@@ -56,6 +59,7 @@ import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
 import org.exoplatform.ide.git.shared.InitRequest;
+import org.exoplatform.ide.git.shared.LogRequest;
 import org.exoplatform.ide.git.shared.PushRequest;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
@@ -93,6 +97,8 @@ public class GitClientServiceImpl extends GitClientService
 
    public static final String INIT = "/ide/git/init";
 
+   public static final String LOG = "/ide/git/log";
+
    public static final String STATUS = "/ide/git/status";
 
    public static final String GET_WORKDIR = "/ide/git-repo/workdir";
@@ -102,7 +108,7 @@ public class GitClientServiceImpl extends GitClientService
    public static final String REMOTE_LIST = "/ide/git/remote-list";
 
    public static final String REMOVE = "/ide/git/rm";
-   
+
    public static final String RESET = "/ide/git/reset";
 
    private HandlerManager eventBus;
@@ -189,7 +195,8 @@ public class GitClientServiceImpl extends GitClientService
       String params = "workdir=" + workDir;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).send(callback);
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN)
+         .send(callback);
    }
 
    /**
@@ -451,12 +458,46 @@ public class GitClientServiceImpl extends GitClientService
       resetRequest.setPaths(paths);
       resetRequest.setCommit(commit);
       resetRequest.setType(resetType);
-      
+
       ResetRequestMarshaller marshaller = new ResetRequestMarshaller(resetRequest);
 
       String params = "workdir=" + workDir;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);      
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#log(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void log(String href, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback)
+   {
+      String url = restServiceContext + LOG;
+
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+      LogRequest logRequest = new LogRequest();
+      LogRequestMarshaller marshaller = new LogRequestMarshaller(logRequest);
+
+      LogResponse logResponse = new LogResponse();
+      LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller(logResponse, isTextFormat);
+      callback.setResult(logResponse);
+      callback.setPayload(unmarshaller);
+
+      String params = "workdir=" + workDir;
+
+      if (isTextFormat)
+      {
+         AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+      }
+      else
+      {
+         AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+            .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+      }
+
    }
 }

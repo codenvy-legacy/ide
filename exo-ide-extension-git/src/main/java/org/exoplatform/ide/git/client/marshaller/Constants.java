@@ -33,6 +33,8 @@ public interface Constants
    
    public static final String COMMIT = "commit";
    
+   public static final String COMMITS = "commits";
+   
    public static final String COMMIT_TIME = "commitTime";
    
    public static final String COMMITTER = "committer";

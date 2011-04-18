@@ -36,8 +36,14 @@ import org.exoplatform.ide.git.shared.ResetRequest;
  */
 public class ResetRequestMarshaller implements Marshallable, Constants
 {
+   /**
+    * Reset request.
+    */
    private ResetRequest resetRequest;
 
+   /**
+    * @param resetRequest reset request
+    */
    public ResetRequestMarshaller(ResetRequest resetRequest)
    {
       this.resetRequest = resetRequest;
@@ -64,7 +70,6 @@ public class ResetRequestMarshaller implements Marshallable, Constants
       {
          jsonObject.put(COMMIT, new JSONString(resetRequest.getCommit()));
       }
-
       if (resetRequest.getType() != null)
       {
          jsonObject.put(TYPE, new JSONString(resetRequest.getType().name()));

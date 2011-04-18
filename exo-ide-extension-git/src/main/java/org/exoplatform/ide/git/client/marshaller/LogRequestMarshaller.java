@@ -16,42 +16,43 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
+package org.exoplatform.ide.git.client.marshaller;
 
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.remove.RemoveFilesEvent;
+import com.google.gwt.json.client.JSONObject;
+
+import org.exoplatform.gwtframework.commons.rest.Marshallable;
+import org.exoplatform.ide.git.shared.LogRequest;
 
 /**
- * Control is used to remove files from commit (added by add command) and work tree.
+ * Marshaller for log request in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 12, 2011 3:33:56 PM anya $
+ * @version $Id:  Apr 14, 2011 5:42:15 PM anya $
  *
  */
-public class RemoveFilesControl extends GitControl
+public class LogRequestMarshaller implements Marshallable, Constants
 {
-
    /**
-    * Control ID.
+    * Log request.
     */
-   public static final String ID = "Git/Remove...";
+   private LogRequest logRequest;
 
    /**
-    * Control's title.
+    * @param logRequest log request
     */
-   public static final String TITLE = "Remove ...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Remove changes from index";
-
-   public RemoveFilesControl()
+   public LogRequestMarshaller(LogRequest logRequest)
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(GitClientBundle.INSTANCE.removeFiles(), GitClientBundle.INSTANCE.removeFilesDisabled());
-      setEvent(new RemoveFilesEvent());
+      this.logRequest = logRequest;
    }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
+    */
+   @Override
+   public String marshal()
+   {
+      JSONObject jsonObject = new JSONObject();
+      return jsonObject.toString();
+   }
+
 }

@@ -16,42 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
+package org.exoplatform.ide.git.client.reset;
 
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.remove.RemoveFilesEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Control is used to remove files from commit (added by add command) and work tree.
+ * Handler for {@link ResetToCommitEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 12, 2011 3:33:56 PM anya $
+ * @version $Id:  Apr 15, 2011 9:51:06 AM anya $
  *
  */
-public class RemoveFilesControl extends GitControl
+public interface ResetToCommitHandler extends EventHandler
 {
-
    /**
-    * Control ID.
+    * Perform actions when user tries to reset the HEAD.
+    * 
+    * @param event
     */
-   public static final String ID = "Git/Remove...";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Remove ...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Remove changes from index";
-
-   public RemoveFilesControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(GitClientBundle.INSTANCE.removeFiles(), GitClientBundle.INSTANCE.removeFilesDisabled());
-      setEvent(new RemoveFilesEvent());
-   }
+   void onResetToCommit(ResetToCommitEvent event);
 }

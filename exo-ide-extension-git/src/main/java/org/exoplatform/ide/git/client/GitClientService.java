@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.Branch;
@@ -197,6 +198,8 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void commit(String workDir, String message, AsyncRequestCallback<Revision> callback);
+   
+   public abstract void log(String workDir, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback); 
 
    /**
     * Gets the working tree status. The status of added, modified or deleted files is shown is written in {@link String}.

@@ -16,42 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
+package org.exoplatform.ide.git.client.marshaller;
 
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.remove.RemoveFilesEvent;
+import org.exoplatform.ide.git.shared.Log;
 
 /**
- * Control is used to remove files from commit (added by add command) and work tree.
+ * The response with the log of commits.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 12, 2011 3:33:56 PM anya $
+ * @version $Id:  Apr 14, 2011 4:32:17 PM anya $
  *
  */
-public class RemoveFilesControl extends GitControl
+public class LogResponse extends Log
 {
-
    /**
-    * Control ID.
+    * The text format of the log response.
     */
-   public static final String ID = "Git/Remove...";
+   private String textLog;
 
    /**
-    * Control's title.
+    * @return the textLog text format of the log response
     */
-   public static final String TITLE = "Remove ...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Remove changes from index";
-
-   public RemoveFilesControl()
+   public String getTextLog()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(GitClientBundle.INSTANCE.removeFiles(), GitClientBundle.INSTANCE.removeFilesDisabled());
-      setEvent(new RemoveFilesEvent());
+      return textLog;
+   }
+
+   /**
+    * @param textLog the textLog text format of the log response
+    */
+   public void setTextLog(String textLog)
+   {
+      this.textLog = textLog;
    }
 }
