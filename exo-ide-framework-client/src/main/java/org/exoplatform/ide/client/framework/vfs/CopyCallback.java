@@ -22,7 +22,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.vfs.CopyCallback.CopyItemData;
 
-
 /**
  * Callback the client has to implement to copy item.
  * 
@@ -32,19 +31,19 @@ import org.exoplatform.ide.client.framework.vfs.CopyCallback.CopyItemData;
  */
 public abstract class CopyCallback extends AsyncRequestCallback<CopyItemData>
 {
-   
+
    public class CopyItemData
    {
       private Item item;
-      
+
       private String destination;
-      
+
       public CopyItemData(Item item, String destination)
       {
          this.item = item;
          this.destination = destination;
       }
-      
+
       /**
        * @return the item
        */
@@ -52,7 +51,7 @@ public abstract class CopyCallback extends AsyncRequestCallback<CopyItemData>
       {
          return item;
       }
-      
+
       /**
        * @return the destination
        */
@@ -61,7 +60,7 @@ public abstract class CopyCallback extends AsyncRequestCallback<CopyItemData>
          return destination;
       }
    }
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
@@ -71,6 +70,5 @@ public abstract class CopyCallback extends AsyncRequestCallback<CopyItemData>
       fireEvent(new ExceptionThrownEvent(
          "Service is not deployed.<br>Destination path does not exist.<br>Folder already has item with same name."));
    }
-
 
 }

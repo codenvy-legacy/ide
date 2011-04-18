@@ -43,7 +43,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final int DEFAULT_WIDTH = 280;
 
-   private static final int DEFAULT_HEIGHT = 335;
+   private static final int DEFAULT_HEIGHT = 345;
 
    private static final String OK_BUTTON_ID = "ideAboutFormOkButton";
 
@@ -73,11 +73,9 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    private IButton okButton;
 
-   private static final String INFO = "";
-
    public AboutIDEView()
    {
-      super(ID, "modal", "About", new Image(IDEImageBundle.INSTANCE.about()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      super(ID, "modal", "About", new Image(IDEImageBundle.INSTANCE.about()), DEFAULT_WIDTH, DEFAULT_HEIGHT, false);
 
       BuildNumber buildNumber = GWT.create(BuildNumber.class);
       REVISION = "Revision: " + buildNumber.buildNumber();
@@ -121,7 +119,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
       okButton.setHeight(BUTTON_HEIGHT);
 
       HorizontalPanel hLayout = new HorizontalPanel();
-      hLayout.setSpacing(20);
+      hLayout.setSpacing(10);
       hLayout.setHeight(BUTTON_HEIGHT + "px");
       hLayout.add(okButton);
       return hLayout;
@@ -131,6 +129,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
    {
       VerticalPanel infoLayout = new VerticalPanel();
       infoLayout.setWidth("100%");
+      infoLayout.setHeight("100%");
 
       Label infoLabel = new Label();
       infoLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -138,7 +137,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
       infoLabel.getElement()
          .setInnerHTML(
             "<h3>" + NAME + "</h3>" + "<b>" + VERSION + "</b>" + "<br>" + YEAR + "&nbsp;" + COMPANY_NAME + "&nbsp;"
-               + COPYRIGHT + "<br>" + INFO + "<br><br>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>" + BUILD_TIME
+               + COPYRIGHT + "<br><br>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>" + BUILD_TIME
                + "</b>");
       infoLayout.add(infoLabel);
       return infoLayout;

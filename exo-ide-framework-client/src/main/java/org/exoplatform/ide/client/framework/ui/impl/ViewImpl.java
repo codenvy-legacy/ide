@@ -110,12 +110,19 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
 
    public ViewImpl(String id, String type, String title, Image icon, int defaultWidth, int defaultHeight)
    {
+      this(id, type, title, icon, defaultWidth, defaultHeight, true);
+   }
+
+   public ViewImpl(String id, String type, String title, Image icon, int defaultWidth, int defaultHeight, boolean canResize)
+   {
       this.id = id;
       this.type = type;
       this.tiltle = title;
       this.icon = icon;
       this.defaultWidth = defaultWidth;
       this.defaultHeight = defaultHeight;
+      this.canResize = canResize;
+      
       getElement().setAttribute("view-id", id);
 
       wrapper = new Wrapper(3);

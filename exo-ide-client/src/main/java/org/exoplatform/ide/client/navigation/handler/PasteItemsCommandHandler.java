@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -147,9 +148,9 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
          copyComleted();
          return;
       }
-
+      
       Item item = context.getItemsToCopy().get(0);
-
+      
       if (folderFromPaste.equals(folderToPaste) || folderToPaste.equals(item.getHref()))
       {
          String message = "Can't copy items in the same directory!";
@@ -160,13 +161,12 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
       String destination = folderToPaste + item.getName();
       VirtualFileSystem.getInstance().copy(item, destination, new CopyCallback()
       {
-
          @Override
          protected void onSuccess(CopyItemData result)
          {
             if (context.getItemsToCopy().size() != 0)
             {
-               context.getItemsToCopy().remove(result);
+               context.getItemsToCopy().remove(result.getItem());
                copyNextItem();
             }
          }

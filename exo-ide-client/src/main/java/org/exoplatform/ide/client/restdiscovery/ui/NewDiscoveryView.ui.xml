@@ -11,12 +11,10 @@
 	<c:VPanel>
 
 		<c:HPanel>
-			<c:Border borderSize="5" borderColor="transparent">
-				<c:Border>
-						<g:ScrollPanel width="100%" height="100%">
-							<rd:RestServiceTree width="100%" height="100%" ui:field="treeGrid"></rd:RestServiceTree>
-						</g:ScrollPanel>
-				</c:Border>
+			<c:Border margin="5">
+					<g:ScrollPanel width="100%" height="100%">
+						<rd:RestServiceTree width="100%" height="100%" ui:field="treeGrid"></rd:RestServiceTree>
+					</g:ScrollPanel>
 			</c:Border>
 			
 			<c:Border borderSize="5" borderColor="transparent">
@@ -32,7 +30,6 @@
 						</c:Border>						
 					</c:VPanel>
 			</c:Border>
-			
 		</c:HPanel>
 
 		<c:Panel height="40px">
