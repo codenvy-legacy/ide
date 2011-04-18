@@ -18,16 +18,14 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.junit.Assert.*;
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.CodeAssistant.Locators;
 import org.junit.Test;
-
-import com.thoughtworks.selenium.Wait;
 
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
@@ -174,7 +172,10 @@ public class CustomizeToolbarTest extends BaseTest
       chekIdeToolbarItemListGrid();
    }
 
-   public void chekTollbarItemExListGrid()
+   /**
+ * chek main elements on TollbarItem
+ */
+public void chekTollbarItemExListGrid()
    {
       checkIdeCommandItemExListGrid("New * [Popup]", 2);
       checkIdeCommandItemExListGrid("Upload Zipped Folder...", 6);
@@ -203,6 +204,7 @@ public class CustomizeToolbarTest extends BaseTest
    }
 
    /**
+    * @chek main elements on ListGridItem
     * 
     */
    public void chekIdeToolbarItemListGrid()
@@ -228,7 +230,10 @@ public class CustomizeToolbarTest extends BaseTest
       checkElementPresentInItemListGrid("Deploy node type", 48);
    }
 
-   public void checkAppearCustomizeToolbarForm() throws Exception
+   /**
+ * @throws Exception
+ */
+public void checkAppearCustomizeToolbarForm() throws Exception
    {
       waitForElementPresent("ideCustomizeToolbarForm");
       assertTrue(selenium.isElementPresent("ideCustomizeToolbarForm"));
@@ -239,7 +244,10 @@ public class CustomizeToolbarTest extends BaseTest
       assertTrue(selenium.isElementPresent("ideCustomizeToolbarFormOkButton"));
    }
 
-   public void checkDisAppearCustomizeToolbarForm() throws InterruptedException
+   /**
+ * @throws InterruptedException
+ */
+public void checkDisAppearCustomizeToolbarForm() throws InterruptedException
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertFalse(selenium.isElementPresent("ideCustomizeToolbarForm"));
@@ -250,7 +258,10 @@ public class CustomizeToolbarTest extends BaseTest
       assertFalse(selenium.isElementPresent("ideCustomizeToolbarFormOkButton"));
    }
 
-   public void clickOnComandToolbarElement(int indexElement)
+   /**
+ * @param indexElement
+ */
+public void clickOnComandToolbarElement(int indexElement)
    {
 
       selenium.click("//table[@ID=\"ideCommandItemExListGrid\"]/tbody/tr[" + indexElement + "]/td");
@@ -279,7 +290,11 @@ public class CustomizeToolbarTest extends BaseTest
          selenium.getText("//table[@ID=\"ideCommandItemExListGrid\"]/tbody/tr[" + indexElement + "]//div"));
    }
 
-   public void checkElementPresentInItemListGrid(String elementTitle, int indexElement)
+   /**
+ * @param elementTitle
+ * @param indexElement
+ */
+public void checkElementPresentInItemListGrid(String elementTitle, int indexElement)
    {
       assertEquals(elementTitle,
          selenium.getText("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[" + indexElement + "]//div"));
