@@ -121,11 +121,6 @@
          <artifactId>exo-ide-extension-git</artifactId>
       </dependency>
             
-       <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor</artifactId>
-      </dependency>
-      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-testframework</artifactId>

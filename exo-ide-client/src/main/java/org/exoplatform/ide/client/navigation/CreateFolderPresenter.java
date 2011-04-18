@@ -20,10 +20,13 @@ package org.exoplatform.ide.client.navigation;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -39,8 +42,21 @@ import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
  * @version @version $Id: $
  */
 
-public class CreateFolderPresenter //implements FolderCreatedHandler
+public class CreateFolderPresenter 
 {
+   
+   public interface Display
+   {
+      HasValue<String> getFolderNameField();
+
+      HasClickHandlers getCreateButton();
+
+      HasClickHandlers getCancelButton();
+
+      HasKeyPressHandlers getFolderNameFiledKeyPressed();
+
+      void closeForm();
+   }
 
    private CreateFolderDisplay display;
 

@@ -42,6 +42,8 @@ import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
+import com.google.gwt.core.client.GWT;
+
 /**
  * Created by The eXo Platform SAS .
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
@@ -55,6 +57,11 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    private ApplicationContext context;
 
    private IDEPresenter presenter;
+   
+   /**
+    * Initialize constants  for UI 
+    */
+   public static final IdeLocalizationConstant IDE_LOCALIZATION_CONSTANT = GWT.create(IdeLocalizationConstant.class);
 
    public IDE()
    {

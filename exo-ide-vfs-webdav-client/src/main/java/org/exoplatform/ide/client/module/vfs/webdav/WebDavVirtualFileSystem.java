@@ -198,7 +198,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    @Override
-   public void createFolder(Folder folder, FolderCreateCallback callback)
+   public void createFolder(Folder folder,  AsyncRequestCallback<Folder> callback)
    {
       String url = javaScriptEncodeURI(folder.getHref());
       callback.setResult(folder);

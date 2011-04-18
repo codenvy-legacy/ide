@@ -143,11 +143,6 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>exo-gwtframework-editor</artifactId>
-            <version>${org.exoplatform.gwtframework.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
             <artifactId>exo-gwtframework-smartgwt</artifactId>
             <version>${org.exoplatform.gwtframework.version}</version>
          </dependency>
@@ -262,6 +257,12 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-netvibes</artifactId>
             <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-vfs</artifactId>
+           <version>${project.version}</version>
          </dependency>
 
          <dependency>

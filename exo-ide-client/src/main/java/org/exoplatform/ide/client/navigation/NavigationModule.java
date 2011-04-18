@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.editor.custom.OpenFileWithForm;
@@ -43,6 +39,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -51,7 +48,10 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.FolderCreateCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
@@ -122,6 +122,13 @@ import org.exoplatform.ide.client.versioning.handler.RestoreToVersionCommandHand
 import org.exoplatform.ide.client.versioning.handler.ShowVersionListCommandHandler;
 import org.exoplatform.ide.client.versioning.handler.VersionHistoryCommandHandler;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -324,14 +331,38 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
    public void onCreateFolder(CreateFolderEvent event)
    {
       Item item = selectedItems.get(0);
-
-      String href = item.getHref();
+      String itemHref = item.getHref();
       if (item instanceof File)
       {
-         href = href.substring(0, href.lastIndexOf("/") + 1);
+         itemHref = itemHref.substring(0, itemHref.lastIndexOf("/") + 1);
       }
+      
+      final String href = itemHref;
 
-      new CreateFolderForm(eventBus, selectedItems.get(0), href);
+      final CreateFolderForm form = new CreateFolderForm(eventBus, selectedItems.get(0), href);
+      form.getCreateButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            String newFolderHref = href + form.getFolderNameField().getValue() + "/";
+            Folder newFolder = new Folder(newFolderHref);
+            VirtualFileSystem.getInstance().createFolder(newFolder, new AsyncRequestCallback<Folder>()
+            {
+               @Override
+               protected void onSuccess(Folder result)
+               {
+                  eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), result));
+                  form.closeForm();
+               }
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  form.closeForm();
+               }
+            });
+         }
+      });
    }
 
    public void onCopyItems(CopyItemsEvent event)

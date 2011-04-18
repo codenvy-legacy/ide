@@ -20,11 +20,6 @@
    
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-editor</artifactId>
-      </dependency>
-   
-      <dependency>
-         <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
    
@@ -278,8 +273,7 @@
                   **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
                   **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
                   **/preloadIDE.js,**/init_smartgwt_for_gadget.js,**/smartgwt-*.jar,
-                  **/exo-gwtframework-commons*.jar,**/exo-gwtframework-editor*.jar,
-                  **/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/exo.portal*.jar,
+                  **/exo-gwtframework-commons*.jar,**/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/exo.portal*.jar,
                   **/chromattic*tests.jar,**/servlet-api*.jar,**/exo-ide-client*.jar
                   </packagingExcludes>
                <webResources>

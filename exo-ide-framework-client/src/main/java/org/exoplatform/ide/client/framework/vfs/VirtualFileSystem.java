@@ -56,7 +56,7 @@ public abstract class VirtualFileSystem
     * @param folder - the folder to create
     * @param callback - the callback which the client has to implement
     */
-   public abstract void createFolder(Folder folder, FolderCreateCallback callback);
+   public abstract void createFolder(Folder folder,  AsyncRequestCallback<Folder> callback);
 
    /**
     * Get content of the file.
