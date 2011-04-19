@@ -75,8 +75,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    public AboutIDEView()
    {
-      super(ID, "modal", "About", new Image(IDEImageBundle.INSTANCE.about()), DEFAULT_WIDTH, DEFAULT_HEIGHT, false);
-
+      super(ID, "modal", "About", new Image(IDEImageBundle.INSTANCE.about()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
       BuildNumber buildNumber = GWT.create(BuildNumber.class);
       REVISION = "Revision: " + buildNumber.buildNumber();
       VERSION = "Version: " + buildNumber.version();
