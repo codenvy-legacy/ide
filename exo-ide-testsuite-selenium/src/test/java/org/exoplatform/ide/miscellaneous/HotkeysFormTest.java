@@ -118,7 +118,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
    public void testBindingAndUnbindingNewHotkey() throws Exception
    {
       refresh();
-      
+      //TODO 1 step not work, shold be fix call template form; see issue 729
       //----- 1 ------------
       //call customize hotkeys form
       IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
