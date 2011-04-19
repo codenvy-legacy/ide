@@ -34,16 +34,11 @@ import org.junit.Test;
  */
 public class DialogAboutTest extends BaseTest
 {
-   private static final String VERSION = "1.0-Beta03-SNAPSHOT";
-   
+
    private static final String COMPANY = "2009-2010 eXo Platform SAS (c)";
-   
+
    private static final String PRODUCT_NAME = "eXo IDE";
-   
-   private static final String REVISION_NUMBER = "";
-   
-   private static final String BUILD_TIME = "";
-   
+
    @Test
    public void testDialogAbout() throws Exception
    {
@@ -51,7 +46,7 @@ public class DialogAboutTest extends BaseTest
       //as you see fit
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().runCommand(MenuCommands.Help.HELP, MenuCommands.Help.ABOUT);
-//      Thread.sleep(TestConstants.SLEEP);
+      //      Thread.sleep(TestConstants.SLEEP);
       //check About form
       assertTrue(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]"));
       assertTrue(selenium.isElementPresent("ideAboutFormOkButton"));
@@ -60,18 +55,18 @@ public class DialogAboutTest extends BaseTest
       assertTrue(selenium.isTextPresent(COMPANY));
       assertTrue(selenium.isTextPresent("Revision:"));
       assertTrue(selenium.isTextPresent("Build Time:"));
-      
+
       //click Ok button
       selenium.click("ideAboutFormOkButton");
       waitForElementNotPresent("ideAboutFormOkButton");
-      
+
       //check About form dissapeared
       assertFalse(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]"));
       assertFalse(selenium.isElementPresent("ideAboutFormOkButton"));
       assertFalse(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]//td//img[@class=\"gwt-Image\"]"));
       assertFalse(selenium.isTextPresent("About"));
       assertFalse(selenium.isTextPresent(PRODUCT_NAME));
-//      assertFalse(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
+      //      assertFalse(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
       assertFalse(selenium.isTextPresent(COMPANY));
       assertFalse(selenium.isTextPresent("Revision:"));
       assertFalse(selenium.isTextPresent("Build Time:"));
