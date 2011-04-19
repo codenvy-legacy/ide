@@ -588,7 +588,7 @@ public abstract class BaseTest
 
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 
-      selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[1]/col[0]");
+      selenium.click("//table[@ID=\"ideOpenFileWithListGrid\"]/tbody/tr/td/div");
       if (checkDefault)
       {
          //click on checkbox Use as default editor
@@ -596,7 +596,7 @@ public abstract class BaseTest
             .click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
          Thread.sleep(TestConstants.SLEEP);
       }
-      selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
+      selenium.click("ideOpenFileWithOkButton");
       Thread.sleep(TestConstants.SLEEP);
       //time remaining to open CK editor
       Thread.sleep(TestConstants.SLEEP);
@@ -1447,11 +1447,7 @@ public abstract class BaseTest
     */
    protected void closeForm(String locator) throws Exception
    {
-      if (!locator.endsWith("/"))
-      {
-         locator += "/";
-      }
-      selenium.click(locator + "closeButton/");
+      selenium.click(locator + "CancelButton");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
