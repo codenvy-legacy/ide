@@ -139,7 +139,7 @@ public class CopyFolderTest extends BaseTest
       
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
 
       /* 
       * Select folder "/Test 1/Test 1.1"
@@ -206,7 +206,7 @@ public class CopyFolderTest extends BaseTest
       IDE.navigator().selectItem(FOLDER_1_1_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
 
       /*
        * Check file content

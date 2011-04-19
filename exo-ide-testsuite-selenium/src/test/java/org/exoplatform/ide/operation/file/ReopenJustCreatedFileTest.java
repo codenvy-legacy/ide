@@ -104,7 +104,7 @@ public class ReopenJustCreatedFileTest extends BaseTest
       
       IDE.editor().closeTab(0);
       
-      openFileFromNavigationTreeWithCodeEditor(NETVIBES_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NETVIBES_FILE_NAME, false);
       
       fileName = IDE.editor().getTabTitle(0);
       

@@ -126,7 +126,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(false);
       //Open versioned file again:
-      openFileFromNavigationTreeWithCodeEditor(FILE_0, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_0, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
@@ -147,7 +147,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
       //Open second file (is not versioned):
-      openFileFromNavigationTreeWithCodeEditor(FILE_4, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_4, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
@@ -254,7 +254,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       Thread.sleep(TestConstants.SLEEP);
       
       //Open file
-      openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
       //Go to end of document
@@ -340,7 +340,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       Thread.sleep(TestConstants.SLEEP);
       
       //Open file
-      openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
 

@@ -116,12 +116,12 @@ public class CutFoldersAndFilesTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       //Open Gadget window, open all created files.
-      openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
 
       //Open Gadget window, open all created files.
-      openFileFromNavigationTreeWithCodeEditor(FILE_2, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_2, false);
 
-      openFileFromNavigationTreeWithCodeEditor(FILE_3, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_3, false);
 
       //Select file "%FOLDER%-1/gadgetxml", and folder "%FOLDER%-2".
       selenium.controlKeyDown();

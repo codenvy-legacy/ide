@@ -66,7 +66,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
 
       saveAsUsingToolbarButton(SECOND_NAME);
 
-      openFileFromNavigationTreeWithCodeEditor(FIRST_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FIRST_NAME, false);
 
       selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
       Thread.sleep(TestConstants.SLEEP_SHORT);

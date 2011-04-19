@@ -209,7 +209,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR_FOR_CHANGING, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR_FOR_CHANGING, false);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 2 -----------------
@@ -329,7 +329,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR, false);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 2 -----------------

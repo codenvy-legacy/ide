@@ -78,7 +78,7 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
       
       createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME_1, 0);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
       
       typeTextIntoEditor(0, "test test test");
       

@@ -116,13 +116,13 @@ public class DeletingFilesTest extends BaseTest
       IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + GROOVY_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CUR_TIME + GROOVY_FILE_NAME, false);
       deleteSelectedItems();
       
       assertEquals(404, VirtualFileSystemUtils.get(GROOVY_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(GROOVY_FILE_NAME));
 
-      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + GOOGLE_GADGET_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CUR_TIME + GOOGLE_GADGET_FILE_NAME, false);
 
       // delete selected items by using "Enter" key to verify issue IDE-488 "Keyboard keys are handled incorrect in the "Delete Item(s)" dialog form."
       IDE.toolbar().runCommand(ToolbarCommands.File.DELETE);
@@ -141,23 +141,23 @@ public class DeletingFilesTest extends BaseTest
       assertEquals(404, VirtualFileSystemUtils.get(GOOGLE_GADGET_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + GOOGLE_GADGET_FILE_NAME));
 
-      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + JAVA_SCRIPT_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CUR_TIME + JAVA_SCRIPT_FILE_NAME, false);
       deleteSelectedItems();
       
       assertEquals(404, VirtualFileSystemUtils.get(JAVA_SCRIPT_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + JAVA_SCRIPT_FILE_NAME));
 
-      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + XML_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CUR_TIME + XML_FILE_NAME, false);
       deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(XML_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + XML_FILE_NAME));
       
-      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + TEXT_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CUR_TIME + TEXT_FILE_NAME, false);
       deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(TEXT_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + TEXT_FILE_NAME));
 
-      openFileFromNavigationTreeWithCodeEditor(CUR_TIME + HTML_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CUR_TIME + HTML_FILE_NAME, false);
       deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(HTML_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + HTML_FILE_NAME));

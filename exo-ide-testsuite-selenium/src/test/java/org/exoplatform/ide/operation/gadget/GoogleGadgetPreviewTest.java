@@ -79,7 +79,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       IDE.navigator().clickOpenIconOfFolder(FOLDER);
       //*********************
       Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
            
       Thread.sleep(TestConstants.SLEEP);
 

@@ -59,7 +59,7 @@ public abstract class ParsingLockTokensInIETest extends BaseTest
       
       IDE.navigator().selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
       

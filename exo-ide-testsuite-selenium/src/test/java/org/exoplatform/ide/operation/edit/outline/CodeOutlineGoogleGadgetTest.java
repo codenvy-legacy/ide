@@ -78,7 +78,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //---- 3 -----------------
       //open Outline Panel

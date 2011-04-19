@@ -75,7 +75,7 @@ public class ChrommaticImportAssistantTest extends BaseTest
       waitForRootElement();
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/"+FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/"+FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);
 
       selenium.click("//div[@class='CodeMirror-line-numbers']/div[contains(text(), '2')]");

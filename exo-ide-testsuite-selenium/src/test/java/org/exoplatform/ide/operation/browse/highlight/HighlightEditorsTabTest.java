@@ -82,7 +82,7 @@ public class HighlightEditorsTabTest extends BaseTest
       //Thread.sleep(TestConstants.SLEEP);
 
       IDE.navigator().selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium

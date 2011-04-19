@@ -153,8 +153,8 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      openFileFromNavigationTreeWithCodeEditor(TEXT_FILE, false);
-      openFileFromNavigationTreeWithCodeEditor(GADGET_FILE, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TEXT_FILE, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(GADGET_FILE, false);
       openFileFromNavigationTreeWithCkEditor(HTML_FILE, true);
       
       checkCkEditorOpened(2);

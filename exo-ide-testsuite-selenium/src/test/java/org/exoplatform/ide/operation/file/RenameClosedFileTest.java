@@ -152,7 +152,7 @@ public class RenameClosedFileTest extends BaseTest
       selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
       
-      openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
       
       final String textFromEditor = getTextFromCodeEditor(0);
       
@@ -187,7 +187,7 @@ public class RenameClosedFileTest extends BaseTest
       IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
       IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
-      openFileFromNavigationTreeWithCodeEditor(RENAMED_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(RENAMED_FILE_NAME, false);
       
       final String textFromEditor = getTextFromCodeEditor(0);
       

@@ -134,7 +134,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       //--------- 7 -------------------
       //Open created earlier xml file and change file content. 
       //Open new file by clicking on "New->Java Script File" button.
-      openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       
       changeFileContent();
       
@@ -143,7 +143,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       
       //--------- 8 -------------------
       //Trying to reopen created earlier xml file. 
-      openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       
       //check warning dialog
       IDE.dialogs().checkTwoBtnDialog("Info");
@@ -180,7 +180,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       //Save, close file tab and open created earlier xml file again.
       IDE.toolbar().runCommand(ToolbarCommands.File.SAVE);
       IDE.editor().closeTab(0);
-      openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       
       //After the step 9: there is saved file content in the new file tab with title without mark "*".
       

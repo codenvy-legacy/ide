@@ -193,7 +193,7 @@ public class UsingKeyboardTest extends BaseTest
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/"); 
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
 
-      openFileFromNavigationTreeWithCodeEditor(TEST_FILE, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TEST_FILE, false);
 
       // open Outline Panel
       IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);

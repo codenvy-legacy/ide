@@ -138,7 +138,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       //----- 6 ------------
       //Go back to gadget window, do some changes in "Content" panel, click "Save" button.
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       selectIFrameWithEditor(0);
       IDE.editor().deleteFileContent();
       selectMainFrame();
@@ -161,7 +161,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       //----- 8 ------------
       //Open "RepoFile.xml" file
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       //You must see the content of your file in "Content" panel.
       assertEquals(FORMATTED_XML_TEXT, getTextFromCodeEditor(0));
 
@@ -227,7 +227,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.editor().closeTab(0);
 
       IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       typeTextIntoEditor(0, "X");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 

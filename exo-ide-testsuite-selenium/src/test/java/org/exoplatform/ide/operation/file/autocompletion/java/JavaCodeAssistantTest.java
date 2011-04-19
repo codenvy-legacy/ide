@@ -73,7 +73,7 @@ public class JavaCodeAssistantTest extends BaseTest
       IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       goToLine(32);
       typeTextIntoEditor(0, "a");
       IDE.codeAssistant().openForm();

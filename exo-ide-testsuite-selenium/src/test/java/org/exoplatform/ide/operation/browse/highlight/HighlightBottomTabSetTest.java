@@ -78,7 +78,7 @@ public class HighlightBottomTabSetTest extends BaseTest
       
 //      selectItemInWorkspaceTree(FILE_NAME);
       IDE.navigator().selectItem(URL +FOLDER_NAME+ "/" + FILE_NAME);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       //Thread.sleep(TestConstants.SLEEP_SHORT);
       

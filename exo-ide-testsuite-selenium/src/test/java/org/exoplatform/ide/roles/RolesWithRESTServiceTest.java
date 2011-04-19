@@ -97,7 +97,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //Check deploy/undeploy is not available for developer
       checkDeployUndeployAllowed(false);
@@ -154,7 +154,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //Check deploy/undeploy is allowed for administrator
       checkDeployUndeployAllowed(true);

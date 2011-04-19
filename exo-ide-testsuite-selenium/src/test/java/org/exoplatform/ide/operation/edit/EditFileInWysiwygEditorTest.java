@@ -231,7 +231,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       //------ 14 ---------------
       //reopen file with CodeMirror
-      openFileFromNavigationTreeWithCodeEditor(HTML_FILE, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(HTML_FILE, false);
       //reopne confirmatioin dialog
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
       assertEquals("Info", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/headerLabel/"));

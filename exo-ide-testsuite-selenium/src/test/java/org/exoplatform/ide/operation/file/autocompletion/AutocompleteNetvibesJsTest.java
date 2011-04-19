@@ -104,7 +104,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       /*
        * 1. Open netvibes file.
        */
-      openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/" + NETVIBES_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/" + NETVIBES_NAME, false);
 
       /*
        * 2. Go inside <code><script></code> tag.
@@ -253,7 +253,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       /*
        * 1. Open netvibes file.
        */
-      openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/" + NETVIBES_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/" + NETVIBES_NAME, false);
 
       /*
        * 2. Go inside <code><script></code> tag.

@@ -140,7 +140,7 @@ public class FindReplaceTest extends BaseTest
       IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_TXT, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_TXT, false);
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
       IDE.toolbar().runCommand(ToolbarCommands.Editor.FIND_REPLACE);
@@ -275,7 +275,7 @@ public class FindReplaceTest extends BaseTest
       
       IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       // Step 3 Click "Find/Replace" button on toolbar
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
@@ -444,11 +444,11 @@ public class FindReplaceTest extends BaseTest
       
       IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_HTML, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_HTML, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_GROOVY_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_GROOVY_1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_GROOVY_2, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_GROOVY_2, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //Create first rest file IDE.editor().with content

@@ -215,7 +215,7 @@ public class CheckHilightTextTest extends BaseTest
       IDE.navigator().selectItem(WS_URL);
       //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -225,7 +225,7 @@ public class CheckHilightTextTest extends BaseTest
       IDE.navigator().selectItem(WS_URL);
       // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(TXT_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TXT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -235,7 +235,7 @@ public class CheckHilightTextTest extends BaseTest
       IDE.navigator().selectItem(WS_URL);
       //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(JS_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(JS_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -245,7 +245,7 @@ public class CheckHilightTextTest extends BaseTest
       IDE.navigator().selectItem(WS_URL);
       //    runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -254,7 +254,7 @@ public class CheckHilightTextTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       IDE.navigator().selectItem(WS_URL);
       //runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -264,14 +264,14 @@ public class CheckHilightTextTest extends BaseTest
       IDE.navigator().selectItem(WS_URL);
       // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(GADGET_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(GADGET_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openCss() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(CSS_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CSS_FILE_NAME, false);
    }
 
    public void checkHilightXML()

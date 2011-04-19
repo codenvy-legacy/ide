@@ -105,7 +105,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       // open outline panel

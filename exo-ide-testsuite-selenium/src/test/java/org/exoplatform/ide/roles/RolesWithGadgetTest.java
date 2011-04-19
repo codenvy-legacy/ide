@@ -126,7 +126,7 @@ public class RolesWithGadgetTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
 
-      openFileFromNavigationTreeWithCodeEditor(FILE1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //Check deploy/undeploy is not available for developer
       checkDeployUndeployAllowed(false);
@@ -159,7 +159,7 @@ public class RolesWithGadgetTest extends BaseTest
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);   
 
-      openFileFromNavigationTreeWithCodeEditor(FILE1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
       //Check deploy/undeploy is available for administrator

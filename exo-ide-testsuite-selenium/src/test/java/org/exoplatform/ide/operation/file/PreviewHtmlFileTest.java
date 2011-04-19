@@ -115,7 +115,7 @@ public class PreviewHtmlFileTest extends BaseTest
 //      Thread.sleep(TestConstants.SLEEP);
       
       IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       Thread.sleep(TestConstants.SLEEP);
       
@@ -154,7 +154,7 @@ public class PreviewHtmlFileTest extends BaseTest
       
       //---- 7 -----------------
       //Reopen HTML-file and click on "Run->Show Preview" top menu command.
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
 //      Thread.sleep(TestConstants.SLEEP);
       

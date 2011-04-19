@@ -112,7 +112,7 @@ public class GroovyProjectAutocompletionTest extends BaseTest
       IDE.navigator().selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL
          + PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME, false);
 
       IDE.codeAssistant().moveCursorDown(12);

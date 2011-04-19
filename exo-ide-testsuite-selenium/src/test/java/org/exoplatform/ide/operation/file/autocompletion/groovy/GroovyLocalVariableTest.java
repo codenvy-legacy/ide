@@ -78,7 +78,7 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       moveCursorDown(15);
 

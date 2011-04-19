@@ -60,7 +60,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
 
       IDE.editor().closeTab(0);
 
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);

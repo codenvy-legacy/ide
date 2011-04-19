@@ -137,7 +137,7 @@ public class ShowHideLineNumbersTest extends BaseTest
 
       //------- 12 ---------------
       //check show/hide line numbers in saved and reopened file
-      openFileFromNavigationTreeWithCodeEditor(XML, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(XML, false);
       checkLineNumbersVisible(false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 

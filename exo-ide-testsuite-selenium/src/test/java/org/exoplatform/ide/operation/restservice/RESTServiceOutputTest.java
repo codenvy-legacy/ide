@@ -82,7 +82,7 @@ public class RESTServiceOutputTest extends BaseTest
       IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       //****************************
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.menu().runCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);

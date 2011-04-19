@@ -193,7 +193,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Open file "/Test 1/test.groovy"
        */
-      openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_GROOVY, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_GROOVY, false);
 
       /*
        * Type "file content"

@@ -120,7 +120,7 @@ public class CutFileTest extends BaseTest
       IDE.navigator().selectItem(FOLDER_NAME_2_URL);
 
       //Open files "test 1/gadget.xml".
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
 
       checkPasteCommands(false);
       checkCutCopyCommands(true);
@@ -185,7 +185,7 @@ public class CutFileTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.SAVE);
       IDE.editor().closeTab(0);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
       assertEquals(oldText, getTextFromCodeEditor(0));
    }
 

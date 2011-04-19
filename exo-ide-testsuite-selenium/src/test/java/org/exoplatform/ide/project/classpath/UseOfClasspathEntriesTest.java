@@ -126,7 +126,7 @@ public class UseOfClasspathEntriesTest extends BaseTest
       IDE.navigator().selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      openFileFromNavigationTreeWithCodeEditor(REST_SERVICE_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(REST_SERVICE_FILE_NAME, false);
       
       /*
        * 2. Validate REST Service and check, that is was successful.

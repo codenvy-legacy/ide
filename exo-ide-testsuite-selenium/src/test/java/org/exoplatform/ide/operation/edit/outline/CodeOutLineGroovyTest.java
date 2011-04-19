@@ -82,7 +82,7 @@ public class CodeOutLineGroovyTest extends BaseTest
       IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
       // open outline panel

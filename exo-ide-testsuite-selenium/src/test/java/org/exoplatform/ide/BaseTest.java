@@ -559,52 +559,6 @@ public abstract class BaseTest
       SaveFileUtils.checkSaveAsDialogAndSave(name, false);
    }
 
-   /**
-    * Open file from navigation tree with code mirror.
-    * 
-    * @param fileName name of file in navigation tree
-    * @param checkDefault - is click on checkbox "Use by default"
-    * @throws Exception
-    */
-   protected void openFileFromNavigationTreeWithCodeEditor(String fileName, boolean checkDefault) throws Exception
-   {
-      //TODO add check form
-      //select file in navigation tree
-      IDE.navigator().selectItem(fileName);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      IDE.navigator().openSelectedFileWithCodeEditor(checkDefault);
-   }
-
-//   /**
-//    * Open selected file with code mirror.
-//    * 
-//    * Method doesn't check is selected item in navigation tree is file.
-//    * It will fail, while calling "Open with" command.
-//    * 
-//    * @param checkDefault - is click on checkbox "Use by default"
-//    * @throws Exception
-//    */
-//   protected void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
-//   {
-//      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-//      
-//      waitForElementPresent("ideOpenFileWithListGrid");
-//
-//      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-//
-//      if (checkDefault)
-//      {
-//         //click on checkbox Use as default editor
-//         selenium.click("//span[@id='ideOpenFileWithDefaulCheckbox']/input");
-//         Thread.sleep(TestConstants.ANIMATION_PERIOD);
-//      }
-//
-//      selenium.click("ideOpenFileWithOkButton");
-//      //time remaining to open editor
-//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-//   }
-
    protected void openFileFromSearchResultsWithCodeEditor(String fileName) throws Exception
    {
       selenium.click("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");

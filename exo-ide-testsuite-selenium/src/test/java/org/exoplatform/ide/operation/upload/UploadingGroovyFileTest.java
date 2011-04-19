@@ -79,7 +79,7 @@ public class UploadingGroovyFileTest extends BaseTest
       uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      openFileFromNavigationTreeWithCodeEditor(GROOVY_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(GROOVY_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
       checkCodeEditorOpened(0);

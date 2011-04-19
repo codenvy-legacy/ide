@@ -83,7 +83,7 @@ public class UploadingGoogleGadgetTest extends BaseTest
       
       assertEquals(URL + "/" + FILE_NAME, url);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       

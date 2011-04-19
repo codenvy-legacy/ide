@@ -145,7 +145,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -190,7 +190,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -241,7 +241,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);

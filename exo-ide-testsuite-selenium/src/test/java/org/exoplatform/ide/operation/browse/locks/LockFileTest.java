@@ -166,7 +166,7 @@ public class LockFileTest extends LockFileAbstract
       //close HTML file, open and check, that file is unlocked
       IDE.editor().closeTab(1);
       IDE.editor().checkIsTabPresentInEditorTabset(FILE_NAME_2, false);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
       
       IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
@@ -220,11 +220,11 @@ public class LockFileTest extends LockFileAbstract
       
       //----- 1 ------------
       //open files
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, true);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
       
       IDE.editor().selectTab(0);
       

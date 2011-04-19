@@ -170,9 +170,9 @@ public class CopyFoldersAndFilesTest extends BaseTest
 
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      openFileFromNavigationTreeWithCodeEditor(FILE_GROOVY, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FOLDER_1_URL + FILE_GROOVY, false);
 
-      openFileFromNavigationTreeWithCodeEditor(FILE_GADGET, false);      
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FOLDER_1_URL + FILE_GADGET, false);      
 
       //Select "test 1/gadget.xml", "test 1/test.groovy", "test 1/test 1.1",  "test 1/test 1.2" items in the Workspace Panel.
       selenium.controlKeyDown();

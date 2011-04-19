@@ -91,7 +91,7 @@ public class OpenLockedFileTest extends LockFileAbstract
 
       //----- 1 ----------
       //open file
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       //----- 2 ----------
       //lock file
@@ -116,7 +116,7 @@ public class OpenLockedFileTest extends LockFileAbstract
       //----- 5 ----------
       //close and open file
       IDE.editor().closeTab(0);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       checkCantSaveLockedFile(FILE_NAME);
 

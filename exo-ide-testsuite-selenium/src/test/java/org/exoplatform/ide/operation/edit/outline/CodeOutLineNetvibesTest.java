@@ -97,7 +97,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().selectItem(URL + FOLDER_NAME +"/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //------ 4 ------------
       //show Outline

@@ -116,7 +116,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().selectItem(URL) ;
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
       Thread.sleep(TestConstants.SLEEP);
       
       assertFalse(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_TAB_LOCATOR));

@@ -89,7 +89,7 @@ public class RESTServiceFilterParametersTest extends BaseTest
       //****************************
 
       //TODO*************change
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       launchRestService();
       //************************

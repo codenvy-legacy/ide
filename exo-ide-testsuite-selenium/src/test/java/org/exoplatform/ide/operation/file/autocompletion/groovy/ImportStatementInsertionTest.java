@@ -83,7 +83,7 @@ public class ImportStatementInsertionTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);   
       
       // goto line 14, type "B" symbol and then click on Ctrl+Space. Then select "Base64" class item from non-default package and press "Enter" key.
@@ -158,7 +158,7 @@ public class ImportStatementInsertionTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + TEMPLATE_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + TEMPLATE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);   
       
       // goto line 15, type "B" symbol and then click on Ctrl+Space. Then select "Base64" class item from non-default package and press "Enter" key.

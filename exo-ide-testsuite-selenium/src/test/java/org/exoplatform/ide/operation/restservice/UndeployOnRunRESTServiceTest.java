@@ -104,7 +104,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       
-      openFileFromNavigationTreeWithCodeEditor(SIMPLE_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(SIMPLE_FILE_NAME, false);
       
     //call Run Groovy Service command
       IDE.toolbar().runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
@@ -138,7 +138,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
     //call Run Groovy Service command
       IDE.toolbar().runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);

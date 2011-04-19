@@ -83,7 +83,7 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);

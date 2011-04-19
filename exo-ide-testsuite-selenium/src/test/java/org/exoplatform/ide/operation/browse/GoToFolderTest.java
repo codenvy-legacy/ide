@@ -88,7 +88,7 @@ public class GoToFolderTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_1 + "/");
       Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
       Thread.sleep(TestConstants.SLEEP);
       //Close first folder
       IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_1 + "/");
@@ -112,7 +112,7 @@ public class GoToFolderTest extends BaseTest
 
       IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
       Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(FILE_2, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_2, false);
       Thread.sleep(TestConstants.SLEEP);
       //Go to folder with first file
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);

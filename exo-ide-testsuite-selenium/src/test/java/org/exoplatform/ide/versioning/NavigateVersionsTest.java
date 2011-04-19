@@ -262,7 +262,7 @@ public class NavigateVersionsTest extends VersioningTest
       /*
        * 15. Open file.
        */
-      openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
       
       /*
        * Version History button is enabled

@@ -71,7 +71,7 @@ public class OpeningFilesTest extends BaseTest
       IDE.navigator().assertItemNotPresent(WS_URL + folderName + "/" + file2Name);
 
       //Open another file from the same folder
-      openFileFromNavigationTreeWithCodeEditor(file1Name, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(file1Name, false);
       Thread.sleep(TestConstants.SLEEP);
       //Check text of opened file
       String text = getTextFromCodeEditor(0);

@@ -110,7 +110,7 @@ public class SaveFileAsTemplateTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       //--------- 2 --------
       //Click on "File->Save As Template" top menu item, 

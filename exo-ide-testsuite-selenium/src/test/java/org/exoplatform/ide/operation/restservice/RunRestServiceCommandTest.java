@@ -114,7 +114,7 @@ public class RunRestServiceCommandTest extends BaseTest
       IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       
-      openFileFromNavigationTreeWithCodeEditor(SIMPLE_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(SIMPLE_FILE_NAME, false);
 
       //---- 2 -----------------
       //check Run Groovy Service button and menu
@@ -177,7 +177,7 @@ public class RunRestServiceCommandTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(NON_VALID_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NON_VALID_FILE_NAME, false);
 
       //---- 2 -----------------
       //check Run Groovy Service button and menu
@@ -234,7 +234,7 @@ public class RunRestServiceCommandTest extends BaseTest
       IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(FILE_FOR_CHANGE_CONTENT_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_FOR_CHANGE_CONTENT_NAME, false);
 
       //---- 2 -----------------
       //type some text

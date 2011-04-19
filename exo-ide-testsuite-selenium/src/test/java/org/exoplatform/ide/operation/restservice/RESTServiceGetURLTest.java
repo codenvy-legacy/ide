@@ -81,7 +81,7 @@ public class RESTServiceGetURLTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //****************************
 
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 

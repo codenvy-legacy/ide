@@ -95,7 +95,7 @@ public class CodeOutLineHtmlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //---- 4 ----
       //show Outline

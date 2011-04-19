@@ -289,7 +289,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
 
       //---- 11 -----------------
       //Open JavaScript file
-      openFileFromNavigationTreeWithCodeEditor(jsFile, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(jsFile, false);
       //existed JavaScript file is active, Outline panel is shown and Outline tree has 
       //nodes with defined variables, functions, method and property
       assertEquals(jsFile, IDE.editor().getTabTitle(1));
@@ -441,7 +441,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
      
       IDE.editor().closeTab(1);
       
-      openFileFromNavigationTreeWithCodeEditor(jsFile, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(jsFile, false);
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommand(ToolbarCommands.View.HIDE_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);

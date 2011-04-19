@@ -116,7 +116,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       
       //----- 1 -------------
       //open xml file
-      openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       //----- 2 -------------
@@ -127,14 +127,14 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       
       //----- 3 -------------
       //open html file
-      openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check outline visible
       assertTrue(selenium.isVisible(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR));
       
       //----- 4 -------------
       //open text file
-      openFileFromNavigationTreeWithCodeEditor(TEXT_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TEXT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check outline is not visible
       assertFalse(selenium.isVisible(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR));

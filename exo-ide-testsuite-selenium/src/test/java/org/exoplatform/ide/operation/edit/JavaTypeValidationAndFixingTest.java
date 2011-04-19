@@ -97,7 +97,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(SERVICE_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(SERVICE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);      
       
       // test error marks
@@ -199,7 +199,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       // save text, reopen and test error marks
       saveCurrentFile();
       IDE.editor().closeTab(0);
-      openFileFromNavigationTreeWithCodeEditor(SERVICE_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(SERVICE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);           
       secondVerificationOfErrorMarks();            
           
@@ -227,7 +227,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(TEMPLATE_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TEMPLATE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);      
       
       // test error marks

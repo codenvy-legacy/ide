@@ -119,7 +119,7 @@ public class DeleteCurrentLineTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
      
       currentTextInEditor = Lines.DEFAULT_TEXT;
       assertEquals(currentTextInEditor, getTextFromCodeEditor(0));
@@ -172,7 +172,7 @@ public class DeleteCurrentLineTest extends BaseTest
       
       //----- 7 -----------
       //Open empty text file
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
       assertEquals("1 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
       typeTextIntoEditor(1, Lines.TEXT_LINE_1);
       

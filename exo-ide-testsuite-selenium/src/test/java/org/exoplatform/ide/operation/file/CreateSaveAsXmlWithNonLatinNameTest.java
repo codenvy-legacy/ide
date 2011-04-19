@@ -143,7 +143,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
       IDE.navigator().assertItemPresent(WS_URL + XML_FILE);
 
-      openFileFromNavigationTreeWithCodeEditor(XML_FILE, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(XML_FILE, false);
 
       checkCodeEditorOpened(0);
 

@@ -74,7 +74,7 @@ public class BigTemplateTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);

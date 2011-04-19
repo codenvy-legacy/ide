@@ -100,7 +100,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/"); 
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);
 
       //---- 3 -----------------

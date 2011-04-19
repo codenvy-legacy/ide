@@ -116,7 +116,7 @@ public class ClosingOutlinePanelTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(JAVASCRIPT_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(JAVASCRIPT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
       //----- 2 -------------
@@ -128,7 +128,7 @@ public class ClosingOutlinePanelTest extends BaseTest
 
       //----- 3 -------------
       //open text file.
-      openFileFromNavigationTreeWithCodeEditor(TEXT_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TEXT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       //check Code Outline in Not Present
       checkCodeHelperPanelVisibility(false);

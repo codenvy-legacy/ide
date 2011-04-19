@@ -97,7 +97,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_HTML_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_HTML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 //      Thread.sleep(TestConstants.SLEEP);
@@ -116,7 +116,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_CSS_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_CSS_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
@@ -137,7 +137,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_JS_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_JS_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 //      Thread.sleep(TestConstants.SLEEP);
@@ -157,7 +157,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_GADGET_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_GADGET_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);

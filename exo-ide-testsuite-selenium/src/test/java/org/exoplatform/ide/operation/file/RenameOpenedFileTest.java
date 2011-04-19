@@ -106,7 +106,7 @@ public class RenameOpenedFileTest extends BaseTest
       
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);

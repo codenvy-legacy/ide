@@ -77,7 +77,7 @@ public class LocksByUserTest extends LockFileAbstract
       
       //----- 1 --------
       //open file
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       //----- 2 --------
       //lock file
@@ -98,7 +98,7 @@ public class LocksByUserTest extends LockFileAbstract
       
       checkFileLocking(FILE_NAME, true);
       //open file
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       checkCantSaveLockedFile(FILE_NAME);
    }

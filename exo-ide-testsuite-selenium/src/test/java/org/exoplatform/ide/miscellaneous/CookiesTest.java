@@ -88,7 +88,7 @@ public class CookiesTest extends BaseTest
       IDE.navigator().selectItem(URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       waitForRootElement();
-      openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
       //Chek cookies
       String[] cookies = selenium.getCookie().split("; ");

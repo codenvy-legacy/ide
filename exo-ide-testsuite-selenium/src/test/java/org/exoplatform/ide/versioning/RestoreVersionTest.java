@@ -141,7 +141,7 @@ public abstract class RestoreVersionTest extends VersioningTest
       //Reopen file to check content:
       IDE.editor().closeTab(0);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals(version1Text + version2Text + version3Text, getTextFromCodeEditor(0));
 

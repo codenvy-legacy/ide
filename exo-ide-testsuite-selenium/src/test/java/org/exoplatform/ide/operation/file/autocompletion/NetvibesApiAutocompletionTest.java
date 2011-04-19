@@ -94,7 +94,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       /*
        * 1. Open netvibes file.
        */
-      openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/"
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/"
          + NETVIBES_NAME, false);
 
       /*
@@ -180,7 +180,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       /*
        * 1. Open netvibes file.
        */
-      openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/"
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/"
          + NETVIBES_NAME, false);
 
       /*

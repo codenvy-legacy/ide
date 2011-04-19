@@ -329,7 +329,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       //step 28
 
-      openFileFromNavigationTreeWithCodeEditor(htmlFile, true);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(htmlFile, true);
 
       saveCurrentFile();
       IDE.editor().closeTabWithNonSaving(0);
@@ -337,7 +337,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
 
-      openFileFromNavigationTreeWithCodeEditor(googleGadgetFile, true);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(googleGadgetFile, true);
       saveCurrentFile();
       IDE.editor().closeTabWithNonSaving(0);
 

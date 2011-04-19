@@ -120,7 +120,7 @@ public class UploadingZippedFolderTest extends BaseTest
       IDE.navigator().assertItemPresent(URL + "/" + testFolder + "/" + exoFolder + "/");      
       IDE.navigator().assertItemPresent(URL + "/" + mineFile);
       
-      openFileFromNavigationTreeWithCodeEditor(settingsFile, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(settingsFile, false);
       checkCodeEditorOpened(0);
 
       String text = getTextFromCodeEditor(0);

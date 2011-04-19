@@ -62,7 +62,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       
       IDE.editor().closeTab(0);
             
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       IDE.menu().runCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       
@@ -103,7 +103,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
      

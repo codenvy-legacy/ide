@@ -97,7 +97,7 @@ public class GadgetDevelopmentTest extends BaseTest
 
       
 
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(FILE_NAME, selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/title"));
       Thread.sleep(TestConstants.SLEEP_SHORT);

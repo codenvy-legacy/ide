@@ -89,7 +89,7 @@ public class HighlightCurrentLineTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);      
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);      
 
       // get line Position Left
       int contentPanelPositionLeft = selenium.getElementPositionLeft(getContentPanelLocator(0)).intValue();

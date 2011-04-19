@@ -84,7 +84,7 @@ public class GroovyTemplatePreviewTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
       Thread.sleep(TestConstants.SLEEP);
       IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);

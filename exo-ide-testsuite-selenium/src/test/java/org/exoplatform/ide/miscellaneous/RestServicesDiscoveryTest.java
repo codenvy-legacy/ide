@@ -97,7 +97,7 @@ public class RestServicesDiscoveryTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);      
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);

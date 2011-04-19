@@ -85,7 +85,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().clickOpenIconOfFolder(URL);
       //Open REST Service file:
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
       //Call the "Run->Launch REST Service" topmenu command

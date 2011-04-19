@@ -123,7 +123,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
       IDE.editor().closeTab(0);
       
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       IDE.editor().deleteFileContent();
       typeTextIntoEditor(0, XML_CONTENT_2);
      

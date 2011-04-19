@@ -137,7 +137,7 @@ public class CutFolderTest extends BaseTest
       /*
        * 2.Open file "test 1/test 2/test.groovy".
        */
-      openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
       
       /*
        * Paste commands are disabled, Cut/Copy are enabled
@@ -273,7 +273,7 @@ public class CutFolderTest extends BaseTest
 
       IDE.navigator().selectRow(3);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
       
       checkCodeEditorOpened(0);
       assertEquals(CHANGED_FILE_CONTENT + FILE_CONTENT, getTextFromCodeEditor(0));

@@ -142,12 +142,12 @@ public class SaveAllFilesTest extends BaseTest
       
       //---- 6 ----------------
       //Open and change content of  "Saved File.xml" and "Saved File.groovy".
-      openFileFromNavigationTreeWithCodeEditor(SAVED_FILE_XML, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(SAVED_FILE_XML, false);
       Thread.sleep(TestConstants.SLEEP);
       typeTextIntoEditor(2, "<root>admin</root>");
       
       //open and change content of groovy file
-      openFileFromNavigationTreeWithCodeEditor(SAVED_FILE_GROOVY, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(SAVED_FILE_GROOVY, false);
       Thread.sleep(TestConstants.SLEEP);
       typeTextIntoEditor(3, "changed content of file");
       Thread.sleep(TestConstants.SLEEP);
@@ -189,9 +189,9 @@ public class SaveAllFilesTest extends BaseTest
       IDE.editor().closeTab(0);
       
       //open files
-      openFileFromNavigationTreeWithCodeEditor(NEW_TEXT_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NEW_TEXT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      openFileFromNavigationTreeWithCodeEditor(NEW_HTML_FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NEW_HTML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
       //After the step 8: there are changed files "Saved File.xml", 

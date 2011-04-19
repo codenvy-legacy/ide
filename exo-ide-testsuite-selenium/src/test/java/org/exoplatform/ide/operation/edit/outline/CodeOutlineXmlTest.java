@@ -102,7 +102,7 @@ public class CodeOutlineXmlTest extends BaseTest
       /*
        * 1. Open file with text
        */
-      openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       /*
        * 2. Open outline
