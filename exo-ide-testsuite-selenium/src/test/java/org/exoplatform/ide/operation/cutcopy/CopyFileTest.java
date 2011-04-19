@@ -43,11 +43,7 @@ public class CopyFileTest extends BaseTest
    
    private static final String FOLDER_1 = CopyFileTest.class.getSimpleName() + "-1";
    
-   private static final String FOLDER_1_URL = WS_URL + FOLDER_1 + "/"; 
-   
    private static final String FILE_GROOVY = "test.groovy";
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    private static final String FILE_CONTENT_1 = "world";
    
@@ -63,14 +59,10 @@ public class CopyFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
-         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, URL + FOLDER_1 + "/" + FILE_GROOVY);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1);
+         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -81,14 +73,10 @@ public class CopyFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_1);
-         VirtualFileSystemUtils.delete(URL + FILE_GROOVY);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_1);
+         VirtualFileSystemUtils.delete(WS_URL + FILE_GROOVY);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -135,10 +123,10 @@ public class CopyFileTest extends BaseTest
    {
       waitForRootElement();
       
-      IDE.navigator().selectItem(FOLDER_1_URL);
+      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/");
       
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(FOLDER_1_URL + FILE_GROOVY); 
+      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
 
       /*
        * Check Cut and Copy commands must be enabled
@@ -188,7 +176,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Open "Test 1" folder
        */
-      IDE.navigator().selectItem(FOLDER_1_URL);
+      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/");
 
       /*
        * Open file "/Test 1/test.groovy"
@@ -215,13 +203,13 @@ public class CopyFileTest extends BaseTest
        */
       IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(MenuCommands.File.REFRESH_TOOLBAR);
-      IDE.navigator().selectItem(FOLDER_1_URL);
+      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/");
       IDE.toolbar().runCommand(MenuCommands.File.REFRESH_TOOLBAR);
       
       /*
        * Select FILE_GROOVY file in FOLDER_1
        */
-      IDE.navigator().selectItem(FOLDER_1_URL + FILE_GROOVY); 
+      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
       
       /*
        * Open FILE_GROOVY file from FOLDER_1
