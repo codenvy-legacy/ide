@@ -374,8 +374,7 @@ public abstract class BaseTest
    protected void selectRootOfWorkspaceTree() throws Exception
    {
       IDE.navigator().selectItem(WS_URL);
-      //      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    /**
@@ -571,59 +570,47 @@ public abstract class BaseTest
    {
       //TODO add check form
       //select file in navigation tree
-      //      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
       IDE.navigator().selectItem(fileName);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      openSelectedFileWithCodeEditor(checkDefault);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
+      IDE.navigator().openSelectedFileWithCodeEditor(checkDefault);
    }
 
-   /**
-    * Open selected file with code mirror.
-    * 
-    * Method doesn't check is selected item in navigation tree is file.
-    * It will fail, while calling "Open with" command.
-    * 
-    * @param checkDefault - is click on checkbox "Use by default"
-    * @throws Exception
-    */
-   protected void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
-   {
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-
-      waitForElementPresent("ideOpenFileWithListGrid");
-      //      selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[0]/col[0]");
-      //      selenium.click("//table[@id='ideOpenFileWithListGrid']/tbody[1]/tr/td/div");
-
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      if (checkDefault)
-      {
-         //click on checkbox Use as default editor
-         selenium.click("//span[@id='ideOpenFileWithDefaulCheckbox']/input");
-
-         Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      }
-
-      selenium.click("ideOpenFileWithOkButton");
-      //time remaining to open editor
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-   }
+//   /**
+//    * Open selected file with code mirror.
+//    * 
+//    * Method doesn't check is selected item in navigation tree is file.
+//    * It will fail, while calling "Open with" command.
+//    * 
+//    * @param checkDefault - is click on checkbox "Use by default"
+//    * @throws Exception
+//    */
+//   protected void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
+//   {
+//      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+//      
+//      waitForElementPresent("ideOpenFileWithListGrid");
+//
+//      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+//
+//      if (checkDefault)
+//      {
+//         //click on checkbox Use as default editor
+//         selenium.click("//span[@id='ideOpenFileWithDefaulCheckbox']/input");
+//         Thread.sleep(TestConstants.ANIMATION_PERIOD);
+//      }
+//
+//      selenium.click("ideOpenFileWithOkButton");
+//      //time remaining to open editor
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+//   }
 
    protected void openFileFromSearchResultsWithCodeEditor(String fileName) throws Exception
    {
-      //TODO add check form
       selenium.click("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-
-      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Open With')]", "");
-      //      
 
       selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[0]/col[0]");
       selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
@@ -665,7 +652,7 @@ public abstract class BaseTest
    protected void saveCurrentFile() throws Exception
    {
       IDE.toolbar().runCommand(ToolbarCommands.File.SAVE);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    /**

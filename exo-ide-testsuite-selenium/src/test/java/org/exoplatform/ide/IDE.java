@@ -63,7 +63,7 @@ public class IDE
       editor = new Editor(selenium, this);
       outline = new Outline(selenium);
       dialogs = new Dialogs(selenium);
-      navigator = new Navigator(selenium);
+      navigator = new Navigator(selenium, this);
       perspective = new Perspective(selenium);
       codeAssistant = new CodeAssistant(selenium);
    }

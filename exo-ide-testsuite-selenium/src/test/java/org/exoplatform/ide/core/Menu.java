@@ -50,12 +50,11 @@ public class Menu
     */
    public void runCommand(String topMenuName, String commandName) throws Exception
    {
-      //    selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" + topMenuName + "']", "");  // Doesn't work in the IE
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']", "");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
    public void runCommand(String menuName, String commandName, String subCommandName) throws Exception {
@@ -63,10 +62,10 @@ public class Menu
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']", "");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
       selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + subCommandName + "']", "");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
    /**
@@ -78,8 +77,6 @@ public class Menu
     */
    public void checkCommandVisibility(String topMenuName, String commandName, boolean visible) throws Exception
    {
-//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" + topMenuName + "']", "");
-      
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
       
       if (visible)
@@ -91,7 +88,7 @@ public class Menu
          assertFalse(selenium.isElementPresent("//td/nobr[text()='" + commandName + "']"));
       }
       selenium.mouseDown("//div[@class='exo-lockLayer']/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
    /**
@@ -103,10 +100,9 @@ public class Menu
     */
    public void checkCommandEnabled(String topMenuName, String commandName, boolean enabled) throws Exception
    {
-      //selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='" + topMenuName + "']", "");
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
       
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
       if (enabled)
       {
          assertTrue(selenium.isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName
@@ -118,7 +114,7 @@ public class Menu
             + commandName + "']"));
       }
       selenium.mouseDown("//div[@class='exo-lockLayer']/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
    /**

@@ -32,7 +32,7 @@ public interface TestConstants
 
    public static final int TYPE_DELAY_PERIOD = 70;
 
-   public static final int ANIMATION_PERIOD = 20;
+   public static final int ANIMATION_PERIOD = 100;
 
    public static final int PAGE_LOAD_PERIOD = 2000;
 

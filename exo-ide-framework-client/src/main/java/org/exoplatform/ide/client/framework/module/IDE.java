@@ -36,7 +36,8 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public abstract class IDE
 {
-   public static final HandlerManager EVENT_BUS = new HandlerManager(null);
+   //public static final HandlerManager EVENT_BUS = new HandlerManager(null);
+   public static final HandlerManager EVENT_BUS = new SafeHandlerManager();
 
    protected static List<Extension> extensions = new ArrayList<Extension>();
 

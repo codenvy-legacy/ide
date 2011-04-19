@@ -84,7 +84,6 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
 
    public void onCreateNewFile(CreateNewFileEvent event)
    {
-      System.out.println("CreateFileCommandHandler.onCreateNewFile()");
       String extension = IDEMimeTypes.getExtensionsMap().get(event.getMimeType());
 
       String href;
@@ -131,8 +130,8 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
       try
       {
          String defaultEditorDescription = defaultEditors.get(event.getMimeType());
-//         Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
-         EditorProducer producer = EditorFactory.getEditorProducer(event.getMimeType(), defaultEditorDescription); 
+         //         Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
+         EditorProducer producer = EditorFactory.getEditorProducer(event.getMimeType(), defaultEditorDescription);
          eventBus.fireEvent(new EditorOpenFileEvent(newFile, producer));
       }
       catch (EditorNotFoundException e)

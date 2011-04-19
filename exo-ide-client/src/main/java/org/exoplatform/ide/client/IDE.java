@@ -43,6 +43,7 @@ import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
 
 /**
  * Created by The eXo Platform SAS .
@@ -103,7 +104,30 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       }
 
       controlsRegistration.formatControls();
+      
+      /*
+       * Find a method to disable selection of text and elements on the page ( exclude text fields ).
+       */
+      //disableTextSelectInternal(RootPanel.get().getElement(), true);
    }
+   
+   /**
+    * Disables selection of HTML on element. 
+    * 
+    * @param e element
+    * @param disable <b>true</b> disables all selection on element, <b>false</b> enables selection
+    */
+   private native static void disableTextSelectInternal(Element e, boolean disable)/*-{
+      if (disable) {
+          e.ondrag = function () { return false; };
+          e.onselectstart = function () { return false; };
+          e.style.MozUserSelect="none"
+      } else {
+          e.ondrag = null;
+          e.onselectstart = null;
+          e.style.MozUserSelect="text"
+      }
+   }-*/;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.IDE#addControl(org.exoplatform.gwtframework.ui.client.command.Control, org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget, boolean)

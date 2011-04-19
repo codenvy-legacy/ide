@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -43,7 +44,7 @@ public class SelectWorkspaceView extends ViewImpl implements
 
    private static final int DEFAULT_WIDTH = 500;
 
-   private static final int DEFAULT_HEIGHT = 200;
+   private static final int DEFAULT_HEIGHT = 220;
 
    private final String ID_OK_BUTTON = "ideSelectWorkspaceFormOkButton";
 
@@ -58,7 +59,7 @@ public class SelectWorkspaceView extends ViewImpl implements
    public SelectWorkspaceView()
    {
       super(ID, ViewType.MODAL, "Workspace", new Image(IDEImageBundle.INSTANCE.workspace()), DEFAULT_WIDTH,
-         DEFAULT_HEIGHT);
+         DEFAULT_HEIGHT, false);
 
       VerticalPanel vLayout = new VerticalPanel();
       vLayout.setBorderWidth(0);
@@ -71,6 +72,7 @@ public class SelectWorkspaceView extends ViewImpl implements
       entryPointListGrid = new EntryPointListGrid();
       entryPointListGrid.setWidth("100%");
       entryPointListGrid.setHeight("100px");
+      DOM.setStyleAttribute(entryPointListGrid.getElement(), "border", "#C0C3C7 1px solid");
       vLayout.add(entryPointListGrid);
 
       HorizontalPanel buttonsLayout = new HorizontalPanel();

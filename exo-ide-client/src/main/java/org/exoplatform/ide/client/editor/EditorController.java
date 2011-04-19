@@ -577,7 +577,12 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          e.printStackTrace();
       }
 
-      eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
+      try {
+         eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+      
       //         eventBus.fireEvent(new EditorActiveFileChangedEvent(file,editors.get(file.getHref())));
    }
 

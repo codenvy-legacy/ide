@@ -73,7 +73,6 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-
       String filePath = "src/test/resources/org/exoplatform/ide/miscellaneous/SampleHtmlFile.html";
       try
       {

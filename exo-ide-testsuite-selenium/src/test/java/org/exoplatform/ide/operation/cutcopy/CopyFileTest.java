@@ -193,7 +193,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Open file "/Test 1/test.groovy"
        */
-      openFileFromNavigationTreeWithCodeEditor(FILE_GROOVY, false);
+      openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_GROOVY, false);
 
       /*
        * Type "file content"
@@ -221,22 +221,22 @@ public class CopyFileTest extends BaseTest
       /*
        * Select FILE_GROOVY file in FOLDER_1
        */
-      IDE.navigator().selectRow(2);
+      IDE.navigator().selectItem(FOLDER_1_URL + FILE_GROOVY); 
       
       /*
        * Open FILE_GROOVY file from FOLDER_1
        */
-      openSelectedFileWithCodeEditor(false);
+      IDE.navigator().openSelectedFileWithCodeEditor(false);
       
       /*
        * Select FILE_GROOVY file in root folder
        */
-      IDE.navigator().selectRow(3);
+      IDE.navigator().selectItem(WS_URL + FILE_GROOVY);
       
       /*
        * Open FILE_GROOVY file from root folder
        */
-      openSelectedFileWithCodeEditor(false);
+      IDE.navigator().openSelectedFileWithCodeEditor(false);
 
       /*
        * Check files content

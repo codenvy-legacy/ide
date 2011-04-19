@@ -52,18 +52,33 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 @RolesAllowed({"administrators", "developers"})
 public class SaveFileCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ItemPropertiesSavedHandler, EditorFileContentChangedHandler,  FileSavedHandler,
-   EntryPointChangedHandler, ApplicationSettingsReceivedHandler
+   ItemPropertiesSavedHandler, EditorFileContentChangedHandler, FileSavedHandler, EntryPointChangedHandler,
+   ApplicationSettingsReceivedHandler
 {
 
+   /**
+    * ID of this control
+    */
    public static final String ID = "File/Save";
 
+   /**
+    * Title of this control
+    */
    public static final String TITLE = "Save";
 
+   /**
+    * Currently active file
+    */
    private File activeFile;
 
+   /**
+    * Lock tokens
+    */
    private Map<String, String> lockTokens;
 
+   /**
+    * Creates a new instance of this control
+    */
    public SaveFileCommand()
    {
       super(ID);
@@ -74,22 +89,23 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
       setEvent(new SaveFileEvent());
       setIgnoreDisable(true);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
    public void initialize(HandlerManager eventBus)
    {
-      System.out.println("SaveFileCommand.initialize()");
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
-//      eventBus.addHandler(FilePropertiesChangedEvent.TYPE, this);
       eventBus.addHandler(FileSavedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler#onEntryPointChanged(org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent)
+    */
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       if (event.getEntryPoint() != null)
@@ -102,26 +118,28 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
 
       if (activeFile == null)
       {
-         //         setVisible(false);
          setEnabled(false);
          return;
       }
-      
+
       if (activeFile.getProperty(ItemProperty.LOCKDISCOVERY) != null)
       {
-         if(!lockTokens.containsKey(activeFile.getHref()))
+         if (!lockTokens.containsKey(activeFile.getHref()))
          {
             setEnabled(false);
             return;
          }
       }
-      
+
       if (activeFile.isNewFile())
       {
          setEnabled(false);
@@ -139,6 +157,9 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler#onItemPropertiesSaved(org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent)
+    */
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
       if (!(event.getItem() instanceof File))
@@ -163,11 +184,14 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent)
+    */
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
       if (event.getFile().getProperty(ItemProperty.LOCKDISCOVERY) != null)
       {
-         if(!lockTokens.containsKey(event.getFile().getHref()))
+         if (!lockTokens.containsKey(event.getFile().getHref()))
          {
             setEnabled(false);
             return;
@@ -182,19 +206,6 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
          setEnabled(true);
       }
    }
-
-//   public void onFilePropertiesChanged(FilePropertiesChangedEvent event)
-//   {
-//      if (event.getFile().isNewFile())
-//      {
-//         setEnabled(false);
-//      }
-//      else
-//      {
-//         setEnabled(true);
-//      }
-//   }
-
 
    /**
     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
@@ -228,4 +239,5 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
          setEnabled(false);
       }
    }
+
 }
