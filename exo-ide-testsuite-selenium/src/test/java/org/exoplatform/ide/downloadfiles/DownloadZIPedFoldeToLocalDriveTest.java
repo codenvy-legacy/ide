@@ -101,23 +101,27 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
          Thread.sleep(TestConstants.SLEEP * 3); //wait for download file
          String donwloadPath = System.getProperty("java.io.tmpdir");
          unzip(donwloadPath + "/" + FOLDER_NAME + ".zip");
-         //TODO fix download zip folder option (see issue 721)
-         //         FileInputStream fstream = new FileInputStream("target/" + FOLDER_NAME + "/" + FILE_NAME);
-         //         DataInputStream in = new DataInputStream(fstream);
-         //         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-         //         String controlStrLine;
-         //         controlStrLine = br.readLine();
-         //         assertEquals(RANDOM_STRING, controlStrLine);
-         //         
-         //         fstream = new FileInputStream("target/" + FOLDER_NAME + "/" + FILE_NAME + ".txt");
-         //         in = new DataInputStream(fstream);
-         //         br = new BufferedReader(new InputStreamReader(in));
-         //         controlStrLine = br.readLine();
-         //         assertEquals(RANDOM_STRING_TXT, controlStrLine);
+         //TODO fix download zip folder option (see issue 721);(further code is not working)
+                  FileInputStream fstream = new FileInputStream("target/" + FOLDER_NAME + "/" + FILE_NAME);
+                  DataInputStream in = new DataInputStream(fstream);
+                  BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                  String controlStrLine;
+                  controlStrLine = br.readLine();
+                  assertEquals(RANDOM_STRING, controlStrLine);
+                  
+                  fstream = new FileInputStream("target/" + FOLDER_NAME + "/" + FILE_NAME + ".txt");
+                  in = new DataInputStream(fstream);
+                  br = new BufferedReader(new InputStreamReader(in));
+                  controlStrLine = br.readLine();
+                  assertEquals(RANDOM_STRING_TXT, controlStrLine);
       }
 
    }
 
+   /**
+    * @param zipPath
+    * unzip file for check inside
+    */
    private void unzip(String zipPath)
    {
       ZipFile zipFile;
@@ -147,6 +151,12 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
 
    }
 
+   /**
+    * check content of file
+    * @param in
+    * @param out
+    * @throws IOException
+    */
    private static void copyInputStream(InputStream in, OutputStream out) throws IOException
    {
       byte[] buffer = new byte[1024];

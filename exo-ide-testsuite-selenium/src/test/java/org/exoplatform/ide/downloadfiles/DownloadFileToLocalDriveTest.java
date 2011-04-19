@@ -88,20 +88,20 @@ public class DownloadFileToLocalDriveTest extends BaseTest
       IDE.navigator().selectItem(URL + FILE_NAME );
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
   
-//      //TODO fix download option in menu (see issue 721)
-//      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
-//      /*
-//       * File will be downloaded automaticaly.
-//       */
-//
-//      Thread.sleep(TestConstants.SLEEP * 3); //wait for download file
-//      String donwloadPath = System.getProperty("java.io.tmpdir");
-//      FileInputStream fstream = new FileInputStream(donwloadPath + "/" + FILE_NAME);
-//      DataInputStream in = new DataInputStream(fstream);
-//      BufferedReader br = new BufferedReader(new InputStreamReader(in));
-//      String controlStrLine;
-//      controlStrLine = br.readLine();
-//      assertEquals(RANDOM_STRING, controlStrLine);
+//      //TODO fix download option in menu (see issue 721);(further code is not working)
+      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
+      /*
+       * File will be downloaded automaticaly.
+       */
+
+      Thread.sleep(TestConstants.SLEEP * 3); //wait for download file
+      String donwloadPath = System.getProperty("java.io.tmpdir");
+      FileInputStream fstream = new FileInputStream(donwloadPath + "/" + FILE_NAME);
+      DataInputStream in = new DataInputStream(fstream);
+      BufferedReader br = new BufferedReader(new InputStreamReader(in));
+      String controlStrLine;
+      controlStrLine = br.readLine();
+      assertEquals(RANDOM_STRING, controlStrLine);
 
    }
 
