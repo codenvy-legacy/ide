@@ -67,7 +67,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final String NAME = "eXo IDE";
 
-   private static final String YEAR = "2009-2010";
+   private static final String YEAR = "2009-2011";
 
    private final String OK = "Ok";
 
