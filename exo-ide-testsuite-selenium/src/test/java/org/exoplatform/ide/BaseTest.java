@@ -720,6 +720,7 @@ public abstract class BaseTest
     * @param tabIndex
     * @throws Exception
     */
+   @Deprecated
    protected void checkCodeEditorOpened(int tabIndex) throws Exception
    {
       String divIndex = String.valueOf(tabIndex + 2);
@@ -1389,7 +1390,7 @@ public abstract class BaseTest
     */
    public void waitForRootElement() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      //Thread.sleep(TestConstants.SLEEP);
       waitForElementPresent(Navigator.NAVIGATION_TREE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
