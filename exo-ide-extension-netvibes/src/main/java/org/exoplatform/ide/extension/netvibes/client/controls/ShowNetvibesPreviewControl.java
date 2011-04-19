@@ -39,9 +39,9 @@ import com.google.gwt.event.shared.HandlerManager;
 public class ShowNetvibesPreviewControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "Run/Show Gadget Preview";
+   public static final String ID = "Run/Show Netwibes Preview";
 
-   public static final String TITLE = "Show Gadget Preview";
+   public static final String TITLE = "Show Netwibes Preview";
 
    public ShowNetvibesPreviewControl()
    {
