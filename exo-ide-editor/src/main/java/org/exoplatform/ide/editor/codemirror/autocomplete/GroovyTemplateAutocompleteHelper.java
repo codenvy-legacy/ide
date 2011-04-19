@@ -36,7 +36,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class GroovyTemplateAutocompleteHelper extends AutocompleteHelper
 {
     
-   List<TokenBeenImpl> groovyCode;
+   List<? extends Token> groovyCode;
 
    public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
    {          

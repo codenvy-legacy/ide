@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.CodeValidator;
 import org.exoplatform.ide.editor.api.DefaultCodeValidator;
 import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 
@@ -59,7 +60,7 @@ public abstract class CodeValidatorImpl extends CodeValidator
     * @param mimeType
     * @return
     */
-   public static List<TokenBeenImpl> extractCode(List<TokenBeenImpl> tokenList, List<TokenBeenImpl> code, String mimeType)
+   public static List<? extends Token> extractCode(List<TokenBeenImpl> tokenList, List<TokenBeenImpl> code, String mimeType)
    {
       for (TokenBeenImpl token : tokenList)
       {
@@ -75,54 +76,36 @@ public abstract class CodeValidatorImpl extends CodeValidator
       {
          return;
       }
-      
-      if (currentToken.getSubTokenList() != null)
+
+      if (mimeType.equals(currentToken.getMimeType()))
       {
-         for (TokenBeenImpl token : currentToken.getSubTokenList())
+         if (MimeType.APPLICATION_GROOVY.equals(mimeType) && TokenType.GROOVY_TAG.equals(currentToken.getType()) // add subtokens of Groovy Template "<%" tag
+               || MimeType.APPLICATION_JAVA.equals(mimeType) && TokenType.JSP_TAG.equals(currentToken.getType())  // add subtokens of JSP file "<%" tag
+               || MimeType.APPLICATION_JAVASCRIPT.equals(mimeType) && TokenType.TAG.equals(currentToken.getType())  // add subtokens of "<script>"
+            )
          {
-            analizeToken(token, code, mimeType);
-         }         
+            if (currentToken.getSubTokenList() != null)
+            {
+               code.addAll(currentToken.getSubTokenList());
+            }
+         }
+         
+         else
+         {
+            code.add(currentToken);
+         }
       }
       
-
-      if (currentToken.getSubTokenList() != null)
+      else
       {
-         // pass tag "<%"
-         if (MimeType.APPLICATION_GROOVY.equals(mimeType))
+         // search target token among subtokens
+         if (currentToken.getSubTokenList() != null)
          {
-            if (!TokenType.GROOVY_TAG.equals(currentToken.getType()))
+            for (TokenBeenImpl subtoken : currentToken.getSubTokenList())
             {
-               return;
+               analizeToken(subtoken, code, mimeType);
             }
          }
-         
-         // pass tag "<%" 
-         if (MimeType.APPLICATION_JAVA.equals(mimeType))
-         {
-            if (!TokenType.JSP_TAG.equals(currentToken.getType()))
-            {
-               return;
-            }
-         }
-         
-         // pass tag "<script>"
-         if (MimeType.APPLICATION_JAVASCRIPT.equals(mimeType))
-         {
-            if (!TokenType.TAG.equals(currentToken.getType()))
-            {
-               return;
-            }
-         }
-         
-         for (TokenBeenImpl subtoken : currentToken.getSubTokenList())
-         {
-            if (mimeType.equals(subtoken.getMimeType())) 
-            {
-               code.add(subtoken);
-            }
-         }
-      }   
-
+      }
    }
-   
 }

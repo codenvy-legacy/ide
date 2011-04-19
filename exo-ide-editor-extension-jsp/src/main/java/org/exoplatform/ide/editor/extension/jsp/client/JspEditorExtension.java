@@ -102,7 +102,7 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
                   true, // can be autocompleted
                   new JspParser(), // exoplatform code parser 
                   new JspAutocompleteHelper(), // autocomplete helper
-                  false, // canBeValidated
+                  true, // canBeValidated
                   new JspCodeValidator(), jspCodeAssistant, true //  canHaveSeveralMimeTypes
                )));
 

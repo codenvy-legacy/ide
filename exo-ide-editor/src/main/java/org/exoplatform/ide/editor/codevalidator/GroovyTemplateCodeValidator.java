@@ -37,7 +37,7 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 public class GroovyTemplateCodeValidator extends CodeValidatorImpl
 {
     
-   List<TokenBeenImpl> groovyCode;
+   List<? extends Token> groovyCode;
    
    /**
     * Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList 
@@ -50,7 +50,7 @@ public class GroovyTemplateCodeValidator extends CodeValidatorImpl
          return new ArrayList<CodeLine>();
       }
 
-      groovyCode = extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
+      groovyCode = extractCode((List<TokenBeenImpl>) tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
 
       return CodeValidatorImpl.getValidator(MimeType.APPLICATION_GROOVY).getCodeErrorList(groovyCode);
    }
@@ -63,9 +63,9 @@ public class GroovyTemplateCodeValidator extends CodeValidatorImpl
          this.groovyCode = extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
       }
       
-      if (GroovyCodeValidator.shouldImportStatementBeInsterted(groovyCode, fqn))
+      if (GroovyCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>) groovyCode, fqn))
       {      
-         int appropriateLineNumber = GroovyCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>)tokenList);
+         int appropriateLineNumber = GroovyCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>) tokenList);
          
          if (appropriateLineNumber > 1)
          {

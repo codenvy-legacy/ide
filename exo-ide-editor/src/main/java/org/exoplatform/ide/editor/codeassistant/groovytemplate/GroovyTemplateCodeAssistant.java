@@ -56,9 +56,10 @@ public class GroovyTemplateCodeAssistant extends GroovyCodeAssistant
    {
 
       if (MimeType.APPLICATION_GROOVY.equals(lineMimeType))
-//         super.autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX,
-//            cursorPositionY, tokenList, lineMimeType, currentToken);
-         return;
+      {
+         super.autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX,
+            cursorPositionY, tokenList, lineMimeType, currentToken);
+      }
       else
       {
          CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, mimeType, cursorOffsetX,

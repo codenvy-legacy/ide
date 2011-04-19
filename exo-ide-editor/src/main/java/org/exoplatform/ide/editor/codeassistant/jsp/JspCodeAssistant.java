@@ -60,7 +60,6 @@ public class JspCodeAssistant extends JavaCodeAssistant
       {
          super.autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX,
             cursorPositionY, tokenList, lineMimeType, currentToken);
-         return;
       }
       else
       {

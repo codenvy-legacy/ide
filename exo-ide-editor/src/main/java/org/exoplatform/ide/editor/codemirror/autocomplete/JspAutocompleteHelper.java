@@ -36,7 +36,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class JspAutocompleteHelper extends AutocompleteHelper
 {
     
-   List<TokenBeenImpl> javaCode;
+   List<? extends Token> javaCode;
 
    public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
    {          

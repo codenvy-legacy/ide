@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
@@ -47,7 +48,9 @@ import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
+import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
 import org.exoplatform.ide.editor.codeassistant.java.service.JavaCodeAssistantService;
+import org.exoplatform.ide.editor.codeassistant.jsp.JspCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -70,6 +73,7 @@ import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
 import org.exoplatform.ide.editor.codevalidator.GroovyTemplateCodeValidator;
 import org.exoplatform.ide.editor.codevalidator.JavaCodeValidator;
+import org.exoplatform.ide.editor.codevalidator.JspCodeValidator;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -179,6 +183,23 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       });
       templateCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
 
+      JspCodeAssistant jspCodeAssistant = new JspCodeAssistant(new JavaCodeAssistantService(eventBus, "", new EmptyLoader()),new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private"), new JavaCodeAssistantErrorHandler()
+      {
+         
+         @Override
+         public void handleError(Throwable exception)
+         {
+            if(exception instanceof ServerException)
+            {
+               ServerException s = (ServerException)exception;
+               System.out.println(s.getMessage());
+            }
+            else exception.printStackTrace();
+         }
+      });
+      jspCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
+
+      
       addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, "CodeMirror text editor", "txt","", true,
          new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']" // code styles
@@ -342,9 +363,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                true, // can be autocompleted
                new JspParser(), // exoplatform code parser 
                new JspAutocompleteHelper(), // autocomplete helper
-               false, // canBeValidated
-               true //  canHaveSeveralMimeTypes
-//               jspCodeAssistant
+               true, // can be validated
+               new JspCodeValidator(),
+               jspCodeAssistant, 
+               true // can have several mimetypes
               )));    
       
       // ckeditor

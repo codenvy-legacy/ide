@@ -5,6 +5,11 @@
        import org.exoplatform.services.security.ConversationState;
      %>
    </head>
+   <script>
+      var a='';
+      a.
+   </script>
+   
    <body>
      <%
        ConversationState curentState = ConversationState.getCurrent();
@@ -15,6 +20,11 @@
          {
            println "Hello " + identity.getUserId();
          }
+         
+         identity.
+         
+         String a;
+         a.
        }
      %>
    </body>

@@ -224,7 +224,9 @@ public class TokenBeenImpl extends TokenImpl
 
    public String getFqn()
    {
-      return ((StringProperty) getProperty(TokenProperties.FQN)).stringValue();
+      return hasProperty(TokenProperties.FQN) 
+         ? ((StringProperty) getProperty(TokenProperties.FQN)).stringValue() 
+         : null;
    }
 
    public List<Modifier> getModifiers()

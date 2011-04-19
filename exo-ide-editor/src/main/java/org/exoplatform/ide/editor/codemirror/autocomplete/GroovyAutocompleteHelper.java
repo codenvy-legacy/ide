@@ -70,7 +70,7 @@ public class GroovyAutocompleteHelper extends AutocompleteHelper
          if (numberOfChainsBetweenPoint == 1)
          {
             tokenBeforeCursor = getGenericToken(nodeContent, lineNumber, (List<TokenBeenImpl>) tokenList);            
-            if (tokenBeforeCursor != null) 
+            if (tokenBeforeCursor != null && tokenBeforeCursor.getFqn() != null) 
             {
                return new TokenBeenImpl(
                   tokenBeforeCursor.getName(), 

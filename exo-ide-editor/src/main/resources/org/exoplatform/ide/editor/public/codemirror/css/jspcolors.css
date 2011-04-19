@@ -57,3 +57,7 @@ span.xml-text {
 span.jsp-java {
   color: #AA00BB;
 }
+
+span.jsp-directive {
+  color: rgb(127, 0, 127);
+}

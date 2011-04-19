@@ -20,8 +20,10 @@ package org.exoplatform.ide.editor.codemirror;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.CodeLine;
@@ -37,7 +39,9 @@ import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
 import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
+import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
@@ -85,6 +89,8 @@ public class CodeMirror extends Editor
 
    private CodeAssistant codeAssistant;
 
+   private String genericMimeType;  // type of document itself
+   
    /**
     * @param file
     * @param params
@@ -112,6 +118,10 @@ public class CodeMirror extends Editor
          configuration = (CodeMirrorConfiguration) params.get(EditorParameters.CONFIGURATION);
       else
          configuration = new CodeMirrorConfiguration();
+      
+      genericMimeType = (String)params.get(EditorParameters.MIME_TYPE);
+      
+      codeAssistant = configuration.getCodeAssistant();
    }
 
    /**
@@ -133,8 +143,6 @@ public class CodeMirror extends Editor
       String styleURLs = configuration.getCodeStyles();
 
       String javaScriptDirectory = configuration.getJsDirectory();
-
-      codeAssistant = configuration.getCodeAssistant();
 
       editorObject =
          initCodeMirror(editorId, width, height, readOnly, continuousScanning, textWrapping, showLineNumbers,
@@ -403,25 +411,10 @@ public class CodeMirror extends Editor
       var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
       if (editor == null) return;   
 
-      var cursorRow = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCursorRow()();
-
-      // calculate cursorOffsetY
-      var cursorOffsetY = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getAbsoluteTop()() + this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCursorOffsetY(I)(0);
-
-      // calculate cursorOffsetX
-      var cursorCol = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCursorCol()();
-      var cursorOffsetX = (cursorCol - 2) * @org.exoplatform.ide.editor.codemirror.CodeMirror::characterWidth + this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getAbsoluteLeft()() + 11;   // 8px per symbol 
-
-      var hasLineNumbers = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::showLineNumbers;
-      if (hasLineNumbers) {
-         cursorOffsetX += this.@org.exoplatform.ide.editor.codemirror.CodeMirror::lineNumberFieldWidth;
-      }
 
       var cursor = editor.cursorPosition(true);     
       var lineContent = editor.lineContent(cursor.line);
 
-      // read mimeType
-      var mimeType =  this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCurrentLineMimeType()();
 
       // get fqn of current node
       if (editor.nextLine(cursor.line) != null 
@@ -430,28 +423,52 @@ public class CodeMirror extends Editor
          var currentNode = editor.nextLine(cursor.line).previousSibling;
       }
 
-      var token = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getTokenBeforeCursor(Lcom/google/gwt/core/client/JavaScriptObject;II)(
-         currentNode, 
-         cursorRow,
-         cursorCol         
+      this.@org.exoplatform.ide.editor.codemirror.CodeMirror::callAutocompleteHandler(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(
+         lineContent,
+         currentNode
       );
 
-      // fire editorAutoCompleteCalledEvent
-      var callback = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::codeAssistant;
-      callback.@org.exoplatform.ide.editor.api.codeassitant.CodeAssistant::autocompleteCalled(Lorg/exoplatform/ide/editor/api/Editor;Ljava/lang/String;IILjava/lang/String;IILjava/util/List;Ljava/lang/String;Lorg/exoplatform/ide/editor/api/codeassitant/Token;)(
-         this,
-         mimeType,
+   }-*/;
+
+   private void callAutocompleteHandler(String lineContent, JavaScriptObject currentNode) {      
+      int cursorRow = getCursorRow();
+
+      // calculate cursorOffsetY
+      int cursorOffsetY = getAbsoluteTop() + getCursorOffsetY(0);
+
+      // calculate cursorOffsetX
+      int cursorCol = getCursorCol();
+      int cursorOffsetX = (cursorCol - 2) * characterWidth + getAbsoluteLeft() + 11;   // 8px per symbol 
+
+      if (this.showLineNumbers) {
+         cursorOffsetX += this.lineNumberFieldWidth;
+      }
+      
+      Token tokenBeforeCursor = getTokenBeforeCursor(currentNode, cursorRow, cursorCol);
+      
+      List<? extends Token> tokenList = getTokenList();
+      
+      // read mimeType
+      String currentLineMimeType = getCurrentLineMimeType();        
+      if (configuration.canHaveSeveralMimeTypes() && ! genericMimeType.equals(currentLineMimeType))
+      {
+         tokenList = CodeValidatorImpl.extractCode((List<TokenBeenImpl>) tokenList, new LinkedList<TokenBeenImpl>(), currentLineMimeType);
+      }
+
+      codeAssistant.autocompleteCalled(
+         this, 
+         this.genericMimeType,
          cursorOffsetX,
          cursorOffsetY,
          lineContent,
          cursorCol,
          cursorRow,
-         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getTokenList()(),
-         mimeType,
-         token
+         (List<Token>) tokenList,
+         currentLineMimeType,
+         tokenBeforeCursor
       );
-   }-*/;
-
+   }
+   
    private native void addScrollAndResizeListener(CodeMirror instance) /*-{
         var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
         var highlightLine = function() {
@@ -490,7 +507,6 @@ public class CodeMirror extends Editor
     */
    private String getCurrentLineMimeType()
    {
-      String genericMimeType = (String)params.get(EditorParameters.MIME_TYPE);
       if (configuration.canHaveSeveralMimeTypes())
       {
          String mimeType = CodeMirrorParserImpl.getLineMimeType(getCursorRow(), (List<TokenBeenImpl>) getTokenList());
@@ -570,10 +586,10 @@ public class CodeMirror extends Editor
          if (needUpdateTokenList)
          {
             needUpdateTokenList = false;
-            tokenList = (List<TokenBeenImpl>) configuration.getParser().getTokenList(editorObject);
+            this.tokenList = (List<TokenBeenImpl>) configuration.getParser().getTokenList(editorObject);
             
             // Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList         
-            if (tokenList == null || tokenList.isEmpty())
+            if (this.tokenList == null || this.tokenList.isEmpty())
             {
                // clear code error marks
                for (CodeLine lastCodeError : codeErrorList)
@@ -583,7 +599,7 @@ public class CodeMirror extends Editor
                return;
             }
 
-            List<CodeLine> newCodeErrorList = configuration.getCodeValidator().getCodeErrorList(tokenList);
+            List<CodeLine> newCodeErrorList = configuration.getCodeValidator().getCodeErrorList(this.tokenList);
                      
             udpateErrorMarks(newCodeErrorList);
          }
@@ -1009,10 +1025,10 @@ public class CodeMirror extends Editor
       if (needUpdateTokenList)
       {
          needUpdateTokenList = false;
-         tokenList = (List<TokenBeenImpl>) configuration.getParser().getTokenList(editorObject);
+         this.tokenList = (List<TokenBeenImpl>) configuration.getParser().getTokenList(editorObject);
       }
 
-      return tokenList;
+      return this.tokenList;
    }
 
    /**

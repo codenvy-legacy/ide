@@ -37,7 +37,7 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 public class JspCodeValidator extends CodeValidatorImpl
 {
     
-   List<TokenBeenImpl> javaCode;
+   List<? extends Token> javaCode;
    
    /**
     * Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList 
@@ -63,7 +63,7 @@ public class JspCodeValidator extends CodeValidatorImpl
          this.javaCode = extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVA);
       }
       
-      if (JavaCodeValidator.shouldImportStatementBeInsterted(javaCode, fqn))
+      if (JavaCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>) javaCode, fqn))
       {      
          int appropriateLineNumber = JavaCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>)tokenList);
          

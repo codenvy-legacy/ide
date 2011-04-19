@@ -43,9 +43,17 @@ var XMLParser = Editor.Parser = (function() {
         }
         
         else if (source.equals("%")) {
-          source.next();          
-          setState(inBlock("jsp-java", "%>"));
-          return "jsp-java";
+          source.next();
+          if (source.equals("@")) 
+          {
+             setState(inBlock("jsp-directive", "%>"));
+             return "jsp-directive";          
+          }
+          else 
+          {
+             setState(inBlock("jsp-java", "%>"));
+             return "jsp-java";
+          }
         }        
         
         else {
@@ -180,7 +188,7 @@ var XMLParser = Editor.Parser = (function() {
     function base() {
       return pass(element, base);
     }
-    var harmlessTokens = {"xml-text": true, "xml-entity": true, "xml-comment": true, "xml-processing": true, "jsp-java": true};
+    var harmlessTokens = {"xml-text": true, "xml-entity": true, "xml-comment": true, "xml-processing": true, "jsp-java": true, "jsp-directive": true};
     function element(style, content) {
       if (content == "<") cont(tagname, attributes, endtag(tokenNr == 1));
       else if (content == "</") cont(closetagname, expect(">"));
