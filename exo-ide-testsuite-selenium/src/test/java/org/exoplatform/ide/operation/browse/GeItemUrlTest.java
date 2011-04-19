@@ -78,7 +78,7 @@ public class GeItemUrlTest extends BaseTest
       IDE.editor().closeTab(0);
       IDE.navigator().assertItemPresent(WS_URL + file2Name);
       //Refresh root item
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand("Refresh Selected Folder");
 
       String workspaceName = getItemNameFromWorkspaceTree(0);
@@ -130,7 +130,7 @@ public class GeItemUrlTest extends BaseTest
    @Test
    public void testGetFileUrlWithSearch() throws Exception
    {
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand("Search...");
       Thread.sleep(TestConstants.SLEEP);
       
@@ -171,7 +171,7 @@ public class GeItemUrlTest extends BaseTest
       selenium.controlKeyDown();
       IDE.navigator().selectItem(WS_URL + file1Name);
       selenium.controlKeyUp();
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
    }
 

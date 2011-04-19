@@ -18,22 +18,13 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -42,7 +33,6 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
@@ -83,13 +73,22 @@ import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointHandler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS.
@@ -100,8 +99,9 @@ import java.util.Map;
  * @version $Id: $
 */
 public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPointHandler, SelectItemHandler,
-   ViewVisibilityChangedHandler, EntryPointChangedHandler, ItemUnlockedHandler, ItemLockResultReceivedHandler,
-   ApplicationSettingsReceivedHandler, ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler
+   ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockResultReceivedHandler,
+   ApplicationSettingsReceivedHandler, ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler,
+   RemoveItemTreeIconHandler
 {
 
    public interface Display extends IsView
@@ -148,12 +148,12 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
        * @param locktokens
        */
       void setLockTokens(Map<String, String> locktokens);
-      
+
       /**
        * Add info icons to main item icon
        */
       void addItemsIcons(Map<Item, Map<TreeIconPosition, String>> itemsIcons);
-      
+
       /**
        * Remove info icon from item
        */
@@ -179,19 +179,19 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private String entryPoint;
-
    public WorkspacePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlerRegistrations.put(RefreshBrowserEvent.TYPE, eventBus.addHandler(RefreshBrowserEvent.TYPE, this));
-      handlerRegistrations.put(EntryPointChangedEvent.TYPE, eventBus.addHandler(EntryPointChangedEvent.TYPE, this));
       handlerRegistrations.put(ItemUnlockedEvent.TYPE, eventBus.addHandler(ItemUnlockedEvent.TYPE, this));
-      handlerRegistrations.put(ItemLockResultReceivedEvent.TYPE, eventBus.addHandler(ItemLockResultReceivedEvent.TYPE, this));
+      handlerRegistrations.put(ItemLockResultReceivedEvent.TYPE,
+         eventBus.addHandler(ItemLockResultReceivedEvent.TYPE, this));
       handlerRegistrations.put(SwitchEntryPointEvent.TYPE, eventBus.addHandler(SwitchEntryPointEvent.TYPE, this));
       handlerRegistrations.put(SelectItemEvent.TYPE, eventBus.addHandler(SelectItemEvent.TYPE, this));
-      handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE, eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this));
-      handlerRegistrations.put(ApplicationSettingsReceivedEvent.TYPE, eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
+      handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE,
+         eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this));
+      handlerRegistrations.put(ApplicationSettingsReceivedEvent.TYPE,
+         eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
       handlerRegistrations.put(AddItemTreeIconEvent.TYPE, eventBus.addHandler(AddItemTreeIconEvent.TYPE, this));
       handlerRegistrations.put(RemoveItemTreeIconEvent.TYPE, eventBus.addHandler(RemoveItemTreeIconEvent.TYPE, this));
 
@@ -302,9 +302,6 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       public void run()
       {
          selectedItems = display.getSelectedItems();
-
-         //context.getSelectedItems(context.getSelectedNavigationPanel()).clear();
-         //context.getSelectedItems(context.getSelectedNavigationPanel()).addAll(selectedItems);
          eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, Display.ID));
       }
    };
@@ -335,7 +332,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    protected void onFolderOpened(Folder openedFolder)
    {
       //Commented to fix bug with selection of new folder
-//      itemToSelect = null;
+      //      itemToSelect = null;
       foldersToRefresh = new ArrayList<Folder>();
       foldersToRefresh.add(openedFolder);
       refreshNextFolder();
@@ -397,34 +394,10 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
       VirtualFileSystem.getInstance().getChildren(foldersToRefresh.get(0), new AsyncRequestCallback<Folder>()
       {
-
          @Override
          protected void onSuccess(Folder result)
          {
-            final Folder folder = result;
-            eventBus.fireEvent(new FolderRefreshedEvent(folder));
-            foldersToRefresh.remove(folder);
-            //TODO if will be some value - display system items or not, then add check here:
-            removeSystemItemsFromView(folder.getChildren());
-            Collections.sort(folder.getChildren(), comparator);
-
-            display.getBrowserTree().setValue(folder);
-
-            //eventBus.fireEvent(new RestorePerspectiveEvent());
-            
-            //eventBus.fireEvent(new SelectViewEvent(Display.ID));
-            display.asView().setViewVisible();
-
-            if (itemToSelect != null)
-            {
-               display.selectItem(itemToSelect);
-               itemToSelect = null;
-            }
-
-            if (foldersToRefresh.size() > 0)
-            {
-               refreshNextFolder();
-            }
+            folderContentReceived(result);
          }
 
          @Override
@@ -437,6 +410,30 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
             eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
          }
       });
+   }
+
+   private void folderContentReceived(Folder folder)
+   {
+      eventBus.fireEvent(new FolderRefreshedEvent(folder));
+      foldersToRefresh.remove(folder);
+      //TODO if will be some value - display system items or not, then add check here:
+      removeSystemItemsFromView(folder.getChildren());
+      Collections.sort(folder.getChildren(), comparator);
+
+      display.getBrowserTree().setValue(folder);
+
+      display.asView().setViewVisible();
+
+      if (itemToSelect != null)
+      {
+         display.selectItem(itemToSelect);
+         itemToSelect = null;
+      }
+
+      if (foldersToRefresh.size() > 0)
+      {
+         refreshNextFolder();
+      }
    }
 
    /**
@@ -486,12 +483,6 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       display.selectItem(event.getItemHref());
    }
 
-
-   public void onEntryPointChanged(EntryPointChangedEvent event)
-   {
-      entryPoint = event.getEntryPoint();
-   }
-
    /**
     * @see org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent)
     */
@@ -538,8 +529,6 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
          IDE.getInstance().openView(display.asView());
       }
 
-      entryPoint = null;
-
       display.getBrowserTree().setValue(null);
       selectedItems.clear();
       selectedItems.clear();
@@ -556,13 +545,10 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
          {
             eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
 
-            entryPoint = result.getHref();
-
             eventBus.fireEvent(new EntryPointChangedEvent(result.getHref()));
 
             display.asView().setViewVisible();
-            //eventBus.fireEvent(new SelectViewEvent(Display.ID));
-            
+
             eventBus.fireEvent(new ViewVisibilityChangedEvent((ViewEx)display));
 
             display.getBrowserTree().setValue(result);

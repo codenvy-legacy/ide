@@ -86,7 +86,7 @@ public class SaveAllFilesTest extends BaseTest
       createFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
       
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       createFolder(FOLDER_NAME_2);
       Thread.sleep(TestConstants.SLEEP);
       
@@ -203,11 +203,11 @@ public class SaveAllFilesTest extends BaseTest
       
       //end
       
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
       
       IDE.navigator().selectItem(WS_URL + FOLDER_NAME_2 + "/");
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
    }
    

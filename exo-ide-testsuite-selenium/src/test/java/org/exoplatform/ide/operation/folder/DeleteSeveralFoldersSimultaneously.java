@@ -115,7 +115,7 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
       //      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, true);
 
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
 
       // TODO After of capability select the few elements in IDE navigator
       // assertTrue(selenium.isTextPresent("exact:Do you want to delete 2 items?"));

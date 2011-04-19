@@ -20,10 +20,12 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
 
 import com.thoughtworks.selenium.Selenium;
@@ -35,26 +37,24 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class Navigator extends AbstractTestModule
 {
-
-   public interface Locators
-   {
-      @Deprecated
-      public static final String SC_NAVIGATION_TREE = "scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]";
-
-      @Deprecated
-      public static final String SC_ROOT_OF_NAVIGATION_TREE = SC_NAVIGATION_TREE + "/body/row[0]/col[1]";
-
-      String NAVIGATION_TREE = "ideNavigatorItemTreeGrid";
-
-      String TREE_PREFIX_ID = "navigation-";
-   }
+   
+   public static final String NAVIGATION_TREE = "ideNavigatorItemTreeGrid";
+   
+   static final String TREE_PREFIX_ID = "navigation-";
 
    private IDE ide;
+
+   private String workspaceURL;
 
    public Navigator(Selenium selenium, IDE ide)
    {
       super(selenium);
       this.ide = ide;
+   }
+
+   public void setWorkspaceURL(String workspaceURL)
+   {
+      this.workspaceURL = workspaceURL;
    }
 
    /**
@@ -65,7 +65,7 @@ public class Navigator extends AbstractTestModule
     */
    public String getScLocator(String title, int col)
    {
-      return Locators.SC_NAVIGATION_TREE + "/body/row[name=" + title + "]/col[" + col + "]";
+      return null;
    }
 
    /**
@@ -76,7 +76,7 @@ public class Navigator extends AbstractTestModule
     */
    public String getScLocator(int row, int col)
    {
-      return Locators.SC_NAVIGATION_TREE + "/body/row[" + row + "]/col[" + col + "]";
+      return null;
    }
 
    /**
@@ -87,13 +87,16 @@ public class Navigator extends AbstractTestModule
     */
    public void selectRow(int rowNumber) throws Exception
    {
-      selenium.click(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      fail();
+//      selenium.click(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[1]");
+//      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    public String getRowTitle(int rowNumber)
    {
-      return selenium.getText(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[0]");
+      fail();
+      return null;
+//      return selenium.getText(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[0]");
    }
 
    /**
@@ -118,9 +121,7 @@ public class Navigator extends AbstractTestModule
     */
    public String getItemId(String href) throws Exception
    {
-      System.out.println("md5 of [" + href + "] is [" + Utils.md5(href) + "]");
-      //Thread.sleep(5000);
-      return Locators.TREE_PREFIX_ID + Utils.md5(href);
+      return TREE_PREFIX_ID + Utils.md5(href);
    }
 
    /**
@@ -178,7 +179,7 @@ public class Navigator extends AbstractTestModule
       //time remaining to open editor
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
-   
+
    /**
     * Open file from navigation tree with code mirror.
     * 
@@ -192,6 +193,37 @@ public class Navigator extends AbstractTestModule
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       openSelectedFileWithCodeEditor(checkDefault);
+   }
+
+   /**
+    * Delete selected item in navigation tree.
+    * 
+    * @throws Exception
+    */
+   public void deleteSelectedItems() throws Exception
+   {
+      ide.toolbar().runCommand(ToolbarCommands.File.DELETE);
+
+      //check deletion form
+      assertTrue(selenium.isElementPresent("//div[@view-id='ideDeleteItemsView']"));
+      assertTrue(selenium.isElementPresent("ideDeleteItemFormOkButton"));
+      assertTrue(selenium.isElementPresent("ideDeleteItemFormCancelButton"));
+
+      //click Ok button
+      selenium.click("ideDeleteItemFormOkButton");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+
+   /**
+    * Select the root workspace item in workspace tree.
+    * 
+    * @param name
+    * @throws Exception
+    */
+   public void selectRootOfWorkspace() throws Exception
+   {
+      selectItem(workspaceURL);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
 }

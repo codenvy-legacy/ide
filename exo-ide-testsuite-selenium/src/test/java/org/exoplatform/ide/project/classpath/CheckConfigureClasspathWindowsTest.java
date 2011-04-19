@@ -144,7 +144,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * 2. Try to configure classpath for workspace
        */
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
       

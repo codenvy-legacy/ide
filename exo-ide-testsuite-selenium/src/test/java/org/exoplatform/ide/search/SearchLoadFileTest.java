@@ -88,7 +88,7 @@ public class SearchLoadFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
       IDE.editor().closeTab(0);
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
 
       performSearch("/", "", "");
       Thread.sleep(TestConstants.SLEEP);
@@ -154,7 +154,7 @@ public class SearchLoadFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
       IDE.editor().closeTab(0);
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
 
       performSearch("/", "", "");
       Thread.sleep(TestConstants.SLEEP);
@@ -211,7 +211,7 @@ public class SearchLoadFileTest extends BaseTest
       selenium.controlKeyDown();
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/" + restFileName);
       selenium.controlKeyUp();
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.navigator().assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + restFileName);

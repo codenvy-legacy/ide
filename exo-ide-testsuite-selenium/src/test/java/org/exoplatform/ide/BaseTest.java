@@ -23,8 +23,17 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
@@ -44,17 +53,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
+import com.thoughtworks.selenium.DefaultSelenium;
+import com.thoughtworks.selenium.Selenium;
 
 /**
  * Created by The eXo Platform SAS.
@@ -176,6 +176,8 @@ public abstract class BaseTest
       }
 
       //      IDE = new IDE(selenium);
+      
+      IDE.navigator().setWorkspaceURL(WS_URL);
    }
 
    protected void logout() throws Exception
@@ -366,18 +368,6 @@ public abstract class BaseTest
    }
 
    /**
-    * Select the root workspace item in workspace tree.
-    * 
-    * @param name
-    * @throws Exception
-    */
-   protected void selectRootOfWorkspaceTree() throws Exception
-   {
-      IDE.navigator().selectItem(WS_URL);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }
-
-   /**
     * Check item is shown in search results tree.
     * 
     * @param name
@@ -422,24 +412,6 @@ public abstract class BaseTest
    {
       return selenium
          .getText("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[" + index + "]/col[0]");
-   }
-
-   /**
-    * Delete selected item in navigation tree.
-    * 
-    * @throws Exception
-    */
-   protected void deleteSelectedItems() throws Exception
-   {
-      IDE.toolbar().runCommand(ToolbarCommands.File.DELETE);
-      //check deletion form
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]/"));
-      assertEquals("Delete Item(s)", selenium.getText("scLocator=//Window[ID=\"ideDeleteItemForm\"]/headerLabel/"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
-      //click Ok button
-      selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    /*  protected void typeTextTo(String locator, String text) throws Exception
@@ -1359,7 +1331,7 @@ public abstract class BaseTest
       //elements are appears in SLEEP tile.
       //Thats why, wait for WAIT_PERIOD for root element
       //of navigation tree.
-      waitForElementPresent(Navigator.Locators.NAVIGATION_TREE);
+      waitForElementPresent(Navigator.NAVIGATION_TREE);
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -1418,7 +1390,7 @@ public abstract class BaseTest
    public void waitForRootElement() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      waitForElementPresent(Navigator.Locators.NAVIGATION_TREE);
+      waitForElementPresent(Navigator.NAVIGATION_TREE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 

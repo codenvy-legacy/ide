@@ -172,7 +172,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Select Root in workspace panel
        */
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
 
       /*
        * Click Paste command
@@ -213,7 +213,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Open "/test.groovy"
        */
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(MenuCommands.File.REFRESH_TOOLBAR);
       IDE.navigator().selectItem(FOLDER_1_URL);
       IDE.toolbar().runCommand(MenuCommands.File.REFRESH_TOOLBAR);

@@ -66,7 +66,7 @@ public class OpeningFilesTest extends BaseTest
 
       // Delete one file  
       IDE.navigator().selectItem(WS_URL + folderName + "/" + file2Name);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().assertItemNotPresent(WS_URL + folderName + "/" + file2Name);
 
@@ -79,7 +79,7 @@ public class OpeningFilesTest extends BaseTest
       
       //Delete folder with file
       IDE.navigator().selectItem(WS_URL + folderName + "/");
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
       
       //Check items not present in navigation tree

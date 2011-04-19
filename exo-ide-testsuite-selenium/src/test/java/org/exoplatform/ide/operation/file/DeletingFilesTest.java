@@ -117,7 +117,7 @@ public class DeletingFilesTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CUR_TIME + GROOVY_FILE_NAME, false);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       
       assertEquals(404, VirtualFileSystemUtils.get(GROOVY_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(GROOVY_FILE_NAME));
@@ -142,23 +142,23 @@ public class DeletingFilesTest extends BaseTest
       assertFalse(selenium.isTextPresent(CUR_TIME + GOOGLE_GADGET_FILE_NAME));
 
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CUR_TIME + JAVA_SCRIPT_FILE_NAME, false);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       
       assertEquals(404, VirtualFileSystemUtils.get(JAVA_SCRIPT_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + JAVA_SCRIPT_FILE_NAME));
 
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CUR_TIME + XML_FILE_NAME, false);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(XML_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + XML_FILE_NAME));
       
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CUR_TIME + TEXT_FILE_NAME, false);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(TEXT_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + TEXT_FILE_NAME));
 
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CUR_TIME + HTML_FILE_NAME, false);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(HTML_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + HTML_FILE_NAME));
    }

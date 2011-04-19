@@ -60,9 +60,9 @@ public class CopyFoldersAndFilesTest extends BaseTest
    
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
-   private static final String FOLDER_1_2_URL = URL + FOLDER_1 + "/" + FOLDER_1_2 + "/";
-
    private static final String FOLDER_1_1_URL = URL + FOLDER_1 + "/" + FOLDER_1_1 + "/";
+
+   private static final String FOLDER_1_2_URL = URL + FOLDER_1 + "/" + FOLDER_1_2 + "/";
    
    private static final String RANDOM_CONTENT_1 = UUID.randomUUID().toString();
    
@@ -147,7 +147,12 @@ public class CopyFoldersAndFilesTest extends BaseTest
     * 
     * Go Back
     * 
-    * Check file is opened
+    * Check file is opened   public InitializeServicesEvent(IDEConfiguration applicationConfiguration, Loader loader)
+   {
+      this.applicationConfiguration = applicationConfiguration;
+      this.loader = loader;
+   }
+
     * Check content of opened file
     * 
     * Check state of "Edit/Paste" command ( it must be false ) 
@@ -166,23 +171,22 @@ public class CopyFoldersAndFilesTest extends BaseTest
    public void testCopyFoldersAndFiles() throws Exception
    {
       waitForRootElement();
+      
       IDE.navigator().selectItem(FOLDER_1_URL);
-
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FOLDER_1_URL + FILE_GROOVY, false);
-
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FOLDER_1_URL + FILE_GADGET, false);      
 
-      //Select "test 1/gadget.xml", "test 1/test.groovy", "test 1/test 1.1",  "test 1/test 1.2" items in the Workspace Panel.
-      selenium.controlKeyDown();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.navigator().selectItem(FOLDER_1_URL + FILE_GADGET);
-      IDE.navigator().selectItem(FOLDER_1_URL + FILE_GROOVY);
-      IDE.navigator().selectItem(FOLDER_1_1_URL);
-      IDE.navigator().selectItem(FOLDER_1_2_URL);
-      selenium.controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+//      //Select "test 1/gadget.xml", "test 1/test.groovy", "test 1/test 1.1",  "test 1/test 1.2" items in the Workspace Panel.
+//      selenium.controlKeyDown();
+//      Thread.sleep(TestConstants.REDRAW_PERIOD);
+//      IDE.navigator().selectItem(FOLDER_1_URL + FILE_GADGET);
+//      IDE.navigator().selectItem(FOLDER_1_URL + FILE_GROOVY);
+//      IDE.navigator().selectItem(FOLDER_1_1_URL);
+//      IDE.navigator().selectItem(FOLDER_1_2_URL);
+//      selenium.controlKeyUp();
+//      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
       IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
@@ -193,15 +197,17 @@ public class CopyFoldersAndFilesTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       IDE.navigator().selectItem(FOLDER_1_1_URL);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
 
       IDE.navigator().selectItem(FOLDER_1_URL + FILE_GADGET);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
 
       //Delete "test 1/test 1.1" folder and "test 1/gadget.xml" file. Select root item. Click on "Paste" button.
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
 
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      
+      Thread.sleep(30000);
       
       checkFilesAndFoldersOnServer();
 
@@ -221,7 +227,10 @@ public class CopyFoldersAndFilesTest extends BaseTest
    {
       assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FOLDER_1).getStatusCode());
       assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FOLDER_1_2).getStatusCode());
-      final HTTPResponse fileResponse1 = VirtualFileSystemUtils.get(URL + FILE_GROOVY);
+      
+      System.out.println(">>> get content of file [" + URL + FILE_GROOVY + "]");
+      
+      final HTTPResponse fileResponse1 = VirtualFileSystemUtils.get(URL + FOLDER_1_2 + "/" + FILE_GROOVY);
       assertEquals(HTTPStatus.OK, fileResponse1.getStatusCode());
       assertEquals(RANDOM_CONTENT_2, new String(fileResponse1.getData()));
       

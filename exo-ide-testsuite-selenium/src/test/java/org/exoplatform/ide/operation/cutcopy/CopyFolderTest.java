@@ -174,13 +174,13 @@ public class CopyFolderTest extends BaseTest
       /* 
        * Select root in workspace tree and call "Edit/Paste"
        */
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
       
       /*
        * Check new folder appeared in root folder
        */
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().assertItemPresent(FOLDER_1_URL);      
       IDE.navigator().assertItemPresent(FOLDER_1_1_URL);
@@ -200,7 +200,7 @@ public class CopyFolderTest extends BaseTest
       /* 
        * Open "/Test 1.1/test.groovy"
        */
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.navigator().selectItem(FOLDER_1_1_URL);

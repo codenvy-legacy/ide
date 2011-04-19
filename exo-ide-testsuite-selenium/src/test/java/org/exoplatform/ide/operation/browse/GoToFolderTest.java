@@ -107,7 +107,7 @@ public class GoToFolderTest extends BaseTest
       //TODO check selected state
       IDE.navigator().assertItemPresent(URL + FOLDER_1 + "/" + FILE_1);
 
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand("Refresh Selected Folder");
 
       IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");

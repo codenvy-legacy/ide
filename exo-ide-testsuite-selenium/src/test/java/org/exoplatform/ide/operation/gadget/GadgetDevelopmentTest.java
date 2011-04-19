@@ -103,7 +103,7 @@ public class GadgetDevelopmentTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       //     Remove created folder with file.
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
    }
 
    @AfterClass

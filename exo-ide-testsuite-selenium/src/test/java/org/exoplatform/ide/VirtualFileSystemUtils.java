@@ -120,6 +120,7 @@ public class VirtualFileSystemUtils
     */
    public static HTTPResponse get(String storageUrl) throws IOException, ModuleException
    {
+      System.out.println("GET on > " + storageUrl);
       URL url = new URL(storageUrl);
       HTTPConnection connection = Utils.getConnection(url);
       HTTPResponse response = connection.Get(url.getFile());

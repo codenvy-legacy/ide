@@ -111,7 +111,7 @@ public class CutFileTest extends BaseTest
    public void testCutFile() throws Exception
    {
       waitForRootElement();
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.navigator().selectItem(FOLDER_NAME_1_URL);
@@ -163,7 +163,7 @@ public class CutFileTest extends BaseTest
       checkPasteCommands(true);
 
       //Select root item and then click on "Paste" toolbar button.
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
 
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
       

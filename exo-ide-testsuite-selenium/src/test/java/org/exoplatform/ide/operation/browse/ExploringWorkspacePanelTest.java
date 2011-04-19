@@ -86,7 +86,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.navigator().assertItemPresent(FOLDER_1_1_URL);
       IDE.navigator().assertItemPresent(FOLDER_1_2_URL);
 
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       createFolder(FOLDER_2);
       createFolder(FOLDER_2_1);
       IDE.navigator().selectItem(FOLDER_2_URL);
@@ -143,8 +143,8 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
       
       IDE.navigator().selectItem(FOLDER_1_URL);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       IDE.navigator().selectItem(FOLDER_2_URL);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
    }
 }

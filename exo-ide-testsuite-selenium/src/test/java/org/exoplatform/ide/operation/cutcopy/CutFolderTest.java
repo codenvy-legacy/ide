@@ -120,7 +120,7 @@ public class CutFolderTest extends BaseTest
       /*
        * 1. Check, that FOLDER_1 and FOLDER_2, FOLDER_2/FILE_1, FOLDER_2/FOLDER_2 are present.
        */
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().assertItemPresent(FOLDER_1_URL);
       
@@ -198,7 +198,7 @@ public class CutFolderTest extends BaseTest
       /*
        * 6. Select root item and then click on "Paste" toolbar button.
        */
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
 
       /*
@@ -234,7 +234,7 @@ public class CutFolderTest extends BaseTest
       /*
        * 8. Select file "test 1/test 2/test.groovy".
        */
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().selectItem(FOLDER_1_URL);
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);

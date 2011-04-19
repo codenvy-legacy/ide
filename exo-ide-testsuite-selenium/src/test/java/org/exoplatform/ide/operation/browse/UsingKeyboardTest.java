@@ -61,7 +61,7 @@ public class UsingKeyboardTest extends BaseTest
    public void setUp() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
    }

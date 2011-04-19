@@ -96,7 +96,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
 
       IDE.navigator().assertItemPresent(URL);
 
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
    }
    
    @AfterClass

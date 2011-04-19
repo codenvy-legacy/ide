@@ -18,18 +18,9 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
@@ -41,9 +32,14 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -51,11 +47,11 @@ import java.util.Map;
  *
  */
 public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.Tree<Item>
-{   
+{
    private Map<String, String> locktokens;
-   
-   private String prefixId; 
-   
+
+   private String prefixId;
+
    /**
     * @param id of UI component
     * @param prefixId prefix for child element ID
@@ -73,7 +69,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
             // Close event don't remove child TtreeItem, just set display:node CSS property
             // so for Selenium test remove id attribute in invisible TreeItem, and remove all child TreeItem
             TreeItem treeItem = event.getTarget();
-            for(int i = 0; i< treeItem.getChildCount(); i++)
+            for (int i = 0; i < treeItem.getChildCount(); i++)
             {
                treeItem.getChild(i).getElement().removeAttribute("id");
                treeItem.getChild(i).removeItems();
@@ -130,27 +126,28 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       {
          node = getChild(node, folderName);
          if (node == null)
+         {
             return node;
+         }
       }
       return node;
-
    }
 
    private TreeItem getChild(TreeItem parent, String name)
    {
-
       for (int i = 0; i < parent.getChildCount(); i++)
       {
          TreeItem child = parent.getChild(i);
          if (child.getUserObject() == null)
+         {
             continue;
-         if (((Item)child.getUserObject()).getName().equals(name))
+         }
+
+         Item userObject = (Item)child.getUserObject();
+         if (userObject.getName().equals(name))
          {
             return child;
          }
-         TreeItem item = getChild(child, name);
-         if (item != null)
-            return item;
       }
 
       return null;
@@ -170,7 +167,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       {
          Item item = children.get(position);
 
-         TreeItem node = getNode(item);
+         TreeItem node = createTreeNode(item);
          parentNode.addItem(node);
 
          if (parentNode.getChild(0).getUserObject() == null)
@@ -182,9 +179,8 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       parentNode.setState(true);
    }
 
-   private TreeItem getNode(Item item)
+   private TreeItem createTreeNode(Item item)
    {
-
       String text = "";
       if (item.getIcon() != null)
       {
@@ -203,9 +199,9 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          // TODO fix this 
          node.addItem("");
       }
-      
-      node.getElement().setId(prefixId+Utils.md5(item.getHref()));
-      
+
+      node.getElement().setId(prefixId + Utils.md5(item.getHref()));
+
       return node;
    }
 
@@ -244,9 +240,10 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
             tree.removeItems();
          return;
       }
+
       if (tree.getItemCount() == 0)
       {
-         TreeItem addItem = getNode(value);
+         TreeItem addItem = createTreeNode(value);
          tree.addItem(addItem);
          if (((Folder)value).getChildren() == null)
             return;
@@ -264,14 +261,15 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       {
          return;
       }
-      TreeItem parent = getNodeByHref(value.getHref());
 
+      TreeItem parent = getNodeByHref(value.getHref());
       try
       {
          setItems(parent, ((Folder)value).getChildren());
-         //move Highlight
          if (tree.getSelectedItem() != null)
+         {
             moveHighlight(tree.getSelectedItem());
+         }
       }
       catch (Exception e)
       {
@@ -290,7 +288,6 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       if (item != null)
       {
          tree.setSelectedItem(item, true);
-
       }
    }
 
@@ -302,7 +299,9 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    {
       List<Item> items = new ArrayList<Item>();
       if (tree.getSelectedItem() != null)
+      {
          items.add((Item)tree.getSelectedItem().getUserObject());
+      }
       return items;
    }
 

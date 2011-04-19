@@ -116,7 +116,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP*2);
       IDE.navigator().assertItemPresent(WS_URL);
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       

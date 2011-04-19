@@ -69,7 +69,7 @@ public class BigTemplateTest extends BaseTest
    public void testBigTemplate() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.navigator().clickOpenIconOfFolder(URL);

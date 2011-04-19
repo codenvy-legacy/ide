@@ -92,7 +92,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       
       IDE.editor().closeTab(0);
       
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);

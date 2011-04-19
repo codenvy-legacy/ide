@@ -75,7 +75,7 @@ public class SearchInRootFolderTest extends BaseTest
       IDE.navigator().assertItemPresent(WS_URL + folder1Name + "/" + restFileName);
 
       //Create second folder
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       createFolder(folder2Name);
       //Save in second folder first time
       saveAsUsingToolbarButton(copyofRestFileName);
@@ -88,7 +88,7 @@ public class SearchInRootFolderTest extends BaseTest
 
       IDE.editor().closeTab(0);
 
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
 
       performSearch("/", "Hello", "text/html");
       Thread.sleep(TestConstants.SLEEP);
@@ -120,7 +120,7 @@ public class SearchInRootFolderTest extends BaseTest
       selenium.controlKeyDown();
       IDE.navigator().selectItem(WS_URL + folder2Name + "/");
       selenium.controlKeyUp();
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().assertItemNotPresent(WS_URL + folder1Name + "/");
       IDE.navigator().assertItemNotPresent(WS_URL + folder2Name + "/");

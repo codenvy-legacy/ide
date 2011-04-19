@@ -170,7 +170,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //---- 2 -----------------
       //delete file
       IDE.navigator().assertItemPresent(WS_URL + FILE_WITH_ERROR);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
 
       //---- 3 -----------------
       //click on validation message to go to error

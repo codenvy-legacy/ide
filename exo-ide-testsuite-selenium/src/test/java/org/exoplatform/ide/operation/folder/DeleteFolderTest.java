@@ -84,7 +84,7 @@ public class DeleteFolderTest extends BaseTest
       //select folder
       IDE.navigator().selectItem(URL_TOOLBAR + "/");
       //run delete
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       //chek create form
       //chek Disappear Form
       chekDisappearDeleteItemForm();
@@ -110,7 +110,7 @@ public class DeleteFolderTest extends BaseTest
       IDE.navigator().selectItem(URL_MENU + "/");
       //run command through menicommands
       //delete item
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       //and chek delete
       chekDisappearDeleteItemForm();
       //chek Disappear in menu of navigator

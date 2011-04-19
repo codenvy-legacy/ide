@@ -64,30 +64,30 @@ public class ItemOrderingTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // create test files
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1_2, 0);
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, UPPERCASE_TEST_FILE_1, 0);      
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1, 0);      
       
       // create test folders
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       createFolder(TEST_FOLDER_1_2);
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       createFolder(UPPERCASE_TEST_FOLDER_1);
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       createFolder(TEST_FOLDER_1);      
 
       checkItemOrderingInNavigationPanel();      
 
       // test ordering within the Navigation Panel after the refreshing root folder
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.IDE_INITIALIZATION_PERIOD);      
       
       // test ordering within the Search Panel
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       performSearch("/", "", MimeType.TEXT_XML);
       
       checkItemOrderngInSearchResultPanel();

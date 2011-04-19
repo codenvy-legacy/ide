@@ -73,7 +73,7 @@ public class SearchByMimeTypeTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().assertItemPresent(WS_URL + jsFileName);
 
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
       createFolder(folder2Name);
 
       saveAsUsingToolbarButton(copyJsFileName);
@@ -98,7 +98,7 @@ public class SearchByMimeTypeTest extends BaseTest
       selenium.controlKeyDown();
       IDE.navigator().selectItem(WS_URL + folder2Name + "/");
       selenium.controlKeyUp();
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
 
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().assertItemNotPresent(WS_URL + folder1Name + "/");

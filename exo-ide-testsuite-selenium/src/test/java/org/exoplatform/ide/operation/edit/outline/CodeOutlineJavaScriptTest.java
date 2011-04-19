@@ -449,7 +449,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
 
       // remove jsFile from workspace panel
       IDE.navigator().selectItem(WS_URL + jsFile); 
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
 
       // close text file

@@ -212,7 +212,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       assertEquals(textWithTable2x4InCkEditor, getTextFromSourceInCkEditor(0));
 
       //------ 12 ---------------
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
 
       //------ 13 ---------------
 

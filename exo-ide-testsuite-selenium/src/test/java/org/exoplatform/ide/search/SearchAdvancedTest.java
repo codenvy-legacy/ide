@@ -60,16 +60,19 @@ public class SearchAdvancedTest extends BaseTest
       saveAsByTopMenu(googleGadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().selectItem(WS_URL + googleGadgetFileName);
-      selectRootOfWorkspaceTree();
+      IDE.navigator().selectRootOfWorkspace();
+      
       //Step 5
       performSearch("/", "text", "");
       Thread.sleep(TestConstants.SLEEP);
       assertElementNotPresentSearchResultsTree(googleGadgetFileName);
+      
       //Step 6
       selectItemInSearchResultsTree(workspace);
       performSearch("/", "", "script/groovy");
       Thread.sleep(TestConstants.SLEEP);
       assertElementNotPresentSearchResultsTree(googleGadgetFileName);
+      
       //Step 7
       selectItemInSearchResultsTree(workspace);
       performSearch("/", "Привет, свет!", "script/groovy");
@@ -81,16 +84,19 @@ public class SearchAdvancedTest extends BaseTest
       performSearch("/", "", "");
       Thread.sleep(TestConstants.SLEEP);
       assertElementPresentSearchResultsTree(googleGadgetFileName);
+      
       //Step 9
       selectItemInSearchResultsTree(workspace);
       performSearch("/", "Привет, свет!", "");
       Thread.sleep(TestConstants.SLEEP);
       assertElementPresentSearchResultsTree(googleGadgetFileName);
+      
       //Step 10
       selectItemInSearchResultsTree(workspace);
       performSearch("/", "", "application/x-google-gadget");
       Thread.sleep(TestConstants.SLEEP);
       assertElementPresentSearchResultsTree(googleGadgetFileName);
+      
       //Step 11
       selectItemInSearchResultsTree(workspace);
       performSearch("/", "Test", "application/x-google-gadget");
@@ -100,7 +106,7 @@ public class SearchAdvancedTest extends BaseTest
       //Clear test items
       selectWorkspaceTab();
       IDE.navigator().selectItem(WS_URL + googleGadgetFileName);
-      deleteSelectedItems();
+      IDE.navigator().deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
       IDE.navigator().assertItemNotPresent(WS_URL + googleGadgetFileName);
    }
