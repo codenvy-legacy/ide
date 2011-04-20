@@ -76,7 +76,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
    private String submitButtonTitle;
 
    
-//   private CreateFolderPresenter presenter;
+   private CreateFolderPresenter presenter;
 
    /**
     * @param eventBus
@@ -126,6 +126,7 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
       folderNameField.setTitleOrientation(TitleOrientation.TOP);
       folderNameField.setWidth(300);
       folderNameField.setHeight(22);
+      folderNameField.setValue(IDE.IDE_LOCALIZATION_CONSTANT.newFolderName());
 
       paramsForm.add(folderNameField);
       folderNameField.focusInItem();

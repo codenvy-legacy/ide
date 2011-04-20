@@ -517,14 +517,16 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       if (openedFiles.get(file.getHref()) != null
          && event.getEditorProducer().getDescription().equals(openedEditors.get(file.getHref())))
       {
-         File openedFile = openedFiles.get(file.getHref());
-         ignoreContentChangedList.add(file.getHref());
-
-         //      display.selectTab(openedFile.getHref());
-         Editor editor = editors.get(file.getHref());
-         EditorView view = editorsViews.get(editor.getEditorId());
-         view.setContent(file);
-         view.setViewVisible();
+         
+//         
+//         File openedFile = openedFiles.get(file.getHref());
+//         ignoreContentChangedList.add(file.getHref());
+//
+//         //      display.selectTab(openedFile.getHref());
+//         Editor editor = editors.get(file.getHref());
+//         EditorView view = editorsViews.get(editor.getEditorId());
+//         view.setContent(file);
+//         view.setViewVisible();
          //      display.setTabContent(file.getHref(), file.getContent());
          return;
       }
@@ -550,12 +552,16 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          EditorProducer producer = event.getEditorProducer();
          Editor editor = producer.createEditor(file.getContent(), eventBus, params);
          DOM.setStyleAttribute(editor.getElement(), "zIndex", "0");
+         
          if (editors.containsKey(file.getHref()))
          {
             Editor oldEditor = editors.get(file.getHref());
             file.setContent(oldEditor.getText());
             EditorView editorView = editorsViews.get(oldEditor.getEditorId());
-            editorView.remove(oldEditor);
+            
+            oldEditor.removeFromParent();
+            //editorView.remove(oldEditor);
+            
             editorView.add(editor);
             editors.put(file.getHref(), editor);
             editorsViews.put(editor.getEditorId(), editorView);

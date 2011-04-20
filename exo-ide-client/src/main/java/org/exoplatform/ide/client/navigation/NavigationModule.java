@@ -129,7 +129,11 @@ import java.util.Map;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -137,10 +141,10 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public class NavigationModule implements OpenFileWithHandler, UploadFileHandler, SaveFileAsTemplateHandler,
-   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander,
-   ApplicationSettingsReceivedHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
-   EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler,
-   InitializeServicesHandler, OpenFileByPathHandler
+   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, ApplicationSettingsReceivedHandler,
+   ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler,
+   ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler,
+   OpenFileByPathHandler
 {
    private HandlerManager eventBus;
 
@@ -185,9 +189,9 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithControl()));
-      
-//      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(), DockTarget.TOOLBAR, true));
-      
+
+      //      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(), DockTarget.TOOLBAR, true));
+
       eventBus.fireEvent(new RegisterControlEvent(new ViewVersionHistoryControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewVersionListControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(), DockTarget.TOOLBAR, true));
@@ -336,31 +340,62 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
       {
          itemHref = itemHref.substring(0, itemHref.lastIndexOf("/") + 1);
       }
-      
+
       final String href = itemHref;
 
       final CreateFolderForm form = new CreateFolderForm(eventBus, selectedItems.get(0), href);
+      form.getCancelButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            form.closeForm();
+         }
+      });
+
       form.getCreateButton().addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
-            String newFolderHref = href + form.getFolderNameField().getValue() + "/";
-            Folder newFolder = new Folder(newFolderHref);
-            VirtualFileSystem.getInstance().createFolder(newFolder, new AsyncRequestCallback<Folder>()
+            createFolder(href, form);
+         }
+        
+      });
+
+      form.getFolderNameFiledKeyPressed().addKeyPressHandler(new KeyPressHandler()
+      {
+         public void onKeyPress(KeyPressEvent event)
+         {
+            if (event.getCharCode() == KeyCodes.KEY_ENTER)
             {
-               @Override
-               protected void onSuccess(Folder result)
-               {
-                  eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), result));
-                  form.closeForm();
-               }
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  form.closeForm();
-               }
-            });
+               createFolder(href, form);
+            }
+         }
+      });
+   }
+   
+   /**
+    * @param href
+    * @param form
+    */
+   private void createFolder(final String href, final CreateFolderForm form)
+   {
+      String newFolderHref = href + form.getFolderNameField().getValue() + "/";
+      Folder newFolder = new Folder(newFolderHref);
+      VirtualFileSystem.getInstance().createFolder(newFolder, new AsyncRequestCallback<Folder>()
+      {
+         @Override
+         protected void onSuccess(Folder result)
+         {
+            eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), result));
+            form.closeForm();
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            form.closeForm();
          }
       });
    }
