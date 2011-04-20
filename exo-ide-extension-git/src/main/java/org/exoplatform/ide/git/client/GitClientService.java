@@ -128,6 +128,25 @@ public abstract class GitClientService
       AsyncRequestCallback<List<Remote>> callback);
    
    /**
+    * Adds remote repository to the list of remote repositories.
+    * 
+    * @param workDir location of Git repository working directory
+    * @param name remote repository's name
+    * @param url remote repository's URL
+    * @param callback callback
+    */
+   public abstract void remoteAdd(String workDir, String name, String url, AsyncRequestCallback<String> callback);
+   
+   /**
+    * Deletes the pointed(by name) remote repository from the list of repositories.
+    * 
+    * @param workDir location of Git repository working directory
+    * @param name remote repository name to delete
+    * @param callback callback
+    */
+   public abstract void remoteDelete(String workDir, String name, AsyncRequestCallback<String> callback);
+   
+   /**
     * Remove files from the working tree and the index.
     * 
     * @param workDir  location of Git repository working directory
@@ -199,6 +218,15 @@ public abstract class GitClientService
     */
    public abstract void commit(String workDir, String message, AsyncRequestCallback<Revision> callback);
    
+   /**
+    * Get log of commits.
+    * The result is the list of {@link Revision},  which is returned
+    * by callback in <code>onSuccess(Revision result)</code>.
+    * 
+    * @param workDir working directory of the Git repository
+    * @param isTextFormat if <code>true</code> the loq response will be in text format
+    * @param callback callback
+    */
    public abstract void log(String workDir, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback); 
 
    /**
@@ -228,6 +256,13 @@ public abstract class GitClientService
    public abstract void statusText(String workDir, boolean shortFormat, String[] fileFilter,
       AsyncRequestCallback<StatusResponse> callback);
 
+   /**
+    * Gets the working tree status : list of untracked, changed not commited 
+    * and changed not updated.
+    * 
+    * @param workDir working directory of the Git repository
+    * @param callback callback
+    */
    public abstract void status(String workDir, AsyncRequestCallback<StatusResponse> callback);
 
    /**

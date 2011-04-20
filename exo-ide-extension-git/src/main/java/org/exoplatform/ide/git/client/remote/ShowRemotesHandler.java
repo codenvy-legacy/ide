@@ -16,42 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
+package org.exoplatform.ide.git.client.remote;
 
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.branch.ShowBranchesEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Control is responsible to open view with branches, 
- * where user can create new, checkout or delete.
+ * Handler for {@link ShowRemotesEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 7, 2011 5:39:13 PM anya $
+ * @version $Id:  Apr 18, 2011 10:24:53 AM anya $
  *
  */
-public class BranchesControl extends GitControl
+public interface ShowRemotesHandler extends EventHandler
 {
    /**
-    * Control ID.
+    * Perform actions on show remote repositories.
+    * 
+    * @param event event
     */
-   public static final String ID = "Git/Branches";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Branches...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Work with branches";
-
-   public BranchesControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new ShowBranchesEvent());
-      setImages(GitClientBundle.INSTANCE.branches(), GitClientBundle.INSTANCE.branchesDisabled());
-   }
+   void onShowRemotes(ShowRemotesEvent event);
 }

@@ -33,7 +33,7 @@ public class PushToRemoteControl extends GitControl
    /**
     * Control ID.
     */
-   public static final String ID = "Git/Push";
+   public static final String ID = "Git/Remote/Push...";
 
    /**
     * Control's title.

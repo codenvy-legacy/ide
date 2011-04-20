@@ -55,4 +55,8 @@
    <replace-with class="org.exoplatform.ide.git.client.reset.ResetToCommitView">
       <when-type-is class="org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.git.client.remote.RemoteView">
+      <when-type-is class="org.exoplatform.ide.git.client.remote.RemotePresenter.Display" />
+   </replace-with>
 </module>

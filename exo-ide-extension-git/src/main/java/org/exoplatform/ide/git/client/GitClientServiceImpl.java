@@ -40,6 +40,7 @@ import org.exoplatform.ide.git.client.marshaller.LogRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.PushRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.RemoteAddRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.RemoteListRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.RemoteListUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.RemoveRequestMarshaller;
@@ -62,6 +63,7 @@ import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.LogRequest;
 import org.exoplatform.ide.git.shared.PushRequest;
 import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
@@ -106,6 +108,10 @@ public class GitClientServiceImpl extends GitClientService
    public static final String PUSH = "/ide/git/push";
 
    public static final String REMOTE_LIST = "/ide/git/remote-list";
+   
+   public static final String REMOTE_ADD = "/ide/git/remote-add";
+   
+   public static final String REMOTE_DELETE = "/ide/git/remote-delete";
 
    public static final String REMOVE = "/ide/git/rm";
 
@@ -499,5 +505,41 @@ public class GitClientServiceImpl extends GitClientService
             .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
       }
 
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#remoteAdd(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void remoteAdd(String href, String name, String repositoryURL, AsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext + REMOTE_ADD;
+
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+      RemoteAddRequest remoteAddRequest = new RemoteAddRequest(name, repositoryURL);
+
+      RemoteAddRequestMarshaller marshaller = new RemoteAddRequestMarshaller(remoteAddRequest);
+
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#remoteDelete(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void remoteDelete(String href, String name, AsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext + REMOTE_DELETE+ "/"+name;
+
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).send(callback);
    }
 }

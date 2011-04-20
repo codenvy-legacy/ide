@@ -16,42 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
+package org.exoplatform.ide.git.client.remote;
 
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.branch.ShowBranchesEvent;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Control is responsible to open view with branches, 
- * where user can create new, checkout or delete.
+ * Event occurs, when user tries to view the list of remote repositories.
+ * Implement {@link ShowRemotesHandler} handler to process event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 7, 2011 5:39:13 PM anya $
+ * @version $Id:  Apr 18, 2011 10:24:15 AM anya $
  *
  */
-public class BranchesControl extends GitControl
+public class ShowRemotesEvent extends GwtEvent<ShowRemotesHandler>
 {
    /**
-    * Control ID.
+    * Type used to register this event.
     */
-   public static final String ID = "Git/Branches";
-
+   public static final GwtEvent.Type<ShowRemotesHandler> TYPE = new GwtEvent.Type<ShowRemotesHandler>();
+   
    /**
-    * Control's title.
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
-   public static final String TITLE = "Branches...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Work with branches";
-
-   public BranchesControl()
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowRemotesHandler> getAssociatedType()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new ShowBranchesEvent());
-      setImages(GitClientBundle.INSTANCE.branches(), GitClientBundle.INSTANCE.branchesDisabled());
+      return TYPE;
    }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(ShowRemotesHandler handler)
+   {
+      handler.onShowRemotes(this);
+   }
+
 }

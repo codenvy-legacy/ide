@@ -19,39 +19,38 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.branch.ShowBranchesEvent;
+import org.exoplatform.ide.git.client.remote.ShowRemotesEvent;
 
 /**
- * Control is responsible to open view with branches, 
- * where user can create new, checkout or delete.
+ * Control is used to view the list of remote repositories.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 7, 2011 5:39:13 PM anya $
+ * @version $Id:  Apr 18, 2011 10:21:02 AM anya $
  *
  */
-public class BranchesControl extends GitControl
+public class RemotesControl extends GitControl
 {
    /**
     * Control ID.
     */
-   public static final String ID = "Git/Branches";
+   public static final String ID = "Git/Remote/Remotes...";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Branches...";
+   public static final String TITLE = "Remotes...";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Work with branches";
+   public static final String PROMPT = "The list of the remote repositories.";
 
-   public BranchesControl()
+   public RemotesControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new ShowBranchesEvent());
-      setImages(GitClientBundle.INSTANCE.branches(), GitClientBundle.INSTANCE.branchesDisabled());
+      setImages(GitClientBundle.INSTANCE.remotes(), GitClientBundle.INSTANCE.remotesDisabled());
+      setEvent(new ShowRemotesEvent());
    }
 }

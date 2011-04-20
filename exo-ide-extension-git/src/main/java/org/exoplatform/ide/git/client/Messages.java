@@ -67,6 +67,10 @@ public interface Messages
    
    public static final String REMOVE_FILES_FAILED = "Remove files failed.";
    
+   public static final String REMOTE_ADD_FAILED = "Add remote repository failed.";
+   
+   public static final String REMOTE_DELETE_FAILED = "Delete remote repository failed.";
+   
    public static final String RESET_FILES_FAILED = "Reset files failed.";
    
    public static final String RESET_FILES_SUCCESSFULLY = "Successfully reseted files.";

@@ -88,6 +88,18 @@ public interface GitClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/git/images/controls/add_Disabled.png")
    ImageResource addToIndexDisabled();
    
+   @Source("org/exoplatform/ide/git/images/controls/branches.png")
+   ImageResource branches();
+   
+   @Source("org/exoplatform/ide/git/images/controls/branches_Disabled.png")
+   ImageResource branchesDisabled();
+   
+   @Source("org/exoplatform/ide/git/images/controls/remotes.png")
+   ImageResource remotes();
+   
+   @Source("org/exoplatform/ide/git/images/controls/remotes_Disabled.png")
+   ImageResource remotesDisabled();
+   
    @Source("org/exoplatform/ide/git/images/controls/commit.png")
    ImageResource commit();
    
