@@ -19,12 +19,15 @@
 package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Ignore;
@@ -52,21 +55,22 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
       //Chek in repository
       assertEquals(200, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME, "UTF-8")).getStatusCode());
       Thread.sleep(120000);
-      //TODO will be possible check nonlatin folders name in navigator
+      //TODO will be possible check nonlatin folders name in navigator; ((further code is not working))
       IDE.navigator().assertItemPresent(URL + FOLDER_NAME + "/");
 
-      //    selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
-      //     selenium.mouseUpAt("//div[@title='Delete Item(s)...']//img", "");
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      //      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
-      //      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
-      //      assertTrue(selenium.isTextPresent("exact:Do you want to delete " + FOLDER_NAME + " ?"));
-      //      selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      //      IDE.navigator().assertItemNotPresent(WS_URL + URLEncoder.encode(FOLDER_NAME,"UTF-8") + "/");
-      //      assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME,"UTF-8")).getStatusCode());
+      selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
+      selenium.mouseUpAt("//div[@title='Delete Item(s)...']//img", "");
+      Thread.sleep(TestConstants.SLEEP);
+
+      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
+      assertTrue(selenium.isTextPresent("exact:Do you want to delete " + FOLDER_NAME + " ?"));
+      selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
+      Thread.sleep(TestConstants.SLEEP);
+      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
+      IDE.navigator().assertItemNotPresent(WS_URL + URLEncoder.encode(FOLDER_NAME, "UTF-8") + "/");
+      assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME, "UTF-8")).getStatusCode());
    }
 
    @AfterClass

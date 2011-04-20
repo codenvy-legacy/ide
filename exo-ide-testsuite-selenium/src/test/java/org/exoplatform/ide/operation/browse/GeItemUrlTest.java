@@ -36,7 +36,7 @@ import org.junit.Test;
  */
 public class GeItemUrlTest extends BaseTest
 {
-   private final String WORK_SPACE_LOCATOR = "";
+   private final String WORK_SPACE_LOCATOR = "//div[@ID=\"ideNavigatorItemTreeGrid\"]//div[@class=\"ide-Tree-label\"]/";
    
    private final String content1 = "<p> Hello!!! </p>";
 
@@ -55,7 +55,7 @@ public class GeItemUrlTest extends BaseTest
    @Test
    public void testGetFileUrl() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP*3);
       //Create first file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
@@ -156,7 +156,7 @@ public class GeItemUrlTest extends BaseTest
       assertElementPresentSearchResultsTree(file1Name);
       assertElementPresentSearchResultsTree(file2Name);
 
-      String workspaceName = getItemNameFromWorkspaceTree(0);
+      String workspaceName = selenium.getText(WORK_SPACE_LOCATOR);
 
       //Check get URL for first file
       selectItemInSearchResultsTree(file1Name);

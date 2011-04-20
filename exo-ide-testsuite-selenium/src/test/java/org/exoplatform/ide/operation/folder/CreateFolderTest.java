@@ -53,7 +53,7 @@ public class CreateFolderTest extends BaseTest
     * 
     * @throws Exception
     */
-   @Test
+   //@Test
    public void testCreateFolderFromToolbar() throws Exception
    {
       //****TODO********fix
@@ -65,8 +65,10 @@ public class CreateFolderTest extends BaseTest
       selenium.type("ideCreateFolderFormNameField", "");
       //type name folder
       selenium.typeKeys("ideCreateFolderFormNameField", FOLDER_NAME_TOOLBAR);
+      //TODO Don't work native press Enter
       selenium.keyPress("ideCreateFolderFormNameField", "\\13");
-      //Thread.sleep(TestConstants.SLEEP);
+     
+      waitForElementNotPresent("ideCreateFolderFormNameField");
       assertFalse(selenium.isElementPresent("ideCreateFolderFormNameField"));
       assertTrue(selenium.isTextPresent(FOLDER_NAME_TOOLBAR));
       IDE.navigator().assertItemPresent(URL + FOLDER_NAME_TOOLBAR + "/");
@@ -84,7 +86,7 @@ public class CreateFolderTest extends BaseTest
       //refresh page
       selenium.refresh();
       //wait...
-      selenium.waitForPageToLoad("30000");
+      waitForRootElement();
       Thread.sleep(TestConstants.SLEEP);
       //run command for create folder
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
@@ -93,7 +95,6 @@ public class CreateFolderTest extends BaseTest
       //check disapear menu after create of folder
       assertFalse(selenium.isElementPresent("ideCreateFolderForm"));
       //check folder in tread menu
-      //TODO Change URL path to folder another (using WS_URL)  
       IDE.navigator().assertItemPresent(URL + FOLDER_NAME_DEFOLT + "/");
       assertEquals(200, VirtualFileSystemUtils.get(URL + URLEncoder.encode("New Folder", "UTF-8")).getStatusCode());
    }

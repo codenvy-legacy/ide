@@ -42,7 +42,7 @@ user_pref("extensions.newAddons", false);
 user_pref("extensions.update.enabled", false);
 user_pref("extensions.update.notifyUser", false);
 user_pref("general.autoScroll", false);
-user_pref("intl.charsetmenu.browser.cache", "ISO-8859-1, UTF-8");
+user_pref("intl.charsetmenu.browser.cache", "UTF-8");
 user_pref("layout.spellcheckDefault", 0);
 user_pref("network.cookie.prefsMigrated", true);
 user_pref("pref.browser.homepage.disable_button.current_page", false);

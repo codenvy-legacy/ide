@@ -288,7 +288,7 @@ public abstract class BaseTest
     */
    protected void selectItemInSearchResultsTree(String name) throws Exception
    {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[name=" + name + "]/col[1]");
+      selenium.click("//div[@id=\"ideSearchResultItemTreeGrid\"]//table/tbody/tr/td/div[@class=\"ide-Tree-label\"and text()= + name]");
    }
 
    /**

@@ -100,6 +100,9 @@ public class RenameFolderTest extends BaseTest
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
    }
 
+   /**
+    * chek appear elements rename form
+    */
    public void chekAppearRenameForm()
    {
       assertTrue(selenium.isElementPresent("ideRenameItemForm"));

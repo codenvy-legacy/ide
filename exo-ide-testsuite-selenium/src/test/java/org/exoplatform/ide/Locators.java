@@ -98,7 +98,7 @@ public class Locators
    {
       public static final String OPERATION_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideOperationPanel\"]";
 
-      public static final String PROPERTIES_FORM_LOCATOR = "scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]";
+      public static final String PROPERTIES_FORM_LOCATOR = "//div[@view-id=\"ideFilePropertiesView\"]";
 
       public static final String PROPERTIES_TAB_LOCATOR = OPERATION_TABSET_LOCATOR + "/tab[ID=idePropertiesView]";
 

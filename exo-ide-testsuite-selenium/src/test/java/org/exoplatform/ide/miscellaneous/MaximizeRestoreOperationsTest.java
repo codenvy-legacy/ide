@@ -38,6 +38,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -51,6 +52,9 @@ import java.io.IOException;
  */
 public class MaximizeRestoreOperationsTest extends BaseTest
 {
+   private final static String PROPERTIES_FORM_LOCATOR = "//div[@view-id=\"ideFilePropertiesView\"]";
+   private final static String EXOTOOLBAR_SHOW_PROPIRTIES_LOCATOR= "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + "Show Properties" + "\"]";
+   
    private final static String FILE_NAME = "file-" + MaximizeRestoreOperationsTest.class.getSimpleName();
    
    private final static String FOLDER_NAME = MaximizeRestoreOperationsTest.class.getSimpleName();
@@ -108,7 +112,8 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    }
    
    //IDE-97:One-click maximize/restore for editor and actions view
-   @Test
+
+@Test
    public void maximizeRestoreForEditorAndActionsView() throws Exception
    {
       //prepare file
@@ -116,17 +121,16 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().selectItem(URL) ;
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);     
       Thread.sleep(TestConstants.SLEEP);
-      
-      assertFalse(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_TAB_LOCATOR));
+      assertFalse(selenium.isElementPresent(PROPERTIES_FORM_LOCATOR));
       
       //---- 1 -----------------
       //Create, save and open new file in the content panel. 
       //Click on "Show Properties" button to open "Properties" Tab.
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
-      Thread.sleep(TestConstants.SLEEP);
-      
+     // clickOnToolbarCommandShowProperties(ToolbarCommands.View.SHOW_PROPERTIES);
+      selenium.click(EXOTOOLBAR_SHOW_PROPIRTIES_LOCATOR);
+      waitForElementPresent(PROPERTIES_FORM_LOCATOR);
       //store width and height of elements in default perspective
       operationPanelNormalWidth = selenium.getElementWidth(OPERATION_PANEL_LOCATOR);
       operationPanelNormalHeight = selenium.getElementHeight(OPERATION_PANEL_LOCATOR);
@@ -490,4 +494,33 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
    }
    
+
+
+   public void clickOnToolbarCommandShowProperties(String buttonTitle) throws Exception
+   {
+      String locator =
+         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
+
+      selenium.mouseOver(locator);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+
+      String hoverLocator =
+         "//div[@class=\"exoIconButtonPanelOver\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + "Hide Properties" + "\"]";
+//      selenium.mouseDownAt(hoverLocator, "");
+//      selenium.mouseUpAt(hoverLocator, "");
+      selenium.clickAt(hoverLocator, "");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+
+      try
+      {
+         selenium.mouseOut(hoverLocator);
+      }
+      catch (Exception e)
+      {
+      }
+   }
+
+
+
+
 }

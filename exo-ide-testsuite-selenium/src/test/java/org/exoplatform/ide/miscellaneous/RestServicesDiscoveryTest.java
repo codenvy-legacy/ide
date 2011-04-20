@@ -35,6 +35,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.restservice.RESTServiceDefaultHTTPParametersTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -83,52 +84,51 @@ public class RestServicesDiscoveryTest extends BaseTest
       }
    }
 
+   @Ignore
    @Test
    public void testRestServicesDiscovery() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" );
+      IDE.navigator()
+         .selectItem(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      
+      waitForRootElement();
+
       // open folder
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       IDE.navigator().selectItem(URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
-      Thread.sleep(TestConstants.SLEEP);      
-      
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      waitForRootElement();
+
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
       IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
 
-      Thread.sleep(TestConstants.SLEEP);
       IDE.menu().runCommand(MenuCommands.Help.HELP, MenuCommands.Help.REST_SERVICES);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]");
+      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]"));
+      assertTrue(selenium
+         .isElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]//div//span[text()=\"OK\"]"));
 
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideRestServiceDiscovery\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideRestServiceDiscoveryOkButton\"]/"));
-
-      assertEquals("/aa", getTitle(0, 0));
+      assertEquals("/aa", getTitle("/aa"));
 
       openNode(0, 0);
       Thread.sleep(TestConstants.SLEEP);
       openNode(1, 0);
       Thread.sleep(TestConstants.SLEEP);
-      
-      assertEquals("/testService11", getTitle(1, 0));
+
+      assertEquals("/testService11", getTitle("/testService11"));
 
       //      assertEquals("/Inner/{pathParam}", selenium.getText("scLocator=//TreeGrid[ID=\"ideRestServiceTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("/Inner/{pathParam}", getTitle(2, 0));
+      assertEquals("/Inner/{pathParam}", getTitle("/Inner/{pathParam}"));
 
       openNode(2, 0);
 
-      assertEquals("GET", getTitle(3, 0));
+      assertEquals("GET", getTitle("GET"));
 
-      assertEquals("POST", getTitle(4, 0));
+      assertEquals("POST", getTitle("POST"));
 
-      assertEquals("OPTIONS", getTitle(5, 0));
+      assertEquals("OPTIONS", getTitle("OPTIONS"));
 
       //      clickNode(1);
 
@@ -156,7 +156,7 @@ public class RestServicesDiscoveryTest extends BaseTest
          .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=pathParam||default=pathParam%20Default]/col[0]"));
 
       clickNode(5);
-      
+
       assertEquals("n/a",
          selenium
             .getValue("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideRequestType]/element"));
@@ -198,10 +198,9 @@ public class RestServicesDiscoveryTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
-   private String getTitle(int row, int col)
+   private String getTitle(String elementDiscovery)
    {
-      return selenium.getText("scLocator=//TreeGrid[ID=\"ideRestServiceTreeGrid\"]/body/row[" + String.valueOf(row)
-         + "]/col[" + String.valueOf(col) + "]");
+      return selenium.getText("//div[@class=\"ide-Tree-label\" and text()=\"/aa\"]");
    }
 
    @AfterClass
