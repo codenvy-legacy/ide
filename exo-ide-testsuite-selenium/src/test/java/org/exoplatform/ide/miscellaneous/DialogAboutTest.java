@@ -35,7 +35,7 @@ import org.junit.Test;
 public class DialogAboutTest extends BaseTest
 {
 
-   private static final String COMPANY = "2009-2010 eXo Platform SAS (c)";
+   private static final String COMPANY = "2009-2011 eXo Platform SAS (c)";
 
    private static final String PRODUCT_NAME = "eXo IDE";
 
