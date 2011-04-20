@@ -299,8 +299,9 @@ public abstract class BaseTest
     */
    protected void assertElementPresentSearchResultsTree(String name) throws Exception
    {
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[name="
-         + name + "]/col[0]"));
+
+      assertTrue(selenium
+         .isElementPresent("//div[@id=\"ideSearchResultItemTreeGrid\"]//table/tbody/tr/td/div[@class=\"ide-Tree-label\"and text()= + name]"));
    }
 
    /**
@@ -551,19 +552,19 @@ public abstract class BaseTest
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
 
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGetItemURLForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideGetItemURLFormOkButton\"]"));
+      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideGetItemURLForm\"]"));
+      assertTrue(selenium.isElementPresent("ideGetItemURLFormOkButton"));
       assertTrue(selenium
-         .isElementPresent("scLocator=//Window[ID=\"ideGetItemURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element"));
+         .isElementPresent("//form[@id=\"ideGetItemURLFormDynamicForm\"]//div/input[@name=\"ideGetItemURLFormURLField\"]"));
 
       String url =
          selenium
-            .getValue("scLocator=//Window[ID=\"ideGetItemURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element");
+            .getValue("//form[@id=\"ideGetItemURLFormDynamicForm\"]//div/input[@name=\"ideGetItemURLFormURLField\"]");
 
       //Close form
-      selenium.click("scLocator=//IButton[ID=\"ideGetItemURLFormOkButton\"]");
+      selenium.click("ideGetItemURLFormOkButton");
       Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGetItemURLForm\"]"));
+      assertFalse(selenium.isElementPresent("//div[@view-id=\"ideGetItemURLForm\"]"));
       return url;
    }
 
