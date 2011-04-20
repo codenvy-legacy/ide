@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
+import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.ide.git.client.GitWorkDirNotFoundException;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemNotFoundException;
@@ -53,7 +51,7 @@ import javax.ws.rs.core.UriInfo;
 
 @Path("ide/git-repo")
 public class GitRepoService
-{  
+{
    /**
     * WebDav context.
     */
@@ -63,41 +61,29 @@ public class GitRepoService
     * Name of the Git's work folder.
     */
    public static final String GIT = ".git";
-   
-   /**
-    * Repository service.
-    */
-   protected RepositoryService repositoryService;
-   
-   /**
-    * Session provider service. 
-    */
-   protected ThreadLocalSessionProviderService sessionProviderService;
-   
-   /**
-    * @param repositoryService repository service
-    * @param sessionProviderService session provider service
-    */
-   public GitRepoService(RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService)
-   {
-      this.repositoryService = repositoryService;
-      this.sessionProviderService = sessionProviderService;
-   }
-   
+
    @GET
    @Path("workdir")
    @Produces(MediaType.TEXT_PLAIN)
    public String getWorkDir(@Context UriInfo uriInfo, @HeaderParam("location") String location)
    {
       String baseUri = uriInfo.getBaseUri().toASCIIString();
-      
+
       String[] jcrLocation = parseJcrLocation(baseUri, location);
       try
       {
-         Session session = getSession(repositoryService, sessionProviderService, jcrLocation[0],
-               jcrLocation[1] + "/" + jcrLocation[2]);
+         Session session = getSession(jcrLocation[0], jcrLocation[1]);
          Node rootNode = session.getRootNode();
-         Node node = rootNode.getNode(jcrLocation[2]);
+         Node node;
+         if (jcrLocation[2] == null || jcrLocation[2].length() <= 0)
+         {
+            node = rootNode;
+         }
+         else
+         {
+            node = rootNode.getNode(jcrLocation[2]);
+         }
+
          //Find node, where ".git" is stored:
          Node gitNode = findGitNode(node);
          if (gitNode != null)
@@ -124,8 +110,12 @@ public class GitRepoService
       {
          throw new WebApplicationException(e, createErrorResponse(e, 404));
       }
+      catch (Exception e)
+      {
+         throw new WebApplicationException(e, createErrorResponse(e, 404));
+      }
    }
-   
+
    /**
     * Find ".git" folder node location by name step by step going upper in node hierarchy.
     * 
@@ -161,8 +151,7 @@ public class GitRepoService
          return null;
       }
    }
-   
-   
+
    /**
     * Parse JCR path to retrieve repository name, 
     * workspace name and absolute path in repository.
@@ -187,30 +176,24 @@ public class GitRepoService
       elements[2] = location.substring(location.indexOf('/') + 1);
       return elements;
    }
-   
-   /**
-    * @param repositoryService repository service
-    * @param sessionProviderService session provider service
-    * @param repoName repository's name
-    * @param repoPath path to file in repository
-    * @return {@link Session} created JCR session
-    * @throws RepositoryException
-    * @throws RepositoryConfigurationException
-    */
-   public static Session getSession(RepositoryService repositoryService, SessionProviderService sessionProviderService,
-      String repoName, String repoPath) throws RepositoryException, RepositoryConfigurationException
-   {
-      ManageableRepository repo = repositoryService.getRepository(repoName);
-      SessionProvider sp = sessionProviderService.getSessionProvider(null);
-      if (sp == null)
-         throw new RepositoryException("SessionProvider is not properly set. Make the application calls"
-            + "SessionProviderService.setSessionProvider(..) somewhere before ("
-            + "for instance in Servlet Filter for WEB application)");
 
-      String workspace = repoPath.split("/")[0];
-      return sp.getSession(workspace, repo);
+   /**
+    * Get user's valid session to access the repository.
+    * 
+    * @param repoName repository name
+    * @param workspace workspace name
+    * @return {@link Session} user's session to access repository 
+    * @throws Exception
+    */
+   public Session getSession(String repoName, String workspace) throws Exception
+   {
+      StandaloneContainer container = StandaloneContainer.getInstance();
+      RepositoryService repositoryService =
+         (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
+      ManageableRepository repository = repositoryService.getRepository(repoName);
+      return repository.login(workspace);
    }
-   
+
    /**
     * Create response to send with error message.
     * 
