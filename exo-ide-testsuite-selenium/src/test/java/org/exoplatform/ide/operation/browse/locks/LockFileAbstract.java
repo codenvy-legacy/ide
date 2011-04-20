@@ -87,7 +87,7 @@ public abstract class LockFileAbstract extends BaseTest
    {
       checkIsFileReadOnlyInEditorTab(fileName);
    
-      typeTextIntoEditor(0, "change dasda111");
+      IDE.editor().typeTextIntoEditor(0, "change dasda111");
    
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
    }

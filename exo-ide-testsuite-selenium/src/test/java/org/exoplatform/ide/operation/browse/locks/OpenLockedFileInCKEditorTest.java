@@ -132,7 +132,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       checkFileLocking(FILE_NAME, true);
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
 
-      typeTextIntoEditor(0, "Test editor");
+      IDE.editor().typeTextIntoEditor(0, "Test editor");
       
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
       

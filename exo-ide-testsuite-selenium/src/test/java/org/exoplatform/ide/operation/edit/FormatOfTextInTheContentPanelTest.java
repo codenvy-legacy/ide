@@ -102,7 +102,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      String postFormating = getTextFromCodeEditor(0);
+      String postFormating = IDE.editor().getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_HTML_FILE_NAME);
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
@@ -122,7 +122,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      String postFormating = getTextFromCodeEditor(0);
+      String postFormating = IDE.editor().getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_CSS_FILE_NAME);
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
@@ -142,7 +142,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      String postFormating = getTextFromCodeEditor(0);
+      String postFormating = IDE.editor().getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_JS_FILE_NAME);
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
@@ -163,7 +163,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      String postFormating = getTextFromCodeEditor(0);
+      String postFormating = IDE.editor().getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_GADGET_FILE_NAME);
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);

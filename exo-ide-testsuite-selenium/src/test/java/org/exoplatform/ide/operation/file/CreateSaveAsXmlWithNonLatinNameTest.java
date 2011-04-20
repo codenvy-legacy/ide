@@ -126,7 +126,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       
       IDE.editor().deleteFileContent();
       
-      typeTextIntoEditor(0, XML_CONTENT);
+      IDE.editor().typeTextIntoEditor(0, XML_CONTENT);
       Thread.sleep(TestConstants.SLEEP);
       
       saveAsUsingToolbarButton(XML_FILE);
@@ -150,7 +150,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       //change file content
       IDE.editor().deleteFileContent();
       
-      typeTextIntoEditor(0, XML_CONTENT_2);
+      IDE.editor().typeTextIntoEditor(0, XML_CONTENT_2);
 
       //save as file
       

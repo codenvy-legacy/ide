@@ -60,7 +60,7 @@ public class GeItemUrlTest extends BaseTest
       
       IDE.editor().deleteLinesInEditor(7);
       
-      assertEquals("", getTextFromCodeEditor(0));
+      assertEquals("", IDE.editor().getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content1);
       saveAsUsingToolbarButton(file1Name);
       Thread.sleep(TestConstants.SLEEP);
@@ -71,7 +71,7 @@ public class GeItemUrlTest extends BaseTest
       createFolder(folderName);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals("", getTextFromCodeEditor(0));
+      assertEquals("", IDE.editor().getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content2);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);

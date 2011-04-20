@@ -49,7 +49,7 @@ public class GroovyClassNameCompletionTest extends BaseTest
       }
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      typeTextIntoEditor(0, "Colle");
+      IDE.editor().typeTextIntoEditor(0, "Colle");
 
       //open autocomplete form
       IDE.codeAssistant().openForm();
@@ -62,7 +62,7 @@ public class GroovyClassNameCompletionTest extends BaseTest
 
       IDE.codeAssistant().insertSelectedItem();
 
-      assertTrue(getTextFromCodeEditor(0).contains("Collections"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("Collections"));
    }
 
 }

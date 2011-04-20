@@ -112,7 +112,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      typeTextIntoEditor(0, ".");
+      IDE.editor().typeTextIntoEditor(0, ".");
       IDE.codeAssistant().openForm();
 
       IDE.codeAssistant().checkElementPresent("addBody(content)");
@@ -122,11 +122,11 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      assertTrue(getTextFromCodeEditor(0).contains("widget.getElement(selector)"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("widget.getElement(selector)"));
       
       IDE.codeAssistant().moveCursorDown(1);
       
-      typeTextIntoEditor(0, "UWA.");
+      IDE.editor().typeTextIntoEditor(0, "UWA.");
       IDE.codeAssistant().openForm();
       
       IDE.codeAssistant().checkElementPresent("Array");
@@ -141,9 +141,9 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      assertTrue(getTextFromCodeEditor(0).contains("UWA.Data"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("UWA.Data"));
       
-      typeTextIntoEditor(0, ".");
+      IDE.editor().typeTextIntoEditor(0, ".");
       
       IDE.codeAssistant().openForm();
       
@@ -161,7 +161,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      assertTrue(getTextFromCodeEditor(0).contains("UWA.Data.getFeed(url, callback)"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("UWA.Data.getFeed(url, callback)"));
    }
    
    @Test
@@ -189,7 +189,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      typeTextIntoEditor(0, "var a = new Array(); \n var b = new UWA.Element(); \n a.");
+      IDE.editor().typeTextIntoEditor(0, "var a = new Array(); \n var b = new UWA.Element(); \n a.");
       IDE.codeAssistant().openForm();
       IDE.codeAssistant().checkElementPresent("concat(array2, array3, ...): Array");
       IDE.codeAssistant().checkElementPresent("detect(iterator): Boolean");
@@ -203,11 +203,11 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      assertTrue(getTextFromCodeEditor(0).contains("a.some(fn, bind)"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("a.some(fn, bind)"));
       
       IDE.codeAssistant().moveCursorDown(1);
       
-      typeTextIntoEditor(0, "b.");
+      IDE.editor().typeTextIntoEditor(0, "b.");
       
       IDE.codeAssistant().openForm();
       
@@ -224,6 +224,6 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      assertTrue(getTextFromCodeEditor(0).contains("b.setOpacity(value)"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("b.setOpacity(value)"));
    }
 }

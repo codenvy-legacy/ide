@@ -150,7 +150,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       selenium.clickAt("//body[@class='editbox']", "5,5");
       for (int i = 0; i < 5; i++)
       {
-         runHotkeyWithinEditor(0, true, false, 68);
+         IDE.editor().runHotkeyWithinEditor(0, true, false, 68);
          Thread.sleep(TestConstants.SLEEP_SHORT*2);
       }
       Thread.sleep(TestConstants.SLEEP);

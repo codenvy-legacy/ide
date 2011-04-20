@@ -144,12 +144,12 @@ public class SaveAllFilesTest extends BaseTest
       //Open and change content of  "Saved File.xml" and "Saved File.groovy".
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(SAVED_FILE_XML, false);
       Thread.sleep(TestConstants.SLEEP);
-      typeTextIntoEditor(2, "<root>admin</root>");
+      IDE.editor().typeTextIntoEditor(2, "<root>admin</root>");
       
       //open and change content of groovy file
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(SAVED_FILE_GROOVY, false);
       Thread.sleep(TestConstants.SLEEP);
-      typeTextIntoEditor(3, "changed content of file");
+      IDE.editor().typeTextIntoEditor(3, "changed content of file");
       Thread.sleep(TestConstants.SLEEP);
       
       //Until the step 6 and after the step 7 the "File->Save All" top menu command 

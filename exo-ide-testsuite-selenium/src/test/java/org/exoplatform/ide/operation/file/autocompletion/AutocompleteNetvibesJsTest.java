@@ -115,7 +115,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       /*
        * 3. Type text to file
        */
-      typeTextIntoEditor(0, "var name = \"ivan\"\n");
+      IDE.editor().typeTextIntoEditor(0, "var name = \"ivan\"\n");
 
       /*
        * 4. Press ctrl+enter to call autocomplete form.
@@ -264,7 +264,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       /*
        * 3. Type text to file
        */
-      typeTextIntoEditor(0, "var name = \"ivan\"\n");
+      IDE.editor().typeTextIntoEditor(0, "var name = \"ivan\"\n");
 
       /*
        * 4. Press ctrl+enter to call autocomplete form.
@@ -279,7 +279,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      checkText(getTextFromCodeEditor(0), snippetTemplate);
+      checkText(IDE.editor().getTextFromCodeEditor(0), snippetTemplate);
    }
 
    /**

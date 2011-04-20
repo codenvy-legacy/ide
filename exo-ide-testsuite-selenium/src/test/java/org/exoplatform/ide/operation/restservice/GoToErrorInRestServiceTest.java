@@ -228,7 +228,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //fix validation error
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       //click on editor
 
       //TODO******************fix****************************
@@ -244,7 +244,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
 
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
 
       //---- 4 -----------------
       //press validate button
@@ -280,7 +280,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       //click on editor
 
       //TODO******************fix****************************
@@ -292,21 +292,21 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       //delete
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
 
       Thread.sleep(TestConstants.SLEEP);
 
       //type some text
-      typeTextIntoEditor(0, "public void TestClass(){}");
+      IDE.editor().typeTextIntoEditor(0, "public void TestClass(){}");
 
       //go to middle
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       //select all
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
 
       assertEquals("1 : 24", getCursorPositionUsingStatusBar());
 

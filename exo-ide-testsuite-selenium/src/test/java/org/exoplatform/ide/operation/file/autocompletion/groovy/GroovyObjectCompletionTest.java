@@ -49,7 +49,7 @@ public class GroovyObjectCompletionTest extends BaseTest
       }
 
       selenium.keyDown("//body[@class='editbox']", "\\35");
-      typeTextIntoEditor(0, ".");
+      IDE.editor().typeTextIntoEditor(0, ".");
 
       IDE.codeAssistant().openForm();
 
@@ -68,7 +68,7 @@ public class GroovyObjectCompletionTest extends BaseTest
 
       IDE.codeAssistant().insertSelectedItem();
 
-      assertTrue(getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
 

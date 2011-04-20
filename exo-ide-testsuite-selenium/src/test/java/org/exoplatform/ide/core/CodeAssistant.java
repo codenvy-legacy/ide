@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.TestConstants;
 
 import java.awt.event.KeyEvent;
@@ -53,10 +54,13 @@ public class CodeAssistant
    }
 
    private final Selenium selenium;
+   
+   private IDE ide;
 
-   public CodeAssistant(Selenium selenium)
+   public CodeAssistant(Selenium selenium, IDE ide)
    {
       this.selenium = selenium;
+      this.ide = ide;
    }
 
    /**
@@ -141,7 +145,7 @@ public class CodeAssistant
     */
    public void openForm() throws Exception
    {
-      BaseTest.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
+      ide.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
       selenium.waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID
          + "\"); value != null", "10000");
       assertTrue(selenium.isElementPresent(Locators.PANEL_ID));

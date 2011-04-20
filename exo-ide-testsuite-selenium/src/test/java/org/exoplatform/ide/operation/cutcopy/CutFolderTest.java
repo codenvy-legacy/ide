@@ -267,7 +267,7 @@ public class CutFolderTest extends BaseTest
        * 10. Change content of opened file "test.groovy" in Content Panel, 
        * save file, close file tab and open file "test 2/test 2/test.groovy".
        */
-      typeTextIntoEditor(0, CHANGED_FILE_CONTENT);
+      IDE.editor().typeTextIntoEditor(0, CHANGED_FILE_CONTENT);
       saveCurrentFile();
       IDE.editor().closeTab(0);
 
@@ -276,7 +276,7 @@ public class CutFolderTest extends BaseTest
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
       
       checkCodeEditorOpened(0);
-      assertEquals(CHANGED_FILE_CONTENT + FILE_CONTENT, getTextFromCodeEditor(0));
+      assertEquals(CHANGED_FILE_CONTENT + FILE_CONTENT, IDE.editor().getTextFromCodeEditor(0));
 
       /*
        * Check folders

@@ -263,89 +263,6 @@ public abstract class BaseTest
     }*/
 
    /**
-    * Select main frame of IDE.
-    * 
-    * This method is used, after typing text in editor.
-    * To type text you must select editor iframe. After typing,
-    * to return to them main frame, use selectMainFrame()
-    * 
-    */
-   public static void selectMainFrame()
-   {
-      if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
-      {
-         selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
-      }
-      else
-      {
-         selenium.selectFrame("relative=top");
-      }
-   }
-
-   /**
-    * Mouse click on editor.
-    * 
-    * @param tabIndex - tab index.
-    * @throws Exception
-    */
-   protected void clickOnEditor(int tabIndex) throws Exception
-   {
-      selectIFrameWithEditor(tabIndex);
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      selectMainFrame();
-   }
-
-   /**
-    * Type text to file, opened in tab.
-    * 
-    * Index of tabs begins from 0.
-    * 
-    * Sometimes, if you can't type text to editor,
-    * try before to click on editor:
-    * 
-    * selenium.clickAt("//body[@class='editbox']", "5,5");
-    * 
-    * @param tabIndex begins from 0
-    * @param text (can be used '\n' as line break)
-    */
-   protected void typeTextIntoEditor(int tabIndex, String text) throws Exception
-   {
-      if (selenium.isElementPresent(getContentPanelLocator(tabIndex)
-         + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"))
-      {
-         selectIFrameWithEditor(tabIndex);
-         AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, text);
-      }
-      else
-      {
-         selectIFrameWithEditor(tabIndex);
-         AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, text);
-      }
-
-      selectMainFrame();
-   }
-
-   /**
-    * Get text from tab number "tabIndex" from editor
-    * @param tabIndex begins from 0
-    */
-   protected String getTextFromCodeEditor(int tabIndex) throws Exception
-   {
-      selectIFrameWithEditor(tabIndex);
-      String text = selenium.getText("//body[@class='editbox']");
-      selectMainFrame();
-      return text;
-   }
-
-   protected String getTextFromCKEditor(int tabIndex) throws Exception
-   {
-      selectIFrameWithEditor(tabIndex);
-      String text = selenium.getText("//body");
-      selectMainFrame();
-      return text;
-   }
-
-   /**
     * Get selected text from browser window.
     * Note: if use editor - select frame with it.
     * 
@@ -751,44 +668,6 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.SLEEP);
    }
 
-   /**
-    * Run hot key within editor. 
-    * 
-    * This method used for running hotkeys for editor, such as ctrl+z, ctrl+a, ctrl+s and so on.
-    * 
-    * @param tabIndex index of tab
-    * @param isCtrl is control key used
-    * @param isAlt is alt key used
-    * @param keyCode virtual code of key (code of key on keyboard)
-    */
-   public static void runHotkeyWithinEditor(int tabIndex, boolean isCtrl, boolean isAlt, int keyCode) throws Exception
-   {
-      selectIFrameWithEditor(tabIndex);
-
-      if (isCtrl)
-      {
-         selenium.controlKeyDown();
-      }
-      if (isAlt)
-      {
-         selenium.altKeyDown();
-      }
-
-      selenium.keyDown("//", String.valueOf(keyCode));
-      selenium.keyUp("//", String.valueOf(keyCode));
-
-      if (isCtrl)
-      {
-         selenium.controlKeyUp();
-      }
-      if (isAlt)
-      {
-         selenium.altKeyUp();
-      }
-
-      selectMainFrame();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
 
    /**
     * Read file content.
@@ -1117,35 +996,7 @@ public abstract class BaseTest
       return selenium.getEval("/Win/.test(navigator.platform)").equals("true");
    }
 
-   /**
-    * 
-    * @param tabIndex begins from 0
-    * @return content panel locator 
-    */
-   protected static String getContentPanelLocator(int tabIndex)
-   {
-      //      String divIndex = String.valueOf(tabIndex + 2);
-      if (BROWSER_COMMAND.equals(EnumBrowserCommand.IE_EXPLORE_PROXY))
-      {
-         return "//div[@class='tabSetContainer']/div[" + tabIndex + "]";
-      }
-      else
-      {
-         return "//div[@panel-id='editor' and @tab-index='" + tabIndex + "' ]";
-         //         return "//div[@class='tabSetContainer']/div/div[" + divIndex + "]";
-      }
-   }
 
-   /**
-    * Select iframe, which contains editor from tab with index tabIndex
-    * 
-    * @param tabIndex begins from 0
-    */
-   public static void selectIFrameWithEditor(int tabIndex) throws Exception
-   {
-      selenium.selectFrame(getContentPanelLocator(tabIndex) + "//iframe");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }
 
    /**
     * remove all cookies which can be stored by IDE

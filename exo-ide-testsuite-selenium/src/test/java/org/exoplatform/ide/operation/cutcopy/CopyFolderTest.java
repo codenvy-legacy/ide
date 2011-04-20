@@ -20,7 +20,6 @@ package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -30,8 +29,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-
 /**
  * IDE-116:Copy folder.
  * 
@@ -40,18 +37,12 @@ import java.io.IOException;
  */
 public class CopyFolderTest extends BaseTest
 {
-   
+
    private static final String FILE_1 = "test"; 
    
-  private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
    private final static String FOLDER_1 = "Test 1";
-   
-   private final static String FOLDER_1_URL = WS_URL + FOLDER_1 + "/";
 
    private final static String FOLDER_1_1 = "Test 1.1";
-   
-   private final static String FOLDER_1_1_URL = FOLDER_1_URL + FOLDER_1_1 + "/";
    
    private static final String FILE_CONTENT_1 = "file content";
    
@@ -66,16 +57,11 @@ public class CopyFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1 + "/" +FOLDER_1_1);
-         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, URL + FOLDER_1 + "/" 
-            + FOLDER_1_1 + "/" + FILE_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1 + "/" +FOLDER_1_1);
+         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + FOLDER_1 + "/"  + FOLDER_1_1 + "/" + FILE_1);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -86,14 +72,10 @@ public class CopyFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL +FOLDER_1);
-         VirtualFileSystemUtils.delete(URL +FOLDER_1_1);
+         VirtualFileSystemUtils.delete(WS_URL +FOLDER_1);
+         VirtualFileSystemUtils.delete(WS_URL +FOLDER_1_1);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -132,19 +114,18 @@ public class CopyFolderTest extends BaseTest
    {
       waitForRootElement();
      
-      IDE.navigator().selectItem(FOLDER_1_URL);
+      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().selectItem(FOLDER_1_1_URL);
-      
+      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/" + FILE_1, false);
 
       /* 
       * Select folder "/Test 1/Test 1.1"
       */
-      IDE.navigator().selectItem(FOLDER_1_1_URL);
+      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
 
       /*
        * Check Copy must be enabled
@@ -182,13 +163,14 @@ public class CopyFolderTest extends BaseTest
        */
       IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().assertItemPresent(FOLDER_1_URL);      
-      IDE.navigator().assertItemPresent(FOLDER_1_1_URL);
+      
+      IDE.navigator().assertItemPresent(WS_URL + FOLDER_1 + "/");      
+      IDE.navigator().assertItemPresent(WS_URL + FOLDER_1_1 + "/");
 
       /*
        * Change text in file.
        */
-      typeTextIntoEditor(0, "updated");
+      IDE.editor().typeTextIntoEditor(0, "updated");
 
       saveCurrentFile();
 
@@ -203,15 +185,15 @@ public class CopyFolderTest extends BaseTest
       IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().selectItem(FOLDER_1_1_URL);
+      IDE.navigator().selectItem(WS_URL + FOLDER_1_1 + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1_1 + "/" + FILE_1, false);
 
       /*
        * Check file content
        */
-      assertEquals(FILE_CONTENT_1, getTextFromCodeEditor(0));
+      assertEquals(FILE_CONTENT_1, IDE.editor().getTextFromCodeEditor(0));
    }
 
 }

@@ -174,7 +174,7 @@ public class PreviewHtmlFileTest extends BaseTest
       
       assertTrue(selenium.isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
       
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
    }
    
 }

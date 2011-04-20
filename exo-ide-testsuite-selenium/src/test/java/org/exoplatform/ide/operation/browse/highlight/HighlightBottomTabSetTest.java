@@ -93,7 +93,7 @@ public class HighlightBottomTabSetTest extends BaseTest
       
       assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       
-      typeTextIntoEditor(0, "test test");
+      IDE.editor().typeTextIntoEditor(0, "test test");
       
       assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       

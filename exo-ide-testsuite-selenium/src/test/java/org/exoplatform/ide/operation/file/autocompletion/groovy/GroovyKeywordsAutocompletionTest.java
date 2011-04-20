@@ -51,7 +51,7 @@ public class GroovyKeywordsAutocompletionTest extends BaseTest
 
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      typeTextIntoEditor(0, "n");
+      IDE.editor().typeTextIntoEditor(0, "n");
 
       IDE.codeAssistant().openForm();
 
@@ -68,7 +68,7 @@ public class GroovyKeywordsAutocompletionTest extends BaseTest
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(getTextFromCodeEditor(0).contains("null"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("null"));
 
    }
 

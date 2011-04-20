@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -92,7 +93,8 @@ public class CursorPositionStatusBarTest extends BaseTest
          selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_RIGHT);
          selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       }
-      selectMainFrame();
+      
+      IDE.editor().selectMainFrame();
       //chek position in status bar 
       assertEquals("1 : 7", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
 
@@ -109,7 +111,7 @@ public class CursorPositionStatusBarTest extends BaseTest
          selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       }
 
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
 
       //		check status bar
       assertEquals("7 : 8", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));

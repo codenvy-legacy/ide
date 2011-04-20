@@ -92,7 +92,7 @@ public class HighlightOutlineTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_OutlineForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      String content = getTextFromCodeEditor(0);
+      String content = IDE.editor().getTextFromCodeEditor(0);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_F);
@@ -103,7 +103,7 @@ public class HighlightOutlineTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_R);
 
-      assertEquals(content, getTextFromCodeEditor(0));
+      assertEquals(content, IDE.editor().getTextFromCodeEditor(0));
 
    }
 

@@ -729,14 +729,14 @@ public class CheckHilightTextTest extends BaseTest
       selenium.selectFrame("relative=top");
    }
 
-   public void checkHiligtGoofleGadget()
+   public void checkHiligtGoogleGadget()
    {
       //selenium.selectFrame("//div[@class='tabSetContainer']/div/div[3]//iframe");
       // string 1
 
       try
       {
-         selectIFrameWithEditor(0);
+         IDE.editor().selectIFrameWithEditor(0);
       }
       catch (Exception e)
       {
@@ -932,7 +932,7 @@ public class CheckHilightTextTest extends BaseTest
    {
       try
       {
-         selectIFrameWithEditor(0);
+         IDE.editor().selectIFrameWithEditor(0);
       }
       catch (Exception e)
       {

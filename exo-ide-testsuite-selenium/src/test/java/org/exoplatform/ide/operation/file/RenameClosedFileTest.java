@@ -154,7 +154,7 @@ public class RenameClosedFileTest extends BaseTest
       
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
       
-      final String textFromEditor = getTextFromCodeEditor(0);
+      final String textFromEditor = IDE.editor().getTextFromCodeEditor(0);
       
       assertEquals(FILE_CONTENT, textFromEditor);
       
@@ -189,7 +189,7 @@ public class RenameClosedFileTest extends BaseTest
       
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(RENAMED_FILE_NAME, false);
       
-      final String textFromEditor = getTextFromCodeEditor(0);
+      final String textFromEditor = IDE.editor().getTextFromCodeEditor(0);
       
       assertEquals(FILE_CONTENT, textFromEditor);
       

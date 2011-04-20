@@ -80,7 +80,7 @@ public class OpenGadgetLocalFileTest extends BaseTest
 
       checkCodeEditorOpened(0);
 
-      String text = getTextFromCodeEditor(0);
+      String text = IDE.editor().getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
 

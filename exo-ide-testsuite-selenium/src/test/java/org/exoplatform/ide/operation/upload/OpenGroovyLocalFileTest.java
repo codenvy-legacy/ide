@@ -79,7 +79,7 @@ public class OpenGroovyLocalFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       checkCodeEditorOpened(0);
-      String text = getTextFromCodeEditor(0);
+      String text = IDE.editor().getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
 

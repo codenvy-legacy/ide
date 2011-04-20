@@ -119,8 +119,8 @@ public class AutoCompletionCSSTest extends BaseTest
    private void cssTest() throws Exception
    {
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
-      typeTextIntoEditor(0, "main{");
-      runHotkeyWithinEditor(0, false, false, KeyEvent.VK_ENTER);
+      IDE.editor().typeTextIntoEditor(0, "main{");
+      IDE.editor().runHotkeyWithinEditor(0, false, false, KeyEvent.VK_ENTER);
 
       IDE.codeAssistant().openForm();
 
@@ -134,7 +134,7 @@ public class AutoCompletionCSSTest extends BaseTest
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.codeAssistant().insertSelectedItem();
 
-      String text = getTextFromCodeEditor(0);
+      String text = IDE.editor().getTextFromCodeEditor(0);
 
       assertTrue(text.contains("list-style-type:"));
 

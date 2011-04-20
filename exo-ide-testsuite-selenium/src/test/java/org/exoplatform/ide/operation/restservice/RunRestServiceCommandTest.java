@@ -197,11 +197,11 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 5 -----------------
       //fix file
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       selenium.clickAt("//body[@class='editbox']", "5,5");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
 
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 6 -----------------
@@ -238,7 +238,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 2 -----------------
       //type some text
-      typeTextIntoEditor(0, "//modified file\n");
+      IDE.editor().typeTextIntoEditor(0, "//modified file\n");
 
       //---- 3 -----------------
       //check Run Groovy Service button and menu

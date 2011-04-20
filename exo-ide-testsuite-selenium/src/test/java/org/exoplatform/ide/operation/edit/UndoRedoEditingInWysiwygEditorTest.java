@@ -98,7 +98,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       final String typedText = selenium.getText("//body/");
       assertEquals("1\n2\n3", typedText);
 
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
 
       //step 6
       IDE.toolbar().runCommand(MenuCommands.Edit.UNDO_TYPING);
@@ -108,7 +108,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //select iframe in first tab
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String revertedText = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       assertEquals("1\n2", revertedText);
 
       //step 7
@@ -124,7 +124,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP);
       final String revertedText2 = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
 
       assertEquals("1", revertedText2);
 
@@ -134,7 +134,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //get and check text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String revertedText3 = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       assertEquals("", revertedText3);
 
       //step 9
@@ -151,7 +151,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //get text
       final String revertedText4 = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       //check text
       assertEquals("", revertedText4);
 
@@ -163,7 +163,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //get and check text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String restoredText = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       assertEquals("1", restoredText);
 
       //step 11
@@ -172,7 +172,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //get and check text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String restoredText2 = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       assertEquals("1\n2", restoredText2);
 
       //step 12
@@ -189,7 +189,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //get text
       final String restoredText3 = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       //check text
       assertEquals("1\n2\n3", restoredText3);
 
@@ -208,7 +208,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //get text
       final String restoredText4 = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       //check text
       assertEquals("1\n2\n3", restoredText4);
 
@@ -220,7 +220,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //check text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String revertedText5 = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       assertEquals("1\n2", revertedText5);
 
       //step 15
@@ -228,7 +228,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //type text
       selenium.typeKeys("//body/", "a");
       Thread.sleep(TestConstants.SLEEP);
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
 
       //step 16
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
@@ -240,7 +240,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //get text
       final String restoredText5 = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       //check text
       assertEquals("1\n2a", restoredText5);
 
@@ -250,7 +250,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //get text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String revertedText6 = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       //check text
       assertEquals("1\n2", revertedText6);
 
@@ -262,7 +262,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //get text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String restoredText6 = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       //check text
       assertEquals("1\n2a", restoredText6);
 
@@ -271,7 +271,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //get text
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
       final String revertedText7 = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       //check text
       assertEquals("1\n2", revertedText7);
 
@@ -290,7 +290,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[3]//iframe");
       Thread.sleep(TestConstants.SLEEP);
       selenium.typeKeys("//body/", "1111 ");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
 
       //step 23

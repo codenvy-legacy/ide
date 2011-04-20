@@ -114,7 +114,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+S
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       //check, that Save As dialog window appeared
       SaveFileUtils.checkSaveAsDialog(false);
       //close
@@ -189,13 +189,13 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.editor().selectTab(2);
 
       //press Alt+N
-      runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
+      IDE.editor().runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
       Thread.sleep(TestConstants.SLEEP);
 
       checkCreateFileFromTemplateFormAndClose();
 
       //press Ctrl+H
-      runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
+      IDE.editor().runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
 
       //check new html file created
       assertEquals("Untitled file.html *", IDE.editor().getTabTitle(3));
@@ -204,12 +204,12 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
 
       //select first tab
       IDE.editor().selectTab(0);
-      runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
+      IDE.editor().runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
       Thread.sleep(TestConstants.SLEEP);
 
       checkCreateFileFromTemplateFormAndClose();
       //press Ctrl+H
-      runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
+      IDE.editor().runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
 
       //check new html file created
       assertEquals("Untitled file.html *", IDE.editor().getTabTitle(3));
@@ -218,12 +218,12 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
 
       //select second tab
       IDE.editor().selectTab(1);
-      runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
+      IDE.editor().runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
 
       checkCreateFileFromTemplateFormAndClose();
 
       //press Ctrl+H
-      runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
+      IDE.editor().runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
 
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 

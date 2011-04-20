@@ -149,7 +149,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       //check table with 2 columns and 3 rows added to ck editor
       selectCkEditorIframe(0);
       checkTable2x3Present();
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       clickSourceButton();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
@@ -170,7 +170,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       checkTable2x3Present();
 
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       clickSourceButton();
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -181,7 +181,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
          .contextMenuAt(
             "//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[3]/td[1]",
             "");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
 
       selenium.clickAt("//span[text()='Row']", "");
       selenium.clickAt("//span[text()='Insert Row After']", "");
@@ -250,7 +250,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
             + "</tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td>"
             + "<td>&nbsp;</td></tr></tbody></table><br/></body></html>";
 
-      String textFromCodeEditor = getTextFromCodeEditor(0);
+      String textFromCodeEditor = IDE.editor().getTextFromCodeEditor(0);
 
       //remove all white spaces, because code mirror 
       //can change format of text 
@@ -361,7 +361,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       //select iframe with CK editor
       selenium.selectFrame("//div[@class='tabSetContainer']/div/div[" + divIndex + "]//iframe");
       final String result = selenium.getText("//body/");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
 
       return result;
    }

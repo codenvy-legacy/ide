@@ -92,7 +92,7 @@ public class HighlightCurrentLineTest extends BaseTest
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);      
 
       // get line Position Left
-      int contentPanelPositionLeft = selenium.getElementPositionLeft(getContentPanelLocator(0)).intValue();
+      int contentPanelPositionLeft = selenium.getElementPositionLeft(IDE.editor().getContentPanelLocator(0)).intValue();
       linePositionLeft = contentPanelPositionLeft + EDITOR_LEFT_OFFSET_POSITION;
            
       // test that new HTML file is opened in editor, first line is highlighted
@@ -109,9 +109,9 @@ public class HighlightCurrentLineTest extends BaseTest
       
       selenium.isElementPresent(LINE_HIGHLIGHTER_LOCATOR);
 
-      assertEquals(selenium.getElementPositionLeft(getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
+      assertEquals(selenium.getElementPositionLeft(IDE.editor().getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
          linePositionLeft);
-      assertEquals(selenium.getElementPositionTop(getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
+      assertEquals(selenium.getElementPositionTop(IDE.editor().getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
          linePositionTop);
       
       
@@ -237,9 +237,9 @@ public class HighlightCurrentLineTest extends BaseTest
       
       selenium.isElementPresent(LINE_HIGHLIGHTER_LOCATOR);
 
-      assertEquals(selenium.getElementPositionLeft(getContentPanelLocator(tabIndex) + LINE_HIGHLIGHTER_LOCATOR),
+      assertEquals(selenium.getElementPositionLeft(IDE.editor().getContentPanelLocator(tabIndex) + LINE_HIGHLIGHTER_LOCATOR),
          linePositionLeft);
-      assertEquals(selenium.getElementPositionTop(getContentPanelLocator(tabIndex) + LINE_HIGHLIGHTER_LOCATOR),
+      assertEquals(selenium.getElementPositionTop(IDE.editor().getContentPanelLocator(tabIndex) + LINE_HIGHLIGHTER_LOCATOR),
          linePositionTop);
    }
    

@@ -80,7 +80,7 @@ public class GadgetDeployUndeployTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, false);
 
       // save gadget in the root folder by clicking on "Ctrl+S" hotkey
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(3 * TestConstants.PAGE_LOAD_PERIOD);

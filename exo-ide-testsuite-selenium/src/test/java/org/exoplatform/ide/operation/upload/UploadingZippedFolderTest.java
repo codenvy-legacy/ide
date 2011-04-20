@@ -123,7 +123,7 @@ public class UploadingZippedFolderTest extends BaseTest
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(settingsFile, false);
       checkCodeEditorOpened(0);
 
-      String text = getTextFromCodeEditor(0);
+      String text = IDE.editor().getTextFromCodeEditor(0);
       assertTrue(text.length() > 0);
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);

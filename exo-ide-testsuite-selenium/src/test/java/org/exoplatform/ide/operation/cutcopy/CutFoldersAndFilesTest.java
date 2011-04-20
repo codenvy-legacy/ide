@@ -204,11 +204,11 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       IDE.editor().selectTab(0);
 
-      assertEquals(RANDOM_CONTENT_1, getTextFromCodeEditor(0));
+      assertEquals(RANDOM_CONTENT_1, IDE.editor().getTextFromCodeEditor(0));
 
       IDE.editor().selectTab(1);
 
-      assertEquals(RANDOM_CONTENT_2, getTextFromCodeEditor(1));
+      assertEquals(RANDOM_CONTENT_2, IDE.editor().getTextFromCodeEditor(1));
       
       checkFilesAndFoldersOnServer();
 

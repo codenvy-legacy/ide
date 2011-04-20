@@ -183,7 +183,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SEARCH, false);  
 
       // trying to save file new file by using "Ctrl+S" hotkey
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       
       // verify appearance of dialog with error message 
       selenium.isTextPresent(SAVE_ERROR_MESSAGE);
@@ -195,7 +195,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER_NAME + "/");
       
       // change file content
-      typeTextIntoEditor(0, "Sample text");
+      IDE.editor().typeTextIntoEditor(0, "Sample text");
       
       // check command accessibility in top menu and main toolbar when Content Panel is non-empty and there is no selected item in the Navigation Panel
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);

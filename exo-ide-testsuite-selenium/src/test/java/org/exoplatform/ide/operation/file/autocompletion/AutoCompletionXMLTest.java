@@ -41,29 +41,29 @@ public class AutoCompletionXMLTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      String text = getTextFromCodeEditor(0);
+      String text = IDE.editor().getTextFromCodeEditor(0);
       assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
 
-      runHotkeyWithinEditor(0, false, false, KeyEvent.VK_HOME);
+      IDE.editor().runHotkeyWithinEditor(0, false, false, KeyEvent.VK_HOME);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       //      selenium.keyDown("//body[@class='editbox']", "\\35");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "<root>");
+      IDE.editor().typeTextIntoEditor(0, "<root>");
       IDE.editor().pressEnter();
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "</root>");
+      IDE.editor().typeTextIntoEditor(0, "</root>");
       selenium.keyPressNative("" + KeyEvent.VK_UP);
 
-      typeTextIntoEditor(0, "<rot>");
+      IDE.editor().typeTextIntoEditor(0, "<rot>");
       IDE.editor().pressEnter();
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "</rot>");
+      IDE.editor().typeTextIntoEditor(0, "</rot>");
       selenium.keyPressNative("" + KeyEvent.VK_UP);
 
-      typeTextIntoEditor(0, "<rt>");
+      IDE.editor().typeTextIntoEditor(0, "<rt>");
       IDE.editor().pressEnter();
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "</rt>");
+      IDE.editor().typeTextIntoEditor(0, "</rt>");
 
       selenium.keyPressNative("" + KeyEvent.VK_UP);
 
@@ -73,7 +73,7 @@ public class AutoCompletionXMLTest extends BaseTest
       IDE.codeAssistant().checkElementPresent("rot");
       IDE.codeAssistant().insertSelectedItem();
 
-      String textAfter = getTextFromCodeEditor(0);
+      String textAfter = IDE.editor().getTextFromCodeEditor(0);
       assertTrue(textAfter.contains("<root></root>"));
 
       IDE.editor().closeUnsavedFileAndDoNotSave(0);

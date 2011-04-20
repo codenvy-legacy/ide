@@ -21,15 +21,16 @@ package org.exoplatform.ide.core;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.thoughtworks.selenium.Selenium;
+import java.awt.Robot;
+import java.awt.event.InputEvent;
 
 import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.SaveFileUtils;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.utils.AbstractTextUtil;
 
-import java.awt.Robot;
-import java.awt.event.InputEvent;
+import com.thoughtworks.selenium.Selenium;
 
 /**
  * 
@@ -43,9 +44,9 @@ public class Editor
 {
 
    private Selenium selenium;
-   
+
    private IDE ide;
-   
+
    public interface EditorLocators
    {
       /**
@@ -93,7 +94,7 @@ public class Editor
     */
    public void selectTab(int tabIndex) throws Exception
    {
-      selenium.clickAt("//div[@panel-id='editor']//td[@tab-bar-index="+ String.valueOf(tabIndex)+"]" + "/table","");
+      selenium.clickAt("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table", "");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
@@ -165,8 +166,7 @@ public class Editor
        * SmartGWT not destroy warning dialog(only hide, maybe set smoller z-index property ),
        * so need check is warning dialogs is visible
        */
-      if (selenium.isElementPresent("exoAskDialog")
-         && selenium.isVisible("exoAskDialog"))
+      if (selenium.isElementPresent("exoAskDialog") && selenium.isVisible("exoAskDialog"))
       {
          //check is warning dialog appears
          assertTrue(selenium
@@ -380,8 +380,9 @@ public class Editor
       // Get the delta between of toolbar browser area
       int deltaX = Integer.parseInt(selenium.getEval("window.outerWidth-window.innerWidth"));
       // Get the position on screen of the editor
-//      int x = selenium.getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
-      int x = selenium.getElementPositionLeft("//div[@panel-id='editor' and @tab-index='0' ]//iframe").intValue() + deltaX;
+      //      int x = selenium.getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
+      int x =
+         selenium.getElementPositionLeft("//div[@panel-id='editor' and @tab-index='0' ]//iframe").intValue() + deltaX;
       return x;
    }
 
@@ -395,16 +396,171 @@ public class Editor
       // Get the delta between of toolbar browser area
       int deltaY = Integer.parseInt(selenium.getEval("window.outerHeight-window.innerHeight"));
       // Get the position on screen of the editor
-      int y = selenium.getElementPositionTop("//div[@panel-id='editor' and @tab-index='0']//iframe").intValue() + deltaY;
+      int y =
+         selenium.getElementPositionTop("//div[@panel-id='editor' and @tab-index='0']//iframe").intValue() + deltaY;
       return y;
    }
-   
+
    /**
     * Press Enter key in editor.
     */
    public void pressEnter()
    {
       selenium.keyDown("//body[@class='editbox']", "\\13");
+   }
+
+   /**
+    * Type text to file, opened in tab.
+    * 
+    * Index of tabs begins from 0.
+    * 
+    * Sometimes, if you can't type text to editor,
+    * try before to click on editor:
+    * 
+    * selenium.clickAt("//body[@class='editbox']", "5,5");
+    * 
+    * @param tabIndex begins from 0
+    * @param text (can be used '\n' as line break)
+    */
+   public void typeTextIntoEditor(int tabIndex, String text) throws Exception
+   {
+      if (selenium.isElementPresent(getContentPanelLocator(tabIndex)
+         + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"))
+      {
+         selectIFrameWithEditor(tabIndex);
+         AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, text);
+      }
+      else
+      {
+         selectIFrameWithEditor(tabIndex);
+         AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, text);
+      }
+
+      selectMainFrame();
+   }
+
+   /**
+    * 
+    * @param tabIndex begins from 0
+    * @return content panel locator 
+    */
+   public String getContentPanelLocator(int tabIndex)
+   {
+      return "//div[@panel-id='editor' and @tab-index='" + tabIndex + "' ]";
+
+      //      //      String divIndex = String.valueOf(tabIndex + 2);
+      //      if (BROWSER_COMMAND.equals(EnumBrowserCommand.IE_EXPLORE_PROXY))
+      //      {
+      //         return "//div[@class='tabSetContainer']/div[" + tabIndex + "]";
+      //      }
+      //      else
+      //      {
+      //         return "//div[@panel-id='editor' and @tab-index='" + tabIndex + "' ]";
+      //         //         return "//div[@class='tabSetContainer']/div/div[" + divIndex + "]";
+      //      }
+   }
+
+   /**
+    * Select iframe, which contains editor from tab with index tabIndex
+    * 
+    * @param tabIndex begins from 0
+    */
+   public void selectIFrameWithEditor(int tabIndex) throws Exception
+   {
+      selenium.selectFrame(getContentPanelLocator(tabIndex) + "//iframe");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+   }
+
+   /**
+    * Select main frame of IDE.
+    * 
+    * This method is used, after typing text in editor.
+    * To type text you must select editor iframe. After typing,
+    * to return to them main frame, use selectMainFrame()
+    * 
+    */
+   public void selectMainFrame()
+   {
+      if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
+      {
+         selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
+      }
+      else
+      {
+         selenium.selectFrame("relative=top");
+      }
+   }
+
+   /**
+    * Mouse click on editor.
+    * 
+    * @param tabIndex - tab index.
+    * @throws Exception
+    */
+   public void clickOnEditor(int tabIndex) throws Exception
+   {
+      selectIFrameWithEditor(tabIndex);
+      selenium.clickAt("//body[@class='editbox']", "5,5");
+      selectMainFrame();
+   }
+
+   /**
+    * Get text from tab number "tabIndex" from editor
+    * @param tabIndex begins from 0
+    */
+   public String getTextFromCodeEditor(int tabIndex) throws Exception
+   {
+      selectIFrameWithEditor(tabIndex);
+      String text = selenium.getText("//body[@class='editbox']");
+      selectMainFrame();
+      return text;
+   }
+
+   public String getTextFromCKEditor(int tabIndex) throws Exception
+   {
+      selectIFrameWithEditor(tabIndex);
+      String text = selenium.getText("//body");
+      selectMainFrame();
+      return text;
+   }
+
+   /**
+    * Run hot key within editor. 
+    * 
+    * This method used for running hotkeys for editor, such as ctrl+z, ctrl+a, ctrl+s and so on.
+    * 
+    * @param tabIndex index of tab
+    * @param isCtrl is control key used
+    * @param isAlt is alt key used
+    * @param keyCode virtual code of key (code of key on keyboard)
+    */
+   public void runHotkeyWithinEditor(int tabIndex, boolean isCtrl, boolean isAlt, int keyCode) throws Exception
+   {
+      selectIFrameWithEditor(tabIndex);
+
+      if (isCtrl)
+      {
+         selenium.controlKeyDown();
+      }
+      if (isAlt)
+      {
+         selenium.altKeyDown();
+      }
+
+      selenium.keyDown("//", String.valueOf(keyCode));
+      selenium.keyUp("//", String.valueOf(keyCode));
+
+      if (isCtrl)
+      {
+         selenium.controlKeyUp();
+      }
+      if (isAlt)
+      {
+         selenium.altKeyUp();
+      }
+
+      selectMainFrame();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
 }

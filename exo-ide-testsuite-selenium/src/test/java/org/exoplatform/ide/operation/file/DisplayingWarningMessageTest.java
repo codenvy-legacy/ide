@@ -169,7 +169,7 @@ public class DisplayingWarningMessageTest extends BaseTest
          +"  </bean>\n"
          +"</test>";
       
-      assertEquals(previousContent, getTextFromCodeEditor(0));
+      assertEquals(previousContent, IDE.editor().getTextFromCodeEditor(0));
       
       //check Save button enabled
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
@@ -186,7 +186,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       
       //check file opened and title doesn't mark with *
       assertEquals(XML_FILE_NAME, IDE.editor().getTabTitle(1));
-      assertEquals(previousContent, getTextFromCodeEditor(1));
+      assertEquals(previousContent, IDE.editor().getTextFromCodeEditor(1));
    }
    
    private void changeFileContent() throws Exception

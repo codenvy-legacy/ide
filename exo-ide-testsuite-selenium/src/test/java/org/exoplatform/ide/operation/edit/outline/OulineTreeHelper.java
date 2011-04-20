@@ -112,13 +112,13 @@ public class OulineTreeHelper extends BaseTest
    protected void expandOutlineTree() throws Exception
    {
       // recognize file's line numbers
-      String fileContent = getTextFromCodeEditor(0);
+      String fileContent = IDE.editor().getTextFromCodeEditor(0);
       System.out.println("fileContent=" + fileContent);
       int fileLineNumbers = fileContent.split("\\r?\\n").length;   
       
       goToLine(1);
       goToLine(1);
-      clickOnEditor(0);
+      IDE.editor().clickOnEditor(0);
            
       // go to the end of file
       do

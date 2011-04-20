@@ -134,7 +134,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       
       // test import statement
       IDE.editor().clickOnEditor();
-      assertTrue(getTextFromCodeEditor(0).startsWith(
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" 
          + "import Path\n"
          + "import javax.ws.rs.GET\n"
@@ -157,7 +157,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       // assertFalse(selenium.getEval("this.browserbot.findElement(\"//div[@class=\'CodeMirror-line-numbers\']/div[text() = \'9\']\").hasAttribute(\"title\")") == "true");           
       
       // add test text
-      typeTextIntoEditor(0, 
+      IDE.editor().typeTextIntoEditor(0, 
          "Integer1 d \n"
          + "@POST \n"
          + "public Base64 hello(@PathParam(\"name\") Base64 name) {}"
@@ -178,7 +178,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       
       // test import statement and code error marks
       IDE.editor().clickOnEditor();
-      assertTrue(getTextFromCodeEditor(0).startsWith(
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).startsWith(
          "import java.util.prefs.Base64\n"
          + "Integer1 d \n"
          + "@POST \n"
@@ -259,7 +259,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       
       // test import statement
       IDE.editor().clickOnEditor();
-      assertTrue(getTextFromCodeEditor(1).startsWith(
+      assertTrue(IDE.editor().getTextFromCodeEditor(1).startsWith(
          "<%\n" 
          + "  import java.util.prefs.Base64\n"
          + "%>\n"

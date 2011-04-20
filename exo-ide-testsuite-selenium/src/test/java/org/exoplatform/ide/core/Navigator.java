@@ -132,6 +132,7 @@ public class Navigator extends AbstractTestModule
    public void selectItem(String itemHref) throws Exception
    {
       selenium.clickAt(getItemId(itemHref), "0");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    /**

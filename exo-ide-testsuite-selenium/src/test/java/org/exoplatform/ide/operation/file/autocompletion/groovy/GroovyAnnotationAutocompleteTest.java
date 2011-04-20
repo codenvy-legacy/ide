@@ -49,7 +49,7 @@ public class GroovyAnnotationAutocompleteTest extends BaseTest
       }
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      typeTextIntoEditor(0, "@");
+      IDE.editor().typeTextIntoEditor(0, "@");
       
       IDE.codeAssistant().openForm();
       IDE.codeAssistant().checkElementNotPresent("hello(String):String");
@@ -69,7 +69,7 @@ public class GroovyAnnotationAutocompleteTest extends BaseTest
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(getTextFromCodeEditor(0).contains("@Override"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("@Override"));
    }
    
 }

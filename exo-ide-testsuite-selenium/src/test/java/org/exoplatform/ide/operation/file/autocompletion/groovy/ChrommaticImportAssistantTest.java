@@ -84,7 +84,7 @@ public class ChrommaticImportAssistantTest extends BaseTest
       selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
    }
 
    private String getErrorCorrectionListItemLocator(String packageName)

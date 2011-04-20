@@ -74,7 +74,7 @@ public class OpeningFilesTest extends BaseTest
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(file1Name, false);
       Thread.sleep(TestConstants.SLEEP);
       //Check text of opened file
-      String text = getTextFromCodeEditor(0);
+      String text = IDE.editor().getTextFromCodeEditor(0);
       assertEquals(file1Content, text);
       
       //Delete folder with file

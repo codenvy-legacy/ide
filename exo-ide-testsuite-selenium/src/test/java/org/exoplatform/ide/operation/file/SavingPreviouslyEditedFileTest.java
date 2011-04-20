@@ -111,7 +111,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       //You will see default XML content  in the new file tab of "Content" panel.
       //is file opened
       assertEquals("Untitled file.xml *", IDE.editor().getTabTitle(0));
-      assertEquals(DEFAULT_XML_CONTENT, getTextFromCodeEditor(0));
+      assertEquals(DEFAULT_XML_CONTENT, IDE.editor().getTextFromCodeEditor(0));
 
       //----- 3-4 ------------
       //Click "Save As" button.
@@ -139,10 +139,10 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       //----- 6 ------------
       //Go back to gadget window, do some changes in "Content" panel, click "Save" button.
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       IDE.editor().deleteFileContent();
-      selectMainFrame();
-      typeTextIntoEditor(0, XML_TEXT);
+      IDE.editor().selectMainFrame();
+      IDE.editor().typeTextIntoEditor(0, XML_TEXT);
       saveCurrentFile();
 
       IDE.editor().closeTab(0);
@@ -163,12 +163,12 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       //Open "RepoFile.xml" file
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       //You must see the content of your file in "Content" panel.
-      assertEquals(FORMATTED_XML_TEXT, getTextFromCodeEditor(0));
+      assertEquals(FORMATTED_XML_TEXT, IDE.editor().getTextFromCodeEditor(0));
 
       //----- 9 ------------
       //Make some changes in file content and then click on "File->Save" top menu command.
       final String typeText = "<root>" + "admin" + "</root>";
-      typeTextIntoEditor(0, typeText);
+      IDE.editor().typeTextIntoEditor(0, typeText);
       //The "Save" button and "File->Save" command must become enabled.
       IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
@@ -194,7 +194,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
 
       saveAsUsingToolbarButton(FILE_NAME);
-      typeTextIntoEditor(0, "X");
+      IDE.editor().typeTextIntoEditor(0, "X");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
@@ -228,7 +228,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      typeTextIntoEditor(0, "X");
+      IDE.editor().typeTextIntoEditor(0, "X");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));

@@ -95,14 +95,14 @@ public abstract class RestoreVersionTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
       
-      typeTextIntoEditor(0, version1Text);
+      IDE.editor().typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       checkViewVersionHistoryButtonState(true);
-      typeTextIntoEditor(0, version2Text);
+      IDE.editor().typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version3Text);
+      IDE.editor().typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version4Text);
+      IDE.editor().typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
@@ -114,7 +114,7 @@ public abstract class RestoreVersionTest extends VersioningTest
       checkNewerVersionButtonState(false);
       //Restore version button is disabled because current version is opened:
       checkRestoreVersionButtonState(false);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
 
       //View older version:
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
@@ -132,7 +132,7 @@ public abstract class RestoreVersionTest extends VersioningTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD*2);
       checkAskDialogPresent(false);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(version1Text + version2Text + version3Text, getTextFromCodeEditor(0));
+      assertEquals(version1Text + version2Text + version3Text, IDE.editor().getTextFromCodeEditor(0));
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkRestoreVersionButtonState(true);
@@ -143,7 +143,7 @@ public abstract class RestoreVersionTest extends VersioningTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      assertEquals(version1Text + version2Text + version3Text, getTextFromCodeEditor(0));
+      assertEquals(version1Text + version2Text + version3Text, IDE.editor().getTextFromCodeEditor(0));
 
       //Open version panel
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
@@ -155,7 +155,7 @@ public abstract class RestoreVersionTest extends VersioningTest
       checkNewerVersionButtonState(false);
       //Restore version button is disabled because current version is opened:
       checkRestoreVersionButtonState(false);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
 
       //View older version:
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
@@ -189,7 +189,7 @@ public abstract class RestoreVersionTest extends VersioningTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkAskDialogPresent(false);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(version1Text + version2Text, getTextFromCodeEditor(0));
+      assertEquals(version1Text + version2Text, IDE.editor().getTextFromCodeEditor(0));
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkRestoreVersionButtonState(true);
@@ -249,14 +249,14 @@ public abstract class RestoreVersionTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
       
-      typeTextIntoEditor(0, version1Text);
+      IDE.editor().typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       checkViewVersionHistoryButtonState(true);
-      typeTextIntoEditor(0, version2Text);
+      IDE.editor().typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version3Text);
+      IDE.editor().typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version4Text);
+      IDE.editor().typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
@@ -268,7 +268,7 @@ public abstract class RestoreVersionTest extends VersioningTest
       checkNewerVersionButtonState(false);
       //Restore version button is disabled because current version is opened:
       checkRestoreVersionButtonState(false);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
       checkVersionListSize(5);
@@ -283,7 +283,7 @@ public abstract class RestoreVersionTest extends VersioningTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD*2);
       checkAskDialogPresent(false);
       Thread.sleep(30000);
-      assertEquals(version1Text + version2Text, getTextFromCodeEditor(0));
+      assertEquals(version1Text + version2Text, IDE.editor().getTextFromCodeEditor(0));
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
       checkRestoreVersionButtonState(true);
@@ -293,12 +293,12 @@ public abstract class RestoreVersionTest extends VersioningTest
       checkVersionListSize(6);
       clickCloseVersionListPanelButton();
 
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       selenium.clickAt("//body[@class='editbox']", "5,5");
       selenium.keyPressNative("" + KeyEvent.VK_END);
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       Thread.sleep(5000);
-      typeTextIntoEditor(0, version5Text);
+      IDE.editor().typeTextIntoEditor(0, version5Text);
       Thread.sleep(5000);
       saveCurrentFile();
       Thread.sleep(5000);

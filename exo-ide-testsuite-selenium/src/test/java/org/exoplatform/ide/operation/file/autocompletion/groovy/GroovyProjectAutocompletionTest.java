@@ -117,7 +117,7 @@ public class GroovyProjectAutocompletionTest extends BaseTest
 
       IDE.codeAssistant().moveCursorDown(12);
 
-      typeTextIntoEditor(0, "Po");
+      IDE.editor().typeTextIntoEditor(0, "Po");
       
       IDE.codeAssistant().openForm();
       
@@ -126,14 +126,14 @@ public class GroovyProjectAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      assertTrue(getTextFromCodeEditor(0).contains("import org.exoplatform.sample.Pojo"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("import org.exoplatform.sample.Pojo"));
       
-      typeTextIntoEditor(0, " p");
+      IDE.editor().typeTextIntoEditor(0, " p");
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      typeTextIntoEditor(0, "p.");
+      IDE.editor().typeTextIntoEditor(0, "p.");
       
       IDE.codeAssistant().openForm();
       
@@ -146,7 +146,7 @@ public class GroovyProjectAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      assertTrue(getTextFromCodeEditor(0).contains("p.printText(String)"));
+      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("p.printText(String)"));
       
    }
 

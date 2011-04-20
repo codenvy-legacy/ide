@@ -138,7 +138,7 @@ public class NavigateVersionsTest extends VersioningTest
       /*
        * 3. Type text in editor and save file.
        */
-      typeTextIntoEditor(0, version1Text);
+      IDE.editor().typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       
       /*
@@ -152,11 +152,11 @@ public class NavigateVersionsTest extends VersioningTest
        */
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version2Text);
+      IDE.editor().typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version3Text);
+      IDE.editor().typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version4Text);
+      IDE.editor().typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
 
       /*
@@ -176,7 +176,7 @@ public class NavigateVersionsTest extends VersioningTest
        * View newer version button is disabled because current version is opened:
        */
       checkNewerVersionButtonState(false);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
       /*
        * 6. View older version.
        */
@@ -283,7 +283,7 @@ public class NavigateVersionsTest extends VersioningTest
        * View newer version button is disabled because current version is opened.
        */
       checkNewerVersionButtonState(false);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
       /*
        * 17. View older version.
        */
@@ -324,7 +324,7 @@ public class NavigateVersionsTest extends VersioningTest
        */
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      typeTextIntoEditor(0, version1Text);
+      IDE.editor().typeTextIntoEditor(0, version1Text);
       saveAsUsingToolbarButton(FILE_2);
       
       /*
@@ -338,7 +338,7 @@ public class NavigateVersionsTest extends VersioningTest
        */
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version2Text);
+      IDE.editor().typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       /*
@@ -350,11 +350,11 @@ public class NavigateVersionsTest extends VersioningTest
       /*
        * 3. Create versions.
        */
-      typeTextIntoEditor(0, version3Text);
+      IDE.editor().typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version4Text);
+      IDE.editor().typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version5Text);
+      IDE.editor().typeTextIntoEditor(0, version5Text);
       saveCurrentFile();
 
       /*
@@ -374,7 +374,7 @@ public class NavigateVersionsTest extends VersioningTest
        * View Newer Version button is disabled because current version is opened.
        */
       checkNewerVersionButtonState(false);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
       /*
        * 5. Click View Older Version button.
        */
@@ -481,23 +481,23 @@ public class NavigateVersionsTest extends VersioningTest
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       //Create new file, add text and save file:
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      typeTextIntoEditor(0, version1Text);
+      IDE.editor().typeTextIntoEditor(0, version1Text);
       saveAsUsingToolbarButton(FILE_3);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version2Text);
+      IDE.editor().typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
-      typeTextIntoEditor(0, version3Text);
+      IDE.editor().typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version4Text);
+      IDE.editor().typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version5Text);
+      IDE.editor().typeTextIntoEditor(0, version5Text);
       saveCurrentFile();
 
       //View versions
@@ -508,7 +508,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkOlderVersionButtonState(true);
       //View newer version button is disabled because current version is opened:
       checkNewerVersionButtonState(false);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
       //View older version:
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
@@ -521,7 +521,7 @@ public class NavigateVersionsTest extends VersioningTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version6Text);
+      IDE.editor().typeTextIntoEditor(0, version6Text);
       saveCurrentFile();
       //Check viewed version on version panel is not changed
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
@@ -549,7 +549,7 @@ public class NavigateVersionsTest extends VersioningTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version7Text);
+      IDE.editor().typeTextIntoEditor(0, version7Text);
       saveCurrentFile();
 
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text + version6Text);
@@ -591,23 +591,23 @@ public class NavigateVersionsTest extends VersioningTest
       IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
       //Create new file, add text and save file:
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      typeTextIntoEditor(0, version1Text);
+      IDE.editor().typeTextIntoEditor(0, version1Text);
       saveAsUsingToolbarButton(FILE_4);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version2Text);
+      IDE.editor().typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
-      typeTextIntoEditor(0, version3Text);
+      IDE.editor().typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version4Text);
+      IDE.editor().typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version5Text);
+      IDE.editor().typeTextIntoEditor(0, version5Text);
       saveCurrentFile();
 
       //View versions
@@ -618,7 +618,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkOlderVersionButtonState(true);
       //View newer version button is disabled because current version is opened:
       checkNewerVersionButtonState(false);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
       //View older version:
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD*2);
@@ -639,7 +639,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkOlderVersionButtonState(true);
       //View newer version button is disabled because current version is opened:
       checkNewerVersionButtonState(false);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
 
       //View older version:
       IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
@@ -657,7 +657,7 @@ public class NavigateVersionsTest extends VersioningTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version6Text);
+      IDE.editor().typeTextIntoEditor(0, version6Text);
       saveCurrentFile();
 
       //Open version panel
@@ -668,7 +668,7 @@ public class NavigateVersionsTest extends VersioningTest
       checkOlderVersionButtonState(true);
       //View newer version button is disabled because current version is opened:
       checkNewerVersionButtonState(false);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
 
       IDE.editor().closeTab(0);
    }

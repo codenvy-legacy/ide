@@ -104,19 +104,19 @@ public class AutoCompletionHTMLTest extends BaseTest
       IDE.editor().deleteFileContent();
 
       
-      typeTextIntoEditor(0, "<div class=\"ItemDetail\" style=\"display:block\">");
+      IDE.editor().typeTextIntoEditor(0, "<div class=\"ItemDetail\" style=\"display:block\">");
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
-      typeTextIntoEditor(0,"<div class=\"NoneAppsMessage\" style=\"display:block\">");
+      IDE.editor().typeTextIntoEditor(0,"<div class=\"NoneAppsMessage\" style=\"display:block\">");
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
-      typeTextIntoEditor(0, "<%=_ctx.appRes(\"UIAddNewApplication.label.NoneApp\")%>");
+      IDE.editor().typeTextIntoEditor(0, "<%=_ctx.appRes(\"UIAddNewApplication.label.NoneApp\")%>");
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
-      typeTextIntoEditor(0, "</div>");
+      IDE.editor().typeTextIntoEditor(0, "</div>");
       selenium.keyDown("//body[@class='editbox']", "\\13");
 
-      typeTextIntoEditor(0,"</div>");
+      IDE.editor().typeTextIntoEditor(0,"</div>");
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
@@ -154,18 +154,18 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       IDE.codeAssistant().insertSelectedItem();
       
-      String textAfter = getTextFromCodeEditor(0);
+      String textAfter = IDE.editor().getTextFromCodeEditor(0);
       assertTrue(textAfter.contains("<textarea></textarea>"));
 
-      typeTextIntoEditor(0, "<p ");
+      IDE.editor().typeTextIntoEditor(0, "<p ");
 
       IDE.codeAssistant().openForm();
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-     IDE.codeAssistant().insertSelectedItem();
+      IDE.codeAssistant().insertSelectedItem();
      
-      String textA = getTextFromCodeEditor(0);
+      String textA = IDE.editor().getTextFromCodeEditor(0);
       assertTrue(textA.contains("<p class=\"\""));
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
@@ -173,7 +173,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       IDE.codeAssistant().openForm();
       IDE.codeAssistant().insertSelectedItem();
 
-      String text = getTextFromCodeEditor(0);
+      String text = IDE.editor().getTextFromCodeEditor(0);
       assertTrue(text.contains("<p class=\"\"></p>"));
    }
 
@@ -187,7 +187,7 @@ public class AutoCompletionHTMLTest extends BaseTest
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
-      typeTextIntoEditor(0, "<t");
+      IDE.editor().typeTextIntoEditor(0, "<t");
 
       IDE.codeAssistant().openForm();
 
@@ -196,10 +196,10 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       IDE.codeAssistant().insertSelectedItem();
       
-      String textAfter = getTextFromCodeEditor(0);
+      String textAfter = IDE.editor().getTextFromCodeEditor(0);
       assertTrue(textAfter.contains("<textarea></textarea>"));
 
-      typeTextIntoEditor(0, "<p ");
+      IDE.editor().typeTextIntoEditor(0, "<p ");
       
       IDE.codeAssistant().openForm();
 
@@ -207,7 +207,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       IDE.codeAssistant().insertSelectedItem();
       
-      String textA = getTextFromCodeEditor(0);
+      String textA = IDE.editor().getTextFromCodeEditor(0);
       assertTrue(textA.contains("<p class=\"\""));
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
@@ -215,7 +215,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       IDE.codeAssistant().openForm();
       IDE.codeAssistant().insertSelectedItem();
 
-      String text = getTextFromCodeEditor(0);
+      String text = IDE.editor().getTextFromCodeEditor(0);
       assertTrue(text.contains("<p class=\"\"></p>"));
    }
 }

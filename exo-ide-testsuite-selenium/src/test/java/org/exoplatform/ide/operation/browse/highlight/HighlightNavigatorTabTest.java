@@ -88,7 +88,7 @@ public class HighlightNavigatorTabTest extends BaseTest
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(255, 255, 255)')]/"));
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      typeTextIntoEditor(0, "Testing yo!  4test.");
+      IDE.editor().typeTextIntoEditor(0, "Testing yo!  4test.");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));

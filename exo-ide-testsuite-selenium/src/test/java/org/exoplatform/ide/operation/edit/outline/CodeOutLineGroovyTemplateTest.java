@@ -127,7 +127,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       //delete some tags in groovy template file
       for (int i = 0; i < 7; i++)
       {
-         runHotkeyWithinEditor(0, true, false, 68);
+         IDE.editor().runHotkeyWithinEditor(0, true, false, 68);
       }
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("26 : 1", getCursorPositionUsingStatusBar());

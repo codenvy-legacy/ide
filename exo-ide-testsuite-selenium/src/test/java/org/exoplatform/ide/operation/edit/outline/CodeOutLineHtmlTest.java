@@ -138,7 +138,7 @@ public class CodeOutLineHtmlTest extends BaseTest
       //press Ctrl+D to delete lines
       for (int i = 0; i < 11; i++)
       {
-         runHotkeyWithinEditor(0, true, false, 68);
+         IDE.editor().runHotkeyWithinEditor(0, true, false, 68);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
       Thread.sleep(TestConstants.SLEEP);

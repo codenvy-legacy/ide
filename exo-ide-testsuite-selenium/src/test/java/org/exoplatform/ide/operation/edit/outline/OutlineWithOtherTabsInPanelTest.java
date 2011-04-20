@@ -141,7 +141,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       
       //----- 5 -------------
       //type text to file and save (create new version)
-      typeTextIntoEditor(2, "hello");
+      IDE.editor().typeTextIntoEditor(2, "hello");
       saveCurrentFile();
       
       //----- 6 -------------
@@ -161,7 +161,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       
       //----- 8 -------------
       //type text and save
-      typeTextIntoEditor(0, "abc");
+      IDE.editor().typeTextIntoEditor(0, "abc");
       saveCurrentFile();
       
       //----- 9 -------------

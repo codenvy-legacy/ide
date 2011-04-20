@@ -218,12 +218,12 @@ public class CodeOutlineXmlTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
       
       //type text
-      typeTextIntoEditor(0, "\n<settings>\n");
+      IDE.editor().typeTextIntoEditor(0, "\n<settings>\n");
       //check, that after typing outline tree is the same
-      typeTextIntoEditor(0, "<value>value</value>\n");
+      IDE.editor().typeTextIntoEditor(0, "<value>value</value>\n");
       Thread.sleep(TestConstants.SLEEP);
       //check, that after typing outline tree is the same
-      typeTextIntoEditor(0, "</settings>\n");
+      IDE.editor().typeTextIntoEditor(0, "</settings>\n");
       //check, that after typing outline tree is the same
 
       //pause

@@ -171,22 +171,22 @@ public class CutFileTest extends BaseTest
       assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FILE_NAME_1).getStatusCode());
       IDE.navigator().selectItem(WS_URL + FILE_NAME_1);
 
-      assertEquals(RANDOM_CONTENT, getTextFromCodeEditor(0));
+      assertEquals(RANDOM_CONTENT, IDE.editor().getTextFromCodeEditor(0));
 
       checkPasteCommands(false);
 
       //Change content of opened file "gadget.xml" in Content Panel, click on "Ctrl+S" hot key, 
       //close file tab and open file "gadget.xml".
-      typeTextIntoEditor(0, "IT`s CHANGE!!!");
+      IDE.editor().typeTextIntoEditor(0, "IT`s CHANGE!!!");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      final String oldText = getTextFromCodeEditor(0);
+      final String oldText = IDE.editor().getTextFromCodeEditor(0);
 
       IDE.toolbar().runCommand(ToolbarCommands.File.SAVE);
       IDE.editor().closeTab(0);
       
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
-      assertEquals(oldText, getTextFromCodeEditor(0));
+      assertEquals(oldText, IDE.editor().getTextFromCodeEditor(0));
    }
 
    /**

@@ -103,7 +103,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       openFolder();
       openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, false);
       
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       selenium.click("//body");
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+A to select all text
@@ -137,7 +137,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check text became underline
       assertTrue(selenium.isElementPresent("//body/u/em/strong[text()='Hello, world! ']"));
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 4 ------------
@@ -169,14 +169,14 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //open file in WYDIWYG editor
       openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, false);
       //check Ctrl+F
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       selenium.click("//body");
       Thread.sleep(TestConstants.SLEEP);
       selenium.controlKeyDown();
       selenium.keyDown("//body", "F");
       selenium.keyUp("//body", "F");
       selenium.controlKeyUp();
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       
       //check find-replace form doesn't appear
@@ -185,23 +185,23 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //check Ctrl+D
       assertEquals(DEFAULT_TEXT_IN_GADGET, getTextFromCkEditor(0));
       
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       selenium.controlKeyDown();
       selenium.keyDown("//body", "D");
       selenium.keyUp("//body", "D");
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       assertEquals(DEFAULT_TEXT_IN_GADGET, getTextFromCkEditor(0));
       Thread.sleep(TestConstants.SLEEP);
       
       //check Ctrl+L
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       selenium.controlKeyDown();
       selenium.keyDown("//body", "L");
       selenium.keyUp("//body", "L");
       selenium.controlKeyUp();
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       //check go to line window dialog appeared
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGoToLineForm\"]/"));
@@ -231,7 +231,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //open file in WYDIWYG editor
       openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, false);
       //select all
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       selenium.click("//body");
       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
@@ -256,12 +256,12 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       
       assertEquals(DEFAULT_TEXT_IN_GADGET, selenium.getText("//body"));
       selenium.keyDown("//body", "Y");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       
       
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+Y
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       selenium.click("//body");
       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
@@ -270,18 +270,18 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       assertEquals("", selenium.getText("//body"));
       Thread.sleep(TestConstants.SLEEP);
       
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       
       //check Ctrl+C, Ctrl+V
       final String textForCopyPaste = "copy-paste text";
       
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, textForCopyPaste);
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       
       
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       selenium.click("//body");
       //select All text
       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
@@ -307,10 +307,10 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       
       assertEquals(textForCopyPaste, selenium.getText("//body"));
       
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       
       //check Ctrl+Home, Ctrl+End
-      selectIFrameWithEditor(0);
+      IDE.editor().selectIFrameWithEditor(0);
       selenium.click("//body");
       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
@@ -322,7 +322,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       Thread.sleep(TestConstants.SLEEP);
       
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       
       Thread.sleep(TestConstants.SLEEP);
       
@@ -348,7 +348,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //open FCK editor
       openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, false);
       
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_N);
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_N);
       
       checkCreateFileFromTemplateFormAndClose();
       
@@ -358,9 +358,9 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
    
    private String getTextFromCkEditor(int tabIndex) throws Exception
    {
-      selectIFrameWithEditor(tabIndex);
+      IDE.editor().selectIFrameWithEditor(tabIndex);
       String text = selenium.getText("//body");
-      selectMainFrame();
+      IDE.editor().selectMainFrame();
       return text;
    }
    

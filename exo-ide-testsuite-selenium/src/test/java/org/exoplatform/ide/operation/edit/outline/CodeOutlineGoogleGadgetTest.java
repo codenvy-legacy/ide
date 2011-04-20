@@ -140,11 +140,11 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       IDE.outline().checkOutlineTreeNodeSelected(11, "script", true);
 
       //delete script node
-      runHotkeyWithinEditor(0, true, false, 68);
+      IDE.editor().runHotkeyWithinEditor(0, true, false, 68);
       Thread.sleep(300);
-      runHotkeyWithinEditor(0, true, false, 68);
+      IDE.editor().runHotkeyWithinEditor(0, true, false, 68);
       Thread.sleep(300);
-      runHotkeyWithinEditor(0, true, false, 68);
+      IDE.editor().runHotkeyWithinEditor(0, true, false, 68);
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.outline().checkOutlineTreeNodeSelected(6, "body", true);

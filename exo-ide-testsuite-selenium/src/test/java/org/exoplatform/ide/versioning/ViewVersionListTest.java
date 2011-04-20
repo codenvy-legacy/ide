@@ -90,7 +90,7 @@ public class ViewVersionListTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
       //Edit and save file
-      typeTextIntoEditor(0, version1Text);
+      IDE.editor().typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
@@ -126,7 +126,7 @@ public class ViewVersionListTest extends VersioningTest
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version2Text);
+      IDE.editor().typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -149,7 +149,7 @@ public class ViewVersionListTest extends VersioningTest
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(false);
       checkViewVersionListButtonState(true);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
 
       //Edit file and save
       IDE.editor().clickOnEditor();
@@ -157,7 +157,7 @@ public class ViewVersionListTest extends VersioningTest
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version3Text);
+      IDE.editor().typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
       checkOlderVersionButtonState(true);
       checkNewerVersionButtonState(true);
@@ -206,16 +206,16 @@ public class ViewVersionListTest extends VersioningTest
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
       //Edit and save file
-      typeTextIntoEditor(0, version1Text);
+      IDE.editor().typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
-      typeTextIntoEditor(0, version2Text);
+      IDE.editor().typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version3Text);
+      IDE.editor().typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
-      typeTextIntoEditor(0, version4Text);
+      IDE.editor().typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
 
       //Open version panel
@@ -224,7 +224,7 @@ public class ViewVersionListTest extends VersioningTest
       
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
 
       checkViewVersionListButtonState(true);
       

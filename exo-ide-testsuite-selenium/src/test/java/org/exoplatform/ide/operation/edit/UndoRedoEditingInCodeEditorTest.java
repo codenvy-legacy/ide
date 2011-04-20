@@ -76,7 +76,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
 		IDE.toolbar().runCommand(ToolbarCommands.Editor.UNDO);
 		Thread.sleep(3000);
 		
-		String currentText = getTextFromCodeEditor(0);
+		String currentText = IDE.editor().getTextFromCodeEditor(0);
 		
 		assertEquals("12", currentText);
 		
@@ -87,9 +87,9 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
 		
       
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Z);//Press Ctrl+Z
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Z);//Press Ctrl+Z
       Thread.sleep(TestConstants.SLEEP);
-      currentText = getTextFromCodeEditor(0);
+      currentText = IDE.editor().getTextFromCodeEditor(0);
       assertEquals("1", currentText);
       
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, true);
@@ -101,7 +101,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      currentText = getTextFromCodeEditor(0);
+      currentText = IDE.editor().getTextFromCodeEditor(0);
       assertEquals("", currentText);
       
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, true);
@@ -119,13 +119,13 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
       
-      currentText = getTextFromCodeEditor(0);
+      currentText = IDE.editor().getTextFromCodeEditor(0);
       assertEquals("1", currentText);
       
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      currentText = getTextFromCodeEditor(0);
+      currentText = IDE.editor().getTextFromCodeEditor(0);
       assertEquals("12", currentText);
       
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, true);
@@ -134,9 +134,9 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
       
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Y);//Press Ctrl+Y
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Y);//Press Ctrl+Y
       Thread.sleep(TestConstants.SLEEP);
-      currentText = getTextFromCodeEditor(0);
+      currentText = IDE.editor().getTextFromCodeEditor(0);
       assertEquals("123", currentText);
       
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, false);
@@ -148,7 +148,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.Editor.UNDO);
       Thread.sleep(TestConstants.SLEEP);
       
-      currentText = getTextFromCodeEditor(0);
+      currentText = IDE.editor().getTextFromCodeEditor(0);
       
       assertEquals("12", currentText);
       
@@ -167,9 +167,9 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
       
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Y);//Press Ctrl+Y
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Y);//Press Ctrl+Y
       Thread.sleep(TestConstants.SLEEP);
-      currentText = getTextFromCodeEditor(0);
+      currentText = IDE.editor().getTextFromCodeEditor(0);
       assertEquals("a12", currentText);
       
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, false);
@@ -181,7 +181,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.toolbar().runCommand(ToolbarCommands.Editor.UNDO);
       Thread.sleep(TestConstants.SLEEP);
       
-      currentText = getTextFromCodeEditor(0);
+      currentText = IDE.editor().getTextFromCodeEditor(0);
       assertEquals("12", currentText);
       
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, true);
@@ -197,7 +197,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       
       IDE.toolbar().runCommand(ToolbarCommands.Editor.REDO);
       Thread.sleep(TestConstants.SLEEP);
-      currentText = getTextFromCodeEditor(0);
+      currentText = IDE.editor().getTextFromCodeEditor(0);
       assertEquals("a12", currentText);
       
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, false);
@@ -207,10 +207,10 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
       
       
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Z); //Press Ctrl+Z
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Z); //Press Ctrl+Z
       Thread.sleep(TestConstants.SLEEP_SHORT);
       Thread.sleep(TestConstants.SLEEP);
-      currentText = getTextFromCodeEditor(0);
+      currentText = IDE.editor().getTextFromCodeEditor(0);
       assertEquals("12", currentText);
       
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, true);
@@ -227,7 +227,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
       
-      typeTextIntoEditor(1, "text");
+      IDE.editor().typeTextIntoEditor(1, "text");
       Thread.sleep(TestConstants.SLEEP);
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.REDO, false);
       IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.UNDO, true);

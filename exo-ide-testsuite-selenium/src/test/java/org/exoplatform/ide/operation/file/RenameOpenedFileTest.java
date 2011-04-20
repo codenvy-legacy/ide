@@ -134,13 +134,13 @@ public class RenameOpenedFileTest extends BaseTest
       
       assertEquals(RENAMED_FILE_NAME, IDE.editor().getTabTitle(0));
 
-      typeTextIntoEditor(0, "change content");
+      IDE.editor().typeTextIntoEditor(0, "change content");
       saveCurrentFile();
       assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
 
       refresh();
       
-      typeTextIntoEditor(0, "cookies cookies cookies cookies !!!111");
+      IDE.editor().typeTextIntoEditor(0, "cookies cookies cookies cookies !!!111");
       saveCurrentFile();
       assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
    }

@@ -61,7 +61,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //---- 3 -----------------
       //Click Enter in editor and type such text:
       //var a
-      typeTextIntoEditor(0, "var a");
+      IDE.editor().typeTextIntoEditor(0, "var a");
       Thread.sleep(TestConstants.SLEEP);
 
       //In 2 seconds, after stopping typing text, new node a appeared in Outline tree. 
@@ -81,7 +81,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
 
       final String textJson = " = {\n" + "\"a1\": \"1\",\n" + "a2: a3.a4,\n" + "a5: function(),\n" + "a6 function\n" + "};\n";
 
-      typeTextIntoEditor(0, textJson);
+      IDE.editor().typeTextIntoEditor(0, textJson);
       Thread.sleep(TestConstants.SLEEP);
 
       //In 2 seconds, after stopping typing text, next node structure should be displayed 
@@ -138,7 +138,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       //click on editor
       selenium.clickAt(Locators.EDITOR_LOCATOR, "5,5");
 
-      typeTextIntoEditor(0, jsText);
+      IDE.editor().typeTextIntoEditor(0, jsText);
       Thread.sleep(TestConstants.SLEEP);
 
       //In 2 seconds, after stopping typing text, 
@@ -337,7 +337,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
             + "</script>\n" + "]]></Content></Module>\n";
            
       IDE.editor().clickOnEditor();
-      typeTextIntoEditor(2, gadgetText);
+      IDE.editor().typeTextIntoEditor(2, gadgetText);
       Thread.sleep(TestConstants.SLEEP);
       
       //New nodes with variables, functions (may be with methods and properties) appear in Outline tree. 

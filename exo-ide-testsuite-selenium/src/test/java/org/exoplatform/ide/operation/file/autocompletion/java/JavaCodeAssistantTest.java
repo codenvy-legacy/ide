@@ -75,7 +75,7 @@ public class JavaCodeAssistantTest extends BaseTest
 
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       goToLine(32);
-      typeTextIntoEditor(0, "a");
+      IDE.editor().typeTextIntoEditor(0, "a");
       IDE.codeAssistant().openForm();
       IDE.codeAssistant().clearInput();
       IDE.codeAssistant().checkElementNotPresent("in");

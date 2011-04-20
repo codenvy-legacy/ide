@@ -79,7 +79,7 @@ public class UploadingHtmlFileTest extends BaseTest
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(HTML_NAME, false);
       checkCodeEditorOpened(0);
 
-      String text = getTextFromCodeEditor(0);
+      String text = IDE.editor().getTextFromCodeEditor(0);
       assertTrue(text.length() > 0);
 
       String fileContent = getFileContent(FILE_PATH);

@@ -111,7 +111,7 @@ public class ViewVersionHistoryTest extends VersioningTest
 
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version1Text);
+      IDE.editor().typeTextIntoEditor(0, version1Text);
       //File content is changed, but not saved yet:
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
@@ -196,7 +196,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version1Text);
+      IDE.editor().typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
@@ -264,11 +264,11 @@ public class ViewVersionHistoryTest extends VersioningTest
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       //Edit file and save:
-      typeTextIntoEditor(0, version2Text);
+      IDE.editor().typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //Edit file and save:
-      typeTextIntoEditor(0, version3Text);
+      IDE.editor().typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
@@ -303,7 +303,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(0, version4Text);
+      IDE.editor().typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
       //Open again with button
       //runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
@@ -366,12 +366,12 @@ public class ViewVersionHistoryTest extends VersioningTest
       //Edit second file and save
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(1, version1Text);
+      IDE.editor().typeTextIntoEditor(1, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
-      typeTextIntoEditor(1, version2Text);
+      IDE.editor().typeTextIntoEditor(1, version2Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //Open version history for second file
@@ -381,7 +381,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkVersionPanelState(true);
-      checkTextOnVersionPanel(getTextFromCodeEditor(1));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(1));
 
       //Select first file:
       IDE.editor().selectTab(0);
@@ -389,7 +389,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkVersionPanelState(true);
-      checkTextOnVersionPanel(getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
 
       //Select second file: 
       IDE.editor().selectTab(1);
@@ -397,7 +397,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkVersionPanelState(true);
-      checkTextOnVersionPanel(getTextFromCodeEditor(1));
+      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(1));
 
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -419,14 +419,14 @@ public class ViewVersionHistoryTest extends VersioningTest
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      typeTextIntoEditor(2, version1Text);
+      IDE.editor().typeTextIntoEditor(2, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
-      typeTextIntoEditor(2, version2Text);
+      IDE.editor().typeTextIntoEditor(2, version2Text);
       saveCurrentFile();
-      typeTextIntoEditor(2, version3Text);
+      IDE.editor().typeTextIntoEditor(2, version3Text);
 
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);

@@ -62,10 +62,10 @@ public class AutoCompletionJavaScriptTest extends BaseTest
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      typeTextIntoEditor(0, "<script>");
+      IDE.editor().typeTextIntoEditor(0, "<script>");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      typeTextIntoEditor(0, "</script>");
+      IDE.editor().typeTextIntoEditor(0, "</script>");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
       IDE.editor().pressEnter();
@@ -89,33 +89,33 @@ public class AutoCompletionJavaScriptTest extends BaseTest
 
       selenium.keyDown("//body[@class='editbox']", "\\" + java.awt.event.KeyEvent.VK_END);
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "<script>");
+      IDE.editor().typeTextIntoEditor(0, "<script>");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "</script>");
+      IDE.editor().typeTextIntoEditor(0, "</script>");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "<script>");
+      IDE.editor().typeTextIntoEditor(0, "<script>");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "</script>");
+      IDE.editor().typeTextIntoEditor(0, "</script>");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "<st");
+      IDE.editor().typeTextIntoEditor(0, "<st");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
-      typeTextIntoEditor(0, "le>");
+      IDE.editor().typeTextIntoEditor(0, "le>");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "</st");
+      IDE.editor().typeTextIntoEditor(0, "</st");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
-      typeTextIntoEditor(0, "le>");
+      IDE.editor().typeTextIntoEditor(0, "le>");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "<script>");
+      IDE.editor().typeTextIntoEditor(0, "<script>");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "</script>");
+      IDE.editor().typeTextIntoEditor(0, "</script>");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       for (int i = 0; i < 9; i++)
@@ -140,38 +140,38 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.editor().deleteFileContent();
       
-      typeTextIntoEditor(0, " <script>");
+      IDE.editor().typeTextIntoEditor(0, " <script>");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, " </script>");
+      IDE.editor().typeTextIntoEditor(0, " </script>");
 
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "<%");
+      IDE.editor().typeTextIntoEditor(0, "<%");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "  import org.exoplatform.web.application.Parameter;");
+      IDE.editor().typeTextIntoEditor(0, "  import org.exoplatform.web.application.Parameter;");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "  List appCategories = uicomponent.getApplicationCategories();");
+      IDE.editor().typeTextIntoEditor(0, "  List appCategories = uicomponent.getApplicationCategories();");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "%>");
+      IDE.editor().typeTextIntoEditor(0, "%>");
 
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "<script>");
+      IDE.editor().typeTextIntoEditor(0, "<script>");
       IDE.editor().pressEnter();
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "</script>");
+      IDE.editor().typeTextIntoEditor(0, "</script>");
 
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "<st");
+      IDE.editor().typeTextIntoEditor(0, "<st");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
-      typeTextIntoEditor(0, "le>");
+      IDE.editor().typeTextIntoEditor(0, "le>");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "</st");
+      IDE.editor().typeTextIntoEditor(0, "</st");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
-      typeTextIntoEditor(0, "le>");
+      IDE.editor().typeTextIntoEditor(0, "le>");
 
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "<script>");
+      IDE.editor().typeTextIntoEditor(0, "<script>");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "</script>");
+      IDE.editor().typeTextIntoEditor(0, "</script>");
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
@@ -191,23 +191,23 @@ public class AutoCompletionJavaScriptTest extends BaseTest
     */
    private void javaScriptTestFunctions() throws Exception
    {
-      typeTextIntoEditor(0, "function topFunc(x) {");
+      IDE.editor().typeTextIntoEditor(0, "function topFunc(x) {");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "  // Local variables get a different colour than global ones.");
+      IDE.editor().typeTextIntoEditor(0, "  // Local variables get a different colour than global ones.");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "  var localVarOfTopFunc = 44;");
+      IDE.editor().typeTextIntoEditor(0, "  var localVarOfTopFunc = 44;");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, " function privateFunc1OfTopFunc() {");
+      IDE.editor().typeTextIntoEditor(0, " function privateFunc1OfTopFunc() {");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "  var localVarOfPrivateFuncOfTopFunc = 1;");
+      IDE.editor().typeTextIntoEditor(0, "  var localVarOfPrivateFuncOfTopFunc = 1;");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "   };");
+      IDE.editor().typeTextIntoEditor(0, "   };");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "   var privateFunc2OfTopFunc = function() {");
+      IDE.editor().typeTextIntoEditor(0, "   var privateFunc2OfTopFunc = function() {");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "   };");
+      IDE.editor().typeTextIntoEditor(0, "   };");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "    };");
+      IDE.editor().typeTextIntoEditor(0, "    };");
       IDE.editor().pressEnter();
       IDE.editor().pressEnter();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
@@ -228,18 +228,18 @@ public class AutoCompletionJavaScriptTest extends BaseTest
     */
    private void javaScriptTestFunction() throws Exception
    {
-      typeTextIntoEditor(0, "function a () {");
+      IDE.editor().typeTextIntoEditor(0, "function a () {");
       IDE.editor().pressEnter();
 
-      typeTextIntoEditor(0, "return 1;");
+      IDE.editor().typeTextIntoEditor(0, "return 1;");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "};");
+      IDE.editor().typeTextIntoEditor(0, "};");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "var b = function() {");
+      IDE.editor().typeTextIntoEditor(0, "var b = function() {");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "return 2;");
+      IDE.editor().typeTextIntoEditor(0, "return 2;");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "};");
+      IDE.editor().typeTextIntoEditor(0, "};");
       IDE.editor().pressEnter();
 
       IDE.codeAssistant().openForm();
@@ -250,11 +250,11 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       selenium.keyDown(CodeAssistant.Locators.INPUT, "\\40");
       IDE.codeAssistant().insertSelectedItem();
 
-      String textAfter = getTextFromCodeEditor(0);
+      String textAfter = IDE.editor().getTextFromCodeEditor(0);
       assertTrue(textAfter.split("b").length >= 2);
 
       // remove created text
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
       IDE.editor().pressEnter();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
    }
@@ -264,9 +264,9 @@ public class AutoCompletionJavaScriptTest extends BaseTest
     */
    private void javaScriptTestVar() throws Exception
    {
-      typeTextIntoEditor(0, "var a = 1;");
+      IDE.editor().typeTextIntoEditor(0, "var a = 1;");
       IDE.editor().pressEnter();
-      typeTextIntoEditor(0, "a");
+      IDE.editor().typeTextIntoEditor(0, "a");
 
       IDE.codeAssistant().openForm();
 
@@ -274,10 +274,10 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       IDE.codeAssistant().closeForm();
 
       // remove created text
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
 
       IDE.editor().pressEnter();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);

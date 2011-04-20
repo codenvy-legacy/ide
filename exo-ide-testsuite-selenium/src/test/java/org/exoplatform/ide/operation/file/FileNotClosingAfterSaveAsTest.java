@@ -80,7 +80,7 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
       
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
       
-      typeTextIntoEditor(0, "test test test");
+      IDE.editor().typeTextIntoEditor(0, "test test test");
       
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
       

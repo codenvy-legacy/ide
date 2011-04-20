@@ -65,7 +65,7 @@ public class IDE
       dialogs = new Dialogs(selenium);
       navigator = new Navigator(selenium, this);
       perspective = new Perspective(selenium);
-      codeAssistant = new CodeAssistant(selenium);
+      codeAssistant = new CodeAssistant(selenium, this);
    }
 
    public Menu menu()

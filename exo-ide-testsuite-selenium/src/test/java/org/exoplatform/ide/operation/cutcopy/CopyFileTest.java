@@ -20,7 +20,6 @@ package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -29,8 +28,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-115:Copy file.
@@ -186,7 +183,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Type "file content"
        */
-      typeTextIntoEditor(0, FILE_CONTENT_2);
+      IDE.editor().typeTextIntoEditor(0, FILE_CONTENT_2);
 
       /*
        * Save file
@@ -229,8 +226,8 @@ public class CopyFileTest extends BaseTest
       /*
        * Check files content
        */
-      assertEquals(FILE_CONTENT_1, getTextFromCodeEditor(0));
-      assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1, getTextFromCodeEditor(1));
+      assertEquals(FILE_CONTENT_1, IDE.editor().getTextFromCodeEditor(0));
+      assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1, IDE.editor().getTextFromCodeEditor(1));
 
    }
 
