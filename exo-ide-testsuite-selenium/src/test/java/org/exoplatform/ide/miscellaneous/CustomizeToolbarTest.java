@@ -174,8 +174,9 @@ public class CustomizeToolbarTest extends BaseTest
 
    /**
  * chek main elements on TollbarItem
+    * @throws InterruptedException 
  */
-public void chekTollbarItemExListGrid()
+public void chekTollbarItemExListGrid() throws InterruptedException
    {
       checkIdeCommandItemExListGrid("New * [Popup]", 2);
       checkIdeCommandItemExListGrid("Upload Zipped Folder...", 6);
@@ -188,19 +189,18 @@ public void chekTollbarItemExListGrid()
       checkIdeCommandItemExListGrid("Version History...", 32);
       checkIdeCommandItemExListGrid("Get URL...", 37);
       checkIdeCommandItemExListGrid("Show / Hide Documentation", 40);
-      checkIdeCommandItemExListGrid("Show Gadget Preview", 44);
+      checkIdeCommandItemExListGrid("Show Preview", 42);
       checkIdeCommandItemExListGrid("Run in Sandbox", 49);
       checkIdeCommandItemExListGrid("Launch REST Service", 52);
       checkIdeCommandItemExListGrid("Preview node type", 57);
       checkIdeCommandItemExListGrid("Initialize repository", 60);
-      checkIdeCommandItemExListGrid("Commit", 65);
-      checkIdeCommandItemExListGrid("Status", 68);
-      checkIdeCommandItemExListGrid("Workspace...", 70);
-      checkIdeCommandItemExListGrid("REST Services Discovery", 75);
-      checkIdeCommandItemExListGrid("New POGO", 81);
-      checkIdeCommandItemExListGrid("Project Template...", 77);
-      checkIdeCommandItemExListGrid("New Data Object", 82);
-      checkIdeCommandItemExListGrid("New Netvibes Widget", 91);
+      checkIdeCommandItemExListGrid("Push", 68);
+      checkIdeCommandItemExListGrid("Workspace...", 71);
+      checkIdeCommandItemExListGrid("REST Services Discovery", 76);
+      checkIdeCommandItemExListGrid("New POGO", 82);
+      checkIdeCommandItemExListGrid("Project Template...", 78);
+      checkIdeCommandItemExListGrid("New Data Object", 83);
+      checkIdeCommandItemExListGrid("New Netvibes Widget", 92);
    }
 
    /**
