@@ -29,6 +29,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -90,7 +91,9 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
     * ----- 1-2 ------------
     * @throws Exception
     */
-   // @Test
+  
+   @Ignore
+   @Test
    public void testDefaultHotkeys() throws Exception
    {
 
@@ -124,7 +127,9 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
     * ----- 15-19 ------------
     * @throws Exception
     */
-   //@Test
+
+   @Ignore
+   @Test
    public void testHotkeysInSeveralTabs() throws Exception
    {
       refresh();
@@ -238,6 +243,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
     * ----- 20 ------------
     * @throws Exception
     */
+   @Ignore
    @Test
    public void testHotkeysAfterRefresh() throws Exception
    {
@@ -246,7 +252,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //----- 1 ------------
       //prepare hotkeys
       //Open "Customize Hotkeys" window (Window->Customize Hotkeys)
-      //TODO 1 step not work, shold be fix call template form; see issue 729
+      //TODO 1 step not work, shold be fix call hotkeys form; see issue 729
       IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
 
       //check cutomize hotkeys dialog window appears

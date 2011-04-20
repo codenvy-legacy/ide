@@ -41,11 +41,12 @@ public class HotkeysFormTest extends AbstractHotkeysTest
    @Test
    public void testFormAndButtons() throws Exception
    {
+    //TODO 1 step not work, shold be fix call hotkey form; see issue 729
       Thread.sleep(TestConstants.SLEEP);
       //----- 1 ------------
       //Call "Customize Hotkeys" window
       IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-//      Thread.sleep(TestConstants.SLEEP);
+      //      Thread.sleep(TestConstants.SLEEP);
       
       checkCustomizeHotkeyDialogWindow();
       
@@ -118,7 +119,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
    public void testBindingAndUnbindingNewHotkey() throws Exception
    {
       refresh();
-      //TODO 1 step not work, shold be fix call template form; see issue 729
+      //TODO 1 step not work, shold be fix call hotkey form; see issue 729
       //----- 1 ------------
       //call customize hotkeys form
       IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
@@ -225,6 +226,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
    {
       refresh();
       //----- 1 ------------
+      //TODO 1 step not work, shold be fix call hotkey form; see issue 729
       //Call "Customize Hotkeys" window
       IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       Thread.sleep(TestConstants.SLEEP);
@@ -367,6 +369,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
    {
       refresh();
       //----- 1 ------------
+      //TODO 1 step not work, shold be fix call hotkey form; see issue 729
       //check Ctrl+N calls Create File From Template window
       //press Ctrl+N
       selenium.controlKeyDown();
