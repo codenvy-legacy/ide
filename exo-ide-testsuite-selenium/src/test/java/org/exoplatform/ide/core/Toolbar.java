@@ -47,28 +47,34 @@ public class Toolbar
     * Performs click on toolbar button and makes pause after it.
     * @param buttonTitle toolbar button title
     */
-   public void runCommand(String buttonTitle) throws Exception
-   {
+   public void runCommand(String buttonTitle, boolean wait) throws Exception {
       String locator =
          "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
 
       selenium.mouseOver(locator);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      String hoverLocator =
-         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
-//      selenium.mouseDownAt(hoverLocator, "");
-//      selenium.mouseUpAt(hoverLocator, "");
-      selenium.clickAt(hoverLocator, "");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
+      String hoverLocator = "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
+      selenium.click(hoverLocator);
+      if (wait) {
+         Thread.sleep(TestConstants.REDRAW_PERIOD);         
+      }
       try
       {
          selenium.mouseOut(hoverLocator);
       }
       catch (Exception e)
       {
-      }
+      }      
+   }
+
+   /**
+    * Performs click on toolbar button and makes pause after it.
+    * @param buttonTitle toolbar button title
+    */
+   public void runCommand(String buttonTitle) throws Exception
+   {
+      runCommand(buttonTitle, true);
    }
 
    /**

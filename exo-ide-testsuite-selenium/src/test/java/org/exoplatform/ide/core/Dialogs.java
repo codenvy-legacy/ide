@@ -36,25 +36,56 @@ import com.thoughtworks.selenium.Selenium;
 public class Dialogs
 {
    private Selenium selenium;
-   
+
    public interface Locators
    {
       public static final String SC_WARN_DIALOG = "scLocator=//Dialog[ID=\"isc_globalWarn\"]";
-      
+
       public static final String SC_WARN_DIALOG_HEADER = SC_WARN_DIALOG + "/header";
-      
+
       public static final String SC_WARN_DIALOG_YES_BTN = SC_WARN_DIALOG + "/yesButton";
-      
+
       public static final String SC_WARN_DIALOG_NO_BTN = SC_WARN_DIALOG + "/noButton";
-      
+
       public static final String SC_WARN_DIALOG_OK_BTN = SC_WARN_DIALOG + "/okButton";
    }
-   
+
+   public class WarningDialog
+   {
+
+      public void checkIsOpened()
+      {
+         assertTrue(selenium.isElementPresent("exoWarningDialog"));
+         assertTrue(selenium.isElementPresent("exoWarningDialogOkButton"));
+      }
+
+      public void checkIsOpened(String message)
+      {
+         checkIsOpened();
+         assertTrue(selenium.isTextPresent(message));
+      }
+
+      public void clickOk() throws Exception
+      {
+         selenium.click("//div[@id='exoWarningDialog']//div[@id='exoWarningDialogOkButton']");
+         Thread.sleep(TestConstants.REDRAW_PERIOD);
+      }
+
+   }
+
+   private WarningDialog warning;
+
    public Dialogs(Selenium selenium)
    {
       this.selenium = selenium;
+      warning = new WarningDialog();
    }
-   
+
+   public WarningDialog warning()
+   {
+      return warning;
+   }
+
    /**
     * Check, that warning dialog with two buttons (YES, NO) appeared and 
     * all elements are present.
@@ -68,7 +99,7 @@ public class Dialogs
       assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_YES_BTN));
       assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_NO_BTN));
    }
-   
+
    /**
     * Check, that warning dialog with one button (OK) appeared and 
     * all elements are present.
@@ -81,7 +112,7 @@ public class Dialogs
       assertEquals(header, selenium.getText(Dialogs.Locators.SC_WARN_DIALOG_HEADER));
       assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
    }
-   
+
    /**
     * Click on Yes button.
     * 
@@ -92,7 +123,7 @@ public class Dialogs
       selenium.click(Dialogs.Locators.SC_WARN_DIALOG_YES_BTN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
    /**
     * Click on No button.
     * 
@@ -103,7 +134,7 @@ public class Dialogs
       selenium.click(Dialogs.Locators.SC_WARN_DIALOG_NO_BTN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
    /**
     * Click on Ok button.
     * 
@@ -114,7 +145,7 @@ public class Dialogs
       selenium.click(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
    public void checkTextInDialog(String text)
    {
       final String textInDialog = selenium.getText(Locators.SC_WARN_DIALOG + "/blurb/");

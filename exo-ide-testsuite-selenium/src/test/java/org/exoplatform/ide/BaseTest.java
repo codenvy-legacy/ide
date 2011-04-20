@@ -126,8 +126,6 @@ public abstract class BaseTest
    public static void startSelenium() throws Exception
    {
       cleanDefaultWorkspace();
-      //      selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
-      //      SaveFileUtils.setSelenium(selenium);
 
       switch (BROWSER_COMMAND)
       {
@@ -146,9 +144,9 @@ public abstract class BaseTest
 
       selenium.start();
       selenium.windowFocus();
+      selenium.windowMaximize();
       selenium.open(APPLICATION_URL);
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      selenium.windowMaximize();
 
       if (isRunIdeUnderPortal())
       {
@@ -175,8 +173,6 @@ public abstract class BaseTest
          standaloneLogin(USER_NAME);
       }
 
-      //      IDE = new IDE(selenium);
-      
       IDE.navigator().setWorkspaceURL(WS_URL);
    }
 
@@ -202,7 +198,18 @@ public abstract class BaseTest
 
    protected static void standaloneLogin(String userName) throws InterruptedException
    {
-      Thread.sleep(TestConstants.SLEEP);
+      String inputFieldLocator = "//input[@type='text' and @name='j_username']";
+      int dSecond = 0;
+      while (!selenium.isElementPresent(inputFieldLocator))
+      {
+         Thread.sleep(10);
+         dSecond++;
+         if (dSecond > 500)
+         {
+            fail();
+         }
+      }
+
       selenium.type("//input[@name='j_username']", userName);
       selenium.type("//input[@name='j_password']", "gtn");
       selenium.click("//input[@value='Log In']");
@@ -668,7 +675,6 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.SLEEP);
    }
 
-
    /**
     * Read file content.
     * 
@@ -995,8 +1001,6 @@ public abstract class BaseTest
    {
       return selenium.getEval("/Win/.test(navigator.platform)").equals("true");
    }
-
-
 
    /**
     * remove all cookies which can be stored by IDE

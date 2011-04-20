@@ -203,10 +203,11 @@ public class Navigator extends AbstractTestModule
     */
    public void deleteSelectedItems() throws Exception
    {
-      ide.toolbar().runCommand(ToolbarCommands.File.DELETE);
+      ide.toolbar().runCommand(ToolbarCommands.File.DELETE, false);
 
       //check deletion form
-      assertTrue(selenium.isElementPresent("//div[@view-id='ideDeleteItemsView']"));
+      //assertTrue(selenium.isElementPresent("//div[@view-id='ideDeleteItemsView']"));
+      waitForElementPresent("//div[@view-id='ideDeleteItemsView']");
       assertTrue(selenium.isElementPresent("ideDeleteItemFormOkButton"));
       assertTrue(selenium.isElementPresent("ideDeleteItemFormCancelButton"));
 

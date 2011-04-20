@@ -21,11 +21,9 @@ package org.exoplatform.ide.operation.cutcopy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -48,118 +46,106 @@ public class CutFileTest extends BaseTest
    private static final String FILE_NAME_1 = "CutFileTest.txt";
 
    private static final String FOLDER_NAME_1 = CutFileTest.class.getSimpleName() + "-1";
-   
-   private static final String FOLDER_NAME_2 = CutFileTest.class.getSimpleName() + "-2";
-   
-  private static final String FOLDER_NAME_1_URL = WS_URL + FOLDER_NAME_1 + "/";
-   
-   private static final String FOLDER_NAME_2_URL = WS_URL + FOLDER_NAME_2 + "/";
-   
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
+   private static final String FOLDER_NAME_2 = CutFileTest.class.getSimpleName() + "-2";
+
+   //  private static final String FOLDER_NAME_1_URL = WS_URL + FOLDER_NAME_1 + "/";
+   //   
+   //   private static final String FOLDER_NAME_2_URL = WS_URL + FOLDER_NAME_2 + "/";
+   //
+   //   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+
    private static final String RANDOM_CONTENT = UUID.randomUUID().toString();
 
-   
    @BeforeClass
    public static void setUp()
    {
-      
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME_1);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME_2);
-         VirtualFileSystemUtils.put(RANDOM_CONTENT.getBytes(), MimeType.TEXT_PLAIN, URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-         VirtualFileSystemUtils.put(RANDOM_CONTENT.getBytes(), MimeType.TEXT_PLAIN, URL + FOLDER_NAME_2 + "/" + FILE_NAME_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_2);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT.getBytes(), MimeType.TEXT_PLAIN, WS_URL + FOLDER_NAME_1 + "/"
+            + FILE_NAME_1);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT.getBytes(), MimeType.TEXT_PLAIN, WS_URL + FOLDER_NAME_2 + "/"
+            + FILE_NAME_1);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME_1);
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME_2);
-         VirtualFileSystemUtils.delete(URL + FILE_NAME_1);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_1);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_2);
+         VirtualFileSystemUtils.delete(WS_URL + FILE_NAME_1);
       }
       catch (Exception e)
       {
          e.printStackTrace();
-      } 
+      }
    }
-   
-   
+
    //IDE-114
    @Test
    public void testCutFile() throws Exception
    {
       waitForRootElement();
+
       IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-
-      IDE.navigator().selectItem(FOLDER_NAME_1_URL);
+      
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME_1 + "/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-
-      IDE.navigator().selectItem(FOLDER_NAME_2_URL);
+      
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME_2 + "/");
 
       //Open files "test 1/gadget.xml".
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1, false);
 
       checkPasteCommands(false);
       checkCutCopyCommands(true);
-
-      IDE.navigator().selectItem(FOLDER_NAME_1_URL + FILE_NAME_1);
-
+      
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      
       checkPasteCommands(false);
       checkCutCopyCommands(true);
 
-      IDE.navigator().selectItem(FOLDER_NAME_1_URL + FILE_NAME_1);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
 
       //Call the "Edit->Cut Items" topmenu command.
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
       checkPasteCommands(true);
 
-      IDE.navigator().selectItem(FOLDER_NAME_1_URL);
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME_1 + "/");
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
-      
-      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
-      assertTrue(selenium.isTextPresent("Can't move items in the same directory!"));
-      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
 
-      IDE.dialogs().clickOkButton();
+      IDE.dialogs().warning().checkIsOpened("Can't move items in the same directory!");
+      IDE.dialogs().warning().clickOk();
 
       checkPasteCommands(true);
 
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME_1_URL);
-      IDE.navigator().selectItem(FOLDER_NAME_2_URL);
+      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.navigator().selectItem(WS_URL + FOLDER_NAME_2 + "/");
 
       //Select "test 2" folder item in the Workspace Panel and then select "Edit->Paste Items" topmenu command.
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
+      /*
       assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
       assertTrue(selenium.isTextPresent("412 Precondition Failed"));
       assertTrue(selenium.isTextPresent("Precondition Failed"));
       assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
-
       IDE.dialogs().clickOkButton();
-
+      */
+      
+      IDE.dialogs().warning().checkIsOpened();
+      IDE.dialogs().warning().clickOk();
+      
       checkPasteCommands(true);
 
       //Select root item and then click on "Paste" toolbar button.
@@ -167,10 +153,12 @@ public class CutFileTest extends BaseTest
 
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
       
-      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(URL + FOLDER_NAME_1 + "/" + FILE_NAME_1).getStatusCode());
-      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FILE_NAME_1).getStatusCode());
-      IDE.navigator().selectItem(WS_URL + FILE_NAME_1);
+      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1).getStatusCode());
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(WS_URL + FILE_NAME_1).getStatusCode());
 
+      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.navigator().selectItem(WS_URL + FILE_NAME_1);
+      
       assertEquals(RANDOM_CONTENT, IDE.editor().getTextFromCodeEditor(0));
 
       checkPasteCommands(false);
@@ -184,8 +172,8 @@ public class CutFileTest extends BaseTest
 
       IDE.toolbar().runCommand(ToolbarCommands.File.SAVE);
       IDE.editor().closeTab(0);
-      
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_NAME_1, false);
       assertEquals(oldText, IDE.editor().getTextFromCodeEditor(0));
    }
 

@@ -28,7 +28,10 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({CutFileTest.class, CutFoldersAndFilesTest.class, CutFolderTest.class, CopyFoldersAndFilesTest.class, CopyFileTest.class, CopyFolderTest.class})
+@SuiteClasses({CopyFileTest.class, CopyFoldersAndFilesTest.class, CopyFolderTest.class, CutFileTest.class
+//CutFoldersAndFilesTest.class,
+//CutFolderTest.class,
+})
 public class CutCopyTestSuite
 {
 
