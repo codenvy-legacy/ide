@@ -22,7 +22,6 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -31,6 +30,7 @@ import org.exoplatform.ide.git.shared.GitUser;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Properties;
 
 /**
@@ -38,12 +38,29 @@ import java.util.Properties;
  * @version $Id: JGitConnectionFactory.java 22811 2011-03-22 07:28:35Z andrew00x
  *          $
  */
+@SuppressWarnings("serial")
 public class JGitConnectionFactory extends GitConnectionFactory
 {
+   /*
+    * XXX : Temporary solution to get access to remote Git Repository.
+    * Need find appropriate place for it at least.
+    * *****************************************************************
+    * File GitCredentials.properties must be accessible to context
+    * class-loader. File may contains: 1. username, password for
+    * authentication over HTTP 2. ssh.host, ssh.passphrase for authentication
+    * over SSH. If key is not protected by passphrase this parameters may be
+    * omitted. Set up SSH keys described here
+    * http://help.github.com/linux-set-up-git/.
+    * 
+    * Example of GitCredentials.properties file:
+    * 
+    * username=andrew00x
+    * password=secret
+    * ssh.host=git@github.com
+    * ssh.passphrase=secret phrase
+    */
    static
    {
-      // XXX : Temporary solution to get access to remote Git Repository.
-      // Need find appropriate place for it at least.
       InputStream ins = Thread.currentThread().getContextClassLoader().getResourceAsStream("GitCredentials.properties");
       if (ins != null)
       {
@@ -68,7 +85,13 @@ public class JGitConnectionFactory extends GitConnectionFactory
          }
          String username = credentialProperties.getProperty("username");
          String password = credentialProperties.getProperty("password");
-         CredentialsProvider.setDefault(new UsernamePasswordCredentialsProvider(username, password));
+         final String sshHost = credentialProperties.getProperty("ssh.host");
+         final String sshPassphrase = credentialProperties.getProperty("ssh.passphrase");
+         CredentialsProvider.setDefault(new CredentialsProviderImpl(username, password, new HashMap<String, String>() {
+            {
+               put(sshHost, sshPassphrase);
+            }
+         }));
       }
    }
 
