@@ -33,7 +33,7 @@ public class GitApplication extends Application
 
    public GitApplication()
    {
-      classes = new HashSet<Class<?>>(1);
+      classes = new HashSet<Class<?>>(2);
       classes.add(GitService.class);
       classes.add(GitRepoService.class);
    }
