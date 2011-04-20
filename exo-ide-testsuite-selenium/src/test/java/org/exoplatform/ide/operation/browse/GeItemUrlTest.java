@@ -36,10 +36,12 @@ import org.junit.Test;
  */
 public class GeItemUrlTest extends BaseTest
 {
+   private final String WORK_SPACE_LOCATOR = "";
+   
    private final String content1 = "<p> Hello!!! </p>";
-   
+
    private final String content2 = "Hello!!!";
-   
+
    private final String searchPhrase = "Hello!!!";
 
    private final String file1Name = "gadget.xml";
@@ -48,7 +50,7 @@ public class GeItemUrlTest extends BaseTest
 
    private final String folderName = GeItemUrlTest.class.getSimpleName();
 
-   private final String entrypoint = WEBDAV_CONTEXT+"/repository/";
+   private final String entrypoint = WEBDAV_CONTEXT + "/repository/";
 
    @Test
    public void testGetFileUrl() throws Exception
@@ -57,14 +59,14 @@ public class GeItemUrlTest extends BaseTest
       //Create first file
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       IDE.editor().deleteLinesInEditor(7);
-      
+
       assertEquals("", IDE.editor().getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content1);
       saveAsUsingToolbarButton(file1Name);
       Thread.sleep(TestConstants.SLEEP);
-     
+
       IDE.editor().closeTab(0);
       IDE.navigator().assertItemPresent(WS_URL + file1Name);
 
@@ -76,12 +78,13 @@ public class GeItemUrlTest extends BaseTest
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
       IDE.editor().closeTab(0);
-      IDE.navigator().assertItemPresent(WS_URL + file2Name);
+      IDE.navigator().assertItemPresent(WS_URL + folderName + "/" + file2Name);
       //Refresh root item
       IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand("Refresh Selected Folder");
 
-      String workspaceName = getItemNameFromWorkspaceTree(0);
+      String workspaceName =
+         selenium.getText("//div[@ID=\"ideNavigatorItemTreeGrid\"]//div[@class=\"ide-Tree-label\"]/");
 
       String url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
@@ -117,7 +120,7 @@ public class GeItemUrlTest extends BaseTest
       //Check get URL for the file in the folder
       IDE.navigator().clickOpenIconOfFolder(WS_URL + folderName + "/");
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL + file2Name);
+      IDE.navigator().selectItem(WS_URL + folderName + "/" + file2Name);
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
@@ -133,39 +136,40 @@ public class GeItemUrlTest extends BaseTest
       IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand("Search...");
       Thread.sleep(TestConstants.SLEEP);
-      
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSearchForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormCancelButton\"]"));
+
+      chekAppearSerchForm();
       //Check form inputs
-      assertEquals("/", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormPathField]/element"));
-      assertEquals("", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element"));
-      assertEquals("", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element"));
+      assertEquals("/", selenium .getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormPathField\"]"));
+      assertEquals("", selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]"));
+      assertEquals("", selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//tr/td/input[@name=\"ideSearchFormMimeTypeField\"]"));
       //Type content to input
-      selenium.click("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element");
-      selenium.type("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element", searchPhrase);
+      selenium
+         .click("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]");
+      selenium.type(
+         "//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]",
+         searchPhrase);
       //Click "Search" button
-      selenium.click("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]");
+      selenium.click("ideSearchFormSearchButton");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //Check files are found
       assertElementPresentSearchResultsTree(file1Name);
       assertElementPresentSearchResultsTree(file2Name);
-      
+
       String workspaceName = getItemNameFromWorkspaceTree(0);
-      
+
       //Check get URL for first file
       selectItemInSearchResultsTree(file1Name);
       String url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + file1Name));
-      
+
       //Check get URL for second file
       selectItemInSearchResultsTree(file2Name);
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
-      
+
       selectWorkspaceTab();
       IDE.navigator().selectItem(WS_URL + folderName + "/");
       selenium.controlKeyDown();
@@ -173,6 +177,16 @@ public class GeItemUrlTest extends BaseTest
       selenium.controlKeyUp();
       IDE.navigator().deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
+   }
+
+   /**
+    * method for check Appear Serch Form
+    */
+   public void chekAppearSerchForm()
+   {
+      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideSearchView\"]"));
+      assertTrue(selenium.isElementPresent("ideSearchFormSearchButton"));
+      assertTrue(selenium.isElementPresent("ideSearchFormCancelButton"));
    }
 
    /**
