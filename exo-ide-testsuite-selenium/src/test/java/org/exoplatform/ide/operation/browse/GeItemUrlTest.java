@@ -27,6 +27,8 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
+import com.google.gwt.logging.client.SystemLogHandler;
+
 /**
  * Created by The eXo Platform SAS.
  *	
@@ -37,7 +39,7 @@ import org.junit.Test;
 public class GeItemUrlTest extends BaseTest
 {
    private final String WORK_SPACE_LOCATOR = "//div[@ID=\"ideNavigatorItemTreeGrid\"]//div[@class=\"ide-Tree-label\"]/";
-   
+
    private final String content1 = "<p> Hello!!! </p>";
 
    private final String content2 = "Hello!!!";
@@ -55,17 +57,14 @@ public class GeItemUrlTest extends BaseTest
    @Test
    public void testGetFileUrl() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP*3);
       //Create first file
+      waitForRootElement();
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-
       IDE.editor().deleteLinesInEditor(7);
-
       assertEquals("", IDE.editor().getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content1);
       saveAsUsingToolbarButton(file1Name);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.SLEEP * 3);
 
       IDE.editor().closeTab(0);
       IDE.navigator().assertItemPresent(WS_URL + file1Name);
@@ -79,13 +78,12 @@ public class GeItemUrlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.editor().closeTab(0);
       IDE.navigator().assertItemPresent(WS_URL + folderName + "/" + file2Name);
+      
       //Refresh root item
       IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand("Refresh Selected Folder");
-
       String workspaceName =
          selenium.getText("//div[@ID=\"ideNavigatorItemTreeGrid\"]//div[@class=\"ide-Tree-label\"]/");
-
       String url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/"));
@@ -139,14 +137,16 @@ public class GeItemUrlTest extends BaseTest
 
       chekAppearSerchForm();
       //Check form inputs
-      assertEquals("/", selenium .getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormPathField\"]"));
-      assertEquals("", selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]"));
-      assertEquals("", selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//tr/td/input[@name=\"ideSearchFormMimeTypeField\"]"));
+      assertEquals("/",
+         selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormPathField\"]"));
+      assertEquals("",
+         selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]"));
+      assertEquals("",
+         selenium
+            .getValue("//table[@id=\"ideSearchFormDynamicForm\"]//tr/td/input[@name=\"ideSearchFormMimeTypeField\"]"));
       //Type content to input
-      selenium
-         .click("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]");
-      selenium.type(
-         "//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]",
+      selenium.click("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]");
+      selenium.type("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]",
          searchPhrase);
       //Click "Search" button
       selenium.click("ideSearchFormSearchButton");
@@ -159,22 +159,21 @@ public class GeItemUrlTest extends BaseTest
       String workspaceName = selenium.getText(WORK_SPACE_LOCATOR);
 
       //Check get URL for first file
-      selectItemInSearchResultsTree(file1Name);
+      IDE.navigator().selectItemInSerchTree(WS_URL + file1Name);
       String url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + file1Name));
 
       //Check get URL for second file
-      selectItemInSearchResultsTree(file2Name);
+      IDE.navigator().selectItemInSerchTree(WS_URL + folderName + "/" + file2Name);
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
 
       selectWorkspaceTab();
       IDE.navigator().selectItem(WS_URL + folderName + "/");
-      selenium.controlKeyDown();
+      IDE.navigator().deleteSelectedItems();
       IDE.navigator().selectItem(WS_URL + file1Name);
-      selenium.controlKeyUp();
       IDE.navigator().deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
    }
