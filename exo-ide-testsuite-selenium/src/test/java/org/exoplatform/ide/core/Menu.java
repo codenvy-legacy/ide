@@ -35,13 +35,14 @@ import com.thoughtworks.selenium.Selenium;
 
 public class Menu
 {
-   
+
    private Selenium selenium;
-   
-   public Menu(Selenium selenium) {
+
+   public Menu(Selenium selenium)
+   {
       this.selenium = selenium;
    }
-   
+
    /**
     * Open command from top menu.
     * 
@@ -56,7 +57,7 @@ public class Menu
       selenium.click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
-   
+
    public void runCommand(String menuName, String commandName, String subCommandName) throws Exception {
       selenium.click("//td[@class='exo-menuBarItem' and text()='" + menuName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
@@ -67,7 +68,7 @@ public class Menu
       selenium.click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + subCommandName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
-   
+
    /**
     * Check is command in top menu visible or hidden.
     * 
@@ -78,7 +79,7 @@ public class Menu
    public void checkCommandVisibility(String topMenuName, String commandName, boolean visible) throws Exception
    {
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
-      
+
       if (visible)
       {
          assertTrue(selenium.isElementPresent("//td/nobr[text()='" + commandName + "']"));
@@ -90,7 +91,7 @@ public class Menu
       selenium.mouseDown("//div[@class='exo-lockLayer']/");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
-   
+
    /**
     * Check is command in top menu enabled or disabled.
     * 
@@ -101,7 +102,7 @@ public class Menu
    public void checkCommandEnabled(String topMenuName, String commandName, boolean enabled) throws Exception
    {
       selenium.mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
-      
+
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       if (enabled)
       {
@@ -116,7 +117,7 @@ public class Menu
       selenium.mouseDown("//div[@class='exo-lockLayer']/");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
-   
+
    /**
     * Get the XPATH locator for top menu command.
     * 

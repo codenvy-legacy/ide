@@ -54,14 +54,15 @@ public class Toolbar
       selenium.mouseOver(locator);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      String hoverLocator = "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
-      selenium.click(hoverLocator);
+      
+      selenium.click(locator);
+      //selenium.mouseUpAt(locator, "");
       if (wait) {
          Thread.sleep(TestConstants.REDRAW_PERIOD);         
       }
       try
       {
-         selenium.mouseOut(hoverLocator);
+         selenium.mouseOut(locator);
       }
       catch (Exception e)
       {
@@ -86,16 +87,17 @@ public class Toolbar
    {
       runCommand("New");
 
-      String locator =
-         "//table[@class=\"exo-popupMenuTable\"]//td[@class=\"exo-popupMenuTitleField\"]//nobr[text()=\""
-            + menuItemName + "\"]";
+      String locator = "//table[@class='exo-popupMenuTable']//tbody//td//nobr[text()='" + menuItemName + "']";
       selenium.mouseOver(locator);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      //selenium.click(locator);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      String hoverLocator =
-         "//table[@class=\"exo-popupMenuTable\"]//td[@class=\"exo-popupMenuTitleFieldOver\"]//nobr[text()=\""
-            + menuItemName + "\"]";
-      selenium.mouseDownAt(hoverLocator, "");
+      selenium.click(locator);
+      //String hoverLocator =
+      //   "//table[@class='exo-popupMenuTable']//tbody//td//nobr[text()='" + menuItemName + "']";
+      
+      //selenium.mouseUp(hoverLocator);
+
       //time to wait while gadget open new file
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
