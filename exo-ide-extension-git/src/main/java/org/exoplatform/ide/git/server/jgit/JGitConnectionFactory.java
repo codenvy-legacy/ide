@@ -79,7 +79,7 @@ public class JGitConnectionFactory extends GitConnectionFactory
             {
                ins.close();
             }
-            catch (Exception e)
+            catch (IOException e)
             {
             }
          }

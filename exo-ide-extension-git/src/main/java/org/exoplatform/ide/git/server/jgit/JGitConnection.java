@@ -380,7 +380,6 @@ public class JGitConnection implements GitConnection
          {
             config.setString("user", null, "name", gitUser.getName());
             config.setString("user", null, "email", gitUser.getEmail());
-            config.save();
          }
 
          config.save();
