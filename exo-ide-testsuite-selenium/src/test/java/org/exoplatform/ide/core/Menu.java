@@ -50,21 +50,21 @@ public class Menu
     */
    public void runCommand(String topMenuName, String commandName) throws Exception
    {
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
+      selenium.mouseDown("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']", "");
+      selenium.click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
    public void runCommand(String menuName, String commandName, String subCommandName) throws Exception {
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + menuName + "']", "");
+      selenium.click("//td[@class='exo-menuBarItem' and text()='" + menuName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']", "");
+      selenium.click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
-      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + subCommandName + "']", "");
+      selenium.click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + subCommandName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
