@@ -37,10 +37,12 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class Navigator extends AbstractTestModule
 {
-   
+
    public static final String NAVIGATION_TREE = "ideNavigatorItemTreeGrid";
-   
+
    static final String TREE_PREFIX_ID = "navigation-";
+
+   static final String TREE_PREFIX_SERCH_ID = "search-";
 
    private IDE ide;
 
@@ -88,15 +90,15 @@ public class Navigator extends AbstractTestModule
    public void selectRow(int rowNumber) throws Exception
    {
       fail();
-//      selenium.click(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[1]");
-//      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      //      selenium.click(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[1]");
+      //      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    public String getRowTitle(int rowNumber)
    {
       fail();
       return null;
-//      return selenium.getText(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[0]");
+      //      return selenium.getText(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[0]");
    }
 
    /**
@@ -124,6 +126,11 @@ public class Navigator extends AbstractTestModule
       return TREE_PREFIX_ID + Utils.md5(href);
    }
 
+   public String getItemIdSerch(String href) throws Exception
+   {
+      return TREE_PREFIX_SERCH_ID + Utils.md5(href);
+   }
+
    /**
     * Select item in workspace tree
     * @param itemHref Href of item
@@ -132,6 +139,17 @@ public class Navigator extends AbstractTestModule
    public void selectItem(String itemHref) throws Exception
    {
       selenium.clickAt(getItemId(itemHref), "0");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+   }
+
+   /**
+    * Select item in search tree
+    * @param itemHref
+    * @throws Exception
+    */
+   public void selectItemInSerchTree(String itemHref) throws Exception
+   {
+      selenium.clickAt(getItemIdSerch(itemHref), "0");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
