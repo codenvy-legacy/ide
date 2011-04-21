@@ -163,7 +163,6 @@ public class Locators
     */
    public static String getTabCloseButtonLocator(int index)
    {
-
       return EDITOR_TABSET_LOCATOR + "//td[@tab-bar-index='" + index + "']//div[@button-name='close-tab']";
    }
 

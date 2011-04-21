@@ -19,22 +19,13 @@
 package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.common.http.client.HTTPResponse;
-import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Dialogs;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -48,97 +39,74 @@ import org.junit.Test;
  */
 public class CutFolderTest extends BaseTest
 {
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
-   private final static String FOLDER_1 = "test 1";
-   
-   private final static String FOLDER_1_URL = WS_URL + FOLDER_1 + "/";
 
-   private final static String FOLDER_2 = "test 2";
-   
-   private final static String FOLDER_2_URL = WS_URL + FOLDER_2 + "/";
-    
-   private final static String FILE_1 = "test.groovy";
-
-   private static final String FILE_URL = URL + FOLDER_1 + "/" 
-               + FOLDER_2 + "/" + FILE_1;
-   
    private static final String FILE_CONTENT = "file content";
-   
+
    private static final String CHANGED_FILE_CONTENT = "changed ";
 
    /**
     * Create next folders' structure in the workspace root:
-    * test 1/
-    *    test 2/
-    *        test.groovy - file with sample content  
-    * test 2/
+    * folder 1/
+    *    folder 2/
+    *        file.groovy - file with sample content  
+    * folder 2/
     */
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1 + "/" + FOLDER_2);
-         VirtualFileSystemUtils.put(FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY, FILE_URL);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_2);
+         VirtualFileSystemUtils.mkcol(WS_URL + "folder 1");
+         VirtualFileSystemUtils.mkcol(WS_URL + "folder 1/folder 2");
+         VirtualFileSystemUtils.put(FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL
+            + "folder 1/folder 2/file.groovy");
+         VirtualFileSystemUtils.mkcol(WS_URL + "folder 2");
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_1);
-         VirtualFileSystemUtils.delete(URL + FOLDER_2);
+         VirtualFileSystemUtils.delete(WS_URL + "folder 1");
+         VirtualFileSystemUtils.delete(WS_URL + "folder 2");
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testCutFolderOperation() throws Exception
    {
       waitForRootElement();
       /*
-       * 1. Check, that FOLDER_1 and FOLDER_2, FOLDER_2/FILE_1, FOLDER_2/FOLDER_2 are present.
+       * 1. Check, that "/folder 1", "/folder 2", "/folder 1/folder 2", "/folder 1/folder 2/file.groovy" are presents
        */
       IDE.navigator().selectRootOfWorkspace();
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().assertItemPresent(FOLDER_1_URL);
-      
-      
-      IDE.navigator().selectItem(FOLDER_1_URL);
+      IDE.navigator().assertItemPresent(WS_URL + "folder 1/");
+      IDE.navigator().assertItemPresent(WS_URL + "folder 2/");
+
+      IDE.navigator().selectItem(WS_URL + "folder 1/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().assertItemPresent(FOLDER_2_URL);
-      
-      IDE.navigator().selectItem(FOLDER_2_URL);
+      IDE.navigator().assertItemPresent(WS_URL + "folder 1/folder 2/");
+
+      IDE.navigator().selectItem(WS_URL + "folder 1/folder 2/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().assertItemPresent(FILE_URL);
-      
+      IDE.navigator().assertItemPresent(WS_URL + "folder 1/folder 2/file.groovy");
 
       /*
        * 2.Open file "test 1/test 2/test.groovy".
        */
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
-      
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + "folder 1/folder 2/file.groovy", false);
+
       /*
        * Paste commands are disabled, Cut/Copy are enabled
        */
@@ -151,12 +119,11 @@ public class CutFolderTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
 
       /*
-       * 3. Select folder "test 1/test 2". Click on "Cut" toolbar button.
-       * 
-       * Select row number 2, because there are two "test 2" folders.
+       * 3. Select folder "folder 1/folder 1.1". Click on "Cut" toolbar button.
        */
-      IDE.navigator().selectRow(2);
+      IDE.navigator().selectItem(WS_URL + "folder 1/folder 2/");
       IDE.toolbar().runCommand(MenuCommands.Edit.CUT_TOOLBAR);
+
       /*
        * Paste commands are enabled.
        */
@@ -164,9 +131,9 @@ public class CutFolderTest extends BaseTest
       IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       /*
-       * 4. Select file "test 1/test 2/test.groovy" in the Workspace Panel.
+       * 4. Select file "folder 1/folder 1.1/test.groovy" in the Workspace Panel.
        */
-      IDE.navigator().selectItem(FILE_URL);
+      IDE.navigator().selectItem(WS_URL + "folder 1/folder 2/file.groovy");
 
       /*
        * Paste commands are enabled.
@@ -175,18 +142,16 @@ public class CutFolderTest extends BaseTest
       IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /*
-       * 5. Select folder "test 1/test 2/" and click on "Paste" toolbar button.
-       * Select row number 2, because there are two "test 2" folders.
+       * 5. Select folder "folder 1/folder 1.1/" and click on "Paste" toolbar button.
        */
-      IDE.navigator().selectRow(2);
+      IDE.navigator().selectItem(WS_URL + "folder 1/folder 2/");
       IDE.toolbar().runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
 
       /*
        * Error message about impossibility to paste folder into the itself should be displayed. 
        */
-      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
-      IDE.dialogs().clickOkButton();
-      assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
+      IDE.dialogs().warning().checkIsOpened("Can't move items in the same directory!");
+      IDE.dialogs().warning().clickOk();
 
       /*
        * After closing error message dialog the toolbar button "Paste" and topmenu command "Edit->Paste Items" 
@@ -204,9 +169,8 @@ public class CutFolderTest extends BaseTest
       /*
        * Error message about impossibility to paste folder with the existed name should be displayed. 
        */
-      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
-      IDE.dialogs().clickOkButton();
-      assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
+      IDE.dialogs().warning().checkIsOpened();
+      IDE.dialogs().warning().clickOk();
 
       /*
        * After closing error message dialog the toolbar button "Paste" and topmenu command "Edit->Paste Items" 
@@ -216,80 +180,47 @@ public class CutFolderTest extends BaseTest
       IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /*
-       * 7. Select folders "test 1" and "test 2".
+       * 7. Select "test 2" item and then select "Edit->Paste Items" topmenu command.
        */
-      IDE.navigator().selectItem(FOLDER_1_URL);
-
-      selenium.keyPressNative("" + KeyEvent.VK_CONTROL);
-      IDE.navigator().selectItem(FOLDER_2_URL);
-      selenium.keyUpNative("" + KeyEvent.VK_CONTROL);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      /*
-       * "Paste" commands should be enabled.
-       */
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-
-      /*
-       * 8. Select file "test 1/test 2/test.groovy".
-       */
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(FOLDER_1_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(FOLDER_2_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(FILE_URL);
-
-      /*
-       * "Paste" commands should be enabled.
-       */
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-
-      /*
-       * 9. Select "test 2" item and then select "Edit->Paste Items" topmenu command.
-       * 
-       * Select row number 4, because there are two "test 2" folders.
-       */
-      IDE.navigator().selectRow(4);
+      IDE.navigator().selectItem(WS_URL + "folder 2/");
       IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       /*
        * Check, that file name stays the same (IDE-225 issue).
        */
-      assertEquals(FILE_1, IDE.editor().getTabTitle(0));
-      IDE.navigator().assertItemNotPresent(FOLDER_1_URL);
+      assertEquals("file.groovy", IDE.editor().getTabTitle(0));
+      IDE.navigator().assertItemNotPresent(WS_URL + "folder 1/folder 2/");
       checkItemsOnWebDav();
 
       /*
-       * 10. Change content of opened file "test.groovy" in Content Panel, 
-       * save file, close file tab and open file "test 2/test 2/test.groovy".
+       * 10. Change content of opened file "file.groovy", 
+       * save file, close file tab and open file "folder 2/folder 2/file.groovy".
        */
       IDE.editor().typeTextIntoEditor(0, CHANGED_FILE_CONTENT);
       saveCurrentFile();
       IDE.editor().closeTab(0);
 
-      IDE.navigator().selectRow(3);
+      IDE.navigator().selectItem(WS_URL + "folder 2/folder 2/");
       IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
-      
-      checkCodeEditorOpened(0);
+
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + "folder 2/folder 2/file.groovy", false);
+      IDE.editor().checkIsTabPresentInEditorTabset("file.groovy", true);
       assertEquals(CHANGED_FILE_CONTENT + FILE_CONTENT, IDE.editor().getTextFromCodeEditor(0));
 
+      IDE.navigator().assertItemPresent(WS_URL + "folder 1/");
+      IDE.navigator().assertItemPresent(WS_URL + "folder 2/");
+      IDE.navigator().assertItemPresent(WS_URL + "folder 2/folder 2/");
+      IDE.navigator().assertItemPresent(WS_URL + "folder 2/folder 2/file.groovy");
+
       /*
-       * Check folders
+       * check there is no "folder 1/folder 2" in the tree
        */
-      assertEquals(FOLDER_1, IDE.navigator().getRowTitle(1));
-      assertEquals(FOLDER_2, IDE.navigator().getRowTitle(2));
-      assertEquals(FOLDER_2, IDE.navigator().getRowTitle(3));
-      assertEquals(FILE_1, IDE.navigator().getRowTitle(4));
-      
+      IDE.navigator().assertItemNotPresent(WS_URL + "folder 1/folder 2/");
+
       /*
-       * check there is no another element in the tree
+       * close editor
        */
-      assertFalse(selenium.isElementPresent(IDE.navigator().getScLocator(5, 0)));
+      IDE.editor().closeTab(0);
    }
 
    /**
@@ -303,20 +234,11 @@ public class CutFolderTest extends BaseTest
     */
    private void checkItemsOnWebDav() throws Exception
    {
-      HTTPResponse response = VirtualFileSystemUtils.get(URL + FOLDER_1);
-      assertEquals(200, response.getStatusCode());
-      
-      response = VirtualFileSystemUtils.get(URL + FOLDER_1 + "/" + FOLDER_2);
-      assertEquals(HTTPStatus.NOT_FOUND, response.getStatusCode());
-      
-      response = VirtualFileSystemUtils.get(URL + FOLDER_2);
-      assertEquals(200, response.getStatusCode());
-      
-      response = VirtualFileSystemUtils.get(URL + FOLDER_2 + "/" + FOLDER_2);
-      assertEquals(200, response.getStatusCode());
-
-      response = VirtualFileSystemUtils.get(URL + FOLDER_2 + "/" + FOLDER_2 + "/" + FILE_1);
-      assertEquals(200, response.getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 1").getStatusCode());
+      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(WS_URL + "folder 1/folder 2").getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 2").getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 2/folder 2").getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 2/folder 2/file.groovy").getStatusCode());
    }
 
 }
