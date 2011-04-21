@@ -95,7 +95,7 @@ public abstract class VersioningTest extends BaseTest
       selenium.selectFrame("//div[@eventproxy='ideVersionContentForm']//iframe");
       String content = selenium.getText("//body[@class='editbox']");
       assertEquals(text, content);
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
    }
 
    /**

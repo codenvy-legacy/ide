@@ -29,13 +29,27 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({PreviewHtmlFileTest.class, OpenFileWithNonDefaultEditorTest.class,
-   OpenAndSaveXmlFileWithNonLatinNameTest.class, DeleteSeveralFilesSimultaniouslyTest.class,
-   CreatingAndSavingAsNewFileTest.class, DisplayingWarningMessageTest.class, StoreOpenedFilesHistoryTest.class,
-   ShowHideLineNumbersTest.class, CreateSaveAsXmlWithNonLatinNameTest.class, SaveAllFilesTest.class,
-   SavingPreviouslyEditedFileTest.class, RenameClosedFileTest.class, RenameOpenedFileTest.class,
-   DeletingFilesTest.class, DeletingXmlFileWithNonLatinNameTest.class,NavigationPanelWithoutSelectedItemTest.class,ChekIconsTests.class,
-   CheckHilightTextTest.class,ClosingAndSaveAsFileTest.class })
+@SuiteClasses({
+   PreviewHtmlFileTest.class
+//   OpenFileWithNonDefaultEditorTest.class,
+//   OpenAndSaveXmlFileWithNonLatinNameTest.class,
+//   DeleteSeveralFilesSimultaniouslyTest.class,
+//   CreatingAndSavingAsNewFileTest.class,
+//   DisplayingWarningMessageTest.class,
+//   StoreOpenedFilesHistoryTest.class,
+//   ShowHideLineNumbersTest.class,
+//   CreateSaveAsXmlWithNonLatinNameTest.class,
+//   SaveAllFilesTest.class,
+//   SavingPreviouslyEditedFileTest.class,
+//   RenameClosedFileTest.class,
+//   RenameOpenedFileTest.class,
+//   DeletingFilesTest.class,
+//   DeletingXmlFileWithNonLatinNameTest.class,
+//   NavigationPanelWithoutSelectedItemTest.class,
+//   ChekIconsTests.class,
+//   CheckHilightTextTest.class,
+//   ClosingAndSaveAsFileTest.class
+   })
 public class FileTestSuite
 {
 

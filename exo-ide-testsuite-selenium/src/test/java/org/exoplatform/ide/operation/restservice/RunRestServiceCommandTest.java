@@ -199,7 +199,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //fix file
       IDE.editor().selectIFrameWithEditor(0);
       selenium.clickAt("//body[@class='editbox']", "5,5");
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
 
       IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
       Thread.sleep(TestConstants.SLEEP);

@@ -25,6 +25,8 @@ import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigator;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Perspective;
+import org.exoplatform.ide.core.Preview;
+import org.exoplatform.ide.core.SaveAs;
 import org.exoplatform.ide.core.Toolbar;
 
 import com.thoughtworks.selenium.Selenium;
@@ -40,6 +42,8 @@ import com.thoughtworks.selenium.Selenium;
 public class IDE
 {
 
+   private Selenium selenium;
+
    private Menu menu;
 
    private Toolbar toolbar;
@@ -53,11 +57,15 @@ public class IDE
    private Navigator navigator;
 
    private Perspective perspective;
-   
+
    private CodeAssistant codeAssistant;
+
+   private Preview preview;
 
    public IDE(Selenium selenium)
    {
+      this.selenium = selenium;
+
       menu = new Menu(selenium);
       toolbar = new Toolbar(selenium);
       editor = new Editor(selenium, this);
@@ -66,6 +74,7 @@ public class IDE
       navigator = new Navigator(selenium, this);
       perspective = new Perspective(selenium);
       codeAssistant = new CodeAssistant(selenium, this);
+      preview = new Preview(selenium);
    }
 
    public Menu menu()
@@ -121,4 +130,35 @@ public class IDE
    {
       return codeAssistant;
    }
+
+   public Preview preview()
+   {
+      return preview;
+   }
+
+   public SaveAs SaveAs()
+   {
+      return SaveAs.getInstance(selenium);
+   }
+
+   /**
+    * Select main frame of IDE.
+    * 
+    * This method is used, after typing text in editor.
+    * To type text you must select editor iframe. After typing,
+    * to return to them main frame, use selectMainFrame()
+    * 
+    */
+   public void selectMainFrame()
+   {
+      if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
+      {
+         selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
+      }
+      else
+      {
+         selenium.selectFrame("relative=top");
+      }
+   }
+
 }

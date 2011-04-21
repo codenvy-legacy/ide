@@ -137,7 +137,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check text became underline
       assertTrue(selenium.isElementPresent("//body/u/em/strong[text()='Hello, world! ']"));
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 4 ------------
@@ -176,7 +176,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       selenium.keyDown("//body", "F");
       selenium.keyUp("//body", "F");
       selenium.controlKeyUp();
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       
       //check find-replace form doesn't appear
@@ -191,7 +191,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       selenium.keyUp("//body", "D");
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       assertEquals(DEFAULT_TEXT_IN_GADGET, getTextFromCkEditor(0));
       Thread.sleep(TestConstants.SLEEP);
       
@@ -201,7 +201,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       selenium.keyDown("//body", "L");
       selenium.keyUp("//body", "L");
       selenium.controlKeyUp();
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       //check go to line window dialog appeared
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGoToLineForm\"]/"));
@@ -256,7 +256,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       
       assertEquals(DEFAULT_TEXT_IN_GADGET, selenium.getText("//body"));
       selenium.keyDown("//body", "Y");
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       
       
       Thread.sleep(TestConstants.SLEEP);
@@ -270,14 +270,14 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       assertEquals("", selenium.getText("//body"));
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       
       //check Ctrl+C, Ctrl+V
       final String textForCopyPaste = "copy-paste text";
       
       IDE.editor().selectIFrameWithEditor(0);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, textForCopyPaste);
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       
       
@@ -307,7 +307,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       
       assertEquals(textForCopyPaste, selenium.getText("//body"));
       
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       
       //check Ctrl+Home, Ctrl+End
       IDE.editor().selectIFrameWithEditor(0);
@@ -322,7 +322,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       
       Thread.sleep(TestConstants.SLEEP);
       
@@ -360,7 +360,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
    {
       IDE.editor().selectIFrameWithEditor(tabIndex);
       String text = selenium.getText("//body");
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       return text;
    }
    

@@ -74,7 +74,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selenium.keyDown("//body[@class='editbox']", "F");
       selenium.keyUp("//body[@class='editbox']", "F");
       selenium.controlKeyUp();
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       //check find-replace form appeared
       assertTrue(selenium.isElementPresent(FIND_REPLACE_FORM_LOCATOR));
       //close form
@@ -88,7 +88,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selenium.keyDown("//body[@class='editbox']", "D");
       selenium.keyUp("//body[@class='editbox']", "D");
       selenium.controlKeyUp();
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       assertEquals("", IDE.editor().getTextFromCodeEditor(0));
 
       //----- 4 ------------
@@ -98,12 +98,12 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selenium.keyDown("//body[@class='editbox']", "L");
       selenium.keyUp("//body[@class='editbox']", "L");
       selenium.controlKeyUp();
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       //check go to line window dialog appeared
       assertTrue(selenium.isElementPresent(GO_TO_LINE_FORM_LOCATOR));
       //close
       closeForm(GO_TO_LINE_FORM_LOCATOR);
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }
@@ -179,7 +179,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selenium.keyPress("//body[@class='editbox']", "v");
       selenium.controlKeyUp();
       assertEquals(textToCut, selenium.getText("//body[@class='editbox']"));
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
 
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
@@ -202,7 +202,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "5");
 
       assertEquals(textToRevert + "5", selenium.getText("//body[@class='editbox']"));
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       //press Ctrl+Z
       IDE.editor().selectIFrameWithEditor(0);
       selenium.click("//body");
@@ -215,7 +215,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selenium.controlKeyUp();
 
       assertEquals(textToRevert, selenium.getText("//body[@class='editbox']"));
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
 
       //----- 5 -------
       //press Ctrl+Y
@@ -225,7 +225,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selenium.keyUp("//body[@class='editbox']", "89");
       selenium.controlKeyUp();
       assertEquals(textToRevert + "5", selenium.getText("//body[@class='editbox']"));
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
 
       IDE.editor().closeUnsavedFileAndDoNotSave(0);

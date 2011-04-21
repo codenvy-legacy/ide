@@ -33,6 +33,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Dialogs;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -75,6 +76,7 @@ public class CutFoldersAndFilesTest extends BaseTest
     *    FOLDER_3
     *    FILE_3 - file with sample content
     */
+   @Ignore
    @BeforeClass
    public static void setUp()
    {
@@ -103,6 +105,7 @@ public class CutFoldersAndFilesTest extends BaseTest
     *  Test from TestLink IDE-117
     * @throws Exception
     */
+   @Ignore
    @Test
    public void testCutOperation() throws Exception
    {
@@ -268,6 +271,7 @@ public class CutFoldersAndFilesTest extends BaseTest
     * 
     * @throws Exception
     */
+   @Ignore
    @AfterClass
    public static void tearDown() throws Exception
    {

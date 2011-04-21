@@ -109,7 +109,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
 
       //You will see default XML content  in the new file tab of "Content" panel.
-      //is file opened
+      //is file openededitor()
       assertEquals("Untitled file.xml *", IDE.editor().getTabTitle(0));
       assertEquals(DEFAULT_XML_CONTENT, IDE.editor().getTextFromCodeEditor(0));
 
@@ -141,7 +141,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       IDE.editor().selectIFrameWithEditor(0);
       IDE.editor().deleteFileContent();
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       IDE.editor().typeTextIntoEditor(0, XML_TEXT);
       saveCurrentFile();
 

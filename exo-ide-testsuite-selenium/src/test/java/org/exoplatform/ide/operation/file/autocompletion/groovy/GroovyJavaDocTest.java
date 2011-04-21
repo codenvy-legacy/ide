@@ -67,13 +67,13 @@ public class GroovyJavaDocTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
       assertFalse(selenium.isElementPresent("//body/pre[text()='Not found']"));
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP);
       selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
       assertFalse(selenium.isElementPresent("//body/pre[text()=\"Not found\"]"));
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       
       IDE.editor().closeUnsavedFileAndDoNotSave(0);
    }

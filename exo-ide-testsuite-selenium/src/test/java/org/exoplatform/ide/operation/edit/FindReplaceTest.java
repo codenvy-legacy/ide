@@ -172,7 +172,7 @@ public class FindReplaceTest extends BaseTest
       IDE.editor().selectIFrameWithEditor(0);
       assertEquals(wordToFind1, getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
 
       // Step 6
@@ -181,7 +181,7 @@ public class FindReplaceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("Gadget", getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
 
       // Step 7
@@ -190,7 +190,7 @@ public class FindReplaceTest extends BaseTest
       IDE.editor().selectIFrameWithEditor(0);
       assertEquals("Gadget", getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
 
       // Step 8
@@ -198,7 +198,7 @@ public class FindReplaceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.editor().selectIFrameWithEditor(0);
       assertEquals("Gadget", getSelectedText());
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       // Check buttons enabled
       checkTextNotFoundState();
 
@@ -212,7 +212,7 @@ public class FindReplaceTest extends BaseTest
       IDE.editor().selectIFrameWithEditor(0);
       assertEquals(wordToFind1, getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
 
       // Step 10
@@ -220,7 +220,7 @@ public class FindReplaceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.editor().selectIFrameWithEditor(0);
       assertEquals(wordToFind1, getSelectedText());
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       // Check buttons enabled
       checkTextNotFoundState();
 
@@ -302,7 +302,7 @@ public class FindReplaceTest extends BaseTest
       IDE.editor().selectIFrameWithEditor(0);
       assertEquals(wordToFind3, getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
 
       // Step 5 Print "form" to replace field and click replace.
@@ -325,7 +325,7 @@ public class FindReplaceTest extends BaseTest
       IDE.editor().selectIFrameWithEditor(0);
       assertEquals(wordToFind3, getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
 
       // Step 7 Clear replace field and click replace button
@@ -376,20 +376,20 @@ public class FindReplaceTest extends BaseTest
       IDE.editor().selectIFrameWithEditor(0);
       assertEquals("Panel", getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
 
       // Step 10 Click "Replace/Find" button
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceFindButton\"]");
       IDE.editor().selectIFrameWithEditor(0);
       assertEquals("Panel", getSelectedText());
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
       // Step 11 Click "Replace/Find" again
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceFindButton\"]");
       IDE.editor().selectIFrameWithEditor(0);
       assertEquals("Panel", getSelectedText());
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
 
       // Step 12 Put cursor position at the start of document and make
@@ -475,7 +475,7 @@ public class FindReplaceTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals("html", getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
 
       //Step 5 Go to "rest2.groovy" file.
@@ -487,7 +487,7 @@ public class FindReplaceTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals("", getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextNotFoundState();
 
       //Step 7 Go to "rest.groovy" file.
@@ -519,7 +519,7 @@ public class FindReplaceTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals("import", getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
 
       //Step 9 Go to "rest2.groovy" file.
@@ -545,7 +545,7 @@ public class FindReplaceTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals("java", getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
 
       //Step 11 Click "Replace" button
@@ -564,14 +564,14 @@ public class FindReplaceTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals("html", getSelectedText());
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextFoundState();
       //Step 14 Click "Replace/Find" again
       selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceFindButton\"]");
       //TODO Check replaced
       Thread.sleep(TestConstants.SLEEP);
       // Check buttons enabled
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       checkTextNotFoundState();
 
       //Step 15 Go to "rest.groovy" file

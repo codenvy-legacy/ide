@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
+
+import org.exoplatform.ide.TestConstants;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -29,40 +31,36 @@ import com.thoughtworks.selenium.Selenium;
  * @version $
  */
 
-public abstract class AbstractTestModule
+public class Preview
 {
 
-   protected Selenium selenium;
+   private Selenium selenium;
 
-   public AbstractTestModule(Selenium selenium)
+   public Preview(Selenium selenium)
    {
       this.selenium = selenium;
    }
 
-   /**
-    * Wait while element present.
-    * 
-    * @param locator - element locator
-    * @throws Exception
-    */
-   public void waitForElementPresent(String locator) throws Exception
+   public void checkIsOpened(boolean isOpened)
    {
-      int WAITING_MAX_SECONDS = 10;
+      String locator = "//div[@view-id='idePreviewHTMLView']";
+      assertEquals(isOpened, selenium.isElementPresent(locator));
+   }
 
-      for (int second = 0;; second++)
-      {
-         if (second >= WAITING_MAX_SECONDS * 10)
-         {
-            fail("timeout for element " + locator);
-         }
+   public void selectIFrame(String iFrameURL)
+   {
+      selenium.selectFrame("//iframe[@src='" + iFrameURL + "']");
+   }
 
-         if (selenium.isElementPresent(locator))
-         {
-            break;
-         }
+   public void close() throws Exception
+   {
+      String locator =
+         "//div[@panel-id='operation']//table[@class='gwt-DecoratedTabBar']//div[@role='tab']//div[@button-name='close-tab' and @tab-title='Preview']";
+      selenium.mouseOver(locator);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-         Thread.sleep(100);
-      }
+      selenium.click(locator);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
 }

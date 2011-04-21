@@ -244,7 +244,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
 
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
 
       //---- 4 -----------------
       //press validate button
@@ -292,7 +292,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       //delete
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
 
       Thread.sleep(TestConstants.SLEEP);
 
@@ -306,7 +306,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
 
       assertEquals("1 : 24", getCursorPositionUsingStatusBar());
 

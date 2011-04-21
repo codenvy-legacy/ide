@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -29,40 +29,55 @@ import com.thoughtworks.selenium.Selenium;
  * @version $
  */
 
-public abstract class AbstractTestModule
+public class SaveAs extends AbstractTestModule
 {
 
-   protected Selenium selenium;
+   private static SaveAs instance;
 
-   public AbstractTestModule(Selenium selenium)
+   public static SaveAs getInstance(Selenium selenium)
    {
-      this.selenium = selenium;
+      if (instance == null)
+      {
+         instance = new SaveAs(selenium);
+      }
+
+      return instance;
    }
 
-   /**
-    * Wait while element present.
-    * 
-    * @param locator - element locator
-    * @throws Exception
-    */
-   public void waitForElementPresent(String locator) throws Exception
+   protected SaveAs(Selenium selenium)
    {
-      int WAITING_MAX_SECONDS = 10;
+      super(selenium);
+   }
 
-      for (int second = 0;; second++)
-      {
-         if (second >= WAITING_MAX_SECONDS * 10)
-         {
-            fail("timeout for element " + locator);
-         }
+   public void checkSaveAsIsOpened(boolean isOpened)
+   {
+      String locator = "//div[@id='ideAskForValueDialog']//div[@class='Caption']/span[text()='Save file as']";
+      assertEquals(isOpened, selenium.isElementPresent(locator));
+   }
 
-         if (selenium.isElementPresent(locator))
-         {
-            break;
-         }
+   public String getFileName()
+   {
+      return "";
+   }
 
-         Thread.sleep(100);
-      }
+   public void setFileName(String fileName)
+   {
+   }
+
+   public void clickYes()
+   {
+
+   }
+
+   public void clickNo()
+   {
+      String locator = "//div[@id='ideAskForValueDialog']//div[@id='ideAskForValueDialogNoButton']";
+      selenium.click(locator);
+   }
+
+   public void clickCancel()
+   {
+
    }
 
 }

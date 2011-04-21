@@ -94,7 +94,7 @@ public class CursorPositionStatusBarTest extends BaseTest
          selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       }
       
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       //chek position in status bar 
       assertEquals("1 : 7", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
 
@@ -111,7 +111,7 @@ public class CursorPositionStatusBarTest extends BaseTest
          selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       }
 
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
 
       //		check status bar
       assertEquals("7 : 8", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));

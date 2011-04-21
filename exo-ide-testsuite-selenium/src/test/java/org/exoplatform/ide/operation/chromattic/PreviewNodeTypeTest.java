@@ -220,7 +220,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
          text = text.replaceAll(" <", "<");
       }
 
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       assertEquals(generatedEXOFormat, text);
 
       IDE.editor().closeTab(0);
@@ -276,7 +276,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
          text = text.replaceAll(" <", "<");
       }
 
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       assertEquals(generatedCNDFormat, text);
 
       IDE.editor().closeTab(0);

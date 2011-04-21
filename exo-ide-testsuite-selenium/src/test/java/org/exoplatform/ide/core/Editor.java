@@ -436,7 +436,7 @@ public class Editor
          AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, text);
       }
 
-      selectMainFrame();
+      ide.selectMainFrame();
    }
 
    /**
@@ -472,26 +472,6 @@ public class Editor
    }
 
    /**
-    * Select main frame of IDE.
-    * 
-    * This method is used, after typing text in editor.
-    * To type text you must select editor iframe. After typing,
-    * to return to them main frame, use selectMainFrame()
-    * 
-    */
-   public void selectMainFrame()
-   {
-      if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
-      {
-         selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
-      }
-      else
-      {
-         selenium.selectFrame("relative=top");
-      }
-   }
-
-   /**
     * Mouse click on editor.
     * 
     * @param tabIndex - tab index.
@@ -501,7 +481,7 @@ public class Editor
    {
       selectIFrameWithEditor(tabIndex);
       selenium.clickAt("//body[@class='editbox']", "5,5");
-      selectMainFrame();
+      ide.selectMainFrame();
    }
 
    /**
@@ -512,7 +492,7 @@ public class Editor
    {
       selectIFrameWithEditor(tabIndex);
       String text = selenium.getText("//body[@class='editbox']");
-      selectMainFrame();
+      ide.selectMainFrame();
       return text;
    }
 
@@ -520,7 +500,7 @@ public class Editor
    {
       selectIFrameWithEditor(tabIndex);
       String text = selenium.getText("//body");
-      selectMainFrame();
+      ide.selectMainFrame();
       return text;
    }
 
@@ -559,7 +539,7 @@ public class Editor
          selenium.altKeyUp();
       }
 
-      selectMainFrame();
+      ide.selectMainFrame();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 

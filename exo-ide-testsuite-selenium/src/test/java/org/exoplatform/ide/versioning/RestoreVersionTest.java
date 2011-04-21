@@ -296,7 +296,7 @@ public abstract class RestoreVersionTest extends VersioningTest
       IDE.editor().selectIFrameWithEditor(0);
       selenium.clickAt("//body[@class='editbox']", "5,5");
       selenium.keyPressNative("" + KeyEvent.VK_END);
-      IDE.editor().selectMainFrame();
+      IDE.selectMainFrame();
       Thread.sleep(5000);
       IDE.editor().typeTextIntoEditor(0, version5Text);
       Thread.sleep(5000);

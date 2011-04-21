@@ -202,13 +202,13 @@ public class Navigator extends AbstractTestModule
    /**
     * Open file from navigation tree with code mirror.
     * 
-    * @param fileName name of file in navigation tree
+    * @param fileURL URL of file in navigation tree
     * @param checkDefault - is click on checkbox "Use by default"
     * @throws Exception
     */
-   public void openFileFromNavigationTreeWithCodeEditor(String fileName, boolean checkDefault) throws Exception
+   public void openFileFromNavigationTreeWithCodeEditor(String fileURL, boolean checkDefault) throws Exception
    {
-      selectItem(fileName);
+      selectItem(fileURL);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       openSelectedFileWithCodeEditor(checkDefault);
