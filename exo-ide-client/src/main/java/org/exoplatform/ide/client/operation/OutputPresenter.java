@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.operation.ui.OutputView;
@@ -96,11 +96,11 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
          {
             display = GWT.create(OutputView.class);
             bindDisplay();
-            IDE.getInstance().openView((ViewEx)display);
+            IDE.getInstance().openView((View)display);
          }
          else
          {
-            ((ViewEx)display).setViewVisible();
+            ((View)display).setViewVisible();
          }
          OutputMessage message = new OutputMessage(event.getMessage(), event.getOutputType());
          if (message.getType() == OutputMessage.Type.LOG)

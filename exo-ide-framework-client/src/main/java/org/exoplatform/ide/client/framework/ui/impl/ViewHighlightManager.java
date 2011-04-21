@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.ui.impl;
 
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -26,6 +26,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
+ * 
+ * 
  * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -35,16 +37,30 @@ import com.google.gwt.event.shared.HandlerManager;
 public class ViewHighlightManager implements ViewClosedHandler
 {
 
+   /**
+    * Instance of this Highlighting Manager.
+    */
    private static ViewHighlightManager instance;
 
-   private ViewEx currentActiveView;
+   /**
+    * Currently active view.
+    */
+   private View currentActiveView;
 
-   private ViewEx previousActiveView;
+   /**
+    * Previous active view.
+    */
+   private View previousActiveView;
 
+   /**
+    * Event Bus.
+    */
    private HandlerManager eventBus;
 
    /**
-    * @param eventBus
+    * Creates new instance of this Highlighting Manager.
+    * 
+    * @param eventBus event bus
     */
    public ViewHighlightManager(HandlerManager eventBus)
    {
@@ -54,7 +70,12 @@ public class ViewHighlightManager implements ViewClosedHandler
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
-   public void selectView(ViewEx view)
+   /**
+    * Set view highlighted.
+    * 
+    * @param view view to be highlighted.
+    */
+   public void selectView(View view)
    {
       if (currentActiveView == view)
       {
@@ -74,6 +95,8 @@ public class ViewHighlightManager implements ViewClosedHandler
    }
 
    /**
+    * Get instance of this Highlighting manager.
+    * 
     * @return the instance
     */
    public static ViewHighlightManager getInstance()
@@ -86,6 +109,11 @@ public class ViewHighlightManager implements ViewClosedHandler
       return instance;
    }
 
+   /**
+    * View Closed Handler
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
@@ -105,7 +133,6 @@ public class ViewHighlightManager implements ViewClosedHandler
       {
          currentActiveView = null;
       }
-
    }
 
 }

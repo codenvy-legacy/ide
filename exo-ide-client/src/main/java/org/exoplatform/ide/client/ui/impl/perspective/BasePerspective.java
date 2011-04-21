@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -138,7 +138,7 @@ public class BasePerspective extends LayerContainer implements Perspective, View
    }
 
    @Override
-   public void openView(ViewEx view)
+   public void openView(View view)
    {
       if (view instanceof IsWidget)
       {

@@ -30,7 +30,7 @@ import org.exoplatform.gwtframework.ui.client.tab.event.CloseTabEvent;
 import org.exoplatform.gwtframework.ui.client.tab.event.CloseTabHandler;
 import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -90,7 +90,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
    /**
     * List of opened Views
     */
-   private LinkedHashMap<String, ViewEx> views = new LinkedHashMap<String, ViewEx>();
+   private LinkedHashMap<String, View> views = new LinkedHashMap<String, View>();
 
    /**
     * Each View wrapped in special wrapper
@@ -268,7 +268,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
     */
    private void setViewVisible(String viewId, boolean isVisible)
    {
-      ViewEx currentView = views.get(viewId);
+      View currentView = views.get(viewId);
       if (currentView instanceof Widget)
       {
          ((Widget)currentView).setVisible(isVisible);
@@ -291,7 +291,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
 
    private void fireVisibilityChangedEvent(String viewId)
    {
-      ViewEx view = views.get(viewId);
+      View view = views.get(viewId);
 
       if (viewVisibilityChangedHandler != null)
       {
@@ -313,7 +313,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          selectedViewId = null;
       }
 
-      ViewEx view = views.get(viewId);
+      View view = views.get(viewId);
       if (view instanceof Widget)
       {
          ((Widget)view).removeFromParent();
@@ -348,7 +348,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
       for (int i = 0; i < tabs; i++) {
          String viewId = tabPanel.getTabIdByIndex(i);
 
-         ViewEx view = views.get(viewId);
+         View view = views.get(viewId);
          if (view == null) {
             continue;
          }
@@ -364,7 +364,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
       public void onCloseTab(CloseTabEvent event)
       {
          String viewId = event.getTabId();
-         ViewEx view = views.get(viewId);
+         View view = views.get(viewId);
 
          try {
             
@@ -446,11 +446,11 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
    private class ViewController extends FlowPanel implements RequiresResize
    {
 
-      private ViewEx view;
+      private View view;
 
       private Widget viewWrapper;
 
-      public ViewController(ViewEx view, Widget viewWrapper)
+      public ViewController(View view, Widget viewWrapper)
       {
          this.view = view;
          this.viewWrapper = viewWrapper;
@@ -538,7 +538,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
    }
 
    @Override
-   public void openView(ViewEx view)
+   public void openView(View view)
    {
       /*
        * add view to ViewLayout
@@ -593,7 +593,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
    }
 
    @Override
-   public Map<String, ViewEx> getViewMap()
+   public Map<String, View> getViewMap()
    {
       return views;
    }
@@ -650,7 +650,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          viewWrapper.setVisible(!panelHidden);
          if (viewVisibilityChangedHandler != null)
          {
-            ViewEx selectedView = views.get(selectedViewId);
+            View selectedView = views.get(selectedViewId);
             ViewVisibilityChangedEvent viewVisibilityChangedEvent = new ViewVisibilityChangedEvent(selectedView);
             viewVisibilityChangedHandler.onViewVisibilityChanged(viewVisibilityChangedEvent);
          }

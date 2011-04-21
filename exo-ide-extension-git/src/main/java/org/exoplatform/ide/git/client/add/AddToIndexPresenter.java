@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
@@ -166,7 +166,7 @@ public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandle
                workDir = result.getWorkDir();
                workDir = workDir.endsWith("/.git") ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
                Display d = GWT.create(Display.class);
-               IDE.getInstance().openView((ViewEx)d);
+               IDE.getInstance().openView((View)d);
                bindDisplay(d);
 
                display.getMessage().setValue(formMessage(), true);

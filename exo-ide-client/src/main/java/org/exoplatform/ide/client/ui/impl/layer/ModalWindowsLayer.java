@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.window.ResizeableWindow;
 import org.exoplatform.gwtframework.ui.client.window.Window;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 
@@ -47,7 +47,7 @@ public class ModalWindowsLayer extends AbstractWindowsLayer
 
    private Map<String, Widget> lockPanels = new HashMap<String, Widget>();
 
-   private Map<String, ViewEx> views = new HashMap<String, ViewEx>();
+   private Map<String, View> views = new HashMap<String, View>();
 
    private Map<String, WindowController> windowControllers = new HashMap<String, WindowController>();
 
@@ -77,7 +77,7 @@ public class ModalWindowsLayer extends AbstractWindowsLayer
 
       windowControllers.remove(viewId);
 
-      ViewEx view = views.get(viewId);
+      View view = views.get(viewId);
       views.remove(viewId);
 
       if (viewClosedHandler != null)
@@ -89,12 +89,12 @@ public class ModalWindowsLayer extends AbstractWindowsLayer
       return true;
    }
 
-   public Map<String, ViewEx> getViews()
+   public Map<String, View> getViews()
    {
       return views;
    }
 
-   public void openView(ViewEx view)
+   public void openView(View view)
    {
       views.put(view.getId(), view);
 

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler;
@@ -119,7 +119,7 @@ public class Layout extends LayerContainer implements ViewVisibilityChangedHandl
       return panel;
    }
 
-   public boolean isViewOpened(ViewEx view)
+   public boolean isViewOpened(View view)
    {
       for (PanelImpl panel : panelsLayer.getPanels().values())
       {
@@ -132,7 +132,7 @@ public class Layout extends LayerContainer implements ViewVisibilityChangedHandl
       return false;
    }
 
-   public boolean openView(ViewEx view)
+   public boolean openView(View view)
    {
       for (PanelImpl panel : panelsLayer.getPanels().values())
       {

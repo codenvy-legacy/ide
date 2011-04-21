@@ -24,7 +24,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -73,7 +73,7 @@ public abstract class IDE
     * Open {@link View}
     * @param view to open
     */   
-   public abstract void openView(ViewEx view);
+   public abstract void openView(View view);
    
    /**
     * Close view

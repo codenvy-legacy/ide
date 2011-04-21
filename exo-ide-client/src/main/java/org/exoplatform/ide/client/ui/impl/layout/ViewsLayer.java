@@ -19,7 +19,7 @@
 
 package org.exoplatform.ide.client.ui.impl.layout;
 
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.ui.impl.Layer;
 
 import com.google.gwt.user.client.DOM;
@@ -40,7 +40,7 @@ public class ViewsLayer extends Layer
    public class ViewContainer extends AbsolutePanel
    {
 
-      public ViewContainer(ViewEx view)
+      public ViewContainer(View view)
       {
          DOM.setStyleAttribute(getElement(), "width", "100px");
          DOM.setStyleAttribute(getElement(), "height", "100px");
@@ -59,7 +59,7 @@ public class ViewsLayer extends Layer
       super("views");
    }
 
-   public Widget addView(ViewEx view)
+   public Widget addView(View view)
    {
       ViewContainer container = new ViewContainer(view);
       add(container);

@@ -32,7 +32,7 @@ import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEv
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.hotkeys.HotKeyManagementModule;
 import org.exoplatform.ide.client.model.ApplicationContext;
@@ -157,7 +157,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    }
 
    @Override
-   public void openView(ViewEx view)
+   public void openView(View view)
    {
       presenter.openView(view);
    }

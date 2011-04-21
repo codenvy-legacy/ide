@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.ui.api;
 
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.HasViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.HasViewOpenedHandler;
@@ -35,7 +35,7 @@ public interface Perspective extends HasViewVisibilityChangedHandler,
 HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
 {
 
-   void openView(ViewEx view);
+   void openView(View view);
 
    void closeView(String viewId);
 

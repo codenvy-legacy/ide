@@ -21,7 +21,7 @@ package org.exoplatform.ide.client.ui.api;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,11 +35,11 @@ public interface Panel
    
    String getPanelId();
 
-   void openView(ViewEx view);
+   void openView(View view);
 
    void closeView(String viewId);
 
-   Map<String, ViewEx> getViewMap();
+   Map<String, View> getViewMap();
    
    boolean canOpenView(String viewType);
    

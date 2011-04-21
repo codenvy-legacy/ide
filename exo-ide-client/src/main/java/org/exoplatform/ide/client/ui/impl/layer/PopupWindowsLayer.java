@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.window.ResizeableWindow;
 import org.exoplatform.gwtframework.ui.client.window.Window;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 
@@ -42,7 +42,7 @@ public class PopupWindowsLayer extends AbstractWindowsLayer
 
    private Map<String, WindowController> windowControllers = new HashMap<String, PopupWindowsLayer.WindowController>();
 
-   private Map<String, ViewEx> views = new HashMap<String, ViewEx>();
+   private Map<String, View> views = new HashMap<String, View>();
 
    private Map<String, Window> windows = new HashMap<String, Window>();
 
@@ -51,7 +51,7 @@ public class PopupWindowsLayer extends AbstractWindowsLayer
       super("popup-windows");
    }
 
-   public void openView(ViewEx view)
+   public void openView(View view)
    {
       views.put(view.getId(), view);
 
@@ -89,7 +89,7 @@ public class PopupWindowsLayer extends AbstractWindowsLayer
       }
    }
 
-   public Map<String, ViewEx> getViews()
+   public Map<String, View> getViews()
    {
       return views;
    }
@@ -109,7 +109,7 @@ public class PopupWindowsLayer extends AbstractWindowsLayer
 
       windowControllers.remove(viewId);
 
-      ViewEx closedView = views.get(viewId);
+      View closedView = views.get(viewId);
       views.remove(viewId);
 
       if (viewClosedHandler != null)

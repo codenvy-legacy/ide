@@ -36,6 +36,6 @@ public interface IsView
     * 
     * @return
     */
-   ViewEx asView();
+   View asView();
 
 }

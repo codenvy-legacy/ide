@@ -43,7 +43,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -140,7 +140,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       if (display == null)
       {
          Display d = GWT.create(Display.class);
-         IDE.getInstance().openView((ViewEx)d);
+         IDE.getInstance().openView((View)d);
          bindDisplay(d);
       }
    }

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.ui.api.event;
 
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -42,7 +42,7 @@ public class ClosingViewEvent extends GwtEvent<ClosingViewHandler>
    /**
     * View to be closed.
     */
-   private ViewEx view;
+   private View view;
 
    /**
     * Revoked or not closing the View.
@@ -54,7 +54,7 @@ public class ClosingViewEvent extends GwtEvent<ClosingViewHandler>
     * 
     * @param view view to be closed
     */
-   public ClosingViewEvent(ViewEx view)
+   public ClosingViewEvent(View view)
    {
       this.view = view;
    }
@@ -64,7 +64,7 @@ public class ClosingViewEvent extends GwtEvent<ClosingViewHandler>
     * 
     * @return View to be closed.
     */
-   public ViewEx getView()
+   public View getView()
    {
       return view;
    }

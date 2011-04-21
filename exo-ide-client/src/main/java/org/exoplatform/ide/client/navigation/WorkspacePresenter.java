@@ -49,7 +49,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
@@ -549,7 +549,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
             display.asView().setViewVisible();
 
-            eventBus.fireEvent(new ViewVisibilityChangedEvent((ViewEx)display));
+            eventBus.fireEvent(new ViewVisibilityChangedEvent((View)display));
 
             display.getBrowserTree().setValue(result);
             display.selectItem(result.getHref());

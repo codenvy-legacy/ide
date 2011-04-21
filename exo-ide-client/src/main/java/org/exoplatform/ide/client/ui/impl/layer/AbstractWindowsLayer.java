@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.ui.impl.layer;
 
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.gwtframework.ui.client.window.Window;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -66,9 +66,9 @@ public abstract class AbstractWindowsLayer extends Layer
    protected class WindowController implements CloseClickHandler
    {
 
-      private ViewEx view;
+      private View view;
 
-      public WindowController(ViewEx view, Window window)
+      public WindowController(View view, Window window)
       {
          this.view = view;
          window.addCloseClickHandler(this);

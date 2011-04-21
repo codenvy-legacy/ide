@@ -22,7 +22,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -75,7 +75,7 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       if (event.isShowProperties() && display == null)
       {
          display = GWT.create(Display.class);
-         IDE.getInstance().openView((ViewEx)display);
+         IDE.getInstance().openView((View)display);
          display.showProperties(file);
          return;
       }

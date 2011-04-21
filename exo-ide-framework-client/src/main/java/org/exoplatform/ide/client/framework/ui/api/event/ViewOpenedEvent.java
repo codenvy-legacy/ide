@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.ui.api.event;
 
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -42,14 +42,14 @@ public class ViewOpenedEvent extends GwtEvent<ViewOpenedHandler>
    /**
     * View which was opened
     */
-   private ViewEx view;
+   private View view;
 
    /**
     * Creates a new instance of this event
     * 
     * @param view view which was opened
     */
-   public ViewOpenedEvent(ViewEx view)
+   public ViewOpenedEvent(View view)
    {
       this.view = view;
    }
@@ -59,7 +59,7 @@ public class ViewOpenedEvent extends GwtEvent<ViewOpenedHandler>
     * 
     * @return view instance which was opened
     */
-   public ViewEx getView()
+   public View getView()
    {
       return view;
    }

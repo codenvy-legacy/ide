@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.ui.api.event;
 
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -43,14 +43,14 @@ public class ViewVisibilityChangedEvent extends GwtEvent<ViewVisibilityChangedHa
    /**
     * View which visibility was changed.
     */
-   private ViewEx view;
+   private View view;
 
    /**
     * Creates a new instance of this event.
     * 
     * @param view view which visibility was changed
     */
-   public ViewVisibilityChangedEvent(ViewEx view)
+   public ViewVisibilityChangedEvent(View view)
    {
       this.view = view;
    }
@@ -60,7 +60,7 @@ public class ViewVisibilityChangedEvent extends GwtEvent<ViewVisibilityChangedHa
     * 
     * @return view instance of view which visibility was changed 
     */
-   public ViewEx getView()
+   public View getView()
    {
       return view;
    }

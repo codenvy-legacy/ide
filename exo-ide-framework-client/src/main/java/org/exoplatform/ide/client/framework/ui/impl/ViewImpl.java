@@ -25,7 +25,7 @@ import org.exoplatform.gwtframework.ui.client.Resizeable;
 import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconEvent;
 import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconHandler;
 import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewTitleEvent;
@@ -41,6 +41,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -51,10 +52,13 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeViewTitleHandler, HasChangeViewIconHandler,
+public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTitleHandler, HasChangeViewIconHandler,
    HasSetViewVisibleHandler, Resizeable
 {
 
+   /**
+    *
+    */
    protected class ViewScrollPanel extends ScrollPanel
    {
       public ViewScrollPanel()
@@ -68,51 +72,132 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       }
    }
 
+   /**
+    * Is this view activated
+    */
    private boolean activated = false;
 
+   /**
+    * Is this view can be resized
+    */
    private boolean canResize = true;
 
+   /**
+    * List of ChangeViewIconHandler
+    */
    private List<ChangeViewIconHandler> changeViewIconHandlers = new ArrayList<ChangeViewIconHandler>();
 
+   /**
+    * List of ChangeViewTitleHandler
+    */
    private List<ChangeViewTitleHandler> changeViewTitleHandlers = new ArrayList<ChangeViewTitleHandler>();
 
+   /**
+    * View's default height
+    */
    protected int defaultHeight = 200;
 
+   /**
+    * View's default width
+    */
    protected int defaultWidth = 300;
 
+   /**
+    * Is this view has close button ( can be closed )
+    */
    private boolean hasCloseButton = true;
 
+   /**
+    * View's icon
+    */
    private Image icon;
 
+   /**
+    * View's ID
+    */
    private String id;
 
+   /**
+    * Panel with scroll bars which will be placed into this view and which will be contains the content of this view.
+    */
    private ViewScrollPanel scrollPanel;
 
+   /**
+    * List of SetViewVisibleHandler
+    */
    private List<SetViewVisibleHandler> setViewVisibleHandlers = new ArrayList<SetViewVisibleHandler>();
 
+   /**
+    * Title of this view.
+    */
    private String tiltle;
 
+   /**
+    * Type of this view.
+    */
    private String type;
 
+   /**
+    * Wrapper which will contains the content of this view ( includes ScrollPanel )
+    */
    private Wrapper wrapper;
 
+   /**
+    * User defined content which will be displayed in this view.
+    */
    private Widget viewWidget;
 
+   /**
+    * Creates a new instance of this View implementation with specified parameters.
+    * 
+    * @param id id of this view
+    * @param type type of this view
+    * @param title title of this view
+    */
    public ViewImpl(String id, String type, String title)
    {
       this(id, type, title, null);
    }
 
+   /**
+    * Creates a new instance of this View implementation with specified parameters.
+    * 
+    * @param id id of this view
+    * @param type type of this view
+    * @param title title of this view
+    * @param icon icon of this view
+    */
    public ViewImpl(String id, String type, String title, Image icon)
    {
       this(id, type, title, icon, 300, 200);
    }
 
+   /**
+    * Creates a new instance of this View implementation with specified parameters.
+    * 
+    * @param id d of this view
+    * @param type type of this view
+    * @param title title of this view
+    * @param icon icon of this view
+    * @param defaultWidth view's default width
+    * @param defaultHeight view's default height
+    */
    public ViewImpl(String id, String type, String title, Image icon, int defaultWidth, int defaultHeight)
    {
       this(id, type, title, icon, defaultWidth, defaultHeight, true);
    }
 
+   /**
+    * Creates a new instance of this View implementation with specified parameters.
+    * 
+    * @param id id of this view
+    * @param type type of this view
+    * @param title title of this view
+    * @param icon icon of this view
+    * @param defaultWidth view's default width
+    * @param defaultHeight view's default height
+    * @param canResize is this view resizeable
+    */
    public ViewImpl(String id, String type, String title, Image icon, int defaultWidth, int defaultHeight, boolean canResize)
    {
       this.id = id;
@@ -132,6 +217,11 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       sinkEvents(Event.ONMOUSEDOWN);
    }
 
+   /**
+    * Set's this view activate.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.View#activate()
+    */
    @Override
    public void activate()
    {
@@ -143,12 +233,23 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       ViewHighlightManager.getInstance().selectView(this);
    }
 
+   /**
+    * Add user defined content into this view.
+    * 
+    * @param viewWidget user defined widget
+    */
    @Override
    public final void add(Widget w)
    {
       add(w, false);
    }
 
+   /**
+    * Add user defined content into this view.
+    * 
+    * @param viewWidget user defined widget
+    * @param contentScrollable is content scrollable
+    */
    public final void add(Widget viewWidget, boolean contentScrollable)
    {
       this.viewWidget = viewWidget;
@@ -170,6 +271,11 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       }
    }
 
+   /**
+    * Adds ChangeViewIconHandler to this view. 
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewIconHandler#addChangeViewIconHandler(org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconHandler)
+    */
    @Override
    public HandlerRegistration addChangeViewIconHandler(ChangeViewIconHandler changeViewIconHandler)
    {
@@ -177,6 +283,11 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       return new ListBasedHandlerRegistration(changeViewIconHandlers, changeViewIconHandler);
    }
 
+   /**
+    * Adds ChangeViewTitleHandler to this view.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewTitleHandler#addChangeViewTitleHandler(org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewTitleHandler)
+    */
    @Override
    public HandlerRegistration addChangeViewTitleHandler(ChangeViewTitleHandler changeViewTitleHandler)
    {
@@ -184,6 +295,11 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       return new ListBasedHandlerRegistration(changeViewTitleHandlers, changeViewTitleHandler);
    }
 
+   /**
+    * Adds SetViewVisibleHandler to this view.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.impl.event.HasSetViewVisibleHandler#addSetViewVisibleHandler(org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleHandler)
+    */
    @Override
    public HandlerRegistration addSetViewVisibleHandler(SetViewVisibleHandler setViewVisibleHandler)
    {
@@ -191,71 +307,131 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       return new ListBasedHandlerRegistration(setViewVisibleHandlers, setViewVisibleHandler);
    }
 
+   /**
+    * Returns this view as  {@link View}.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.IsView#asView()
+    */
    @Override
-   public ViewEx asView()
+   public View asView()
    {
       return this;
    }
 
+   /**
+    * Determines whether this view can be resized.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.View#canResize()
+    */
    @Override
    public boolean canResize()
    {
       return canResize;
    }
 
+   /**
+    * Get default height of this view.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.View#getDefaultHeight()
+    */
    @Override
    public int getDefaultHeight()
    {
       return defaultHeight;
    }
 
+   /**
+    * Get default width of this view.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.View#getDefaultWidth()
+    */
    @Override
    public int getDefaultWidth()
    {
       return defaultWidth;
    }
 
+   /**
+    * Get icon of this view.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.View#getIcon()
+    */
    @Override
    public Image getIcon()
    {
       return icon;
    }
 
+   /**
+    * Get ID of this view.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.View#getId()
+    */
    @Override
    public String getId()
    {
       return id;
    }
 
+   /**
+    * Get ScrollPanel
+    * 
+    * @return ScrollPanel
+    */
    public ScrollPanel getScrollPanel()
    {
       return scrollPanel;
    }
 
+   /**
+    * Get title of this view.
+    * 
+    * @see com.google.gwt.user.client.ui.UIObject#getTitle()
+    */
    @Override
    public String getTitle()
    {
       return tiltle;
    }
 
+   /**
+    * Get type of this view.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.View#getType()
+    */
    @Override
    public String getType()
    {
       return type;
    }
 
+   /**
+    * Determines whether this view has close button.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.View#hasCloseButton()
+    */
    @Override
    public boolean hasCloseButton()
    {
       return hasCloseButton;
    }
 
+   /**
+    * Determined whether this view is visible.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.View#isViewVisible()
+    */
    @Override
    public boolean isViewVisible()
    {
       return isVisible();
    }
 
+   /**
+    * Handle of browser events.
+    * 
+    * @see com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt.user.client.Event)
+    */
    @Override
    public void onBrowserEvent(Event event)
    {
@@ -272,22 +448,40 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       }
    }
 
+   /**
+    * Mouse down handler.
+    */
    protected void onMouseDown()
    {
       ViewHighlightManager.getInstance().selectView(this);
    }
 
+   /**
+    * Sets this view activated.
+    * 
+    * @param activated
+    */
    public void setActivated(boolean activated)
    {
       this.activated = activated;
       wrapper.setHighlited(activated);
    }
 
+   /**
+    * Sets this view has close button.
+    * 
+    * @param hasCloseButton
+    */
    public void setHasCloseButton(boolean hasCloseButton)
    {
       this.hasCloseButton = hasCloseButton;
    }
 
+   /**
+    * Sets new icon.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.View#setIcon(com.google.gwt.user.client.ui.Image)
+    */
    @Override
    public void setIcon(Image icon)
    {
@@ -300,6 +494,11 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       }
    }
 
+   /**
+    * Sets new title.
+    * 
+    * @see com.google.gwt.user.client.ui.UIObject#setTitle(java.lang.String)
+    */
    @Override
    public void setTitle(String title)
    {
@@ -312,6 +511,11 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       }
    }
 
+   /**
+    * Sets this view is visible.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.View#setViewVisible()
+    */
    @Override
    public void setViewVisible()
    {
@@ -323,6 +527,11 @@ public class ViewImpl extends FlowPanel implements ViewEx, IsView, HasChangeView
       }
    }
 
+   /**
+    * Resize this view.
+    * 
+    * @see org.exoplatform.gwtframework.ui.client.Resizeable#resize(int, int)
+    */
    @Override
    public void resize(int width, int height)
    {

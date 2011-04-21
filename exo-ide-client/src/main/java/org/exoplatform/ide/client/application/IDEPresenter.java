@@ -22,7 +22,7 @@ import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarBuilder;
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
 import org.exoplatform.ide.client.application.phases.LoadRegistryConfigurationPhase;
 import org.exoplatform.ide.client.editor.EditorController;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -99,7 +99,7 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
       }.schedule(500);
    }
 
-   public void openView(ViewEx view)
+   public void openView(View view)
    {
       display.getPerspective().openView(view);
    }

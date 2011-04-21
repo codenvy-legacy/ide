@@ -22,7 +22,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -97,7 +97,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
       if (event.isShowPreview() && display == null)
       {
          display = GWT.create(Display.class);
-         IDE.getInstance().openView((ViewEx)display);
+         IDE.getInstance().openView((View)display);
          previewActiveFile();
 
          return;

@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
@@ -94,13 +94,13 @@ ViewClosedHandler, SearchResultReceivedHandler
       if (display == null)
       {
          Display display = GWT.create(Display.class);
-         IDE.getInstance().openView((ViewEx)display);
+         IDE.getInstance().openView((View)display);
          bindDsplay(display);
       }
       else
       {
-         ((ViewEx)display).setViewVisible();
-         ((ViewEx)display).activate();
+         ((View)display).setViewVisible();
+         ((View)display).activate();
       }
 
       refreshSearchResult();

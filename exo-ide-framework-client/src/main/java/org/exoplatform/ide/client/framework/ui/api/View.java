@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public interface ViewEx
+public interface View
 {
    
    /**

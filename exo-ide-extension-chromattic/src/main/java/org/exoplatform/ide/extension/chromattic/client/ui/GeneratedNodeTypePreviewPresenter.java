@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.ViewEx;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
@@ -218,7 +218,7 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
 
          final Display view = new GeneratedNodeTypePreviewForm(eventBus);
          bindDisplay(view);
-         IDE.getInstance().openView((ViewEx)view);
+         IDE.getInstance().openView((View)view);
       }
    }
 
