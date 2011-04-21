@@ -77,32 +77,32 @@ public class GoToFolderTest extends BaseTest
    @Test
    public void testGoToFolder() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
-      //       IDE.navigator().selectItem(WS_URL);
+
       IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //Thread.sleep(TestConstants.SLEEP);
+      //waitForRootElement();
 
       //Open first folder and file in it
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_1 + "/");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_1, false);
+      waitForRootElement();
+      waitForRootElement();
       //Close first folder
       IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_1 + "/");
       IDE.navigator().assertItemNotPresent(URL + FOLDER_1 + "/" + FILE_1);
 
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //Select second file
       IDE.navigator().selectItem(URL + FOLDER_2 + "/" + FILE_2);
       //Go to folder with first file
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      //Thread.sleep(TestConstants.SLEEP);
-
+      waitForRootElement();
       //Check file is shown in tree
       //TODO check selected state
       IDE.navigator().assertItemPresent(URL + FOLDER_1 + "/" + FILE_1);
@@ -111,12 +111,12 @@ public class GoToFolderTest extends BaseTest
       IDE.toolbar().runCommand("Refresh Selected Folder");
 
       IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_2, false);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
+      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_2 + "/" + FILE_2, false);
+      waitForRootElement();
       //Go to folder with first file
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      //Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       //TODO check selected state
       IDE.navigator().assertItemPresent(URL + FOLDER_2 + "/" + FILE_2);
 
@@ -124,7 +124,7 @@ public class GoToFolderTest extends BaseTest
       IDE.editor().closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.editor().closeTab(0);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
    }
 
@@ -134,7 +134,7 @@ public class GoToFolderTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       //Close root workspace folder
       IDE.navigator().selectItem(WS_URL);
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
@@ -147,40 +147,22 @@ public class GoToFolderTest extends BaseTest
       IDE.navigator().assertItemNotPresent(URL + FOLDER_1 + "/");
       IDE.navigator().assertItemNotPresent(URL + FOLDER_2 + "/");
 
-      //      IDE.toolbar().runCommand("Search...");
-      //      Thread.sleep(TestConstants.SLEEP);
-
-      //Check search form appears
-      //      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSearchForm\"]"));
-      //      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormPathField]/element"));
-      //      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element"));
-      //      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element"));
-      //      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]"));
-      //      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormCancelButton\"]"));
-
-      //Check form inputs
-      //      assertEquals("/", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormPathField]/element"));
-      //      assertEquals("", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element"));
-      //      assertEquals("", selenium.getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element"));
-      //Click "Search" button
-      //      selenium.click("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]");
       performSearch("/", "", "");
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       //Check files are found
-      assertElementPresentSearchResultsTree(FILE_1);
-      assertElementPresentSearchResultsTree(FILE_2);
+      IDE.navigator().selectItemInSerchTree(URL + FOLDER_1 + "/" + FILE_1);
+      IDE.navigator().selectItemInSerchTree(URL + FOLDER_2 + "/" + FILE_2);
       //Open second file
       //      selectItemInSearchResultsTree(FILE_2);
-      openFileFromSearchResultsWithCodeEditor(FILE_2);
+      openFileFromSearchResultsWithCodeEditor(URL + FOLDER_2 + "/" + FILE_2);
       //Go to folder with second file
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.menu().checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, true);
       IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      //Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
 
       //TODO check selected
       IDE.navigator().assertItemPresent(URL + FOLDER_2 + "/" + FILE_2);
-      
       IDE.navigator().assertItemNotPresent(URL + FOLDER_1 + "/" + FILE_1);
       IDE.navigator().assertItemPresent(URL + FOLDER_1 + "/");
       IDE.navigator().assertItemPresent(URL + FOLDER_2 + "/");

@@ -288,7 +288,7 @@ public abstract class BaseTest
     */
    protected void selectItemInSearchResultsTree(String name) throws Exception
    {
-      selenium.click("//div[@id=\"ideSearchResultItemTreeGrid\"]//table/tbody/tr/td/div[@class=\"ide-Tree-label\"and text()= + name]");
+      selenium.click("//td/div[@class='ide-Tree-label' and text()=" + "'" + name + "'" + "]");
    }
 
    /**
@@ -300,8 +300,7 @@ public abstract class BaseTest
    protected void assertElementPresentSearchResultsTree(String name) throws Exception
    {
 
-      assertTrue(selenium
-         .isElementPresent("//div[@id=\"ideSearchResultItemTreeGrid\"]//table/tbody/tr/td/div[@class=\"ide-Tree-label\"and text()= + name]"));
+      assertTrue(selenium.isElementPresent("//td/div[@class='ide-Tree-label' and text()=" + "'" + name + "'" + "]"));
    }
 
    /**
@@ -458,14 +457,26 @@ public abstract class BaseTest
 
    protected void openFileFromSearchResultsWithCodeEditor(String fileName) throws Exception
    {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
+      IDE.navigator().selectItemInSerchTree(fileName);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-
       IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-
-      selenium.click("scLocator=//ListGrid[ID=\"ideOpenFileWithListGrid\"]/body/row[0]/col[0]");
-      selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]");
+      
+      selenium.click("//table[@id=\"ideOpenFileWithListGrid\"]/tbody/tr");
+      selenium.click("ideOpenFileWithOkButton");
+      
+      Thread.sleep(TestConstants.SLEEP_SHORT*2);
+     
+      
+      //TODO After fix bug the error relates to the reappearance "OpenWithForm", shold be remove  
+      if (selenium.isElementPresent("exoAskDialog"))
+      {
+         selenium.click("exoAskDialogYesButton");
+         Thread.sleep(TestConstants.SLEEP_SHORT);
+         selenium.click("ideOpenFileWithCancelButton");
+         Thread.sleep(TestConstants.SLEEP_SHORT);
+      }
    }
+      
 
    /**
     * Open file from navigation tree with CK (WYSIWYG) editor
@@ -573,7 +584,7 @@ public abstract class BaseTest
     */
    protected void selectWorkspaceTab()
    {
-      selenium.click("scLocator=//TabSet[ID=\"ideNavigationTabSet\"]/tab[ID=BrowserPanel]");
+      selenium.click("//div[@panel-id='navigation']//td[text()='Workspace']");
    }
 
    /**
@@ -597,35 +608,26 @@ public abstract class BaseTest
       IDE.toolbar().runCommand("Search...");
       Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSearchForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSearchFormCancelButton\"]"));
+      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideSearchView\"]"));
+      assertTrue(selenium.isElementPresent("ideSearchFormSearchButton"));
+      assertTrue(selenium.isElementPresent("ideSearchFormCancelButton"));
       //Check form inputs
-      assertEquals(
-         checkPath,
-         selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormPathField]/element"));
-      assertEquals(
-         "",
-         selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element"));
-      assertEquals(
-         "",
-         selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element"));
+      assertEquals(checkPath, selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormPathField\"]"));
+      assertEquals("",selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]"));
+      assertEquals("",selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//tr/td/input[@name=\"ideSearchFormMimeTypeField\"]"));
       //Type content to input
       selenium
-         .click("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element");
+         .click("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]");
       selenium.type(
-         "scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormContentField]/element", text);
+         "//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]", text);
       //Type mime type
       selenium
-         .click("scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element");
+         .click("//table[@id=\"ideSearchFormDynamicForm\"]//tr/td/input[@name=\"ideSearchFormMimeTypeField\"]");
       selenium.type(
-         "scLocator=//DynamicForm[ID=\"ideSearchFormDynamicForm\"]/item[name=ideSearchFormMimeTypeField]/element",
+         "//table[@id=\"ideSearchFormDynamicForm\"]//tr/td/input[@name=\"ideSearchFormMimeTypeField\"]",
          mimeType);
       //Click "Search" button
-      selenium.click("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]");
+      selenium.click("ideSearchFormSearchButton");
       Thread.sleep(TestConstants.SLEEP);
    }
 
