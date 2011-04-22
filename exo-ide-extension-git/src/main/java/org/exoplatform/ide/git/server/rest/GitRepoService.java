@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
-import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.ide.git.client.GitWorkDirNotFoundException;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
@@ -61,6 +60,19 @@ public class GitRepoService
     * Name of the Git's work folder.
     */
    public static final String GIT = ".git";
+
+   /**
+    * Repository service.
+    */
+   private RepositoryService repositoryService;
+
+   /**
+    * @param repositoryService repository service
+    */
+   public GitRepoService(RepositoryService repositoryService)
+   {
+      this.repositoryService = repositoryService;
+   }
 
    @GET
    @Path("workdir")
@@ -187,9 +199,6 @@ public class GitRepoService
     */
    public Session getSession(String repoName, String workspace) throws Exception
    {
-      StandaloneContainer container = StandaloneContainer.getInstance();
-      RepositoryService repositoryService =
-         (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
       ManageableRepository repository = repositoryService.getRepository(repoName);
       return repository.login(workspace);
    }
