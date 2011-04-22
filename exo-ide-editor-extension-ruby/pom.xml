@@ -75,9 +75,9 @@
                </execution>
             </executions>
             <configuration>
-               <runTarget>RubyEditor.html</runTarget>
+               <runTarget>RubyEditorExtension.html</runTarget>
                <hostedWebapp>${webappDirectory}</hostedWebapp>
-               <i18nMessagesBundle>org.exoplatform.ide.editor.ruby.client.Messages</i18nMessagesBundle>
+               <i18nMessagesBundle>org.exoplatform.ide.editor.extension.ruby.client.Messages</i18nMessagesBundle>
                <testTimeOut>500</testTimeOut>                                                                                                                                                                  
                <mode>htmlunit</mode>                                                                                                                                                                           
                <productionMode>false</productionMode>
