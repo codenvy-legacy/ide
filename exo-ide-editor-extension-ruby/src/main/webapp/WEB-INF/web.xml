@@ -9,7 +9,7 @@
 
    <!-- Default page to serve -->
    <welcome-file-list>
-      <welcome-file>RubyEditor.html</welcome-file>
+      <welcome-file>RubyEditorExtension.html</welcome-file>
    </welcome-file-list>
 
    <mime-mapping>
