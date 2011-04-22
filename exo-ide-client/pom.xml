@@ -98,6 +98,11 @@
       
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-extension-ruby</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-groovy</artifactId>
       </dependency>
       
@@ -406,7 +411,7 @@
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
-                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m</extraJvmArgs>
+                     <extraJvmArgs>-Xmx1000m -XX:MaxPermSize=256m</extraJvmArgs>
                   </configuration>
                </plugin>
                
