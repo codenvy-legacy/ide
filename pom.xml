@@ -224,7 +224,13 @@
             <artifactId>exo-ide-editor-extension-netvibes</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
+         <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-editor-extension-ruby</artifactId>
+           <version>${project.version}</version>
+         </dependency>         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-chromattic</artifactId>
