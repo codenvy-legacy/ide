@@ -185,25 +185,25 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
     */
    private void updateBrowserTreeStatus(final Folder folder)
    {
-      if (folder == null || folder.getChildren() == null || folder.getChildren().size() <= 0)
+      if (folder == null || folder.getChildren() == null || folder.getChildren().size() <= 0
+         || folder.getHref() == null)
          return;
 
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getHref(),
-         new AsyncRequestCallback<WorkDirResponse>()
+      GitClientService.getInstance().getWorkDir(folder.getHref(), new AsyncRequestCallback<WorkDirResponse>()
+      {
+         @Override
+         protected void onSuccess(WorkDirResponse result)
          {
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               String workDir = result.getWorkDir();
-               workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-               getStatus(workDir, folder);
-            }
+            String workDir = result.getWorkDir();
+            workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
+            getStatus(workDir, folder);
+         }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-            }
-         });
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+         }
+      });
    }
 
    /**
