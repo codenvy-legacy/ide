@@ -76,7 +76,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
    @Test
    public void testExplodeCollapseFolder() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       createFolder(FOLDER_1);
       createFolder(FOLDER_1_1);
       IDE.navigator().selectItem(FOLDER_1_URL);
@@ -102,7 +102,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
 
       //Close folder "folder-2"
       IDE.navigator().clickOpenIconOfFolder(FOLDER_2_URL);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.navigator().assertItemPresent(FOLDER_1_URL);
       IDE.navigator().assertItemPresent(FOLDER_2_URL);
       //Sub folders of folder "folder-2" are hidden
@@ -111,7 +111,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       
       //Open "folder-1"
       IDE.navigator().clickOpenIconOfFolder(FOLDER_1_URL);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.navigator().assertItemPresent(FOLDER_1_URL);
       IDE.navigator().assertItemPresent(FOLDER_1_1_URL);
       IDE.navigator().assertItemPresent(FOLDER_1_2_URL);
@@ -119,11 +119,11 @@ public class ExploringWorkspacePanelTest extends BaseTest
       //Sub folders of folder "folder-2" are hidden 
       IDE.navigator().assertItemNotPresent(FOLDER_2_1_URL);
       IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
 
       //Close workspace item
       IDE.navigator().clickOpenIconOfFolder(WS_URL);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       //All sub folders hide
       IDE.navigator().assertItemNotPresent(FOLDER_1_URL);
       IDE.navigator().assertItemNotPresent(FOLDER_1_1_URL);
@@ -134,7 +134,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
 
       //Open workspace item
       IDE.navigator().clickOpenIconOfFolder(WS_URL);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.navigator().assertItemPresent(FOLDER_1_URL);
       IDE.navigator().assertItemNotPresent(FOLDER_1_1_URL);
       IDE.navigator().assertItemNotPresent(FOLDER_1_2_URL);
