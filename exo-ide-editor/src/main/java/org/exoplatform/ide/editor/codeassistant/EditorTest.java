@@ -367,7 +367,13 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                new JspCodeValidator(),
                jspCodeAssistant, 
                true // can have several mimetypes
-              )));    
+              )));  
+      
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby script editor", "rb","", true,
+         new CodeMirrorConfiguration("['parseruby.js', 'parserubyhtmlmixed.js', 'tokenizeruby.js']", // generic code parsers
+            "['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']" // code styles
+         )));
+      
       
       // ckeditor
       addEditor(new CKEditorProducer(MimeType.TEXT_HTML, "CKEditor HTML editor", "html","", false,
@@ -746,6 +752,27 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          }
       });
 
+      Button rubyButton =
+         new Button();
+      rubyButton.setTitle("Create CodeMirror Editor for Ruby script");
+      rubyButton.setText("Ruby script");
+      rubyButton.addClickHandler(new ClickHandler()
+      {
+         
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_RUBY);
+            
+            editor = codeEditors.get(MimeType.APPLICATION_RUBY).createEditor(ExamplesBundle.INSTANCE.rubyExample().getText(), 
+               eventBus, params);
+            panel.clear();
+            panel.add(editor);
+            
+         }
+      });
+
+      
       
       toolbar.add(cssButton);
       toolbar.add(htmlButton);
@@ -759,6 +786,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       toolbar.add(groovyTemplateButton);  
       toolbar.add(javaButton);
       toolbar.add(jspButton);      
+      toolbar.add(rubyButton);      
       
       toolbar.add(htmlCKEditorButton);
       toolbar.add(googleGadgetCKEditorButton);      
