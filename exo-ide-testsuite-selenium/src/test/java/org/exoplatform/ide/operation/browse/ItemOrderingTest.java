@@ -92,44 +92,47 @@ public class ItemOrderingTest extends BaseTest
       
       checkItemOrderngInSearchResultPanel();
    }
-
+   
+   
    private void checkItemOrderingInNavigationPanel() throws Exception
    {
       IDE.navigator().assertItemPresent(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/"); 
-      assertEquals(UPPERCASE_TEST_FOLDER_1, getItemNameFromWorkspaceTree(1));
-      
+      assertEquals(UPPERCASE_TEST_FOLDER_1, getItemNameFromWorkspaceTree(UPPERCASE_TEST_FOLDER_1));
+            
       IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER_1 + "/"); 
-      assertEquals(TEST_FOLDER_1, getItemNameFromWorkspaceTree(2));
+      assertEquals(TEST_FOLDER_1, getItemNameFromWorkspaceTree(TEST_FOLDER_1));
       
       IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER_1_2 + "/");
-      assertEquals(TEST_FOLDER_1_2, getItemNameFromWorkspaceTree(3));
+      assertEquals(TEST_FOLDER_1_2, getItemNameFromWorkspaceTree(TEST_FOLDER_1_2));
       
       IDE.navigator().assertItemPresent(WS_URL + UPPERCASE_TEST_FILE_1);
-      assertEquals(UPPERCASE_TEST_FILE_1, getItemNameFromWorkspaceTree(4));
+      assertEquals(UPPERCASE_TEST_FILE_1, getItemNameFromWorkspaceTree(UPPERCASE_TEST_FILE_1));
       
       IDE.navigator().assertItemPresent(WS_URL + TEST_FILE_1);
-      assertEquals(TEST_FILE_1, getItemNameFromWorkspaceTree(5));
+      assertEquals(TEST_FILE_1, getItemNameFromWorkspaceTree(TEST_FILE_1));
       
       IDE.navigator().assertItemPresent(WS_URL + TEST_FILE_1_2);
-      assertEquals(TEST_FILE_1_2, getItemNameFromWorkspaceTree(6));
+      assertEquals(TEST_FILE_1_2, getItemNameFromWorkspaceTree(TEST_FILE_1_2));
    }
    
    private void checkItemOrderngInSearchResultPanel() throws Exception
    {
       assertElementPresentSearchResultsTree(UPPERCASE_TEST_FILE_1);
-      assertEquals(UPPERCASE_TEST_FILE_1, getItemNameFromSearchResultsTree(1));
+      assertEquals(UPPERCASE_TEST_FILE_1, getItemNameFromSearchResultsTree(UPPERCASE_TEST_FILE_1));
       
       assertElementPresentSearchResultsTree(TEST_FILE_1);
-      assertEquals(TEST_FILE_1, getItemNameFromSearchResultsTree(2));
+      assertEquals(TEST_FILE_1, getItemNameFromSearchResultsTree(TEST_FILE_1));
       
       assertElementPresentSearchResultsTree(TEST_FILE_1_2);
-      assertEquals(TEST_FILE_1_2, getItemNameFromSearchResultsTree(3));
+      assertEquals(TEST_FILE_1_2, getItemNameFromSearchResultsTree(TEST_FILE_1_2));
+      Thread.sleep(6000);
    }   
+      
+   
    
    @AfterClass
    public static void tearDown() throws Exception
    {
-      IDE.editor().closeTab(0);
       cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME);
    }
    
