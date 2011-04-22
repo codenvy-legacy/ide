@@ -70,7 +70,7 @@ public class RubyEditorExtension extends Extension implements InitializeServices
       IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New Ruby", "Ruby", "Create Ruby Script", Images.RUBY,
+         new NewItemControl("File/New/New Ruby File", "Ruby File", "Create Ruby File", Images.RUBY,
             MimeType.APPLICATION_RUBY), DockTarget.NONE, false);
    }
 
