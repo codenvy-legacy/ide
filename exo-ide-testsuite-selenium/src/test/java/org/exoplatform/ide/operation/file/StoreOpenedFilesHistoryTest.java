@@ -124,37 +124,37 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       //select another workspace
       selectWorkspace(secondWorkspaceName);
       
-      IDE.navigator().selectItem(SECOND_WORKSPACE_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(SECOND_WORKSPACE_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/");
+      IDE.NAVIGATION.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/");
       
       //create txt file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       saveAsUsingToolbarButton(TEXT_FILE);
       
-      IDE.navigator().selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
       
       //create html file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       saveAsUsingToolbarButton(HTML_FILE);
       
       //create google gadget file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       saveAsUsingToolbarButton(GADGET_FILE);
       
       //create groovy script file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       
       //closing all files
-      IDE.editor().closeTab(0);
-      IDE.editor().closeTab(0);
-      IDE.editor().closeTab(0);
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TEXT_FILE, false);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(GADGET_FILE, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TEXT_FILE, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GADGET_FILE, false);
       openFileFromNavigationTreeWithCkEditor(HTML_FILE, true);
       
       checkCkEditorOpened(2);
@@ -188,15 +188,15 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       
       checkOpenedFilesHistory();
       
-      IDE.editor().closeTab(0);
-      IDE.editor().closeTabWithNonSaving(0);
+     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeTabWithNonSaving(0);
       
       //open folder to select html file
-      IDE.navigator().selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().assertItemPresent(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
-      IDE.navigator().assertItemPresent(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
+      IDE.NAVIGATION.assertItemPresent(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
+      IDE.NAVIGATION.assertItemPresent(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
    }
    
    /**
@@ -209,19 +209,19 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    {
       //check that files are opened and in right order.
       //check that tab with html file is selected
-      assertEquals(GADGET_FILE, IDE.editor().getTabTitle(0));
-      assertTrue(IDE.editor().getTabTitle(1).equals(HTML_FILE) || IDE.editor().getTabTitle(1).equals(HTML_FILE + " *"));
+      assertEquals(GADGET_FILE,IDE.EDITOR.getTabTitle(0));
+      assertTrue(IDE.EDITOR.getTabTitle(1).equals(HTML_FILE) ||IDE.EDITOR.getTabTitle(1).equals(HTML_FILE + " *"));
       
       //select Gadget file
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       
-      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    

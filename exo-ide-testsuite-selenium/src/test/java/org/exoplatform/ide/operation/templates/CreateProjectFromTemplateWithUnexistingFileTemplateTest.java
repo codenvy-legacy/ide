@@ -149,7 +149,7 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       Thread.sleep(TestConstants.SLEEP);
       //----- 1 ----------------
       //open create project from template form
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
 
       checkCreateProjectFromTemplateForm();
 
@@ -166,18 +166,18 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
 
       //----- 3 ----------------
       //check new project created
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + "/"); 
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + "/"); 
 
       clickOpenIconOfFolder(PROJECT_NAME);
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
 
       clickOpenIconOfFolder(FOLDER_ORG);
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
 
       clickOpenIconOfFolder(FOLDER_EXOPLATFORM);
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
-      IDE.navigator().assertItemNotPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + UNEXISTING_FILE_HTML);
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
+      IDE.NAVIGATION.assertItemNotPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + UNEXISTING_FILE_HTML);
    }
 
    private void clickOpenIconOfFolder(String folderName) throws Exception

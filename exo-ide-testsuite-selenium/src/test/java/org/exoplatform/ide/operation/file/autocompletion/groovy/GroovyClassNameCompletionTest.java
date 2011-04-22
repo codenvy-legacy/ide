@@ -39,7 +39,7 @@ public class GroovyClassNameCompletionTest extends BaseTest
    public void testGroovyClassNameCompletion() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       for (int i = 0; i < 9; i++)
@@ -49,20 +49,20 @@ public class GroovyClassNameCompletionTest extends BaseTest
       }
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      IDE.editor().typeTextIntoEditor(0, "Colle");
+     IDE.EDITOR.typeTextIntoEditor(0, "Colle");
 
       //open autocomplete form
-      IDE.codeAssistant().openForm();
+      IDE.CODEASSISTANT.openForm();
 
-      IDE.codeAssistant().checkElementPresent("Collections");
-      IDE.codeAssistant().checkElementPresent("Collection");
+      IDE.CODEASSISTANT.checkElementPresent("Collections");
+      IDE.CODEASSISTANT.checkElementPresent("Collection");
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      IDE.codeAssistant().insertSelectedItem();
+      IDE.CODEASSISTANT.insertSelectedItem();
 
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("Collections"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections"));
    }
 
 }

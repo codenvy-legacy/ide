@@ -84,11 +84,11 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
       //Select file newHtmlFile.html in the Workspace Panel and then call 
       //the "File->Open with.." topmenu command.
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.SLEEP);
       callOpenWithWindow(CUR_TIME + HTML_FILE_NAME);
       //gadget displayed "Open File with" dialog window with second items in the central column: 
@@ -165,7 +165,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
       doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       checkCkEditorOpened(0);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //file newHtmlFile.html and new HTML-file should be opened only in the WYSYWYG editor.
       checkCkEditorOpened(0);
@@ -182,7 +182,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
       
       //---- 10 -------------------------
       //Reopen file newHtmlFile.html.
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       checkCkEditorOpened(0);
@@ -206,7 +206,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
       selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD+"");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       closeFileTab(0);
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       doubleClickItemInNavigationTree(CUR_TIME + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
       checkCodeEditorOpened(0);
@@ -227,7 +227,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
    
    private void closeFileTab(int tabIndex) throws Exception
    {
-      IDE.editor().closeTab(tabIndex);
+     IDE.EDITOR.closeTab(tabIndex);
 
       //check is warning dialog appears
       if (selenium.isElementPresent(
@@ -245,7 +245,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       
 //      //call Open With window
 //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");

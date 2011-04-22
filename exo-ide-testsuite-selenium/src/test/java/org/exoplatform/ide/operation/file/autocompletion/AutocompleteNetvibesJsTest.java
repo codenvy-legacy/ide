@@ -73,7 +73,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
    @After
    public void tearDown() throws Exception
    {
-      IDE.editor().closeFileTabIgnoreChanges(0);
+     IDE.EDITOR.closeFileTabIgnoreChanges(0);
 
       try
       {
@@ -98,13 +98,13 @@ public class AutocompleteNetvibesJsTest extends BaseTest
    public void testAutocomplateList() throws Exception
    {
       waitForRootElement();
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       /*
        * 1. Open netvibes file.
        */
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/" + NETVIBES_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/" + NETVIBES_NAME, false);
 
       /*
        * 2. Go inside <code><script></code> tag.
@@ -115,29 +115,29 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       /*
        * 3. Type text to file
        */
-      IDE.editor().typeTextIntoEditor(0, "var name = \"ivan\"\n");
+     IDE.EDITOR.typeTextIntoEditor(0, "var name = \"ivan\"\n");
 
       /*
        * 4. Press ctrl+enter to call autocomplete form.
        */
 
-      IDE.codeAssistant().openForm();
+      IDE.CODEASSISTANT.openForm();
 
       /*
        * Check, that all UWA snippets are present.
        */
-      IDE.codeAssistant().checkElementPresent("name");
-      IDE.codeAssistant().checkElementPresent("flash");
-      IDE.codeAssistant().checkElementPresent("jsonrequest");
-      IDE.codeAssistant().checkElementPresent("pager");
-      IDE.codeAssistant().checkElementPresent("tabs");
-      IDE.codeAssistant().checkElementPresent("thumbnailed");
+      IDE.CODEASSISTANT.checkElementPresent("name");
+      IDE.CODEASSISTANT.checkElementPresent("flash");
+      IDE.CODEASSISTANT.checkElementPresent("jsonrequest");
+      IDE.CODEASSISTANT.checkElementPresent("pager");
+      IDE.CODEASSISTANT.checkElementPresent("tabs");
+      IDE.CODEASSISTANT.checkElementPresent("thumbnailed");
 
       /*
        * 5. Move down, and check, that javadoc form appeared with hint.
        */
       //      Autocomplete.moveCursorDown(1+11);
-      IDE.codeAssistant().typeToInput("flash");
+      IDE.CODEASSISTANT.typeToInput("flash");
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
 
       /*
@@ -149,35 +149,35 @@ public class AutocompleteNetvibesJsTest extends BaseTest
 
       //      Autocomplete.moveCursorDown(4);
       //      Thread.sleep(TestConstants.SLEEP);
-      IDE.codeAssistant().typeToInput("jsonrequest", true);
+      IDE.CODEASSISTANT.typeToInput("jsonrequest", true);
 
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
 
       assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
       assertEquals(JSON_REQUEST_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
 
-      IDE.codeAssistant().typeToInput("pager", true);
+      IDE.CODEASSISTANT.typeToInput("pager", true);
 
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
 
       assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
       assertEquals(PAGER_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
 
-      IDE.codeAssistant().typeToInput("tabs", true);
+      IDE.CODEASSISTANT.typeToInput("tabs", true);
 
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
 
       assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
       assertEquals(TABS_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
 
-      IDE.codeAssistant().typeToInput("thumbnailed", true);
+      IDE.CODEASSISTANT.typeToInput("thumbnailed", true);
 
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
       
       assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
       assertEquals(THUMBNAILED_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
       
-      IDE.codeAssistant().closeForm();
+      IDE.CODEASSISTANT.closeForm();
    }
 
    /**
@@ -248,12 +248,12 @@ public class AutocompleteNetvibesJsTest extends BaseTest
     */
    private void testSnippetInAutocomplete(String name, String snippetTemplate) throws Exception
    {
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       /*
        * 1. Open netvibes file.
        */
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/" + NETVIBES_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/" + NETVIBES_NAME, false);
 
       /*
        * 2. Go inside <code><script></code> tag.
@@ -264,22 +264,22 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       /*
        * 3. Type text to file
        */
-      IDE.editor().typeTextIntoEditor(0, "var name = \"ivan\"\n");
+     IDE.EDITOR.typeTextIntoEditor(0, "var name = \"ivan\"\n");
 
       /*
        * 4. Press ctrl+enter to call autocomplete form.
        */
-      IDE.codeAssistant().openForm();
+      IDE.CODEASSISTANT.openForm();
 
       /*
        * 5. Move down, and click enter
        */
-      IDE.codeAssistant().typeToInput(name);
+      IDE.CODEASSISTANT.typeToInput(name);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      checkText(IDE.editor().getTextFromCodeEditor(0), snippetTemplate);
+      checkText(IDE.EDITOR.getTextFromCodeEditor(0), snippetTemplate);
    }
 
    /**

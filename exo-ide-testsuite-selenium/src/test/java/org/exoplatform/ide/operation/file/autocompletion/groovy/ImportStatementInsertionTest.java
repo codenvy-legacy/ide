@@ -80,23 +80,23 @@ public class ImportStatementInsertionTest extends BaseTest
    {
       // Open groovy file with test content
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME, false);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);   
       
       // goto line 14, type "B" symbol and then click on Ctrl+Space. Then select "Base64" class item from non-default package and press "Enter" key.
       goToLine(14);
-      IDE.editor().typeTextIntoEditor(0, "B"); 
-      IDE.codeAssistant().openForm();
+     IDE.EDITOR.typeTextIntoEditor(0, "B"); 
+      IDE.CODEASSISTANT.openForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      IDE.editor().clickOnEditor();
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).startsWith(
+     IDE.EDITOR.clickOnEditor();
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" 
          + "import javax.ws.rs.Path\n"
          + "import javax.ws.rs.GET\n"
@@ -108,16 +108,16 @@ public class ImportStatementInsertionTest extends BaseTest
       
       // Empty line 14, type "B" symbol and then click on Ctrl+Space. Then select "BitSet" class item from default package and press "Enter" key.
       goToLine(14);
-      IDE.editor().deleteLinesInEditor(1);
-      IDE.editor().typeTextIntoEditor(0, "B"); 
-      IDE.codeAssistant().openForm();
+     IDE.EDITOR.deleteLinesInEditor(1);
+     IDE.EDITOR.typeTextIntoEditor(0, "B"); 
+      IDE.CODEASSISTANT.openForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      IDE.editor().clickOnEditor();
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).startsWith(
+     IDE.EDITOR.clickOnEditor();
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" 
          + "import javax.ws.rs.Path\n"
          + "import javax.ws.rs.GET\n"
@@ -129,16 +129,16 @@ public class ImportStatementInsertionTest extends BaseTest
       
       // Empty line 14 and then click on Ctrl+Space. Then select "HelloWorld" class item with current class name and press "Enter" key.
       goToLine(14);
-      IDE.editor().deleteLinesInEditor(1);
-      IDE.editor().typeTextIntoEditor(0, " "); 
-      IDE.codeAssistant().openForm();
+     IDE.EDITOR.deleteLinesInEditor(1);
+     IDE.EDITOR.typeTextIntoEditor(0, " "); 
+      IDE.CODEASSISTANT.openForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("HelloWorld"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      IDE.editor().clickOnEditor();
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).startsWith(
+     IDE.EDITOR.clickOnEditor();
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" 
          + "import javax.ws.rs.Path\n"
          + "import javax.ws.rs.GET\n"
@@ -155,23 +155,23 @@ public class ImportStatementInsertionTest extends BaseTest
    {
       // Open ECM template file with test content
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + TEMPLATE_FILE_NAME, false);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + TEMPLATE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);   
       
       // goto line 15, type "B" symbol and then click on Ctrl+Space. Then select "Base64" class item from non-default package and press "Enter" key.
       goToLine(15);
-      IDE.editor().typeTextIntoEditor(1, "B"); 
-      IDE.codeAssistant().openForm();
+     IDE.EDITOR.typeTextIntoEditor(1, "B"); 
+      IDE.CODEASSISTANT.openForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      IDE.editor().clickOnEditor();
-      assertTrue(IDE.editor().getTextFromCodeEditor(1).startsWith(
+     IDE.EDITOR.clickOnEditor();
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(1).startsWith(
          "<html>"
          + "   <head>"
          + "     <%"
@@ -185,16 +185,16 @@ public class ImportStatementInsertionTest extends BaseTest
       
       // Empty line 15, type "B" symbol and then click on Ctrl+Space. Then select "BitSet" class item from default package and press "Enter" key.
       goToLine(15);
-      IDE.editor().deleteLinesInEditor(1);
-      IDE.editor().typeTextIntoEditor(1, "B"); 
-      IDE.codeAssistant().openForm();
+     IDE.EDITOR.deleteLinesInEditor(1);
+     IDE.EDITOR.typeTextIntoEditor(1, "B"); 
+      IDE.CODEASSISTANT.openForm();
       selenium.clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      IDE.editor().clickOnEditor();
-      assertTrue(IDE.editor().getTextFromCodeEditor(1).startsWith(
+     IDE.EDITOR.clickOnEditor();
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(1).startsWith(
          "<html>"
          + "   <head>"
          + "     <%"
@@ -210,8 +210,8 @@ public class ImportStatementInsertionTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-//      IDE.editor().closeFileTabIgnoreChanges(1);
-      IDE.editor().closeFileTabIgnoreChanges(0);
+//     IDE.EDITOR.closeFileTabIgnoreChanges(1);
+     IDE.EDITOR.closeFileTabIgnoreChanges(0);
       
       try
       {

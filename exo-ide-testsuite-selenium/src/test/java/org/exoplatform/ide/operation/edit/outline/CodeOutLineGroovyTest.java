@@ -79,14 +79,14 @@ public class CodeOutLineGroovyTest extends BaseTest
    {
       // Open groovy file with content
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
       // open outline panel
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
       // check for presence of tab outline
@@ -126,7 +126,7 @@ public class CodeOutLineGroovyTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       cleanDefaultWorkspace();
    }
 }

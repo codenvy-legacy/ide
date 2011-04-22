@@ -97,7 +97,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       
       //------ 1 ----------
       //Click on "File->New->From Template..." topmenu item.
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       
       // check "Create file" dialog window
@@ -136,7 +136,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       
       //------ 1 --------
       //Click on "File->New->From Template..." topmenu item.
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       
       // check "Create file" dialog window
@@ -187,7 +187,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       
       //------ 1 --------
       //Click on "File->New->From Template..." topmenu item.
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       
       // check "Create file" dialog window

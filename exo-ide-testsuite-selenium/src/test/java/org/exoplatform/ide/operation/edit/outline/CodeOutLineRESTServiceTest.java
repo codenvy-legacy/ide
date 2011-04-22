@@ -80,7 +80,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       try
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
@@ -102,14 +102,14 @@ public class CodeOutLineRESTServiceTest extends BaseTest
    {
       // Open groovy file with content
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       // open outline panel
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
       // check for presence of tab outline

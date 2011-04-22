@@ -88,14 +88,14 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
    {
       {
          waitForRootElement();
-         IDE.navigator().selectItem(
+         IDE.NAVIGATION.selectItem(
             BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
-         IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+         IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
          waitForRootElement();
 
-         IDE.navigator().selectItem(URL);
-         IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, true);
-         IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER);
+         IDE.NAVIGATION.selectItem(URL);
+         IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, true);
+         IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER);
 
          selenium.keyPressNative("10");
          Thread.sleep(TestConstants.SLEEP * 3); //wait for download file

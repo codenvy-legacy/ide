@@ -108,23 +108,23 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 -----------------
       //open file
-       IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(SIMPLE_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(SIMPLE_FILE_NAME, false);
 
       //---- 2 -----------------
       //check Run Groovy Service button and menu
-      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
       //---- 3 -----------------
       //call Run Groovy Service command
-      IDE.toolbar().runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP * 2);
 
       //check Launch Rest Service form appears
@@ -151,13 +151,13 @@ public class RunRestServiceCommandTest extends BaseTest
       //check, that hanlders removed, and after validation and deploying 
       //Launt Rest Service form doesn't appear
 
-      IDE.toolbar().runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       //check Launch Rest Service form doesn't appear
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
 
-      IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       //check Launch Rest Service form doesn't appear
@@ -173,21 +173,21 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 -----------------
       //open file
-       IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().clickOpenIconOfFolder(URL);
+       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NON_VALID_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NON_VALID_FILE_NAME, false);
 
       //---- 2 -----------------
       //check Run Groovy Service button and menu
-      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
       //---- 3 -----------------
       //call Run Groovy Service command
-      IDE.toolbar().runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 4 -----------------
@@ -197,16 +197,16 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 5 -----------------
       //fix file
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.clickAt("//body[@class='editbox']", "5,5");
       IDE.selectMainFrame();
 
-      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 6 -----------------
       //validate file and check, that Launch Rest Service form doesn't appear
-      IDE.toolbar().runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 7 -----------------
@@ -229,26 +229,26 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 -----------------
       //open file
-       IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().clickOpenIconOfFolder(URL);
+       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_FOR_CHANGE_CONTENT_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_FOR_CHANGE_CONTENT_NAME, false);
 
       //---- 2 -----------------
       //type some text
-      IDE.editor().typeTextIntoEditor(0, "//modified file\n");
+     IDE.EDITOR.typeTextIntoEditor(0, "//modified file\n");
 
       //---- 3 -----------------
       //check Run Groovy Service button and menu
-      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
       //---- 4 -----------------
       //call Run Groovy Service command
-      IDE.toolbar().runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       //check Launch Rest Service form appears
@@ -281,23 +281,23 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 -----------------
       //open file
-       IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
 
       //---- 2 -----------------
       //check Run Groovy Service button and menu
-      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
       
       //---- 3 -----------------
       //call Run Groovy Service command
-      IDE.toolbar().runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 5 -----------------
@@ -330,7 +330,7 @@ public class RunRestServiceCommandTest extends BaseTest
    @After
    public void afterMethod() throws Exception
    {
-      IDE.editor().tryCloseTabWithNonSaving(0);
+     IDE.EDITOR.tryCloseTabWithNonSaving(0);
    }
 
 }

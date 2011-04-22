@@ -23,8 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.TestConstants;
 
-import com.thoughtworks.selenium.Selenium;
-
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -33,40 +31,34 @@ import com.thoughtworks.selenium.Selenium;
  * @version $
  */
 
-public class Toolbar
+public class Toolbar extends AbstractTestModule
 {
-
-   private Selenium selenium;
-
-   public Toolbar(Selenium selenium)
-   {
-      this.selenium = selenium;
-   }
 
    /**
     * Performs click on toolbar button and makes pause after it.
     * @param buttonTitle toolbar button title
     */
-   public void runCommand(String buttonTitle, boolean wait) throws Exception {
+   public void runCommand(String buttonTitle, boolean wait) throws Exception
+   {
       String locator =
          "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
 
-      selenium.mouseOver(locator);
+      selenium().mouseOver(locator);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      
-      selenium.click(locator);
+      selenium().click(locator);
       //selenium.mouseUpAt(locator, "");
-      if (wait) {
-         Thread.sleep(TestConstants.REDRAW_PERIOD);         
+      if (wait)
+      {
+         Thread.sleep(TestConstants.REDRAW_PERIOD);
       }
       try
       {
-         selenium.mouseOut(locator);
+         selenium().mouseOut(locator);
       }
       catch (Exception e)
       {
-      }      
+      }
    }
 
    /**
@@ -88,19 +80,19 @@ public class Toolbar
       runCommand("New");
 
       String locator = "//table[@class='exo-popupMenuTable']//tbody//td//nobr[text()='" + menuItemName + "']";
-      selenium.mouseOver(locator);
+      selenium().mouseOver(locator);
       //selenium.click(locator);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      selenium.click(locator);
+      selenium().click(locator);
       //String hoverLocator =
       //   "//table[@class='exo-popupMenuTable']//tbody//td//nobr[text()='" + menuItemName + "']";
-      
+
       //selenium.mouseUp(hoverLocator);
 
       //time to wait while gadget open new file
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
+
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
@@ -117,14 +109,14 @@ public class Toolbar
          String locator =
             "//div[@id=\"exoIDEToolbar\" and @class=\"exoToolbarPanel\"]//div[@enabled=\"true\" and @title=\"" + name
                + "\"]";
-         assertTrue(selenium.isElementPresent(locator));
+         assertTrue(selenium().isElementPresent(locator));
       }
       else
       {
          String locator =
             "//div[@id=\"exoIDEToolbar\" and @class=\"exoToolbarPanel\"]//div[@enabled=\"false\" and @title=\"" + name
                + "\"]";
-         assertTrue(selenium.isElementPresent(locator));
+         assertTrue(selenium().isElementPresent(locator));
       }
    }
 
@@ -137,17 +129,16 @@ public class Toolbar
    public void assertButtonExistAtLeft(String name, boolean exist)
    {
       String locator =
-         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]/div[@class=\"exoToolbarElementLeft\"]" 
-         + "/div[contains(@class, \"exoIconButtonPanel\") and @title=\""
-         + name + "\"]";
+         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]/div[@class=\"exoToolbarElementLeft\"]"
+            + "/div[contains(@class, \"exoIconButtonPanel\") and @title=\"" + name + "\"]";
       if (exist)
       {
-         assertTrue(selenium.isVisible(locator));
+         assertTrue(selenium().isVisible(locator));
       }
       else
       {
-         
-         assertTrue(!selenium.isElementPresent(locator) || !selenium.isVisible(locator) );
+
+         assertTrue(!selenium().isElementPresent(locator) || !selenium().isVisible(locator));
 
       }
    }
@@ -166,28 +157,29 @@ public class Toolbar
 
       if (exist)
       {
-         assertTrue(selenium.isElementPresent(locator));
+         assertTrue(selenium().isElementPresent(locator));
       }
       else
       {
-         if(selenium.isElementPresent(locator))
-          assertFalse(selenium.isVisible(locator));
+         if (selenium().isElementPresent(locator))
+            assertFalse(selenium().isVisible(locator));
       }
    }
-   
-   public void assertButtonPresent(String name, boolean present) {
-//      String locator =
-//         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@class=\"exoIconButtonPanel\" and @title=\"" + name + "\"]";
-//
-//      if (present)
-//      {
-//         assertTrue(selenium.isElementPresent(locator));
-//      }
-//      else
-//      {
-//         assertFalse(selenium.isElementPresent(locator));
-//      }
-      
+
+   public void assertButtonPresent(String name, boolean present)
+   {
+      //      String locator =
+      //         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@class=\"exoIconButtonPanel\" and @title=\"" + name + "\"]";
+      //
+      //      if (present)
+      //      {
+      //         assertTrue(selenium.isElementPresent(locator));
+      //      }
+      //      else
+      //      {
+      //         assertFalse(selenium.isElementPresent(locator));
+      //      }
+
    }
 
 }

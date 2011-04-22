@@ -115,10 +115,10 @@ public class CheckHilightTextTest extends BaseTest
       //------------3---------------------    
       // Refresh Workspace:
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
    }
 
@@ -143,7 +143,7 @@ public class CheckHilightTextTest extends BaseTest
    {
       openXML();
       checkHilightXML();
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //TODO fix  Task IDE-445
@@ -155,7 +155,7 @@ public class CheckHilightTextTest extends BaseTest
    {
       openTXT();
       checkHiligtTXT();
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //TODO fix  Task IDE-445
@@ -167,7 +167,7 @@ public class CheckHilightTextTest extends BaseTest
    {
       openJavaScript();
       checkHilightJavaScript();
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //TODO fix  Task IDE-445
       checkSaveDialog();
@@ -178,7 +178,7 @@ public class CheckHilightTextTest extends BaseTest
    {
       openHtml();
       checkHilightHTML();
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //TODO fix  Task IDE-445
@@ -190,7 +190,7 @@ public class CheckHilightTextTest extends BaseTest
    {
       openGroovy();
       checkHilightGroovy();
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //TODO fix  Task IDE-445
@@ -203,7 +203,7 @@ public class CheckHilightTextTest extends BaseTest
       openCss();
       chekHilightingInCssFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //TODO fix  Task IDE-445
       checkSaveDialog();
@@ -212,66 +212,66 @@ public class CheckHilightTextTest extends BaseTest
    public void openXML() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openTXT() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TXT_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TXT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openJavaScript() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(JS_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(JS_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openHtml() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       //    runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openGroovy() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       //runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openGooglegadget() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(GADGET_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GADGET_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openCss() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CSS_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(CSS_FILE_NAME, false);
    }
 
    public void checkHilightXML()
@@ -736,7 +736,7 @@ public class CheckHilightTextTest extends BaseTest
 
       try
       {
-         IDE.editor().selectIFrameWithEditor(0);
+        IDE.EDITOR.selectIFrameWithEditor(0);
       }
       catch (Exception e)
       {
@@ -932,7 +932,7 @@ public class CheckHilightTextTest extends BaseTest
    {
       try
       {
-         IDE.editor().selectIFrameWithEditor(0);
+        IDE.EDITOR.selectIFrameWithEditor(0);
       }
       catch (Exception e)
       {
@@ -1017,7 +1017,7 @@ public class CheckHilightTextTest extends BaseTest
    public void checkIcons() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertTrue(selenium.isElementPresent("//table[@class='listTable']/tbody/tr[3]//img[contains(@src, 'css.png')]"));
       assertTrue(selenium.isTextPresent(CSS_FILE_NAME));

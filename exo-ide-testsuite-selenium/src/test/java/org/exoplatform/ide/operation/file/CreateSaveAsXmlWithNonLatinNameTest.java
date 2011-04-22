@@ -115,59 +115,59 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
    {
 
       Thread.sleep(TestConstants.SLEEP*2);
-      IDE.navigator().assertItemPresent(WS_URL);
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.NAVIGATION.assertItemPresent(WS_URL);
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      assertEquals("Untitled file.xml *", IDE.editor().getTabTitle(0));
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
+      assertEquals("Untitled file.xml *",IDE.EDITOR.getTabTitle(0));
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
       
-      IDE.editor().deleteFileContent();
+     IDE.EDITOR.deleteFileContent();
       
-      IDE.editor().typeTextIntoEditor(0, XML_CONTENT);
+     IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
       Thread.sleep(TestConstants.SLEEP);
       
       saveAsUsingToolbarButton(XML_FILE);
       
-      assertEquals(XML_FILE, IDE.editor().getTabTitle(0));
+      assertEquals(XML_FILE,IDE.EDITOR.getTabTitle(0));
       
       //check file properties
       showAndCheckProperties(String.valueOf(XML_CONTENT.length()+1), MimeType.TEXT_XML, XML_FILE);
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
       //check file on server
       checkFileExists(URL + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
 
-      IDE.navigator().assertItemPresent(WS_URL + XML_FILE);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + XML_FILE);
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(XML_FILE, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE, false);
 
       checkCodeEditorOpened(0);
 
       //change file content
-      IDE.editor().deleteFileContent();
+     IDE.EDITOR.deleteFileContent();
       
-      IDE.editor().typeTextIntoEditor(0, XML_CONTENT_2);
+     IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT_2);
 
       //save as file
       
       saveAsUsingToolbarButton(NEW_XML_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertEquals(NEW_XML_FILE, IDE.editor().getTabTitle(0));
+      assertEquals(NEW_XML_FILE,IDE.EDITOR.getTabTitle(0));
 
       showAndCheckProperties(String.valueOf(XML_CONTENT_2.length()+1), MimeType.TEXT_XML, NEW_XML_FILE);
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
       //check two files exist
       checkFileExists(URL + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
       checkFileExists(URL + URLEncoder.encode(NEW_XML_FILE, "UTF-8"), XML_CONTENT_2);
 
-      IDE.navigator().assertItemPresent(WS_URL + XML_FILE);
-      IDE.navigator().assertItemPresent(WS_URL + NEW_XML_FILE);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + XML_FILE);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + NEW_XML_FILE);
 
    }
    
@@ -188,7 +188,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
    private void showAndCheckProperties(String contentLength, String contentType, String displayName) throws Exception
    {
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       
       assertTrue(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_TAB_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.PropertiesPanel.SC_DYNAMIC_FORM_LOCATOR));

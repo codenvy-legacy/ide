@@ -118,10 +118,10 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    {
       //prepare file
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(URL) ;
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);     
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL) ;
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);     
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent(PROPERTIES_FORM_LOCATOR));
       
@@ -200,7 +200,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 7 -----------------
       //Click on "Show Properties" button.
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       Thread.sleep(TestConstants.SLEEP);
       
       //there is Properties Tab under the file tab and with horizontal delimeter between them, 
@@ -218,7 +218,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       //---- 9 -----------------
       //Click on "File->Search" topmenu item and then click on 
       //"Search" button within the "Search" dialog window.
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SEARCH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SEARCH);
       
       selenium.click("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]/");
       Thread.sleep(TestConstants.SLEEP);
@@ -236,7 +236,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 10 -----------------
       //Click on Show Outline Panel
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       //check code helper panel visible
       assertTrue(selenium.isElementPresent(CODE_HELPER_PANEL_LOCATOR));
@@ -273,7 +273,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkOperationsPanelVisibility(true);
       
       //close outline
-      IDE.toolbar().runCommand(ToolbarCommands.View.HIDE_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.HIDE_OUTLINE);
 
       //---- 13 -----------------
       //select Workspace tab
@@ -291,7 +291,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 15 -----------------
       //click Show Outline button
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       
       //outline panel is visible, content panel is visible.
@@ -303,7 +303,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 16 -----------------
       //open new xml file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
       //check content panel is visible, outline is visible,
@@ -330,7 +330,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 16 -----------------
       //Close and remove created file.
-      IDE.editor().closeUnsavedFileAndDoNotSave(1);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
       
       Thread.sleep(TestConstants.SLEEP);
    }

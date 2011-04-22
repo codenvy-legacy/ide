@@ -134,7 +134,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
    @After
    public void cleanTest() throws Exception
    {
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
 
    /**
@@ -144,8 +144,8 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
    public void testGenerateNodeTypeForm() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -153,7 +153,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       checkDeployNodeTypeButton(true, true);
 
       //Click preview node type button and check dialog window appears
-      IDE.toolbar().runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkGenerateNodeTypeFormPresent();
 
@@ -163,7 +163,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGenerateNodeTypeForm\"]"));
 
       //Click preview node type button and check dialog window appears
-      IDE.toolbar().runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkGenerateNodeTypeFormPresent();
 
@@ -174,7 +174,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       checkViewWithGeneratedCodePresent(true);
 
       //Close file and check view with generated code is closed.
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.SLEEP);
       checkViewWithGeneratedCodePresent(false);
    }
@@ -189,8 +189,8 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -198,7 +198,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       checkDeployNodeTypeButton(true, true);
 
       //Click preview node type button and check dialog window appears
-      IDE.toolbar().runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkGenerateNodeTypeFormPresent();
 
@@ -223,7 +223,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       IDE.selectMainFrame();
       assertEquals(generatedEXOFormat, text);
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.SLEEP);
       checkViewWithGeneratedCodePresent(false);
    }
@@ -240,8 +240,8 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -249,7 +249,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       checkDeployNodeTypeButton(true, true);
 
       //Click preview node type button and check dialog window appears
-      IDE.toolbar().runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkGenerateNodeTypeFormPresent();
 
@@ -279,7 +279,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       IDE.selectMainFrame();
       assertEquals(generatedCNDFormat, text);
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.SLEEP);
       checkViewWithGeneratedCodePresent(false);
    }

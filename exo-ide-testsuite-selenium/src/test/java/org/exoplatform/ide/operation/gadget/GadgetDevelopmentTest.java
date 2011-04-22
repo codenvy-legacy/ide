@@ -56,12 +56,12 @@ public class GadgetDevelopmentTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);      
       
       Thread.sleep(TestConstants.SLEEP);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/headerLabel/"));
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -93,17 +93,17 @@ public class GadgetDevelopmentTest extends BaseTest
       
       assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FILE_NAME).getStatusCode());    
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
       
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(FILE_NAME, selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/title"));
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       //     Remove created folder with file.
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.deleteSelectedItems();
    }
 
    @AfterClass

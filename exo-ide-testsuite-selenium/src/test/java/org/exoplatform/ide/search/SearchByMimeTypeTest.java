@@ -66,21 +66,21 @@ public class SearchByMimeTypeTest extends BaseTest
       createFolder(folder1Name);
 
       //Create and save 
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, jsFileContent);
       saveAsByTopMenu(jsFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemPresent(WS_URL + jsFileName);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + jsFileName);
 
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
       createFolder(folder2Name);
 
       saveAsUsingToolbarButton(copyJsFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
-      IDE.navigator().selectItem(WS_URL + folder2Name + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + folder2Name + "/");
 
       performSearch("/" + folder2Name + "/", "", jsFileMimeType);
 
@@ -90,19 +90,19 @@ public class SearchByMimeTypeTest extends BaseTest
 
       openFileFromSearchResultsWithCodeEditor(copyJsFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(getItemNameFromWorkspaceTree(0) + "/" + folder2Name, getStatusbarText());
+      assertEquals(getItemNameFromWorkspaceTree(null) + "/" + folder2Name, getStatusbarText());
 
       //Clear created items
       selectWorkspaceTab();
-      IDE.navigator().selectItem(WS_URL + folder1Name + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + folder1Name + "/");
       selenium.controlKeyDown();
-      IDE.navigator().selectItem(WS_URL + folder2Name + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + folder2Name + "/");
       selenium.controlKeyUp();
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.deleteSelectedItems();
 
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemNotPresent(WS_URL + folder1Name + "/");
-      IDE.navigator().assertItemNotPresent(WS_URL + folder2Name + "/");
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folder1Name + "/");
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folder2Name + "/");
    }
    
    @AfterClass

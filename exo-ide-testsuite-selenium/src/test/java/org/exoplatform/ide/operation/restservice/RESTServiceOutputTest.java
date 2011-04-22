@@ -75,20 +75,20 @@ public class RESTServiceOutputTest extends BaseTest
    public void testOutput() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-       IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //TODO***********change************
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       //****************************
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.menu().runCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.MENU.runCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.toolbar().runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
+      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
       //Expect 1
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
@@ -168,7 +168,7 @@ public class RESTServiceOutputTest extends BaseTest
          .contains("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><application xmlns=\"http://research.sun.com/wadl/2006/10\">"));
 
       //Step 5
-      IDE.toolbar().runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
+      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
 
@@ -241,7 +241,7 @@ public class RESTServiceOutputTest extends BaseTest
 
       assertTrue(mess.contains("Param List 1:param1; Test Query Parameter 1: ; Test-Header 1: test; Body:"));
 
-      IDE.toolbar().runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
+      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
 
@@ -291,7 +291,7 @@ public class RESTServiceOutputTest extends BaseTest
       assertTrue(mess
          .contains("Param List 1:param1; Test Query Parameter 1: value 1; Test-Header 1: value 2; Body:Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�"));
 
-      IDE.toolbar().runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
+      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
 

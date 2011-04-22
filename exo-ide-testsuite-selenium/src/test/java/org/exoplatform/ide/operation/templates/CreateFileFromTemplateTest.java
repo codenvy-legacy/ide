@@ -116,8 +116,8 @@ public class CreateFileFromTemplateTest extends BaseTest
    {
       // -------- 1 ----------
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER + "/");
       // -------- 2-4 ----------
       testTemplate(GROOVY_REST_SERVICE, GROOVY_FILE_NAME);
       
@@ -138,23 +138,23 @@ public class CreateFileFromTemplateTest extends BaseTest
    public void testCreateFileFromTemplateWithDuplicatedName() throws Exception
    {
       refresh();
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER + "/");
       /*
        * 1. Open two html files. 
        * They will have names: Untitled file.html, Untitled file 1.html
        */
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
-      assertEquals(TestConstants.UNTITLED_FILE_NAME + ".html *", IDE.editor().getTabTitle(0));
-      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html *", IDE.editor().getTabTitle(1));
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + ".html *",IDE.EDITOR.getTabTitle(0));
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html *",IDE.EDITOR.getTabTitle(1));
       
       /*
        * 2. Open "Create file from template" form.
        */
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       
       /*
        * 3. Select "Empty HTML" template and click "Create" button
@@ -165,32 +165,32 @@ public class CreateFileFromTemplateTest extends BaseTest
       /*
        * Check, new file opened with name "Untitled file 2.html"
        */
-      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 2.html *", IDE.editor().getTabTitle(2));
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 2.html *",IDE.EDITOR.getTabTitle(2));
       
       /*
        * 4. Go to file in second tab "Untitled file 1.html" and save file
        */
-      IDE.editor().selectTab(1);
+     IDE.EDITOR.selectTab(1);
       saveAsUsingToolbarButton(null);
       
-      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html", IDE.editor().getTabTitle(1));
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html",IDE.EDITOR.getTabTitle(1));
       
       /*
        * 5. Create new Netvibes widget from template:
        */
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       TemplateUtils.selectItemInTemplateList(selenium, NETVIBES_WIDGET);
       TemplateUtils.clickCreateFileButton(selenium);
       
       /*
        * Check, new file opened with name "Untitled file 3.html"
        */
-      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 3.html *", IDE.editor().getTabTitle(3));
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 3.html *",IDE.EDITOR.getTabTitle(3));
       
       /*
        * Close saved file
        */
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
    
    @Test
@@ -200,7 +200,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       
       //---- 1 ----------
       //call create file from template form
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       
       checkNameFieldEnabled(selenium, false);
       checkCreateButtonEnabled(selenium, false);
@@ -264,7 +264,7 @@ public class CreateFileFromTemplateTest extends BaseTest
    {
       // ---------2--------
       //Click on "New->From Template" button.
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       TemplateUtils.checkCreateFileFromTemplateWindow(selenium);
       // -------3-------
@@ -277,16 +277,16 @@ public class CreateFileFromTemplateTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
       Thread.sleep(TestConstants.SLEEP);
       //new file with appropriate titles and highlighting should be opened in the Content Panel
-      assertEquals(fileName + " *", IDE.editor().getTabTitle(0));
+      assertEquals(fileName + " *",IDE.EDITOR.getTabTitle(0));
       // --------4------------
       //Click on "File->Save File As" top menu command and save file "Test Groovy File.groovy".
       saveAsByTopMenu(fileName);
       Thread.sleep(TestConstants.SLEEP);
       //new file with appropriate name should be appeared in the root folder of  
       //"Workspace" panel in the "Gadget " window and in the root folder of  "Server" window.
-      assertEquals(fileName, IDE.editor().getTabTitle(0));
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER + "/" + fileName);
-      IDE.editor().closeTab(0);
+      assertEquals(fileName,IDE.EDITOR.getTabTitle(0));
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER + "/" + fileName);
+     IDE.EDITOR.closeTab(0);
       
       //check file created on server
       HTTPResponse response = VirtualFileSystemUtils.get(URL + FOLDER + "/" + fileName);

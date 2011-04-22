@@ -41,7 +41,7 @@ public class RESTServiceVaditionWrongTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       createFolder("Validaton");
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu("REST Service");
+      IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -49,7 +49,7 @@ public class RESTServiceVaditionWrongTest extends BaseTest
 
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "1");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
 
       Thread.sleep(TestConstants.SLEEP);
 

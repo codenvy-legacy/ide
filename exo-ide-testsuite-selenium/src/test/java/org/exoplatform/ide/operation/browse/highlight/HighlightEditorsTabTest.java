@@ -77,17 +77,17 @@ public class HighlightEditorsTabTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/"); 
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/"); 
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP);
 
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(selenium
@@ -103,13 +103,13 @@ public class HighlightEditorsTabTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
       openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_1'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));

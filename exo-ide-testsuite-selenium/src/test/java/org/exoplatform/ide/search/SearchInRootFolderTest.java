@@ -66,29 +66,29 @@ public class SearchInRootFolderTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       createFolder(folder1Name);
       //Create and save 
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.editor().deleteLinesInEditor(14);
+     IDE.EDITOR.deleteLinesInEditor(14);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, restFileContent);
       saveAsByTopMenu(restFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemPresent(WS_URL + folder1Name + "/" + restFileName);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + folder1Name + "/" + restFileName);
 
       //Create second folder
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
       createFolder(folder2Name);
       //Save in second folder first time
       saveAsUsingToolbarButton(copyofRestFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemPresent(WS_URL + folder2Name + "/" + copyofRestFileName);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + folder2Name + "/" + copyofRestFileName);
       //Save in second folder second time
       saveAsUsingToolbarButton(restFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemPresent(WS_URL + folder2Name + "/" + restFileName);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + folder2Name + "/" + restFileName);
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
 
       performSearch("/", "Hello", "text/html");
       Thread.sleep(TestConstants.SLEEP);
@@ -108,22 +108,22 @@ public class SearchInRootFolderTest extends BaseTest
       //Open first file from search results
       openFileFromSearchResultsWithCodeEditor(restFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(restFileName, IDE.editor().getTabTitle(0));
+      assertEquals(restFileName,IDE.EDITOR.getTabTitle(0));
 
       //Open second file from search results
       openFileFromSearchResultsWithCodeEditor(copyofRestFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(copyofRestFileName, IDE.editor().getTabTitle(1));
+      assertEquals(copyofRestFileName,IDE.EDITOR.getTabTitle(1));
 
       selectWorkspaceTab();
-      IDE.navigator().selectItem(WS_URL + folder1Name + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + folder1Name + "/");
       selenium.controlKeyDown();
-      IDE.navigator().selectItem(WS_URL + folder2Name + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + folder2Name + "/");
       selenium.controlKeyUp();
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemNotPresent(WS_URL + folder1Name + "/");
-      IDE.navigator().assertItemNotPresent(WS_URL + folder2Name + "/");
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folder1Name + "/");
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folder2Name + "/");
 
       Thread.sleep(TestConstants.SLEEP);
    }

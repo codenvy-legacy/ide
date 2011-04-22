@@ -22,20 +22,17 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
-
-import com.thoughtworks.selenium.Selenium;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Jan 10, 2011 $
  *
  */
-public class Navigator extends AbstractTestModule
+public class Navigation extends AbstractTestModule
 {
 
    public static final String NAVIGATION_TREE = "ideNavigatorItemTreeGrid";
@@ -43,43 +40,6 @@ public class Navigator extends AbstractTestModule
    static final String TREE_PREFIX_ID = "navigation-";
 
    static final String TREE_PREFIX_SERCH_ID = "search-";
-
-   private IDE ide;
-
-   private String workspaceURL;
-
-   public Navigator(Selenium selenium, IDE ide)
-   {
-      super(selenium);
-      this.ide = ide;
-   }
-
-   public void setWorkspaceURL(String workspaceURL)
-   {
-      this.workspaceURL = workspaceURL;
-   }
-
-   /**
-    * Get the SmartGWT locator for element in navigation tree by its title.
-    * 
-    * @param title - the element title
-    * @return {@link String}
-    */
-   public String getScLocator(String title, int col)
-   {
-      return null;
-   }
-
-   /**
-    * Get the SmartGWT locator for element in navigation tree by its row number and col number.
-    * 
-    * @param title - the element title
-    * @return {@link String}
-    */
-   public String getScLocator(int row, int col)
-   {
-      return null;
-   }
 
    /**
     * Select row in navigation tree.
@@ -112,7 +72,7 @@ public class Navigator extends AbstractTestModule
    public void clickOpenIconOfFolder(String folderHref) throws Exception
    {
       //      selenium.click(getScLocator(folderHref, 0) + "/open");
-      selenium.clickAt("//div[@id='" + getItemId(folderHref) + "']/table/tbody/tr/td[1]/img", "0");
+      selenium().clickAt("//div[@id='" + getItemId(folderHref) + "']/table/tbody/tr/td[1]/img", "0");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
@@ -138,7 +98,7 @@ public class Navigator extends AbstractTestModule
     */
    public void selectItem(String itemHref) throws Exception
    {
-      selenium.clickAt(getItemId(itemHref), "0");
+      selenium().clickAt(getItemId(itemHref), "0");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
@@ -149,7 +109,7 @@ public class Navigator extends AbstractTestModule
     */
    public void selectItemInSerchTree(String itemHref) throws Exception
    {
-      selenium.clickAt(getItemIdSerch(itemHref), "0");
+      selenium().clickAt(getItemIdSerch(itemHref), "0");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
@@ -159,7 +119,7 @@ public class Navigator extends AbstractTestModule
     */
    public void assertItemPresent(String itemHref) throws Exception
    {
-      assertTrue(selenium.isElementPresent(getItemId(itemHref)));
+      assertTrue(selenium().isElementPresent(getItemId(itemHref)));
    }
 
    /**
@@ -168,7 +128,7 @@ public class Navigator extends AbstractTestModule
     */
    public void assertItemNotPresent(String itemHref) throws Exception
    {
-      assertFalse(selenium.isElementPresent(getItemId(itemHref)));
+      assertFalse(selenium().isElementPresent(getItemId(itemHref)));
    }
 
    /**
@@ -182,7 +142,7 @@ public class Navigator extends AbstractTestModule
     */
    public void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
    {
-      ide.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 
       String locator = "//table[@id='ideOpenFileWithListGrid']";
       waitForElementPresent(locator);
@@ -190,11 +150,11 @@ public class Navigator extends AbstractTestModule
       if (checkDefault)
       {
          //click on checkbox Use as default editor
-         selenium.click("//span[@id='ideOpenFileWithDefaulCheckbox']/input");
+         selenium().click("//span[@id='ideOpenFileWithDefaulCheckbox']/input");
          Thread.sleep(TestConstants.ANIMATION_PERIOD);
       }
 
-      selenium.click("ideOpenFileWithOkButton");
+      selenium().click("ideOpenFileWithOkButton");
       //time remaining to open editor
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
@@ -221,16 +181,16 @@ public class Navigator extends AbstractTestModule
     */
    public void deleteSelectedItems() throws Exception
    {
-      ide.toolbar().runCommand(ToolbarCommands.File.DELETE, false);
+      IDE().TOOLBAR.runCommand(ToolbarCommands.File.DELETE, false);
 
       //check deletion form
       //assertTrue(selenium.isElementPresent("//div[@view-id='ideDeleteItemsView']"));
       waitForElementPresent("//div[@view-id='ideDeleteItemsView']");
-      assertTrue(selenium.isElementPresent("ideDeleteItemFormOkButton"));
-      assertTrue(selenium.isElementPresent("ideDeleteItemFormCancelButton"));
+      assertTrue(selenium().isElementPresent("ideDeleteItemFormOkButton"));
+      assertTrue(selenium().isElementPresent("ideDeleteItemFormCancelButton"));
 
       //click Ok button
-      selenium.click("ideDeleteItemFormOkButton");
+      selenium().click("ideDeleteItemFormOkButton");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
@@ -242,7 +202,7 @@ public class Navigator extends AbstractTestModule
     */
    public void selectRootOfWorkspace() throws Exception
    {
-      selectItem(workspaceURL);
+      selectItem(IDE().getWorkspaceURL());
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 

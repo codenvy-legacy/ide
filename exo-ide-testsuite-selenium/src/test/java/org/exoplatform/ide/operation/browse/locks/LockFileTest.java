@@ -94,116 +94,116 @@ public class LockFileTest extends LockFileAbstract
    public void testLockFileManually() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP*2);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
-      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
       
-      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, false);
+      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, false);
 
       //----- 1 ------------
       //open new XML file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       
       //check menu and button on toolbar
-      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
-      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, false);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, false);
       
       //----- 2 ------------
       //save XML file
       saveAsUsingToolbarButton(FILE_NAME_1);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
       checkFileLocking(FILE_NAME_1, false);
       
       //----- 3 ------------
       //lock XML file
-      IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       
-      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.Editor.UNLOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
       
       checkFileLocking(FILE_NAME_1, false);
       
       //----- 4 ------------
       //open new HTML file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       
-      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
-      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, false);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, false);
       
       //----- 5 ------------
       //select XML file tab
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       
-      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.Editor.UNLOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
       
       //----- 6 ------------
       //unlock XML file
-      IDE.toolbar().runCommand(ToolbarCommands.Editor.UNLOCK_FILE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNLOCK_FILE);
       
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
       
       //----- 7 ------------
       //select HTML file, save file, lock
-      IDE.editor().selectTab(1);
+     IDE.EDITOR.selectTab(1);
       saveAsUsingToolbarButton(FILE_NAME_2);
-      IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
       
       //----- 8 ------------
       //close HTML file, open and check, that file is unlocked
-      IDE.editor().closeTab(1);
-      IDE.editor().checkIsTabPresentInEditorTabset(FILE_NAME_2, false);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
+     IDE.EDITOR.closeTab(1);
+     IDE.EDITOR.checkIsTabPresentInEditorTabset(FILE_NAME_2, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
       
-      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
       
       //----- 9 ------------
       //lock file
-      IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
       
       //----- 10 ------------
       //create new file and close it
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       
       //check menu and button on toolbar
-      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
-      IDE.toolbar().assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, false);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, false);
       
-      IDE.editor().closeUnsavedFileAndDoNotSave(2);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(2);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 11 ------------
       //check, that HTML file is locked
 //      checkIsEditorTabSelected(FILE_NAME_2, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
       
       //----- 12 ------------
       //check XML file is unlocked
-      IDE.editor().selectTab(0);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
+     IDE.EDITOR.selectTab(0);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
    }
    
    @Test
@@ -213,27 +213,27 @@ public class LockFileTest extends LockFileAbstract
       createFileViaWebDav(FILE_NAME_2);
       refresh();
       
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       //----- 1 ------------
       //open files
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, true);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, true);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
       
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       
       //----- 2 ------------
       //lock file
-      IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
       
       //----- 3 ------------
       //refresh IDE
@@ -241,16 +241,16 @@ public class LockFileTest extends LockFileAbstract
       
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.editor().checkEditorTabSelected(FILE_NAME_1, true);
+     IDE.EDITOR.checkEditorTabSelected(FILE_NAME_1, true);
 
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
       
       //----- 4 ------------
       //select second tab and check, that file is not locked
-      IDE.editor().selectTab(1);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, true);
+     IDE.EDITOR.selectTab(1);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, true);
    }
    
    private void createFileViaWebDav(String fileName)

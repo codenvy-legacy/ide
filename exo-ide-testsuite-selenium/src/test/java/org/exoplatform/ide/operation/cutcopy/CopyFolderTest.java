@@ -114,86 +114,86 @@ public class CopyFolderTest extends BaseTest
    {
       waitForRootElement();
      
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/" + FILE_1, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/" + FILE_1, false);
 
       /* 
       * Select folder "/Test 1/Test 1.1"
       */
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
 
       /*
        * Check Copy must be enabled
        */
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
-      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
+      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
 
       /* 
        * Check Paste must be disabled
        */
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
       /* 
        * Call "Edit/Copy" in menu
        */
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
 
       /* 
        * Check Paste must be enabled
        */
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /* 
        * Select root in workspace tree and call "Edit/Paste"
        */
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
       
       /*
        * Check new folder appeared in root folder
        */
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER_1 + "/");      
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER_1_1 + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_1 + "/");      
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_1_1 + "/");
 
       /*
        * Change text in file.
        */
-      IDE.editor().typeTextIntoEditor(0, "updated");
+     IDE.EDITOR.typeTextIntoEditor(0, "updated");
 
       saveCurrentFile();
 
       /* 
        * Close opened file
        */
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
       /* 
        * Open "/Test 1.1/test.groovy"
        */
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().selectItem(WS_URL + FOLDER_1_1 + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1_1 + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1_1 + "/" + FILE_1, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1_1 + "/" + FILE_1, false);
 
       /*
        * Check file content
        */
-      assertEquals(FILE_CONTENT_1, IDE.editor().getTextFromCodeEditor(0));
+      assertEquals(FILE_CONTENT_1,IDE.EDITOR.getTextFromCodeEditor(0));
    }
 
 }

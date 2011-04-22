@@ -44,11 +44,11 @@ public class OpenLocalFileTest extends BaseTest
    public void testOpenFileWithoutExtention() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-       IDE.navigator().selectItem(WS_URL);
+       IDE.NAVIGATION.selectItem(WS_URL);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       //call Open Local File form
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]"));
       checkUploadButtonEnabled(false);
       

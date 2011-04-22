@@ -211,7 +211,7 @@ public class TemplateUtils
     */
    public static void createProjectFromTemplate(Selenium selenium, String templateName, String projectName) throws Exception
    {
-      BaseTest.IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      BaseTest.IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       
       TemplateUtils.checkCreateProjectFromTemplateForm(selenium);
       TemplateUtils.selectProjectTemplate(selenium, templateName);

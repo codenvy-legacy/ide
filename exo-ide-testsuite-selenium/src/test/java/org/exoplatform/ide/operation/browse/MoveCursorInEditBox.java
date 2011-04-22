@@ -41,12 +41,12 @@ public class MoveCursorInEditBox extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       String locator =
          "scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element";
       selenium.focus(locator);
       
-      IDE.editor().deleteFileContent();
+     IDE.EDITOR.deleteFileContent();
       selenium.typeKeys(locator, "FooBr");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       selenium.typeKeys(locator, "a");

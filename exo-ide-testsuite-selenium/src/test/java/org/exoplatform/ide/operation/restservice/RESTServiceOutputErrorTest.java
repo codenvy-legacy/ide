@@ -78,23 +78,23 @@ public class RESTServiceOutputErrorTest extends BaseTest
    public void testOutputError() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-       IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
 
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, true);
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, true);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/body/"));
 
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
 
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       launchRestService();

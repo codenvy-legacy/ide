@@ -96,18 +96,18 @@ public class CodeOutlineXmlTest extends BaseTest
    {
       waitForRootElement();
       
-      IDE.navigator().selectItem(URL + TEST_FOLDER +"/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL + TEST_FOLDER +"/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       /*
        * 1. Open file with text
        */
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       /*
        * 2. Open outline
        */
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       
       /*
@@ -126,7 +126,7 @@ public class CodeOutlineXmlTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
      
-      IDE.editor().closeFileTabIgnoreChanges(0);
+     IDE.EDITOR.closeFileTabIgnoreChanges(0);
    }
    
    private void checkCodeNavigation() throws Exception
@@ -134,7 +134,7 @@ public class CodeOutlineXmlTest extends BaseTest
       /*
        * Click on editor
        */
-      IDE.editor().clickOnEditor();
+     IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       /*
@@ -147,7 +147,7 @@ public class CodeOutlineXmlTest extends BaseTest
      
       Thread.sleep(TestConstants.SLEEP);
      
-      IDE.outline().checkOutlineTreeNodeSelected(1, "display-name", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(1, "display-name", true);
       assertEquals("5 : 1", getCursorPositionUsingStatusBar());
       
       Thread.sleep(TestConstants.SLEEP);
@@ -161,8 +161,8 @@ public class CodeOutlineXmlTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.outline().checkOutlineTreeNodeSelected(1, "display-name", false);
-      IDE.outline().checkOutlineTreeNodeSelected(3, "param-name", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(1, "display-name", false);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(3, "param-name", true);
       assertEquals("9 : 1", getCursorPositionUsingStatusBar());
       Thread.sleep(TestConstants.SLEEP);
       
@@ -173,8 +173,8 @@ public class CodeOutlineXmlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check selection in tree
-      IDE.outline().checkOutlineTreeNodeSelected(3, "param-name", false);
-      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(3, "param-name", false);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(0, "web-app", true);
       //check cursor position
       assertEquals("32 : 11", getCursorPositionUsingStatusBar());
       
@@ -185,23 +185,23 @@ public class CodeOutlineXmlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check selection in tree
-      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(0, "web-app", true);
       //check cursor position
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
       
       //check, that selection in tree will redraw after
       //2 seconds, when cursor activity stop
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(0, "web-app", true);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(0, "web-app", true);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(0, "web-app", true);
       Thread.sleep(TestConstants.SLEEP);
       
       //check selection in tree
-      IDE.outline().checkOutlineTreeNodeSelected(0, "web-app", false);
-      IDE.outline().checkOutlineTreeNodeSelected(1, "display-name", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(0, "web-app", false);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(1, "display-name", true);
       //check cursor position
       assertEquals("4 : 1", getCursorPositionUsingStatusBar());
       Thread.sleep(TestConstants.SLEEP);
@@ -218,37 +218,37 @@ public class CodeOutlineXmlTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
       
       //type text
-      IDE.editor().typeTextIntoEditor(0, "\n<settings>\n");
+     IDE.EDITOR.typeTextIntoEditor(0, "\n<settings>\n");
       //check, that after typing outline tree is the same
-      IDE.editor().typeTextIntoEditor(0, "<value>value</value>\n");
+     IDE.EDITOR.typeTextIntoEditor(0, "<value>value</value>\n");
       Thread.sleep(TestConstants.SLEEP);
       //check, that after typing outline tree is the same
-      IDE.editor().typeTextIntoEditor(0, "</settings>\n");
+     IDE.EDITOR.typeTextIntoEditor(0, "</settings>\n");
       //check, that after typing outline tree is the same
 
       //pause
       Thread.sleep(TestConstants.SLEEP);
       
       //check, that after 2 seconds tree is updated
-      assertEquals("web-app", IDE.outline().getTitle(0, 0));
-      assertEquals("display-name", IDE.outline().getTitle(1, 0));
+      assertEquals("web-app", IDE.OUTLINE.getTitle(0, 0));
+      assertEquals("display-name", IDE.OUTLINE.getTitle(1, 0));
       //new nodes added
-      assertEquals("settings", IDE.outline().getTitle(2, 0));
-      assertEquals("value", IDE.outline().getTitle(3, 0));
-      assertEquals("context-param", IDE.outline().getTitle(4, 0));
-      assertEquals("context-param", IDE.outline().getTitle(5, 0));
-      assertEquals("CDATA", IDE.outline().getTitle(6, 0));
-      assertEquals("filter", IDE.outline().getTitle(7, 0));
+      assertEquals("settings", IDE.OUTLINE.getTitle(2, 0));
+      assertEquals("value", IDE.OUTLINE.getTitle(3, 0));
+      assertEquals("context-param", IDE.OUTLINE.getTitle(4, 0));
+      assertEquals("context-param", IDE.OUTLINE.getTitle(5, 0));
+      assertEquals("CDATA", IDE.OUTLINE.getTitle(6, 0));
+      assertEquals("filter", IDE.OUTLINE.getTitle(7, 0));
       
       //close node settings
-      IDE.outline().clickOpenImg(2, 0);
+      IDE.OUTLINE.clickOpenImg(2, 0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check, than node value is hidden
-      assertEquals("settings", IDE.outline().getTitle(2, 0));
-      assertEquals("context-param", IDE.outline().getTitle(3, 0));
-      assertEquals("context-param", IDE.outline().getTitle(4, 0));
-      assertEquals("CDATA", IDE.outline().getTitle(5, 0));
-      assertEquals("filter", IDE.outline().getTitle(6, 0));
+      assertEquals("settings", IDE.OUTLINE.getTitle(2, 0));
+      assertEquals("context-param", IDE.OUTLINE.getTitle(3, 0));
+      assertEquals("context-param", IDE.OUTLINE.getTitle(4, 0));
+      assertEquals("CDATA", IDE.OUTLINE.getTitle(5, 0));
+      assertEquals("filter", IDE.OUTLINE.getTitle(6, 0));
       
       //check cursor position
       assertEquals("10 : 3", getCursorPositionUsingStatusBar());
@@ -258,10 +258,10 @@ public class CodeOutlineXmlTest extends BaseTest
       //works correctly with new node
       
       //click on node
-      IDE.outline().select(3);
+      IDE.OUTLINE.select(3);
       
       //click on editor
-      IDE.editor().clickOnEditor();
+     IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //go up and check, that node settings opened
       //and node value selected
@@ -274,17 +274,17 @@ public class CodeOutlineXmlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check, that after 2 seconds tree is updated
-      assertEquals("web-app", IDE.outline().getTitle(0, 0));
-      assertEquals("display-name", IDE.outline().getTitle(1, 0));
+      assertEquals("web-app", IDE.OUTLINE.getTitle(0, 0));
+      assertEquals("display-name", IDE.OUTLINE.getTitle(1, 0));
       //new nodes added
-      assertEquals("settings", IDE.outline().getTitle(2, 0));
-      assertEquals("value", IDE.outline().getTitle(3, 0));
-      assertEquals("context-param", IDE.outline().getTitle(4, 0));
-      assertEquals("context-param", IDE.outline().getTitle(5, 0));
-      assertEquals("CDATA", IDE.outline().getTitle(6, 0));
-      assertEquals("filter", IDE.outline().getTitle(7, 0));
+      assertEquals("settings", IDE.OUTLINE.getTitle(2, 0));
+      assertEquals("value", IDE.OUTLINE.getTitle(3, 0));
+      assertEquals("context-param", IDE.OUTLINE.getTitle(4, 0));
+      assertEquals("context-param", IDE.OUTLINE.getTitle(5, 0));
+      assertEquals("CDATA", IDE.OUTLINE.getTitle(6, 0));
+      assertEquals("filter", IDE.OUTLINE.getTitle(7, 0));
       
-      IDE.outline().checkOutlineTreeNodeSelected(3, "value", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(3, "value", true);
       
       //check cursor position
       assertEquals("8 : 1", getCursorPositionUsingStatusBar());
@@ -301,48 +301,48 @@ public class CodeOutlineXmlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check, that tree is the same, as on the previous step 
-      assertEquals("web-app", IDE.outline().getTitle(0, 0));
-      assertEquals("display-name", IDE.outline().getTitle(1, 0));
-      assertEquals("settings", IDE.outline().getTitle(2, 0));
-      assertEquals("value", IDE.outline().getTitle(3, 0));
-      assertEquals("context-param", IDE.outline().getTitle(4, 0));
-      assertEquals("context-param", IDE.outline().getTitle(5, 0));
-      assertEquals("CDATA", IDE.outline().getTitle(6, 0));
-      assertEquals("filter", IDE.outline().getTitle(7, 0));
+      assertEquals("web-app", IDE.OUTLINE.getTitle(0, 0));
+      assertEquals("display-name", IDE.OUTLINE.getTitle(1, 0));
+      assertEquals("settings", IDE.OUTLINE.getTitle(2, 0));
+      assertEquals("value", IDE.OUTLINE.getTitle(3, 0));
+      assertEquals("context-param", IDE.OUTLINE.getTitle(4, 0));
+      assertEquals("context-param", IDE.OUTLINE.getTitle(5, 0));
+      assertEquals("CDATA", IDE.OUTLINE.getTitle(6, 0));
+      assertEquals("filter", IDE.OUTLINE.getTitle(7, 0));
       
       //check, that settings node is selected
-      IDE.outline().checkOutlineTreeNodeSelected(2, "settings", true);
-      IDE.outline().checkOutlineTreeNodeSelected(3, "value", false);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(2, "settings", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(3, "value", false);
       assertEquals("9 : 1", getCursorPositionUsingStatusBar());
       
       //now click on node "settings" in tree
       //and cursor must go to <settings> tab in editor: line 7, column 1
-      IDE.outline().select(2);
+      IDE.OUTLINE.select(2);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.outline().checkOutlineTreeNodeSelected(2, "settings", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(2, "settings", true);
       assertEquals("7 : 1", getCursorPositionUsingStatusBar());
    }
    
    private void checkTreeNavigation() throws Exception
    {
       //click on node
-      IDE.outline().select(4);
+      IDE.OUTLINE.select(4);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //cursor jump to the node in editor
       assertEquals("12 : 1", getCursorPositionUsingStatusBar());
       
       //close filter node
-      IDE.outline().clickOpenImg(9, 1);
+      IDE.OUTLINE.clickOpenImg(9, 1);
       //cursor stay at the same position
       assertEquals("12 : 1", getCursorPositionUsingStatusBar());
       
       //click on CDATA node
-      IDE.outline().select(8);
+      IDE.OUTLINE.select(8);
       //cursor jump to the node in editor
       assertEquals("24 : 1", getCursorPositionUsingStatusBar());
       
       //click on root node
-      IDE.outline().select(0);
+      IDE.OUTLINE.select(0);
       //cursor jump to the node in editor
       assertEquals("2 : 1", getCursorPositionUsingStatusBar());
    }
@@ -359,34 +359,34 @@ public class CodeOutlineXmlTest extends BaseTest
    private void checkTreeCorrectlyCreated() throws Exception
    {
       // check when all nodex closed, except root
-      assertEquals("web-app", IDE.outline().getTitle(0, 0));
-      assertEquals("display-name", IDE.outline().getTitle(1, 0));
-      assertEquals("context-param", IDE.outline().getTitle(2, 0));
-      assertEquals("context-param", IDE.outline().getTitle(3, 0));
-      assertEquals("CDATA", IDE.outline().getTitle(4, 0));
-      assertEquals("filter", IDE.outline().getTitle(5, 0));
+      assertEquals("web-app", IDE.OUTLINE.getTitle(0, 0));
+      assertEquals("display-name", IDE.OUTLINE.getTitle(1, 0));
+      assertEquals("context-param", IDE.OUTLINE.getTitle(2, 0));
+      assertEquals("context-param", IDE.OUTLINE.getTitle(3, 0));
+      assertEquals("CDATA", IDE.OUTLINE.getTitle(4, 0));
+      assertEquals("filter", IDE.OUTLINE.getTitle(5, 0));
       
       // open first context-param
-      IDE.outline().clickOpenImg(2, 0);
+      IDE.OUTLINE.clickOpenImg(2, 0);
       // check two nodes under context-param added
-      assertEquals("param-name", IDE.outline().getTitle(3, 0));
-      assertEquals("param-value", IDE.outline().getTitle(4, 0));
+      assertEquals("param-name", IDE.OUTLINE.getTitle(3, 0));
+      assertEquals("param-value", IDE.OUTLINE.getTitle(4, 0));
       // check other nodes do down on two positions
-      assertEquals("context-param", IDE.outline().getTitle(5, 0));
-      assertEquals("CDATA", IDE.outline().getTitle(6, 0));
-      assertEquals("filter", IDE.outline().getTitle(7, 0));
+      assertEquals("context-param", IDE.OUTLINE.getTitle(5, 0));
+      assertEquals("CDATA", IDE.OUTLINE.getTitle(6, 0));
+      assertEquals("filter", IDE.OUTLINE.getTitle(7, 0));
       // open second node context-param
-      IDE.outline().clickOpenImg(5, 0);
+      IDE.OUTLINE.clickOpenImg(5, 0);
       // check two nodes under context-param added
-      assertEquals("param-name", IDE.outline().getTitle(6, 0));
-      assertEquals("param-value", IDE.outline().getTitle(7, 0));
+      assertEquals("param-name", IDE.OUTLINE.getTitle(6, 0));
+      assertEquals("param-value", IDE.OUTLINE.getTitle(7, 0));
       // check other nodes do down on two positions
-      assertEquals("CDATA", IDE.outline().getTitle(8, 0));
-      assertEquals("filter", IDE.outline().getTitle(9, 0));
+      assertEquals("CDATA", IDE.OUTLINE.getTitle(8, 0));
+      assertEquals("filter", IDE.OUTLINE.getTitle(9, 0));
       // open filter node
-      IDE.outline().clickOpenImg(9, 0);
+      IDE.OUTLINE.clickOpenImg(9, 0);
       // check two nodes under filter node added
-      assertEquals("filter-name", IDE.outline().getTitle(10, 0));
-      assertEquals("filter-class", IDE.outline().getTitle(11, 0));
+      assertEquals("filter-name", IDE.OUTLINE.getTitle(10, 0));
+      assertEquals("filter-class", IDE.OUTLINE.getTitle(11, 0));
    }
 }

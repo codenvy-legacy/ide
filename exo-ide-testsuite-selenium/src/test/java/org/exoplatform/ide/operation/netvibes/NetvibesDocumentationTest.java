@@ -54,20 +54,20 @@ public class NetvibesDocumentationTest extends BaseTest
    {
       waitForRootElement();
       
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_DOCUMENTATION);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_DOCUMENTATION);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
       assertTrue(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
       
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
       assertFalse(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
       
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       
       assertTrue(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
       
@@ -75,7 +75,7 @@ public class NetvibesDocumentationTest extends BaseTest
       
       assertTrue(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
       
-      IDE.editor().selectTab(1);
+     IDE.EDITOR.selectTab(1);
       
       assertFalse(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
       

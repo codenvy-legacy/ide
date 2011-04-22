@@ -110,42 +110,42 @@ public class CopyFoldersAndFilesTest extends BaseTest
    {
       waitForRootElement();
 
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_GROOVY, false);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_GADGET, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_GROOVY, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_GADGET, false);
 
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
 
-      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
       // Call the "Edit->Copy Items" topmenu command.
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
+      IDE.NAVIGATION.deleteSelectedItems();
 
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/" + FILE_GADGET);
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GADGET);
+      IDE.NAVIGATION.deleteSelectedItems();
 
-      //IDE.navigator().selectRootOfWorkspace();
-      IDE.navigator().selectItem(WS_URL + FOLDER_2 + "/");
+      //IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_2 + "/");
 
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       checkFilesAndFoldersOnServer();
 
-      IDE.editor().checkIsTabPresentInEditorTabset("test_groovy", true);
+     IDE.EDITOR.checkIsTabPresentInEditorTabset("test_groovy", true);
 
-      IDE.menu().checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
 
-      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
    }
 

@@ -72,18 +72,18 @@ public class GoogleGadgetPreviewTest extends BaseTest
    public void testGadgetPreview() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-       IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       //TODO*********change****
-      IDE.navigator().clickOpenIconOfFolder(FOLDER);
+      IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER);
       //*********************
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
            
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
 
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       Thread.sleep(3000);
@@ -95,8 +95,8 @@ public class GoogleGadgetPreviewTest extends BaseTest
 
       selenium.click("//body[@class='editbox']/");
 
-      IDE.editor().clickOnEditor();
-      IDE.editor().deleteFileContent();
+     IDE.EDITOR.clickOnEditor();
+     IDE.EDITOR.deleteFileContent();
 
       String hello =
          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "  <ModulePrefs title=\"Hello World!\" />\n"
@@ -107,11 +107,11 @@ public class GoogleGadgetPreviewTest extends BaseTest
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'Hello,world!')]"));
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
    
    @AfterClass

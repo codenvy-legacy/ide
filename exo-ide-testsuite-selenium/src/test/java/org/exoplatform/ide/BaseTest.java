@@ -39,7 +39,7 @@ import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.common.http.client.ProtocolNotSuppException;
-import org.exoplatform.ide.core.Navigator;
+import org.exoplatform.ide.core.Navigation;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.exoplatform.ide.utils.InternetExplorerUtil;
 import org.exoplatform.ide.utils.TextUtil;
@@ -173,7 +173,7 @@ public abstract class BaseTest
          standaloneLogin(USER_NAME);
       }
 
-      IDE.navigator().setWorkspaceURL(WS_URL);
+      IDE.setWorkspaceURL(WS_URL);
    }
 
    protected void logout() throws Exception
@@ -381,9 +381,9 @@ public abstract class BaseTest
     */
    protected void createFolder(String folderName) throws Exception
    {
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
 
-      //      IDE.toolbar().runCommand("New");
+      //      IDE.TOOLBAR.runCommand("New");
       //      
       //      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
 
@@ -425,7 +425,7 @@ public abstract class BaseTest
     */
    protected void saveAsUsingToolbarButton(String name) throws Exception
    {
-      IDE.toolbar().runCommand("Save As...");
+      IDE.TOOLBAR.runCommand("Save As...");
       SaveFileUtils.checkSaveAsDialogAndSave(name, false);
    }
 
@@ -450,16 +450,16 @@ public abstract class BaseTest
       //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Save As...']", "");
       //      Thread.sleep(TestConstants.SLEEP);
 
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
 
       SaveFileUtils.checkSaveAsDialogAndSave(name, false);
    }
 
    protected void openFileFromSearchResultsWithCodeEditor(String fileName) throws Exception
    {
-      IDE.navigator().selectItemInSerchTree(fileName);
+      IDE.NAVIGATION.selectItemInSerchTree(fileName);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       
       selenium.click("//table[@id=\"ideOpenFileWithListGrid\"]/tbody/tr");
       selenium.click("ideOpenFileWithOkButton");
@@ -487,14 +487,14 @@ public abstract class BaseTest
    protected void openFileFromNavigationTreeWithCkEditor(String fileName, boolean checkDefault) throws Exception
    {
       //TODO add check form
-      IDE.navigator().selectItem(fileName);
+      IDE.NAVIGATION.selectItem(fileName);
       //      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
       //      Thread.sleep(TestConstants.SLEEP_SHORT);
       //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
       //      Thread.sleep(TestConstants.SLEEP);      
       //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Open With')]", "");
 
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 
       selenium.click("//table[@ID=\"ideOpenFileWithListGrid\"]/tbody/tr/td/div");
       if (checkDefault)
@@ -513,7 +513,7 @@ public abstract class BaseTest
 
    protected void saveCurrentFile() throws Exception
    {
-      IDE.toolbar().runCommand(ToolbarCommands.File.SAVE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
@@ -524,7 +524,7 @@ public abstract class BaseTest
     */
    protected void callNewItemFromToolbar(String itemName) throws Exception
    {
-      IDE.toolbar().runCommand("New");
+      IDE.TOOLBAR.runCommand("New");
 
       String locator = "//td[@class=\"exo-popupMenuTitleField\"]//nobr[text()='" + itemName + "']";
       selenium.mouseOver(locator);
@@ -560,7 +560,7 @@ public abstract class BaseTest
       //Click get URL 
       //      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
 
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
 
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isElementPresent("//div[@view-id=\"ideGetItemURLForm\"]"));
@@ -605,7 +605,7 @@ public abstract class BaseTest
     */
    protected void performSearch(String checkPath, String text, String mimeType) throws Exception
    {
-      IDE.toolbar().runCommand("Search...");
+      IDE.TOOLBAR.runCommand("Search...");
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isElementPresent("//div[@view-id=\"ideSearchView\"]"));
@@ -668,13 +668,13 @@ public abstract class BaseTest
     */
    protected void createSaveAndCloseFile(String menuCommand, String fileName, int tabIndex) throws Exception
    {
-      IDE.toolbar().runCommandFromNewPopupMenu(menuCommand);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(menuCommand);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       saveAsUsingToolbarButton(fileName);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.editor().closeTab(tabIndex);
+     IDE.EDITOR.closeTab(tabIndex);
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -724,7 +724,7 @@ public abstract class BaseTest
     */
    protected void launchRestService() throws Exception, InterruptedException
    {
-      IDE.toolbar().runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
+      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
    }
@@ -760,7 +760,7 @@ public abstract class BaseTest
       }
 
       //runTopMenuCommand(MenuCommands.File.FILE, formName);
-      IDE.menu().runCommand(MenuCommands.File.FILE, formName);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, formName);
 
       Thread.sleep(TestConstants.SLEEP);
 
@@ -804,7 +804,7 @@ public abstract class BaseTest
     */
    protected void createFileFromTemplate(String templateName, String fileName) throws Exception
    {
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
 
       useTemplateForm(templateName, fileName);
    }
@@ -1045,7 +1045,7 @@ public abstract class BaseTest
 
       //runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
 
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
 
       Thread.sleep(TestConstants.SLEEP);
       selenium.click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/");
@@ -1104,7 +1104,7 @@ public abstract class BaseTest
       //      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
       //      Thread.sleep(TestConstants.SLEEP);
 
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
 
       // selenium.click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/row[entryPoint[contains(\"/" + workspaceName + "/\")]]/col[fieldName=entryPoint]");
 
@@ -1137,7 +1137,7 @@ public abstract class BaseTest
    protected void openFileByFilePath(String fileUrl) throws Exception
    {
       //runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
 
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideOpenFileByPathWindow\"]"));
       selenium.type(
@@ -1158,7 +1158,7 @@ public abstract class BaseTest
       //      runTopMenuCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       //      Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
 
       waitForElementPresent("ideGoToLineForm");
       // Type line number
@@ -1190,7 +1190,7 @@ public abstract class BaseTest
       //elements are appears in SLEEP tile.
       //Thats why, wait for WAIT_PERIOD for root element
       //of navigation tree.
-      waitForElementPresent(Navigator.NAVIGATION_TREE);
+      waitForElementPresent(Navigation.NAVIGATION_TREE);
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -1249,7 +1249,7 @@ public abstract class BaseTest
    public void waitForRootElement() throws Exception
    {
       //Thread.sleep(TestConstants.SLEEP);
-      waitForElementPresent(Navigator.NAVIGATION_TREE);
+      waitForElementPresent(Navigation.NAVIGATION_TREE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 

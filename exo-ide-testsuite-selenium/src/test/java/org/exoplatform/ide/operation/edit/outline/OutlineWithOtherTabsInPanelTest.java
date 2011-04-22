@@ -110,50 +110,50 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
    public void testOutlineWithOtherTabsInPanel() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       //----- 1 -------------
       //open xml file
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       //----- 2 -------------
       //open outline panel
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       //check outline visible
       assertTrue(selenium.isVisible(Locators.CodeHelperPanel.SC_OUTLINE_TAB_LOCATOR));
       
       //----- 3 -------------
       //open html file
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check outline visible
       assertTrue(selenium.isVisible(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR));
       
       //----- 4 -------------
       //open text file
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TEXT_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TEXT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check outline is not visible
       assertFalse(selenium.isVisible(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR));
       
       //----- 5 -------------
       //type text to file and save (create new version)
-      IDE.editor().typeTextIntoEditor(2, "hello");
+     IDE.EDITOR.typeTextIntoEditor(2, "hello");
       saveCurrentFile();
       
       //----- 6 -------------
       //open version tab
-      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
       //check version tab is visible, outline tab is not visible
       assertTrue(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_VERSION_TAB_LOCATOR));
       assertFalse(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_OUTLINE_TAB_LOCATOR));
       
       //----- 7 -------------
       //go to xml file
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       
       //version tab is closed, outline is visible
       assertFalse(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_VERSION_TAB_LOCATOR));
@@ -161,12 +161,12 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       
       //----- 8 -------------
       //type text and save
-      IDE.editor().typeTextIntoEditor(0, "abc");
+     IDE.EDITOR.typeTextIntoEditor(0, "abc");
       saveCurrentFile();
       
       //----- 9 -------------
       //open versions tab
-      IDE.toolbar().runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
       assertTrue(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_VERSION_TAB_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_OUTLINE_TAB_LOCATOR));
       
@@ -181,12 +181,12 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       
       //----- 11 -------------
       //select text file
-      IDE.editor().selectTab(2);
+     IDE.EDITOR.selectTab(2);
       assertFalse(selenium.isVisible(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR));
       
       //----- 12 -------------
       //select html file
-      IDE.editor().selectTab(1);
+     IDE.EDITOR.selectTab(1);
       assertFalse(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_OUTLINE_TAB_LOCATOR));
       
    }

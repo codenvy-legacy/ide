@@ -70,23 +70,23 @@ public class CursorPositionStatusBarTest extends BaseTest
    {
       waitForRootElement();
 
-      IDE.navigator().selectItem(URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.selectItem(URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       saveAsUsingToolbarButton(FILE_1);
 
       waitForRootElement();
       //TODO****try****fix
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       waitForRootElement();
       //****************
 
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //click on editor
-      IDE.editor().clickOnEditor();
+     IDE.EDITOR.clickOnEditor();
       // change cursor position in editor
       for (int i = 0; i < 6; i++)
       {
@@ -117,11 +117,11 @@ public class CursorPositionStatusBarTest extends BaseTest
       assertEquals("7 : 8", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
 
       //	Create Css
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       // selectMainFrame();
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
 
 //      //TODO fix problem see issue IDE -713
 //      //		check status bar
@@ -131,7 +131,7 @@ public class CursorPositionStatusBarTest extends BaseTest
 //
 //      //			check status bar
 //      assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
 
    @AfterClass

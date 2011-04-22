@@ -39,44 +39,44 @@ public class AutoCompletionXMLTest extends BaseTest
    public void openForm() throws Throwable
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      String text = IDE.editor().getTextFromCodeEditor(0);
+      String text =IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
 
-      IDE.editor().runHotkeyWithinEditor(0, false, false, KeyEvent.VK_HOME);
+     IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_HOME);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       //      selenium.keyDown("//body[@class='editbox']", "\\35");
-      IDE.editor().pressEnter();
-      IDE.editor().typeTextIntoEditor(0, "<root>");
-      IDE.editor().pressEnter();
-      IDE.editor().pressEnter();
-      IDE.editor().typeTextIntoEditor(0, "</root>");
+     IDE.EDITOR.pressEnter();
+     IDE.EDITOR.typeTextIntoEditor(0, "<root>");
+     IDE.EDITOR.pressEnter();
+     IDE.EDITOR.pressEnter();
+     IDE.EDITOR.typeTextIntoEditor(0, "</root>");
       selenium.keyPressNative("" + KeyEvent.VK_UP);
 
-      IDE.editor().typeTextIntoEditor(0, "<rot>");
-      IDE.editor().pressEnter();
-      IDE.editor().pressEnter();
-      IDE.editor().typeTextIntoEditor(0, "</rot>");
+     IDE.EDITOR.typeTextIntoEditor(0, "<rot>");
+     IDE.EDITOR.pressEnter();
+     IDE.EDITOR.pressEnter();
+     IDE.EDITOR.typeTextIntoEditor(0, "</rot>");
       selenium.keyPressNative("" + KeyEvent.VK_UP);
 
-      IDE.editor().typeTextIntoEditor(0, "<rt>");
-      IDE.editor().pressEnter();
-      IDE.editor().pressEnter();
-      IDE.editor().typeTextIntoEditor(0, "</rt>");
+     IDE.EDITOR.typeTextIntoEditor(0, "<rt>");
+     IDE.EDITOR.pressEnter();
+     IDE.EDITOR.pressEnter();
+     IDE.EDITOR.typeTextIntoEditor(0, "</rt>");
 
       selenium.keyPressNative("" + KeyEvent.VK_UP);
 
-      IDE.codeAssistant().openForm();
+      IDE.CODEASSISTANT.openForm();
 
-      IDE.codeAssistant().typeToInput("ro");
-      IDE.codeAssistant().checkElementPresent("rot");
-      IDE.codeAssistant().insertSelectedItem();
+      IDE.CODEASSISTANT.typeToInput("ro");
+      IDE.CODEASSISTANT.checkElementPresent("rot");
+      IDE.CODEASSISTANT.insertSelectedItem();
 
-      String textAfter = IDE.editor().getTextFromCodeEditor(0);
+      String textAfter =IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(textAfter.contains("<root></root>"));
 
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
 }

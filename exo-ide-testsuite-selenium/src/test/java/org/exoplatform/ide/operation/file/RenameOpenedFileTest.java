@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -26,14 +31,9 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Dialogs;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
@@ -49,8 +49,9 @@ public class RenameOpenedFileTest extends BaseTest
    private final static String RENAMED_FILE_NAME = "Renamed Test File.groovy";
 
    private final static String FOLDER_NAME = RenameOpenedFileTest.class.getSimpleName();
-   
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
+
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME;
 
    private final static String ORIG_URL = URL + "/" + ORIG_FILE_NAME;
 
@@ -75,7 +76,7 @@ public class RenameOpenedFileTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -99,18 +100,18 @@ public class RenameOpenedFileTest extends BaseTest
    {
 
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
-      
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
-      
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR));
@@ -119,30 +120,33 @@ public class RenameOpenedFileTest extends BaseTest
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.MIME_TYPE_FIELD_DISABLED_LOCATOR));
       //check, warning message is present
       assertTrue(selenium.isTextPresent("Can't change mime-type to opened file"));
-      
+
       selenium.type(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR, RENAMED_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
-      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
-      
+
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
-      
-      assertEquals(RENAMED_FILE_NAME, IDE.editor().getTabTitle(0));
 
-      IDE.editor().typeTextIntoEditor(0, "change content");
+      assertEquals(RENAMED_FILE_NAME,IDE.EDITOR.getTabTitle(0));
+
+     IDE.EDITOR.typeTextIntoEditor(0, "change content");
       saveCurrentFile();
-      assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
+
+      //assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
+      IDE.WARNING_DIALOG.checkIsOpened();
 
       refresh();
-      
-      IDE.editor().typeTextIntoEditor(0, "cookies cookies cookies cookies !!!111");
+
+     IDE.EDITOR.typeTextIntoEditor(0, "cookies cookies cookies cookies !!!111");
       saveCurrentFile();
-      assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
+      //      assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
+      IDE.WARNING_DIALOG.checkIsOpened();
    }
 
 }

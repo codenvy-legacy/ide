@@ -75,14 +75,14 @@ public class HighlightOutlineTest extends BaseTest
    public void testHighlightOutline() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(URL + "/");
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL + "/");
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
       // open outline panel
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.refresh();
@@ -92,7 +92,7 @@ public class HighlightOutlineTest extends BaseTest
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_OutlineForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      String content = IDE.editor().getTextFromCodeEditor(0);
+      String content =IDE.EDITOR.getTextFromCodeEditor(0);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_F);
@@ -103,7 +103,7 @@ public class HighlightOutlineTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_R);
 
-      assertEquals(content, IDE.editor().getTextFromCodeEditor(0));
+      assertEquals(content,IDE.EDITOR.getTextFromCodeEditor(0));
 
    }
 

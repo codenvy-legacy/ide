@@ -76,15 +76,15 @@ public class HighlightCKEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP);
 
-      IDE.navigator().selectItem(URL + FOLDER_NAME+ "/" + FILE_NAME); 
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME+ "/" + FILE_NAME); 
       openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
       //Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium
@@ -92,7 +92,7 @@ public class HighlightCKEditorTest extends BaseTest
       assertFalse(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_1'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      IDE.editor().clickOnEditor();
+     IDE.EDITOR.clickOnEditor();
 
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
@@ -100,7 +100,7 @@ public class HighlightCKEditorTest extends BaseTest
       assertFalse(selenium
          .isElementPresent("//div[@eventproxy='isc_PreviewForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
 
    @AfterClass

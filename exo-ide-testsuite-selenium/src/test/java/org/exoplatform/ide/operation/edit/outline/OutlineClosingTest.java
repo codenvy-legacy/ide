@@ -40,7 +40,7 @@ public class OutlineClosingTest extends BaseTest
    public void test() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       
       openAndCloseOutline();
       
@@ -56,7 +56,7 @@ public class OutlineClosingTest extends BaseTest
    private void openAndCloseOutline() throws Exception, InterruptedException
    {
       // open outline panel
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       
       // check for presence of tab outline

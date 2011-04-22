@@ -79,17 +79,17 @@ public class RESTServiceFilterParametersTest extends BaseTest
    public void testFilterParameters() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-       IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       //TODO*************change
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       //****************************
 
       //TODO*************change
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       launchRestService();
       //************************

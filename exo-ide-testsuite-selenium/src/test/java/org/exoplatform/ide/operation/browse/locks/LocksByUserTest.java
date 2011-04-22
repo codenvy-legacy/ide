@@ -72,16 +72,16 @@ public class LocksByUserTest extends LockFileAbstract
    public void testLocksByUser() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       //----- 1 --------
       //open file
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       //----- 2 --------
       //lock file
-      IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       
       //----- 3 --------
       //logout
@@ -93,12 +93,12 @@ public class LocksByUserTest extends LockFileAbstract
       Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
       
       //----- 5 --------
-      IDE.navigator().selectItem(URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       checkFileLocking(FILE_NAME, true);
       //open file
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       checkCantSaveLockedFile(FILE_NAME);
    }

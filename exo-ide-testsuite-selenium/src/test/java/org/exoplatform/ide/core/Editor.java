@@ -24,13 +24,10 @@ import static org.junit.Assert.fail;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.SaveFileUtils;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
-
-import com.thoughtworks.selenium.Selenium;
 
 /**
  * 
@@ -40,12 +37,8 @@ import com.thoughtworks.selenium.Selenium;
  * @version $
  */
 
-public class Editor
+public class Editor extends AbstractTestModule
 {
-
-   private Selenium selenium;
-
-   private IDE ide;
 
    public interface EditorLocators
    {
@@ -53,12 +46,6 @@ public class Editor
        * XPATH CK editor locator.
        */
       public static final String CK_EDITOR = "//table[@class='cke_editor']";
-   }
-
-   public Editor(Selenium selenium, IDE ide)
-   {
-      this.selenium = selenium;
-      this.ide = ide;
    }
 
    /**
@@ -70,7 +57,7 @@ public class Editor
     */
    public String getTabTitle(int index)
    {
-      return selenium.getText(getEditorTabScLocator(index) + "//span");
+      return selenium().getText(getEditorTabScLocator(index) + "//span");
    }
 
    /**
@@ -94,7 +81,8 @@ public class Editor
     */
    public void selectTab(int tabIndex) throws Exception
    {
-      selenium.clickAt("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table", "");
+      selenium().clickAt("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table",
+         "");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
@@ -105,10 +93,10 @@ public class Editor
     */
    public void closeTab(int index) throws Exception
    {
-      selenium.mouseOver(Locators.getTabCloseButtonLocator(index));
+      selenium().mouseOver(Locators.getTabCloseButtonLocator(index));
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      selenium.click(Locators.getTabCloseButtonLocator(index));
+      selenium().click(Locators.getTabCloseButtonLocator(index));
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
@@ -120,7 +108,8 @@ public class Editor
    public void tryCloseTabWithNonSaving(int tabIndex) throws Exception
    {
       //if file is opened, close it
-      if (selenium.isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + tabIndex + "]/icon"))
+      if (selenium()
+         .isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + tabIndex + "]/icon"))
       {
          closeTabWithNonSaving(tabIndex);
       }
@@ -137,11 +126,9 @@ public class Editor
       closeTab(tabIndex);
 
       //check is warning dialog appears
-      if (selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG + "/header[contains(text(), 'Close file')]"))
+      if (IDE().WARNING_DIALOG.isDialogOpened("Close file"))
       {
-         //click No button
-         ide.dialogs().clickNoButton();
-         Thread.sleep(TestConstants.SLEEP);
+         IDE().WARNING_DIALOG.clickNo();
       }
    }
 
@@ -166,23 +153,23 @@ public class Editor
        * SmartGWT not destroy warning dialog(only hide, maybe set smoller z-index property ),
        * so need check is warning dialogs is visible
        */
-      if (selenium.isElementPresent("exoAskDialog") && selenium.isVisible("exoAskDialog"))
+      if (selenium().isElementPresent("exoAskDialog") && selenium().isVisible("exoAskDialog"))
       {
          //check is warning dialog appears
-         assertTrue(selenium
-            .isElementPresent("//div[@id='exoAskDialog']//div[@class='Caption']/span[contains(text(), 'Close file')]"));
+         assertTrue(selenium().isElementPresent(
+            "//div[@id='exoAskDialog']//div[@class='Caption']/span[contains(text(), 'Close file')]"));
 
-         assertTrue(selenium.isElementPresent("exoAskDialogYesButton"));
-         assertTrue(selenium.isElementPresent("exoAskDialogNoButton"));
+         assertTrue(selenium().isElementPresent("exoAskDialogYesButton"));
+         assertTrue(selenium().isElementPresent("exoAskDialogNoButton"));
 
          //click No button
-         selenium.click("exoAskDialogNoButton");
+         selenium().click("exoAskDialogNoButton");
       }
       //close new file
-      else if (selenium.isElementPresent(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR)
-         && selenium.isVisible(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR))
+      else if (selenium().isElementPresent(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR)
+         && selenium().isVisible(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR))
       {
-         selenium.click(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
+         selenium().click(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
       }
       else
       {
@@ -237,7 +224,7 @@ public class Editor
       else
       {
          SaveFileUtils.checkSaveAsDialog(true);
-         selenium.click(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
+         selenium().click(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
       }
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
@@ -250,14 +237,16 @@ public class Editor
          //used //td[contains(@class, 'tabTitleSelected')] locator, instead of equals,
          //because after refreshing tab is overed by mouse and there is no 'tabTitleSelected'
          //class, but there is 'tabTitleSelectedOver'.
-         assertTrue(selenium.isElementPresent(Locators.EDITOR_PANEL_LOCATOR
-            + "//div[@class='tabBar']//td[contains(@class, 'tabTitleSelected')]/span[contains(text(), '" + tabTitle
-            + "')]"));
+         assertTrue(selenium().isElementPresent(
+            Locators.EDITOR_PANEL_LOCATOR
+               + "//div[@class='tabBar']//td[contains(@class, 'tabTitleSelected')]/span[contains(text(), '" + tabTitle
+               + "')]"));
       }
       else
       {
-         assertTrue(selenium.isElementPresent(Locators.EDITOR_PANEL_LOCATOR
-            + "//div[@class='tabBar']//td[@class='tabTitle']/span[contains(text(), '" + tabTitle + "')]"));
+         assertTrue(selenium().isElementPresent(
+            Locators.EDITOR_PANEL_LOCATOR + "//div[@class='tabBar']//td[@class='tabTitle']/span[contains(text(), '"
+               + tabTitle + "')]"));
       }
    }
 
@@ -278,7 +267,7 @@ public class Editor
       {
          for (int i = 0; i < 50; i++)
          {
-            if (selenium.isElementPresent(getEditorTabScLocator(i)))
+            if (selenium().isElementPresent(getEditorTabScLocator(i)))
             {
                if (tabTitle.equals(getTabTitle(i)))
                   return;
@@ -294,7 +283,7 @@ public class Editor
       {
          for (int i = 0; i < 50; i++)
          {
-            if (selenium.isElementPresent(getEditorTabScLocator(i)))
+            if (selenium().isElementPresent(getEditorTabScLocator(i)))
             {
                if (tabTitle.equals(getTabTitle(i)))
                   fail(tabTitle + "is present in tab titles");
@@ -314,12 +303,12 @@ public class Editor
     */
    public void deleteLinesInEditor(int count)
    {
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       for (int i = 0; i < count; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_D);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_D);
       }
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
    }
 
    /**
@@ -327,13 +316,13 @@ public class Editor
     */
    public void deleteFileContent() throws Exception
    {
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
 
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
 
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
@@ -363,10 +352,10 @@ public class Editor
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       // Put cursor at the beginning of the document
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
@@ -378,11 +367,11 @@ public class Editor
    protected int getEditorLeftScreenPosition()
    {
       // Get the delta between of toolbar browser area
-      int deltaX = Integer.parseInt(selenium.getEval("window.outerWidth-window.innerWidth"));
+      int deltaX = Integer.parseInt(selenium().getEval("window.outerWidth-window.innerWidth"));
       // Get the position on screen of the editor
       //      int x = selenium.getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
       int x =
-         selenium.getElementPositionLeft("//div[@panel-id='editor' and @tab-index='0' ]//iframe").intValue() + deltaX;
+         selenium().getElementPositionLeft("//div[@panel-id='editor' and @tab-index='0' ]//iframe").intValue() + deltaX;
       return x;
    }
 
@@ -394,10 +383,10 @@ public class Editor
    protected int getEditorTopScreenPosition()
    {
       // Get the delta between of toolbar browser area
-      int deltaY = Integer.parseInt(selenium.getEval("window.outerHeight-window.innerHeight"));
+      int deltaY = Integer.parseInt(selenium().getEval("window.outerHeight-window.innerHeight"));
       // Get the position on screen of the editor
       int y =
-         selenium.getElementPositionTop("//div[@panel-id='editor' and @tab-index='0']//iframe").intValue() + deltaY;
+         selenium().getElementPositionTop("//div[@panel-id='editor' and @tab-index='0']//iframe").intValue() + deltaY;
       return y;
    }
 
@@ -406,7 +395,7 @@ public class Editor
     */
    public void pressEnter()
    {
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium().keyDown("//body[@class='editbox']", "\\13");
    }
 
    /**
@@ -424,8 +413,8 @@ public class Editor
     */
    public void typeTextIntoEditor(int tabIndex, String text) throws Exception
    {
-      if (selenium.isElementPresent(getContentPanelLocator(tabIndex)
-         + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"))
+      if (selenium().isElementPresent(
+         getContentPanelLocator(tabIndex) + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"))
       {
          selectIFrameWithEditor(tabIndex);
          AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, text);
@@ -436,7 +425,7 @@ public class Editor
          AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, text);
       }
 
-      ide.selectMainFrame();
+      IDE().selectMainFrame();
    }
 
    /**
@@ -467,7 +456,7 @@ public class Editor
     */
    public void selectIFrameWithEditor(int tabIndex) throws Exception
    {
-      selenium.selectFrame(getContentPanelLocator(tabIndex) + "//iframe");
+      selenium().selectFrame(getContentPanelLocator(tabIndex) + "//iframe");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
@@ -480,8 +469,8 @@ public class Editor
    public void clickOnEditor(int tabIndex) throws Exception
    {
       selectIFrameWithEditor(tabIndex);
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      ide.selectMainFrame();
+      selenium().clickAt("//body[@class='editbox']", "5,5");
+      IDE().selectMainFrame();
    }
 
    /**
@@ -491,16 +480,16 @@ public class Editor
    public String getTextFromCodeEditor(int tabIndex) throws Exception
    {
       selectIFrameWithEditor(tabIndex);
-      String text = selenium.getText("//body[@class='editbox']");
-      ide.selectMainFrame();
+      String text = selenium().getText("//body[@class='editbox']");
+      IDE().selectMainFrame();
       return text;
    }
 
    public String getTextFromCKEditor(int tabIndex) throws Exception
    {
       selectIFrameWithEditor(tabIndex);
-      String text = selenium.getText("//body");
-      ide.selectMainFrame();
+      String text = selenium().getText("//body");
+      IDE().selectMainFrame();
       return text;
    }
 
@@ -520,26 +509,26 @@ public class Editor
 
       if (isCtrl)
       {
-         selenium.controlKeyDown();
+         selenium().controlKeyDown();
       }
       if (isAlt)
       {
-         selenium.altKeyDown();
+         selenium().altKeyDown();
       }
 
-      selenium.keyDown("//", String.valueOf(keyCode));
-      selenium.keyUp("//", String.valueOf(keyCode));
+      selenium().keyDown("//", String.valueOf(keyCode));
+      selenium().keyUp("//", String.valueOf(keyCode));
 
       if (isCtrl)
       {
-         selenium.controlKeyUp();
+         selenium().controlKeyUp();
       }
       if (isAlt)
       {
-         selenium.altKeyUp();
+         selenium().altKeyUp();
       }
 
-      ide.selectMainFrame();
+      IDE().selectMainFrame();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 

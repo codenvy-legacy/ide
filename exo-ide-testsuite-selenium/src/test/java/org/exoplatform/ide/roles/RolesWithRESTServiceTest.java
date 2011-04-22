@@ -52,7 +52,7 @@ public class RolesWithRESTServiceTest extends BaseTest
    {
       try
       {
-         IDE.editor().closeTab(0);
+        IDE.EDITOR.closeTab(0);
          VirtualFileSystemUtils.delete(URL+FILE1);
       }
       catch (IOException e)
@@ -75,7 +75,7 @@ public class RolesWithRESTServiceTest extends BaseTest
    public void testDeveloperRoleWithRESTService() throws Exception
    {
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       saveAsUsingToolbarButton(FILE1);
 
       Thread.sleep(TestConstants.SLEEP);
@@ -88,7 +88,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       checkLaunchService(true);
       checkValidateService(true);
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
       //Logout and login as developer
       logout();
@@ -97,7 +97,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE1, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //Check deploy/undeploy is not available for developer
       checkDeployUndeployAllowed(false);
@@ -112,7 +112,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       // Check launch service is allowed for developer
       checkLaunchService(false);
       
-      IDE.toolbar().runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
       
       //Check Launch Rest Service form appears
@@ -131,7 +131,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceCancel\"]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
       Thread.sleep(TestConstants.SLEEP);
    }
@@ -154,7 +154,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE1, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //Check deploy/undeploy is allowed for administrator
       checkDeployUndeployAllowed(true);
@@ -169,7 +169,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       // Check launch service is allowed for administrator
       checkLaunchService(true);
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
    
    /**
@@ -178,16 +178,16 @@ public class RolesWithRESTServiceTest extends BaseTest
     */
    private void checkDeployUndeployAllowed(boolean allowed) throws Exception
    {
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE, allowed);
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE, allowed);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE, allowed);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE, allowed);
 
       if (allowed)
       {
-         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE, allowed);
-         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE, allowed);
+         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE, allowed);
+         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE, allowed);
 
          //Deploy service:
-         IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
+         IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
          Thread.sleep(TestConstants.SLEEP);
          //Check successfully deployed message
          assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
@@ -196,7 +196,7 @@ public class RolesWithRESTServiceTest extends BaseTest
          assertTrue(message.contains(FILE1 + " deployed successfully."));
 
          //Undeploy service
-         IDE.toolbar().runCommand(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE);
+         IDE.TOOLBAR.runCommand(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE);
          Thread.sleep(TestConstants.SLEEP);
          //Check successfully undeployed message
          assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
@@ -215,11 +215,11 @@ public class RolesWithRESTServiceTest extends BaseTest
     */
    private void checkRunService(boolean allowed) throws Exception
    {
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, allowed);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, allowed);
       if (allowed)
       {
-         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, allowed);
-         IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, allowed);
+         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, allowed);
+         IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, allowed);
       }
    }
    
@@ -232,12 +232,12 @@ public class RolesWithRESTServiceTest extends BaseTest
     */
    private void checkValidateService(boolean allowed) throws Exception
    {
-	   IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE, allowed);
-	   IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, allowed);
+	   IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE, allowed);
+	   IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, allowed);
 	   if (allowed)
 	   {
-	      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE, allowed);
-	      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, allowed);
+	      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE, allowed);
+	      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, allowed);
 	   }
    }
    
@@ -250,11 +250,11 @@ public class RolesWithRESTServiceTest extends BaseTest
     */
    private void checkSetAutoload(boolean allowed) throws Exception
    {
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
 	   if (allowed)
 	   {
-	      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.SET_AUTOLOAD, allowed);
-	      IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
+	      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.SET_AUTOLOAD, allowed);
+	      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
 	   }
    }
    
@@ -267,14 +267,14 @@ public class RolesWithRESTServiceTest extends BaseTest
     */
    private void checkSandbox(boolean allowed) throws Exception
    {
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX, allowed);
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX, allowed);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX, allowed);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX, allowed);
       if (allowed)
       {
-         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_SANDBOX, allowed);
-         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_SANDBOX, allowed);
-         IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX, allowed);
-         IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX, allowed);
+         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.DEPLOY_SANDBOX, allowed);
+         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_SANDBOX, allowed);
+         IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX, allowed);
+         IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX, allowed);
       }
    }
    
@@ -287,12 +287,12 @@ public class RolesWithRESTServiceTest extends BaseTest
     */
    private void checkLaunchService(boolean allowed) throws Exception
    {
-      IDE.toolbar().checkButtonExistAtRight(MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
+      IDE.TOOLBAR.checkButtonExistAtRight(MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
       if (allowed)
       {
-         IDE.toolbar().assertButtonEnabled(MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
-         IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
+         IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
+         IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
       }
    }
 }

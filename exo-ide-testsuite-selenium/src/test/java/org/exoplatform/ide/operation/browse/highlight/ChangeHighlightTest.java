@@ -70,25 +70,25 @@ public class ChangeHighlightTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.navigator().selectItem(URL + FOLDER_NAME);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME);
       
       selenium.click("scLocator=//VLayout[ID=\"ideVerticalSplitLayout\"]/child[Class=Snapbar||index=2||length=4||classIndex=0||classLength=1]/");
 //      Thread.sleep(TestConstants.SLEEP_SHORT);
 //      assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 //      
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       assertFalse(selenium.isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       assertFalse(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       
-      IDE.navigator().selectItem(URL + FOLDER_NAME);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME);
       assertFalse(selenium.isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));

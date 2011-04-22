@@ -85,18 +85,18 @@ public class OpenLockedFileTest extends LockFileAbstract
    public void testOpenLockedFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       //----- 1 ----------
       //open file
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       //----- 2 ----------
       //lock file
-      IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
       checkFileLocking(FILE_NAME, false);
 
       //----- 3 ----------
@@ -106,21 +106,21 @@ public class OpenLockedFileTest extends LockFileAbstract
       
       //----- 4 ----------
       //check that file is locked
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
       checkCantSaveLockedFile(FILE_NAME);
 
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       
       checkFileLocking(FILE_NAME, true);
 
       //----- 5 ----------
       //close and open file
-      IDE.editor().closeTab(0);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+     IDE.EDITOR.closeTab(0);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       checkCantSaveLockedFile(FILE_NAME);
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
 
 }

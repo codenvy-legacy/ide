@@ -45,7 +45,7 @@ public class DialogAboutTest extends BaseTest
       //TODO: you can change information in About window
       //as you see fit
       Thread.sleep(TestConstants.SLEEP);
-      IDE.menu().runCommand(MenuCommands.Help.HELP, MenuCommands.Help.ABOUT);
+      IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.ABOUT);
       //      Thread.sleep(TestConstants.SLEEP);
       //check About form
       assertTrue(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]"));

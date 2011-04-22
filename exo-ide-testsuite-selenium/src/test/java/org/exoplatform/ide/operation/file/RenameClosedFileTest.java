@@ -104,15 +104,15 @@ public class RenameClosedFileTest extends BaseTest
    public void testRenameClosedFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
       assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
@@ -126,8 +126,8 @@ public class RenameClosedFileTest extends BaseTest
       selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
-      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
@@ -137,14 +137,14 @@ public class RenameClosedFileTest extends BaseTest
    public void testChangeMimeType() throws Exception
    {
       refresh();
-      IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
       selenium.type(Locators.RenameItemForm.SC_MIME_TYPE_FIELD_LOCATOR, MimeType.TEXT_XML);
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -152,13 +152,13 @@ public class RenameClosedFileTest extends BaseTest
       selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
       
-      final String textFromEditor = IDE.editor().getTextFromCodeEditor(0);
+      final String textFromEditor =IDE.EDITOR.getTextFromCodeEditor(0);
       
       assertEquals(FILE_CONTENT, textFromEditor);
       
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       
       assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
    }
@@ -167,14 +167,14 @@ public class RenameClosedFileTest extends BaseTest
    public void testRenameAndChangeMimeType() throws Exception
    {
       refresh();
-      IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
       selenium.type(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR, RENAMED_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -184,16 +184,16 @@ public class RenameClosedFileTest extends BaseTest
       selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
-      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(RENAMED_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(RENAMED_FILE_NAME, false);
       
-      final String textFromEditor = IDE.editor().getTextFromCodeEditor(0);
+      final String textFromEditor =IDE.EDITOR.getTextFromCodeEditor(0);
       
       assertEquals(FILE_CONTENT, textFromEditor);
       
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       
       assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
    }

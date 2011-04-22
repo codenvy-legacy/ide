@@ -75,15 +75,15 @@ public class RESTServiceSandboxTest extends BaseTest
    public void testDeployUndeploy() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/");
       //Create REST Service file and save it:
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
       //Deploy service to sandbox:
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX);
       Thread.sleep(TestConstants.SLEEP);
       
       //Check deploy request:
@@ -93,7 +93,7 @@ public class RESTServiceSandboxTest extends BaseTest
       assertTrue(mess.contains(FILE_NAME + " deployed successfully."));
       
       //Undeploy service from sandbox:
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
       Thread.sleep(TestConstants.SLEEP);
 
       //Check undeploy request:
@@ -102,14 +102,14 @@ public class RESTServiceSandboxTest extends BaseTest
       assertTrue(mess.contains(FILE_NAME + " undeployed successfully."));
    
       //Try undeploy undeployed service:
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
       Thread.sleep(TestConstants.SLEEP);
 
       mess = selenium.getText("//div[contains(@eventproxy,'Record_2')]");
       assertTrue(mess.contains("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
    
    /**

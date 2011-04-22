@@ -136,7 +136,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 1. Open Create Project From Template form
        */
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       
       checkCreateProjectFromTemplateForm(selenium);
       
@@ -158,19 +158,19 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 3. Check new project created
        */
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/");
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/");
       
-      IDE.navigator().clickOpenIconOfFolder(PROJECT_NAME);      
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(PROJECT_NAME);      
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
       
       
-      IDE.navigator().clickOpenIconOfFolder(FOLDER_ORG);
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER_ORG);
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
       
-      IDE.navigator().clickOpenIconOfFolder(FOLDER_EXOPLATFORM);
+      IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER_EXOPLATFORM);
       
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
    }
    
    /**
@@ -195,22 +195,22 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 3. Check sample project created
        */
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
       
-      IDE.navigator().clickOpenIconOfFolder(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
       
-      IDE.navigator().clickOpenIconOfFolder("logic");
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/" + "GreetingRESTService.grs");
+      IDE.NAVIGATION.clickOpenIconOfFolder("logic");
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/" + "GreetingRESTService.grs");
       
-      IDE.navigator().clickOpenIconOfFolder("UI");
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/" + "GreetingGoogleGadget.xml");
+      IDE.NAVIGATION.clickOpenIconOfFolder("UI");
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/" + "GreetingGoogleGadget.xml");
       
-      IDE.navigator().clickOpenIconOfFolder("data");
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"DataObject.groovy"); 
-      IDE.navigator().assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"Pojo.groovy");
+      IDE.NAVIGATION.clickOpenIconOfFolder("data");
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"DataObject.groovy"); 
+      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"Pojo.groovy");
    }
    
    /**
@@ -235,7 +235,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 3. Check new project created
        */
-      IDE.navigator().assertItemNotPresent(PROJECT_FOLDER_URL + EMPTY_PROJECT + "/");
+      IDE.NAVIGATION.assertItemNotPresent(PROJECT_FOLDER_URL + EMPTY_PROJECT + "/");
    }
    
    /**
@@ -253,7 +253,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 1. Open create project from template form
        */
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       
       /*
        * Name field, Delete and Create buttons are disabled

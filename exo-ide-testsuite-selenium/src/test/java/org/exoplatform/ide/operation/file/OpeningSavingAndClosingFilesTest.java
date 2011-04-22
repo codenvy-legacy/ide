@@ -117,13 +117,13 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       // Refresh Workspace:
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
       
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       // ----------5--------------
       reopenFiles();
@@ -210,7 +210,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[1]");
       
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       
 //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
 //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
@@ -230,7 +230,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       // Open HTML:
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[6]/col[1]");
 
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
 //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
 //      Thread.sleep(TestConstants.SLEEP);
@@ -249,7 +249,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       // Open JavaScript:
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[7]/col[1]");
 
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
 //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
 //      Thread.sleep(TestConstants.SLEEP);
@@ -268,7 +268,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       // Open XML:
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[9]/col[1]");
 
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       
 //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
 //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
@@ -413,91 +413,91 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
 
    protected void clickTabAndCheckSaveButton() throws Exception
    {
-      IDE.editor().selectTab(0);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+     IDE.EDITOR.selectTab(0);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
 
-      IDE.editor().selectTab(1);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+     IDE.EDITOR.selectTab(1);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
       
-      IDE.editor().selectTab(2);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+     IDE.EDITOR.selectTab(2);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
       
-      IDE.editor().selectTab(3);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);      
+     IDE.EDITOR.selectTab(3);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);      
       
-      IDE.editor().selectTab(4);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+     IDE.EDITOR.selectTab(4);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
       
-      IDE.editor().selectTab(5);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+     IDE.EDITOR.selectTab(5);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
       
-      IDE.editor().selectTab(6);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+     IDE.EDITOR.selectTab(6);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
    }
 
    public void openXML() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openTXT() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TXT_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TXT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openJavaScript() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(JS_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(JS_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openHtml() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       //    runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
       Thread.sleep(3000);
    }
 
    public void openGroovy() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       //runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openGooglegadget() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(GADGET_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GADGET_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
    }
 
    public void openCss() throws InterruptedException, Exception
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(CSS_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(CSS_FILE_NAME, false);
    }
 
    //****************TODO fix  Task IDE-445

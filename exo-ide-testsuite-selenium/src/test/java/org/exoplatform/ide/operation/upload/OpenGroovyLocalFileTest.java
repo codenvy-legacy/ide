@@ -72,14 +72,14 @@ public class OpenGroovyLocalFileTest extends BaseTest
    public void testOpenGroovy() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       
       uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       checkCodeEditorOpened(0);
-      String text = IDE.editor().getTextFromCodeEditor(0);
+      String text =IDE.EDITOR.getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
 
@@ -91,7 +91,7 @@ public class OpenGroovyLocalFileTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       
       assertEquals("exo:groovyResourceContainer", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
       assertEquals(MimeType.GROOVY_SERVICE, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));

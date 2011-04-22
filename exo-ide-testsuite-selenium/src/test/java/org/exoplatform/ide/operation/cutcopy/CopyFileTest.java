@@ -120,70 +120,70 @@ public class CopyFileTest extends BaseTest
    {
       waitForRootElement();
       
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
       
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
 
       /*
        * Check Cut and Copy commands must be enabled
        */
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
-      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
+      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
 
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
-      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.CUT_TOOLBAR, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
+      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.CUT_TOOLBAR, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
 
       /*
        * Check Paste command must be disabled
        */
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      IDE.toolbar().assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
       /*
        * Click Copy command on toolbar
        */
-      IDE.toolbar().runCommand(MenuCommands.Edit.COPY_TOOLBAR);
+      IDE.TOOLBAR.runCommand(MenuCommands.Edit.COPY_TOOLBAR);
 
       /*
        * Check Paste must be enabled 
        */
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /*
        * Select Root in workspace panel
        */
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
 
       /*
        * Click Paste command
        */
-      IDE.toolbar().runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.TOOLBAR.runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
 
       /*
        * Check Paste command must be disabled
        */
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
 
       /*
        * Open "Test 1" folder
        */
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
 
       /*
        * Open file "/Test 1/test.groovy"
        */
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_GROOVY, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_GROOVY, false);
 
       /*
        * Type "file content"
        */
-      IDE.editor().typeTextIntoEditor(0, FILE_CONTENT_2);
+     IDE.EDITOR.typeTextIntoEditor(0, FILE_CONTENT_2);
 
       /*
        * Save file
@@ -193,41 +193,41 @@ public class CopyFileTest extends BaseTest
       /*
        * Close file
        */
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
       /*
        * Open "/test.groovy"
        */
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommand(MenuCommands.File.REFRESH_TOOLBAR);
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/");
-      IDE.toolbar().runCommand(MenuCommands.File.REFRESH_TOOLBAR);
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
       
       /*
        * Select FILE_GROOVY file in FOLDER_1
        */
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
       
       /*
        * Open FILE_GROOVY file from FOLDER_1
        */
-      IDE.navigator().openSelectedFileWithCodeEditor(false);
+      IDE.NAVIGATION.openSelectedFileWithCodeEditor(false);
       
       /*
        * Select FILE_GROOVY file in root folder
        */
-      IDE.navigator().selectItem(WS_URL + FILE_GROOVY);
+      IDE.NAVIGATION.selectItem(WS_URL + FILE_GROOVY);
       
       /*
        * Open FILE_GROOVY file from root folder
        */
-      IDE.navigator().openSelectedFileWithCodeEditor(false);
+      IDE.NAVIGATION.openSelectedFileWithCodeEditor(false);
 
       /*
        * Check files content
        */
-      assertEquals(FILE_CONTENT_1, IDE.editor().getTextFromCodeEditor(0));
-      assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1, IDE.editor().getTextFromCodeEditor(1));
+      assertEquals(FILE_CONTENT_1,IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1,IDE.EDITOR.getTextFromCodeEditor(1));
 
    }
 

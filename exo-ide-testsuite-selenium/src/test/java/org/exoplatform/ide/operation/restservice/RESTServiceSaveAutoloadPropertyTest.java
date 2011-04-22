@@ -54,17 +54,17 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       createFolder("Autoload");
       //**********************
       
-      IDE.toolbar().runCommandFromNewPopupMenu("REST Service");
+      IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
       Thread.sleep(TestConstants.SLEEP);
       
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);      
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
             
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
-      IDE.menu().runCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.MENU.runCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       
       String mess = selenium.getText("//font[@color='#880000']");
       
@@ -76,12 +76,12 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       //assertTrue(mess.contains("Can't unbind script " + FILE_NAME + ", not bound or has wrong mapping to the resource class"));
       //************************
       
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD);
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.toolbar().assertButtonEnabled("Unset REST Service Autoload", true);
+      IDE.TOOLBAR.assertButtonEnabled("Unset REST Service Autoload", true);
       
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       
       assertEquals("true", selenium.getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextAutoload||title=%3Cb%3EAutoload%3C%24fs%24b%3E||value=false||index=0||Class=StaticTextItem]/textbox"));
       
@@ -90,11 +90,11 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
       
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
      
       //TODO*********change*********
@@ -103,9 +103,9 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
      
     
       // selectMainFrame();

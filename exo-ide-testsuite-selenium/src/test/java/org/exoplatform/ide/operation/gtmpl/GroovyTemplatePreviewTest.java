@@ -79,14 +79,14 @@ public class GroovyTemplatePreviewTest extends BaseTest
    public void testGtmplPreview() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-       IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
       Thread.sleep(TestConstants.SLEEP);
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       selenium.selectFrame("eXo-IDE-preview-frame");         
       assertTrue(selenium.isTextPresent("root"));

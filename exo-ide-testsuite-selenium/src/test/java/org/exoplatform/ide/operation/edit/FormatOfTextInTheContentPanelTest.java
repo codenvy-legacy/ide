@@ -93,18 +93,18 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    {
      
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_HTML_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_HTML_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      String postFormating = IDE.editor().getTextFromCodeEditor(0);
+      String postFormating =IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_HTML_FILE_NAME);
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
    }
    
@@ -112,19 +112,19 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    public void tesFormatingCss() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_CSS_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_CSS_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      String postFormating = IDE.editor().getTextFromCodeEditor(0);
+      String postFormating =IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_CSS_FILE_NAME);
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
    }
    
@@ -133,18 +133,18 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    {
     
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_JS_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_JS_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      String postFormating = IDE.editor().getTextFromCodeEditor(0);
+      String postFormating =IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_JS_FILE_NAME);
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
       
    }
@@ -153,19 +153,19 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    public void tesFormatingGadget() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_GADGET_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_GADGET_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      String postFormating = IDE.editor().getTextFromCodeEditor(0);
+      String postFormating =IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_GADGET_FILE_NAME);
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
    }
    

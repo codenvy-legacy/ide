@@ -89,138 +89,138 @@ public class CutFolderTest extends BaseTest
       /*
        * 1. Check, that "/folder 1", "/folder 2", "/folder 1/folder 2", "/folder 1/folder 2/file.groovy" are presents
        */
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().assertItemPresent(WS_URL + "folder 1/");
-      IDE.navigator().assertItemPresent(WS_URL + "folder 2/");
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 1/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 2/");
 
-      IDE.navigator().selectItem(WS_URL + "folder 1/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().assertItemPresent(WS_URL + "folder 1/folder 2/");
+      IDE.NAVIGATION.selectItem(WS_URL + "folder 1/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 1/folder 2/");
 
-      IDE.navigator().selectItem(WS_URL + "folder 1/folder 2/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().assertItemPresent(WS_URL + "folder 1/folder 2/file.groovy");
+      IDE.NAVIGATION.selectItem(WS_URL + "folder 1/folder 2/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 1/folder 2/file.groovy");
 
       /*
        * 2.Open file "test 1/test 2/test.groovy".
        */
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + "folder 1/folder 2/file.groovy", false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + "folder 1/folder 2/file.groovy", false);
 
       /*
        * Paste commands are disabled, Cut/Copy are enabled
        */
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
 
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
 
       /*
        * 3. Select folder "folder 1/folder 1.1". Click on "Cut" toolbar button.
        */
-      IDE.navigator().selectItem(WS_URL + "folder 1/folder 2/");
-      IDE.toolbar().runCommand(MenuCommands.Edit.CUT_TOOLBAR);
+      IDE.NAVIGATION.selectItem(WS_URL + "folder 1/folder 2/");
+      IDE.TOOLBAR.runCommand(MenuCommands.Edit.CUT_TOOLBAR);
 
       /*
        * Paste commands are enabled.
        */
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
       /*
        * 4. Select file "folder 1/folder 1.1/test.groovy" in the Workspace Panel.
        */
-      IDE.navigator().selectItem(WS_URL + "folder 1/folder 2/file.groovy");
+      IDE.NAVIGATION.selectItem(WS_URL + "folder 1/folder 2/file.groovy");
 
       /*
        * Paste commands are enabled.
        */
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /*
        * 5. Select folder "folder 1/folder 1.1/" and click on "Paste" toolbar button.
        */
-      IDE.navigator().selectItem(WS_URL + "folder 1/folder 2/");
-      IDE.toolbar().runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.NAVIGATION.selectItem(WS_URL + "folder 1/folder 2/");
+      IDE.TOOLBAR.runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
 
       /*
        * Error message about impossibility to paste folder into the itself should be displayed. 
        */
-      IDE.dialogs().warning().checkIsOpened("Can't move items in the same directory!");
-      IDE.dialogs().warning().clickOk();
+      IDE.WARNING_DIALOG.checkIsOpened("Can't move items in the same directory!");
+      IDE.WARNING_DIALOG.clickOk();
 
       /*
        * After closing error message dialog the toolbar button "Paste" and topmenu command "Edit->Paste Items" 
        * should be still enabled.
        */
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /*
        * 6. Select root item and then click on "Paste" toolbar button.
        */
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.TOOLBAR.runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
 
       /*
        * Error message about impossibility to paste folder with the existed name should be displayed. 
        */
-      IDE.dialogs().warning().checkIsOpened();
-      IDE.dialogs().warning().clickOk();
+      IDE.WARNING_DIALOG.checkIsOpened();
+      IDE.WARNING_DIALOG.clickOk();
 
       /*
        * After closing error message dialog the toolbar button "Paste" and topmenu command "Edit->Paste Items" 
        * should be still enabled.
        */
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
 
       /*
        * 7. Select "test 2" item and then select "Edit->Paste Items" topmenu command.
        */
-      IDE.navigator().selectItem(WS_URL + "folder 2/");
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.NAVIGATION.selectItem(WS_URL + "folder 2/");
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       /*
        * Check, that file name stays the same (IDE-225 issue).
        */
-      assertEquals("file.groovy", IDE.editor().getTabTitle(0));
-      IDE.navigator().assertItemNotPresent(WS_URL + "folder 1/folder 2/");
+      assertEquals("file.groovy",IDE.EDITOR.getTabTitle(0));
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + "folder 1/folder 2/");
       checkItemsOnWebDav();
 
       /*
        * 10. Change content of opened file "file.groovy", 
        * save file, close file tab and open file "folder 2/folder 2/file.groovy".
        */
-      IDE.editor().typeTextIntoEditor(0, CHANGED_FILE_CONTENT);
+     IDE.EDITOR.typeTextIntoEditor(0, CHANGED_FILE_CONTENT);
       saveCurrentFile();
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
-      IDE.navigator().selectItem(WS_URL + "folder 2/folder 2/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + "folder 2/folder 2/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + "folder 2/folder 2/file.groovy", false);
-      IDE.editor().checkIsTabPresentInEditorTabset("file.groovy", true);
-      assertEquals(CHANGED_FILE_CONTENT + FILE_CONTENT, IDE.editor().getTextFromCodeEditor(0));
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + "folder 2/folder 2/file.groovy", false);
+     IDE.EDITOR.checkIsTabPresentInEditorTabset("file.groovy", true);
+      assertEquals(CHANGED_FILE_CONTENT + FILE_CONTENT,IDE.EDITOR.getTextFromCodeEditor(0));
 
-      IDE.navigator().assertItemPresent(WS_URL + "folder 1/");
-      IDE.navigator().assertItemPresent(WS_URL + "folder 2/");
-      IDE.navigator().assertItemPresent(WS_URL + "folder 2/folder 2/");
-      IDE.navigator().assertItemPresent(WS_URL + "folder 2/folder 2/file.groovy");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 1/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 2/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 2/folder 2/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 2/folder 2/file.groovy");
 
       /*
        * check there is no "folder 1/folder 2" in the tree
        */
-      IDE.navigator().assertItemNotPresent(WS_URL + "folder 1/folder 2/");
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + "folder 1/folder 2/");
 
       /*
        * close editor
        */
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
 
    /**

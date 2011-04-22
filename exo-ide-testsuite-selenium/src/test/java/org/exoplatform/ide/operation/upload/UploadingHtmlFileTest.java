@@ -71,22 +71,22 @@ public class UploadingHtmlFileTest extends BaseTest
    public void testUploadingHtml() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       
       uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.TEXT_HTML);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(HTML_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_NAME, false);
       checkCodeEditorOpened(0);
 
-      String text = IDE.editor().getTextFromCodeEditor(0);
+      String text =IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.length() > 0);
 
       String fileContent = getFileContent(FILE_PATH);
 
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       assertEquals("nt:resource", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
       assertEquals(MimeType.TEXT_HTML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
       

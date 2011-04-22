@@ -36,7 +36,7 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
    {
       waitForRootElement();
       
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "var a;\n \n function a() {\n}");
@@ -46,10 +46,10 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.SLEEP);
             
-      IDE.codeAssistant().openForm();
+      IDE.CODEASSISTANT.openForm();
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.codeAssistant().checkElementPresent("a");
+      IDE.CODEASSISTANT.checkElementPresent("a");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -58,13 +58,13 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       
-      IDE.codeAssistant().openForm();
+      IDE.CODEASSISTANT.openForm();
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.codeAssistant().checkElementPresent("a()");
+      IDE.CODEASSISTANT.checkElementPresent("a()");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
       
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
 }

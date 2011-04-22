@@ -62,7 +62,7 @@ public class RestServiceUtils
     */
    public static void validate(String fileName, int numberOfRecord) throws Exception
    {
-      ide.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
+      IDE.getInstance().MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isElementPresent(Locators.OperationForm.OUTPUT_TAB_LOCATOR));
       
@@ -79,7 +79,7 @@ public class RestServiceUtils
     */
    public static void deploy(String filePath, int numberOfRecord) throws Exception
    {
-      ide.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.getInstance().MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
       
       assertTrue(selenium.isElementPresent(Locators.OperationForm.OUTPUT_TAB_LOCATOR));

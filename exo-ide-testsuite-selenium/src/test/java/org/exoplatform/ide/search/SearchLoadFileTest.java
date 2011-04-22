@@ -81,14 +81,14 @@ public class SearchLoadFileTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
       saveAsByTopMenu(restFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
-      IDE.editor().closeTab(0);
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
+     IDE.EDITOR.closeTab(0);
+      IDE.NAVIGATION.selectRootOfWorkspace();
 
       performSearch("/", "", "");
       Thread.sleep(TestConstants.SLEEP);
@@ -96,65 +96,65 @@ public class SearchLoadFileTest extends BaseTest
 
       openFileFromSearchResultsWithCodeEditor(restFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(restFileName, IDE.editor().getTabTitle(0));
+      assertEquals(restFileName,IDE.EDITOR.getTabTitle(0));
      
-      IDE.toolbar().assertButtonEnabled("Delete Item(s)...", false);
-      IDE.toolbar().assertButtonEnabled("Cut Selected Item(s)", false);
-      IDE.toolbar().assertButtonEnabled("Copy Selected Item(s)", false);
-      IDE.toolbar().assertButtonEnabled("Paste Selected Item(s)", false);
-      IDE.toolbar().assertButtonEnabled("Refresh Selected Folder", false);
+      IDE.TOOLBAR.assertButtonEnabled("Delete Item(s)...", false);
+      IDE.TOOLBAR.assertButtonEnabled("Cut Selected Item(s)", false);
+      IDE.TOOLBAR.assertButtonEnabled("Copy Selected Item(s)", false);
+      IDE.TOOLBAR.assertButtonEnabled("Paste Selected Item(s)", false);
+      IDE.TOOLBAR.assertButtonEnabled("Refresh Selected Folder", false);
 
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
 
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
       //TODO check selected
 
-      IDE.toolbar().assertButtonEnabled("Delete Item(s)...", true);
-      IDE.toolbar().assertButtonEnabled("Cut Selected Item(s)", true);
-      IDE.toolbar().assertButtonEnabled("Copy Selected Item(s)", true);
-      IDE.toolbar().assertButtonEnabled("Paste Selected Item(s)", false);
-      IDE.toolbar().assertButtonEnabled("Refresh Selected Folder", true);
+      IDE.TOOLBAR.assertButtonEnabled("Delete Item(s)...", true);
+      IDE.TOOLBAR.assertButtonEnabled("Cut Selected Item(s)", true);
+      IDE.TOOLBAR.assertButtonEnabled("Copy Selected Item(s)", true);
+      IDE.TOOLBAR.assertButtonEnabled("Paste Selected Item(s)", false);
+      IDE.TOOLBAR.assertButtonEnabled("Refresh Selected Folder", true);
 
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.editor().deleteLinesInEditor(7);
+     IDE.EDITOR.deleteLinesInEditor(7);
       
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, gadgetFileContent);
       saveAsByTopMenu(gadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
-      IDE.editor().closeTab(0);
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
+     IDE.EDITOR.closeTab(0);
+      IDE.NAVIGATION.selectRootOfWorkspace();
 
       performSearch("/", "", "");
       Thread.sleep(TestConstants.SLEEP);
@@ -162,60 +162,60 @@ public class SearchLoadFileTest extends BaseTest
 
       openFileFromSearchResultsWithCodeEditor(gadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(gadgetFileName, IDE.editor().getTabTitle(0));
+      assertEquals(gadgetFileName,IDE.EDITOR.getTabTitle(0));
 
-      IDE.toolbar().assertButtonEnabled("Delete Item(s)...", false);
-      IDE.toolbar().assertButtonEnabled("Cut Selected Item(s)", false);
-      IDE.toolbar().assertButtonEnabled("Copy Selected Item(s)", false);
-      IDE.toolbar().assertButtonEnabled("Paste Selected Item(s)", false);
-      IDE.toolbar().assertButtonEnabled("Refresh Selected Folder", false);
+      IDE.TOOLBAR.assertButtonEnabled("Delete Item(s)...", false);
+      IDE.TOOLBAR.assertButtonEnabled("Cut Selected Item(s)", false);
+      IDE.TOOLBAR.assertButtonEnabled("Copy Selected Item(s)", false);
+      IDE.TOOLBAR.assertButtonEnabled("Paste Selected Item(s)", false);
+      IDE.TOOLBAR.assertButtonEnabled("Refresh Selected Folder", false);
 
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
 
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
       //TODO check selected
 
-      IDE.toolbar().assertButtonEnabled("Delete Item(s)...", true);
-      IDE.toolbar().assertButtonEnabled("Cut Selected Item(s)", true);
-      IDE.toolbar().assertButtonEnabled("Copy Selected Item(s)", true);
-      IDE.toolbar().assertButtonEnabled("Paste Selected Item(s)", false);
-      IDE.toolbar().assertButtonEnabled("Refresh Selected Folder", true);
+      IDE.TOOLBAR.assertButtonEnabled("Delete Item(s)...", true);
+      IDE.TOOLBAR.assertButtonEnabled("Cut Selected Item(s)", true);
+      IDE.TOOLBAR.assertButtonEnabled("Copy Selected Item(s)", true);
+      IDE.TOOLBAR.assertButtonEnabled("Paste Selected Item(s)", false);
+      IDE.TOOLBAR.assertButtonEnabled("Refresh Selected Folder", true);
 
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
 
       selenium.controlKeyDown();
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/" + restFileName);
       selenium.controlKeyUp();
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.navigator().assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
-      IDE.navigator().assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + gadgetFileContent);
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + gadgetFileContent);
 
       Thread.sleep(TestConstants.SLEEP);
    }

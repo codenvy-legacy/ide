@@ -80,12 +80,12 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
    public void testComplexMediaType() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-       IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       //Open REST Service file:
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
       //Call the "Run->Launch REST Service" topmenu command
@@ -227,7 +227,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
 
       assertTrue(mess.contains("{\"value\" : \"value4\"}"));
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
    
    /**

@@ -51,11 +51,11 @@ public class MazimizeRestoreTest extends BaseTest
       //prepare file
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.perspective().maximizePanel(Perspective.Panel.NAVIGATION);
-      IDE.perspective().checkPanelIsMaximized(Perspective.Panel.NAVIGATION, true);
+      IDE.PERSPECTIVE.maximizePanel(Perspective.Panel.NAVIGATION);
+      IDE.PERSPECTIVE.checkPanelIsMaximized(Perspective.Panel.NAVIGATION, true);
       
-      IDE.perspective().restorePanel(Perspective.Panel.NAVIGATION);
-      IDE.perspective().checkPanelIsMaximized(Perspective.Panel.NAVIGATION, false);
+      IDE.PERSPECTIVE.restorePanel(Perspective.Panel.NAVIGATION);
+      IDE.PERSPECTIVE.checkPanelIsMaximized(Perspective.Panel.NAVIGATION, false);
    }
 
 }

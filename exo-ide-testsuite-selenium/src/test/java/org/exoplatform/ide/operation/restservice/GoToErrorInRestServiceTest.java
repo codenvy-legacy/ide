@@ -102,7 +102,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       openAndValidateRestService();
       //---- 1 -----------------
       //close tab
-      IDE.editor().tryCloseTabWithNonSaving(0);
+     IDE.EDITOR.tryCloseTabWithNonSaving(0);
 
       //---- 2 -----------------
       //click on validation message to go to error
@@ -110,13 +110,13 @@ public class GoToErrorInRestServiceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //file must be opened and cursor must stay on error
-      assertEquals(FILE_WITH_ERROR, IDE.editor().getTabTitle(0));
+      assertEquals(FILE_WITH_ERROR,IDE.EDITOR.getTabTitle(0));
 
       assertEquals("3 : 9", getCursorPositionUsingStatusBar());
 
       //---- 3 -----------------
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
 
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
    }
@@ -132,7 +132,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       openAndValidateRestService();
       //---- 1 -----------------
       //open another tab
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
 
       //---- 2 -----------------
       //click on validation message to go to error
@@ -140,16 +140,16 @@ public class GoToErrorInRestServiceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //check, tab with rest service must be opened
-      IDE.editor().checkEditorTabSelected(FILE_WITH_ERROR, true);
+     IDE.EDITOR.checkEditorTabSelected(FILE_WITH_ERROR, true);
 
       assertEquals("3 : 9", getCursorPositionUsingStatusBar());
 
       //---- 3 -----------------
       //close file
-      IDE.editor().tryCloseTabWithNonSaving(1);
+     IDE.EDITOR.tryCloseTabWithNonSaving(1);
 
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
 
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
    }
@@ -165,12 +165,12 @@ public class GoToErrorInRestServiceTest extends BaseTest
       openAndValidateRestService();
       //---- 1 -----------------
       //close tab
-      IDE.editor().tryCloseTabWithNonSaving(0);
+     IDE.EDITOR.tryCloseTabWithNonSaving(0);
 
       //---- 2 -----------------
       //delete file
-      IDE.navigator().assertItemPresent(WS_URL + FILE_WITH_ERROR);
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FILE_WITH_ERROR);
+      IDE.NAVIGATION.deleteSelectedItems();
 
       //---- 3 -----------------
       //click on validation message to go to error
@@ -189,7 +189,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 5 -----------------
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
 
       assertEquals("1 : 1", getCursorPositionUsingStatusBar());
    }
@@ -204,17 +204,17 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 1 -----------------
       //open file    
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR_FOR_CHANGING, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR_FOR_CHANGING, false);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 2 -----------------
       //press validate button
-      IDE.toolbar().runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
       //check, validation fails
@@ -228,7 +228,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //fix validation error
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       //click on editor
 
       //TODO******************fix****************************
@@ -249,7 +249,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //---- 4 -----------------
       //press validate button
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
 
       //check, validation fails
       validationMsg =
@@ -280,7 +280,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       //click on editor
 
       //TODO******************fix****************************
@@ -297,10 +297,10 @@ public class GoToErrorInRestServiceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //type some text
-      IDE.editor().typeTextIntoEditor(0, "public void TestClass(){}");
+     IDE.EDITOR.typeTextIntoEditor(0, "public void TestClass(){}");
 
       //go to middle
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       //select all
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
@@ -324,17 +324,17 @@ public class GoToErrorInRestServiceTest extends BaseTest
    {
       //---- 1 -----------------
       //open file
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR, false);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 2 -----------------
       //press validate button
-      IDE.toolbar().runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
       //check, validation fails
@@ -347,8 +347,8 @@ public class GoToErrorInRestServiceTest extends BaseTest
    public void afterMethod() throws Exception
    {
       //check, if opened, close two files
-      IDE.editor().tryCloseTabWithNonSaving(0);
-      IDE.editor().tryCloseTabWithNonSaving(0);
+     IDE.EDITOR.tryCloseTabWithNonSaving(0);
+     IDE.EDITOR.tryCloseTabWithNonSaving(0);
    }
 
    @AfterClass

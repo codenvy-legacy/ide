@@ -73,84 +73,84 @@ public class GroovyLocalVariableTest extends BaseTest
    public void testLocalVariable() throws Exception
    {
       waitForRootElement();
-      IDE.navigator().selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       moveCursorDown(15);
 
-      IDE.codeAssistant().openForm();
+      IDE.CODEASSISTANT.openForm();
 
-      IDE.codeAssistant().checkElementPresent("hello(String):String");
-      IDE.codeAssistant().checkElementPresent("getInt(Double):Integer");
-      IDE.codeAssistant().checkElementNotPresent("s:String");
-      IDE.codeAssistant().closeForm();
+      IDE.CODEASSISTANT.checkElementPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
+      IDE.CODEASSISTANT.checkElementNotPresent("s:String");
+      IDE.CODEASSISTANT.closeForm();
       
       moveCursorDown(5);
-      IDE.codeAssistant().openForm();
-      IDE.codeAssistant().checkElementPresent("hello(String):String");
-      IDE.codeAssistant().checkElementPresent("getInt(Double):Integer");
-      IDE.codeAssistant().checkElementPresent("s:String");
-      IDE.codeAssistant().checkElementPresent("name:String");
-      IDE.codeAssistant().checkElementPresent("e:Exception");
-      IDE.codeAssistant().checkElementNotPresent("stream:PrintStream");
-      IDE.codeAssistant().checkElementNotPresent("d");
-      IDE.codeAssistant().checkElementNotPresent("ii");
-      IDE.codeAssistant().closeForm();
+      IDE.CODEASSISTANT.openForm();
+      IDE.CODEASSISTANT.checkElementPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
+      IDE.CODEASSISTANT.checkElementPresent("s:String");
+      IDE.CODEASSISTANT.checkElementPresent("name:String");
+      IDE.CODEASSISTANT.checkElementPresent("e:Exception");
+      IDE.CODEASSISTANT.checkElementNotPresent("stream:PrintStream");
+      IDE.CODEASSISTANT.checkElementNotPresent("d");
+      IDE.CODEASSISTANT.checkElementNotPresent("ii");
+      IDE.CODEASSISTANT.closeForm();
 
       moveCursorDown(2);
-      IDE.codeAssistant().openForm();
-      IDE.codeAssistant().checkElementPresent("hello(String):String");
-      IDE.codeAssistant().checkElementPresent("getInt(Double):Integer");
-      IDE.codeAssistant().checkElementPresent("s:String");
-      IDE.codeAssistant().checkElementPresent("name:String");
-      IDE.codeAssistant().checkElementPresent("e:Exception");
-      IDE.codeAssistant().checkElementPresent("stream:PrintStream");
-      IDE.codeAssistant().checkElementNotPresent("d:Double");
-      IDE.codeAssistant().checkElementNotPresent("ii:Integer");
-      IDE.codeAssistant().closeForm();
+      IDE.CODEASSISTANT.openForm();
+      IDE.CODEASSISTANT.checkElementPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
+      IDE.CODEASSISTANT.checkElementPresent("s:String");
+      IDE.CODEASSISTANT.checkElementPresent("name:String");
+      IDE.CODEASSISTANT.checkElementPresent("e:Exception");
+      IDE.CODEASSISTANT.checkElementPresent("stream:PrintStream");
+      IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
+      IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
+      IDE.CODEASSISTANT.closeForm();
 
       moveCursorDown(7);
-      IDE.codeAssistant().openForm();
-      IDE.codeAssistant().checkElementPresent("hello(String):String");
-      IDE.codeAssistant().checkElementPresent("getInt(Double):Integer");
-      IDE.codeAssistant().checkElementPresent("s:String");
-      IDE.codeAssistant().checkElementNotPresent("name:String");
-      IDE.codeAssistant().checkElementNotPresent("e:Exception");
-      IDE.codeAssistant().checkElementNotPresent("stream:PrintStream");
-      IDE.codeAssistant().checkElementPresent("d:Double");
-      IDE.codeAssistant().checkElementPresent("ii:Integer");
-      IDE.codeAssistant().closeForm();
+      IDE.CODEASSISTANT.openForm();
+      IDE.CODEASSISTANT.checkElementPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
+      IDE.CODEASSISTANT.checkElementPresent("s:String");
+      IDE.CODEASSISTANT.checkElementNotPresent("name:String");
+      IDE.CODEASSISTANT.checkElementNotPresent("e:Exception");
+      IDE.CODEASSISTANT.checkElementNotPresent("stream:PrintStream");
+      IDE.CODEASSISTANT.checkElementPresent("d:Double");
+      IDE.CODEASSISTANT.checkElementPresent("ii:Integer");
+      IDE.CODEASSISTANT.closeForm();
 
       moveCursorDown(2);
-      IDE.codeAssistant().openForm();
+      IDE.CODEASSISTANT.openForm();
 
-      IDE.codeAssistant().checkElementPresent("hello(String):String");
-      IDE.codeAssistant().checkElementPresent("getInt(Double):Integer");
-      IDE.codeAssistant().checkElementNotPresent("s:String");
-      IDE.codeAssistant().checkElementNotPresent("name:String");
-      IDE.codeAssistant().checkElementNotPresent("e:Exception");
-      IDE.codeAssistant().checkElementNotPresent("stream:PrintStream");
-      IDE.codeAssistant().checkElementNotPresent("d:Double");
-      IDE.codeAssistant().checkElementNotPresent("ii:Integer");
-      IDE.codeAssistant().closeForm();
+      IDE.CODEASSISTANT.checkElementPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
+      IDE.CODEASSISTANT.checkElementNotPresent("s:String");
+      IDE.CODEASSISTANT.checkElementNotPresent("name:String");
+      IDE.CODEASSISTANT.checkElementNotPresent("e:Exception");
+      IDE.CODEASSISTANT.checkElementNotPresent("stream:PrintStream");
+      IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
+      IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
+      IDE.CODEASSISTANT.closeForm();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
 
-      IDE.codeAssistant().openForm();
-      IDE.codeAssistant().checkElementNotPresent("hello(String):String");
-      IDE.codeAssistant().checkElementNotPresent("getInt(Double):Integer");
-      IDE.codeAssistant().checkElementNotPresent("s:String");
-      IDE.codeAssistant().checkElementNotPresent("name:String");
-      IDE.codeAssistant().checkElementNotPresent("e:Exception");
-      IDE.codeAssistant().checkElementNotPresent("stream:PrintStream");
-      IDE.codeAssistant().checkElementNotPresent("d:Double");
-      IDE.codeAssistant().checkElementNotPresent("ii:Integer");
-      IDE.codeAssistant().closeForm();
-      IDE.editor().closeTab(0);
+      IDE.CODEASSISTANT.openForm();
+      IDE.CODEASSISTANT.checkElementNotPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementNotPresent("getInt(Double):Integer");
+      IDE.CODEASSISTANT.checkElementNotPresent("s:String");
+      IDE.CODEASSISTANT.checkElementNotPresent("name:String");
+      IDE.CODEASSISTANT.checkElementNotPresent("e:Exception");
+      IDE.CODEASSISTANT.checkElementNotPresent("stream:PrintStream");
+      IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
+      IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
+      IDE.CODEASSISTANT.closeForm();
+     IDE.EDITOR.closeTab(0);
    }
 
    /**

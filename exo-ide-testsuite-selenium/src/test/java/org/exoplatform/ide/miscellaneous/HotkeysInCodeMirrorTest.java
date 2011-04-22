@@ -61,14 +61,14 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       waitForRootElement();
       //----- 1 ------------
       //Create new text file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       //type text to editor
       final String text = "Text File";
-      IDE.editor().typeTextIntoEditor(0, text);
+     IDE.EDITOR.typeTextIntoEditor(0, text);
       //----- 2 ------------
       //Press Ctrl+F
       //Find-replace form appeared
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
       selenium.controlKeyDown();
       selenium.keyDown("//body[@class='editbox']", "F");
@@ -83,17 +83,17 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
 
       //----- 3 ------------
       //check Ctrl+D
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.controlKeyDown();
       selenium.keyDown("//body[@class='editbox']", "D");
       selenium.keyUp("//body[@class='editbox']", "D");
       selenium.controlKeyUp();
       IDE.selectMainFrame();
-      assertEquals("", IDE.editor().getTextFromCodeEditor(0));
+      assertEquals("",IDE.EDITOR.getTextFromCodeEditor(0));
 
       //----- 4 ------------
       //check Ctrl+L
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.controlKeyDown();
       selenium.keyDown("//body[@class='editbox']", "L");
       selenium.keyUp("//body[@class='editbox']", "L");
@@ -105,7 +105,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       closeForm(GO_TO_LINE_FORM_LOCATOR);
       IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
@@ -114,16 +114,16 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       refresh();
       //----- 1 ------------
       //Create new text file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       //type text to editor
 
       //----- 10 ------------
       //check Ctrl+C, Ctrl+V
 
       final String textToEdit = "text to edit";
-      IDE.editor().typeTextIntoEditor(0, textToEdit);
+     IDE.EDITOR.typeTextIntoEditor(0, textToEdit);
 
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
 
       //select all text
@@ -182,7 +182,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
 
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
@@ -191,7 +191,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       refresh();
       //----- 1 -------
       //Create new text file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
 
       final String textToRevert = "a";
 
@@ -204,7 +204,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       assertEquals(textToRevert + "5", selenium.getText("//body[@class='editbox']"));
       IDE.selectMainFrame();
       //press Ctrl+Z
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
 
       //----- 4 -------
@@ -219,7 +219,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
 
       //----- 5 -------
       //press Ctrl+Y
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.controlKeyDown();
       selenium.keyDown("//body[@class='editbox']", "89");
       selenium.keyUp("//body[@class='editbox']", "89");
@@ -228,7 +228,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
 
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    /**
@@ -243,9 +243,9 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       refresh();
       //----- 14 ------------
       //Create JavaScript file and press Ctrl+Space
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
 
-      IDE.editor().runHotkeyWithinEditor(0, true, false, 32);
+     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, 32);
 
       //check autocomplete form appears
       assertTrue(selenium.isElementPresent("//td/div[@class='gwt-Label']"));
@@ -255,7 +255,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selenium.keyUp("//", "13");
 
       //close file
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
 
    }
 

@@ -107,16 +107,16 @@ public class SaveFileAsTemplateTest extends BaseTest
       //-------- 1 ----------
       //open file with text
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       //--------- 2 --------
       //Click on "File->Save As Template" top menu item, 
       //set "Name" field on "test REST template", 
       //"Description" field on "test REST Service template description", and then click on "Save" button.
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       // check "Save file as template" dialog window
       TemplateUtils.checkSaveAsTemplateWindow(selenium);
@@ -156,7 +156,7 @@ public class SaveFileAsTemplateTest extends BaseTest
       
       //------------ 3 ----------
       //Click on "New->From Template" button and then click on "test groovy template" item.
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       
       // check create "Create file dialog window"
@@ -176,13 +176,13 @@ public class SaveFileAsTemplateTest extends BaseTest
       //there should be new tab with title "Test Groovy File.groovy", 
       //first line "// test groovy file template" in content and with "Groovy" 
       //highlighting opened in the Content Panel.
-      assertEquals(REST_SERVICE_FILE_NAME + " *", IDE.editor().getTabTitle(1));
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).startsWith(TEXT));
+      assertEquals(REST_SERVICE_FILE_NAME + " *",IDE.EDITOR.getTabTitle(1));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(TEXT));
       
       //------------ 5 ----------
       //Close files "Test File.groovy" and "Test Groovy File.groovy".
-      IDE.editor().closeUnsavedFileAndDoNotSave(1);
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
+     IDE.EDITOR.closeTab(0);
    }
    
    private void checkSaveButtonEnabled(boolean enabled)

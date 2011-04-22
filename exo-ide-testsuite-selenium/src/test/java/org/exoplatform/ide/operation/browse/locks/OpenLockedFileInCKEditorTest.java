@@ -89,18 +89,18 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
    public void testOpenLockedFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       //----- 1 ----------
       //open file
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
       //----- 2 ----------
       //lock file
-      IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
       checkFileLocking(FILE_NAME, false);
 
       //----- 3 ----------
@@ -110,33 +110,33 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       
       //----- 4 ----------
       //check is file locked
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       //Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
       
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
       
       checkFileLocking(FILE_NAME, true);
       
       //----- 5 ----------
       //close file
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
       //----- 6 ----------
       //open file in CK editor and check is file locked
       openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
       checkFileLocking(FILE_NAME, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
 
-      IDE.editor().typeTextIntoEditor(0, "Test editor");
+     IDE.EDITOR.typeTextIntoEditor(0, "Test editor");
       
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
       assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header[contains(text(), 'Close file')]"));      
    }

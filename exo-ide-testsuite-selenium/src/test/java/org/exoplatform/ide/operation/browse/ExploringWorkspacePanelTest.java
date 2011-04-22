@@ -79,72 +79,72 @@ public class ExploringWorkspacePanelTest extends BaseTest
       waitForRootElement();
       createFolder(FOLDER_1);
       createFolder(FOLDER_1_1);
-      IDE.navigator().selectItem(FOLDER_1_URL);
+      IDE.NAVIGATION.selectItem(FOLDER_1_URL);
       createFolder(FOLDER_1_2);
 
-      IDE.navigator().assertItemPresent(FOLDER_1_URL);
-      IDE.navigator().assertItemPresent(FOLDER_1_1_URL);
-      IDE.navigator().assertItemPresent(FOLDER_1_2_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_1_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_1_1_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_1_2_URL);
 
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
       createFolder(FOLDER_2);
       createFolder(FOLDER_2_1);
-      IDE.navigator().selectItem(FOLDER_2_URL);
+      IDE.NAVIGATION.selectItem(FOLDER_2_URL);
       createFolder(FOLDER_2_2);
       //Sub folders of folder "folder-1" are hidden
-      IDE.navigator().assertItemPresent(FOLDER_1_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_1_1_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_1_2_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_1_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_1_1_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_1_2_URL);
 
-      IDE.navigator().assertItemPresent(FOLDER_2_URL);
-      IDE.navigator().assertItemPresent(FOLDER_2_1_URL);
-      IDE.navigator().assertItemPresent(FOLDER_2_2_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_2_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_2_1_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_2_2_URL);
 
       //Close folder "folder-2"
-      IDE.navigator().clickOpenIconOfFolder(FOLDER_2_URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER_2_URL);
       waitForRootElement();
-      IDE.navigator().assertItemPresent(FOLDER_1_URL);
-      IDE.navigator().assertItemPresent(FOLDER_2_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_1_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_2_URL);
       //Sub folders of folder "folder-2" are hidden
-      IDE.navigator().assertItemNotPresent(FOLDER_2_1_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_2_1_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_2_2_URL);
       
       //Open "folder-1"
-      IDE.navigator().clickOpenIconOfFolder(FOLDER_1_URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER_1_URL);
       waitForRootElement();
-      IDE.navigator().assertItemPresent(FOLDER_1_URL);
-      IDE.navigator().assertItemPresent(FOLDER_1_1_URL);
-      IDE.navigator().assertItemPresent(FOLDER_1_2_URL);
-      IDE.navigator().assertItemPresent(FOLDER_2_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_1_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_1_1_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_1_2_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_2_URL);
       //Sub folders of folder "folder-2" are hidden 
-      IDE.navigator().assertItemNotPresent(FOLDER_2_1_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_2_1_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_2_2_URL);
       waitForRootElement();
 
       //Close workspace item
-      IDE.navigator().clickOpenIconOfFolder(WS_URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL);
       waitForRootElement();
       //All sub folders hide
-      IDE.navigator().assertItemNotPresent(FOLDER_1_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_1_1_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_1_2_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_2_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_2_1_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_1_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_1_1_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_1_2_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_2_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_2_1_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_2_2_URL);
 
       //Open workspace item
-      IDE.navigator().clickOpenIconOfFolder(WS_URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL);
       waitForRootElement();
-      IDE.navigator().assertItemPresent(FOLDER_1_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_1_1_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_1_2_URL);
-      IDE.navigator().assertItemPresent(FOLDER_2_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_2_1_URL);
-      IDE.navigator().assertItemNotPresent(FOLDER_2_2_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_1_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_1_1_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_1_2_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_2_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_2_1_URL);
+      IDE.NAVIGATION.assertItemNotPresent(FOLDER_2_2_URL);
       
-      IDE.navigator().selectItem(FOLDER_1_URL);
-      IDE.navigator().deleteSelectedItems();
-      IDE.navigator().selectItem(FOLDER_2_URL);
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.selectItem(FOLDER_1_URL);
+      IDE.NAVIGATION.deleteSelectedItems();
+      IDE.NAVIGATION.selectItem(FOLDER_2_URL);
+      IDE.NAVIGATION.deleteSelectedItems();
    }
 }

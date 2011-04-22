@@ -108,37 +108,37 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
    public void testOpenAndSaveXmlFileWithNonLatinName() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP*2);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
       
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       
-      assertEquals("Untitled file.xml *", IDE.editor().getTabTitle(0));
+      assertEquals("Untitled file.xml *",IDE.EDITOR.getTabTitle(0));
       
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
       
-      IDE.editor().deleteFileContent();
-      IDE.editor().typeTextIntoEditor(0, XML_CONTENT);
+     IDE.EDITOR.deleteFileContent();
+     IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
       
       saveAsUsingToolbarButton(FILE_NAME);
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      IDE.editor().deleteFileContent();
-      IDE.editor().typeTextIntoEditor(0, XML_CONTENT_2);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+     IDE.EDITOR.deleteFileContent();
+     IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT_2);
      
       //Save command enabled
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, true);
       //File name ends with *
-      assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
+      assertEquals(FILE_NAME + " *",IDE.EDITOR.getTabTitle(0));
       
       saveCurrentFile();
       
       //File name doesn't end with *
-      assertEquals(FILE_NAME, IDE.editor().getTabTitle(0));
+      assertEquals(FILE_NAME,IDE.EDITOR.getTabTitle(0));
       
       //Save command disabled
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
    }
 
 }

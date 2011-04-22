@@ -21,8 +21,6 @@ package org.exoplatform.ide.core;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.thoughtworks.selenium.Selenium;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -30,7 +28,7 @@ import com.thoughtworks.selenium.Selenium;
  * @version $
  */
 
-public class Perspective
+public class Perspective extends AbstractTestModule
 {
 
    public interface Panel
@@ -46,13 +44,6 @@ public class Perspective
 
    }
 
-   private Selenium selenium;
-
-   public Perspective(Selenium selenium)
-   {
-      this.selenium = selenium;
-   }
-
    /**
     * Maximize panel with specified ID
     * 
@@ -61,38 +52,38 @@ public class Perspective
    public void maximizePanel(String panelId) throws Exception
    {
       String locator = "//div[@id='" + panelId + "-maximize']";
-      selenium.click(locator);
+      selenium().click(locator);
       String panelLocator = "//div[@panel-id='" + panelId + "']";
-      selenium.waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + panelLocator
+      selenium().waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + panelLocator
          + "\"); value.getAttribute('panel-maximized') == 'true' ", "5000");
    }
 
    public void restorePanel(String panelId) throws Exception
    {
       String locator = "//div[@id='" + panelId + "-restore']";
-      selenium.click(locator);
+      selenium().click(locator);
       String panelLocator = "//div[@panel-id='" + panelId + "']";
-      selenium.waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + panelLocator
+      selenium().waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + panelLocator
          + "\"); value.getAttribute('panel-maximized') == 'false' ", "5000");
    }
 
    public void checkPanelIsMaximized(String panelId, boolean isMaximized)
    {
       String panelLocator = "//div[@panel-id='" + panelId + "' and @panel-maximized='" + isMaximized + "']";
-      selenium.isVisible(panelLocator);
+      selenium().isVisible(panelLocator);
 
       String maximizeButtonLocator = "//div[@id='" + panelId + "-maximize']";
       String restoreButtonLocator = "//div[@id='" + panelId + "-restore']";
 
       if (isMaximized)
       {
-         assertFalse(selenium.isVisible(maximizeButtonLocator));
-         assertTrue(selenium.isVisible(restoreButtonLocator));
+         assertFalse(selenium().isVisible(maximizeButtonLocator));
+         assertTrue(selenium().isVisible(restoreButtonLocator));
       }
       else
       {
-         assertTrue(selenium.isVisible(maximizeButtonLocator));
-         assertFalse(selenium.isVisible(restoreButtonLocator));
+         assertTrue(selenium().isVisible(maximizeButtonLocator));
+         assertFalse(selenium().isVisible(restoreButtonLocator));
       }
    }
 

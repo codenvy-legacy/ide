@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.TestConstants;
 
@@ -29,28 +30,53 @@ import org.exoplatform.ide.TestConstants;
  * @version $
  */
 
-public class Preview extends AbstractTestModule
+public class WarningDialog extends AbstractTestModule
 {
 
-   public void checkIsOpened(boolean isOpened)
+   public void checkIsOpened()
    {
-      String locator = "//div[@view-id='idePreviewHTMLView']";
-      assertEquals(isOpened, selenium().isElementPresent(locator));
+      assertTrue(selenium().isElementPresent("exoWarningDialog"));
+      assertTrue(selenium().isElementPresent("exoWarningDialogOkButton"));
    }
 
-   public void selectIFrame(String iFrameURL)
+   public void checkIsOpened(String message)
    {
-      selenium().selectFrame("//iframe[@src='" + iFrameURL + "']");
+      checkIsOpened();
+      assertTrue(selenium().isTextPresent(message));
    }
 
-   public void close() throws Exception
+   public boolean isDialogOpened()
    {
-      String locator =
-         "//div[@panel-id='operation']//table[@class='gwt-DecoratedTabBar']//div[@role='tab']//div[@button-name='close-tab' and @tab-title='Preview']";
-      selenium().mouseOver(locator);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      fail();
+      return false;
+   }
+   
+   public boolean isDialogOpened(String message) {
+      fail();
+      return false;
+   }
 
-      selenium().click(locator);
+   public void clickOk() throws Exception
+   {
+      selenium().click("//div[@id='exoWarningDialog']//div[@id='exoWarningDialogOkButton']");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+
+   public void clickYes() throws Exception
+   {
+      fail();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+
+   public void clickNo() throws Exception
+   {
+      fail();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+
+   public void clickCancel() throws Exception
+   {
+      fail();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 

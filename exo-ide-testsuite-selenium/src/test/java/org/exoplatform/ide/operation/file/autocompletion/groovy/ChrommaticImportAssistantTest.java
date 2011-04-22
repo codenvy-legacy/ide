@@ -73,9 +73,9 @@ public class ChrommaticImportAssistantTest extends BaseTest
    public void testChrommaticImportAssistant() throws Exception
    {
       waitForRootElement();
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/"+FILE_NAME, false);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/"+FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);
 
       selenium.click("//div[@class='CodeMirror-line-numbers']/div[contains(text(), '2')]");
@@ -84,7 +84,7 @@ public class ChrommaticImportAssistantTest extends BaseTest
       selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
    }
 
    private String getErrorCorrectionListItemLocator(String packageName)
@@ -95,7 +95,7 @@ public class ChrommaticImportAssistantTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      IDE.editor().closeFileTabIgnoreChanges(0);
+     IDE.EDITOR.closeFileTabIgnoreChanges(0);
 
       try
       {

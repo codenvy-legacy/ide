@@ -19,15 +19,17 @@
 package org.exoplatform.ide;
 
 import org.exoplatform.ide.core.CodeAssistant;
-import org.exoplatform.ide.core.Dialogs;
 import org.exoplatform.ide.core.Editor;
+import org.exoplatform.ide.core.ErrorDialog;
+import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Menu;
-import org.exoplatform.ide.core.Navigator;
+import org.exoplatform.ide.core.Navigation;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.core.SaveAs;
 import org.exoplatform.ide.core.Toolbar;
+import org.exoplatform.ide.core.WarningDialog;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -44,102 +46,47 @@ public class IDE
 
    private Selenium selenium;
 
-   private Menu menu;
+   private static IDE instance;
 
-   private Toolbar toolbar;
-
-   private Editor editor;
-
-   private Outline outline;
-
-   private Dialogs dialogs;
-
-   private Navigator navigator;
-
-   private Perspective perspective;
-
-   private CodeAssistant codeAssistant;
-
-   private Preview preview;
+   public static IDE getInstance()
+   {
+      return instance;
+   }
 
    public IDE(Selenium selenium)
    {
       this.selenium = selenium;
-
-      menu = new Menu(selenium);
-      toolbar = new Toolbar(selenium);
-      editor = new Editor(selenium, this);
-      outline = new Outline(selenium);
-      dialogs = new Dialogs(selenium);
-      navigator = new Navigator(selenium, this);
-      perspective = new Perspective(selenium);
-      codeAssistant = new CodeAssistant(selenium, this);
-      preview = new Preview(selenium);
+      instance = this;
    }
 
-   public Menu menu()
+   public Selenium getSelenium()
    {
-      return menu;
+      return selenium;
    }
 
-   public Toolbar toolbar()
-   {
-      return toolbar;
-   }
+   public Menu MENU = new Menu();
+   
+   public Toolbar TOOLBAR = new Toolbar();
 
-   public Editor editor()
-   {
-      return editor;
-   }
+   public Editor EDITOR = new Editor();
+   
+   public Outline OUTLINE = new Outline();
+   
+   public Navigation NAVIGATION = new Navigation();
+   
+   public Perspective PERSPECTIVE = new Perspective();
+   
+   public CodeAssistant CODEASSISTANT = new CodeAssistant();
+   
+   public Preview PREVIEW = new Preview();
+   
+   public SaveAs SAVE_AS = new SaveAs();
+   
+   public WarningDialog WARNING_DIALOG = new WarningDialog();
 
-   /**
-    * Get the code outline.
-    * 
-    * @return {@link Outline}
-    */
-   public Outline outline()
-   {
-      return outline;
-   }
-
-   public Dialogs dialogs()
-   {
-      return dialogs;
-   }
-
-   /**
-    * Get the navigator element.
-    * 
-    * @return {@link Navigator}
-    */
-   public Navigator navigator()
-   {
-      return navigator;
-   }
-
-   public Perspective perspective()
-   {
-      return perspective;
-   }
-
-   /**
-    * Get code assistant 
-    * @return {@link CodeAssistant}
-    */
-   public CodeAssistant codeAssistant()
-   {
-      return codeAssistant;
-   }
-
-   public Preview preview()
-   {
-      return preview;
-   }
-
-   public SaveAs SaveAs()
-   {
-      return SaveAs.getInstance(selenium);
-   }
+   public ErrorDialog ERROR_DIALOG = new ErrorDialog();
+   
+   public InformationDialog INFORMATION_DIALOG = new InformationDialog();
 
    /**
     * Select main frame of IDE.
@@ -159,6 +106,18 @@ public class IDE
       {
          selenium.selectFrame("relative=top");
       }
+   }
+
+   private String workspaceURL;
+
+   public void setWorkspaceURL(String workspaceURL)
+   {
+      this.workspaceURL = workspaceURL;
+   }
+
+   public String getWorkspaceURL()
+   {
+      return workspaceURL;
    }
 
 }

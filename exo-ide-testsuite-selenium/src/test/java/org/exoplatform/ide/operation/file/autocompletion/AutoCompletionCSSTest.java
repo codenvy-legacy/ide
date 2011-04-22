@@ -40,17 +40,17 @@ public class AutoCompletionCSSTest extends BaseTest
    public void testPlainCSS() throws Exception
    {
       waitForRootElement();
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
 
       cssTest();
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
    public void testGoogleGadget() throws Exception
    {
       refresh();
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -79,7 +79,7 @@ public class AutoCompletionCSSTest extends BaseTest
 
       cssTest();
 
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    @Test
@@ -88,7 +88,7 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -110,7 +110,7 @@ public class AutoCompletionCSSTest extends BaseTest
 
       cssTest();
 
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    /**
@@ -119,12 +119,12 @@ public class AutoCompletionCSSTest extends BaseTest
    private void cssTest() throws Exception
    {
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
-      IDE.editor().typeTextIntoEditor(0, "main{");
-      IDE.editor().runHotkeyWithinEditor(0, false, false, KeyEvent.VK_ENTER);
+     IDE.EDITOR.typeTextIntoEditor(0, "main{");
+     IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_ENTER);
 
-      IDE.codeAssistant().openForm();
+      IDE.CODEASSISTANT.openForm();
 
-      IDE.codeAssistant().typeToInput("list-st");
+      IDE.CODEASSISTANT.typeToInput("list-st");
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
@@ -132,9 +132,9 @@ public class AutoCompletionCSSTest extends BaseTest
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE.codeAssistant().insertSelectedItem();
+      IDE.CODEASSISTANT.insertSelectedItem();
 
-      String text = IDE.editor().getTextFromCodeEditor(0);
+      String text =IDE.EDITOR.getTextFromCodeEditor(0);
 
       assertTrue(text.contains("list-style-type:"));
 

@@ -90,7 +90,7 @@ public class UploadingZippedFolderTest extends BaseTest
    public void testUploadingHtml() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       
       uploadZippedFolder(FILE_PATH);
@@ -104,29 +104,29 @@ public class UploadingZippedFolderTest extends BaseTest
       final String mineFile = "mine.xml";
       
       
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().assertItemPresent(URL + "/" + testFolder + "/");
-      IDE.navigator().assertItemPresent(URL + "/" + folder + "/");
-      IDE.navigator().assertItemPresent(URL + "/" + sampleFile);
-      IDE.navigator().assertItemPresent(URL + "/" + settingsFile);
+      IDE.NAVIGATION.assertItemPresent(URL + "/" + testFolder + "/");
+      IDE.NAVIGATION.assertItemPresent(URL + "/" + folder + "/");
+      IDE.NAVIGATION.assertItemPresent(URL + "/" + sampleFile);
+      IDE.NAVIGATION.assertItemPresent(URL + "/" + settingsFile);
       
-      IDE.navigator().selectItem(URL + "/" + folder + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().assertItemPresent(URL + "/" + folder + "/" + projectFolder + "/");
+      IDE.NAVIGATION.selectItem(URL + "/" + folder + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.assertItemPresent(URL + "/" + folder + "/" + projectFolder + "/");
       
-      IDE.navigator().selectItem(URL + "/" + testFolder + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().assertItemPresent(URL + "/" + testFolder + "/" + exoFolder + "/");      
-      IDE.navigator().assertItemPresent(URL + "/" + mineFile);
+      IDE.NAVIGATION.selectItem(URL + "/" + testFolder + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.assertItemPresent(URL + "/" + testFolder + "/" + exoFolder + "/");      
+      IDE.NAVIGATION.assertItemPresent(URL + "/" + mineFile);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(settingsFile, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(settingsFile, false);
       checkCodeEditorOpened(0);
 
-      String text = IDE.editor().getTextFromCodeEditor(0);
+      String text =IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.length() > 0);
 
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       assertEquals("nt:resource", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
       assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
       
@@ -134,7 +134,7 @@ public class UploadingZippedFolderTest extends BaseTest
    
    protected void uploadZippedFolder(String filePath) throws Exception
    {
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FOLDER);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FOLDER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/body/"));

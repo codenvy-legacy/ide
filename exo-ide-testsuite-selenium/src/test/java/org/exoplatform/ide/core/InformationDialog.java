@@ -16,7 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.core.view;
+package org.exoplatform.ide.core;
+
+import static org.junit.Assert.fail;
 
 /**
  * Created by The eXo Platform SAS .
@@ -25,7 +27,19 @@ package org.exoplatform.ide.core.view;
  * @version $
  */
 
-public class Workspace
+public class InformationDialog extends AbstractTestModule
 {
+   
+   public void checkIsOpened() {
+      fail();
+   }
+   
+   public void checkIsOpened(String message) {
+      fail();
+   }
+   
+   public void clickOk() {
+      fail();
+   }
 
 }

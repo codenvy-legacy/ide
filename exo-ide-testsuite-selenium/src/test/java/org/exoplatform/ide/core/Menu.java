@@ -23,8 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.TestConstants;
 
-import com.thoughtworks.selenium.Selenium;
-
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -33,15 +31,8 @@ import com.thoughtworks.selenium.Selenium;
  * @version $
  */
 
-public class Menu
+public class Menu extends AbstractTestModule
 {
-
-   private Selenium selenium;
-
-   public Menu(Selenium selenium)
-   {
-      this.selenium = selenium;
-   }
 
    /**
     * Open command from top menu.
@@ -51,21 +42,21 @@ public class Menu
     */
    public void runCommand(String topMenuName, String commandName) throws Exception
    {
-      selenium.mouseDown("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']");
+      selenium().mouseDown("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      selenium.click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']");
+      selenium().click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    public void runCommand(String menuName, String commandName, String subCommandName) throws Exception {
-      selenium.click("//td[@class='exo-menuBarItem' and text()='" + menuName + "']");
+      selenium().click("//td[@class='exo-menuBarItem' and text()='" + menuName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      selenium.click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']");
+      selenium().click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
-      selenium.click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + subCommandName + "']");
+      selenium().click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + subCommandName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
@@ -78,17 +69,17 @@ public class Menu
     */
    public void checkCommandVisibility(String topMenuName, String commandName, boolean visible) throws Exception
    {
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
+      selenium().mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
 
       if (visible)
       {
-         assertTrue(selenium.isElementPresent("//td/nobr[text()='" + commandName + "']"));
+         assertTrue(selenium().isElementPresent("//td/nobr[text()='" + commandName + "']"));
       }
       else
       {
-         assertFalse(selenium.isElementPresent("//td/nobr[text()='" + commandName + "']"));
+         assertFalse(selenium().isElementPresent("//td/nobr[text()='" + commandName + "']"));
       }
-      selenium.mouseDown("//div[@class='exo-lockLayer']/");
+      selenium().mouseDown("//div[@class='exo-lockLayer']/");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
@@ -101,20 +92,20 @@ public class Menu
     */
    public void checkCommandEnabled(String topMenuName, String commandName, boolean enabled) throws Exception
    {
-      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
+      selenium().mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
 
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       if (enabled)
       {
-         assertTrue(selenium.isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName
+         assertTrue(selenium().isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName
             + "']"));
       }
       else
       {
-         assertTrue(selenium.isElementPresent("//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='"
+         assertTrue(selenium().isElementPresent("//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='"
             + commandName + "']"));
       }
-      selenium.mouseDown("//div[@class='exo-lockLayer']/");
+      selenium().mouseDown("//div[@class='exo-lockLayer']/");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
@@ -125,9 +116,13 @@ public class Menu
     * 
     * @return {@link String}
     */
-   public static String getMenuLocator(String title)
+   public String getMenuLocator(String title)
    {
       return "//td[@class='exo-menuBarItem' and text()='" + title + "']";
+   }
+   
+   public void waitForMenuItemPresent(String itemName) throws Exception {
+      waitForElementPresent(getMenuLocator(itemName));
    }
 
 }

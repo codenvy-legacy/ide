@@ -72,14 +72,14 @@ public class HighlightBottomTabSetTest extends BaseTest
    public void testHighlightBottopTabSet() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP);
       
 //      selectItemInWorkspaceTree(FILE_NAME);
-      IDE.navigator().selectItem(URL +FOLDER_NAME+ "/" + FILE_NAME);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.NAVIGATION.selectItem(URL +FOLDER_NAME+ "/" + FILE_NAME);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       //Thread.sleep(TestConstants.SLEEP_SHORT);
       
       assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_PropertiesForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
@@ -87,17 +87,17 @@ public class HighlightBottomTabSetTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);     
       assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       
-      IDE.editor().clickOnEditor();
+     IDE.EDITOR.clickOnEditor();
       //border: 3px solid rgb(122, 173, 224)
       assertFalse(selenium.isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       
       assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       
-      IDE.editor().typeTextIntoEditor(0, "test test");
+     IDE.EDITOR.typeTextIntoEditor(0, "test test");
       
       assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    @AfterClass

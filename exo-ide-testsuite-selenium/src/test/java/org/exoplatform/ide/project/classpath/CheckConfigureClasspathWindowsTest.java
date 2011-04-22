@@ -130,42 +130,41 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        * 1. Try to configure classpath for simple folder
        */
       
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
       
       /*
        * Error dialog appeared
        */
-      IDE.dialogs().checkOneBtnDialog("Error");
-      
-      IDE.dialogs().checkTextInDialog(ERROR_MSG);
-      IDE.dialogs().clickOkButton();
+      IDE.ERROR_DIALOG.checkIsOpened("Error");
+      IDE.ERROR_DIALOG.checkMessage(ERROR_MSG);
+      IDE.ERROR_DIALOG.clickOk();
       
       /*
        * 2. Try to configure classpath for workspace
        */
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
       
       /*
        * Error dialog appeared
        */
-      IDE.dialogs().checkOneBtnDialog("Error");
-      IDE.dialogs().checkTextInDialog(ERROR_MSG);
-      IDE.dialogs().clickOkButton();
+      IDE.ERROR_DIALOG.checkIsOpened("Error");
+      IDE.ERROR_DIALOG.checkMessage(ERROR_MSG);
+      IDE.ERROR_DIALOG.clickOk();
       
       /*
        * 3. Try to configure classpath for project.
        * Check, that .groovyclasspath in project folder is hidden
        */
-      IDE.navigator().selectItem(WS_URL + PROJECT_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + PROJECT_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.navigator().assertItemNotPresent(WS_URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
       
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
       Thread.sleep(TestConstants.SLEEP);
       
       /*
@@ -260,8 +259,8 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * 10. Open form and check, that it is empty
        */
-      IDE.navigator().selectItem(WS_URL + PROJECT_NAME + "/");
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      IDE.NAVIGATION.selectItem(WS_URL + PROJECT_NAME + "/");
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
       Thread.sleep(TestConstants.SLEEP);
       
       /*
@@ -337,7 +336,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * Check new project created.
        */
-      IDE.navigator().assertItemPresent(WS_URL + CREATED_PROJECT_NAME + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + CREATED_PROJECT_NAME + "/");
       /*
        * Check .groovyclasspath file
        */

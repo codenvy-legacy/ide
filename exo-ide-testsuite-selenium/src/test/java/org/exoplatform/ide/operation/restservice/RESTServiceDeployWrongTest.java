@@ -67,20 +67,20 @@ public class RESTServiceDeployWrongTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommandFromNewPopupMenu("REST Service");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
 
-      IDE.editor().typeTextIntoEditor(0, "1");
+     IDE.EDITOR.typeTextIntoEditor(0, "1");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.menu().runCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.MENU.runCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));

@@ -82,14 +82,14 @@ public class DownloadFileToLocalDriveTest extends BaseTest
    {
       waitForRootElement();
 
-      IDE.navigator().selectItem(URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().selectItem(URL + FILE_NAME );
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
+      IDE.NAVIGATION.selectItem(URL + FILE_NAME );
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
   
 //      //TODO fix download option in menu (see issue 721);(further code is not working)
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
       /*
        * File will be downloaded automaticaly.
        */

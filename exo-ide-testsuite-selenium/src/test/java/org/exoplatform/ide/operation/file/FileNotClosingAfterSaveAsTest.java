@@ -73,18 +73,18 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
    public void testFileNotClosingAfterSaveAs() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
       
       createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME_1, 0);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
       
-      IDE.editor().typeTextIntoEditor(0, "test test test");
+     IDE.EDITOR.typeTextIntoEditor(0, "test test test");
       
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       
       saveAsUsingToolbarButton(FILE_NAME_2);
       

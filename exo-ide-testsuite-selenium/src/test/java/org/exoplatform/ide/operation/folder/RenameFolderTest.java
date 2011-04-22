@@ -79,11 +79,11 @@ public class RenameFolderTest extends BaseTest
    {
       waitForRootElement();
       //select and refresh workspace for appper folder
-      IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       //select folder and run rename command
-      IDE.navigator().selectItem(ORIG_URL + "/");
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.NAVIGATION.selectItem(ORIG_URL + "/");
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       chekAppearRenameForm();
       //set cursor on rename field
       selenium.click("ideRenameItemFormRenameField");
@@ -93,9 +93,9 @@ public class RenameFolderTest extends BaseTest
       selenium.type("ideRenameItemFormRenameField", NEW_FOLDER_NAME);
       selenium.keyPress("ideRenameItemFormRenameField", "\\13");
       // check appear folder with new name
-      waitForElementPresent(IDE.navigator().getItemId(RENAME_URL + "/"));
-      IDE.navigator().assertItemNotPresent(ORIG_URL + "/");
-      IDE.navigator().assertItemPresent(RENAME_URL + "/");
+      waitForElementPresent(IDE.NAVIGATION.getItemId(RENAME_URL + "/"));
+      IDE.NAVIGATION.assertItemNotPresent(ORIG_URL + "/");
+      IDE.NAVIGATION.assertItemPresent(RENAME_URL + "/");
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
    }

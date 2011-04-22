@@ -49,7 +49,7 @@ public class WorkspaceTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       //check default workspace is root of navigation tree
-      IDE.navigator().assertItemPresent(WS_URL);
+      IDE.NAVIGATION.assertItemPresent(WS_URL);
       checkCurrentWorkspace(WS_NAME);
    }
    
@@ -60,7 +60,7 @@ public class WorkspaceTest extends BaseTest
       //----- 1 ---------------
       //check form Workspace
       //call select workspace window
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
       //check select workspace window
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
       assertTrue(selenium.isTextPresent("Workspace"));

@@ -55,14 +55,14 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //---- 1 --------------
       //open new javascript file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //no outline panel
       assertFalse(selenium.isElementPresent("//div[@eventproxy='ideCodeHelperPanel']"));
       
       //---- 2 --------------
       //show outline
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       //check outline appeared
       //we can't use checkOutlineVisibility() method,
@@ -72,7 +72,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       
       //---- 3 --------------
       //open new html file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
       //check outline present
@@ -83,17 +83,17 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       //Close Outline tab 
       selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[index=0]/icon");
       Thread.sleep(TestConstants.SLEEP);
-      IDE.outline().checkOutlineVisibility(false);
+      IDE.OUTLINE.checkOutlineVisibility(false);
 
       //---- 5 --------------
       //go to javascript file
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.outline().checkOutlineVisibility(false);
+      IDE.OUTLINE.checkOutlineVisibility(false);
 
       //end
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
    
 }

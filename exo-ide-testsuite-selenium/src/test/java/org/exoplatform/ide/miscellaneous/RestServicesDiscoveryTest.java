@@ -89,22 +89,22 @@ public class RestServicesDiscoveryTest extends BaseTest
    public void testRestServicesDiscovery() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator()
+      IDE.NAVIGATION
          .selectItem(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       waitForRootElement();
 
       // open folder
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       waitForRootElement();
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
 
-      IDE.menu().runCommand(MenuCommands.Help.HELP, MenuCommands.Help.REST_SERVICES);
+      IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.REST_SERVICES);
       waitForElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]");
       assertTrue(selenium.isElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]"));
       assertTrue(selenium

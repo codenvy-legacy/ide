@@ -61,7 +61,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
             + "\t</body>\n" + "</html>";
       
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(URL);
+      IDE.NAVIGATION.selectItem(URL);
       Thread.sleep(TestConstants.SLEEP);
       //------ 1 ---------------
       createSaveAndCloseFile(MenuCommands.New.HTML_FILE, HTML_FILE, 0);
@@ -152,14 +152,14 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       IDE.selectMainFrame();
       clickSourceButton();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
 
       //------ 9 ---------------
       //      runHotkeyWithinCkEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       Thread.sleep(TestConstants.SLEEP);
 
-      assertEquals(HTML_FILE, IDE.editor().getTabTitle(0));
-      IDE.menu().runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      assertEquals(HTML_FILE,IDE.EDITOR.getTabTitle(0));
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
 //      Thread.sleep(TestConstants.SLEEP);
 
       //check is Preview tab appeared
@@ -212,7 +212,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       assertEquals(textWithTable2x4InCkEditor, getTextFromSourceInCkEditor(0));
 
       //------ 12 ---------------
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.deleteSelectedItems();
 
       //------ 13 ---------------
 
@@ -231,7 +231,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       //------ 14 ---------------
       //reopen file with CodeMirror
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(HTML_FILE, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_FILE, false);
       //reopne confirmatioin dialog
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
       assertEquals("Info", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/headerLabel/"));
@@ -250,7 +250,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
             + "</tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td>"
             + "<td>&nbsp;</td></tr></tbody></table><br/></body></html>";
 
-      String textFromCodeEditor = IDE.editor().getTextFromCodeEditor(0);
+      String textFromCodeEditor =IDE.EDITOR.getTextFromCodeEditor(0);
 
       //remove all white spaces, because code mirror 
       //can change format of text 

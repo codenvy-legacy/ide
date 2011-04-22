@@ -79,16 +79,16 @@ public class CookiesTest extends BaseTest
       //wait
       waitForRootElement();
       //select
-      IDE.navigator()
+      IDE.NAVIGATION
          .selectItem(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
       //refresh
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       waitForRootElement();
       //select and open file
-      IDE.navigator().selectItem(URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       waitForRootElement();
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
       //Chek cookies
       String[] cookies = selenium.getCookie().split("; ");

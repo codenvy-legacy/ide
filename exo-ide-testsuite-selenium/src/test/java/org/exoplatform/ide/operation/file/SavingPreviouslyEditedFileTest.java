@@ -101,17 +101,17 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       //Create and select "Test" in "Workspace" panel.
 
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       //----- 2 ------------
       //Click "New -> XML File" button.
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
 
       //You will see default XML content  in the new file tab of "Content" panel.
       //is file openededitor()
-      assertEquals("Untitled file.xml *", IDE.editor().getTabTitle(0));
-      assertEquals(DEFAULT_XML_CONTENT, IDE.editor().getTextFromCodeEditor(0));
+      assertEquals("Untitled file.xml *",IDE.EDITOR.getTabTitle(0));
+      assertEquals(DEFAULT_XML_CONTENT,IDE.EDITOR.getTextFromCodeEditor(0));
 
       //----- 3-4 ------------
       //Click "Save As" button.
@@ -119,15 +119,15 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
 
       //is file saved
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       
-      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
 
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertEquals(FILE_NAME, IDE.editor().getTabTitle(0));
-      IDE.editor().closeTab(0);
+      assertEquals(FILE_NAME,IDE.EDITOR.getTabTitle(0));
+     IDE.EDITOR.closeTab(0);
 
       //----- 5 ------------
       //Go to server window and check that the files created on the server
@@ -138,14 +138,14 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       //----- 6 ------------
       //Go back to gadget window, do some changes in "Content" panel, click "Save" button.
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      IDE.editor().selectIFrameWithEditor(0);
-      IDE.editor().deleteFileContent();
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+     IDE.EDITOR.selectIFrameWithEditor(0);
+     IDE.EDITOR.deleteFileContent();
       IDE.selectMainFrame();
-      IDE.editor().typeTextIntoEditor(0, XML_TEXT);
+     IDE.EDITOR.typeTextIntoEditor(0, XML_TEXT);
       saveCurrentFile();
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
       //----- 7 ------------
       //Refresh page, go to "Test" in "Workspace" panel.
@@ -153,26 +153,26 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       refresh();
 
       //Test folder is closed, no file in navigation tree
-      IDE.navigator().assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       //open Test folder
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       //see xml file in navigation tree
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
 
       //----- 8 ------------
       //Open "RepoFile.xml" file
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       //You must see the content of your file in "Content" panel.
-      assertEquals(FORMATTED_XML_TEXT, IDE.editor().getTextFromCodeEditor(0));
+      assertEquals(FORMATTED_XML_TEXT,IDE.EDITOR.getTextFromCodeEditor(0));
 
       //----- 9 ------------
       //Make some changes in file content and then click on "File->Save" top menu command.
       final String typeText = "<root>" + "admin" + "</root>";
-      IDE.editor().typeTextIntoEditor(0, typeText);
+     IDE.EDITOR.typeTextIntoEditor(0, typeText);
       //The "Save" button and "File->Save" command must become enabled.
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
    }
 
    /**
@@ -186,21 +186,21 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    {
       refresh();
 
-      IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/");
 
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
 
       saveAsUsingToolbarButton(FILE_NAME);
-      IDE.editor().typeTextIntoEditor(0, "X");
+     IDE.EDITOR.typeTextIntoEditor(0, "X");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
+      assertEquals(FILE_NAME + " *",IDE.EDITOR.getTabTitle(0));
 
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, true);
    }
 
    /**
@@ -214,26 +214,26 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    {
       refresh();
 
-      IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/");
 
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
 
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      IDE.editor().typeTextIntoEditor(0, "X");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+     IDE.EDITOR.typeTextIntoEditor(0, "X");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      assertEquals(FILE_NAME + " *", IDE.editor().getTabTitle(0));
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.SAVE, true);
+      assertEquals(FILE_NAME + " *",IDE.EDITOR.getTabTitle(0));
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, true);
    }
 
 }

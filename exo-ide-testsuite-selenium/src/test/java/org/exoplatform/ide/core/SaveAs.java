@@ -19,8 +19,7 @@
 package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertEquals;
-
-import com.thoughtworks.selenium.Selenium;
+import static org.junit.Assert.fail;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,52 +31,37 @@ import com.thoughtworks.selenium.Selenium;
 public class SaveAs extends AbstractTestModule
 {
 
-   private static SaveAs instance;
-
-   public static SaveAs getInstance(Selenium selenium)
-   {
-      if (instance == null)
-      {
-         instance = new SaveAs(selenium);
-      }
-
-      return instance;
-   }
-
-   protected SaveAs(Selenium selenium)
-   {
-      super(selenium);
-   }
-
    public void checkSaveAsIsOpened(boolean isOpened)
    {
       String locator = "//div[@id='ideAskForValueDialog']//div[@class='Caption']/span[text()='Save file as']";
-      assertEquals(isOpened, selenium.isElementPresent(locator));
+      assertEquals(isOpened, selenium().isElementPresent(locator));
    }
 
    public String getFileName()
    {
+      fail();
       return "";
    }
 
    public void setFileName(String fileName)
    {
+      fail();
    }
 
    public void clickYes()
    {
-
+      fail();
    }
 
    public void clickNo()
    {
       String locator = "//div[@id='ideAskForValueDialog']//div[@id='ideAskForValueDialogNoButton']";
-      selenium.click(locator);
+      selenium().click(locator);
    }
 
    public void clickCancel()
    {
-
+      fail();
    }
 
 }

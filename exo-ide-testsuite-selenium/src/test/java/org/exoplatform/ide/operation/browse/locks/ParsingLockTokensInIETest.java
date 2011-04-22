@@ -53,17 +53,17 @@ public abstract class ParsingLockTokensInIETest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       createFolder(FOLDER_NAME);
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
       
       createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME, 0);
       
-      IDE.navigator().selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
-      IDE.toolbar().runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
       assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
    }

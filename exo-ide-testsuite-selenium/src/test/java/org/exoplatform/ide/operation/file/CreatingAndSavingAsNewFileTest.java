@@ -95,11 +95,11 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    {
 
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       testFileSaveAs(MenuCommands.New.REST_SERVICE_FILE, "grs", REST_SERVICE_FILE_NAME);
       testFileSaveAs(MenuCommands.New.TEXT_FILE, "txt", TXT_FILE_NAME);
       testFileSaveAs(MenuCommands.New.XML_FILE, "xml", XML_FILE_NAME);
@@ -118,25 +118,25 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    private void testFileSaveAs(String menuTitle, String fileExtention, String fileName) throws InterruptedException,
       Exception
    {
-      IDE.toolbar().runCommandFromNewPopupMenu(menuTitle);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
 
       assertTrue(selenium.isTextPresent("Untitled file." + fileExtention));
-      IDE.toolbar().runCommandFromNewPopupMenu(menuTitle);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
 
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isTextPresent("Untitled file 1." + fileExtention));
       
-      IDE.toolbar().runCommand(ToolbarCommands.File.SAVE_AS);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE_AS);
       SaveFileUtils.checkSaveAsDialogAndSave(fileName, false);
 
-      IDE.editor().closeTab(1);
+     IDE.EDITOR.closeTab(1);
 
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
 
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.navigator().assertItemPresent(STORAGE_URL + fileName);
+      IDE.NAVIGATION.assertItemPresent(STORAGE_URL + fileName);
    }
 
    private void testFilesCreatedOnServer()

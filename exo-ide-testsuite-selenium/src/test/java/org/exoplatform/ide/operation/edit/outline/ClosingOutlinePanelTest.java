@@ -111,31 +111,31 @@ public class ClosingOutlinePanelTest extends BaseTest
       //----- 1 -------------
       //open JavaScript file.
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(JAVASCRIPT_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(JAVASCRIPT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
       //----- 2 -------------
       //show Code Outline panel
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       //check Code Outline present
       checkCodeHelperPanelPresent(true);
 
       //----- 3 -------------
       //open text file.
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TEXT_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TEXT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       //check Code Outline in Not Present
       checkCodeHelperPanelVisibility(false);
       Thread.sleep(TestConstants.SLEEP);
 
       //return to the tab with JavaScript.
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       //check Code Outline present
       checkCodeHelperPanelVisibility(true);
       Thread.sleep(TestConstants.SLEEP);
@@ -143,7 +143,7 @@ public class ClosingOutlinePanelTest extends BaseTest
       //----- 4 -------------
       //close code outline panel.
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       //check Code Outline in Not Present
       checkCodeHelperPanelVisibility(false);
       Thread.sleep(TestConstants.SLEEP);

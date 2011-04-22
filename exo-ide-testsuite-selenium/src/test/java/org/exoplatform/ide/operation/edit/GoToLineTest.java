@@ -42,11 +42,11 @@ public class GoToLineTest extends BaseTest
       //      Open new Groovy file in editor.
 
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
       //     Open new HTML file in editor.
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
       //      Select Groovy file.
@@ -59,7 +59,7 @@ public class GoToLineTest extends BaseTest
       selenium.selectFrame("relative=top");
 
       //      Go to menu and click "View->Go To Line".
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
 
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGoToLineForm\"]/headerLabel/"));      
       assertTrue(selenium.isTextPresent("Enter line number (1..13):"));
@@ -130,7 +130,7 @@ public class GoToLineTest extends BaseTest
       selenium.selectFrame("relative=top");
       //      Go to menu and click "View->Go To Line".
       
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       
       selenium.click("scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);

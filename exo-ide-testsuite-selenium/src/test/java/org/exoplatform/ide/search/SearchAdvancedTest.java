@@ -51,16 +51,16 @@ public class SearchAdvancedTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      String workspace = getItemNameFromWorkspaceTree(0);
+      String workspace = getItemNameFromWorkspaceTree(null);
 
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.editor().deleteLinesInEditor(7);
+     IDE.EDITOR.deleteLinesInEditor(7);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, googleGadgetFileContent);
       saveAsByTopMenu(googleGadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL + googleGadgetFileName);
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectItem(WS_URL + googleGadgetFileName);
+      IDE.NAVIGATION.selectRootOfWorkspace();
       
       //Step 5
       performSearch("/", "text", "");
@@ -105,10 +105,10 @@ public class SearchAdvancedTest extends BaseTest
 
       //Clear test items
       selectWorkspaceTab();
-      IDE.navigator().selectItem(WS_URL + googleGadgetFileName);
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.selectItem(WS_URL + googleGadgetFileName);
+      IDE.NAVIGATION.deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemNotPresent(WS_URL + googleGadgetFileName);
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + googleGadgetFileName);
    }
    
    @AfterClass

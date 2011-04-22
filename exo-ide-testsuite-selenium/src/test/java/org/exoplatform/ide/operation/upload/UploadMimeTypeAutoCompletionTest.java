@@ -46,7 +46,7 @@ public class UploadMimeTypeAutoCompletionTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
 
       try
       {

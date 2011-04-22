@@ -47,7 +47,7 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
       /*
        * 1. Open REST Service file.
        */
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       /*
@@ -65,12 +65,12 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
       /*
        * 3. Type text "Collections."
        */
-      IDE.editor().typeTextIntoEditor(0, "Collections.");
+     IDE.EDITOR.typeTextIntoEditor(0, "Collections.");
 
       /*
        * 4. Call autocomplete form.
        */
-      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
+     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isElementPresent(CodeAssistant.Locators.PANEL_ID));
 
@@ -78,15 +78,15 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
        * 5. Type to the input field text "so".
        */
       selenium.focus(CodeAssistant.Locators.INPUT);
-      IDE.codeAssistant().typeToInput("so");
+      IDE.CODEASSISTANT.typeToInput("so");
 
       /*
        * Check, that to elements are found:
        * sort(List):void
        * sort(List, Comparator):void
        */
-      IDE.codeAssistant().checkElementPresent("sort(List):void");
-      IDE.codeAssistant().checkElementPresent("sort(List, Comparator):void");
+      IDE.CODEASSISTANT.checkElementPresent("sort(List):void");
+      IDE.CODEASSISTANT.checkElementPresent("sort(List, Comparator):void");
 
       /*
        * 6. Select sort(List, Comparator):void element
@@ -104,12 +104,12 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
        * Check, that autocomplete form dissapeared, and new text in editor appeared.
        */
       assertFalse(selenium.isElementPresent(CodeAssistant.Locators.PANEL_ID));
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("Collections.sort(List, Comparator)"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections.sort(List, Comparator)"));
       
       /*
        * 8. Close file
        */
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
 }

@@ -19,7 +19,9 @@
 package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.UUID;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.common.http.client.HTTPResponse;
@@ -30,14 +32,10 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Dialogs;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.UUID;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -110,49 +108,49 @@ public class CutFoldersAndFilesTest extends BaseTest
    public void testCutOperation() throws Exception
    {
       waitForRootElement();
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.navigator().selectItem(WS_URL + FOLDER_1 + "/"); 
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + FOLDER_2 + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/"); 
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_2 + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       //Open Gadget window, open all created files.
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_1, false);
 
       //Open Gadget window, open all created files.
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_2, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_2, false);
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_3, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_3, false);
 
       //Select file "%FOLDER%-1/gadgetxml", and folder "%FOLDER%-2".
       selenium.controlKeyDown();
-      IDE.navigator().selectRow(7);
-      IDE.navigator().selectRow(3);
-      IDE.navigator().selectRow(5);
+      IDE.NAVIGATION.selectRow(7);
+      IDE.NAVIGATION.selectRow(3);
+      IDE.NAVIGATION.selectRow(5);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       checkButtonsDisabled();
 
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
 
       //Select files "test 1/gadgetxml", and "test 2/gadgetxml".
       selenium.controlKeyDown();
-      IDE.navigator().selectRow(0);
-      IDE.navigator().selectRow(3);
-      IDE.navigator().selectRow(7);
+      IDE.NAVIGATION.selectRow(0);
+      IDE.NAVIGATION.selectRow(3);
+      IDE.NAVIGATION.selectRow(7);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       checkButtonsDisabled();
 
-      IDE.navigator().selectRow(0);
+      IDE.NAVIGATION.selectRow(0);
       //Select folders "test 1/test 1.1", and root folder.
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      IDE.navigator().selectRow(2);
+      IDE.NAVIGATION.selectRow(2);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
@@ -160,62 +158,59 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
 
       //Select "test 1/gadgetxml", "test 1/test 1.1" items in the Workspace Panel and press the "Cut" toolbar button.
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      IDE.navigator().selectRow(0);
-      IDE.navigator().selectRow(3);
-      IDE.navigator().selectRow(2);
+      IDE.NAVIGATION.selectRow(0);
+      IDE.NAVIGATION.selectRow(3);
+      IDE.NAVIGATION.selectRow(2);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
 
       checkPasteButton(true);
 
-      IDE.navigator().selectRow(5);
+      IDE.NAVIGATION.selectRow(5);
 
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
-      assertTrue(selenium.isTextPresent("412 Precondition Failed"));
-      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
-      assertTrue(selenium.isTextPresent("Precondition Failed"));
-      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
-      IDE.dialogs().clickOkButton();
+      IDE.WARNING_DIALOG.checkIsOpened("412 Precondition Failed");
+      IDE.WARNING_DIALOG.clickOk();
 
       checkPasteButton(true);
 
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
 
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //deselect root of navigation tree
-      IDE.navigator().selectRow(0);
-      IDE.navigator().selectRow(2);
-      IDE.navigator().selectRow(3);
-      IDE.navigator().selectRow(4);
+      IDE.NAVIGATION.selectRow(0);
+      IDE.NAVIGATION.selectRow(2);
+      IDE.NAVIGATION.selectRow(3);
+      IDE.NAVIGATION.selectRow(4);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
 
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
 
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
 
-      assertEquals(RANDOM_CONTENT_1, IDE.editor().getTextFromCodeEditor(0));
+      assertEquals(RANDOM_CONTENT_1,IDE.EDITOR.getTextFromCodeEditor(0));
 
-      IDE.editor().selectTab(1);
+     IDE.EDITOR.selectTab(1);
 
-      assertEquals(RANDOM_CONTENT_2, IDE.editor().getTextFromCodeEditor(1));
+      assertEquals(RANDOM_CONTENT_2,IDE.EDITOR.getTextFromCodeEditor(1));
       
       checkFilesAndFoldersOnServer();
 
-      IDE.navigator().selectRow(1);
+      IDE.NAVIGATION.selectRow(1);
 
       checkPasteButton(false);
    }
@@ -246,8 +241,8 @@ public class CutFoldersAndFilesTest extends BaseTest
     */
    private void checkPasteButton(boolean enabled) throws Exception
    {
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, enabled);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, enabled);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, enabled);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, enabled);
 
    }
 
@@ -258,12 +253,12 @@ public class CutFoldersAndFilesTest extends BaseTest
     */
    private void checkButtonsDisabled() throws Exception
    {
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, false);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, false);
-      IDE.toolbar().assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, false);
-      IDE.menu().checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, false);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, false);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, false);
+      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, false);
    }
 
    /**

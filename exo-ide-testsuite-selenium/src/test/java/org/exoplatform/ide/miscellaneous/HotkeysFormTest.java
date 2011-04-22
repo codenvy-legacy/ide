@@ -45,7 +45,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       //----- 1 ------------
       //Call "Customize Hotkeys" window
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       //      Thread.sleep(TestConstants.SLEEP);
       
       checkCustomizeHotkeyDialogWindow();
@@ -122,7 +122,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       //TODO 1 step not work, shold be fix call hotkey form; see issue 729
       //----- 1 ------------
       //call customize hotkeys form
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
 
       //----- 2 ------------
       //select row with css file
@@ -154,14 +154,14 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //check new Css file is createed
-      assertEquals("Untitled file.css *", IDE.editor().getTabTitle(0));
+      assertEquals("Untitled file.css *",IDE.EDITOR.getTabTitle(0));
       
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 5 ------------
       //Call "Customize Hotkeys" window and select "New CSS file". Press Unbind button
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       selectRow(Commands.NEW_CSS_FILE);
       
       //check, Ctrl+M text appears near New CSS File in list grid
@@ -182,15 +182,15 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //check new Css file is createed
-      assertEquals("Untitled file.css *", IDE.editor().getTabTitle(0));
+      assertEquals("Untitled file.css *",IDE.EDITOR.getTabTitle(0));
       
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 7 ------------
       //Call "Customize Hotkeys" window and select "New CSS file". 
       //Press Unbind button and then press Save button.
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       
       selectRow(Commands.NEW_CSS_FILE);
       
@@ -212,7 +212,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //Nothing or default browser event works out
-      IDE.editor().checkIsTabPresentInEditorTabset("Untitled file.css", false);
+     IDE.EDITOR.checkIsTabPresentInEditorTabset("Untitled file.css", false);
       Thread.sleep(TestConstants.SLEEP);
    }
    
@@ -228,7 +228,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       //----- 1 ------------
       //TODO 1 step not work, shold be fix call hotkey form; see issue 729
       //Call "Customize Hotkeys" window
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 2 ------------
@@ -382,7 +382,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       
       //----- 2 ------------
       //Call "Customize Hotkeys" window
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       Thread.sleep(TestConstants.SLEEP);
       
       //----- 3 ------------
@@ -405,7 +405,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       
       //----- 5 ------------
       //Call "Customize Hotkeys" window
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       Thread.sleep(TestConstants.SLEEP);
       
       selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);

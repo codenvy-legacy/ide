@@ -70,10 +70,10 @@ public class DeployNetvibesWidgetTest extends BaseTest
    public void testDeployFormSteps() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/");
 
       //Create new UWA widget
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkDeployWidgetControlState(true, false);
 
@@ -83,7 +83,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkDeployWidgetControlState(true, true);
 
       //Call deploy widget control:
-      IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_UWA_WIDGET);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_UWA_WIDGET);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkDeployFormPresent(true);
       checkStepOneLayout();
@@ -180,10 +180,10 @@ public class DeployNetvibesWidgetTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/");
 
       //Create new UWA widget
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkDeployWidgetControlState(true, false);
 
@@ -193,7 +193,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkDeployWidgetControlState(true, true);
 
       //Call deploy widget control:
-      IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_UWA_WIDGET);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_UWA_WIDGET);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkDeployFormPresent(true);
       checkStepOneLayout();
@@ -369,11 +369,11 @@ public class DeployNetvibesWidgetTest extends BaseTest
 
    private void checkDeployWidgetControlState(boolean isVisible, boolean isEnabled) throws Exception
    {
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_UWA_WIDGET, isVisible);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_UWA_WIDGET, isVisible);
       if (isVisible)
       {
-         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_UWA_WIDGET, isEnabled);
-         IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_UWA_WIDGET, isEnabled);
+         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.DEPLOY_UWA_WIDGET, isEnabled);
+         IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_UWA_WIDGET, isEnabled);
       }
    }
 

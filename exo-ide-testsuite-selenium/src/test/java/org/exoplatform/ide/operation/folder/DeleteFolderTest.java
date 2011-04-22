@@ -77,17 +77,17 @@ public class DeleteFolderTest extends BaseTest
    {
       waitForRootElement();
       //select workspace and refresh
-      IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //select folder
-      IDE.navigator().selectItem(URL_TOOLBAR + "/");
+      IDE.NAVIGATION.selectItem(URL_TOOLBAR + "/");
       //run delete
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.deleteSelectedItems();
       //chek create form
       //chek Disappear Form
       chekDisappearDeleteItemForm();
       //chek Disappear in menu of navigator
-      IDE.navigator().assertItemNotPresent(URL_TOOLBAR + "/");
+      IDE.NAVIGATION.assertItemNotPresent(URL_TOOLBAR + "/");
       assertEquals(404, VirtualFileSystemUtils.get(URL_TOOLBAR).getStatusCode());
    }
 
@@ -102,17 +102,17 @@ public class DeleteFolderTest extends BaseTest
 
       waitForRootElement();
       //select workspace and refresh
-      IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //select folder
-      IDE.navigator().selectItem(URL_MENU + "/");
+      IDE.NAVIGATION.selectItem(URL_MENU + "/");
       //run command through menicommands
       //delete item
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.deleteSelectedItems();
       //and chek delete
       chekDisappearDeleteItemForm();
       //chek Disappear in menu of navigator
-      IDE.navigator().assertItemNotPresent(URL_MENU + FOLDER_NAME_MENU + "/");
+      IDE.NAVIGATION.assertItemNotPresent(URL_MENU + FOLDER_NAME_MENU + "/");
       assertEquals(404, VirtualFileSystemUtils.get(URL_MENU).getStatusCode());
    }
 

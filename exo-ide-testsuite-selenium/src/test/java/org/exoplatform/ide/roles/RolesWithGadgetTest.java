@@ -74,7 +74,7 @@ public class RolesWithGadgetTest extends BaseTest
    {
       try
       {
-        IDE.editor().closeTab(0);
+       IDE.EDITOR.closeTab(0);
     	  VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
@@ -100,18 +100,18 @@ public class RolesWithGadgetTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
       // open folder
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);   
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);   
       
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       saveAsUsingToolbarButton(FILE1);
 
       Thread.sleep(TestConstants.SLEEP);
       //Check deploy/undeploy is available for administrator
       checkDeployUndeployAllowed(true);
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
       //Logout and login as developer
       logout();
@@ -121,17 +121,17 @@ public class RolesWithGadgetTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
       // open folder
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE1, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //Check deploy/undeploy is not available for developer
       checkDeployUndeployAllowed(false);
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
       Thread.sleep(TestConstants.SLEEP);
    }
@@ -155,17 +155,17 @@ public class RolesWithGadgetTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
       // open folder
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);   
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);   
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE1, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE1, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
       //Check deploy/undeploy is available for administrator
       checkDeployUndeployAllowed(true);
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
    
    /**
@@ -177,18 +177,18 @@ public class RolesWithGadgetTest extends BaseTest
     */
    private void checkDeployUndeployAllowed(boolean allowed) throws Exception
    {
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, allowed);
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, allowed);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, allowed);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, allowed);
 
       if (allowed)
       {
-         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, allowed);
-         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, allowed);
+         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, allowed);
+         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, allowed);
          //Check deploy/undeploy gadget functionality only when in portal:
          if (IdeAddress.PORTAL.getApplicationUrl().equals(APPLICATION_URL))
          {
             //Deploy gadget:
-            IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_GADGET);
+            IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GADGET);
             Thread.sleep(TestConstants.SLEEP);
             //Check successfully deployed message
             assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
@@ -197,7 +197,7 @@ public class RolesWithGadgetTest extends BaseTest
             assertTrue(message.contains(FILE1 + " deployed successfully."));
 
             //Undeploy gadget
-            IDE.toolbar().runCommand(ToolbarCommands.Run.UNDEPLOY_GADGET);
+            IDE.TOOLBAR.runCommand(ToolbarCommands.Run.UNDEPLOY_GADGET);
             Thread.sleep(TestConstants.SLEEP);
             //Check successfully undeployed message
             assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));

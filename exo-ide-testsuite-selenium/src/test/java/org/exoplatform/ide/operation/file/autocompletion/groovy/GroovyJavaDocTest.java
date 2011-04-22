@@ -43,7 +43,7 @@ public class GroovyJavaDocTest extends BaseTest
    public void testGroovyJavaDoc() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       for (int i = 0; i < 9; i++)
@@ -53,9 +53,9 @@ public class GroovyJavaDocTest extends BaseTest
       }
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      IDE.editor().typeTextIntoEditor(0, "Collections.");
+     IDE.EDITOR.typeTextIntoEditor(0, "Collections.");
 
-     IDE.codeAssistant().openForm();
+     IDE.CODEASSISTANT.openForm();
       
       for (int i = 0; i < 4; i++)
       {
@@ -63,7 +63,7 @@ public class GroovyJavaDocTest extends BaseTest
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
       Thread.sleep(TestConstants.SLEEP);
-      IDE.codeAssistant().checDocFormPresent();
+      IDE.CODEASSISTANT.checDocFormPresent();
       Thread.sleep(TestConstants.SLEEP);
       selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
       assertFalse(selenium.isElementPresent("//body/pre[text()='Not found']"));
@@ -75,7 +75,7 @@ public class GroovyJavaDocTest extends BaseTest
       assertFalse(selenium.isElementPresent("//body/pre[text()=\"Not found\"]"));
       IDE.selectMainFrame();
       
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
    
 }

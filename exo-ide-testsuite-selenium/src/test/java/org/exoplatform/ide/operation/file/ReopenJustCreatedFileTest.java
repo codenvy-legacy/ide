@@ -88,13 +88,13 @@ public class ReopenJustCreatedFileTest extends BaseTest
    public void testReopenJustCreatedFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
       
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
       
-      String fileName = IDE.editor().getTabTitle(0);
+      String fileName =IDE.EDITOR.getTabTitle(0);
       
       assertEquals("Untitled file.html *", fileName);
       
@@ -102,11 +102,11 @@ public class ReopenJustCreatedFileTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(NETVIBES_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NETVIBES_FILE_NAME, false);
       
-      fileName = IDE.editor().getTabTitle(0);
+      fileName =IDE.EDITOR.getTabTitle(0);
       
       assertEquals(NETVIBES_FILE_NAME, fileName);
    }

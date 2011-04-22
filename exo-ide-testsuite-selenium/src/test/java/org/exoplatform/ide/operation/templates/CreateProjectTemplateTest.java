@@ -83,7 +83,7 @@ public class CreateProjectTemplateTest extends BaseTest
       //=================== Check adding folder ====================
       //----- 1 ----------------
       //open Create Project Template Form
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
       checkCreateProjectTemplateForm();
       checkTreeNodeSelected(ROOT_NODE_NAME);
       
@@ -163,7 +163,7 @@ public class CreateProjectTemplateTest extends BaseTest
       //check cancel button
       Thread.sleep(TestConstants.SLEEP);
       //call create project template form
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
       checkCreateProjectTemplateForm();
       
       //click cancel button
@@ -176,7 +176,7 @@ public class CreateProjectTemplateTest extends BaseTest
       //=================== Create project template with existing name ====================
       Thread.sleep(TestConstants.SLEEP);
       //----- 11 ----------------
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
       checkCreateProjectTemplateForm();
       
       //type new project name to name field
@@ -214,7 +214,7 @@ public class CreateProjectTemplateTest extends BaseTest
       refresh();
       
       //----- 1 ----------------
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
       checkButtonDisabled(CREATE_BUTTON_TITLE);
       
       //----- 2 ----------------

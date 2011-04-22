@@ -106,47 +106,47 @@ public class GroovyProjectAutocompletionTest extends BaseTest
        * 1. Check, that project folder and folder with resources are present.
        * Open REST Service. 
        */
-      IDE.navigator().assertItemPresent(WS_URL + PROJECT_NAME + "/");
-      IDE.navigator().assertItemPresent(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + PROJECT_NAME + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/");
 
-      IDE.navigator().selectItem(WS_URL + PROJECT_NAME + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + PROJECT_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL
          + PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME, false);
 
-      IDE.codeAssistant().moveCursorDown(12);
+      IDE.CODEASSISTANT.moveCursorDown(12);
 
-      IDE.editor().typeTextIntoEditor(0, "Po");
+     IDE.EDITOR.typeTextIntoEditor(0, "Po");
       
-      IDE.codeAssistant().openForm();
+      IDE.CODEASSISTANT.openForm();
       
-      IDE.codeAssistant().checkElementPresent("Pojo");
+      IDE.CODEASSISTANT.checkElementPresent("Pojo");
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("import org.exoplatform.sample.Pojo"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import org.exoplatform.sample.Pojo"));
       
-      IDE.editor().typeTextIntoEditor(0, " p");
-      
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      IDE.editor().typeTextIntoEditor(0, "p.");
-      
-      IDE.codeAssistant().openForm();
-      
-      IDE.codeAssistant().checkElementPresent("getName():String");
-      IDE.codeAssistant().checkElementPresent("printText(String):void");
-      IDE.codeAssistant().checkElementPresent("setName(String):void");
-      
-      IDE.codeAssistant().typeToInput("pr");
+     IDE.EDITOR.typeTextIntoEditor(0, " p");
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("p.printText(String)"));
+     IDE.EDITOR.typeTextIntoEditor(0, "p.");
+      
+      IDE.CODEASSISTANT.openForm();
+      
+      IDE.CODEASSISTANT.checkElementPresent("getName():String");
+      IDE.CODEASSISTANT.checkElementPresent("printText(String):void");
+      IDE.CODEASSISTANT.checkElementPresent("setName(String):void");
+      
+      IDE.CODEASSISTANT.typeToInput("pr");
+      
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("p.printText(String)"));
       
    }
 

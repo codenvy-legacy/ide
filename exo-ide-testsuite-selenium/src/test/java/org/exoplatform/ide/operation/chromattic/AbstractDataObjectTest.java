@@ -65,12 +65,12 @@ public abstract class AbstractDataObjectTest extends BaseTest
     */
    protected void checkPreviewNodeTypeButton(boolean isPresent, boolean isEnabled) throws Exception
    {
-      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.PREVIEW_NODE_TYPE, isPresent);
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.PREVIEW_NODE_TYPE, isPresent);
+      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.PREVIEW_NODE_TYPE, isPresent);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.PREVIEW_NODE_TYPE, isPresent);
       if (isEnabled)
       {
-         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, isEnabled);
-         IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.PREVIEW_NODE_TYPE, isEnabled);
+         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, isEnabled);
+         IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.PREVIEW_NODE_TYPE, isEnabled);
       }
    }
 
@@ -83,12 +83,12 @@ public abstract class AbstractDataObjectTest extends BaseTest
     */
    protected void checkDeployNodeTypeButton(boolean isPresent, boolean isEnabled) throws Exception
    {
-      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.Run.DEPLOY_NODE_TYPE, isPresent);
-      IDE.menu().checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE, isPresent);
+      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.DEPLOY_NODE_TYPE, isPresent);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE, isPresent);
       if (isEnabled)
       {
-         IDE.toolbar().assertButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, isEnabled);
-         IDE.menu().checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE, isEnabled);
+         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, isEnabled);
+         IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE, isEnabled);
       }
    }
 

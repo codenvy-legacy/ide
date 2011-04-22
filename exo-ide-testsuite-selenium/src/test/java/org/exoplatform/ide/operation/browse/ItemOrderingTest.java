@@ -64,30 +64,30 @@ public class ItemOrderingTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // create test files
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1_2, 0);
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, UPPERCASE_TEST_FILE_1, 0);      
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1, 0);      
       
       // create test folders
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
       createFolder(TEST_FOLDER_1_2);
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
       createFolder(UPPERCASE_TEST_FOLDER_1);
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
       createFolder(TEST_FOLDER_1);      
 
       checkItemOrderingInNavigationPanel();      
 
       // test ordering within the Navigation Panel after the refreshing root folder
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.IDE_INITIALIZATION_PERIOD);      
       
       // test ordering within the Search Panel
-      IDE.navigator().selectRootOfWorkspace();
+      IDE.NAVIGATION.selectRootOfWorkspace();
       performSearch("/", "", MimeType.TEXT_XML);
       
       checkItemOrderngInSearchResultPanel();
@@ -96,22 +96,22 @@ public class ItemOrderingTest extends BaseTest
    
    private void checkItemOrderingInNavigationPanel() throws Exception
    {
-      IDE.navigator().assertItemPresent(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/"); 
+      IDE.NAVIGATION.assertItemPresent(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/"); 
       assertEquals(UPPERCASE_TEST_FOLDER_1, getItemNameFromWorkspaceTree(UPPERCASE_TEST_FOLDER_1));
             
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER_1 + "/"); 
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER_1 + "/"); 
       assertEquals(TEST_FOLDER_1, getItemNameFromWorkspaceTree(TEST_FOLDER_1));
       
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FOLDER_1_2 + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER_1_2 + "/");
       assertEquals(TEST_FOLDER_1_2, getItemNameFromWorkspaceTree(TEST_FOLDER_1_2));
       
-      IDE.navigator().assertItemPresent(WS_URL + UPPERCASE_TEST_FILE_1);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + UPPERCASE_TEST_FILE_1);
       assertEquals(UPPERCASE_TEST_FILE_1, getItemNameFromWorkspaceTree(UPPERCASE_TEST_FILE_1));
       
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FILE_1);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FILE_1);
       assertEquals(TEST_FILE_1, getItemNameFromWorkspaceTree(TEST_FILE_1));
       
-      IDE.navigator().assertItemPresent(WS_URL + TEST_FILE_1_2);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FILE_1_2);
       assertEquals(TEST_FILE_1_2, getItemNameFromWorkspaceTree(TEST_FILE_1_2));
    }
    

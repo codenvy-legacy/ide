@@ -20,6 +20,8 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.fail;
 
+import org.exoplatform.ide.IDE;
+
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -32,11 +34,14 @@ import com.thoughtworks.selenium.Selenium;
 public abstract class AbstractTestModule
 {
 
-   protected Selenium selenium;
-
-   public AbstractTestModule(Selenium selenium)
+   protected Selenium selenium()
    {
-      this.selenium = selenium;
+      return IDE.getInstance().getSelenium();
+   }
+   
+   protected IDE IDE()
+   {
+      return IDE.getInstance();
    }
 
    /**
@@ -45,7 +50,7 @@ public abstract class AbstractTestModule
     * @param locator - element locator
     * @throws Exception
     */
-   public void waitForElementPresent(String locator) throws Exception
+   protected void waitForElementPresent(String locator) throws Exception
    {
       int WAITING_MAX_SECONDS = 10;
 
@@ -56,7 +61,7 @@ public abstract class AbstractTestModule
             fail("timeout for element " + locator);
          }
 
-         if (selenium.isElementPresent(locator))
+         if (selenium().isElementPresent(locator))
          {
             break;
          }

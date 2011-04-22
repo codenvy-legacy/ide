@@ -95,13 +95,13 @@ public class CodeOutLineNetvibesTest extends BaseTest
       //------ 1-3 ------------
       //open file with text
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(URL + FOLDER_NAME +"/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME +"/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //------ 4 ------------
       //show Outline
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       
       Thread.sleep(TestConstants.SLEEP);
 
@@ -128,46 +128,46 @@ public class CodeOutLineNetvibesTest extends BaseTest
       //------ 6 ------------
       //check navigation in tree
       //click on "p" tag
-      IDE.outline().select(3);
+      IDE.OUTLINE.select(3);
       
       assertEquals("51 : 1", getCursorPositionUsingStatusBar());
       
       //close "p" tag
-      IDE.outline().clickOpenImg(3, 1);
+      IDE.OUTLINE.clickOpenImg(3, 1);
       assertEquals("51 : 1", getCursorPositionUsingStatusBar());
       
       //open "p" tag
-      IDE.outline().clickOpenImg(3, 1);
+      IDE.OUTLINE.clickOpenImg(3, 1);
       assertEquals("51 : 1", getCursorPositionUsingStatusBar());
-      IDE.outline().checkOutlineTreeNodeSelected(3, "p", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(3, "p", true);
       
       goToLine(7);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.outline().checkOutlineTreeNodeSelected(2, "meta", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(2, "meta", true);
       
       //press Ctrl+D to delete lines
       //click on editor
       selenium.clickAt("//body[@class='editbox']", "5,5");
       for (int i = 0; i < 5; i++)
       {
-         IDE.editor().runHotkeyWithinEditor(0, true, false, 68);
+        IDE.EDITOR.runHotkeyWithinEditor(0, true, false, 68);
          Thread.sleep(TestConstants.SLEEP_SHORT*2);
       }
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.outline().checkOutlineTreeNodeSelected(2, "link", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(2, "link", true);
       
-      assertEquals("html", IDE.outline().getTitle(0, 0));
-      assertEquals("head", IDE.outline().getTitle(1, 0));
+      assertEquals("html", IDE.OUTLINE.getTitle(0, 0));
+      assertEquals("head", IDE.OUTLINE.getTitle(1, 0));
       
-      assertEquals("link", IDE.outline().getTitle(2, 0));
-      assertEquals("script", IDE.outline().getTitle(3, 0));
-      assertEquals("title", IDE.outline().getTitle(4, 0));
-      assertEquals("link", IDE.outline().getTitle(5, 0));
-      assertEquals("widget:preferences", IDE.outline().getTitle(6, 0));
-      assertEquals("style", IDE.outline().getTitle(7, 0));
-      assertEquals("script", IDE.outline().getTitle(8, 0));
-      assertEquals("body", IDE.outline().getTitle(9, 0));
+      assertEquals("link", IDE.OUTLINE.getTitle(2, 0));
+      assertEquals("script", IDE.OUTLINE.getTitle(3, 0));
+      assertEquals("title", IDE.OUTLINE.getTitle(4, 0));
+      assertEquals("link", IDE.OUTLINE.getTitle(5, 0));
+      assertEquals("widget:preferences", IDE.OUTLINE.getTitle(6, 0));
+      assertEquals("style", IDE.OUTLINE.getTitle(7, 0));
+      assertEquals("script", IDE.OUTLINE.getTitle(8, 0));
+      assertEquals("body", IDE.OUTLINE.getTitle(9, 0));
 
    }
    
@@ -180,40 +180,40 @@ public class CodeOutLineNetvibesTest extends BaseTest
       
       //check tree correctly created:
       //all nodes closed, except root
-      assertEquals("html", IDE.outline().getTitle(0, 0));
-      assertEquals("head", IDE.outline().getTitle(1, 0));
-      assertEquals("body", IDE.outline().getTitle(2, 0));
+      assertEquals("html", IDE.OUTLINE.getTitle(0, 0));
+      assertEquals("head", IDE.OUTLINE.getTitle(1, 0));
+      assertEquals("body", IDE.OUTLINE.getTitle(2, 0));
       
       //open "head" node
-      IDE.outline().clickOpenImg(1, 0);
+      IDE.OUTLINE.clickOpenImg(1, 0);
       //check new nodes appeard
-      assertEquals("meta", IDE.outline().getTitle(2, 0));
-      assertEquals("meta", IDE.outline().getTitle(3, 0));
-      assertEquals("meta", IDE.outline().getTitle(4, 0));
-      assertEquals("meta", IDE.outline().getTitle(5, 0));
-      assertEquals("meta", IDE.outline().getTitle(6, 0));
-      assertEquals("link", IDE.outline().getTitle(7, 0));
-      assertEquals("script", IDE.outline().getTitle(8, 0));
-      assertEquals("title", IDE.outline().getTitle(9, 0));
-      assertEquals("link", IDE.outline().getTitle(10, 0));
-      assertEquals("widget:preferences", IDE.outline().getTitle(11, 0));
-      assertEquals("style", IDE.outline().getTitle(12, 0));
-      assertEquals("script", IDE.outline().getTitle(13, 0));
-      assertEquals("body", IDE.outline().getTitle(14, 0));
+      assertEquals("meta", IDE.OUTLINE.getTitle(2, 0));
+      assertEquals("meta", IDE.OUTLINE.getTitle(3, 0));
+      assertEquals("meta", IDE.OUTLINE.getTitle(4, 0));
+      assertEquals("meta", IDE.OUTLINE.getTitle(5, 0));
+      assertEquals("meta", IDE.OUTLINE.getTitle(6, 0));
+      assertEquals("link", IDE.OUTLINE.getTitle(7, 0));
+      assertEquals("script", IDE.OUTLINE.getTitle(8, 0));
+      assertEquals("title", IDE.OUTLINE.getTitle(9, 0));
+      assertEquals("link", IDE.OUTLINE.getTitle(10, 0));
+      assertEquals("widget:preferences", IDE.OUTLINE.getTitle(11, 0));
+      assertEquals("style", IDE.OUTLINE.getTitle(12, 0));
+      assertEquals("script", IDE.OUTLINE.getTitle(13, 0));
+      assertEquals("body", IDE.OUTLINE.getTitle(14, 0));
       
       //open "script" node
-      IDE.outline().clickOpenImg(13, 0);
-      assertEquals("YourWidgetName : Object", IDE.outline().getTitle(14, 0));
-      assertEquals("function()", IDE.outline().getTitle(15, 0));
-      assertEquals("function()", IDE.outline().getTitle(16, 0));      
-      assertEquals("body", IDE.outline().getTitle(17, 0));
+      IDE.OUTLINE.clickOpenImg(13, 0);
+      assertEquals("YourWidgetName : Object", IDE.OUTLINE.getTitle(14, 0));
+      assertEquals("function()", IDE.OUTLINE.getTitle(15, 0));
+      assertEquals("function()", IDE.OUTLINE.getTitle(16, 0));      
+      assertEquals("body", IDE.OUTLINE.getTitle(17, 0));
      
       //close "head" node
-      IDE.outline().clickOpenImg(1, 0);
+      IDE.OUTLINE.clickOpenImg(1, 0);
       
       //open "body" node
-      IDE.outline().clickOpenImg(2, 0);
-      assertEquals("p", IDE.outline().getTitle(3, 0));
+      IDE.OUTLINE.clickOpenImg(2, 0);
+      assertEquals("p", IDE.OUTLINE.getTitle(3, 0));
    }
 
 }

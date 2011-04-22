@@ -39,7 +39,7 @@ public class GroovyAnnotationAutocompleteTest extends BaseTest
    public void testGroovyAnnotation() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       for (int i = 0; i < 8; i++)
@@ -49,17 +49,17 @@ public class GroovyAnnotationAutocompleteTest extends BaseTest
       }
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      IDE.editor().typeTextIntoEditor(0, "@");
+     IDE.EDITOR.typeTextIntoEditor(0, "@");
       
-      IDE.codeAssistant().openForm();
-      IDE.codeAssistant().checkElementNotPresent("hello(String):String");
-      IDE.codeAssistant().checkElementPresent("Deprecated");
-      IDE.codeAssistant().checkElementPresent("Documented");
-      IDE.codeAssistant().checkElementPresent("Inherited");
-      IDE.codeAssistant().checkElementPresent("Override");
-      IDE.codeAssistant().checkElementPresent("Retention");
-      IDE.codeAssistant().checkElementPresent("SuppressWarnings");
-      IDE.codeAssistant().checkElementPresent("Target");
+      IDE.CODEASSISTANT.openForm();
+      IDE.CODEASSISTANT.checkElementNotPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("Deprecated");
+      IDE.CODEASSISTANT.checkElementPresent("Documented");
+      IDE.CODEASSISTANT.checkElementPresent("Inherited");
+      IDE.CODEASSISTANT.checkElementPresent("Override");
+      IDE.CODEASSISTANT.checkElementPresent("Retention");
+      IDE.CODEASSISTANT.checkElementPresent("SuppressWarnings");
+      IDE.CODEASSISTANT.checkElementPresent("Target");
       
       for (int i = 0; i < 3; i++)
       {
@@ -69,7 +69,7 @@ public class GroovyAnnotationAutocompleteTest extends BaseTest
       
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains("@Override"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("@Override"));
    }
    
 }

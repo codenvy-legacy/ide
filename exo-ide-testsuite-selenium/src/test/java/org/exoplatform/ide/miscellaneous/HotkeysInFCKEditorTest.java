@@ -103,7 +103,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       openFolder();
       openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, false);
       
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+A to select all text
@@ -143,16 +143,16 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //----- 4 ------------
       //Press Ctrl+S to check file saving
       //check tab title is marked by *
-      assertEquals(GOOGLE_GADGET_FILE + " *", IDE.editor().getTabTitle(0));
+      assertEquals(GOOGLE_GADGET_FILE + " *",IDE.EDITOR.getTabTitle(0));
       selenium.controlKeyDown();
       selenium.keyDown("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "S");
       selenium.keyUp("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "S");
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP);
       //check tab title is not marked by *
-      assertEquals(GOOGLE_GADGET_FILE, IDE.editor().getTabTitle(0));
+      assertEquals(GOOGLE_GADGET_FILE,IDE.EDITOR.getTabTitle(0));
       //close file      
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
    
    /**
@@ -169,7 +169,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //open file in WYDIWYG editor
       openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, false);
       //check Ctrl+F
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
       Thread.sleep(TestConstants.SLEEP);
       selenium.controlKeyDown();
@@ -185,7 +185,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //check Ctrl+D
       assertEquals(DEFAULT_TEXT_IN_GADGET, getTextFromCkEditor(0));
       
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.controlKeyDown();
       selenium.keyDown("//body", "D");
       selenium.keyUp("//body", "D");
@@ -196,7 +196,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check Ctrl+L
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.controlKeyDown();
       selenium.keyDown("//body", "L");
       selenium.keyUp("//body", "L");
@@ -219,7 +219,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       assertFalse(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
       
       Thread.sleep(TestConstants.SLEEP);
-      IDE.editor().closeFileTabIgnoreChanges(0);
+     IDE.EDITOR.closeFileTabIgnoreChanges(0);
    }
    
    //@Test
@@ -231,7 +231,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //open file in WYDIWYG editor
       openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, false);
       //select all
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
@@ -261,7 +261,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+Y
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
@@ -275,13 +275,13 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //check Ctrl+C, Ctrl+V
       final String textForCopyPaste = "copy-paste text";
       
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, textForCopyPaste);
       IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       
       
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
       //select All text
       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
@@ -310,7 +310,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       IDE.selectMainFrame();
       
       //check Ctrl+Home, Ctrl+End
-      IDE.editor().selectIFrameWithEditor(0);
+     IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
       selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
@@ -326,7 +326,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.editor().closeFileTabIgnoreChanges(0);
+     IDE.EDITOR.closeFileTabIgnoreChanges(0);
    }
    
    //@Test
@@ -348,17 +348,17 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //open FCK editor
       openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, false);
       
-      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_N);
+     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_N);
       
       checkCreateFileFromTemplateFormAndClose();
       
       Thread.sleep(TestConstants.SLEEP);
-      IDE.editor().closeFileTabIgnoreChanges(0);
+     IDE.EDITOR.closeFileTabIgnoreChanges(0);
    }
    
    private String getTextFromCkEditor(int tabIndex) throws Exception
    {
-      IDE.editor().selectIFrameWithEditor(tabIndex);
+     IDE.EDITOR.selectIFrameWithEditor(tabIndex);
       String text = selenium.getText("//body");
       IDE.selectMainFrame();
       return text;

@@ -111,10 +111,10 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //----- 2 ------------
       //Check Ctrl+S
       //open new file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+S
-      IDE.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
+     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       //check, that Save As dialog window appeared
       SaveFileUtils.checkSaveAsDialog(false);
       //close
@@ -137,16 +137,16 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       openFolder();
       //----- 1 ------------
       //Open several tabs (open existed documents and create some new)
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
 
       openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, false);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
 
       //----- 2 ------------
       //Open "Customize Hotkeys" window (Window->Customize Hotkeys)
       //TODO Form "Hotkeys" don't appear. See issue 730
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
 
       //----- 3 ------------
       //Select "New HTML File" and bind Ctrl+H to this command 
@@ -186,56 +186,56 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //----- 19 ------------
       //Try Ctrl+H and Alt+N hotkeys in several tabs
 
-      IDE.editor().selectTab(2);
+     IDE.EDITOR.selectTab(2);
 
       //press Alt+N
-      IDE.editor().runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
+     IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
       Thread.sleep(TestConstants.SLEEP);
 
       checkCreateFileFromTemplateFormAndClose();
 
       //press Ctrl+H
-      IDE.editor().runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
+     IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
 
       //check new html file created
-      assertEquals("Untitled file.html *", IDE.editor().getTabTitle(3));
-      IDE.editor().closeUnsavedFileAndDoNotSave(3);
+      assertEquals("Untitled file.html *",IDE.EDITOR.getTabTitle(3));
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
 
       //select first tab
-      IDE.editor().selectTab(0);
-      IDE.editor().runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
+     IDE.EDITOR.selectTab(0);
+     IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
       Thread.sleep(TestConstants.SLEEP);
 
       checkCreateFileFromTemplateFormAndClose();
       //press Ctrl+H
-      IDE.editor().runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
+     IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
 
       //check new html file created
-      assertEquals("Untitled file.html *", IDE.editor().getTabTitle(3));
-      IDE.editor().closeUnsavedFileAndDoNotSave(3);
+      assertEquals("Untitled file.html *",IDE.EDITOR.getTabTitle(3));
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
 
       //select second tab
-      IDE.editor().selectTab(1);
-      IDE.editor().runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
+     IDE.EDITOR.selectTab(1);
+     IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
 
       checkCreateFileFromTemplateFormAndClose();
 
       //press Ctrl+H
-      IDE.editor().runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
+     IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
 
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //check new html file created
-      assertEquals("Untitled file.html *", IDE.editor().getTabTitle(3));
-      IDE.editor().closeUnsavedFileAndDoNotSave(3);
+      assertEquals("Untitled file.html *",IDE.EDITOR.getTabTitle(3));
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
 
       //close all tabs
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    /**
@@ -253,7 +253,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //prepare hotkeys
       //Open "Customize Hotkeys" window (Window->Customize Hotkeys)
       //TODO 1 step not work, shold be fix call hotkeys form; see issue 729
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
 
       //check cutomize hotkeys dialog window appears
       checkCustomizeHotkeyDialogWindow();
@@ -307,12 +307,12 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
 
       //check new html file created
-      assertEquals("Untitled file.html *", IDE.editor().getTabTitle(0));
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+      assertEquals("Untitled file.html *",IDE.EDITOR.getTabTitle(0));
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
 
       //----- 3 ------------
-      IDE.menu().runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       Thread.sleep(TestConstants.SLEEP);
       checkCustomizeHotkeyDialogWindow();
 

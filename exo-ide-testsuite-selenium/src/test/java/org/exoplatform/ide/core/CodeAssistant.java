@@ -18,24 +18,21 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.IDE;
-import org.exoplatform.ide.TestConstants;
+import static org.junit.Assert.assertTrue;
 
 import java.awt.event.KeyEvent;
 
-import com.thoughtworks.selenium.Selenium;
+import org.exoplatform.ide.TestConstants;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Jan 17, 2011 2:27:36 PM vereshchaka $
  *
  */
-public class CodeAssistant
+public class CodeAssistant extends AbstractTestModule
 {
+   
    public interface Locators
    {
       /**
@@ -53,16 +50,6 @@ public class CodeAssistant
       public static final String JAVADOC_DIV = "exo-ide-autocomplete-doc-panel";
    }
 
-   private final Selenium selenium;
-   
-   private IDE ide;
-
-   public CodeAssistant(Selenium selenium, IDE ide)
-   {
-      this.selenium = selenium;
-      this.ide = ide;
-   }
-
    /**
     * Type text to input field of autocompletion form.
     * 
@@ -71,7 +58,7 @@ public class CodeAssistant
     */
    public  void typeToInput(String text) throws Exception
    {
-      selenium.typeKeys(CodeAssistant.Locators.INPUT, text);
+      selenium().typeKeys(CodeAssistant.Locators.INPUT, text);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
@@ -89,12 +76,12 @@ public class CodeAssistant
     */
    public void checkElementPresent(String elementTitle)
    {
-      assertTrue(selenium.isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
+      assertTrue(selenium().isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
    }
    
    public void checkElementNotPresent(String elementTitle)
    {
-      assertFalse(selenium.isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
+      assertFalse(selenium().isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
    }
 
    /**
@@ -107,7 +94,7 @@ public class CodeAssistant
       Thread.sleep(TestConstants.SLEEP_SHORT);
       for (int i = 0; i < row; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
    }
@@ -117,17 +104,17 @@ public class CodeAssistant
     */
    public void clearInput()
    {
-      selenium.focus(Locators.INPUT);
-      selenium.controlKeyDown();
-      selenium.keyPress(Locators.INPUT, "97");
-      selenium.controlKeyUp();
-      selenium.keyPressNative("" + KeyEvent.VK_DELETE);
+      selenium().focus(Locators.INPUT);
+      selenium().controlKeyDown();
+      selenium().keyPress(Locators.INPUT, "97");
+      selenium().controlKeyUp();
+      selenium().keyPressNative("" + KeyEvent.VK_DELETE);
    }
 
    public void closeForm()
    {
-      selenium.keyPressNative("" + KeyEvent.VK_ESCAPE);
-      selenium.waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID
+      selenium().keyPressNative("" + KeyEvent.VK_ESCAPE);
+      selenium().waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID
          + "\"); value == null", "5000");
    }
    
@@ -136,7 +123,7 @@ public class CodeAssistant
     */
    public void insertSelectedItem()
    {
-      selenium.keyPressNative("" + KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + KeyEvent.VK_ENTER);
    }
 
    /**
@@ -145,15 +132,15 @@ public class CodeAssistant
     */
    public void openForm() throws Exception
    {
-      ide.editor().runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
-      selenium.waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID
+      IDE().EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
+      selenium().waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID
          + "\"); value != null", "10000");
-      assertTrue(selenium.isElementPresent(Locators.PANEL_ID));
-      selenium.focus(Locators.INPUT);
+      assertTrue(selenium().isElementPresent(Locators.PANEL_ID));
+      selenium().focus(Locators.INPUT);
    }
    
    public void checDocFormPresent()
    {
-      assertTrue(selenium.isElementPresent(Locators.JAVADOC_DIV));
+      assertTrue(selenium().isElementPresent(Locators.JAVADOC_DIV));
    }
 }

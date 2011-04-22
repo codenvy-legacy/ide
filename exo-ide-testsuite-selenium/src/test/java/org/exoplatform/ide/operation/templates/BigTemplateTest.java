@@ -69,15 +69,15 @@ public class BigTemplateTest extends BaseTest
    public void testBigTemplate() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.navigator().clickOpenIconOfFolder(URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
 
       TemplateUtils.checkSaveAsTemplateWindow(selenium);
 
@@ -99,9 +99,9 @@ public class BigTemplateTest extends BaseTest
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton");
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       // check "Create file" dialog window
@@ -111,7 +111,7 @@ public class BigTemplateTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    @AfterClass

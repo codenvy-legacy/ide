@@ -94,10 +94,10 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    {
       // Open groovy file with test content
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(SERVICE_FILE_NAME, false);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(SERVICE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);      
       
       // test error marks
@@ -133,8 +133,8 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      IDE.editor().clickOnEditor();
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).startsWith(
+     IDE.EDITOR.clickOnEditor();
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" 
          + "import Path\n"
          + "import javax.ws.rs.GET\n"
@@ -150,14 +150,14 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(32)));      
       
       // edit text
-      IDE.editor().deleteFileContent();
+     IDE.EDITOR.deleteFileContent();
       Thread.sleep(TestConstants.SLEEP);
       
       // test removing error marks if file is empty
       // assertFalse(selenium.getEval("this.browserbot.findElement(\"//div[@class=\'CodeMirror-line-numbers\']/div[text() = \'9\']\").hasAttribute(\"title\")") == "true");           
       
       // add test text
-      IDE.editor().typeTextIntoEditor(0, 
+     IDE.EDITOR.typeTextIntoEditor(0, 
          "Integer1 d \n"
          + "@POST \n"
          + "public Base64 hello(@PathParam(\"name\") Base64 name) {}"
@@ -177,8 +177,8 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP * 2);
       
       // test import statement and code error marks
-      IDE.editor().clickOnEditor();
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).startsWith(
+     IDE.EDITOR.clickOnEditor();
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "import java.util.prefs.Base64\n"
          + "Integer1 d \n"
          + "@POST \n"
@@ -189,23 +189,23 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(4, "'PathParam' cannot be resolved to a type; ")));       
 
       // turn off line numbers
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
       
       // turn on line numbers and test error marks
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);      
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);      
       Thread.sleep(TestConstants.SLEEP);
       secondVerificationOfErrorMarks();            
       
       // save text, reopen and test error marks
       saveCurrentFile();
-      IDE.editor().closeTab(0);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(SERVICE_FILE_NAME, false);
+     IDE.EDITOR.closeTab(0);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(SERVICE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);           
       secondVerificationOfErrorMarks();            
           
       // refresh browser and test error marks
       refresh();
-      IDE.editor().clickOnEditor();
+     IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.SLEEP);
       secondVerificationOfErrorMarks();            
    }
@@ -224,10 +224,10 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    {
       // Open template file with test content
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TEMPLATE_FILE_NAME, false);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TEMPLATE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);      
       
       // test error marks
@@ -258,8 +258,8 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // test import statement
-      IDE.editor().clickOnEditor();
-      assertTrue(IDE.editor().getTextFromCodeEditor(1).startsWith(
+     IDE.EDITOR.clickOnEditor();
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(1).startsWith(
          "<%\n" 
          + "  import java.util.prefs.Base64\n"
          + "%>\n"
@@ -274,8 +274,8 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      IDE.editor().closeFileTabIgnoreChanges(1);
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeFileTabIgnoreChanges(1);
+     IDE.EDITOR.closeTab(0);
       
       try
       {

@@ -90,17 +90,17 @@ public class ClosingAndSaveAsFileTest extends BaseTest
    public void testClosingAnsSaveAsFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
       
       //----- 1 ----------
       //open 2 new files
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       
       //----- 2 ----------
       //try to close xml file
-      IDE.editor().closeTab(1);
+     IDE.EDITOR.closeTab(1);
       //save file as dialog appears
       SaveFileUtils.checkSaveAsDialog(true);
       //close save file as dialog
@@ -110,29 +110,29 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       
       //----- 3 ----------
       //select first file (text file)
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       //save file from tab
       saveAsUsingToolbarButton(FILE_NAME_1);
       
       //file stays in editor panel
       checkCodeEditorOpened(0);
       checkCodeEditorOpened(1);
-      assertEquals(FILE_NAME_1, IDE.editor().getTabTitle(0));
+      assertEquals(FILE_NAME_1,IDE.EDITOR.getTabTitle(0));
    }
    
    @Test
    public void testSaveAsFileAfterTryingToCloseNewFile() throws Exception
    {
       refresh();
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
       
       //----- 1 ----------
       //open new file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       
       //----- 2 ----------
       //try to close xml file
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       //save file as dialog appears
       SaveFileUtils.checkSaveAsDialog(true);
       //close save file as dialog

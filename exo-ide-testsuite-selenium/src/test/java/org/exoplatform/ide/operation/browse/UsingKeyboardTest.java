@@ -61,8 +61,8 @@ public class UsingKeyboardTest extends BaseTest
    public void setUp() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -81,13 +81,13 @@ public class UsingKeyboardTest extends BaseTest
       }
 
       createFolder(TEST_FOLDER);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/"); 
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/"); 
       createFolder(TEST_SUBFOLDER);
 
       Thread.sleep(TestConstants.SLEEP);
 
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
@@ -96,7 +96,7 @@ public class UsingKeyboardTest extends BaseTest
          + TEST_SUBFOLDER + "]/col[fieldName=title]"));
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/"); 
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/"); 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -105,10 +105,10 @@ public class UsingKeyboardTest extends BaseTest
          + TEST_SUBFOLDER + "]/col[fieldName=title]"));
 
       // test keyboard with opened Content Panel
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
 
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
@@ -116,7 +116,7 @@ public class UsingKeyboardTest extends BaseTest
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title="
          + TEST_SUBFOLDER + "]/col[fieldName=title]"));
 
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    /**
@@ -134,7 +134,7 @@ public class UsingKeyboardTest extends BaseTest
       }
 
       createFolder(TEST_FOLDER);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/"); 
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/"); 
 
       createSaveAndCloseFile(MenuCommands.New.GOOGLE_GADGET_FILE, TEST_FILE, 0);
 
@@ -150,7 +150,7 @@ public class UsingKeyboardTest extends BaseTest
       assertElementNotPresentSearchResultsTree(TEST_FILE);
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
-      IDE.navigator().selectItem(WS_URL); 
+      IDE.NAVIGATION.selectItem(WS_URL); 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -189,18 +189,18 @@ public class UsingKeyboardTest extends BaseTest
 
       // refresh page and open test file
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/"); 
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/"); 
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);     
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(TEST_FILE, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TEST_FILE, false);
 
       // open Outline Panel
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.editor().selectTab(0);
-      IDE.editor().clickOnEditor();
+     IDE.EDITOR.selectTab(0);
+     IDE.EDITOR.clickOnEditor();
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
@@ -210,18 +210,18 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // check outline tree
-      IDE.outline().assertElementPresentOutlineTree("Module");
-      IDE.outline().assertElementPresentOutlineTree("ModulePrefs");
-      IDE.outline().assertElementPresentOutlineTree("Content");
-      IDE.outline().assertElementNotPresentOutlineTree("CDATA");
+      IDE.OUTLINE.assertElementPresentOutlineTree("Module");
+      IDE.OUTLINE.assertElementPresentOutlineTree("ModulePrefs");
+      IDE.OUTLINE.assertElementPresentOutlineTree("Content");
+      IDE.OUTLINE.assertElementNotPresentOutlineTree("CDATA");
 
       // verify keyboard key pressing within the outline
-      IDE.outline().selectItemInOutlineTree("Module");
+      IDE.OUTLINE.selectItemInOutlineTree("Module");
       assertEquals("2 : 1", getCursorPositionUsingStatusBar());
 
       // open "Content" node in the Outline Panel and got to "CDATA" node
 
-      IDE.outline().selectItemInOutlineTree("Content");
+      IDE.OUTLINE.selectItemInOutlineTree("Content");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
@@ -234,16 +234,16 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       // check outline tree     
-      IDE.outline().assertElementPresentOutlineTree("CDATA");
+      IDE.OUTLINE.assertElementPresentOutlineTree("CDATA");
       assertEquals("6 : 1", getCursorPositionUsingStatusBar());
 
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
 
    @After
    public void tearDown() throws Exception
    {
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       selectWorkspaceTab();
    }

@@ -93,13 +93,13 @@ public class ViewVersionHistoryTest extends VersioningTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
       // open folder
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       //Open new file:
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");  
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");  
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
       //Check there is no "View Version History" button
       checkViewVersionHistoryButtonPresent(false);
       //Save file:
@@ -111,7 +111,7 @@ public class ViewVersionHistoryTest extends VersioningTest
 
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE.editor().typeTextIntoEditor(0, version1Text);
+     IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       //File content is changed, but not saved yet:
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
@@ -122,17 +122,17 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkViewVersionHistoryButtonState(true);
 
       //Close file:
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(false);
       //Open versioned file again:
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_0, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_0, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
 
       //Open new file:
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       //Check there is no "View Version History" button
       checkViewVersionHistoryButtonPresent(false);
       //Save file:
@@ -143,29 +143,29 @@ public class ViewVersionHistoryTest extends VersioningTest
       checkViewVersionHistoryButtonState(false);
 
       //Close second file, versioned file becomes active:
-      IDE.editor().closeTab(1);
+     IDE.EDITOR.closeTab(1);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
       //Open second file (is not versioned):
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_4, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_4, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
 
       //Select versioned file in editor:
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
 
       //Select unversioned file in editor:
-      IDE.editor().selectTab(1);
+     IDE.EDITOR.selectTab(1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(false);
 
-      IDE.editor().closeTab(0);
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
 
    /**
@@ -180,15 +180,15 @@ public class ViewVersionHistoryTest extends VersioningTest
       selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
       
       //Open new file
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkViewVersionHistoryButtonPresent(false);
       //Save file
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
       saveAsUsingToolbarButton(FILE_1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
@@ -196,7 +196,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE.editor().typeTextIntoEditor(0, version1Text);
+     IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
@@ -205,7 +205,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       //Open version panel
       
 //      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
@@ -215,7 +215,7 @@ public class ViewVersionHistoryTest extends VersioningTest
 //      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
 //      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       
       checkVersionPanelState(false);
 
@@ -223,14 +223,14 @@ public class ViewVersionHistoryTest extends VersioningTest
 //      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
 //      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       
       checkVersionPanelState(true);
       //Close file:
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       assertFalse(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
    }
 
@@ -246,35 +246,35 @@ public class ViewVersionHistoryTest extends VersioningTest
       selenium.refresh();
       selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       // open folder
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
       
       //Open file
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
       //Go to end of document
-      IDE.editor().clickOnEditor();
+     IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       //Edit file and save:
-      IDE.editor().typeTextIntoEditor(0, version2Text);
+     IDE.EDITOR.typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //Edit file and save:
-      IDE.editor().typeTextIntoEditor(0, version3Text);
+     IDE.EDITOR.typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
 //      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
@@ -285,7 +285,7 @@ public class ViewVersionHistoryTest extends VersioningTest
       //Open again with button
   
       //runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
@@ -293,30 +293,30 @@ public class ViewVersionHistoryTest extends VersioningTest
       //Close again with button
       
       //runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       
       checkVersionPanelState(false);
 
       //Edit file and save
-      IDE.editor().clickOnEditor();
+     IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE.editor().typeTextIntoEditor(0, version4Text);
+     IDE.EDITOR.typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
       //Open again with button
       //runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
       checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
       //Close file
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       assertFalse(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
    }
 
@@ -334,30 +334,30 @@ public class ViewVersionHistoryTest extends VersioningTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
       // open folder
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);     
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);     
       Thread.sleep(TestConstants.SLEEP);
       
       //Open file
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_1, true);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
 
       //Open new file:
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
-      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION_HISTORY, false);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION_HISTORY, false);
 
       //Select tab with saved file
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
 
       //Select tab with unsaved file
-      IDE.editor().selectTab(1);
-      IDE.menu().checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
-      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION_HISTORY, false);
+     IDE.EDITOR.selectTab(1);
+      IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
+      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION_HISTORY, false);
       saveAsUsingToolbarButton(FILE_2);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
@@ -366,52 +366,52 @@ public class ViewVersionHistoryTest extends VersioningTest
       //Edit second file and save
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE.editor().typeTextIntoEditor(1, version1Text);
+     IDE.EDITOR.typeTextIntoEditor(1, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
-      IDE.editor().typeTextIntoEditor(1, version2Text);
+     IDE.EDITOR.typeTextIntoEditor(1, version2Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //Open version history for second file
       
       //runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkVersionPanelState(true);
-      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(1));
+      checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(1));
 
       //Select first file:
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       checkVersionPanelState(false);
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkVersionPanelState(true);
-      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(0));
+      checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(0));
 
       //Select second file: 
-      IDE.editor().selectTab(1);
+     IDE.EDITOR.selectTab(1);
       checkVersionPanelState(false);
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       checkVersionPanelState(true);
-      checkTextOnVersionPanel(IDE.editor().getTextFromCodeEditor(1));
+      checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(1));
 
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       checkViewVersionHistoryButtonPresent(false);
       assertFalse(selenium.isElementPresent("scLocator=//Layout[ID=\"ideVersionContentForm\"]"));
       // View version button
-      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION, false);
+      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION, false);
       //Restore button
-      IDE.toolbar().checkButtonExistAtRight(MenuCommands.File.RESTORE_VERSION, false);
+      IDE.TOOLBAR.checkButtonExistAtRight(MenuCommands.File.RESTORE_VERSION, false);
       //Newer version button
-      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_NEWER_VERSION, false);
+      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.View.VIEW_NEWER_VERSION, false);
       //Older version button
-      IDE.toolbar().checkButtonExistAtRight(ToolbarCommands.View.VIEW_OLDER_VERSION, false);
+      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.View.VIEW_OLDER_VERSION, false);
 
       saveAsByTopMenu(FILE_3);
       checkViewVersionHistoryButtonPresent(true);
@@ -419,23 +419,23 @@ public class ViewVersionHistoryTest extends VersioningTest
       
       selenium.keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE.editor().typeTextIntoEditor(2, version1Text);
+     IDE.EDITOR.typeTextIntoEditor(2, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkViewVersionHistoryButtonPresent(true);
       checkViewVersionHistoryButtonState(true);
-      IDE.editor().typeTextIntoEditor(2, version2Text);
+     IDE.EDITOR.typeTextIntoEditor(2, version2Text);
       saveCurrentFile();
-      IDE.editor().typeTextIntoEditor(2, version3Text);
+     IDE.EDITOR.typeTextIntoEditor(2, version3Text);
 
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
       checkVersionPanelState(true);
       checkTextOnVersionPanel(version1Text + version2Text);
 
-      IDE.editor().closeTab(0);
-      IDE.editor().closeTab(0);
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
 
    @AfterClass

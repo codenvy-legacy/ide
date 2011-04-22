@@ -72,20 +72,20 @@ public class UploadingGoogleGadgetTest extends BaseTest
    public void testUploadGoogleGadget() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       
       uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().assertItemPresent(URL + "/" + FILE_NAME);
+      IDE.NAVIGATION.assertItemPresent(URL + "/" + FILE_NAME);
       String url = getSelectedItemUrl();
       
       assertEquals(URL + "/" + FILE_NAME, url);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       
       assertEquals("exo:googleGadget", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
       assertEquals(MimeType.GOOGLE_GADGET, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));

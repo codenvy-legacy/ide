@@ -80,7 +80,7 @@ public class RemoveNonDefaultProjectTemplatesTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //----- 1 ----------------
       //open create project from template form
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       
       checkCreateProjectFromTemplateForm(selenium);
       
@@ -117,7 +117,7 @@ public class RemoveNonDefaultProjectTemplatesTest extends BaseTest
       
       //------ 1 --------
       //Click on "New->Project From Template..."  toolbar button.
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       Thread.sleep(TestConstants.SLEEP);
       
       // check "Create project" dialog window

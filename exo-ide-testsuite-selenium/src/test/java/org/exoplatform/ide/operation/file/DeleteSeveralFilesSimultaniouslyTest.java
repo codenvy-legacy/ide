@@ -91,38 +91,38 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
    public void testDeleteSeveralFilesSimultaniously() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".groovy");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".groovy");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".html");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".html");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".xml");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".xml");
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, false);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, false);
       
             
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
       
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
 //      Thread.sleep(TestConstants.SLEEP_SHORT);
       
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/"));
@@ -144,21 +144,21 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
      
       
       
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".groovy");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".groovy");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".html");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".html");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.navigator().selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".xml");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + CUR_TIME + ".xml");
       selenium.controlKeyUp();
             
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.menu().checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      IDE.toolbar().assertButtonEnabled(ToolbarCommands.File.DELETE, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
       
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
           
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]/"));
@@ -179,7 +179,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       assertTrue(selenium.isTextPresent(FOLDER_NAME));
       
       
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]/"));
       assertTrue(selenium.isTextPresent("Delete Item(s)"));
@@ -199,7 +199,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       assertTrue(selenium.isTextPresent(FOLDER_NAME));
       
       
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]/"));
       assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]/"));
       assertTrue(selenium.isTextPresent("Delete Item(s)"));

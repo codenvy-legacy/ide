@@ -73,17 +73,17 @@ public class UploadingGroovyFileTest extends BaseTest
    public void testUploadingGroovy() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       
       uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(GROOVY_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GROOVY_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
       checkCodeEditorOpened(0);
-      String text = IDE.editor().getTextFromCodeEditor(0);
+      String text =IDE.EDITOR.getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
 
@@ -91,7 +91,7 @@ public class UploadingGroovyFileTest extends BaseTest
 
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
-      IDE.menu().runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
 
       assertEquals("exo:groovyResourceContainer", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
       assertEquals(MimeType.GROOVY_SERVICE, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
@@ -108,7 +108,7 @@ public class UploadingGroovyFileTest extends BaseTest
       
       //----- 1 --------------
       //open upload form
-      IDE.menu().runCommand(MenuCommands.File.FILE, formName);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, formName);
 
       assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/body/"));
       assertTrue(selenium.isElementPresent("//div[@class='stretchImgButtonDisabled' and @eventproxy='ideUploadFormUploadButton']"));

@@ -98,7 +98,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
    @After
    public void cleanTest() throws Exception
    {
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
 
    /**
@@ -108,8 +108,8 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
    public void testGenerateNodeTypeForm() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -117,7 +117,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       checkDeployNodeTypeButton(true, true);
 
       //Click preview node type button and check dialog window appears
-      IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkDeployNodeTypeFormPresent();
 
@@ -127,7 +127,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeployNodeTypeForm\"]"));
 
       //Click preview node type button and check dialog window appears
-      IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkDeployNodeTypeFormPresent();
       
@@ -144,7 +144,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       assertTrue(errorMessage.contains("Unsupported content type:text/x-jcr-cnd"));
       selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton");
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
    
    /**
@@ -159,8 +159,8 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -168,7 +168,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       checkDeployNodeTypeButton(true, true);
 
       //Click preview node type button and check dialog window appears
-      IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkDeployNodeTypeFormPresent();
       
@@ -184,7 +184,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       
       checkViewWithGeneratedCodePresent(false);
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
    
    /**
@@ -199,8 +199,8 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
 
       //Check controls are present and enabled:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -208,7 +208,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       checkDeployNodeTypeButton(true, true);
 
       //Click preview node type button and check dialog window appears
-      IDE.toolbar().runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       checkDeployNodeTypeFormPresent();
       
@@ -228,7 +228,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       
       checkViewWithGeneratedCodePresent(false);
       
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
    }
 
 }

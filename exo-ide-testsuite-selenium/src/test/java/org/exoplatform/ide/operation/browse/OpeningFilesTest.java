@@ -51,40 +51,40 @@ public class OpeningFilesTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       createFolder(folderName);
 
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, file1Content);
       saveAsUsingToolbarButton(file1Name);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.editor().closeTab(0);
+     IDE.EDITOR.closeTab(0);
 
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.editor().closeTab(0);
-      IDE.navigator().assertItemPresent(WS_URL + folderName + "/" + file2Name); 
+     IDE.EDITOR.closeTab(0);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/" + file2Name); 
 
       // Delete one file  
-      IDE.navigator().selectItem(WS_URL + folderName + "/" + file2Name);
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.selectItem(WS_URL + folderName + "/" + file2Name);
+      IDE.NAVIGATION.deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().assertItemNotPresent(WS_URL + folderName + "/" + file2Name);
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folderName + "/" + file2Name);
 
       //Open another file from the same folder
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(file1Name, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(file1Name, false);
       Thread.sleep(TestConstants.SLEEP);
       //Check text of opened file
-      String text = IDE.editor().getTextFromCodeEditor(0);
+      String text =IDE.EDITOR.getTextFromCodeEditor(0);
       assertEquals(file1Content, text);
       
       //Delete folder with file
-      IDE.navigator().selectItem(WS_URL + folderName + "/");
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.selectItem(WS_URL + folderName + "/");
+      IDE.NAVIGATION.deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
       
       //Check items not present in navigation tree
-      IDE.navigator().assertItemPresent(WS_URL + folderName + "/");
-      IDE.navigator().assertItemPresent(WS_URL + folderName + "/" + file1Name);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/" + file1Name);
    }
 
 }

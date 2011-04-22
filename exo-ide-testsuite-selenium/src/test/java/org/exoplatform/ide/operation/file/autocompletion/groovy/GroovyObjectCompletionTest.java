@@ -39,7 +39,7 @@ public class GroovyObjectCompletionTest extends BaseTest
    public void testGroovyObjectCompletion() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       for (int i = 0; i < 10; i++)
@@ -49,27 +49,27 @@ public class GroovyObjectCompletionTest extends BaseTest
       }
 
       selenium.keyDown("//body[@class='editbox']", "\\35");
-      IDE.editor().typeTextIntoEditor(0, ".");
+     IDE.EDITOR.typeTextIntoEditor(0, ".");
 
-      IDE.codeAssistant().openForm();
+      IDE.CODEASSISTANT.openForm();
 
-      IDE.codeAssistant().typeToInput("con");
+      IDE.CODEASSISTANT.typeToInput("con");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      IDE.codeAssistant().checkElementPresent("concat(String):String");
-      IDE.codeAssistant().checkElementPresent("contains(CharSequence):boolean");
-      IDE.codeAssistant().checkElementPresent("contentEquals(StringBuffer):boolean");
-      IDE.codeAssistant().checkElementPresent("contentEquals(CharSequence):boolean");
+      IDE.CODEASSISTANT.checkElementPresent("concat(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("contains(CharSequence):boolean");
+      IDE.CODEASSISTANT.checkElementPresent("contentEquals(StringBuffer):boolean");
+      IDE.CODEASSISTANT.checkElementPresent("contentEquals(CharSequence):boolean");
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      IDE.codeAssistant().insertSelectedItem();
+      IDE.CODEASSISTANT.insertSelectedItem();
 
-      assertTrue(IDE.editor().getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
 }

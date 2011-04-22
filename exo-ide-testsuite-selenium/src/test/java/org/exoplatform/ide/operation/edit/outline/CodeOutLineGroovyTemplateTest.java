@@ -73,7 +73,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       
       try
       {
@@ -97,15 +97,15 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       //open file with text
       // Open groovy file with test content
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().selectItem(WS_URL + TEST_FOLDER + "/"); 
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/"); 
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);
 
       //---- 3 -----------------
       //open Outline Panel
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 4 -----------------
@@ -127,7 +127,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       //delete some tags in groovy template file
       for (int i = 0; i < 7; i++)
       {
-         IDE.editor().runHotkeyWithinEditor(0, true, false, 68);
+        IDE.EDITOR.runHotkeyWithinEditor(0, true, false, 68);
       }
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("26 : 1", getCursorPositionUsingStatusBar());
@@ -136,7 +136,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       assertEquals("div", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[1]/col[0]"));
       assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
       //check selection in outline tree
-      IDE.outline().checkOutlineTreeNodeSelected(1, "div", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(1, "div", true);
       
       //---- 6 -----------------
       //move in editor
@@ -155,7 +155,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       assertEquals("a", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[2]/col[0]"));
       assertEquals("groovy code", selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[3]/col[0]"));
       //check selection in outline tree
-      IDE.outline().checkOutlineTreeNodeSelected(2, "a", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(2, "a", true);
       assertEquals("27 : 1", getCursorPositionUsingStatusBar());
    }
    

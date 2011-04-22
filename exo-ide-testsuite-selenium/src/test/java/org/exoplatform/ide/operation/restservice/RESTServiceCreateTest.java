@@ -97,16 +97,16 @@ public class RESTServiceCreateTest extends BaseTest
    public void testCreatingRESTService() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.toolbar().runCommand(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      assertEquals("Untitled file.grs *", IDE.editor().getTabTitle(0));
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      assertEquals("Untitled file.grs *",IDE.EDITOR.getTabTitle(0));
       saveAsUsingToolbarButton(FIRST_NAME);
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
 
       assertTrue(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
 
@@ -126,7 +126,7 @@ public class RESTServiceCreateTest extends BaseTest
 
       assertFalse(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
 
-      IDE.toolbar().runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
 
       assertTrue(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
 

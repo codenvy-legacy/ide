@@ -58,7 +58,7 @@ public class CreateFolderTest extends BaseTest
    {
       //****TODO********fix
       Thread.sleep(TestConstants.SLEEP);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       //****************
       selenium.focus("//input[@name='ideCreateFolderFormNameField']");
       // clear dafault name in textfield
@@ -71,7 +71,7 @@ public class CreateFolderTest extends BaseTest
       waitForElementNotPresent("ideCreateFolderFormNameField");
       assertFalse(selenium.isElementPresent("ideCreateFolderFormNameField"));
       assertTrue(selenium.isTextPresent(FOLDER_NAME_TOOLBAR));
-      IDE.navigator().assertItemPresent(URL + FOLDER_NAME_TOOLBAR + "/");
+      IDE.NAVIGATION.assertItemPresent(URL + FOLDER_NAME_TOOLBAR + "/");
       assertEquals(200, VirtualFileSystemUtils.get(URL + FOLDER_NAME_TOOLBAR).getStatusCode());
    }
 
@@ -89,13 +89,13 @@ public class CreateFolderTest extends BaseTest
       waitForRootElement();
       Thread.sleep(TestConstants.SLEEP);
       //run command for create folder
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       //create folder
       selenium.click("ideCreateFolderFormCreateButton");
       //check disapear menu after create of folder
       assertFalse(selenium.isElementPresent("ideCreateFolderForm"));
       //check folder in tread menu
-      IDE.navigator().assertItemPresent(URL + FOLDER_NAME_DEFOLT + "/");
+      IDE.NAVIGATION.assertItemPresent(URL + FOLDER_NAME_DEFOLT + "/");
       assertEquals(200, VirtualFileSystemUtils.get(URL + URLEncoder.encode("New Folder", "UTF-8")).getStatusCode());
    }
 

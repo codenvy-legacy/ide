@@ -85,14 +85,14 @@ public class HighlightCurrentLineTest extends BaseTest
    {
       //open HTML-file with required text
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL);
-      IDE.menu().runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 //      Thread.sleep(TestConstants.SLEEP);
       
-      IDE.navigator().openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);      
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);      
 
       // get line Position Left
-      int contentPanelPositionLeft = selenium.getElementPositionLeft(IDE.editor().getContentPanelLocator(0)).intValue();
+      int contentPanelPositionLeft = selenium.getElementPositionLeft(IDE.EDITOR.getContentPanelLocator(0)).intValue();
       linePositionLeft = contentPanelPositionLeft + EDITOR_LEFT_OFFSET_POSITION;
            
       // test that new HTML file is opened in editor, first line is highlighted
@@ -109,9 +109,9 @@ public class HighlightCurrentLineTest extends BaseTest
       
       selenium.isElementPresent(LINE_HIGHLIGHTER_LOCATOR);
 
-      assertEquals(selenium.getElementPositionLeft(IDE.editor().getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
+      assertEquals(selenium.getElementPositionLeft(IDE.EDITOR.getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
          linePositionLeft);
-      assertEquals(selenium.getElementPositionTop(IDE.editor().getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
+      assertEquals(selenium.getElementPositionTop(IDE.EDITOR.getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
          linePositionTop);
       
       
@@ -143,7 +143,7 @@ public class HighlightCurrentLineTest extends BaseTest
       lineHighlighterTest(8, 0);      
 
       // remove last line
-      IDE.menu().runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
 //      Thread.sleep(TestConstants.SLEEP_SHORT);
       
       lineHighlighterTest(8, 0);
@@ -154,7 +154,7 @@ public class HighlightCurrentLineTest extends BaseTest
       lineHighlighterTest(8, 0);
 
       // Click in menu "File>New->REST Service".
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       lineHighlighterTest(1, 1);
       
@@ -175,21 +175,21 @@ public class HighlightCurrentLineTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       // switch tab to previous file.
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       lineHighlighterTest(8, 0);      
       
       // Return to new HTML file
-      IDE.editor().selectTab(1);
+     IDE.EDITOR.selectTab(1);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       lineHighlighterTest(2, 1);      
      
       // switch tab to previous file.
-      IDE.editor().selectTab(0);
+     IDE.EDITOR.selectTab(0);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       // goto end of first line 
-      IDE.editor().clickOnEditor();
+     IDE.EDITOR.clickOnEditor();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
       Thread.sleep(TestConstants.SLEEP_SHORT);      
@@ -237,9 +237,9 @@ public class HighlightCurrentLineTest extends BaseTest
       
       selenium.isElementPresent(LINE_HIGHLIGHTER_LOCATOR);
 
-      assertEquals(selenium.getElementPositionLeft(IDE.editor().getContentPanelLocator(tabIndex) + LINE_HIGHLIGHTER_LOCATOR),
+      assertEquals(selenium.getElementPositionLeft(IDE.EDITOR.getContentPanelLocator(tabIndex) + LINE_HIGHLIGHTER_LOCATOR),
          linePositionLeft);
-      assertEquals(selenium.getElementPositionTop(IDE.editor().getContentPanelLocator(tabIndex) + LINE_HIGHLIGHTER_LOCATOR),
+      assertEquals(selenium.getElementPositionTop(IDE.EDITOR.getContentPanelLocator(tabIndex) + LINE_HIGHLIGHTER_LOCATOR),
          linePositionTop);
    }
    
@@ -267,8 +267,8 @@ public class HighlightCurrentLineTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      IDE.editor().closeUnsavedFileAndDoNotSave(1);
-      IDE.editor().closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
    }   
 

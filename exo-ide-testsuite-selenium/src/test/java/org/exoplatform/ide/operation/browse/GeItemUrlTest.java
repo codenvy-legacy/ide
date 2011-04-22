@@ -59,29 +59,29 @@ public class GeItemUrlTest extends BaseTest
    {
       //Create first file
       waitForRootElement();
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.editor().deleteLinesInEditor(7);
-      assertEquals("", IDE.editor().getTextFromCodeEditor(0));
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+     IDE.EDITOR.deleteLinesInEditor(7);
+      assertEquals("",IDE.EDITOR.getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content1);
       saveAsUsingToolbarButton(file1Name);
       Thread.sleep(TestConstants.SLEEP * 3);
 
-      IDE.editor().closeTab(0);
-      IDE.navigator().assertItemPresent(WS_URL + file1Name);
+     IDE.EDITOR.closeTab(0);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + file1Name);
 
       createFolder(folderName);
-      IDE.toolbar().runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals("", IDE.editor().getTextFromCodeEditor(0));
+      assertEquals("",IDE.EDITOR.getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content2);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.editor().closeTab(0);
-      IDE.navigator().assertItemPresent(WS_URL + folderName + "/" + file2Name);
+     IDE.EDITOR.closeTab(0);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/" + file2Name);
       
       //Refresh root item
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommand("Refresh Selected Folder");
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.TOOLBAR.runCommand("Refresh Selected Folder");
       String workspaceName =
          selenium.getText("//div[@ID=\"ideNavigatorItemTreeGrid\"]//div[@class=\"ide-Tree-label\"]/");
       String url = getSelectedItemUrl();
@@ -97,13 +97,13 @@ public class GeItemUrlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //Check get URL for file in root of the tree
-      IDE.navigator().selectItem(WS_URL + file1Name);
+      IDE.NAVIGATION.selectItem(WS_URL + file1Name);
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + file1Name));
 
       //Check get URL for folder in root of the tree
-      IDE.navigator().selectItem(WS_URL + folderName + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + folderName + "/");
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/"));
@@ -116,9 +116,9 @@ public class GeItemUrlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //Check get URL for the file in the folder
-      IDE.navigator().clickOpenIconOfFolder(WS_URL + folderName + "/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + folderName + "/");
       Thread.sleep(TestConstants.SLEEP);
-      IDE.navigator().selectItem(WS_URL + folderName + "/" + file2Name);
+      IDE.NAVIGATION.selectItem(WS_URL + folderName + "/" + file2Name);
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
@@ -131,8 +131,8 @@ public class GeItemUrlTest extends BaseTest
    @Test
    public void testGetFileUrlWithSearch() throws Exception
    {
-      IDE.navigator().selectRootOfWorkspace();
-      IDE.toolbar().runCommand("Search...");
+      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.TOOLBAR.runCommand("Search...");
       Thread.sleep(TestConstants.SLEEP);
 
       chekAppearSerchForm();
@@ -159,22 +159,22 @@ public class GeItemUrlTest extends BaseTest
       String workspaceName = selenium.getText(WORK_SPACE_LOCATOR);
 
       //Check get URL for first file
-      IDE.navigator().selectItemInSerchTree(WS_URL + file1Name);
+      IDE.NAVIGATION.selectItemInSerchTree(WS_URL + file1Name);
       String url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + file1Name));
 
       //Check get URL for second file
-      IDE.navigator().selectItemInSerchTree(WS_URL + folderName + "/" + file2Name);
+      IDE.NAVIGATION.selectItemInSerchTree(WS_URL + folderName + "/" + file2Name);
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
 
       selectWorkspaceTab();
-      IDE.navigator().selectItem(WS_URL + folderName + "/");
-      IDE.navigator().deleteSelectedItems();
-      IDE.navigator().selectItem(WS_URL + file1Name);
-      IDE.navigator().deleteSelectedItems();
+      IDE.NAVIGATION.selectItem(WS_URL + folderName + "/");
+      IDE.NAVIGATION.deleteSelectedItems();
+      IDE.NAVIGATION.selectItem(WS_URL + file1Name);
+      IDE.NAVIGATION.deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
    }
 
