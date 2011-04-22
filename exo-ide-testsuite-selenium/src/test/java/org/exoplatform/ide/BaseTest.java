@@ -321,9 +321,9 @@ public abstract class BaseTest
     * @param index
     * @return {@link String} name
     */
-   protected String getItemNameFromWorkspaceTree(int index)
+   protected String getItemNameFromWorkspaceTree(String name)
    {
-      return selenium.getText("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[" + index + "]/col[0]");
+      return selenium.getText("//div[@ID=\"ideNavigatorItemTreeGrid\"]//table//td/div[@class=\"ide-Tree-label\" and text()=" +"'" + name + "'"+"]");
    }
 
    /**
@@ -332,10 +332,10 @@ public abstract class BaseTest
    * @param index starting from 0
    * @return {@link String} name
    */
-   protected String getItemNameFromSearchResultsTree(int index)
+   protected String getItemNameFromSearchResultsTree(String name)
    {
       return selenium
-         .getText("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[" + index + "]/col[0]");
+         .getText("//div[@ID=\"ideSearchResultItemTreeGrid\"]//table//tbody//td/div[@class=\"ide-Tree-label\" and text()="+"'"+name+"'"+"]");
    }
 
    /*  protected void typeTextTo(String locator, String text) throws Exception
