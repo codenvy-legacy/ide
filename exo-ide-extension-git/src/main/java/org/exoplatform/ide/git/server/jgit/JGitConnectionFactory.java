@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.server.jgit;
 
+import org.eclipse.jgit.events.ListenerList;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
@@ -31,16 +32,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
+import java.util.ServiceLoader;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: JGitConnectionFactory.java 22811 2011-03-22 07:28:35Z andrew00x
  *          $
  */
-@SuppressWarnings("serial")
 public class JGitConnectionFactory extends GitConnectionFactory
 {
+   private static ServiceLoader<GitCommandListener> gitCommandListeners = ServiceLoader.load(GitCommandListener.class);
+
    /*
     * XXX : Temporary solution to get access to remote Git Repository.
     * Need find appropriate place for it at least.
@@ -56,11 +61,15 @@ public class JGitConnectionFactory extends GitConnectionFactory
     * 
     * username=andrew00x
     * password=secret
-    * ssh.host=git@github.com
-    * ssh.passphrase=secret phrase
+    * ssh.hosts=git@github.com
+    * ssh.git@github.com.passphrase=secret phrase
     */
    static
    {
+      ListenerList globalRepositoryListeners = Repository.getGlobalListenerList();
+      for (Iterator<GitCommandListener> iter = gitCommandListeners.iterator(); iter.hasNext();)
+         globalRepositoryListeners.addListener(GitCommandListener.class, iter.next());
+      
       InputStream ins = Thread.currentThread().getContextClassLoader().getResourceAsStream("GitCredentials.properties");
       if (ins != null)
       {
@@ -85,13 +94,20 @@ public class JGitConnectionFactory extends GitConnectionFactory
          }
          String username = credentialProperties.getProperty("username");
          String password = credentialProperties.getProperty("password");
-         final String sshHost = credentialProperties.getProperty("ssh.host");
-         final String sshPassphrase = credentialProperties.getProperty("ssh.passphrase");
-         CredentialsProvider.setDefault(new CredentialsProviderImpl(username, password, new HashMap<String, String>() {
+         String sshHosts = credentialProperties.getProperty("ssh.hosts");
+         Map<String, String> hostToPassphrase = null;
+         if (sshHosts != null)
+         {
+            String[] hosts = sshHosts.split(",");
+            hostToPassphrase = new HashMap<String, String>(hosts.length);
+            for (int i = 0; i < hosts.length; i++)
             {
-               put(sshHost, sshPassphrase);
+               String host = hosts[i].trim();
+               String passphrase = credentialProperties.getProperty("ssh." + host + ".passphrase");
+               hostToPassphrase.put(host, passphrase);
             }
-         }));
+         }
+         CredentialsProvider.setDefault(new CredentialsProviderImpl(username, password, hostToPassphrase));
       }
    }
 
