@@ -45,8 +45,8 @@ public class RestoreMimeTypeListener implements GitCommandListener
    @Override
    public void afterCommand(String gitCommand, Repository repository)
    {
-      if (gitCommand.equals("clone") || gitCommand.equals("fetch"))
-         System.out.println(">>>>> Restore jrc:mimeType after " + gitCommand + " operation. ");
+      /*if (gitCommand.equals("clone") || gitCommand.equals("fetch"))
+         System.out.println(">>>>> Restore jrc:mimeType after " + gitCommand + " operation. ");*/
       // TODO : Get JCR repository, traverse and restore jrc:mimeType property on nt:file/jcr:content.
    }
 }
