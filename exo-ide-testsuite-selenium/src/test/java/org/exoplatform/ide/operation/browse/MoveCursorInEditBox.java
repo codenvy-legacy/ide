@@ -39,30 +39,30 @@ public class MoveCursorInEditBox extends BaseTest
    @Test
    public void testCursorNavigationInEditBox() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      
+      waitForRootElement();
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       String locator =
-         "scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element";
+         "//form[@id=\"ideCreateFolderFormDynamicForm\"]/div/input[@name=\"ideCreateFolderFormNameField\"]";
       selenium.focus(locator);
-      
-     IDE.EDITOR.deleteFileContent();
+
+      IDE.EDITOR.deleteFileContent();
       selenium.typeKeys(locator, "FooBr");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       selenium.typeKeys(locator, "a");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertEquals("FooBar",selenium.getValue(locator));
-      
+      assertEquals("FooBar", selenium.getValue(locator));
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
-      
+
       selenium.typeKeys(locator, "eXo ");
-      assertEquals("eXo FooBar",selenium.getValue(locator));
-      
+      assertEquals("eXo FooBar", selenium.getValue(locator));
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
-      
+
       selenium.typeKeys(locator, " UA");
-      assertEquals("eXo FooBar UA",selenium.getValue(locator));
+      assertEquals("eXo FooBar UA", selenium.getValue(locator));
 
    }
-   
+
 }
