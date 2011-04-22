@@ -411,7 +411,7 @@
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
-                     <extraJvmArgs>-Xmx1000m -XX:MaxPermSize=256m</extraJvmArgs>
+                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m</extraJvmArgs>
                   </configuration>
                </plugin>
                
