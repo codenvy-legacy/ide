@@ -33,7 +33,6 @@
    <inherits name="com.smartgwt.SmartGwt" />
    <!-- load GWT Commons Libraries -->
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-   <inherits name='org.exoplatform.gwtframework.editor.Editor' />
    <inherits name='org.exoplatform.gwtframework.ui.UI' />
    <inherits name='org.exoplatform.gwtframework.ui.UITextEditor' />
 

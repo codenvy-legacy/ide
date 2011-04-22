@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.editor.event;
 
-import org.exoplatform.gwtframework.editor.api.TextEditor;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 

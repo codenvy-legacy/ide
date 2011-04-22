@@ -42,11 +42,6 @@
       </dependency>
    
       <dependency>
-         <groupId>com.smartgwt</groupId>
-         <artifactId>smartgwt</artifactId>
-      </dependency>
-   
-      <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
@@ -272,7 +267,7 @@
                <packagingExcludes>**/classes/org/**,**/classes/gadget/**,**/Commons.css,
                   **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
                   **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
-                  **/preloadIDE.js,**/init_smartgwt_for_gadget.js,**/smartgwt-*.jar,
+                  **/preloadIDE.js,**/init_smartgwt_for_gadget.js,
                   **/exo-gwtframework-commons*.jar,**/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/exo.portal*.jar,
                   **/chromattic*tests.jar,**/servlet-api*.jar,**/exo-ide-client*.jar
                   </packagingExcludes>
