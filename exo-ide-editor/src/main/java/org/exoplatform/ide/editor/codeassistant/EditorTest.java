@@ -55,6 +55,7 @@ import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
+import org.exoplatform.ide.editor.codemirror.autocomplete.DefaultAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyTemplateAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
@@ -69,6 +70,7 @@ import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 import org.exoplatform.ide.editor.codemirror.parser.JspParser;
+import org.exoplatform.ide.editor.codemirror.parser.RubyParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
 import org.exoplatform.ide.editor.codevalidator.GroovyTemplateCodeValidator;
@@ -371,7 +373,12 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby script editor", "rb","", true,
          new CodeMirrorConfiguration("['parseruby.js', 'parserubyhtmlmixed.js', 'tokenizeruby.js']", // generic code parsers
-            "['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']" // code styles
+            "['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']", // code styles
+            true, // can be outlined
+            true, // can be autocompleted
+            new RubyParser(), // exoplatform code parser 
+            new DefaultAutocompleteHelper(), // autocomplete helper
+            new DefaultCodeAssistant()            
          )));
       
       

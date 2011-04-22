@@ -4,12 +4,12 @@
 class ClassName < SuperClass::SomeOther::NameSpace
    include Comparable
    
-   CLASS_CONSTANT = 123
+   CLASS_CONSTANT = 123 
    $global = $global1 = 'around the world'
    # This comment may span only this line
    @@class_variable = "some string"
 
-   def initialize(value)
+   def initialize(value) 
       @field = value
       @char = ?a
    end
@@ -158,7 +158,7 @@ class ClassName < SuperClass::SomeOther::NameSpace
 
   def operators? year
     array = []
-    array << 'item'
+    array << 'item' 
     str = "Marlow".length.to_s
     str << 101 << ", Cris"
     # ranges
@@ -170,7 +170,7 @@ class ClassName < SuperClass::SomeOther::NameSpace
 
   A, B = :A, :B
   I, IV = 1, 4
-  T, Рђ = true, false
+  T, A = true, false
   
   # Strings
   
@@ -283,12 +283,12 @@ class Array
   end
 end
 
-if a < b
+if a < b 
    print "a < b"
 end
 
 x[1] = 5
-x[0] = 1   # Error
+x[0] = 1   # Error 
 
 a = ["January", "February"]
 a.grep(/ary/) {|m| m.length}
@@ -356,7 +356,7 @@ array_parent = Array.superclass   # Object
 fn_parent = 327.class.superclass  # Integer
 obj_parent = Object.superclass    # nil
 
-seat_box = Gtk::VBox.new("2.0")
+seat_box = Gtk::VBox.new("2.0") 
 
  
 head1 = puts <<EOF
@@ -377,4 +377,3 @@ next if head +~ %r{^X-rubimirror:}
 # Directives
 if $0 == __FILE__
 end
-
