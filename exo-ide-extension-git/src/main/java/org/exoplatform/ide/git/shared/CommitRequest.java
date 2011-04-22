@@ -26,10 +26,23 @@ package org.exoplatform.ide.git.shared;
  */
 public class CommitRequest extends GitRequest
 {
-   /**
-    * Commit message.
-    */
+   /** Commit message. */
    private String message;
+
+   /**
+    * Need automatically stage files that have been modified and deleted, but
+    * not new files.
+    */
+   private boolean all;
+
+   /**
+    * @param message commit message
+    */
+   public CommitRequest(String message, boolean all)
+   {
+      this.message = message;
+      this.all = all;
+   }
 
    /**
     * @param message commit message
@@ -61,5 +74,23 @@ public class CommitRequest extends GitRequest
    public void setMessage(String message)
    {
       this.message = message;
+   }
+
+   /**
+    * @return <code>true</code> if need automatically stage files that have been
+    *         modified and deleted
+    */
+   public boolean isAll()
+   {
+      return all;
+   }
+
+   /**
+    * @param all if <code>true</code> automatically stage files that have been
+    *           modified and deleted
+    */
+   public void setAll(boolean all)
+   {
+      this.all = all;
    }
 }

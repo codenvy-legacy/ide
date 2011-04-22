@@ -474,7 +474,8 @@ public class JGitConnection implements GitConnection
    {
       try
       {
-         CommitCommand commitCommand = new Git(repository).commit().setMessage(request.getMessage());
+         CommitCommand commitCommand =
+            new Git(repository).commit().setMessage(request.getMessage()).setAll(request.isAll());
 
          GitUser committer = getUser();
          if (committer != null)
