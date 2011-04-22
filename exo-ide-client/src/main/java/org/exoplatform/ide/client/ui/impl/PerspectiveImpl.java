@@ -16,12 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.impl.perspective;
+package org.exoplatform.ide.client.ui.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
+import org.exoplatform.ide.client.framework.ui.api.Panel;
+import org.exoplatform.ide.client.framework.ui.api.Perspective;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
@@ -31,11 +33,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.ui.api.Panel;
-import org.exoplatform.ide.client.ui.api.Perspective;
-import org.exoplatform.ide.client.ui.impl.LayerContainer;
-import org.exoplatform.ide.client.ui.impl.layer.ModalWindowsLayer;
-import org.exoplatform.ide.client.ui.impl.layer.PopupWindowsLayer;
 import org.exoplatform.ide.client.ui.impl.layout.Layout;
 import org.exoplatform.ide.client.ui.impl.panel.PanelDirection;
 
@@ -52,7 +49,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class BasePerspective extends LayerContainer implements Perspective, ViewVisibilityChangedHandler,
+public class PerspectiveImpl extends Layer implements Perspective, ViewVisibilityChangedHandler,
    ViewOpenedHandler, ViewClosedHandler, ClosingViewHandler
 {
 
@@ -71,7 +68,7 @@ public class BasePerspective extends LayerContainer implements Perspective, View
 
    private Layout layout;
 
-   public BasePerspective()
+   public PerspectiveImpl()
    {
       super("test-perspective");
 
@@ -95,18 +92,18 @@ public class BasePerspective extends LayerContainer implements Perspective, View
       modalWindowsLayer.setViewClosedHandler(this);
       addLayer(modalWindowsLayer);
 
-      layout.beginBuildLayout();
-      buildPerspective();
-      layout.finishBuildLayout();
+//      layout.beginBuildLayout();
+//      buildPerspective();
+//      layout.finishBuildLayout();
    }
 
-   public void buildPerspective()
-   {
-   }
+//   public void buildPerspective()
+//   {
+//   }
 
-   public Panel addPanel(String panelId, PanelDirection direction, int size)
+   public Panel addPanel(String panelId, PanelDirection direction, int initialSize)
    {
-      return layout.addPanel(panelId, direction, size);
+      return layout.addPanel(panelId, direction, initialSize);
    }
 
    @Override

@@ -19,12 +19,15 @@
 package org.exoplatform.ide.client.application.ui;
 
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.application.IDEPresenter;
-import org.exoplatform.ide.client.application.ui.layer.MenuLayer;
-import org.exoplatform.ide.client.application.ui.layer.ToolbarsLayer;
-import org.exoplatform.ide.client.ui.api.Menu;
-import org.exoplatform.ide.client.ui.api.Perspective;
-import org.exoplatform.ide.client.ui.impl.LayerContainer;
+import org.exoplatform.ide.client.framework.ui.api.Panel;
+import org.exoplatform.ide.client.framework.ui.api.Perspective;
+import org.exoplatform.ide.client.menu.Menu;
+import org.exoplatform.ide.client.menu.MenuImpl;
+import org.exoplatform.ide.client.ui.impl.Layer;
+import org.exoplatform.ide.client.ui.impl.PerspectiveImpl;
+import org.exoplatform.ide.client.ui.impl.panel.PanelDirection;
 
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -40,14 +43,16 @@ import com.google.gwt.user.client.ui.RootPanel;
  * @version $
  */
 
-public class IDEForm extends LayerContainer implements IDEPresenter.Display, ResizeHandler
+public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandler
 {
 
-   private Menu menu;
+   private PerspectiveImpl perspective;
 
-   private DefaultPerspective perspective;
+   private MenuImpl menu;
 
-   private ToolbarsLayer toolbarsLayer;
+   private Toolbar toolbar;
+
+   private Toolbar statusbar;
 
    public IDEForm()
    {
@@ -60,34 +65,79 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
 
       RootPanel.get().add(ideRootPanel);
 
-      //resize(Window.getClientWidth(), Window.getClientHeight());
+      //      BackgroundLayer background = new BackgroundLayer();
+      //      addLayer(background);
 
-      createLayers();
+      createMenu();
+      createToolbar();
+      createStatusbar();
+      createPerspective();
+
+      //      DebugLayer debugController = new DebugLayer();
+      //      addLayer(debugController);      
+
       ideRootPanel.add(this, 0, 0);
 
       resize(Window.getClientWidth(), Window.getClientHeight());
       Window.addResizeHandler(this);
    }
 
-   private void createLayers()
+   /**
+    * Creates Top Menu.
+    */
+   private void createMenu()
    {
-      //      BackgroundLayer background = new BackgroundLayer();
-      //      addLayer(background);
-
-      MenuLayer menuLayer = new MenuLayer();
-      menu = menuLayer.getMenu();
-      addLayer(menuLayer);
-
-      toolbarsLayer = new ToolbarsLayer();
-      addLayer(toolbarsLayer);
-
-      perspective = new DefaultPerspective();
-      addLayer(perspective);
-
-      //      DebugLayer debugController = new DebugLayer();
-      //      addLayer(debugController);
+      menu = new MenuImpl();
+      add(menu);
    }
 
+   /**
+    * Creates Toolbar.
+    */
+   private void createToolbar()
+   {
+      toolbar = new Toolbar("exoIDEToolbar");
+      add(toolbar, 0, 20);
+   }
+
+   /**
+    * Creates Statusbar.
+    */
+   private void createStatusbar()
+   {
+      statusbar = new Toolbar("exoIDEStatusbar");
+      statusbar.setHeight("30px");
+      String background =
+         UIHelper.getGadgetImagesURL() + "../eXoStyle/skin/default/images/component/toolbar/statusbar_Background.png";
+      statusbar.setBackgroundImage(background);
+      statusbar.setItemsTopPadding(3);
+      add(statusbar, 0, 100);
+   }
+
+   /**
+    * Create Perspective.
+    */
+   private void createPerspective()
+   {
+      perspective = new PerspectiveImpl();
+      addLayer(perspective);
+
+      Panel navigationPanel = perspective.addPanel("navigation", PanelDirection.WEST, 300);
+      navigationPanel.acceptType("navigation");
+
+      Panel informationPane = perspective.addPanel("information", PanelDirection.EAST, 200);
+      informationPane.acceptType("information");
+
+      Panel operationPanel = perspective.addPanel("operation", PanelDirection.SOUTH, 150);
+      operationPanel.acceptType("operation");
+
+      Panel editorPanel = perspective.addPanel("editor", PanelDirection.CENTER, 0);
+      editorPanel.acceptType("editor");      
+   }
+
+   /**
+    * @see com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google.gwt.event.logical.shared.ResizeEvent)
+    */
    @Override
    public void onResize(ResizeEvent event)
    {
@@ -96,28 +146,54 @@ public class IDEForm extends LayerContainer implements IDEPresenter.Display, Res
       resize(width, height);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.ui.impl.Layer#onResize(int, int)
+    */
+   @Override
+   public void onResize(int width, int height)
+   {
+      menu.setWidth("" + width + "px");
+
+      toolbar.setWidth("" + width + "px");
+
+      statusbar.setWidth("" + width + "px");
+      DOM.setStyleAttribute(statusbar.getElement(), "top", "" + (height - 30) + "px");
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.application.IDEPresenter.Display#getMenu()
+    */
    @Override
    public Menu getMenu()
    {
       return menu;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.application.IDEPresenter.Display#getPerspective()
+    */
    @Override
    public Perspective getPerspective()
    {
       return perspective;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.application.IDEPresenter.Display#getToolbar()
+    */
    @Override
    public Toolbar getToolbar()
    {
-      return toolbarsLayer.getToolbar();
+      return toolbar;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.application.IDEPresenter.Display#getStatusbar()
+    */
    @Override
    public Toolbar getStatusbar()
    {
-      return toolbarsLayer.getStatusbar();
+      return statusbar;
    }
 
 }

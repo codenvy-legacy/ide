@@ -30,6 +30,7 @@ import org.exoplatform.gwtframework.ui.client.tab.event.CloseTabEvent;
 import org.exoplatform.gwtframework.ui.client.tab.event.CloseTabHandler;
 import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
@@ -48,7 +49,6 @@ import org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewTitleHand
 import org.exoplatform.ide.client.framework.ui.impl.event.HasSetViewVisibleHandler;
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleEvent;
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleHandler;
-import org.exoplatform.ide.client.ui.api.Panel;
 import org.exoplatform.ide.client.ui.impl.layout.ViewsLayer;
 
 import com.google.gwt.event.dom.client.ClickEvent;

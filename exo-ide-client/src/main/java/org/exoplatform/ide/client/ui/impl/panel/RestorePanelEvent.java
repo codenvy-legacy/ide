@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.ui.impl.panel;
 
-import org.exoplatform.ide.client.ui.api.Panel;
+import org.exoplatform.ide.client.framework.ui.api.Panel;
 
 import com.google.gwt.event.shared.GwtEvent;
 

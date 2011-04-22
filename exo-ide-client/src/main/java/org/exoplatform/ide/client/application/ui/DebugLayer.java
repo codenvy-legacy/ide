@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.application.ui.layer;
+package org.exoplatform.ide.client.application.ui;
 
 import org.exoplatform.gwtframework.ui.client.button.ext.IconButton;
 import org.exoplatform.ide.client.Log;
@@ -93,10 +93,8 @@ public class DebugLayer extends Layer
    }
 
    @Override
-   public void resize(int width, int height)
+   public void onResize(int width, int height)
    {
-      super.resize(width, height);
-
       backgroundPanel.setWidth("" + (width) + "px");
       backgroundPanel.setHeight("" + (height - 30) + "px");
 

@@ -16,11 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.application.ui;
+package org.exoplatform.ide.client.framework.ui.api;
 
-import org.exoplatform.ide.client.ui.api.Panel;
-import org.exoplatform.ide.client.ui.impl.panel.PanelDirection;
-import org.exoplatform.ide.client.ui.impl.perspective.BasePerspective;
+import java.util.List;
+import java.util.Map;
+
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,23 +30,25 @@ import org.exoplatform.ide.client.ui.impl.perspective.BasePerspective;
  * @version $
  */
 
-public class DefaultPerspective extends BasePerspective
+public interface Panel
 {
+   
+   String getPanelId();
 
-   @Override
-   public void buildPerspective()
-   {
-      Panel navigationPanel = addPanel("navigation", PanelDirection.WEST, 300);
-      navigationPanel.acceptType("navigation");
+   void openView(View view);
 
-      Panel informationPane = addPanel("information", PanelDirection.EAST, 200);
-      informationPane.acceptType("information");
+   void closeView(String viewId);
 
-      Panel operationPanel = addPanel("operation", PanelDirection.SOUTH, 150);
-      operationPanel.acceptType("operation");
-
-      Panel editorPanel = addPanel("editor", PanelDirection.CENTER, 0);
-      editorPanel.acceptType("editor");
-   }
-
+   Map<String, View> getViewMap();
+   
+   boolean canOpenView(String viewType);
+   
+   List<String> getAcceptedTypes();
+   
+   void acceptType(String viewType);
+   
+   void setPanelHidden(boolean panelHidden);
+   
+   boolean isPanelHidden();
+   
 }

@@ -16,13 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.api;
+package org.exoplatform.ide.client.menu;
 
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.HasViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.HasViewOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.HasViewVisibilityChangedHandler;
+import java.util.List;
+
+import org.exoplatform.gwtframework.ui.client.command.Control;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,12 +31,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.HasViewVisibilityChange
  * @version $
  */
 
-public interface Perspective extends HasViewVisibilityChangedHandler, 
-HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
+public interface Menu
 {
-
-   void openView(View view);
-
-   void closeView(String viewId);
+   
+   void refresh(List<Control> commands, HandlerManager eventBus);
 
 }

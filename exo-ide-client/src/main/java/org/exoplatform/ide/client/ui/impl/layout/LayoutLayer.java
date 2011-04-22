@@ -22,7 +22,7 @@ package org.exoplatform.ide.client.ui.impl.layout;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.ide.client.ui.api.Panel;
+import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.ui.impl.Layer;
 import org.exoplatform.ide.client.ui.impl.panel.HidePanelEvent;
 import org.exoplatform.ide.client.ui.impl.panel.HidePanelHandler;
@@ -229,10 +229,8 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
    private int height;
 
    @Override
-   public void resize(int width, int height)
+   public void onResize(int width, int height)
    {
-      super.resize(width, height);
-
       this.width = width - MARGIN - MARGIN;
       this.height = height - MENU_HEIGHT - TOOLBAR_HEIGHT - MARGIN - MARGIN - STATUSBAR_HEIGHT;
 

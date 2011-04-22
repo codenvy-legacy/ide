@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.impl.layer;
+package org.exoplatform.ide.client.ui.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class PopupWindowsLayer extends AbstractWindowsLayer
+public class PopupWindowsLayer extends WindowsLayer
 {
 
    private Map<String, WindowController> windowControllers = new HashMap<String, PopupWindowsLayer.WindowController>();

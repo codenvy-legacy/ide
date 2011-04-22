@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.impl.layer;
+package org.exoplatform.ide.client.ui.impl;
 
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.gwtframework.ui.client.window.Window;
@@ -34,10 +34,10 @@ import org.exoplatform.ide.client.ui.impl.Layer;
  * @version $
  */
 
-public abstract class AbstractWindowsLayer extends Layer
+public abstract class WindowsLayer extends Layer
 {
 
-   public AbstractWindowsLayer(String layerId)
+   public WindowsLayer(String layerId)
    {
       super(layerId);
    }

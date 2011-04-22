@@ -16,13 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.api;
+package org.exoplatform.ide.client.application.ui;
 
-import java.util.List;
+import org.exoplatform.ide.client.ui.impl.Layer;
 
-import org.exoplatform.gwtframework.ui.client.command.Control;
-
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS .
@@ -31,9 +29,25 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public interface Menu
+public class BackgroundLayer extends Layer
 {
-   
-   void refresh(List<Control> commands, HandlerManager eventBus);
+
+   private Image backgroundImage;
+
+   public BackgroundLayer()
+   {
+      super("background");
+      backgroundImage = new Image("ide-background.jpg");
+      backgroundImage.setWidth("100%");
+      backgroundImage.setHeight("100%");
+      add(backgroundImage);
+   }
+
+   @Override
+   public void onResize(int width, int height)
+   {
+      backgroundImage.setWidth(width + "px");
+      backgroundImage.setHeight(height + "px");
+   }
 
 }

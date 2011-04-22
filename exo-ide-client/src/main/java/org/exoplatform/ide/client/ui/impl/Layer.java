@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.ui.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,8 +35,21 @@ import com.google.gwt.user.client.ui.Widget;
 public class Layer extends AbsolutePanel
 {
 
+   /**
+    * Layer's ID.
+    */
    private String layerId;
 
+   /**
+    * Child layers.
+    */
+   private List<Layer> layers = new ArrayList<Layer>();
+
+   /**
+    * Creates a new instance of this Layer.
+    * 
+    * @param layerId ID of this layer
+    */
    public Layer(String layerId)
    {
       this.layerId = layerId;
@@ -44,17 +60,64 @@ public class Layer extends AbsolutePanel
       DOM.setStyleAttribute(getElement(), "overflow", "visible");
    }
 
-   public void resize(int width, int height)
+   /**
+    * Adds a child layer.
+    * 
+    * @param layer layer
+    */
+   public void addLayer(Layer layer)
    {
+      layers.add(layer);
+      add(layer, 0, 0);
    }
 
+   /**
+    * Resize this layer.
+    * 
+    * @param width new width
+    * @param height new height
+    */
+   public final void resize(int width, int height)
+   {
+      /*
+       * Resize widgets.
+       */
+      onResize(width, height);
+      
+      /*
+       * Resize child layers.
+       */
+      for (Layer layer : layers)
+      {
+         layer.resize(width, height);
+      }
+   }
+   
+   /**
+    * Resize user defined widgets.
+    * Override this method to complete resizing of this Layer.
+    * 
+    * @param width width
+    * @param height height
+    */
+   public void onResize(int width, int height) {
+   }
+
+   /**
+    * @see com.google.gwt.user.client.ui.AbsolutePanel#add(com.google.gwt.user.client.ui.Widget)
+    */
    @Override
    public void add(Widget w)
    {
       super.add(w, 0, 0);
    }
 
-   public String letLayerId()
+   /**
+    * Get ID of this layer.
+    * 
+    * @return ID of this layer
+    */
+   public String getLayerId()
    {
       return layerId;
    }

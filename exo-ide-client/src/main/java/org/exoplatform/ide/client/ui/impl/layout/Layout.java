@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
+import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
@@ -35,8 +36,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.ui.api.Panel;
-import org.exoplatform.ide.client.ui.impl.LayerContainer;
+import org.exoplatform.ide.client.ui.impl.Layer;
 import org.exoplatform.ide.client.ui.impl.panel.PanelDirection;
 import org.exoplatform.ide.client.ui.impl.panel.PanelImpl;
 
@@ -49,7 +49,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @version $
  */
 
-public class Layout extends LayerContainer implements ViewVisibilityChangedHandler, ViewOpenedHandler,
+public class Layout extends Layer implements ViewVisibilityChangedHandler, ViewOpenedHandler,
    ClosingViewHandler, ViewClosedHandler, HasViewOpenedHandler,
    HasViewClosedHandler, HasClosingViewHandler, HasViewVisibilityChangedHandler
 {
@@ -75,15 +75,15 @@ public class Layout extends LayerContainer implements ViewVisibilityChangedHandl
       addLayer(viewsLayer);
    }
 
-   public void beginBuildLayout()
-   {
-      layoutLayer.beginBuildLayot();
-   }
-
-   public void finishBuildLayout()
-   {
-      layoutLayer.finishBuildLayot();
-   }
+//   public void beginBuildLayout()
+//   {
+//      layoutLayer.beginBuildLayot();
+//   }
+//
+//   public void finishBuildLayout()
+//   {
+//      layoutLayer.finishBuildLayot();
+//   }
 
    public Panel addPanel(String panelId, PanelDirection direction, int size)
    {

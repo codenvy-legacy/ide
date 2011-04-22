@@ -42,7 +42,6 @@ public class PanelController extends AbsolutePanel implements RequiresResize
 
    public static final String INVISIBLE_PANEL_MESSAGE = "Not enough space to display this panel.";
    
-   
    private int height;
 
    private PanelImpl panel;
