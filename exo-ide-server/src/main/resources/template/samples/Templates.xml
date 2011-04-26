@@ -5,31 +5,31 @@
       <name>new-project</name>
       <description>Empty Project</description>
       <type>project</type>
-      <src>org/exoplatform/ide/template/samples/empty</src>
+      <src>template/samples/empty</src>
    </template>
    <template>
       <name>ide-project</name>
       <description>Sample project with REST script and Google Gadget</description>
       <type>project</type>
-      <src>org/exoplatform/ide/template/samples/ide</src>
+      <src>template/samples/ide</src>
    </template>
    <template>
       <name>linkedin-contacts-project</name>
       <description>Linkedin Contacts Demo Project</description>
       <type>project</type>
-      <src>org/exoplatform/ide/template/samples/linkedin</src>
+      <src>template/samples/linkedin</src>
    </template>
    <template>
       <name>shopping-cart-project</name>
       <description>Shopping Cart Demo Project</description>
       <type>project</type>
-      <src>org/exoplatform/ide/template/samples/sc</src>
+      <src>template/samples/sc</src>
    </template>
    <template>
       <name>twitter-trends-project</name>
       <description>Twitter trend as images sample project</description>
       <type>project</type>
-      <src>org/exoplatform/ide/template/samples/twittertrends</src>
+      <src>template/samples/twittertrends</src>
    </template>
    <!-- base file templates -->
    <template>

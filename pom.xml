@@ -21,10 +21,10 @@
       <exo.snapshots.repo.url>http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
       <exo.product.name>exo-ide</exo.product.name>
       <!-- eXo Modules -->
-      <org.exoplatform.jcr.version>1.14.0-Beta03</org.exoplatform.jcr.version>
-      <org.exoplatform.kernel.version>2.3.0-Beta03</org.exoplatform.kernel.version>
-      <org.exoplatform.core.version>2.4.0-Beta03</org.exoplatform.core.version>
-      <org.exoplatform.ws.version>2.2.0-Beta03</org.exoplatform.ws.version>
+      <org.exoplatform.jcr.version>1.14.0-CR1</org.exoplatform.jcr.version>
+      <org.exoplatform.kernel.version>2.3.0-CR1</org.exoplatform.kernel.version>
+      <org.exoplatform.core.version>2.4.0-CR1</org.exoplatform.core.version>
+      <org.exoplatform.ws.version>2.2.0-CR1</org.exoplatform.ws.version>
       <org.exoplatform.gwtframework.version>1.2.0-SNAPSHOT</org.exoplatform.gwtframework.version>
       <org.exoplatform.gatein.version>3.1.4-PLF</org.exoplatform.gatein.version>
       <!-- Third parties -->
@@ -35,7 +35,7 @@
       <maven.compiler.source>1.6</maven.compiler.source>
       <maven.compiler.target>1.6</maven.compiler.target>
       <org.slf4j.version>1.5.6</org.slf4j.version>
-      <chromattic.version>1.1.0-beta1</chromattic.version>
+      <chromattic.version>1.1.0-beta3</chromattic.version>
       <apache.commons-compress.version>1.0</apache.commons-compress.version>
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
       <javax.jcr.version>1.0</javax.jcr.version>
@@ -312,9 +312,9 @@
             <version>1.2.0</version>
          </dependency>
          <dependency>
-            <groupId>hsqldb</groupId>
+            <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>1.8.0.7</version>
+            <version>2.0.0</version>
          </dependency>
          <dependency>
             <groupId>org.gatein.shindig</groupId>

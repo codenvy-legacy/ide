@@ -22,18 +22,6 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-   <component>
-      <key>org.exoplatform.container.PropertyConfigurator</key>
-      <type>org.exoplatform.container.PropertyConfigurator</type>
-      <init-params>
-         <value-param>
-            <name>properties.url</name>
-            <value>configuration.properties</value>
-         </value-param>
-      </init-params>
-   </component>
-
-
  <component>
       <type>org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyCompiler</type>
    </component>
@@ -254,9 +242,6 @@
       </init-params>
    </component>
  
-   <component>
-   <type>org.exoplatform.ide.groovy.GroovyScriptServiceApplication2</type>
-   </component>
 
    <component>
       <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
@@ -323,7 +308,7 @@
 
 
    <component>
-      <type>org.exoplatform.ide.shindig.oauth.RestSecurityTokenGenerator</type>
+      <type>org.exoplatform.ide.extension.gadget.server.shindig.oauth.RestSecurityTokenGenerator</type>
    </component>
 
 
@@ -366,7 +351,11 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.groovy.GroovyScriptService</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
+    </component>
+
+  <component>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type> 
       <init-params>
          <object-param>
             <name>observation.config</name>
@@ -391,7 +380,7 @@
    </component>
 
   <component>
-      <type>org.exoplatform.ide.chromattic.RestDataObjectService</type>
+      <type>org.exoplatform.ide.extension.chromattic.server.RestDataObjectService</type>
    </component>
 
    <component>

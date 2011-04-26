@@ -68,9 +68,8 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>hsqldb</groupId>
+         <groupId>org.hsqldb</groupId>
          <artifactId>hsqldb</artifactId>
-         <version>1.8.0.7</version>
          <scope>test</scope>
       </dependency>
       <dependency>
@@ -98,6 +97,7 @@
       <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>servlet-api</artifactId>
+         <scope>runtime</scope>
       </dependency>
       
       <dependency>

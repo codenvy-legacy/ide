@@ -77,7 +77,7 @@ import javax.xml.parsers.ParserConfigurationException;
 @Path("/ide/templates")
 public class TemplatesRestService
 {
-   private static final String TEMPLATES_PATH = "org/exoplatform/ide/template/samples";
+   private static final String TEMPLATES_PATH = "template/samples";
 
    private static final String TEMPLATES_FILE = "Templates.xml";
 

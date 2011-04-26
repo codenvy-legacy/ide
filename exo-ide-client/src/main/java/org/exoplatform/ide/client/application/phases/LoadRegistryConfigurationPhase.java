@@ -28,7 +28,9 @@ import org.exoplatform.ide.client.framework.configuration.event.ConfigurationRec
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.conversation.ConversationServiceImpl;
+import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
+import org.exoplatform.ide.client.project.ProjectSupportingModule;
 
 /**
  * 
@@ -74,9 +76,11 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
 
          new ConversationServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext());
 
-         new TemplateServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL() + "/"
-            + RegistryConstants.EXO_APPLICATIONS + "/" + IDEConfigurationLoader.APPLICATION_NAME,
-            applicationConfiguration.getContext());
+         if (TemplateService.getInstance() == null)
+         {
+            new TemplateServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getRegistryURL() + "/"
+               + RegistryConstants.EXO_APPLICATIONS + "/" + IDEConfigurationLoader.APPLICATION_NAME);
+         }
          
          new LoadUserInfoPhase(eventBus, applicationConfiguration, controls);
       }
