@@ -49,6 +49,7 @@ public class FileTemplates
       addGtmplTemplate();
       addUWAWidgetContent();
      // addClassPathTemplate();
+      addRubyTemplate();
    }
 
    public static String getTemplateFor(String mimeType)
@@ -72,6 +73,21 @@ public class FileTemplates
             + "           println \"Hello \" + identity.getUserId();\n" + "         }\n" + "       }\n" + "     %>\n"
             + "   </body>\n" + "</html>";
       templates.put(MimeType.GROOVY_TEMPLATE, content);
+   }
+   
+   private static void addRubyTemplate()
+   {
+      String content = "# Ruby Sample program\n" +
+      "class HelloClass\n" +
+      "  def sayHello\n"+
+      "    puts( \"Hello, wolrd!\" )\n"+
+      "  end\n"+
+      "end\n\n"+
+
+      "ob = HelloClass.new\n"+
+      "ob.sayHello\n";
+         
+      templates.put(MimeType.APPLICATION_RUBY, content);
    }
 
    private static void addXMLFileContent()

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
+    <head>
+        <!-- Widget Infos -->
+        <title>Sample tabbed widget</title>
+        <meta name="author" content="Exposition Libraries" />
+        <meta name="description" content="Sample code for a UWA widget with tabs" />
+        <meta name="apiVersion" content="1.0" />
+        <meta name="autoRefresh" content="20" />
+
+        <meta name="debugMode" content="true" />
+
+        <!-- UWA Environment -->
+        <link rel="stylesheet" type="text/css" href="http://uwa.netvibes.com/css/lib/UWA/uwa-standalone.css" />
+        <script type="text/javascript"> var UWA_SERVER = 'http://uwa.netvibes.com'; </script>
+        <script type="text/javascript" src="http://uwa.netvibes.com/js/c/UWA/UWA_Standalone.js?v=preview3"></script>
+        <script type="text/javascript" src="http://uwa.netvibes.com/js/c/UWA/UWA_Controls_TabView.js?v=preview3"></script>
+
+        <!-- Widget Preferences -->
+
+        <widget:preferences>
+            <preference name="feedUrl" label="Feed URL" type="hidden" defaultValue="http://feedproxy.google.com/NetvibesDevNetBlog" />
+            <preference name="feedLimit" type="range" label="Number of items to display" defaultValue="10" step="1" min="1" max="20" />
+        </widget:preferences>
+
+        <!-- Widget Styles -->
+        <style type="text/css">
+            .astronomy img {
+                border: none;
+                -ms-interpolation-mode: bicubic;
+            }
+
+            .astronomy a, .astronomy a:hover {
+                border: none;
+            }
+        </style>
+
+        <!-- Widget Source -->
+        <script type="text/javascript">
+        //<![CDATA[
+
+            /*
+                We create the global MyWidget object (it could be any other name).
+                This object will be used to store variables and function.
+            */
+            var MyWidget = {
+
+                imageHtml: null,
+
+                feed: null,
+
+                /*
+                    The onLoad() function is the first one, triggered by widget.onLoad.
+                    Its use is to display a "Loading" message, then call the next method.
+                */
+                onLoad: function() {
+
+                    widget.body.empty();
+
+                    widget.createElement('p', {
+                        text: 'Loading...'
+                    }).inject(widget.body);
+
+                    MyWidget.buildTabs();
+                    widget.callback('onUpdateBody');
+                },
+
+                /*
+                    The buildTabs function is where the tabl component is loaded and displayed.
+                    Tabs are build using the TabView controler.
+                */
+                buildTabs: function() {
+
+                    var tabs = new UWA.Controls.TabView();
+                    MyWidget.tabs = tabs;
+
+                    tabs.addTab('tab1', {text: 'Some text'});
+                    tabs.addTab('tab2', {text: 'An image'});
+                    tabs.addTab('tab3', {text: 'A feed'});
+                    tabs.observe('activeTabChange', MyWidget.onActiveTabChanged);
+                    tabs.selectTab(widget.getValue('activeTab') || 'tab');
+
+                    widget.body.empty();
+                    tabs.inject(widget.body);
+                },
+
+                /*
+                    onActiveTabChanged() is triggered on the 'activeTabChange' event,
+                    which means each time the user clicks a hidden tab.
+                    The TabView controler displays the clicked tab, and
+                    it's then up to the developer to decide what happens.
+                */
+                onActiveTabChanged: function(name, data) {
+
+                    var tabs = MyWidget.tabs;
+                    widget.setValue('activeTab', name);
+
+                    switch (name) {
+                        case 'tab1':
+                            MyWidget.displayText();
+                            break;
+                        case 'tab2':
+                            // if the image's HTML page has already been loaded, just display the image
+                            // if not, then load it (and then display it)
+                            (MyWidget.imageHtml) ? MyWidget.displayImage(MyWidget.imageHtml) : MyWidget.retrieveImage();
+                            break;
+                        case 'tab3':
+                            // if the feed has already been loaded, just display it
+                            // if not, then load it (and then display it)
+                            (MyWidget.feed) ? MyWidget.displayFeed(MyWidget.feed) : MyWidget.retrieveFeed();
+                        break;
+                    }
+                },
+
+                /*
+                    Our first tab just displays some simple HTML.
+                    One part of the HTML is built using a simple string, converted to HTML using setHTML().
+                    The second part of the HTML is built with the DOM, and added to the tab's HTML content using appendChild().
+                */
+                displayText: function() {
+
+                    var htmlString = '<p>This is just some demo text.</p>'
+                                   + '<p>Of course, you can use <b>any</b> <acronym title="Hypertext Mark-up Language">HTML</acronym> <a href="http://www.w3.org/MarkUp/">tag</a> you need.</p>'
+                                   + '<p>This widget demoes tabs. In the two other tabs, you\'ll see...</p>';
+
+                    var content = widget.createElement('div', {
+                        html: htmlString
+                    });
+
+                    var ul = widget.createElement('ul').inject(content);
+                    widget.createElement('li', {text: 'an image'}).inject(ul);
+                    widget.createElement('li', {text: 'a feed'}).inject(ul);
+
+                    MyWidget.tabs.setContent('tab1', content);
+                },
+
+                /*
+                    Ajax request to retrieve the full HTML code for the APOD page.
+                */
+                retrieveImage: function() {
+                    UWA.Data.getText('http://antwrp.gsfc.nasa.gov/apod/astropix.html', MyWidget.displayImage);
+                },
+
+                /*
+                    Displaying the APOD image.
+                    Since we start with an HTML page, we have to search through the code to fetch the various infos.
+                    This is done using RegExp.
+                */
+                displayImage: function(html) {
+
+                    // Section heavily inspired by the Astronomy Picture of the Day sample widget
+                    // http://dev.netvibes.com/doc/uwa/examples/apod
+
+                    if (html) {
+                        MyWidget.imageHtml = html;
+                    }
+
+                    var matchesPicturePath = html.match(/IMG SRC="([^"]*)/);
+
+                    if (matchesPicturePath) {
+
+                        var content = widget.createElement('div', {
+                            'class': 'astronomy'
+                        });
+
+                        var picturePath = matchesPicturePath[1];
+                        var matchesDescription = html.match(/<b>([^<>]*)<\/b>.*<br>/);
+                        var description = matchesDescription[1] || '?';
+                        var imageWidth = widget.body.getDimensions().width;
+                        var contentHtml = '<a href="http://antwrp.gsfc.nasa.gov/apod/" target="_blank" title="'+ description +'">'
+                                        + '    <img src="http://antwrp.gsfc.nasa.gov/apod/'+ picturePath +'" width="'+ imageWidth +'" alt="' + description + '" />'
+                                        + '</a>';
+
+                        content.setHTML(contentHtml);
+
+                        MyWidget.tabs.getTabContent('tab2').setStyle('padding', 0);
+                        MyWidget.tabs.setContent('tab2', content);
+
+                    } else {
+                        MyWidget.tabs.setContent('tab2', 'No Image Found');
+                    }
+                },
+
+                /*
+                    Ajax call to retrieve a feed.
+                    Since we are using the getFeed() function, the feed will use the JSON Feed format.
+                    http://dev.netvibes.com/doc/uwa/documentation/json_feed_format
+                */
+                retrieveFeed: function() {
+                    UWA.Data.getFeed(widget.getValue('feedUrl'), MyWidget.displayFeed)
+                },
+
+                /*
+                    Display the JSON Feed format.
+                */
+                displayFeed: function(feed) {
+
+                    // Section heavily inspired by the RSSReader sample widget
+                    // http://dev.netvibes.com/doc/uwa/examples/rssreader
+
+                    if (feed) {
+                        MyWidget.feed = feed;
+                    }
+
+                    // Update Preference feedLimit max value
+                    widget.getPreference('feedLimit').max = feed.items.length;
+
+                    var feedLimit = widget.getInt('feedLimit');
+                    var feedList = widget.createElement('ul', {
+                        'class': 'nv-feedList'
+                    });
+
+                    for (var i = 0; i < feedLimit; i++) {
+
+                      var item = feed.items[i];
+                      var li = widget.createElement('li');
+                      var a = widget.createElement('a', {
+                            text: item.title,
+                            href: item.link
+                      });
+
+                      var desc = item.content.stripTags().truncate(255);
+                      UWA.Utils.setTooltip(a, desc, 250);
+
+                      li.appendChild(a);
+                      feedList.appendChild(li);
+                    }
+
+                    MyWidget.tabs.setContent('tab3', feedList);
+                }
+            };
+
+            /*
+                widget.onLoad() is the very first function triggered when the widget is loaded.
+                Here, we make it trigger the MyWidget.onLoad() method.
+            */
+            widget.onLoad = MyWidget.onLoad;
+
+        //]]>
+        </script>
+    </head>
+    <body>
+        <p>Loading...</p>
+    </body>
+
+</html>

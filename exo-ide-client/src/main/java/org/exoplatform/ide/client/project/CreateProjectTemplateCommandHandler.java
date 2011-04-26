@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.project;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -52,37 +53,15 @@ public class CreateProjectTemplateCommandHandler implements CreateProjectTemplat
     */
    public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
    {
-      final TemplateList defaultTemplates = new TemplateList();
+      
       //get default file templates
-      TemplateService.getInstance().getTemplateList("file", new AsyncRequestCallback<List<TemplateNative>>()
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
 
          @Override
-         protected void onSuccess(List<TemplateNative> result)
+         protected void onSuccess(TemplateList result)
          {
-            for (TemplateNative tn : result)
-            {
-               defaultTemplates.getTemplates().add(new FileTemplate(
-                  tn.getName(), tn.getDescription(), tn.getMimeType(), true));
-            }
-            //get users file templates
-            TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
-            {
-
-               @Override
-               protected void onSuccess(TemplateList result)
-               {
-                  defaultTemplates.getTemplates().addAll(result.getTemplates());
-                  new CreateProjectTemplateForm(eventBus, defaultTemplates.getTemplates());
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-             
+            new CreateProjectTemplateForm(eventBus, result.getTemplates());
          }
 
          @Override
@@ -92,5 +71,4 @@ public class CreateProjectTemplateCommandHandler implements CreateProjectTemplat
          }
       });
    }
-
 }

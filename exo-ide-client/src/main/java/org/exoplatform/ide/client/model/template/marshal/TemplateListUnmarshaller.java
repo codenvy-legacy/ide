@@ -76,7 +76,6 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       }
       catch (Exception exc)
       {
-         exc.printStackTrace();
          String message = "Can't parse template!";
          throw new UnmarshallerException(message);
       }

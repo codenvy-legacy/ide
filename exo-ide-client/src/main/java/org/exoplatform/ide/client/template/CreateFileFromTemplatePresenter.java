@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.client.template;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -32,7 +28,6 @@ import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 
@@ -40,6 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for form "Create file from template"
@@ -173,34 +170,9 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       newFile.setIcon(ImageUtil.getIcon(contentType));
       newFile.setNewFile(true);
       newFile.setContentChanged(true);
-      
-      if (selectedTemplate.isDefault())
-      {
-         TemplateService.getInstance().getFileContent(selectedTemplate.getName(), new AsyncRequestCallback<String>()
-         {
-            
-            @Override
-            protected void onSuccess(String result)
-            {
-               newFile.setContent(result);
-               eventBus.fireEvent(new OpenFileEvent(newFile));
-               display.closeForm();
-            }
-            
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
-      }
-      else
-      {
-         newFile.setContent(selectedTemplate.getContent());
-         eventBus.fireEvent(new OpenFileEvent(newFile));
-         display.closeForm();
-      }
-
+      newFile.setContent(selectedTemplate.getContent());
+      eventBus.fireEvent(new OpenFileEvent(newFile));
+      display.closeForm();
    }
    
    /**

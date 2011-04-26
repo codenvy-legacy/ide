@@ -119,39 +119,18 @@ public class TemplateCommandHandler implements CreateFileFromTemplateHandler, It
    {
       final TemplateList defaultTemplates = new TemplateList();
 //      TemplateList defaultTemplates = TemplateServiceImpl.getDefaultTemplates();
-      TemplateService.getInstance().getTemplateList("file", new AsyncRequestCallback<List<TemplateNative>>()
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
          {
 
             @Override
-            protected void onSuccess(List<TemplateNative> result)
+            protected void onSuccess(TemplateList result)
             {
-               for (TemplateNative tn : result)
-               {
-                  defaultTemplates.getTemplates().add(new FileTemplate(
-                     tn.getName(), tn.getDescription(), tn.getMimeType(), true));
-               }
-               
-               TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
-                  {
-
-                     @Override
-                     protected void onSuccess(TemplateList result)
-                     {
-                        defaultTemplates.getTemplates().addAll(result.getTemplates());
-                        CreateFileFromTemplatePresenter createFilePresenter =
-                           new CreateFileFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), openedFiles);
-                        CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
-                           new CreateFileFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createFilePresenter);
-                        createFilePresenter.bindDisplay(createFileDisplay);
-                     }
-
-                     @Override
-                     protected void onFailure(Throwable exception)
-                     {
-                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                     }
-                  });
-               
+               defaultTemplates.getTemplates().addAll(result.getTemplates());
+               CreateFileFromTemplatePresenter createFilePresenter =
+                  new CreateFileFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), openedFiles);
+               CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
+                  new CreateFileFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createFilePresenter);
+               createFilePresenter.bindDisplay(createFileDisplay);
             }
 
             @Override
@@ -160,6 +139,28 @@ public class TemplateCommandHandler implements CreateFileFromTemplateHandler, It
                eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
          });
+//      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<List<TemplateNative>>()
+//         {
+//
+//            @Override
+//            protected void onSuccess(List<TemplateNative> result)
+//            {
+//               for (TemplateNative tn : result)
+//               {
+//                  defaultTemplates.getTemplates().add(new FileTemplate(
+//                     tn.getName(), tn.getDescription(), tn.getMimeType(), true));
+//               }
+//               
+//              
+//               
+//            }
+
+//            @Override
+//            protected void onFailure(Throwable exception)
+//            {
+//               eventBus.fireEvent(new ExceptionThrownEvent(exception));
+//            }
+//         });
       
       /* TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
        {

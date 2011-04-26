@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
+    <head>
+        <!-- Widget Infos -->
+        <title>Sample Flash widget</title>
+        <meta name="author" content="Exposition Libraries" />
+        <meta name="description" content="Sample code for a UWA widget with Flash" />
+        <meta name="apiVersion" content="1.0" />
+        <meta name="autoRefresh" content="20" />
+
+        <meta name="debugMode" content="true" />
+
+        <!-- UWA Environment -->
+        <link rel="stylesheet" type="text/css" href="http://uwa.netvibes.com/css/lib/UWA/uwa-standalone.css" />
+        <script type="text/javascript"> var UWA_SERVER = 'http://uwa.netvibes.com'; </script>
+        <script type="text/javascript" src="http://uwa.netvibes.com/js/c/UWA/UWA_Standalone.js?v=preview3"></script>
+        <script type="text/javascript" src="http://uwa.netvibes.com/js/c/UWA/UWA_Controls_Flash.js?v=preview3"></script>
+
+        <!-- Widget Preferences -->
+
+        <widget:preferences>
+            <preference type="text" name="title" label="Title"/>
+            <preference type="text" name="flashUrl" label="Flash URL (swf)" defaultValue="http://uwa.netvibes.com/modules/img/fire.swf"/>
+            <preference type="text" name="width" label="Original width" defaultValue="320"/>
+            <preference type="text" name="height" label="Original height" defaultValue="240"/>
+            <preference type="text" name="flashVars" label="Flash variables" defaultValue="" />
+        </widget:preferences>
+
+        <!-- Widget Styles -->
+
+        <style type="text/css">
+        </style>
+
+        <!-- Widget Source -->
+        <script type="text/javascript">
+        //<![CDATA[
+
+            /*
+                We create the global MyWidget object (it could be any other name).
+                This object will be used to store variables and function.
+            */
+            var MyWidget = {
+
+                /*
+                    The onLoad() function is the first one, triggered by widget.onLoad.
+                    Its use is to display a "Loading" message, then call the next method.
+                */
+                onLoad: function() {
+
+                    var widgetDimensions = widget.body.getDimensions(),
+                        widgetWidth = (widgetDimensions.width > 0 ? widgetDimensions.width : widget.getInt('width')),
+                        widgetHeight = (widgetDimensions.height > 0 ? widgetDimensions.height : widget.getInt('height')),
+                        widgetTitle = widget.getValue('title');
+
+                    // Update Title if available
+                    if (widgetTitle && widgetTitle.length > 0) {
+                        widget.setTitle(widgetTitle);
+                    }
+
+                    // Create Flash Controls
+                    this.flash = new UWA.Controls.Flash({
+                        resize: true,
+                        url: widget.getValue('flashUrl'),
+                        flashVars: widget.getValue('flashVars'),
+                        width: widgetWidth,
+                        heigh: widgetHeight
+                    });
+
+                    widget.body.setStyle('padding', 0);
+                    widget.setBody(this.flash.getContent());
+                },
+
+                onResize: function() {
+                    this.flash.onResize();
+                }
+            }
+
+            /*
+                widget.onLoad() is the very first function triggered when the widget is loaded.
+                Here, we make it trigger the MyWidget.onLoad() method.
+            */
+            widget.onLoad = MyWidget.onLoad;
+            widget.onResize = MyWidget.onResize;
+
+        //]]>
+        </script>
+    </head>
+    <body>
+
+        <p>Loading ...</p>
+    </body>
+</html>

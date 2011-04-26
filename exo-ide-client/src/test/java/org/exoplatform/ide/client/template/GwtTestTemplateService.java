@@ -79,7 +79,7 @@ public class GwtTestTemplateService extends GWTTestCase
     */
    public void testGetBaseTemplates()
    {
-      new TemplateServiceImpl(eventBus, loader, url, null);
+      new TemplateServiceImpl(eventBus, loader, url);
 
       TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
@@ -106,7 +106,7 @@ public class GwtTestTemplateService extends GWTTestCase
     */
    public void testGetTemplates()
    {
-      new TemplateServiceImpl(eventBus, loader, url, null);
+      new TemplateServiceImpl(eventBus, loader, url);
 
       String content = "var hello = 'Hello all!';";
       String contentType = MimeType.APPLICATION_JAVASCRIPT;
@@ -145,7 +145,7 @@ public class GwtTestTemplateService extends GWTTestCase
     */
    public void testCreateTemplate()
    {
-      new TemplateServiceImpl(eventBus, loader, url, null);
+      new TemplateServiceImpl(eventBus, loader, url);
 
       String content = "New empty file.";
       String contentType = MimeType.TEXT_PLAIN;
@@ -179,7 +179,7 @@ public class GwtTestTemplateService extends GWTTestCase
     */
    public void testCreateTemplateWithNonLatinSymbols()
    {
-      new TemplateServiceImpl(eventBus, loader, url, null);
+      new TemplateServiceImpl(eventBus, loader, url);
       String content = "Это новый пустой файл.";
       String contentType = MimeType.TEXT_PLAIN;
       String name = "Новый тестовый файл";
@@ -212,7 +212,7 @@ public class GwtTestTemplateService extends GWTTestCase
     */
    public void testCreateTemplateWithFail()
    {
-      new TemplateServiceImpl(eventBus, loader, wrongUrl, null);
+      new TemplateServiceImpl(eventBus, loader, wrongUrl);
 
       String content = "New empty file.";
       String contentType = MimeType.TEXT_CSS;
@@ -242,7 +242,7 @@ public class GwtTestTemplateService extends GWTTestCase
     */
    public void testDeleteTemplate()
    {
-      new TemplateServiceImpl(eventBus, loader, url, null);
+      new TemplateServiceImpl(eventBus, loader, url);
      
       String content = "New empty file.";
       String contentType = MimeType.TEXT_PLAIN;
@@ -303,7 +303,7 @@ public class GwtTestTemplateService extends GWTTestCase
     */
    public void testDeleteNotExistTemplate()
    {
-      new TemplateServiceImpl(eventBus, loader, url, null);
+      new TemplateServiceImpl(eventBus, loader, url);
       
       String contentType = MimeType.TEXT_PLAIN;
       String name = "no such";

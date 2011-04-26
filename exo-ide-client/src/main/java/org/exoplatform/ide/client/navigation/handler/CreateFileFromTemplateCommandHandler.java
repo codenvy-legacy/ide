@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -32,7 +30,6 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.model.template.TemplateNative;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler;
@@ -44,6 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
@@ -58,14 +57,14 @@ import java.util.Map;
  * @version $
  */
 
-public class CreateFileFromTemplateCommandHandler implements CreateFileFromTemplateHandler,
-   ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler
+public class CreateFileFromTemplateCommandHandler implements CreateFileFromTemplateHandler, ItemsSelectedHandler,
+   EditorFileOpenedHandler, EditorFileClosedHandler
 {
 
    private HandlerManager eventBus;
 
    private List<Item> selectedItems = new ArrayList<Item>();
-   
+
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
    public CreateFileFromTemplateCommandHandler(HandlerManager eventBus)
@@ -80,42 +79,17 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
 
    public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
    {
-      final TemplateList defaultTemplates = new TemplateList();
-      
-      //get default file templates
-      TemplateService.getInstance().getTemplateList("file", new AsyncRequestCallback<List<TemplateNative>>()
+
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
-
          @Override
-         protected void onSuccess(List<TemplateNative> result)
+         protected void onSuccess(TemplateList result)
          {
-            for (TemplateNative tn : result)
-            {
-               defaultTemplates.getTemplates().add(new FileTemplate(
-                  tn.getName(), tn.getDescription(), tn.getMimeType(), true));
-            }
-            //get users file templates
-            TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
-            {
-
-               @Override
-               protected void onSuccess(TemplateList result)
-               {
-                  defaultTemplates.getTemplates().addAll(result.getTemplates());
-                  CreateFileFromTemplatePresenter createFilePresenter =
-                     new CreateFileFromTemplatePresenter(eventBus, selectedItems, defaultTemplates.getTemplates(), openedFiles);
-                  CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
-                     new CreateFileFromTemplateForm(eventBus, defaultTemplates.getTemplates(), createFilePresenter);
-                  createFilePresenter.bindDisplay(createFileDisplay);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-             
+            CreateFileFromTemplatePresenter createFilePresenter =
+               new CreateFileFromTemplatePresenter(eventBus, selectedItems, result.getTemplates(), openedFiles);
+            CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
+               new CreateFileFromTemplateForm(eventBus, result.getTemplates(), createFilePresenter);
+            createFilePresenter.bindDisplay(createFileDisplay);
          }
 
          @Override
@@ -124,7 +98,7 @@ public class CreateFileFromTemplateCommandHandler implements CreateFileFromTempl
             eventBus.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
-      //TODO removed the getting templates from registry:
+
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)

@@ -22,13 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
@@ -80,6 +83,11 @@ public class ProjectSupportingModule implements ItemsSelectedHandler, Configurat
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
       restServiceContext = event.getConfiguration().getContext();
+      if (TemplateService.getInstance() == null)
+      {
+         new TemplateServiceImpl(eventBus, IDELoader.getInstance(), event.getConfiguration().getRegistryURL() + "/"
+            + RegistryConstants.EXO_APPLICATIONS + "/" + IDEConfigurationLoader.APPLICATION_NAME);
+      }
    }
    
    @Override

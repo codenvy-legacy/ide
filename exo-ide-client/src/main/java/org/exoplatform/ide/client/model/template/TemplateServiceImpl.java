@@ -18,11 +18,6 @@
  */
 package org.exoplatform.ide.client.model.template;
 
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.user.client.Random;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -31,9 +26,14 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshaller;
 import org.exoplatform.ide.client.model.template.marshal.TemplateMarshaller;
+import org.exoplatform.ide.client.samples.linkedin.LinkedinContactsProject;
+import org.exoplatform.ide.client.samples.netvibes.NetvibesSamples;
+import org.exoplatform.ide.client.samples.sc.ShoppingCardProject;
+import org.exoplatform.ide.client.samples.twittertrends.TwitterTrendsProject;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.user.client.Random;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,7 +44,22 @@ import java.util.List;
 
 public class TemplateServiceImpl extends TemplateService
 {
-   private static final String TEMPLATE_REST_URL = "/ide/templates";
+
+   private interface DefaultFileTemplates
+   {
+      public static final String EMPTY_XML = "Empty XML";
+
+      public static final String EMPTY_HTML = "Empty HTML";
+
+      public static final String EMPTY_TEXT = "Empty TEXT";
+
+      public static final String GOOGLE_GADGET = "Google Gadget";
+
+      public static final String GROOVY_REST_SERVICE = "Groovy REST Service";
+
+      public static final String GROOVY_TEMPLATE = "Template";
+
+   }
 
    private static final String CONTEXT = "/templates";
 
@@ -55,16 +70,12 @@ public class TemplateServiceImpl extends TemplateService
    private HandlerManager eventBus;
 
    private Loader loader;
-   
-   private String restServiceContext;
 
-   public TemplateServiceImpl(HandlerManager eventBus, Loader loader, String restContext, 
-      String restServiceContext)
+   public TemplateServiceImpl(HandlerManager eventBus, Loader loader, String restContext)
    {
       this.eventBus = eventBus;
       this.loader = loader;
       this.restContext = restContext;
-      this.restServiceContext = restServiceContext;
 
    }
 
@@ -89,14 +100,67 @@ public class TemplateServiceImpl extends TemplateService
       callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "DELETE")
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).send(callback);
-
    }
 
    @Override
-   public void getTemplates(AsyncRequestCallback<TemplateList> callback)
+   public void getTemplates(AsyncRequestCallback<TemplateList> callback) 
    {
       String url = restContext + CONTEXT + "/?noCache=" + Random.nextInt();
-      TemplateList templateList = new TemplateList();
+      final TemplateList templateList = new TemplateList();
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.TEXT_XML, DefaultFileTemplates.EMPTY_XML, "Create empty XML file.", FileTemplates
+            .getTemplateFor(MimeType.TEXT_XML), null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.TEXT_HTML, DefaultFileTemplates.EMPTY_HTML, "Create empty HTML file.", FileTemplates
+            .getTemplateFor(MimeType.TEXT_HTML), null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.TEXT_PLAIN, DefaultFileTemplates.EMPTY_TEXT, "Create empty TEXT file.",
+            FileTemplates.getTemplateFor(MimeType.TEXT_PLAIN), null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.GOOGLE_GADGET, DefaultFileTemplates.GOOGLE_GADGET, "Sample of Google Gadget",
+            FileTemplates.getTemplateFor(MimeType.GOOGLE_GADGET), null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.GROOVY_SERVICE, DefaultFileTemplates.GROOVY_REST_SERVICE,
+            "Sample of Groovy REST service.", FileTemplates.getTemplateFor(MimeType.GROOVY_SERVICE), null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.GROOVY_TEMPLATE, DefaultFileTemplates.GROOVY_TEMPLATE, "Sample of Template.",
+            FileTemplates.getTemplateFor(MimeType.GROOVY_TEMPLATE), null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget", "Netvibes Widget Skeleton", FileTemplates
+            .getTemplateFor(MimeType.UWA_WIDGET), null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget Flash", "Netvibes Widget Flash",
+            NetvibesSamples.INSTANCE.getSampleFlashWidgetSource().getText(), null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget Chart", "Netvibes Widget Chart",
+            NetvibesSamples.INSTANCE.getSampleChartWidgetSource().getText(), null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Widget Tabview", "Netvibes Widget Tabview",
+            NetvibesSamples.INSTANCE.getSampleTabbedWidgetSource().getText(), null));
+
+      templateList.getTemplates().add(
+         new FileTemplate(MimeType.UWA_WIDGET, "Netvibes Sample Blog Post Widget", "Netvibes Sample Blog Post Widget",
+            NetvibesSamples.INSTANCE.getSampleBlogPostWidgetSource().getText(), null));
+
+      ShoppingCardProject shoppingCardProject = new ShoppingCardProject();
+      templateList.getTemplates().addAll(shoppingCardProject.getTemplateList());
+      
+      TwitterTrendsProject twitterTrendsProject = new TwitterTrendsProject();
+      templateList.getTemplates().addAll(twitterTrendsProject.getTemplateList());
+      
+      LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
+      templateList.getTemplates().addAll(linkedinContactsProject.getTemplateList());
+     
       
       TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
       int[] acceptStatus = new int[]{HTTPStatus.OK, HTTPStatus.NOT_FOUND};
@@ -107,48 +171,6 @@ public class TemplateServiceImpl extends TemplateService
       callback.setSuccessCodes(acceptStatus);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
-   
-   @Override
-   public void getTemplateList(String type, AsyncRequestCallback<List<TemplateNative>> callback)
-   {
-      List<TemplateNative> templateList = new ArrayList<TemplateNative>();
-      callback.setResult(templateList);
-      
-      DefaultTemplatesUnmarshaller unmarshal =
-         new DefaultTemplatesUnmarshaller(templateList);
-      
-      callback.setEventBus(eventBus);
-      callback.setPayload(unmarshal);
-      
-      final String url = restServiceContext + TEMPLATE_REST_URL + "/list";
-      
-      AsyncRequest.build(RequestBuilder.GET, url, loader)
-      .header("type", type).send(callback);
-   }
-   
-   @Override
-   public void createProject(String templateName, String location, AsyncRequestCallback<String> callback)
-   {
-      final String url = restServiceContext + TEMPLATE_REST_URL + "/create";
-      
-      callback.setResult(url);
-      
-      AsyncRequest.build(RequestBuilder.GET, url, loader)
-      .header("type", "project").header("template-name", templateName)
-      .header("location", location).send(callback);
-   }
-   
-   @Override
-   public void getFileContent(String templateName, AsyncRequestCallback<String> callback)
-   {
-      final String url = restServiceContext + TEMPLATE_REST_URL + "/file-content";
 
-      TemplateContentUnmarshaller unmarshal = new TemplateContentUnmarshaller(callback);
-      
-      callback.setPayload(unmarshal);
-      
-      AsyncRequest.build(RequestBuilder.GET, url, loader)
-      .header("template-name", templateName)
-      .send(callback);
-   }
+
 }
