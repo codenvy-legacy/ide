@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.browse;
 import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
@@ -52,39 +53,39 @@ public class OpeningFilesTest extends BaseTest
       createFolder(folderName);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForElementPresent(Locators.EDITOR_TABSET_LOCATOR);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, file1Content);
       saveAsUsingToolbarButton(file1Name);
-      Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.closeTab(0);
+      waitForRootElement();
+      IDE.EDITOR.closeTab(0);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       saveAsUsingToolbarButton(file2Name);
-      Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.closeTab(0);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/" + file2Name); 
+      waitForRootElement();
+      IDE.EDITOR.closeTab(0);
+      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/" + file2Name);
 
       // Delete one file  
       IDE.NAVIGATION.selectItem(WS_URL + folderName + "/" + file2Name);
       IDE.NAVIGATION.deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.NAVIGATION.assertItemNotPresent(WS_URL + folderName + "/" + file2Name);
 
       //Open another file from the same folder
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(file1Name, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + folderName + "/" + file1Name, false);
+      waitForElementPresent(Locators.EDITOR_TABSET_LOCATOR);
       //Check text of opened file
-      String text =IDE.EDITOR.getTextFromCodeEditor(0);
+      String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertEquals(file1Content, text);
-      
+
       //Delete folder with file
       IDE.NAVIGATION.selectItem(WS_URL + folderName + "/");
       IDE.NAVIGATION.deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-      
+      waitForRootElement();
+
       //Check items not present in navigation tree
-      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/");
-      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/" + file1Name);
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folderName + "/");
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folderName + "/" + file1Name);
    }
 
 }
