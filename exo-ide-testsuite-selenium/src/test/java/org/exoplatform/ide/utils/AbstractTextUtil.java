@@ -52,7 +52,9 @@ public abstract class AbstractTextUtil
     */
    public void typeToInput(String locator, String text, boolean clear) throws Exception
    {
+      selenium.focus(locator);
       selenium.click(locator);
+      
       if (clear)
       {
          selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
