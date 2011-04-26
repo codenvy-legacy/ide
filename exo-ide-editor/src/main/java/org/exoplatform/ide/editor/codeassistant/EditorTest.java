@@ -371,14 +371,12 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
                true // can have several mimetypes
               )));  
       
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby script editor", "rb","", true,
-         new CodeMirrorConfiguration("['parseruby.js', 'parserubyhtmlmixed.js', 'tokenizeruby.js']", // generic code parsers
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby file editor", "rb","", true,
+         new CodeMirrorConfiguration("['parseruby.js', 'tokenizeruby.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']", // code styles
             true, // can be outlined
             true, // can be autocompleted
-            new RubyParser(), // exoplatform code parser 
-            new DefaultAutocompleteHelper(), // autocomplete helper
-            new DefaultCodeAssistant()            
+            new RubyParser() // exoplatform code parser           
          )));
       
       
@@ -761,8 +759,8 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
 
       Button rubyButton =
          new Button();
-      rubyButton.setTitle("Create CodeMirror Editor for Ruby script");
-      rubyButton.setText("Ruby script");
+      rubyButton.setTitle("Create CodeMirror Editor for Ruby file");
+      rubyButton.setText("Ruby");
       rubyButton.addClickHandler(new ClickHandler()
       {
          

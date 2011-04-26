@@ -53,28 +53,58 @@ public class RubyParser extends CodeMirrorParserImpl
    TokenBeenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of content
-      if (javaScriptNode == null)
+      if (javaScriptNode == null || Node.getName(javaScriptNode).equals("BR"))
       {
          return currentToken;
       }
-      
-      // interrupt at the end of the line
-      else if (Node.getName(javaScriptNode).equals("BR"))
-      {
-         nodeStack.push(new Node("BR", ""));
-      }
+//      
+//      // interrupt at the end of the line
+//      else if (Node.getName(javaScriptNode).equals("BR"))
+//      {
+//         nodeStack.push(new Node("BR", ""));
+//      }
       
       else
       {
          nodeStack.push(new Node(javaScriptNode));
       }
       
-      verifyClassName(nodeStack, enclosers, currentToken, lineNumber);
-    
-      verifyEndNode(nodeStack, enclosers, currentToken, lineNumber); 
+      TokenBeenImpl newToken;
+
+      // verify on class name 
+      if (isClassName(nodeStack))
+      {
+         currentToken = addSubToken(lineNumber, currentToken, TokenType.CLASS);
+      }
+
+      // verify on method name 
+      else if (isMethodName(nodeStack))
+      {
+         currentToken = addSubToken(lineNumber, currentToken, TokenType.METHOD);
+      }
+      
+      else if (isBlockNode(nodeStack.lastElement()))
+      {
+         enclosers.push(TokenType.BLOCK);         
+      }
+      
+      // verify on "end" node
+      else if (isEndNode(nodeStack.lastElement()))
+      {
+         // to filter block nodes like "if ... end"
+         if (!enclosers.lastElement().equals(TokenType.BLOCK))
+         {        
+            currentToken = closeToken(lineNumber, currentToken);
+         }
+         else
+         {
+            enclosers.pop();
+            nodeStack.clear();
+         }
+      }
       
       // recognize "("
-      if (isOpenBracket(nodeStack.lastElement()))
+      else if (isOpenBracket(nodeStack.lastElement()))
       {        
       }
 
@@ -97,37 +127,76 @@ public class RubyParser extends CodeMirrorParserImpl
       return parseLine(Node.getNext(javaScriptNode), lineNumber, currentToken, false);
    }
 
-   private void verifyClassName(Stack<Node> nodeStack, Stack<TokenType> enclosers, TokenBeenImpl currentToken, int lineNumber)
+   private TokenBeenImpl addSubToken(int lineNumber, TokenBeenImpl currentToken, TokenType tokenType)
+   {
+      TokenBeenImpl newToken = new TokenBeenImpl(nodeStack.lastElement().getContent(), tokenType, lineNumber, MimeType.APPLICATION_RUBY);
+      currentToken.addSubToken(newToken);
+      enclosers.push(tokenType);
+      nodeStack.clear();
+      return newToken;
+   }
+
+   private TokenBeenImpl closeToken(int lineNumber, TokenBeenImpl currentToken)
+   {
+      currentToken.setLastLineNumber(lineNumber);
+      enclosers.pop();
+      nodeStack.clear();
+      return currentToken.getParentToken();
+   }
+   
+   private boolean isClassName(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 1
                && isClassNode(nodeStack.get(nodeStack.size() - 2))
                && isConstant(nodeStack.lastElement())
           )
       {
-         TokenBeenImpl newToken = new TokenBeenImpl(nodeStack.lastElement().getContent(), TokenType.CLASS, lineNumber, MimeType.APPLICATION_RUBY);
-         
-         currentToken.addSubToken(newToken);            
-         currentToken = newToken;
-         
-         enclosers.push(TokenType.CLASS);
+         return true;
       }
 
+      return false;
    }
-   
-   private void verifyEndNode(Stack<Node> nodeStack, Stack<TokenType> enclosers, TokenBeenImpl currentToken, int lineNumber)
+
+   private boolean isMethodName(Stack<Node> nodeStack)
    {
-      if (nodeStack.size() > 1 && ! enclosers.isEmpty()
-               && isEndNode(nodeStack.lastElement())
+      if (nodeStack.size() > 1
+               && isDefNode(nodeStack.get(nodeStack.size() - 2))
+               && isMethodNode(nodeStack.lastElement().getType())
           )
       {
-         enclosers.pop();
-         
-         // close token
-         currentToken.setLastLineNumber(lineNumber);         
-         currentToken = currentToken.getParentToken();  
+         return true;
       }
+
+      return false;
    }
 
+   /**
+    * Recognize block node keywords like "case", "if", "unless", "do", "begin"
+    * @param node
+    * @return
+    */
+   private boolean isBlockNode(Node node)
+   {
+      return isKeyword(node.getType()) &&
+                (
+                    "case".equals(node.getContent())
+                    || "if".equals(node.getContent())
+                    || "unless".equals(node.getContent())
+                    || "do".equals(node.getContent())  // it is mean "while", "until", "for" keywords 
+                    || "begin".equals(node.getContent())                   
+                );
+   }
+   
+   /**
+    * Recognize ruby method name type "rb-method rb-methodname"
+    * @param nodeType
+    * @return
+    */
+   private boolean isMethodNode(String nodeType)
+   {
+      return "rb-method rb-methodname".equals(nodeType); 
+   }   
+   
    /**
     * Recognize ruby constant name and class name
     * @param node
@@ -145,7 +214,7 @@ public class RubyParser extends CodeMirrorParserImpl
     */
    private boolean isEndNode(Node node)
    {
-      return isKeyword(node) && "end".equals(node.getContent()); 
+      return isKeyword(node.getType()) && "end".equals(node.getContent()); 
    }
    
    /**
@@ -153,9 +222,9 @@ public class RubyParser extends CodeMirrorParserImpl
     * @param nodeType
     * @return
     */
-   private boolean isKeyword(Node node)
+   private boolean isKeyword(String nodeType)
    {
-      return "rb-keyword".equals(node.getType());
+      return "rb-keyword".equals(nodeType);
    }
 
    /**
@@ -255,7 +324,7 @@ public class RubyParser extends CodeMirrorParserImpl
     * @param node
     * @return
     */
-   private boolean isDef(Node node)
+   private boolean isDefNode(Node node)
    {
       return "rb-keyword".equals(node.getType()) && "def".equals(node.getContent());
    }
@@ -268,6 +337,4 @@ public class RubyParser extends CodeMirrorParserImpl
    {
       return "whitespace".equals(node.getType());
    }
-
-
 }
