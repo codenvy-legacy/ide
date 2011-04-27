@@ -77,6 +77,12 @@ public class RubyParser extends CodeMirrorParserImpl
          currentToken = addSubToken(lineNumber, currentToken, TokenType.CLASS);
       }
 
+      // verify on module name 
+      else if (isModuleName(nodeStack))
+      {
+         currentToken = addSubToken(lineNumber, currentToken, TokenType.MODULE);
+      }      
+      
       // verify on method name 
       else if (isMethodName(nodeStack))
       {
@@ -92,7 +98,7 @@ public class RubyParser extends CodeMirrorParserImpl
       else if (isEndNode(nodeStack.lastElement()))
       {
          // to filter block nodes like "if ... end"
-         if (!enclosers.lastElement().equals(TokenType.BLOCK))
+         if (!enclosers.empty() && !enclosers.lastElement().equals(TokenType.BLOCK))
          {        
             currentToken = closeToken(lineNumber, currentToken);
          }
@@ -157,6 +163,19 @@ public class RubyParser extends CodeMirrorParserImpl
       return false;
    }
 
+   private boolean isModuleName(Stack<Node> nodeStack)
+   {
+      if (nodeStack.size() > 1
+               && isModuleNode(nodeStack.get(nodeStack.size() - 2))
+               && isMethodNode(nodeStack.lastElement().getType())
+          )
+      {
+         return true;
+      }
+
+      return false;
+   }   
+   
    private boolean isMethodName(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 1
@@ -194,7 +213,7 @@ public class RubyParser extends CodeMirrorParserImpl
     */
    private boolean isMethodNode(String nodeType)
    {
-      return "rb-method rb-methodname".equals(nodeType); 
+      return "rb-method rb-methodname".equals(nodeType) || "rb-method".equals(nodeType); 
    }   
    
    /**
@@ -319,6 +338,11 @@ public class RubyParser extends CodeMirrorParserImpl
       return "rb-keyword".equals(node.getType()) && "class".equals(node.getContent());
    }
 
+   private boolean isModuleNode(Node node)
+   {
+      return "rb-keyword".equals(node.getType()) && "module".equals(node.getContent());
+   }   
+   
    /**
     * Recognize "def varname"
     * @param node

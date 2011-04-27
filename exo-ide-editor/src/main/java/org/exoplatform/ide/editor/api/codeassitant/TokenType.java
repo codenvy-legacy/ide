@@ -48,5 +48,8 @@ public enum TokenType {
    GROOVY_TAG, PACKAGE, IMPORT, PARAMETER, TYPE,
    
    /** Property type for Java code */
-   JSP_TAG;
+   JSP_TAG,
+   
+   /** Property type for Ruby code **/
+   MODULE;
 }
