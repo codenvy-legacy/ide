@@ -86,7 +86,7 @@ public class Navigation extends AbstractTestModule
       return TREE_PREFIX_ID + Utils.md5(href);
    }
 
-   public String getItemIdSerch(String href) throws Exception
+   public String getItemIdSearch(String href) throws Exception
    {
       return TREE_PREFIX_SERCH_ID + Utils.md5(href);
    }
@@ -109,10 +109,30 @@ public class Navigation extends AbstractTestModule
     */
    public void selectItemInSerchTree(String itemHref) throws Exception
    {
-      selenium().clickAt(getItemIdSerch(itemHref), "0");
+      selenium().click(getItemIdSearch(itemHref));
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
+      
+   /**
+    * Assert present item in search tree
+    * @param itemHref
+    * @throws Exception
+    */
+   public void assertElementPresentInSerchTree(String itemHref) throws Exception
+   {
+      assertTrue(selenium().isElementPresent(getItemIdSearch(itemHref)));
+   }
 
+   /**
+    * Assert not present item in search tree
+    * @param itemHref
+    * @throws Exception
+    */
+   public void assertElementNotPresentInSerchTree(String itemHref) throws Exception
+   {
+      assertFalse(selenium().isElementPresent(getItemIdSearch(itemHref)));
+   }
+   
    /**
     * Check navigation workspace tree contains item.
     * @param itemHref Href of item
