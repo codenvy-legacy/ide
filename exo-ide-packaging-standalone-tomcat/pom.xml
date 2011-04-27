@@ -273,14 +273,16 @@
                         <requireProperty>
                            <property>exo.projects.directory.dependencies</property>
                            <message>You must define the property exo.projects.directory.dependencies to
-                              give the path to the directory where you store your applications servers</message>
+                              give the path to the directory where you store
+                              your applications servers</message>
                         </requireProperty>
                         <requireProperty>
                            <property>exo.projects.app.tomcat.version</property>
                            <message>You must define the property exo.projects.app.tomcat.version to
-                              give the name of the directory where is stored tomcat</message>
-                            <regex>[a-z-]+-${tomcat.version}</regex>
-                            <regexMessage>Tomcat version must be: ${tomcat.version}</regexMessage>
+                              give the name of the directory where is stored
+                              tomcat</message>
+                           <regex>[a-z-]+-${tomcat.version}</regex>
+                           <regexMessage>Tomcat version must be: ${tomcat.version}</regexMessage>
                         </requireProperty>
                         <requireFilesExist>
                            <files>
@@ -323,8 +325,31 @@
          <activation>
             <activeByDefault>true</activeByDefault>
          </activation>
+         <dependencies>
+            <dependency>
+               <groupId>org.hsqldb</groupId>
+               <artifactId>hsqldb</artifactId>
+            </dependency>
+         </dependencies>
          <build>
             <plugins>
+             <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-dependency-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>copy-dependencies</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                           <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                           <includeTypes>jar</includeTypes>
+                           <outputDirectory>${project.build.directory}/tomcat-ide/lib</outputDirectory>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
                <plugin>
                   <artifactId>maven-antrun-plugin</artifactId>
                   <executions>
@@ -382,23 +407,23 @@
                <plugin>
                   <artifactId>maven-assembly-plugin</artifactId>
                   <executions>
-                    <!-- Create the distribution zip and attach it to maven -->
-                    <execution>
-                    <id>tomcat-zip</id>
-                    <phase>package</phase>
-                    <goals>
-                      <goal>single</goal>
-                    </goals>
-                    <configuration>
-                      <appendAssemblyId>false</appendAssemblyId>
-                      <updateOnly>false</updateOnly>
-                      <descriptors>
-                        <descriptor>${project.basedir}/src/main/assembly/tomcat-archive.xml</descriptor>
-                      </descriptors>
-                   </configuration>
-                  </execution>
-                </executions>
-              </plugin>
+                     <!-- Create the distribution zip and attach it to maven -->
+                     <execution>
+                        <id>tomcat-zip</id>
+                        <phase>package</phase>
+                        <goals>
+                           <goal>single</goal>
+                        </goals>
+                        <configuration>
+                           <appendAssemblyId>false</appendAssemblyId>
+                           <updateOnly>false</updateOnly>
+                           <descriptors>
+                              <descriptor>${project.basedir}/src/main/assembly/tomcat-archive.xml</descriptor>
+                           </descriptors>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
             </plugins>
          </build>
       </profile>
@@ -495,8 +520,31 @@
          <activation>
             <activeByDefault>false</activeByDefault>
          </activation>
+         <dependencies>
+            <dependency>
+               <groupId>org.hsqldb</groupId>
+               <artifactId>hsqldb</artifactId>
+            </dependency>
+         </dependencies>
          <build>
             <plugins>
+             <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-dependency-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>copy-dependencies</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                           <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                           <includeTypes>jar</includeTypes>
+                           <outputDirectory>${project.build.directory}/tomcat-ide/lib</outputDirectory>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
                <plugin>
                   <artifactId>maven-antrun-plugin</artifactId>
                   <executions>
