@@ -46,9 +46,6 @@
       <version.failsafe.plugin>2.6</version.failsafe.plugin>
       <tomcat.version>6.0.32</tomcat.version>
       <gwt.test.skip>true</gwt.test.skip>
-      <version.assembly.plugin>2.2.1</version.assembly.plugin>
-      <!-- maven-release-plugin -->
-      <arguments>-DcreateChecksum=true</arguments>
    </properties>
 
 
