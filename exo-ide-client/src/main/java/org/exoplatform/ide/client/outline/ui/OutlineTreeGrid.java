@@ -84,7 +84,7 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    private static final String DATA_ICON = Images.Outline.DATA_ITEM;
 
    private static final String ERROR_ICON = Images.Outline.ERROR_ITEM;
-   
+
    private static final String MODULE_ICON = Images.Outline.MODULE_ITEM;
 
    private static final String INTERFACE_ICON = Images.Outline.INTERFACE_ITEM;
@@ -112,8 +112,19 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
       {
          TreeItem addItem = tree.addItem(createItemWidget(getTokenIcon(value), getTokenDisplayTitle(value)));
          addItem.setUserObject(value);
+         addItem.getElement().setId(getIdForToken(value));
          fillTreeItems(addItem, getValue().getSubTokenList());
       }
+   }
+
+   /**
+    * Generate id for token tree item
+    * @param child token
+    * @return String id
+    */
+   private String getIdForToken(TokenBeenImpl child)
+   {
+      return child.getName() + ":" + child.getType() + ":" + child.getLineNumber();
    }
 
    /**
@@ -134,6 +145,7 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
          {
             TreeItem node = parentNode.addItem(createItemWidget(getTokenIcon(child), getTokenDisplayTitle(child)));
             node.setUserObject(child);
+            node.getElement().setId(getIdForToken(child));
             if (child.getSubTokenList() != null && child.getSubTokenList().size() > 0)
             {
                fillTreeItems(node, child.getSubTokenList());
@@ -158,6 +170,7 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
          {
             TreeItem node = tree.addItem(createItemWidget(getTokenIcon(child), getTokenDisplayTitle(child)));
             node.setUserObject(child);
+            node.getElement().setId(getIdForToken(child));
             if (child.getSubTokenList() != null && child.getSubTokenList().size() > 0)
             {
                fillTreeItems(node, child.getSubTokenList());
@@ -178,8 +191,8 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
       boolean isDeprecated = isDeprecated(token);
       // add info about java type, parameters and annotations
       if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType())
-               || MimeType.APPLICATION_JAVA.equals(token.getMimeType())
-               || MimeType.APPLICATION_RUBY.equals(token.getMimeType()))
+         || MimeType.APPLICATION_JAVA.equals(token.getMimeType())
+         || MimeType.APPLICATION_RUBY.equals(token.getMimeType()))
       {
          //icon, that displays in right bottom corner, if token is CLASS, 
          //and shows access modifier
@@ -274,9 +287,8 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    private String getTokenIcon(TokenBeenImpl token)
    {
       if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()) && !TokenType.GROOVY_TAG.equals(token.getType())
-          || MimeType.APPLICATION_JAVA.equals(token.getMimeType()) && !TokenType.JSP_TAG.equals(token.getType())
-          || MimeType.APPLICATION_RUBY.equals(token.getMimeType())
-         )
+         || MimeType.APPLICATION_JAVA.equals(token.getMimeType()) && !TokenType.JSP_TAG.equals(token.getType())
+         || MimeType.APPLICATION_RUBY.equals(token.getMimeType()))
       {
          return getIconForJavaFiles(token);
       }
@@ -300,10 +312,10 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
          case CDATA :
             return CDATA_ICON;
 
-         case JSP_TAG :            
+         case JSP_TAG :
          case GROOVY_TAG :
             return GROOVY_TAG_ICON;
-            
+
          case CLASS :
             return CLASS_ICON;
 
@@ -312,7 +324,7 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
 
          case INTERFACE :
             return INTERFACE_ICON;
-            
+
          case MODULE :
             return MODULE_ICON;
 
@@ -490,7 +502,7 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
       tree.setSelectedItem(null);
       hideHighlighter();
    }
-   
+
    /**
     * Get the the list of selected tokens in outline tree.
     * 
@@ -649,9 +661,10 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
       }
       return null;
    }
-   
+
    @Override
-   public void setValue(T value) {
+   public void setValue(T value)
+   {
       super.setValue(value);
       hideHighlighter();
    };
