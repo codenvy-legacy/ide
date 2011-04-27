@@ -155,7 +155,7 @@ public class LockFileTest extends LockFileAbstract
       
       //----- 7 ------------
       //select HTML file, save file, lock
-     IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.selectTab(1);
       saveAsUsingToolbarButton(FILE_NAME_2);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       

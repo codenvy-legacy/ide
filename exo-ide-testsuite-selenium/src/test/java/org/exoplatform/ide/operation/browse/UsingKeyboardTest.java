@@ -60,17 +60,26 @@ public class UsingKeyboardTest extends BaseTest
    @Before
    public void setUp() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectRootOfWorkspace();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+      waitForRootElement();
    }
 
    /**
     * Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
     * @throws Exception
     */
-   @Test
+  @Test
    public void testUsingKeyboardInNavigationPanel() throws Exception
    {
       // Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
@@ -79,44 +88,40 @@ public class UsingKeyboardTest extends BaseTest
       {
          return;
       }
-
-      createFolder(TEST_FOLDER);
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/"); 
-      createFolder(TEST_SUBFOLDER);
-
-      Thread.sleep(TestConstants.SLEEP);
-
+      //create subfolder 
+      VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
+      //refresh workspace    
+      waitForRootElement();
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      waitForRootElement();
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      waitForRootElement();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title="
-         + TEST_SUBFOLDER + "]/col[fieldName=title]"));
+      waitForRootElement();
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/"); 
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertTrue(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title="
-         + TEST_SUBFOLDER + "]/col[fieldName=title]"));
+      waitForRootElement();
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
 
       // test keyboard with opened Content Panel
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
       IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      waitForRootElement();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[title="
-         + TEST_SUBFOLDER + "]/col[fieldName=title]"));
-
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      waitForRootElement();
+      IDE.NAVIGATION.assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    /**
@@ -133,13 +138,16 @@ public class UsingKeyboardTest extends BaseTest
          return;
       }
 
-      createFolder(TEST_FOLDER);
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/"); 
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      waitForRootElement();
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
 
       createSaveAndCloseFile(MenuCommands.New.GOOGLE_GADGET_FILE, TEST_FILE, 0);
 
       performSearch("/" + TEST_FOLDER + "/", "", MimeType.GOOGLE_GADGET);
-      assertElementPresentSearchResultsTree(TEST_FILE);
+      IDE.NAVIGATION.assertElementPresentInSerchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
 
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT
       selectItemInSearchResultsTree(TEST_FILE);
@@ -147,22 +155,23 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertElementNotPresentSearchResultsTree(TEST_FILE);
+      IDE.NAVIGATION.assertElementNotPresentInSerchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
-      IDE.NAVIGATION.selectItem(WS_URL); 
+      IDE.NAVIGATION.selectItemInSerchTree(WS_URL);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertElementPresentSearchResultsTree(TEST_FILE);
+      //IDE.NAVIGATION.selectItemInSerchTree(WS_URL);
+
+      IDE.NAVIGATION.assertElementPresentInSerchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
    }
 
    /**
     * Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
     * @throws Exception
     */
-   @Test
+   //@Test
    public void testUsingKeyboardInOutlinePanel() throws Exception
    {
       // Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
@@ -175,7 +184,6 @@ public class UsingKeyboardTest extends BaseTest
       // copy test file into repository
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
          VirtualFileSystemUtils.put(TEST_FILE_PATH, MimeType.GOOGLE_GADGET, URL + TEST_FOLDER + "/" + TEST_FILE);
       }
       catch (IOException e)
@@ -190,17 +198,17 @@ public class UsingKeyboardTest extends BaseTest
       // refresh page and open test file
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/"); 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);     
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TEST_FILE, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + TEST_FOLDER + "/" + TEST_FILE, false);
 
       // open Outline Panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
-     IDE.EDITOR.selectTab(0);
-     IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.selectTab(0);
+      IDE.EDITOR.clickOnEditor();
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
@@ -213,7 +221,7 @@ public class UsingKeyboardTest extends BaseTest
       IDE.OUTLINE.assertElementPresentOutlineTree("Module");
       IDE.OUTLINE.assertElementPresentOutlineTree("ModulePrefs");
       IDE.OUTLINE.assertElementPresentOutlineTree("Content");
-      IDE.OUTLINE.assertElementNotPresentOutlineTree("CDATA");
+      //IDE.OUTLINE.assertElementNotPresentOutlineTree("CDATA");
 
       // verify keyboard key pressing within the outline
       IDE.OUTLINE.selectItemInOutlineTree("Module");
@@ -237,13 +245,12 @@ public class UsingKeyboardTest extends BaseTest
       IDE.OUTLINE.assertElementPresentOutlineTree("CDATA");
       assertEquals("6 : 1", getCursorPositionUsingStatusBar());
 
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
    }
 
    @After
    public void tearDown() throws Exception
    {
-     IDE.EDITOR.closeTab(0);
       VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       selectWorkspaceTab();
    }

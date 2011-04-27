@@ -35,15 +35,15 @@ import org.junit.Test;
  *
  */
 public class WorkspaceTest extends BaseTest
-{  
+{
    private String secondWorkspace;
-   
+
    @AfterClass
    public static void tearDown()
    {
       deleteCookies();
    }
-   
+
    @Test
    public void testDefaultEntryPoint() throws Exception
    {
@@ -52,11 +52,11 @@ public class WorkspaceTest extends BaseTest
       IDE.NAVIGATION.assertItemPresent(WS_URL);
       checkCurrentWorkspace(WS_NAME);
    }
-   
+
    @Test
    public void testSelectWorkspace() throws Exception
    {
-      secondWorkspace = getNonActiveWorkspaceName();
+      String secondWorkspace = IDE.SELECTWORKSPACE.getNonActiveWorkspaceName1();
       //----- 1 ---------------
       //check form Workspace
       //call select workspace window
@@ -69,32 +69,36 @@ public class WorkspaceTest extends BaseTest
       assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]"));
       assertTrue(selenium.isTextPresent(ENTRY_POINT_URL + secondWorkspace + "/"));
       assertTrue(selenium.isTextPresent(ENTRY_POINT_URL + WS_NAME + "/"));
-      
+
       //check Ok button is disabled
-      assertTrue(selenium.isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitleDisabled' and text()='OK']"));
+      assertTrue(selenium
+         .isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitleDisabled' and text()='OK']"));
       //check Cancel button is enabled
-      assertTrue(selenium.isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormCancelButton']//td[@class='buttonTitle' and text()='Cancel']"));
+      assertTrue(selenium
+         .isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormCancelButton']//td[@class='buttonTitle' and text()='Cancel']"));
       //click Cancel button and check form disappeared
       selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
       //check workspace doesn't changed
       checkCurrentWorkspace(WS_NAME);
-      
+
       //----- 2 ---------------
       //check changing of workspace
       //select second workspace
       selectWorkspace(secondWorkspace);
       checkCurrentWorkspace(secondWorkspace);
-      
+
       // return to initial workspace
       selectWorkspace(WS_NAME);
       checkCurrentWorkspace(WS_NAME);
+
    }
-   
-   private void checkCurrentWorkspace(String workspaceName)
+
+   private void checkCurrentWorkspace(String workspaceName) throws Exception
    {
-      assertEquals(workspaceName, selenium.getText("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[0]/col[0]"));
+
+      assertEquals(workspaceName, selenium.getText(IDE.NAVIGATION.getItemId(WS_URL)));
    }
-   
+
 }

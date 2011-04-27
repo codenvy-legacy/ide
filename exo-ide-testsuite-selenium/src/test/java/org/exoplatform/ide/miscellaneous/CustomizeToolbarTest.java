@@ -82,6 +82,7 @@ public class CustomizeToolbarTest extends BaseTest
          .getText("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td"));
       selenium.click("ideCustomizeToolbarFormOkButton");
       checkDisAppearCustomizeToolbarForm();
+      
       // ---------5--------
       //run customize toolbar
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
@@ -89,8 +90,9 @@ public class CustomizeToolbarTest extends BaseTest
       // Control defoult settings
       selenium.click("ideCustomizeToolbarFormRestoreDefaultsButton");
       //check appear list grid basic elements
+      checkAppearCustomizeToolbarForm();
       chekIdeToolbarItemListGrid();
-      chekTollbarItemExListGrid();
+      chekToollbarItemExListGrid();
       selenium.click("ideCustomizeToolbarFormOkButton");
 
       // ------6-------
@@ -168,7 +170,7 @@ public class CustomizeToolbarTest extends BaseTest
       waitForElementPresent("ideCustomizeToolbarForm");
       //restore default settings and check
       selenium.click("ideCustomizeToolbarFormRestoreDefaultsButton");
-      chekTollbarItemExListGrid();
+      chekToollbarItemExListGrid();
       chekIdeToolbarItemListGrid();
    }
 
@@ -176,7 +178,7 @@ public class CustomizeToolbarTest extends BaseTest
  * chek main elements on TollbarItem
     * @throws InterruptedException 
  */
-public void chekTollbarItemExListGrid() throws InterruptedException
+public void chekToollbarItemExListGrid() throws InterruptedException
    {
       checkIdeCommandItemExListGrid("New * [Popup]", 2);
       checkIdeCommandItemExListGrid("Upload Zipped Folder...", 6);
@@ -194,13 +196,13 @@ public void chekTollbarItemExListGrid() throws InterruptedException
       checkIdeCommandItemExListGrid("Launch REST Service", 52);
       checkIdeCommandItemExListGrid("Preview node type", 57);
       checkIdeCommandItemExListGrid("Initialize repository", 60);
-      checkIdeCommandItemExListGrid("Push", 68);
-      checkIdeCommandItemExListGrid("Workspace...", 71);
-      checkIdeCommandItemExListGrid("REST Services Discovery", 76);
-      checkIdeCommandItemExListGrid("New POGO", 82);
-      checkIdeCommandItemExListGrid("Project Template...", 78);
-      checkIdeCommandItemExListGrid("New Data Object", 83);
-      checkIdeCommandItemExListGrid("New Netvibes Widget", 92);
+      checkIdeCommandItemExListGrid("Push...", 70);
+      checkIdeCommandItemExListGrid("Workspace...", 75);
+      checkIdeCommandItemExListGrid("REST Services Discovery", 80);
+      checkIdeCommandItemExListGrid("New POGO", 86);
+      checkIdeCommandItemExListGrid("Project Template...", 82);
+      checkIdeCommandItemExListGrid("New Data Object", 87);
+      checkIdeCommandItemExListGrid("New Netvibes Widget", 96);
    }
 
    /**

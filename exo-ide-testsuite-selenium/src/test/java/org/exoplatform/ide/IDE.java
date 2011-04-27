@@ -28,6 +28,7 @@ import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.core.SaveAs;
+import org.exoplatform.ide.core.SelectWorkspace;
 import org.exoplatform.ide.core.Toolbar;
 import org.exoplatform.ide.core.WarningDialog;
 
@@ -87,6 +88,8 @@ public class IDE
    public ErrorDialog ERROR_DIALOG = new ErrorDialog();
    
    public InformationDialog INFORMATION_DIALOG = new InformationDialog();
+   
+   public SelectWorkspace SELECTWORKSPACE = new SelectWorkspace();
 
    /**
     * Select main frame of IDE.
