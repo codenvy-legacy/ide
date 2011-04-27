@@ -32,6 +32,12 @@ import org.exoplatform.ide.TestConstants;
  */
 public class Outline extends AbstractTestModule
 {
+   interface Locators
+   {
+      String TREE_ID = "ideOutlineTreeGrid";
+      
+      String TREE  = "//div[@id='" + TREE_ID + "']/";
+   }
    
    /**
     * Get title of outline node.
@@ -162,4 +168,20 @@ public class Outline extends AbstractTestModule
       selenium().click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name + "]/col[1]");
    }   
 
+   /**
+    * Check is outline tree present in DOM 
+    */
+   public void assertOutlineTreePresent()
+   {
+      assertTrue(selenium().isElementPresent(Locators.TREE_ID));
+   }
+   
+   /**
+    * Check is element present in outline tree
+    * @param id of row
+    */
+   public void assertElmentPresentById(String id)
+   {
+      assertTrue(selenium().isElementPresent(Locators.TREE + "/div[@id='" + id + "']"));
+   }
 }

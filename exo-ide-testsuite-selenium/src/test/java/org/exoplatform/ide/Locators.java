@@ -130,11 +130,22 @@ public class Locators
       /**
        * SmartGWT locator for code helper tabset.
        */
+      @Deprecated
       public static final String SC_CODE_HELPER_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]";
 
       /**
+       * Locator of Information tab set
+       */
+      public static final String INFORMATION_TABSET_LOCATOR = "//div[@panel-id='information']";
+      
+      /**
+       * Locator for outline tab
+       */
+      public static final String OUTLINE_TAB_LOCATOR = "//div[@view-id='ideOutlineView' and @panel-id='information']";
+      /**
        * SmartGWT locator for outline tab.
        */
+      @Deprecated
       public static final String SC_OUTLINE_TAB_LOCATOR = SC_CODE_HELPER_TABSET_LOCATOR + "/tab[ID=ideOutlineForm]";
 
       /**
@@ -146,6 +157,7 @@ public class Locators
       /**
        * Non smartGWT locator for outline tab.
        */
+      @Deprecated
       public static final String XPATH_OUTLINE_TAB_LOCATOR = "//div[@eventproxy='ideOutlineForm']";
 
       /**
