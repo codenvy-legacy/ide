@@ -33,12 +33,12 @@ import org.junit.Test;
 public class SearchAdvancedTest extends BaseTest
 {
    
-   private final String googleGadgetFileName = "Тестовый гаджет.xml";
+   private final String googleGadgetFileName = "Ð¢ÐµÑ�Ñ‚Ð¾Ð²Ñ‹Ð¹ Ð³Ð°Ð´Ð¶ÐµÑ‚.xml";
 
    private final String googleGadgetFileContent =
 
       "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
-         + "<Content type=\"html\">\n" + "<![CDATA[ Привет, свет! Test]]></Content></Module>";
+         + "<Content type=\"html\">\n" + "<![CDATA[ ÐŸÑ€Ð¸Ð²ÐµÑ‚, Ñ�Ð²ÐµÑ‚! Test]]></Content></Module>";
    
    /**
     * IDE-34:Advanced search test.
@@ -51,7 +51,7 @@ public class SearchAdvancedTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
       Thread.sleep(TestConstants.SLEEP);
-      String workspace = getItemNameFromWorkspaceTree(null);
+      String workspace = IDE.NAVIGATION.getItemId(WS_URL);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       Thread.sleep(TestConstants.SLEEP);
@@ -75,7 +75,7 @@ public class SearchAdvancedTest extends BaseTest
       
       //Step 7
       selectItemInSearchResultsTree(workspace);
-      performSearch("/", "Привет, свет!", "script/groovy");
+      performSearch("/", "ÐŸÑ€Ð¸Ð²ÐµÑ‚, Ñ�Ð²ÐµÑ‚!", "script/groovy");
       Thread.sleep(TestConstants.SLEEP);
       assertElementNotPresentSearchResultsTree(googleGadgetFileName);
 
@@ -87,7 +87,7 @@ public class SearchAdvancedTest extends BaseTest
       
       //Step 9
       selectItemInSearchResultsTree(workspace);
-      performSearch("/", "Привет, свет!", "");
+      performSearch("/", "ÐŸÑ€Ð¸Ð²ÐµÑ‚, Ñ�Ð²ÐµÑ‚!", "");
       Thread.sleep(TestConstants.SLEEP);
       assertElementPresentSearchResultsTree(googleGadgetFileName);
       

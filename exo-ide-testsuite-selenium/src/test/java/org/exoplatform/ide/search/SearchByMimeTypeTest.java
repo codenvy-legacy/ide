@@ -90,7 +90,7 @@ public class SearchByMimeTypeTest extends BaseTest
 
       openFileFromSearchResultsWithCodeEditor(copyJsFileName);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(getItemNameFromWorkspaceTree(null) + "/" + folder2Name, getStatusbarText());
+      assertEquals(getItemNameFromWorkspaceTree(WS_URL) + "/" + folder2Name, getStatusbarText());
 
       //Clear created items
       selectWorkspaceTab();
