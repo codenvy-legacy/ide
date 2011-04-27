@@ -27,8 +27,6 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
-import com.google.gwt.logging.client.SystemLogHandler;
-
 /**
  * Created by The eXo Platform SAS.
  *	
