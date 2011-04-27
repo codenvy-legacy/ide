@@ -175,8 +175,9 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
             parentNode.getChild(0).remove();
          }
       }
-
-      parentNode.setState(true);
+      
+       //to avoid send open event (thus extra refresh folder is not done)  
+      parentNode.setState(true, false);
    }
 
    private TreeItem createTreeNode(Item item)
