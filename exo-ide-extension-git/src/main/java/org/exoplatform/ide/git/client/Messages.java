@@ -59,9 +59,17 @@ public interface Messages
 
    public static final String INIT_FAILED = "Init repository failed.";
    
-   public static final String PUSH_SUCCESS = "Successfully pushed to remote repository.";
+   public static final String PUSH_SUCCESS = "Successfully pushed to remote repository ";
    
    public static final String PUSH_FAIL = "Push to remote repository failed.";
+   
+   public static final String PULL_SUCCESS = "Successfully pulled from remote repository ";
+   
+   public static final String PULL_FAIL = "Failed to pull from remote repository";
+   
+   public static final String FETCH_SUCCESS = "Successfully fetched from remote repository ";
+   
+   public static final String FETCH_FAIL = "Failed to fetch from remote repository";
    
    public static final String REMOTE_LIST_FAILED = "No remote repositories are found.";
    

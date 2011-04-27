@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -42,7 +43,7 @@ import org.exoplatform.ide.git.client.remove.IndexFilesGrid;
  */
 public class ResetFilesView extends ViewImpl implements ResetFilesPresenter.Display
 {
-   private static final int HEIGHT = 280;
+   private static final int HEIGHT = 290;
 
    private static final int WIDTH = 480;
 
@@ -91,11 +92,14 @@ public class ResetFilesView extends ViewImpl implements ResetFilesPresenter.Disp
       mainLayout.setSpacing(10);
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-
+      
+      Border border = new Border();
       indexFilesGrid = new IndexFilesGrid();
       indexFilesGrid.setWidth("100%");
       indexFilesGrid.setHeight(180);
-      mainLayout.add(indexFilesGrid);
+      border.add(indexFilesGrid);
+      border.setWidth("100%");
+      mainLayout.add(border);
 
       addButtonsLayout(mainLayout);
 

@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
@@ -43,9 +44,9 @@ import org.exoplatform.ide.git.shared.Branch;
  */
 public class BranchView extends ViewImpl implements BranchPresenter.Display
 {
-   private static final int HEIGHT = 280;
+   private static final int HEIGHT = 300;
 
-   private static final int WIDTH = 480;
+   private static final int WIDTH = 470;
    
    public static final String ID = "ideBranchView";
 
@@ -109,11 +110,13 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
       
+      Border border = new Border();
+      border.setWidth("100%");
       branchGrid = new BranchGrid();
       branchGrid.setWidth("100%");
       branchGrid.setHeight(180);
-      mainLayout.add(branchGrid);
-      
+      border.add(branchGrid);
+      mainLayout.add(border);
       
       addButtonsLayout(mainLayout);
       

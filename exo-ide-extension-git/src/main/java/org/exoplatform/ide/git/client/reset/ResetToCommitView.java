@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.RadioItem;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -47,9 +48,9 @@ import org.exoplatform.ide.git.shared.Revision;
  */
 public class ResetToCommitView extends ViewImpl implements ResetToCommitPresenter.Display
 {
-   private static final int HEIGHT = 270;
+   private static final int HEIGHT = 345;
 
-   private static final int WIDTH = 600;
+   private static final int WIDTH = 610;
 
    public static final String ID = "ideResetToCommitView";
 
@@ -127,11 +128,14 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
       mainLayout.setSpacing(10);
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-
+      
+      Border border = new Border();
+      border.setWidth("100%");
       revisionGrid = new RevisionGrid();
       revisionGrid.setWidth("100%");
       revisionGrid.setHeight(140);
-      mainLayout.add(revisionGrid);
+      border.add(revisionGrid);
+      mainLayout.add(border);
 
       softMode = new RadioItem(MODE_ID, SOFT_MODE_TITLE);
       addDescription(softMode, SOFT_MODE_DESCRIPTION);

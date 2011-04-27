@@ -33,16 +33,12 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.Messages;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.Branch;
 
 import java.util.List;
@@ -55,7 +51,7 @@ import java.util.List;
  * @version $Id:  Apr 8, 2011 12:02:49 PM anya $
  *
  */
-public class BranchPresenter implements ShowBranchesHandler, ItemsSelectedHandler
+public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
 {
    interface Display extends IsView
    {
@@ -122,29 +118,13 @@ public class BranchPresenter implements ShowBranchesHandler, ItemsSelectedHandle
    private Display display;
 
    /**
-    * Working directory of Git repository.
-    */
-   private String workDir;
-
-   /**
-    * Selected items in browser tree.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * @param eventBus
     */
    public BranchPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
 
       eventBus.addHandler(ShowBranchesEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -211,40 +191,6 @@ public class BranchPresenter implements ShowBranchesHandler, ItemsSelectedHandle
    }
 
    /**
-    * Get the location of the Git working directory, starting 
-    * from pointed href.
-    * 
-    * @param href
-    */
-   private void getWorkDir(String href)
-   {
-      GitClientService.getInstance().getWorkDir(href, new AsyncRequestCallback<WorkDirResponse>()
-      {
-
-         @Override
-         protected void onSuccess(WorkDirResponse result)
-         {
-            workDir = result.getWorkDir();
-            workDir = workDir.endsWith("/.git") ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-
-            Display d = GWT.create(Display.class);
-            IDE.getInstance().openView((View)d);
-            bindDisplay(d);
-
-            display.enableCheckoutButton(false);
-            display.enableDeleteButton(false);
-            getBranches(workDir);
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            Dialogs.getInstance().showInfo(Messages.NOT_GIT_REPOSITORY);
-         }
-      });
-   }
-
-   /**
     * Get the list of branches.
     * 
     * @param workDir Git repository work tree location
@@ -277,10 +223,7 @@ public class BranchPresenter implements ShowBranchesHandler, ItemsSelectedHandle
    @Override
    public void onShowBranches(ShowBranchesEvent event)
    {
-      if (selectedItems != null && selectedItems.size() > 0)
-      {
-         getWorkDir(selectedItems.get(0).getHref());
-      }
+      getWorkDir();
    }
 
    private void askNewBranchName()
@@ -409,12 +352,18 @@ public class BranchPresenter implements ShowBranchesHandler, ItemsSelectedHandle
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
     */
    @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
+   public void onWorkDirReceived()
    {
-      selectedItems = event.getSelectedItems();
+      Display d = GWT.create(Display.class);
+      IDE.getInstance().openView(d.asView());
+      bindDisplay(d);
+
+      display.enableCheckoutButton(false);
+      display.enableDeleteButton(false);
+      getBranches(workDir);
    }
 
 }

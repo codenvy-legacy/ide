@@ -18,34 +18,33 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
-import com.google.gwt.json.client.JSONBoolean;
-
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
+import com.google.gwt.json.client.JSONObject;
+
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.ide.git.shared.CommitRequest;
+import org.exoplatform.ide.git.shared.PullRequest;
 
 /**
- * Marshaller for forming commit request in JSON format.
+ * Marshaller for pull request in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 31, 2011 11:11:25 AM anya $
+ * @version $Id:  Apr 20, 2011 3:20:49 PM anya $
  *
  */
-public class CommitRequestMarshaller implements Marshallable, Constants
+public class PullRequestMarshaller implements Marshallable, Constants
 {
    /**
-    * Request for commit.
+    * Pull request.
     */
-   private CommitRequest commitRequest;
+   private PullRequest pullRequest;
 
    /**
-    * @param commitRequest request for commit
+    * @param pullRequest pull request
     */
-   public CommitRequestMarshaller(CommitRequest commitRequest)
+   public PullRequestMarshaller(PullRequest pullRequest)
    {
-      this.commitRequest = commitRequest;
+      this.pullRequest = pullRequest;
    }
 
    /**
@@ -55,8 +54,15 @@ public class CommitRequestMarshaller implements Marshallable, Constants
    public String marshal()
    {
       JSONObject jsonObject = new JSONObject();
-      jsonObject.put(MESSAGE, new JSONString(commitRequest.getMessage()));
-      jsonObject.put(ALL, JSONBoolean.getInstance(commitRequest.isAll()));
+      if (pullRequest.getRefSpec() != null)
+      {
+         jsonObject.put(REF_SPEC, new JSONString(pullRequest.getRefSpec()));
+      }
+
+      if (pullRequest.getRemote() != null)
+      {
+         jsonObject.put(REMOTE, new JSONString(pullRequest.getRemote()));
+      }
       return jsonObject.toString();
    }
 

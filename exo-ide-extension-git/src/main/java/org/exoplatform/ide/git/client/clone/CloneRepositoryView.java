@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.git.client.clone;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -160,7 +159,7 @@ public class CloneRepositoryView extends ViewImpl implements
    {
       TextField textField = new TextField(id, title);
       textField.setTitleOrientation(TitleOrientation.TOP);
-      textField.setWidth(420);
+      textField.setWidth("100%");
       textField.setHeight(22);
       return textField;
    }
@@ -211,6 +210,15 @@ public class CloneRepositoryView extends ViewImpl implements
    public void enableCloneButton(boolean enable)
    {
       cloneButton.setEnabled(enable);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display#focusInRemoteUrlField()
+    */
+   @Override
+   public void focusInRemoteUrlField()
+   {
+      remoteUriField.focusInItem();
    }
 
 }

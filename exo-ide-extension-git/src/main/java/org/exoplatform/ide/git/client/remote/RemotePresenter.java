@@ -31,18 +31,14 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.Messages;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.Remote;
 
 import java.util.List;
@@ -55,7 +51,7 @@ import java.util.List;
  * @version $Id:  Apr 18, 2011 11:13:30 AM anya $
  *
  */
-public class RemotePresenter implements ShowRemotesHandler, ItemsSelectedHandler, ViewClosedHandler
+public class RemotePresenter extends GitPresenter implements ShowRemotesHandler, ViewClosedHandler
 {
    public interface Display extends IsView
    {
@@ -65,14 +61,14 @@ public class RemotePresenter implements ShowRemotesHandler, ItemsSelectedHandler
        * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getAddButton();
-      
+
       /**
        * Get delete button's click handler.
        * 
        * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getDeleteButton();
-      
+
       /**
        * Get cancel button's click handler.
        * 
@@ -108,26 +104,10 @@ public class RemotePresenter implements ShowRemotesHandler, ItemsSelectedHandler
     */
    private Display display;
 
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items in browser tree.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Working directory of the Git repository.
-    */
-   private String workDir;
-
    public RemotePresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
 
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(ShowRemotesEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
@@ -184,44 +164,12 @@ public class RemotePresenter implements ShowRemotesHandler, ItemsSelectedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
-   }
-
-   /**
     * @see org.exoplatform.ide.git.client.remote.ShowRemotesHandler#onShowRemotes(org.exoplatform.ide.git.client.remote.ShowRemotesEvent)
     */
    @Override
    public void onShowRemotes(ShowRemotesEvent event)
    {
-      if (selectedItems == null || selectedItems.size() <= 0)
-      {
-         Dialogs.getInstance().showInfo(Messages.SELECTED_ITEMS_FAIL);
-         return;
-      }
-
-      //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getHref(),
-         new AsyncRequestCallback<WorkDirResponse>()
-         {
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               workDir = result.getWorkDir();
-               workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-               getRemotes(workDir);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showError(Messages.NOT_GIT_REPOSITORY);
-            }
-         });
+      getWorkDir();
    }
 
    /**
@@ -241,7 +189,7 @@ public class RemotePresenter implements ShowRemotesHandler, ItemsSelectedHandler
             if (display == null)
             {
                Display d = GWT.create(Display.class);
-               IDE.getInstance().openView((View)d);
+               IDE.getInstance().openView(d.asView());
                bindDisplay(d);
             }
 
@@ -370,5 +318,14 @@ public class RemotePresenter implements ShowRemotesHandler, ItemsSelectedHandler
       {
          display = null;
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
+    */
+   @Override
+   public void onWorkDirReceived()
+   {
+      getRemotes(workDir);
    }
 }

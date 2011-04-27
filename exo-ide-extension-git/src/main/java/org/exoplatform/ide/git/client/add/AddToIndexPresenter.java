@@ -25,24 +25,18 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitClientUtil;
+import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.Messages;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
-
-import java.util.List;
 
 /**
  * Presenter for add changes to index view.
@@ -53,7 +47,7 @@ import java.util.List;
  * @version $Id:  Mar 29, 2011 4:35:16 PM anya $
  *
  */
-public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandler, Messages
+public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
 {
    public interface Display extends IsView
    {
@@ -92,28 +86,12 @@ public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandle
    private Display display;
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items in browser tree.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Working directory location.
-    */
-   private String workDir;
-
-   /**
     * @param eventBus events handler
     */
    public AddToIndexPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
       eventBus.addHandler(AddFilesEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -150,34 +128,7 @@ public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandle
    @Override
    public void onAddFiles(AddFilesEvent event)
    {
-      if (selectedItems == null || selectedItems.size() <= 0)
-      {
-         Dialogs.getInstance().showInfo(SELECTED_ITEMS_FAIL);
-         return;
-      }
-
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getHref(),
-         new AsyncRequestCallback<WorkDirResponse>()
-         {
-
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               workDir = result.getWorkDir();
-               workDir = workDir.endsWith("/.git") ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-               Display d = GWT.create(Display.class);
-               IDE.getInstance().openView((View)d);
-               bindDisplay(d);
-
-               display.getMessage().setValue(formMessage(), true);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showInfo(NOT_GIT_REPOSITORY);
-            }
-         });
+      getWorkDir();
    }
 
    /**
@@ -232,7 +183,7 @@ public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandle
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent(ADD_SUCCESS));
+            eventBus.fireEvent(new OutputEvent(Messages.ADD_SUCCESS));
             eventBus.fireEvent(new RefreshBrowserEvent());
          }
 
@@ -241,7 +192,7 @@ public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandle
          {
             String errorMessage =
                (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : ADD_FAILED;
+                  : Messages.ADD_FAILED;
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
@@ -250,11 +201,15 @@ public class AddToIndexPresenter implements AddFilesHandler, ItemsSelectedHandle
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
     */
    @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
+   public void onWorkDirReceived()
    {
-      selectedItems = event.getSelectedItems();
+      Display d = GWT.create(Display.class);
+      IDE.getInstance().openView(d.asView());
+      bindDisplay(d);
+
+      display.getMessage().setValue(formMessage(), true);
    }
 }

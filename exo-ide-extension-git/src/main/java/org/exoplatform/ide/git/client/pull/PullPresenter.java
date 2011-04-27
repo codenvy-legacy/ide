@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.push;
+package org.exoplatform.ide.git.client.pull;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -42,60 +42,51 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- * Presenter of view for pushing changes to remote repository.
- * The view is pointed in Views.gwt.xml file.
+ * Presenter of the view for pulling changes from remote repository.
+ * View must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 4, 2011 9:53:07 AM anya $
+ * @version $Id:  Apr 20, 2011 4:20:24 PM anya $
  *
  */
-public class PushToRemotePresenter extends HasBranchesPresenter implements PushToRemoteHandler
+public class PullPresenter extends HasBranchesPresenter implements PullHandler
 {
-   public interface Display extends IsView
+   interface Display extends IsView
    {
       /**
-       * Get the push button click handler.
+       * Get pull button's click handler.
        * 
-       * @return {@link HasClickHandlers} push button
+       * @return {@link HasClickHandlers} click handler
        */
-      HasClickHandlers getPushButton();
+      HasClickHandlers getPullButton();
 
       /**
-       * Get the cancel button click handler.
+       * Get cancel button's click handler.
        * 
-       * @return {@link HasClickHandlers} cancel button
+       * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getCancelButton();
 
       /**
-       * Get remote repository field value.
+       * Get remote repository field.
        * 
-       * @return {@link HasValue} field
+       * @return {@link HasValue}
        */
-      HasValue<String> getRemoteValue();
+      HasValue<String> getRemoteName();
 
       /**
-       * Get remote branches field value.
+       * Get remote branches field.
        * 
-       * @return {@link HasValue} field
+       * @return {@link HasValue}
        */
-      HasValue<String> getRemoteBranchesValue();
+      HasValue<String> getRemoteBranches();
 
       /**
-       * Get local branches field value.
+       * Get local branches field.
        * 
-       * @return {@link HasValue} field
+       * @return {@link HasValue}
        */
-      HasValue<String> getLocalBranchesValue();
-
-      /**
-       * Set values of remote repositories. 
-       * 
-       * @param values values to set
-       */
-      void setRemoteValues(LinkedHashMap<String, String> values);
-
-      String getRemoteDisplayValue();
+      HasValue<String> getLocalBranches();
 
       /**
        * Set values of remote repository branches. 
@@ -112,33 +103,29 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       void setLocalBranches(String[] values);
 
       /**
-       * Change the enable state of the push button.
+       * Change the enable state of the pull button.
        * 
        * @param enable enable state
        */
-      void enablePushButton(boolean enable);
+      void enablePullButton(boolean enable);
 
+      /**
+       * Set values of remote repositories. 
+       * 
+       * @param values values to set
+       */
+      void setRemoteValues(LinkedHashMap<String, String> values);
+
+      /**
+       * Get the display name of the remote repository.
+       * 
+       * @return String display name of the remote repository
+       */
+      String getRemoteDisplayValue();
    }
 
-   /**
-    * Presenter's display.
-    */
    private Display display;
 
-   /**
-    * @param eventBus events handler
-    */
-   public PushToRemotePresenter(HandlerManager eventBus)
-   {
-      super(eventBus);
-      eventBus.addHandler(PushToRemoteEvent.TYPE, this);
-   }
-
-   /**
-    * Bind pointed display with presenter.
-    * 
-    * @param d display
-    */
    public void bindDisplay(Display d)
    {
       this.display = d;
@@ -153,77 +140,55 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
          }
       });
 
-      display.getPushButton().addClickHandler(new ClickHandler()
+      display.getPullButton().addClickHandler(new ClickHandler()
       {
 
          @Override
          public void onClick(ClickEvent event)
          {
-            doPush();
+            doPull();
          }
       });
 
-      display.getRemoteValue().addValueChangeHandler(new ValueChangeHandler<String>()
+      display.getRemoteName().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            display.setRemoteBranches(getRemoteBranchesToDisplay(display.getRemoteDisplayValue()));
+            display.setRemoteBranches(getRemoteBranchesNamesToDisplay(display.getRemoteDisplayValue()));
          }
       });
 
-      display.getRemoteBranchesValue().addValueChangeHandler(new ValueChangeHandler<String>()
+      display.getRemoteBranches().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
             boolean empty = (event.getValue() == null || event.getValue().length() <= 0);
-            display.enablePushButton(!empty);
+            display.enablePullButton(!empty);
          }
       });
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemoteHandler#onPushToRemote(org.exoplatform.ide.git.client.push.PushToRemoteEvent)
+    * @param eventBus
     */
-   @Override
-   public void onPushToRemote(PushToRemoteEvent event)
+   public PullPresenter(HandlerManager eventBus)
    {
-      getWorkDir();
+      super(eventBus);
+
+      eventBus.addHandler(PullEvent.TYPE, this);
    }
 
    /**
-    * Push changes to remote repository.
+    * @see org.exoplatform.ide.git.client.pull.PullHandler#onPull(org.exoplatform.ide.git.client.pull.PullEvent)
     */
-   public void doPush()
+   @Override
+   public void onPull(PullEvent event)
    {
-      if (workDir == null)
-         return;
-
-      final String remote = display.getRemoteValue().getValue();
-      String localBranch = display.getLocalBranchesValue().getValue();
-      String remoteBranch = display.getRemoteBranchesValue().getValue();
-
-      GitClientService.getInstance().push(workDir, new String[]{localBranch + ":" + remoteBranch}, remote, false,
-         new AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
-            {
-               eventBus.fireEvent(new OutputEvent(Messages.PUSH_SUCCESS + "<b>" + remote + "</b>", Type.INFO));
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : Messages.PUSH_FAIL;
-               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
-      IDE.getInstance().closeView(display.asView().getId());
+      getWorkDir();
    }
 
    /**
@@ -235,7 +200,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       Display d = GWT.create(Display.class);
       IDE.getInstance().openView(d.asView());
       bindDisplay(d);
-      display.enablePushButton(false);
+
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
       for (Remote remote : remotes)
       {
@@ -254,7 +219,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
    @Override
    protected void setRemoteBranches(List<Branch> result)
    {
-      display.setRemoteBranches(getRemoteBranchesToDisplay(display.getRemoteDisplayValue()));
+      display.setRemoteBranches(getRemoteBranchesNamesToDisplay(display.getRemoteDisplayValue()));
    }
 
    /**
@@ -266,8 +231,45 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       String[] values = new String[branches.size()];
       for (int i = 0; i < branches.size(); i++)
       {
-         values[i] = branches.get(i).getName();
+         values[i] = branches.get(i).getDisplayName();
       }
       display.setLocalBranches(values);
    }
+
+   /**
+    * Perform pull from pointed by user remote repository, from pointed remote branch to local one.
+    * Local branch may not be pointed.
+    */
+   public void doPull()
+   {
+      String remoteName = display.getRemoteDisplayValue();
+      final String remoteUrl = display.getRemoteName().getValue();
+      String localBranch = display.getLocalBranches().getValue();
+      String remoteBranch = display.getRemoteBranches().getValue();
+      //Form the refspec. User points only the branch names:
+      String refs =
+         (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
+            + "refs/remotes/" + remoteName + "/" + remoteBranch;
+
+      GitClientService.getInstance().pull(workDir, refs, remoteName, new AsyncRequestCallback<String>()
+      {
+
+         @Override
+         protected void onSuccess(String result)
+         {
+            eventBus.fireEvent(new OutputEvent(Messages.PULL_SUCCESS + "<b>" + remoteUrl + "</b>", Type.INFO));
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            String errorMessage =
+               (exception.getMessage() != null) ? exception.getMessage() : Messages.PULL_FAIL + "<b>" + remoteUrl
+                  + "</b>";
+            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         }
+      });
+   }
+
 }

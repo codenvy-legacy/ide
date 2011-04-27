@@ -72,6 +72,26 @@ public abstract class GitClientService
    public abstract void add(String workDir, boolean update, String[] filePattern, AsyncRequestCallback<String> callback);
 
    /**
+    * Fetch changes from remote repository to local one.
+    * 
+    * @param workDir location of Git repository working directory
+    * @param remote remote repository's name
+    * @param refspec  list of refspec to fetch.
+    * <p>
+    * Expected form is:
+    * <ul>
+    * <li>
+    * refs/heads/featured:refs/remotes/origin/featured - branch 'featured' from
+    * remote repository will be fetched to 'refs/remotes/origin/featured'.</li>
+    * <li>featured - remote branch name.</li>
+    * </ul>
+    * @param removeDeletedRefs if <code>true</code> then delete removed refs from local repository
+    * @param callback callback
+    */
+   public abstract void fetch(String workDir, String remote, String[] refspec, boolean removeDeletedRefs,
+      AsyncRequestCallback<String> callback);
+
+   /**
     * Get the list of the branches.
     * For now, all branches cannot be returned at once, so
     * the parameter <code>remote</code> tells to get remote branches 
@@ -126,7 +146,7 @@ public abstract class GitClientService
     */
    public abstract void remoteList(String workDir, String remoteName, boolean verbose,
       AsyncRequestCallback<List<Remote>> callback);
-   
+
    /**
     * Adds remote repository to the list of remote repositories.
     * 
@@ -136,7 +156,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void remoteAdd(String workDir, String name, String url, AsyncRequestCallback<String> callback);
-   
+
    /**
     * Deletes the pointed(by name) remote repository from the list of repositories.
     * 
@@ -145,7 +165,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void remoteDelete(String workDir, String name, AsyncRequestCallback<String> callback);
-   
+
    /**
     * Remove files from the working tree and the index.
     * 
@@ -154,7 +174,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void remove(String workDir, String[] files, AsyncRequestCallback<String> callback);
-   
+
    /**
     * Reset current HEAD to the specified state.
     * There two types of the reset: <br>
@@ -171,8 +191,9 @@ public abstract class GitClientService
     * @param resetType type of the reset
     * @param callback callback
     */
-   public abstract void reset(String workDir, String[] paths, String commit, ResetRequest.ResetType resetType, AsyncRequestCallback<String> callback);
-   
+   public abstract void reset(String workDir, String[] paths, String commit, ResetRequest.ResetType resetType,
+      AsyncRequestCallback<String> callback);
+
    /**
     * Initializes new Git repository.
     * 
@@ -181,6 +202,24 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void init(String workDir, boolean bare, AsyncRequestCallback<String> callback);
+
+   /**
+    * Pull(fetch and merge) changes from remote repository to local one.
+    * 
+    * @param workDir ocation of Git repository working directory
+    * @param refSpec  list of refspec to fetch.
+    * <p>
+    * Expected form is:
+    * <ul>
+    * <li>
+    * refs/heads/featured:refs/remotes/origin/featured - branch 'featured' from
+    * remote repository will be fetched to 'refs/remotes/origin/featured'.</li>
+    * <li>featured - remote branch name.</li>
+    * </ul>
+    * @param remote remote remote repository's name
+    * @param callback callback
+    */
+   public abstract void pull(String workDir, String refSpec, String remote, AsyncRequestCallback<String> callback);
 
    /**
     * Push changes from local repository to remote one.
@@ -214,10 +253,11 @@ public abstract class GitClientService
     * 
     * @param workDir location of Git repository working directory
     * @param message commit log message
+    * @param all automatically stage files that have been modified and deleted
     * @param callback callback
     */
-   public abstract void commit(String workDir, String message, AsyncRequestCallback<Revision> callback);
-   
+   public abstract void commit(String workDir, String message, boolean all, AsyncRequestCallback<Revision> callback);
+
    /**
     * Get log of commits.
     * The result is the list of {@link Revision},  which is returned
@@ -227,7 +267,7 @@ public abstract class GitClientService
     * @param isTextFormat if <code>true</code> the loq response will be in text format
     * @param callback callback
     */
-   public abstract void log(String workDir, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback); 
+   public abstract void log(String workDir, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback);
 
    /**
     * Gets the working tree status. The status of added, modified or deleted files is shown is written in {@link String}.

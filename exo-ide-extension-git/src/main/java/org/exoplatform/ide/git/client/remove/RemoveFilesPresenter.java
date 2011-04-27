@@ -19,7 +19,6 @@
 package org.exoplatform.ide.git.client.remove;
 
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -30,17 +29,13 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.GitFile;
 
 import java.util.ArrayList;
@@ -60,7 +55,7 @@ import java.util.List;
  * @version $Id:  Apr 12, 2011 4:03:44 PM anya $
  *
  */
-public class RemoveFilesPresenter implements RemoveFilesHandler, ItemsSelectedHandler
+public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHandler
 {
    interface Display extends IsView
    {
@@ -92,29 +87,13 @@ public class RemoveFilesPresenter implements RemoveFilesHandler, ItemsSelectedHa
    private Display display;
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items in browser tree.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Git repository working directory.
-    */
-   private String workDir;
-
-   /**
     * @param eventBus event handlers
     */
    public RemoveFilesPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
 
       eventBus.addHandler(RemoveFilesEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -153,28 +132,7 @@ public class RemoveFilesPresenter implements RemoveFilesHandler, ItemsSelectedHa
    @Override
    public void onRemoveFiles(RemoveFilesEvent event)
    {
-      if (selectedItems == null || selectedItems.size() <= 0)
-         return;
-
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getHref(),
-         new AsyncRequestCallback<WorkDirResponse>()
-         {
-
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               workDir = result.getWorkDir();
-               workDir = workDir.endsWith("/.git") ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-
-               getStatus(workDir);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showInfo(Messages.NOT_GIT_REPOSITORY);
-            }
-         });
+      getWorkDir();
    }
 
    /**
@@ -197,7 +155,7 @@ public class RemoveFilesPresenter implements RemoveFilesHandler, ItemsSelectedHa
             }
 
             Display d = GWT.create(Display.class);
-            IDE.getInstance().openView((View)d);
+            IDE.getInstance().openView(d.asView());
             bindDisplay(d);
 
             List<IndexFile> values = new ArrayList<IndexFile>();
@@ -216,15 +174,6 @@ public class RemoveFilesPresenter implements RemoveFilesHandler, ItemsSelectedHa
             eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
          }
       });
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
    }
 
    /**
@@ -260,5 +209,14 @@ public class RemoveFilesPresenter implements RemoveFilesHandler, ItemsSelectedHa
                eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
             }
          });
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
+    */
+   @Override
+   public void onWorkDirReceived()
+   {
+      getStatus(workDir);
    }
 }

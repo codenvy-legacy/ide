@@ -36,6 +36,8 @@ import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
 
+import java.util.LinkedHashMap;
+
 /**
  * View for pushing changes to remote repository.
  * Must be pointed in View.gwt.xml file.
@@ -238,7 +240,7 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
     * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#setRemoteValues(java.lang.String[])
     */
    @Override
-   public void setRemoteValues(String[] values)
+   public void setRemoteValues(LinkedHashMap<String, String> values)
    {
       remoteField.setValueMap(values);
    }
@@ -268,6 +270,8 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
    public void setRemoteBranches(String[] values)
    {
       remoteBranchesField.setValueMap(values);
+      if (values != null && values.length > 0)
+         remoteBranchesField.setValue(values[0]);
    }
 
    /**
@@ -286,5 +290,14 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
    public void enablePushButton(boolean enable)
    {
       pushButton.setEnabled(enable);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getRemoteDisplayValue()
+    */
+   @Override
+   public String getRemoteDisplayValue()
+   {
+      return remoteField.getDisplayValue();
    }
 }

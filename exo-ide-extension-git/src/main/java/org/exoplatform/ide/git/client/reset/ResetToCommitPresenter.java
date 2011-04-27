@@ -27,26 +27,19 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
-
-import java.util.List;
 
 /**
  * Presenter for view for reseting head to commit.
@@ -56,7 +49,7 @@ import java.util.List;
  * @version $Id:  Apr 15, 2011 10:31:25 AM anya $
  *
  */
-public class ResetToCommitPresenter implements ItemsSelectedHandler, ResetToCommitHandler
+public class ResetToCommitPresenter extends GitPresenter implements ResetToCommitHandler
 {
    interface Display extends IsView
    {
@@ -94,14 +87,14 @@ public class ResetToCommitPresenter implements ItemsSelectedHandler, ResetToComm
        * @return {@link HasValue}
        */
       HasValue<Boolean> getSoftMode();
-      
+
       /**
       * Get the mix mode radio field.
       * 
       * @return {@link HasValue}
       */
       HasValue<Boolean> getMixMode();
-      
+
       /**
        * Get the hard mode radio field.
        * 
@@ -123,29 +116,13 @@ public class ResetToCommitPresenter implements ItemsSelectedHandler, ResetToComm
    private Display display;
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items in browser tree.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Git repository working directory.
-    */
-   private String workDir;
-
-   /**
     * @param eventBus event handlers
     */
    public ResetToCommitPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
 
       eventBus.addHandler(ResetToCommitEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -190,38 +167,7 @@ public class ResetToCommitPresenter implements ItemsSelectedHandler, ResetToComm
    @Override
    public void onResetToCommit(ResetToCommitEvent event)
    {
-      if (selectedItems == null || selectedItems.size() <= 0)
-         return;
-
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getHref(),
-         new AsyncRequestCallback<WorkDirResponse>()
-         {
-
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               workDir = result.getWorkDir();
-               workDir = workDir.endsWith("/.git") ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-
-               getCommits();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showInfo(Messages.NOT_GIT_REPOSITORY);
-            }
-         });
-
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
+      getWorkDir();
    }
 
    private void getCommits()
@@ -233,7 +179,7 @@ public class ResetToCommitPresenter implements ItemsSelectedHandler, ResetToComm
          protected void onSuccess(LogResponse result)
          {
             Display d = GWT.create(Display.class);
-            IDE.getInstance().openView((View)d);
+            IDE.getInstance().openView(d.asView());
             bindDisplay(d);
 
             display.getRevisionGrid().setValue(result.getCommits());
@@ -276,5 +222,14 @@ public class ResetToCommitPresenter implements ItemsSelectedHandler, ResetToComm
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
+    */
+   @Override
+   public void onWorkDirReceived()
+   {
+      getCommits();
    }
 }

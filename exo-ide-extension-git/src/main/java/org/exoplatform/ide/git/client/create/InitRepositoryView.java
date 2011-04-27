@@ -83,7 +83,7 @@ public class InitRepositoryView extends ViewImpl implements org.exoplatform.ide.
 
    public InitRepositoryView()
    {
-      super(ID, TYPE, TITLE, null, 470, 180);
+      super(ID, TYPE, TITLE, null, 475, 180);
       setWidth("100%");
       setHeight("100%");
       

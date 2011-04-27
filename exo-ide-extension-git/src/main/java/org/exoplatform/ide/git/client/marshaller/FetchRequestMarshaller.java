@@ -18,34 +18,34 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
-
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.ide.git.shared.CommitRequest;
+import org.exoplatform.ide.git.shared.FetchRequest;
 
 /**
- * Marshaller for forming commit request in JSON format.
+ * Marshaller for creation fetch request in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 31, 2011 11:11:25 AM anya $
+ * @version $Id:  Apr 20, 2011 3:05:47 PM anya $
  *
  */
-public class CommitRequestMarshaller implements Marshallable, Constants
+public class FetchRequestMarshaller implements Marshallable, Constants
 {
    /**
-    * Request for commit.
+    * Fetch request.
     */
-   private CommitRequest commitRequest;
+   private FetchRequest fetchRequest;
 
    /**
-    * @param commitRequest request for commit
+    * @param fetchRequest fetch request
     */
-   public CommitRequestMarshaller(CommitRequest commitRequest)
+   public FetchRequestMarshaller(FetchRequest fetchRequest)
    {
-      this.commitRequest = commitRequest;
+      this.fetchRequest = fetchRequest;
    }
 
    /**
@@ -55,8 +55,23 @@ public class CommitRequestMarshaller implements Marshallable, Constants
    public String marshal()
    {
       JSONObject jsonObject = new JSONObject();
-      jsonObject.put(MESSAGE, new JSONString(commitRequest.getMessage()));
-      jsonObject.put(ALL, JSONBoolean.getInstance(commitRequest.isAll()));
+      if (fetchRequest.getRefSpec() != null || fetchRequest.getRefSpec().length > 0)
+      {
+         JSONArray array = new JSONArray();
+         for (int i = 0; i < fetchRequest.getRefSpec().length; i++)
+         {
+            array.set(i, new JSONString(fetchRequest.getRefSpec()[i]));
+         }
+         jsonObject.put(REF_SPEC, array);
+      }
+
+      if (fetchRequest.getRemote() != null)
+      {
+         jsonObject.put(REMOTE, new JSONString(fetchRequest.getRemote()));
+      }
+
+      jsonObject.put(REMOVE_DELETED_REFS, JSONBoolean.getInstance(fetchRequest.isRemoveDeletedRefs()));
+
       return jsonObject.toString();
    }
 

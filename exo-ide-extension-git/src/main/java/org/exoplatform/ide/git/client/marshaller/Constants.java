@@ -29,6 +29,8 @@ public interface Constants
 {
    public static final String ACTIVE = "active";
    
+   public static final String ALL = "all";
+   
    public static final String ID = "id";
    
    public static final String COMMIT = "commit";
@@ -74,6 +76,8 @@ public interface Constants
    public static final String REMOTE_URI = "remoteUri";
    
    public static final String REMOTE_NAME = "remoteName";
+   
+   public static final String REMOVE_DELETED_REFS = "removeDeletedRefs";
    
    public static final String REF_SPEC = "refSpec";
    
