@@ -21,7 +21,6 @@ package org.exoplatform.ide.editor.extension.ruby.client;
 
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
@@ -30,6 +29,7 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
+import org.exoplatform.ide.editor.codemirror.parser.RubyParser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Messages;
@@ -79,8 +79,11 @@ public class RubyEditorExtension extends Extension implements InitializeServices
    {
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby script editor", "rb", Images.RUBY, true,
-            new CodeMirrorConfiguration("['parseruby.js', 'parserubyhtmlmixed.js', 'tokenizeruby.js']", // generic code parsers
-               "['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']" // code styles
+            new CodeMirrorConfiguration("['parseruby.js', 'tokenizeruby.js']", // generic code parsers
+               "['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']", // code styles
+               true, // can be outlined
+               true, // can be autocompleted
+               new RubyParser() // exoplatform code parser           
             )
          )
       );
