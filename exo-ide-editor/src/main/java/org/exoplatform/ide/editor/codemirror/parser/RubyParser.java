@@ -97,16 +97,20 @@ public class RubyParser extends CodeMirrorParserImpl
       // verify on "end" node
       else if (isEndNode(nodeStack.lastElement()))
       {
-         // to filter block nodes like "if ... end"
-         if (!enclosers.empty() && !enclosers.lastElement().equals(TokenType.BLOCK))
-         {        
-            currentToken = closeToken(lineNumber, currentToken);
-         }
-         else
+         if (!enclosers.empty())
          {
-            enclosers.pop();
-            nodeStack.clear();
+            // to filter block nodes like "if ... end"
+            if (!enclosers.lastElement().equals(TokenType.BLOCK))
+            {        
+               currentToken = closeToken(lineNumber, currentToken);
+            }
+            else
+            {
+               enclosers.pop();
+            }
          }
+      
+         nodeStack.clear();
       }
       
       // recognize "("
@@ -128,7 +132,6 @@ public class RubyParser extends CodeMirrorParserImpl
       else if (isCloseBrace(nodeStack.lastElement()))
       {                 
       }
- 
 
       return parseLine(Node.getNext(javaScriptNode), lineNumber, currentToken, false);
    }
@@ -167,7 +170,9 @@ public class RubyParser extends CodeMirrorParserImpl
    {
       if (nodeStack.size() > 1
                && isModuleNode(nodeStack.get(nodeStack.size() - 2))
-               && isMethodNode(nodeStack.lastElement().getType())
+               && (isMethodNode(nodeStack.lastElement().getType()) 
+                     || isConstant(nodeStack.lastElement())
+                   )
           )
       {
          return true;

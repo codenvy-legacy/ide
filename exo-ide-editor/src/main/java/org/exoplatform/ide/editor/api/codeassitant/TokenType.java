@@ -51,5 +51,5 @@ public enum TokenType {
    JSP_TAG,
    
    /** Property type for Ruby code **/
-   MODULE;
+   MODULE, LOCAL_VARIABLE;
 }
