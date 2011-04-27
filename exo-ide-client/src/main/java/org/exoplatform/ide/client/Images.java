@@ -222,6 +222,8 @@ public interface Images
       public static final String INTERFACE_ITEM = IMAGE_URL + "outline/interface-item.png";
       
       public static final String MODULE_ITEM = IMAGE_URL + "outline/module-item.png";
+      
+      public static final String LOCAL_VARIABLE_ITEM = IMAGE_URL + "outline/local-variable-item.png";      
    }
 
    public interface Versioning

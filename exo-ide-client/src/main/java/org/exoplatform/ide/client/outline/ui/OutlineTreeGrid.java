@@ -88,6 +88,8 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    private static final String MODULE_ICON = Images.Outline.MODULE_ITEM;
 
    private static final String INTERFACE_ICON = Images.Outline.INTERFACE_ITEM;
+   
+   private static final String LOCAL_VARIABLE_ICON = Images.Outline.LOCAL_VARIABLE_ITEM;
 
    public OutlineTreeGrid(String id)
    {
@@ -192,7 +194,7 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
       // add info about java type, parameters and annotations
       if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType())
          || MimeType.APPLICATION_JAVA.equals(token.getMimeType())
-         || MimeType.APPLICATION_RUBY.equals(token.getMimeType()))
+         )
       {
          //icon, that displays in right bottom corner, if token is CLASS, 
          //and shows access modifier
@@ -288,10 +290,16 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    {
       if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()) && !TokenType.GROOVY_TAG.equals(token.getType())
          || MimeType.APPLICATION_JAVA.equals(token.getMimeType()) && !TokenType.JSP_TAG.equals(token.getType())
-         || MimeType.APPLICATION_RUBY.equals(token.getMimeType()))
+         )
       {
          return getIconForJavaFiles(token);
       }
+      
+      else if (MimeType.APPLICATION_RUBY.equals(token.getMimeType()))
+      {
+         return getIconForRubyFile(token);
+      }
+      
       switch (token.getType())
       {
          case FUNCTION :
@@ -324,9 +332,6 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
 
          case INTERFACE :
             return INTERFACE_ICON;
-
-         case MODULE :
-            return MODULE_ICON;
 
          default :
             return "";
@@ -390,6 +395,32 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
       }
    }
 
+   /**
+    * Forms the icon for ruby file
+    * 
+    * @return {@link String} icon
+    */
+   private String getIconForRubyFile(TokenBeenImpl token)
+   {
+      switch (token.getType())
+      {
+         case METHOD :
+            return PUBLIC_METHOD_ICON;
+
+         case LOCAL_VARIABLE:
+            return LOCAL_VARIABLE_ICON;
+            
+         case CLASS :
+            return CLASS_ICON;
+
+         case MODULE :
+            return MODULE_ICON;
+
+         default :
+            return "";
+      }
+   }
+   
    /**
     * @param token {@link TokenBeenImpl} 
     * @return html element with modifers
