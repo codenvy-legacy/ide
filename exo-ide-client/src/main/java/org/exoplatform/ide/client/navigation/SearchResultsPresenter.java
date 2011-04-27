@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.client.navigation;
 
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -151,6 +157,16 @@ ViewClosedHandler, SearchResultReceivedHandler
          public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<Item> event)
          {
             onItemSelected();
+         }
+      });
+      
+      display.getSearchResultTree().addOpenHandler(new OpenHandler<Item>()
+      {
+         
+         @Override
+         public void onOpen(OpenEvent<Item> event)
+         {
+            refreshSearchResult();
          }
       });
    }
