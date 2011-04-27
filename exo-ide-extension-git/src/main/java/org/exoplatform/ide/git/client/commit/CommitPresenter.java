@@ -27,24 +27,18 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.Messages;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.Revision;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Presenter for commit view. 
@@ -55,7 +49,7 @@ import java.util.List;
  * @version $Id:  Mar 31, 2011 10:02:25 AM anya $
  *
  */
-public class CommitPresenter implements ItemsSelectedHandler, CommitHandler
+public class CommitPresenter extends GitPresenter implements CommitHandler
 {
    public interface Display extends IsView
    {
@@ -91,6 +85,13 @@ public class CommitPresenter implements ItemsSelectedHandler, CommitHandler
        * Give focus to message field.
        */
       void focusInMessageField();
+      
+      /**
+       * Get all field.
+       * 
+       * @return {@link HasValue}
+       */
+      HasValue<Boolean> getAllField();
    }
 
    /**
@@ -99,28 +100,12 @@ public class CommitPresenter implements ItemsSelectedHandler, CommitHandler
    private Display display;
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items in the workspace tree.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * The working directory of the Git repository.
-    */
-   private String workDir;
-
-   /**
     * @param eventBus events handler
     */
    public CommitPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      super(eventBus);
+      
       eventBus.addHandler(CommitEvent.TYPE, this);
    }
 
@@ -165,56 +150,12 @@ public class CommitPresenter implements ItemsSelectedHandler, CommitHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-   }
-
-   /**
     * @see org.exoplatform.ide.git.client.commit.CommitHandler#onCommit(org.exoplatform.ide.git.client.commit.CommitEvent)
     */
    @Override
    public void onCommit(CommitEvent event)
    {
-      if (selectedItems == null || selectedItems.size() <= 0)
-         return;
-
-      getWorkDir(selectedItems.get(0).getHref());
-   }
-
-   /**
-    * Get the location of the Git working directory, starting 
-    * from pointed href.
-    * 
-    * @param href
-    */
-   private void getWorkDir(String href)
-   {
-      GitClientService.getInstance().getWorkDir(href, new AsyncRequestCallback<WorkDirResponse>()
-      {
-
-         @Override
-         protected void onSuccess(WorkDirResponse result)
-         {
-            workDir = result.getWorkDir();
-
-            Display d = GWT.create(Display.class);
-            IDE.getInstance().openView((View)d);
-            bindDisplay(d);
-            //Commit button is disabled, because message is empty:
-            display.enableCommitButton(false);
-            display.focusInMessageField();
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            Dialogs.getInstance().showInfo(Messages.NOT_GIT_REPOSITORY);
-         }
-      });
+      getWorkDir();
    }
 
    /**
@@ -224,11 +165,11 @@ public class CommitPresenter implements ItemsSelectedHandler, CommitHandler
    {
       if (workDir == null)
          return;
-      workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
 
       String message = display.getMessage().getValue();
-
-      GitClientService.getInstance().commit(workDir, message, new AsyncRequestCallback<Revision>()
+      boolean all = display.getAllField().getValue();
+      
+      GitClientService.getInstance().commit(workDir, message, all, new AsyncRequestCallback<Revision>()
       {
          @Override
          protected void onSuccess(Revision result)
@@ -252,5 +193,19 @@ public class CommitPresenter implements ItemsSelectedHandler, CommitHandler
          }
       });
       IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
+    */
+   @Override
+   public void onWorkDirReceived()
+   {
+      Display d = GWT.create(Display.class);
+      IDE.getInstance().openView(d.asView());
+      bindDisplay(d);
+      //Commit button is disabled, because message is empty:
+      display.enableCommitButton(false);
+      display.focusInMessageField();
    }
 }

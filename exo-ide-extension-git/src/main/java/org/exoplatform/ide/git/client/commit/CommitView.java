@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
@@ -43,9 +44,9 @@ import org.exoplatform.ide.git.client.GitClientBundle;
  */
 public class CommitView extends ViewImpl implements CommitPresenter.Display
 {
-   private static final int HEIGHT = 190;
+   private static final int HEIGHT = 240;
 
-   private static final int WIDTH = 420;
+   private static final int WIDTH = 460;
    
    public static final String ID = "ideCommitView";
 
@@ -64,6 +65,8 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
    private static final String CANCEL_BUTTON_ID = "ideCommitViewCancelButton";
 
    private static final String MESSAGE_FIELD_ID = "ideCommitViewMessageField";
+   
+   private static final String ALL_FIELD_ID = "ideCommitViewAllField";
 
    /*Elements titles*/
 
@@ -72,12 +75,16 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
    private static final String CANCEL_BUTTON_TITLE = "Cancel";
 
    private static final String MESSAGE_FIELD_TITLE = "Enter log message for current commit:";
+   
+   private static final String ALL_FIELD_TITLE = "Add modified and deleted files (but not new files)";
 
    private IButton commitButton;
 
    private IButton cancelButton;
 
    private TextAreaItem messageField;
+   
+   private CheckboxItem allField;
    
    public CommitView()
    {
@@ -87,9 +94,13 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
       mainLayout.setWidth("100%");
       mainLayout.setHeight("100%");
       mainLayout.setSpacing(5);
-      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
       mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-
+      
+      allField = new CheckboxItem(ALL_FIELD_ID, ALL_FIELD_TITLE);
+      mainLayout.add(allField);
+      mainLayout.setCellHeight(allField, "30px");
+      
       messageField = createTextAreaField(MESSAGE_FIELD_ID, MESSAGE_FIELD_TITLE);
 
       mainLayout.add(messageField);
@@ -117,6 +128,7 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
       buttonsLayout.add(cancelButton);
 
       panel.add(buttonsLayout);
+      panel.setCellHorizontalAlignment(buttonsLayout, HasHorizontalAlignment.ALIGN_CENTER);
    }
 
    /**
@@ -149,7 +161,7 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
    {
       TextAreaItem textArea = new TextAreaItem(id, title);
       textArea.setTitleOrientation(TitleOrientation.TOP);
-      textArea.setWidth(370);
+      textArea.setWidth("100%");
       textArea.setHeight(60);
       return textArea;
    }
@@ -197,5 +209,14 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
    public void focusInMessageField()
    {
       messageField.focusInItem();
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#getAllField()
+    */
+   @Override
+   public HasValue<Boolean> getAllField()
+   {
+      return allField;
    }
 }
