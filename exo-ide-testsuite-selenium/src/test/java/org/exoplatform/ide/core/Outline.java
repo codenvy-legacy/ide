@@ -35,10 +35,10 @@ public class Outline extends AbstractTestModule
    interface Locators
    {
       String TREE_ID = "ideOutlineTreeGrid";
-      
-      String TREE  = "//div[@id='" + TREE_ID + "']/";
+
+      String TREE = "//div[@id='" + TREE_ID + "']/";
    }
-   
+
    /**
     * Get title of outline node.
     * 
@@ -48,10 +48,11 @@ public class Outline extends AbstractTestModule
     */
    public String getTitle(int row, int col)
    {
-      return selenium().getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" 
-         + String.valueOf(row) +  "]/col[" + String.valueOf(col) + "]");
+      return selenium().getText(
+         "scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col["
+            + String.valueOf(col) + "]");
    }
-   
+
    /**
     * Click on open icon of outline node.
     * 
@@ -63,11 +64,12 @@ public class Outline extends AbstractTestModule
     */
    public void clickOpenImg(int row, int col) throws Exception
    {
-      selenium().click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" 
-         + String.valueOf(row) + "]/col[" + String.valueOf(col) + "]/open");
+      selenium().click(
+         "scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col["
+            + String.valueOf(col) + "]/open");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
    /**
     * Select row in outline tree.
     * 
@@ -78,11 +80,10 @@ public class Outline extends AbstractTestModule
     */
    public void select(int row) throws Exception
    {
-      selenium().click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" 
-         + String.valueOf(row) + "]/col[1]");
+      selenium().click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
    /**
     * Check is Outline Panel visible.
     * Note: you can't use this method, to check is Outline Panel visible,
@@ -98,19 +99,23 @@ public class Outline extends AbstractTestModule
       if (isVisible)
       {
          assertTrue(selenium()
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
+            .isElementPresent(
+               "//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
          assertFalse(selenium()
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));         
+            .isElementPresent(
+               "//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
       }
       else
       {
          assertFalse(selenium()
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
+            .isElementPresent(
+               "//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
          assertTrue(selenium()
-            .isElementPresent("//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));         
+            .isElementPresent(
+               "//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
       }
    }
-   
+
    /**
     * Check is node in Outline tree is selected
     * 
@@ -123,16 +128,18 @@ public class Outline extends AbstractTestModule
       String divIndex = String.valueOf(rowNumber + 1);
       if (isSelected)
       {
-         assertTrue(selenium().isElementPresent("//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" 
-            + divIndex + "]/td[@class='treeCellSelected']//nobr[text()='" + name + "']"));
+         assertTrue(selenium().isElementPresent(
+            "//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" + divIndex
+               + "]/td[@class='treeCellSelected']//nobr[text()='" + name + "']"));
       }
       else
       {
-         assertTrue(selenium().isElementPresent("//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" 
-            + divIndex + "]/td[@class='treeCell']//nobr[text()='" + name + "']"));
+         assertTrue(selenium().isElementPresent(
+            "//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" + divIndex
+               + "]/td[@class='treeCell']//nobr[text()='" + name + "']"));
       }
-   }   
-   
+   }
+
    /**
     * Check item is shown in outline tree.
     * 
@@ -141,10 +148,10 @@ public class Outline extends AbstractTestModule
     */
    public void assertElementPresentOutlineTree(String name) throws Exception
    {
-      assertTrue(selenium().isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name
-         + "]/col[0]"));
+      assertTrue(selenium().isElementPresent(
+         "//div[@id=\"ideOutlineTreeGrid\"]//div[@class=\"gwt-Label\"and text()=" + "'" + name + "'" + "]"));
    }
-   
+
    /**
     * Check item is not shown in outline tree.
     * 
@@ -153,10 +160,11 @@ public class Outline extends AbstractTestModule
     */
    public void assertElementNotPresentOutlineTree(String name) throws Exception
    {
-      assertFalse(selenium().isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name
-         + "]/col[0]"));
+
+      assertFalse(selenium().isElementPresent(
+         "//div[@id=\"ideOutlineTreeGrid\"]//div[@class=\"gwt-Label\"and text()=" + "'" + name + "'" + "]"));
    }
-   
+
    /**
     * Select the item in the outline tree. 
     * 
@@ -166,7 +174,7 @@ public class Outline extends AbstractTestModule
    public void selectItemInOutlineTree(String name) throws Exception
    {
       selenium().click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name + "]/col[1]");
-   }   
+   }
 
    /**
     * Check is outline tree present in DOM 
@@ -175,7 +183,7 @@ public class Outline extends AbstractTestModule
    {
       assertTrue(selenium().isElementPresent(Locators.TREE_ID));
    }
-   
+
    /**
     * Check is element present in outline tree
     * @param id of row
