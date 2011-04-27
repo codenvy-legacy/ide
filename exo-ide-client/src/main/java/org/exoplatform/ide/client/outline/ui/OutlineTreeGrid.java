@@ -84,6 +84,8 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    private static final String DATA_ICON = Images.Outline.DATA_ITEM;
 
    private static final String ERROR_ICON = Images.Outline.ERROR_ITEM;
+   
+   private static final String MODULE_ICON = Images.Outline.MODULE_ITEM;
 
    private static final String INTERFACE_ICON = Images.Outline.INTERFACE_ITEM;
 
@@ -176,7 +178,8 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
       boolean isDeprecated = isDeprecated(token);
       // add info about java type, parameters and annotations
       if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType())
-               || MimeType.APPLICATION_JAVA.equals(token.getMimeType()))
+               || MimeType.APPLICATION_JAVA.equals(token.getMimeType())
+               || MimeType.APPLICATION_RUBY.equals(token.getMimeType()))
       {
          //icon, that displays in right bottom corner, if token is CLASS, 
          //and shows access modifier
@@ -272,6 +275,7 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    {
       if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()) && !TokenType.GROOVY_TAG.equals(token.getType())
           || MimeType.APPLICATION_JAVA.equals(token.getMimeType()) && !TokenType.JSP_TAG.equals(token.getType())
+          || MimeType.APPLICATION_RUBY.equals(token.getMimeType())
          )
       {
          return getIconForJavaFiles(token);
@@ -308,6 +312,9 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
 
          case INTERFACE :
             return INTERFACE_ICON;
+            
+         case MODULE :
+            return MODULE_ICON;
 
          default :
             return "";
