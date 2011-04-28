@@ -83,7 +83,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 1 -----------------
       //click on validation message to go to error
-      selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //check, cursor go to position
@@ -106,7 +106,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 2 -----------------
       //click on validation message to go to error
-      selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //file must be opened and cursor must stay on error
@@ -127,7 +127,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //refresh, to clear console and close it
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
 
       openAndValidateRestService();
       //---- 1 -----------------
@@ -136,7 +136,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 2 -----------------
       //click on validation message to go to error
-      selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //check, tab with rest service must be opened
@@ -160,8 +160,8 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //refresh, to clear console and close it
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
-
+      waitForRootElement();
+      
       openAndValidateRestService();
       //---- 1 -----------------
       //close tab
@@ -169,22 +169,23 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 2 -----------------
       //delete file
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FILE_WITH_ERROR);
+      IDE.NAVIGATION.assertItemPresent(URL + FILE_WITH_ERROR);
       IDE.NAVIGATION.deleteSelectedItems();
 
       //---- 3 -----------------
       //click on validation message to go to error
-      selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //check, error dialog appeared
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
-      final String textFromErrDialog = selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/");
+      assertTrue(selenium.isElementPresent("exoWarningDialog"));
+      final String textFromErrDialog = selenium.getText("exoWarningDialog");
+      System.out.println(textFromErrDialog);
       assertTrue(textFromErrDialog.contains("404"));
 
       //---- 4 -----------------
       //click Ok button
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
+      selenium.click("exoWarningDialogOkButton");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //---- 5 -----------------
@@ -200,17 +201,13 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //refresh, to clear console and close it
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
-
+      waitForRootElement();
+      
       //---- 1 -----------------
       //open file    
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);     
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR_FOR_CHANGING, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.waitForItem(URL + FILE_WITH_ERROR_FOR_CHANGING);     
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_WITH_ERROR_FOR_CHANGING, false);
 
       //---- 2 -----------------
       //press validate button
@@ -219,12 +216,12 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //check, validation fails
       String validationMsg =
-         selenium.getText("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span");
+         selenium.getText("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span");
       assertTrue(validationMsg.contains("validation failed"));
 
       //---- 3 -----------------
       //click on validation message to go to error
-      selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //fix validation error
@@ -253,13 +250,13 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //check, validation fails
       validationMsg =
-         selenium.getText("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span");
+         selenium.getText("//div[@id='ideOutputForm']/div[2]/table//font[@color='#880000']/span");
       assertTrue(validationMsg.contains("validation failed"));
 
       //---- 5 -----------------
       //click on validation message to go to error
       Thread.sleep(TestConstants.SLEEP);
-      selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputForm']/div[2]/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //check cursor went to position
@@ -268,7 +265,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //---- 6 -----------------
       //click on first validation message to check, 
       //that cursor can go to previous error (event, it is already fixed)
-      selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //check cursor went to position
@@ -277,7 +274,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //---- 7 -----------------
       //delete some text and check
       //that cursor stays if try to go to nonexistent line
-      selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputForm']/div[2]/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
      IDE.EDITOR.selectIFrameWithEditor(0);
@@ -311,7 +308,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       assertEquals("1 : 24", getCursorPositionUsingStatusBar());
 
       //when 3d line is deleted, try to go to it
-      selenium.clickAt("//div[@eventproxy='ideOutputForm']/div[2]/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputForm']/div[2]/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       assertEquals("1 : 24", getCursorPositionUsingStatusBar());
@@ -327,9 +324,9 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);     
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_WITH_ERROR, false);
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.waitForItem(URL + FILE_WITH_ERROR);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_WITH_ERROR, false);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 2 -----------------
@@ -339,7 +336,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //check, validation fails
       final String validationMsg =
-         selenium.getText("//div[@eventproxy='ideOutputForm']/div[1]/div/table//font[@color='#880000']/span");
+         selenium.getText("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/");
       assertTrue(validationMsg.contains("validation failed"));
    }
 

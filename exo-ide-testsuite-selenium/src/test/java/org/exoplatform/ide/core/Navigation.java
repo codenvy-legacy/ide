@@ -226,4 +226,14 @@ public class Navigation extends AbstractTestModule
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
+   /**
+    * Wait for item present in workspace tree
+    * @param itemHref Href of the item
+    * @throws Exception 
+    */
+   public void waitForItem(String itemHref) throws Exception
+   {
+      waitForElementPresent(getItemId(itemHref));
+   }
+
 }

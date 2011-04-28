@@ -46,10 +46,6 @@ public class Locators
     */
    public final static String OPERATION_PANEL_LOCATOR = "//div[@eventproxy='ideOperationPanel' and @class='normal']";
 
-   /**
-    * XPath locator for content (editor) panel of IDE. Non-smartGWt.
-    */
-   public final static String EDITOR_PANEL_LOCATOR = "//div[@eventproxy='ideEditorPanel' and @class='normal']";
 
    /**
     * XPath locator for navigation panel of IDE. Non-smartGWt.

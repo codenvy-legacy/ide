@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide;
 
+import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.ErrorDialog;
@@ -86,6 +87,8 @@ public class IDE
    public WarningDialog WARNING_DIALOG = new WarningDialog();
 
    public ErrorDialog ERROR_DIALOG = new ErrorDialog();
+   
+   public AskDialog ASK_DIALOG = new AskDialog();
    
    public InformationDialog INFORMATION_DIALOG = new InformationDialog();
    

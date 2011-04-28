@@ -108,8 +108,7 @@ public class Editor extends AbstractTestModule
    public void tryCloseTabWithNonSaving(int tabIndex) throws Exception
    {
       //if file is opened, close it
-      if (selenium()
-         .isElementPresent("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=" + tabIndex + "]/icon"))
+      if (selenium().isElementPresent("//div[@panel-id='editor']//td[@tab-bar-index='" + tabIndex + "']"))
       {
          closeTabWithNonSaving(tabIndex);
       }
@@ -126,9 +125,13 @@ public class Editor extends AbstractTestModule
       closeTab(tabIndex);
 
       //check is warning dialog appears
-      if (IDE().WARNING_DIALOG.isDialogOpened("Close file"))
+      if (IDE().ASK_DIALOG.isDialogOpened("Close file"))
       {
-         IDE().WARNING_DIALOG.clickNo();
+         IDE().ASK_DIALOG.clickNo();
+      }
+      else if(selenium().isElementPresent(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR))
+      {
+         selenium().click(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
       }
    }
 
@@ -238,14 +241,14 @@ public class Editor extends AbstractTestModule
          //because after refreshing tab is overed by mouse and there is no 'tabTitleSelected'
          //class, but there is 'tabTitleSelectedOver'.
          assertTrue(selenium().isElementPresent(
-            Locators.EDITOR_PANEL_LOCATOR
-               + "//div[@class='tabBar']//td[contains(@class, 'tabTitleSelected')]/span[contains(text(), '" + tabTitle
+            Locators.EDITOR_TABSET_LOCATOR
+               + "//td[contains(@class, 'gwt-TabBarItem-wrapper-selected')]//span[contains(text(), '" + tabTitle
                + "')]"));
       }
       else
       {
          assertTrue(selenium().isElementPresent(
-            Locators.EDITOR_PANEL_LOCATOR + "//div[@class='tabBar']//td[@class='tabTitle']/span[contains(text(), '"
+            Locators.EDITOR_TABSET_LOCATOR + "//div[@role='tab']//span[contains(text(), '"
                + tabTitle + "')]"));
       }
    }
