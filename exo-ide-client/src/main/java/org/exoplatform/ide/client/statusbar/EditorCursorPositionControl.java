@@ -19,7 +19,7 @@
 package org.exoplatform.ide.client.statusbar;
 
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
-import org.exoplatform.gwtframework.ui.client.text.TextButton.TextAlignment;
+import org.exoplatform.gwtframework.ui.client.component.TextButton.TextAlignment;
 import org.exoplatform.ide.client.edit.event.GoToLineEvent;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;

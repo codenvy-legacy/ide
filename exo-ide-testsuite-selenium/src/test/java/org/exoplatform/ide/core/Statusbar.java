@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-import com.thoughtworks.selenium.Selenium;
-
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -28,13 +26,12 @@ import com.thoughtworks.selenium.Selenium;
  * @version $
  */
 
-public class Statusbar
+public class Statusbar extends AbstractTestModule
 {
-   
-   private Selenium selenium;
-   
-   public Statusbar(Selenium selenium) {
-      this.selenium = selenium;
+
+   public String getCursorPosition()
+   {
+      return selenium().getText("//div[@control-id='__editor_cursor_position']//td[@text-button-text='']");
    }
 
 }

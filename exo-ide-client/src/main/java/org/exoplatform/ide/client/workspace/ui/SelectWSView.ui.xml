@@ -6,22 +6,31 @@
 	>
 	
 	<c:VPanel>
+	
 		<c:Border margin="5">
+		
 			<w:EntryPointListGrid></w:EntryPointListGrid>
+			
 		</c:Border>
 
 		<c:Panel height="40px">
+		
 			<g:HorizontalPanel spacing="5" width="100%" height="100%">
+			
 				<g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
 					<c:IButton title="OK" ui:field="okButton"></c:IButton>
 				</g:cell>
+				
 				<g:cell horizontalAlignment='ALIGN_LEFT' verticalAlignment="ALIGN_MIDDLE">
 					<c:IButton title="Cancel" ui:field="cancelButton"></c:IButton>
 				</g:cell>
+				
 			</g:HorizontalPanel>
+			
 		</c:Panel>
 		
 	</c:VPanel>
 	
 </ui:UiBinder>
+ 
  

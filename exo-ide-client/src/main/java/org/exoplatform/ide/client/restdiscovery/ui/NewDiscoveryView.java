@@ -67,43 +67,43 @@ public class NewDiscoveryView extends ViewImpl implements
    interface NewDiscoveryViewUiBinder extends UiBinder<Widget, NewDiscoveryView>
    {
    }
-   
+
    /**
     * Ok button
     */
    @UiField
    IButton okButton;
-   
+
    /**
     * Rest services tree
     */
    @UiField
    RestServiceTree treeGrid;
-   
+
    /**
     * Rest service parameters table
     */
    @UiField
    RestServiceParameterListGrid parametersListGrid;
-   
+
    /**
     * Text field for displaying Path to selected Rest Service
     */
    @UiField
    TextField pathField;
-   
+
    /**
     * Text field that displays type of Request
     */
    @UiField
    TextField requestTypeField;
-   
+
    /**
     * Test field that displays type of Response
     */
    @UiField
    TextField responseTypeField;
-   
+
    /**
     * Border over service parameters table 
     */
@@ -218,7 +218,7 @@ public class NewDiscoveryView extends ViewImpl implements
    @Override
    public void setParametersListGridVisible(boolean visible)
    {
-      parametersListGridContainer.setVisible(visible);     
+      parametersListGridContainer.setVisible(visible);
    }
 
    /**

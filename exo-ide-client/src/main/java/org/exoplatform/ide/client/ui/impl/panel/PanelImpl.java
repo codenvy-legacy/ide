@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.ui.client.tab.TabControl;
+import org.exoplatform.gwtframework.ui.client.tab.TabButton;
 import org.exoplatform.gwtframework.ui.client.tab.TabPanel;
 import org.exoplatform.gwtframework.ui.client.tab.event.CloseTabEvent;
 import org.exoplatform.gwtframework.ui.client.tab.event.CloseTabHandler;
@@ -130,12 +130,12 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
    /**
     * Maximize button
     */
-   private TabControl maximizePanelControl;
+   private TabButton maximizePanelControl;
 
    /**
     * Restore button
     */
-   private TabControl restorePanelControl;
+   private TabButton restorePanelControl;
 
    /**
     * Image for Maximize button
@@ -171,7 +171,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
       tabPanel.addSelectionHandler(tabSelectionHandler);
       tabPanel.addCloseTabHandler(closeTabHandler);
 
-      maximizePanelControl = new TabControl(panelId + "-maximize", maximizeImage, maximizeImage);
+      maximizePanelControl = new TabButton(panelId + "-maximize", maximizeImage, maximizeImage);
       maximizePanelControl.addClickHandler(new ClickHandler()
       {
          @Override
@@ -181,7 +181,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          }
       });
 
-      restorePanelControl = new TabControl(panelId + "-restore", restoreImage, restoreImage);
+      restorePanelControl = new TabButton(panelId + "-restore", restoreImage, restoreImage);
       restorePanelControl.setVisible(false);
       restorePanelControl.addClickHandler(new ClickHandler()
       {
@@ -192,8 +192,8 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          }
       });
 
-      tabPanel.addControl(maximizePanelControl);
-      tabPanel.addControl(restorePanelControl);
+      tabPanel.addTabButton(maximizePanelControl);
+      tabPanel.addTabButton(restorePanelControl);
    }
 
    public String getSelectedViewId()

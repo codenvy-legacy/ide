@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide;
 
-import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.ErrorDialog;
@@ -29,7 +28,7 @@ import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.core.SaveAs;
-import org.exoplatform.ide.core.SelectWorkspace;
+import org.exoplatform.ide.core.Statusbar;
 import org.exoplatform.ide.core.Toolbar;
 import org.exoplatform.ide.core.WarningDialog;
 
@@ -91,6 +90,8 @@ public class IDE
    public AskDialog ASK_DIALOG = new AskDialog();
    
    public InformationDialog INFORMATION_DIALOG = new InformationDialog();
+   
+   public Statusbar STATUSBAR = new Statusbar();
    
    public SelectWorkspace SELECTWORKSPACE = new SelectWorkspace();
 
