@@ -68,8 +68,8 @@
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
       </dependency>
-      
-       <dependency>
+
+      <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.ext</artifactId>
       </dependency>
@@ -82,7 +82,34 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
                <forkMode>never</forkMode>
+               <excludes>
+                  <exclude>**/*Gwt*</exclude>
+               </excludes>
             </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>gwt-maven-plugin</artifactId>
+            <version>${gwt.maven.plugin.version}</version>
+            <configuration>
+               <module>org.exoplatform.ide.git.GitTest</module>
+               <logLevel>ERROR</logLevel>
+               <skipTests>false</skipTests>
+               <forkMode>never</forkMode>
+               <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
+               <productionMode>false</productionMode>
+               <testTimeOut>500</testTimeOut>
+               <mode>htmlunit</mode>
+               <htmlunit>FF3</htmlunit>
+               <extraJvmArgs>-Xmx1048m -XX:MaxPermSize=256m -Xss35m</extraJvmArgs>
+            </configuration>
+            <executions>
+               <execution>
+                  <goals>
+                     <goal>test</goal>
+                  </goals>
+               </execution>
+            </executions>
          </plugin>
       </plugins>
       <resources>
