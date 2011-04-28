@@ -77,11 +77,11 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
       HasClickHandlers getDeleteBranchButton();
 
       /**
-       * Click handler for cancel button.
+       * Click handler for close button.
        * 
        * @return {@link HasClickHandlers}
        */
-      HasClickHandlers getCancelButton();
+      HasClickHandlers getCloseButton();
 
       /**
        * Returns the grid, responsible for displaying branches.
@@ -178,7 +178,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
          }
       });
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
+      display.getCloseButton().addClickHandler(new ClickHandler()
       {
 
          @Override

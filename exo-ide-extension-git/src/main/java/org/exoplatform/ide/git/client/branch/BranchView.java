@@ -66,7 +66,7 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display
 
    private static final String DELETE_BUTTON_ID = "ideBranchViewDeleteButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideBranchViewCancelButton";
+   private static final String CLOSE_BUTTON_ID = "ideBranchViewCloseButton";
    
    /* Element's titles*/
    private static final String CREATE_BUTTON_TITLE = "Create";
@@ -75,7 +75,7 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display
 
    private static final String DELETE_BUTTON_TITLE = "Delete";
 
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
+   private static final String CLOSE_BUTTON_TITLE = "Close";
    
    /**
     * Create branch button.
@@ -95,7 +95,7 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display
    /**
     * Cancel button.
     */
-   private IButton cancelButton;
+   private IButton closeButton;
    
    private BranchGrid branchGrid;
 
@@ -139,15 +139,15 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display
       createButton = createButton(CREATE_BUTTON_ID, CREATE_BUTTON_TITLE, GitClientBundle.INSTANCE.add(), GitClientBundle.INSTANCE.addDisabled());
       checkoutButton = createButton(CHECKOUT_BUTTON_ID, CHECKOUT_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(), GitClientBundle.INSTANCE.okDisabled());
       deleteButton = createButton(DELETE_BUTTON_ID, DELETE_BUTTON_TITLE, GitClientBundle.INSTANCE.remove(), GitClientBundle.INSTANCE.removeDisabled());
-      cancelButton = createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(), GitClientBundle.INSTANCE.cancelDisabled());
+      closeButton = createButton(CLOSE_BUTTON_ID, CLOSE_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(), GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(checkoutButton);
       buttonsLayout.add(createButton);
       buttonsLayout.add(deleteButton);
-      buttonsLayout.add(cancelButton);
+      buttonsLayout.add(closeButton);
       
-      buttonsLayout.setCellWidth(cancelButton, "100%");
-      buttonsLayout.setCellHorizontalAlignment(cancelButton, HasHorizontalAlignment.ALIGN_RIGHT);
+      buttonsLayout.setCellWidth(closeButton, "100%");
+      buttonsLayout.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
       panel.add(buttonsLayout);
    }
 
@@ -198,12 +198,12 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getCloseButton()
     */
    @Override
-   public HasClickHandlers getCancelButton()
+   public HasClickHandlers getCloseButton()
    {
-      return cancelButton;
+      return closeButton;
    }
 
    /**

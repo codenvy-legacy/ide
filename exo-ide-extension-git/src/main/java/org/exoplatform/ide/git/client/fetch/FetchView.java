@@ -283,7 +283,7 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
 
       if (values != null && values.length > 0)
       {
-         remoteBranchesField.setValue(values[0]);
+         remoteBranchesField.setValue(values[0], true);
       }
    }
 
@@ -296,7 +296,7 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
       localBranchesField.setValueMap(values);
       if (values != null && values.length > 0)
       {
-         localBranchesField.setValue(values[0]);
+         localBranchesField.setValue(values[0], true);
       }
    }
 

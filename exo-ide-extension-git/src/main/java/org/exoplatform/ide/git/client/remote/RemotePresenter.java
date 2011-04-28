@@ -70,11 +70,11 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
       HasClickHandlers getDeleteButton();
 
       /**
-       * Get cancel button's click handler.
+       * Get close button's click handler.
        * 
        * @return {@link HasClickHandlers} click handler
        */
-      HasClickHandlers getCancelButton();
+      HasClickHandlers getCloseButton();
 
       /**
        * Get list grid with remote repositories.
@@ -131,7 +131,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
          }
       });
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
+      display.getCloseButton().addClickHandler(new ClickHandler()
       {
 
          @Override

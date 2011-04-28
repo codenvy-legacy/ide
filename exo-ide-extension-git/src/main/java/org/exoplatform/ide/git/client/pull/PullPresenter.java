@@ -200,6 +200,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       Display d = GWT.create(Display.class);
       IDE.getInstance().openView(d.asView());
       bindDisplay(d);
+      display.enablePullButton(false);
 
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
       for (Remote remote : remotes)

@@ -248,6 +248,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
       Display d = GWT.create(Display.class);
       IDE.getInstance().openView(d.asView());
       bindDisplay(d);
+      display.enableFetchButton(false);
 
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
       for (Remote remote : remotes)

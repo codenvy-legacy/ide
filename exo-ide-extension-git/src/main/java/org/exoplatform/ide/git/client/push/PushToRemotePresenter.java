@@ -139,10 +139,8 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
     * 
     * @param d display
     */
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      this.display = d;
-
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
 
@@ -172,7 +170,6 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
             display.setRemoteBranches(getRemoteBranchesToDisplay(display.getRemoteDisplayValue()));
          }
       });
-
       display.getRemoteBranchesValue().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
@@ -180,6 +177,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
          public void onValueChange(ValueChangeEvent<String> event)
          {
             boolean empty = (event.getValue() == null || event.getValue().length() <= 0);
+            empty = empty || display.getLocalBranchesValue().getValue() == null || display.getLocalBranchesValue().getValue().length() <= 0;
             display.enablePushButton(!empty);
          }
       });
@@ -232,10 +230,11 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
    @Override
    public void onRemotesReceived(List<Remote> remotes)
    {
-      Display d = GWT.create(Display.class);
-      IDE.getInstance().openView(d.asView());
-      bindDisplay(d);
+      display = GWT.create(Display.class);
+      bindDisplay();
+      IDE.getInstance().openView(display.asView());
       display.enablePushButton(false);
+      
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
       for (Remote remote : remotes)
       {

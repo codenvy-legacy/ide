@@ -64,14 +64,14 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
 
    private static final String DELETE_BUTTON_ID = "ideRemoteViewDeleteButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideRemoteViewCancelButton";
+   private static final String CLOSE_BUTTON_ID = "ideRemoteViewCloseButton";
 
    /* Element's titles*/
    private static final String ADD_BUTTON_TITLE = "Add";
 
    private static final String DELETE_BUTTON_TITLE = "Delete";
 
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
+   private static final String CLOSE_BUTTON_TITLE = "Close";
 
    /**
     * Create remote repository button.
@@ -84,9 +84,9 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
    private IButton deleteButton;
 
    /**
-    * Cancel button.
+    * Close button.
     */
-   private IButton cancelButton;
+   private IButton closeButton;
 
    /**
     * Grid with remote repositories.
@@ -129,16 +129,16 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
       deleteButton =
          createButton(DELETE_BUTTON_ID, DELETE_BUTTON_TITLE, GitClientBundle.INSTANCE.remove(),
             GitClientBundle.INSTANCE.removeDisabled());
-      cancelButton =
-         createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(),
+      closeButton =
+         createButton(CLOSE_BUTTON_ID, CLOSE_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(),
             GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(addButton);
       buttonsLayout.add(deleteButton);
-      buttonsLayout.add(cancelButton);
+      buttonsLayout.add(closeButton);
 
-      buttonsLayout.setCellWidth(cancelButton, "100%");
-      buttonsLayout.setCellHorizontalAlignment(cancelButton, HasHorizontalAlignment.ALIGN_RIGHT);
+      buttonsLayout.setCellWidth(closeButton, "100%");
+      buttonsLayout.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
       panel.add(buttonsLayout);
    }
 
@@ -171,12 +171,12 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getCloseButton()
     */
    @Override
-   public HasClickHandlers getCancelButton()
+   public HasClickHandlers getCloseButton()
    {
-      return cancelButton;
+      return closeButton;
    }
 
    /**

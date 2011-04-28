@@ -269,9 +269,13 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
    @Override
    public void setRemoteBranches(String[] values)
    {
+      System.out.println("PushToRemoteView.setRemoteBranches()"+remoteBranchesField.getValue());
       remoteBranchesField.setValueMap(values);
       if (values != null && values.length > 0)
-         remoteBranchesField.setValue(values[0]);
+      {
+         remoteBranchesField.setValue(values[0], true);
+      }
+         
    }
 
    /**
