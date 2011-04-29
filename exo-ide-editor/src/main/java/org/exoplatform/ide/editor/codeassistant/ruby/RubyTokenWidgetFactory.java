@@ -21,6 +21,7 @@ package org.exoplatform.ide.editor.codeassistant.ruby;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+import org.exoplatform.ide.editor.codeassistant.ruby.ui.RubyClassWidget;
 import org.exoplatform.ide.editor.codeassistant.ruby.ui.RubyKeyWordWidget;
 import org.exoplatform.ide.editor.codeassistant.ruby.ui.RubyMethodWidget;
 
@@ -45,6 +46,9 @@ public class RubyTokenWidgetFactory implements TokenWidgetFactory
 
          case METHOD :
             return new RubyMethodWidget(token);
+
+         case CLASS :
+            return new RubyClassWidget(token);
 
          default :
             return new RubyKeyWordWidget(token);

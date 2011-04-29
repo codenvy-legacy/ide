@@ -165,13 +165,27 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
                tokens.addAll(getTokenFromModules(metaclass.getIncludedModules()));
                //               tokens.addAll(getObjectMethods(BuiltinMethodsDatabase.objectMethods));
             }
+            else if (!"".equals(tokenToComplete) && Character.isUpperCase(tokenToComplete.charAt(0)))
+            {
+               for (Object className : BuiltinMethodsDatabase.metaclasses.keySet())
+               {
+//                  if (String.valueOf(className).startsWith(tokenToComplete))
+                     tokens.add(getClassToken((Metaclass)BuiltinMethodsDatabase.metaclasses.get(className)));
+               }
+            }
             else
             {
                tokens.addAll(defaultTokens);
             }
-
-            Collections.sort(tokens, RubyCodeAssistant.this);
-            openForm(tokens, widgetFactory, RubyCodeAssistant.this);
+            try
+            {
+               Collections.sort(tokens, RubyCodeAssistant.this);
+               openForm(tokens, widgetFactory, RubyCodeAssistant.this);
+            }
+            catch (Exception e)
+            {
+               e.printStackTrace();
+            }
          }
 
          @Override
@@ -181,6 +195,17 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
          }
       });
 
+   }
+
+   /**
+    * @param metaclass
+    * @return
+    */
+   protected Token getClassToken(Metaclass metaclass)
+   {
+      Token clazz = new TokenImpl(metaclass.getName(), TokenType.CLASS);
+      clazz.setProperty(TokenProperties.FQN, new StringProperty(metaclass.getName()+".rb"));
+      return clazz;
    }
 
    /**
@@ -195,9 +220,11 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
          for (MethodInfo method : module.getMethods())
          {
             Token m = new TokenImpl(method.getName(), TokenType.METHOD);
+            String param = getParameters(method.getArity());
             m.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(module.getName()));
             m.setProperty(TokenProperties.MODIFIERS, new NumericProperty(method.getFlags()));
-            m.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(getParameters(method.getArity())));
+            m.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(param));
+            m.setProperty(TokenProperties.CODE, new StringProperty(method.getName() + param));
             tokens.add(m);
          }
          tokens.addAll(getTokenFromModules(module.getIncludedModules()));
@@ -226,7 +253,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
             par += "arg" + i + ", ";
          }
          if (par.endsWith(", "))
-            par = par.substring(0,par.lastIndexOf(", "));
+            par = par.substring(0, par.lastIndexOf(", "));
 
       }
 
