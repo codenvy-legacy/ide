@@ -50,6 +50,7 @@ public class FileTemplates
       addUWAWidgetContent();
      // addClassPathTemplate();
       addRubyTemplate();
+      addPhpTemplate();      
    }
 
    public static String getTemplateFor(String mimeType)
@@ -60,6 +61,20 @@ public class FileTemplates
          content = "";
       }
       return content;
+   }
+
+   private static void addPhpTemplate()
+   {
+      String content =      
+         "<html>\n" +
+         "  <head>\n" +
+         "     <title>PHP Test</title>\n" +
+         "  </head>\n" +
+         "  <body>\n" +
+         "     <?php echo '<p>Hello World</p>'; ?>\n" + 
+         "  </body>\n" +
+         "</html>";
+      templates.put(MimeType.APPLICATION_PHP, content);
    }
 
    private static void addGtmplTemplate()

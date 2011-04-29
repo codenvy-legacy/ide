@@ -74,13 +74,21 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
 
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_PHP, "CodeMirror PHP editor", "php", Images.PHP, true,
-            new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']", // generic code parsers
-               "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/csscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/phpcolors.css']" // code styles
-            )
-         )
+      CodeMirrorConfiguration phpCodeMirrorConfiguration = new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']", // generic code parsers
+         "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/csscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/phpcolors.css']" // code styles
       );
+      
+      IDE.getInstance().addEditor(
+         new CodeMirrorProducer(MimeType.APPLICATION_PHP, "CodeMirror PHP editor", "php", Images.PHP, true, phpCodeMirrorConfiguration)
+      );
+      
+      IDE.getInstance().addEditor(
+         new CodeMirrorProducer(MimeType.APPLICATION_X_PHP, "CodeMirror PHP editor", "php", Images.PHP, true, phpCodeMirrorConfiguration)
+      );
+      
+      IDE.getInstance().addEditor(
+         new CodeMirrorProducer(MimeType.APPLICATION_X_HTTPD_PHP, "CodeMirror PHP editor", "php", Images.PHP, true, phpCodeMirrorConfiguration)
+      );      
    }
    
 }
