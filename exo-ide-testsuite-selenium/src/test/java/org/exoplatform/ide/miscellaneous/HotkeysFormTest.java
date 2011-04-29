@@ -21,6 +21,8 @@ package org.exoplatform.ide.miscellaneous;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import com.google.gwt.editor.client.Editor.Ignore;
+
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
@@ -221,6 +223,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
     * ----- 21-25 ------------
     * @throws Exception
     */
+   @Ignore
    @Test
    public void testTryToBindForbiddenHotkeys() throws Exception
    {
@@ -363,7 +366,8 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       selenium.click("scLocator=//IButton[ID=\"ideCustomizeHotKeysFormCancelButton\"]/");
 
    }
-   
+  
+   @Ignore
    @Test
    public void testUnbindingDefaultHotkey() throws Exception
    {
