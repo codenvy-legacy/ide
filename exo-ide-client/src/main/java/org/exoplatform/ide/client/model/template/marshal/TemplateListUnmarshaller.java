@@ -26,6 +26,7 @@ import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
@@ -61,7 +62,8 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
    {
       try
       {
-         if(response.getText().isEmpty())
+         if(response.getText().isEmpty() || 
+                  response.getStatusCode() == HTTPStatus.NOT_FOUND) 
             return;
          
          Document dom = XMLParser.parse(response.getText());

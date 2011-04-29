@@ -22,7 +22,6 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.editor.custom.OpenFileWithForm;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -49,7 +48,6 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.FolderCreateCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.model.ApplicationContext;
@@ -88,8 +86,6 @@ import org.exoplatform.ide.client.navigation.event.CutItemsHandler;
 import org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedEvent;
 import org.exoplatform.ide.client.navigation.event.OpenFileByPathEvent;
 import org.exoplatform.ide.client.navigation.event.OpenFileByPathHandler;
-import org.exoplatform.ide.client.navigation.event.OpenFileWithEvent;
-import org.exoplatform.ide.client.navigation.event.OpenFileWithHandler;
 import org.exoplatform.ide.client.navigation.event.RenameItemEvent;
 import org.exoplatform.ide.client.navigation.event.RenameItemHander;
 import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
@@ -133,7 +129,6 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
