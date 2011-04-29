@@ -26,6 +26,8 @@ import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
+import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
+import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
 import org.exoplatform.ide.editor.codevalidator.JavaCodeValidator;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -86,7 +88,7 @@ public class JavaAutocompleteHelper extends GroovyAutocompleteHelper
          }
 
          // search fqn among default packages
-         String fqn = JavaCodeValidator.getFqnFromDefaultPackages(nodeContent);
+         String fqn = ((JavaCodeValidator)CodeValidatorImpl.getValidator(MimeType.APPLICATION_JAVA)).getFqnFromDefaultPackages(nodeContent);
          if (fqn != null) 
             return new TokenBeenImpl(null, TokenType.TYPE, lineNumber, MimeType.APPLICATION_JAVA, nodeContent, Arrays.asList(Modifier.STATIC), fqn);
          

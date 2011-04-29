@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.codevalidator;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;

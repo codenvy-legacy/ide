@@ -63,7 +63,7 @@ public class GroovyTemplateCodeValidator extends CodeValidatorImpl
          this.groovyCode = extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
       }
       
-      if (GroovyCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>) groovyCode, fqn))
+      if (((GroovyCodeValidator)getValidator(MimeType.APPLICATION_GROOVY)).shouldImportStatementBeInsterted((List<TokenBeenImpl>) groovyCode, fqn))
       {      
          int appropriateLineNumber = GroovyCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>) tokenList);
          

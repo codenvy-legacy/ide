@@ -46,7 +46,7 @@ public class GroovyCodeValidator extends CodeValidatorImpl
    */
    private static List<String> shortJavaType = Arrays.asList("boolean", "char", "enum", "byte", "double", "float", "int", "long", "short", "void");
   
-   public static String getFqnFromDefaultPackages(String javaType)
+   public String getFqnFromDefaultPackages(String javaType)
    {      
       Iterator<String> iterator = defaultPackages.keySet().iterator();
       while (iterator.hasNext())
@@ -286,7 +286,7 @@ public class GroovyCodeValidator extends CodeValidatorImpl
     * @param fqn
     * @return <b>true</b> if there is no such fqn among the default packages of import statements
     */
-   static boolean shouldImportStatementBeInsterted(List<TokenBeenImpl> tokenList, String fqn)
+   boolean shouldImportStatementBeInsterted(List<TokenBeenImpl> tokenList, String fqn)
    {
 //      // test if this is correct FQN with more the two point delimiters like "java.lang.String", not "HelloWorld" fqn or even ""java.lang."
 //      if (fqn.split("[.]").length <= 2)
@@ -349,7 +349,7 @@ public class GroovyCodeValidator extends CodeValidatorImpl
     * groovy.lang.*
     * groovy.util.*
     */
-   private static LinkedHashMap<String, List<String>> defaultPackages = new LinkedHashMap<String, List<String>>() {{          
+   protected LinkedHashMap<String, List<String>> defaultPackages = new LinkedHashMap<String, List<String>>() {{          
 
       // http://download.oracle.com/javase/6/docs/api/java/io/package-tree.html
       put("java.io", new LinkedList<String>(){{

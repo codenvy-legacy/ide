@@ -63,7 +63,7 @@ public class JspCodeValidator extends CodeValidatorImpl
          this.javaCode = extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVA);
       }
       
-      if (JavaCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>) javaCode, fqn))
+      if (((JavaCodeValidator)getValidator(MimeType.APPLICATION_JAVA)).shouldImportStatementBeInsterted((List<TokenBeenImpl>) javaCode, fqn))
       {      
          int appropriateLineNumber = JavaCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>)tokenList);
          

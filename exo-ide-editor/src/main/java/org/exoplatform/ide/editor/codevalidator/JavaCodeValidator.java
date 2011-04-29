@@ -34,7 +34,11 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
  *
  */
 public class JavaCodeValidator extends GroovyCodeValidator
-{
+{  
+   public JavaCodeValidator()
+   {
+      super.defaultPackages = this.defaultPackages;
+   }
    
    @Override
    public CodeLine getImportStatement(List<? extends Token> tokenList, String fqn)
@@ -52,7 +56,7 @@ public class JavaCodeValidator extends GroovyCodeValidator
     * Map of default packages which could be omitted within the import statements, like "String" from package "java.lang.String"
     * java.lang.*
     */
-   private static LinkedHashMap<String, List<String>> defaultPackages = new LinkedHashMap<String, List<String>>() {{          
+   protected LinkedHashMap<String, List<String>> defaultPackages = new LinkedHashMap<String, List<String>>() {{          
    
       // types from java.lang package http://download.oracle.com/javase/6/docs/api/java/lang/package-tree.html
       // LinkedList has better performance as ArrayList [http://download.oracle.com/javase/tutorial/collections/interfaces/list.html]      
