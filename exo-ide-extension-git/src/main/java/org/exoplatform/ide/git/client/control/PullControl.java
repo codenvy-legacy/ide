@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.pull.PullEvent;
 
 /**
@@ -50,6 +51,7 @@ public class PullControl extends GitControl
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new PullEvent());
+      setImages(GitClientBundle.INSTANCE.pull(), GitClientBundle.INSTANCE.pullDisabled());
    }
 
 }

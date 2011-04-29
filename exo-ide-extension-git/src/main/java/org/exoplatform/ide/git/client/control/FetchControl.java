@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.fetch.FetchEvent;
 
 /**
@@ -50,6 +51,6 @@ public class FetchControl extends GitControl
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new FetchEvent());
-      //setImages(GitClientBundle.INSTANCE.commit(), GitClientBundle.INSTANCE.commitDisabled());
+      setImages(GitClientBundle.INSTANCE.fetch(), GitClientBundle.INSTANCE.fetchDisabled());
    }
 }

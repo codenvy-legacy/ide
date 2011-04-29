@@ -112,11 +112,17 @@ public interface GitClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/git/images/controls/push_Disabled.png")
    ImageResource pushDisabled();
    
-   /*@Source("org/exoplatform/ide/git/images/controls/pull.png")
+   @Source("org/exoplatform/ide/git/images/controls/pull.png")
    ImageResource pull();
    
    @Source("org/exoplatform/ide/git/images/controls/pull_Disabled.png")
-   ImageResource pullDisabled();*/
+   ImageResource pullDisabled();
+   
+   @Source("org/exoplatform/ide/git/images/controls/fetch.png")
+   ImageResource fetch();
+   
+   @Source("org/exoplatform/ide/git/images/controls/fetch_Disabled.png")
+   ImageResource fetchDisabled();
    
    @Source("org/exoplatform/ide/git/images/controls/status.png")
    ImageResource status();
