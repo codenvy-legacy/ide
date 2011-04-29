@@ -96,6 +96,7 @@ public class Navigation extends AbstractTestModule
     * @param itemHref Href of item
     * <h1>Folder href MUST ends with "/"</h1>
     */
+   @Deprecated
    public void selectItem(String itemHref) throws Exception
    {
       selenium().clickAt(getItemId(itemHref), "0");

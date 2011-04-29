@@ -24,6 +24,8 @@ import static org.junit.Assert.fail;
 import org.exoplatform.ide.TestConstants;
 
 /**
+ * This class provides methods for working with Warning dialog.
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -33,18 +35,31 @@ import org.exoplatform.ide.TestConstants;
 public class WarningDialog extends AbstractTestModule
 {
 
+   /**
+    * Check whether the Warning dialog is opened.
+    */
    public void checkIsOpened()
    {
       assertTrue(selenium().isElementPresent("exoWarningDialog"));
       assertTrue(selenium().isElementPresent("exoWarningDialogOkButton"));
    }
 
+   /**
+    * Check whether the Warning dialog is opened and contains specified message.
+    * 
+    * @param message message
+    */
    public void checkIsOpened(String message)
    {
       checkIsOpened();
       assertTrue(selenium().isTextPresent(message));
    }
 
+   /**
+    * Gets 
+    * 
+    * @return
+    */
    public boolean isDialogOpened()
    {
       fail();

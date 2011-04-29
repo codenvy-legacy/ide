@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import org.exoplatform.ide.operation.browse.NavigationPanelWithoutSelectedItemTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -30,8 +29,8 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-   PreviewHtmlFileTest.class
-//   OpenFileWithNonDefaultEditorTest.class,
+//   PreviewHtmlFileTest.class
+   OpenFileWithNonDefaultEditorTest.class
 //   OpenAndSaveXmlFileWithNonLatinNameTest.class,
 //   DeleteSeveralFilesSimultaniouslyTest.class,
 //   CreatingAndSavingAsNewFileTest.class,

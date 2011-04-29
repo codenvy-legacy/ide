@@ -34,6 +34,8 @@ public interface TestConstants
 
    public static final int ANIMATION_PERIOD = 100;
 
+   public static final int FOLDER_REFRESH_PERIOD = 1000;
+   
    public static final int PAGE_LOAD_PERIOD = 2000;
 
    public static final int EDITOR_OPEN_PERIOD = 1500;

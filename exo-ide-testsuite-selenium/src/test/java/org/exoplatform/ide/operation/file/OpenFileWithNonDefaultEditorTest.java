@@ -43,35 +43,27 @@ import java.io.IOException;
  * @version $Id:
  *
  */
-public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
+public class OpenFileWithNonDefaultEditorTest extends BaseTest
 {
-   private static String FOLDER_NAME =OpenFileWithNonDefaultEditorTest.class.getSimpleName() ;
+   
+   private static String FOLDER_NAME = OpenFileWithNonDefaultEditorTest.class.getSimpleName() ;
    
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
    
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
    private static String GOOGLE_GADGET_FILE_NAME = "Calculator.xml";
 
-   private static String CUR_TIME = String.valueOf(System.currentTimeMillis());   
-   
    @BeforeClass
    public static void setUp()
    {
-      
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, URL + CUR_TIME + HTML_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + GOOGLE_GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, URL + CUR_TIME +  GOOGLE_GADGET_FILE_NAME);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + GOOGLE_GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -79,18 +71,27 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
    
    @Test
    public void testOpenFileWithNonDefaultEditor() throws Exception
-   {      
-      //---- 2 -------------------------
-      //Select file newHtmlFile.html in the Workspace Panel and then call 
-      //the "File->Open with.." topmenu command.
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL);
+   {
+      waitForRootElement();
+
+      /*
+       * Select file newHtmlFile.html in the Workspace Panel and then call "File->Open with.." topmenu command.
+       */
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
-      Thread.sleep(TestConstants.SLEEP);
-      callOpenWithWindow(CUR_TIME + HTML_FILE_NAME);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+      IDE.OPENWITH.open();
+      
+      //callOpenWithWindow(CUR_TIME + HTML_FILE_NAME);
+      
+      Thread.sleep(60000);
+      
+      /*
       //gadget displayed "Open File with" dialog window with second items in the central column: 
       //"Code Editor [Default]" and "WYSYWYG editor".
       checkOpenWithWindowCodeEditorIsDefault();
@@ -222,7 +223,9 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       checkCkEditorOpened(0);
       Thread.sleep(TestConstants.SLEEP);
-      closeFileTab(0);      
+      closeFileTab(0);
+      
+            */
    }
    
    private void closeFileTab(int tabIndex) throws Exception
@@ -324,6 +327,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
    
    private void checkReopenWarningDialog(boolean clickYes) throws Exception
    {
+      /*
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
       assertTrue(selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/blurb/").matches("^Do you want to reopen " + CUR_TIME + HTML_FILE_NAME+ " in selected editor[\\s\\S]$"));
       assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
@@ -336,6 +340,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
       {
          selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
       }
+      */
    }
    
    private void doubleClickItemInNavigationTree(String name) throws Exception
@@ -362,6 +367,7 @@ public abstract class OpenFileWithNonDefaultEditorTest extends BaseTest
    {
       deleteCookies();
       cleanRegistry();
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      cleanRepository(WS_URL);
    }
+   
 }

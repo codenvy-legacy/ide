@@ -76,4 +76,8 @@
 		<when-type-is class="org.exoplatform.ide.client.project.CreateProjectFromTemplatePresenter.Display" />
 	</replace-with>
 
+	<replace-with class="org.exoplatform.ide.client.editor.custom.OpenFileWithView">
+		<when-type-is class="org.exoplatform.ide.client.editor.custom.OpenFileWithPresenter.Display" />
+	</replace-with>
+
 </module>

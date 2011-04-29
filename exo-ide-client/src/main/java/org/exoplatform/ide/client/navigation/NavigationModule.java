@@ -140,7 +140,7 @@ import com.google.gwt.user.client.Window;
  * @version $Id: $
  *
  */
-public class NavigationModule implements OpenFileWithHandler, UploadFileHandler, SaveFileAsTemplateHandler,
+public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHandler,
    CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, ApplicationSettingsReceivedHandler,
    ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler,
    ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler,
@@ -226,7 +226,6 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
-      eventBus.addHandler(OpenFileWithEvent.TYPE, this);
       eventBus.addHandler(OpenFileByPathEvent.TYPE, this);
       eventBus.addHandler(UploadFileEvent.TYPE, this);
       eventBus.addHandler(SaveFileAsTemplateEvent.TYPE, this);
@@ -279,11 +278,6 @@ public class NavigationModule implements OpenFileWithHandler, UploadFileHandler,
    {
       new WebDavVirtualFileSystem(eventBus, event.getLoader(), ImageUtil.getIcons(), event
          .getApplicationConfiguration().getContext());
-   }
-
-   public void onOpenFileWith(OpenFileWithEvent event)
-   {
-      new OpenFileWithForm(eventBus, (File)selectedItems.get(0), openedFiles, applicationSettings);
    }
 
    public void onUploadFile(UploadFileEvent event)

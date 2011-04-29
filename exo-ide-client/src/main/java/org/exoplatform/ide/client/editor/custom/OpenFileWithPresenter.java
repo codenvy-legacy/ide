@@ -18,6 +18,40 @@
  */
 package org.exoplatform.ide.client.editor.custom;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.editor.EditorFactory;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.navigation.event.OpenFileWithEvent;
+import org.exoplatform.ide.client.navigation.event.OpenFileWithHandler;
+import org.exoplatform.ide.editor.api.EditorProducer;
+
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -28,51 +62,33 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.editor.EditorFactory;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.editor.api.EditorProducer;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Presenter for open file with editor form.
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class OpenFileWithPresenter implements EditorFileOpenedHandler
+public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFileClosedHandler, OpenFileWithHandler,
+   ItemsSelectedHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler
 {
 
-   public interface Display
+   public interface Display extends IsView
    {
 
-      void closeForm();
+      String ID = "ideOpenFileWithView";
 
       EditorsListGrid getEditorsListGrid();
 
+      void setSelectedItem(EditorInfo item);
+
       HasValue<Boolean> getIsDefaultCheckItem();
 
-      HasClickHandlers getOkButton();
+      HasClickHandlers getOpenButton();
 
-      void enableOpenButton();
+      void setOpenButtonEnabled(boolean enabled);
 
       HasClickHandlers getCancelButton();
 
-      void setSelectedItem(EditorInfo item);      
    }
 
    private HandlerManager eventBus;
@@ -87,29 +103,37 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler
 
    private ApplicationSettings applicationSettings;
 
-   public OpenFileWithPresenter(HandlerManager eventBus, File selectedFile, Map<String, File> openedFiles,
-      ApplicationSettings applicationSettings)
+   public OpenFileWithPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.selectedFile = selectedFile;
-      this.openedFiles = openedFiles;
-      this.applicationSettings = applicationSettings;
-      this.eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(OpenFileWithEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
    }
 
-   public void destroy()
+   public void onOpenFileWith(OpenFileWithEvent event)
    {
-   }
-   
-   public void bindDisplay(Display d)
-   {
+      if (display != null)
+      {
+         return;
+      }
 
-      display = d;
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
+   }
+
+   public void bindDisplay()
+   {
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent arg0)
          {
-            display.closeForm();
+            IDE.getInstance().closeView(Display.ID);
          }
       });
 
@@ -122,8 +146,8 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler
          }
 
       });
-      
-      display.getOkButton().addClickHandler(new ClickHandler()
+
+      display.getOpenButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent arg0)
          {
@@ -142,7 +166,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler
             }
 
             selectedEditor = event.getSelectedItem().getEditor();
-            display.enableOpenButton();
+            display.setOpenButtonEnabled(true);
          }
 
       });
@@ -165,9 +189,9 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler
          List<EditorInfo> editorInfoItems = new ArrayList<EditorInfo>();
 
          EditorProducer defaultEditor = null;
-         
+
          Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
-         if (defaultEditors == null) 
+         if (defaultEditors == null)
          {
             defaultEditors = new HashMap<String, String>();
          }
@@ -189,13 +213,13 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler
          }
 
          EditorInfo defaultEditorItem = null;
-         
+
          for (EditorProducer e : editorsItems)
          {
             if (e.getDescription().equals(defaultEditor.getDescription()))
             {
                defaultEditorItem = new EditorInfo(e, true);
-               editorInfoItems.add(defaultEditorItem); 
+               editorInfoItems.add(defaultEditorItem);
             }
             else
             {
@@ -204,10 +228,10 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler
          }
 
          display.getEditorsListGrid().setValue(editorInfoItems);
-       
+
          if (defaultEditorItem != null)
          {
-            display.setSelectedItem(defaultEditorItem);            
+            display.setSelectedItem(defaultEditorItem);
          }
 
       }
@@ -231,20 +255,19 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler
       else
       {
          String mimeType = selectedFile.getContentType();
-         
+
          Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
-         if (defaultEditors == null) 
+         if (defaultEditors == null)
          {
             defaultEditors = new HashMap<String, String>();
             applicationSettings.setValue("default-editors", defaultEditors, Store.REGISTRY);
          }
-         
+
          defaultEditors.put(mimeType, selectedEditor.getDescription());
-         
-         SettingsService.getInstance().saveSettingsToRegistry(applicationSettings, 
+
+         SettingsService.getInstance().saveSettingsToRegistry(applicationSettings,
             new AsyncRequestCallback<ApplicationSettings>()
             {
-
                @Override
                protected void onSuccess(ApplicationSettings result)
                {
@@ -265,7 +288,8 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler
     */
    private void showAskReopenDialog()
    {
-      Dialogs.getInstance().ask("Info", "Do you want to reopen <b>" + selectedFile.getName() + "</b> in selected editor?",
+      Dialogs.getInstance().ask("Info",
+         "Do you want to reopen <b>" + selectedFile.getName() + "</b> in selected editor?",
          new BooleanValueReceivedHandler()
          {
             public void booleanValueReceived(Boolean value)
@@ -281,7 +305,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler
                }
                else
                {
-                  display.closeForm();
+                  IDE.getInstance().closeView(Display.ID);
                }
             }
          });
@@ -294,7 +318,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler
     */
    private void tryOpenFile()
    {
-      if (openedFiles.get(selectedFile.getHref()) != null)
+      if (openedFiles != null && openedFiles.get(selectedFile.getHref()) != null)
       {
          showAskReopenDialog();
          return;
@@ -303,13 +327,59 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler
       openFile();
    }
 
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if (event.getSelectedItems().size() != 1 || !(event.getSelectedItems().get(0) instanceof File))
+      {
+         selectedFile = null;
+         return;
+      }
+
+      Item selectedItem = (File)event.getSelectedItems().get(0);
+      if (selectedItem instanceof File)
+      {
+         selectedFile = (File)selectedItem;
+      }
+      else
+      {
+         selectedFile = null;
+      }
+   }
+
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
     */
    @Override
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
-      display.closeForm();
+      openedFiles = event.getOpenedFiles();
+
+      if (display != null)
+      {
+         IDE.getInstance().closeView(Display.ID);
+      }
+   }
+
+   @Override
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
+   }
+
+   @Override
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
    }
 
 }

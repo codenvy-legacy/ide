@@ -25,6 +25,7 @@ import org.exoplatform.ide.core.ErrorDialog;
 import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigation;
+import org.exoplatform.ide.core.OpenWith;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Preview;
@@ -33,6 +34,7 @@ import org.exoplatform.ide.core.SelectWorkspace;
 import org.exoplatform.ide.core.Statusbar;
 import org.exoplatform.ide.core.Toolbar;
 import org.exoplatform.ide.core.WarningDialog;
+import org.exoplatform.ide.core.Workspace;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -96,6 +98,10 @@ public class IDE
    public Statusbar STATUSBAR = new Statusbar();
    
    public SelectWorkspace SELECTWORKSPACE = new SelectWorkspace();
+   
+   public Workspace WORKSPACE = new Workspace();
+   
+   public OpenWith OPENWITH = new OpenWith();
 
    /**
     * Select main frame of IDE.

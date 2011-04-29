@@ -57,7 +57,7 @@ public class NewDiscoveryView extends ViewImpl implements
    /**
     * Initial height of this view
     */
-   private static int INITIAL_HEIGTH = 330;
+   private static int INITIAL_HEIGHT = 330;
 
    /**
     * UIBinder instance
@@ -116,7 +116,7 @@ public class NewDiscoveryView extends ViewImpl implements
    public NewDiscoveryView()
    {
       super(ID, "popup", "REST Services Discovery", new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()),
-         INITIAL_WIDTH, INITIAL_HEIGTH);
+         INITIAL_WIDTH, INITIAL_HEIGHT);
 
       Widget viewWidget = uiBinder.createAndBindUi(this);
       add(viewWidget);

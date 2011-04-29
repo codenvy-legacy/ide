@@ -62,6 +62,7 @@
       <plugins>
 
          <!-- GWT Maven Plugin -->
+         <!-- 
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>gwt-maven-plugin</artifactId>
@@ -84,8 +85,10 @@
                <logLevel>ERROR</logLevel>
             </configuration>
          </plugin>
+          -->
 
          <!-- Copy static web files before executing gwt:run -->
+         <!-- 
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
@@ -101,6 +104,8 @@
                <webappDirectory>${webappDirectory}</webappDirectory>
             </configuration>
          </plugin>
+          -->
+         
       </plugins>
    </build>
 </project>

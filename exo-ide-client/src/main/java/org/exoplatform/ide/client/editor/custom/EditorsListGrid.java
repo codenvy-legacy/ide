@@ -35,14 +35,20 @@ import com.google.gwt.user.cellview.client.Column;
 */
 public class EditorsListGrid extends ListGrid<EditorInfo>
 {
-   Column<EditorInfo, SafeHtml> entryNameColumn;
-   
+
+   /**
+    * 
+    */
+   private Column<EditorInfo, SafeHtml> entryNameColumn;
+
+   /**
+    * 
+    */
    public EditorsListGrid()
-   {     
+   {
       SafeHtmlCell htmlCell = new SafeHtmlCell();
       entryNameColumn = new Column<EditorInfo, SafeHtml>(htmlCell)
       {
-
          @Override
          public SafeHtml getValue(final EditorInfo item)
          {
@@ -52,32 +58,33 @@ public class EditorsListGrid extends ListGrid<EditorInfo>
 
                public String asString()
                {
-                  if(item.isDefault())
-                   {                      
-                      return item.getEditor().getDescription()+"&nbsp;[Default]";         
-                   }
-                   else
-                   {
-                      return item.getEditor().getDescription();
-                   }
+                  if (item.isDefault())
+                  {
+                     return item.getEditor().getDescription() + "&nbsp;[Default]";
+                  }
+                  else
+                  {
+                     return item.getEditor().getDescription();
+                  }
                }
             };
             return html;
          }
-
       };
-      
+
       entryNameColumn.setSortable(true);
       getCellTable().addColumn(entryNameColumn, "Editors");
       getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
-
    }
-   
+
+   /**
+    * @param editorInfo
+    */
    @Override
    public void setValue(List<EditorInfo> editorInfo)
    {
       super.setValue(editorInfo);
-      
+
       // Add comparator
       getColumnSortHandler().setComparator(entryNameColumn, new Comparator<EditorInfo>()
       {
