@@ -66,4 +66,7 @@ public interface ExamplesBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/editor/public/example/ruby.txt")   
    TextResource rubyExample();
+
+   @Source("org/exoplatform/ide/editor/public/example/php.txt")   
+   TextResource phpExample();
 }

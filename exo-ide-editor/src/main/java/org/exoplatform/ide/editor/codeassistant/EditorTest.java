@@ -395,6 +395,11 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             new RubyParser() // exoplatform code parser         
             , new RubyCodeAssistant())));
 
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_PHP, "CodeMirror php-script editor", "php", "", true,
+         new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']", // generic code parsers
+            "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/csscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/phpcolors.css']" // code styles
+         )));   
+      
       // ckeditor
       addEditor(new CKEditorProducer(MimeType.TEXT_HTML, "CKEditor HTML editor", "html", "", false,
          new CKEditorConfiguration()));
@@ -734,6 +739,23 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          }
       });
 
+      Button phpButton =
+         new Button();
+      phpButton.setTitle("Create CodeMirror Editor for PHP");
+      phpButton.setText("PHP");
+      phpButton.addClickHandler(new ClickHandler()
+      {
+         
+         @Override
+         public void onClick(ClickEvent event)
+         {            
+            editor = codeEditors.get(MimeType.APPLICATION_PHP).createEditor(ExamplesBundle.INSTANCE.phpExample().getText(), eventBus, params);
+            panel.clear();
+            panel.add(editor);
+            
+         }
+      });
+      
       Button showLineNumbersButton = new Button();
       showLineNumbersButton.setTitle("Show LineNumbers");
       showLineNumbersButton.setText("Show LineNumbers");
@@ -793,6 +815,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       toolbar.add(javaButton);
       toolbar.add(jspButton);
       toolbar.add(rubyButton);
+      toolbar.add(phpButton);     
 
       toolbar.add(htmlCKEditorButton);
       toolbar.add(googleGadgetCKEditorButton);
