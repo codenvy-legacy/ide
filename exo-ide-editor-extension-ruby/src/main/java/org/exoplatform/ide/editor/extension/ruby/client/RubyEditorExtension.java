@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.codeassistant.ruby.RubyCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.parser.RubyParser;
@@ -83,7 +84,8 @@ public class RubyEditorExtension extends Extension implements InitializeServices
                "['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']", // code styles
                true, // can be outlined
                true, // can be autocompleted
-               new RubyParser() // exoplatform code parser           
+               new RubyParser(), // exoplatform code parser
+               new RubyCodeAssistant()
             )
          )
       );
