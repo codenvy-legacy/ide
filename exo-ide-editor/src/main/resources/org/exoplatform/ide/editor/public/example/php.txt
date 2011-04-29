@@ -1,3 +1,13 @@
+<?php
+    namespace A;
+  
+  
+  interface test {
+    function test_interface()
+    {
+    }
+  }
+?>
 The "root" parser is XML in HTML mode.
 Next, we can switch into PHP mode, for example. This is
 <?php echo 'text output by';
@@ -68,28 +78,24 @@ On the line above, we just had an XML syntax error due to the </b> tag not being
   The PHP code below contains some deliberate errors. Play with the editor by fixing them
   and observing how the highlight changes.
 
-    <?php
-    namespace A;
-    namespace A::B::C;
-    namespace A::::B;
-    namespace A::B::C::;
-    namespace A::B::C::D x;
-    
+    <?php    
     define("CONSTANT_EX", False);
     
+    global $g;
+            
     CONSTANT_EX;
     
-    self::range($row['lft'], $row['rgt']));  // error: extra ')'
-    $a = (b() + 4) 5 foo;  // error: missing operators
+    self::range($row['lft'], $row['rgt']);  // error: extra ')'
+    $a = (b() + 4);  // error: missing operators
     self::$var;
     $parent = self::range($max + 1, $max + 1);
     $row[attributes][$attribute_name] = $attribute_value;
     $row[attributes()][$attribute_name] = $attribute_value;
     $row[attributes(5)][$attribute_name] = $attribute_value;
     $row[$attributes()][$attribute_name] = $attribute_value;
-    abstract class test extends foo {
+    abstract class test extends foo implements test {
         private function domainObjectBuilder($var2) {
-          $test;
+         $test;
             return $this->use_domain_object_builder
                    ? $this->domain()->objectBuilder()
                    : null;
@@ -97,20 +103,18 @@ On the line above, we just had an XML syntax error due to the </b> tag not being
 
         const MYCONST = 'some string';
         
-        $array[MYCONST] = 4;
+        $g[MYCONST] = 4;
         // this is a single-line C++-style comment
         # this is a single-line shell-style comment
         var $a = __FILE__;
         private $a = __FILE__;
-        protected static $b = timezone_transitions_get('some parameter here');
-        global $g = isset("string");
+        protected static $b = 'test';
         static $s = hash_update_file;  // warning: predefined function non-call
-        function mike ($var) $foo;
+        function mike($var);
+        func($b,$c);        
         mike(A::func(param));
-        func($b $c);  // error: function parameters must be comma-separated
-        foo bar;  // error: no operator
-        $baz $quux;  // error: no operator
-        public abstract function loadPageXML(util_FilePath $filename, $merge=0+$foo, $x, $y=3) {
+
+        public abstract function loadPageXML(util_FilePath $filename, $merge=0, $x, $y=3) {
             $newrow[$key] = $val;
             $newresult[] = $row;
             $state = $row['c'] == 1;
@@ -129,7 +133,7 @@ single quoting means no \'interpolation\' like "$start" or method call
 line5';
             $bitpattern = 1 << 2;
             $bitpattern <<= 3;
-            $incorrect = <<< 5 EOSTRING  // FIXME: CodeMirror update bug: add a letter before 5 and notice that syntax is not updated until EOF, even with continuousScanning: 500
+            $incorrect =<<<EOSTRING
 error: the identifier must conform to the identifier rules
 EOSTRING;
             $sql = <<< EOSQL
@@ -147,7 +151,7 @@ EOSTRING
             echo "a = ".$this ->a[2+3*$array["foo"]]."";
             echo "b = {$this->b}";  // FIXME: highlight interpolation in strings
         }
-        final function makecoffee error($types = array("cappuccino"), $coffeeMaker = NULL) {
+        final function makecoffee_error($types = array("cappuccino"), $coffeeMaker = NULL) {
             $out_of_way_amount = $max - $child->left() + 1;
             $absolute_pos = $child->left() - $move->width();
             $varfunc(1, 'x');
@@ -167,37 +171,37 @@ EOSTRING
             }
             return $this->target*$this->trans+myfunc(__METHOD__);
             /*
-            echo 'This is a test'; 
+            echo 'This is a test';
             */
         }
-        switch( $type ) {
-            case "r3core_AddTemplateToTargetEvent":
-                $this->notifyAddTemplateToTarget( $genevent );
-                break;
-            case "r3core_GenerateTargetEvent" $this:
-                for($i=0; $i<=this->method(); $i++) {
-                    echo 'Syntax "highlighting"';
-                }
-                try {
-                    foreach($array xor $loader->parse_fn($filename) as $key => value) {
-                        namespace r3;
-                    }
-                } catch( Exception $e ) {
-                    /** restore the backup
-                    */
-                    $this->loadAll($tmp, $event, true);
-                    // `php -l` doesn't complain at all at this (it assumes string constants):
-                    this + makes * no - sense;
-                }
+    }
 
-                break;
+    switch( $type ) {
+       case "r3core_AddTemplateToTargetEvent":
+           $this->notifyAddTemplateToTarget( $genevent );
+           break;
+               
+       case "r3core_GenerateTargetEvent":
+           for($i=0; $i<=$this->method(); $i++) {
+               echo 'Syntax "highlighting"';
+           }
+                
+           try {
+               foreach($array xor $loader->parse_fn($filename) as $key => $value) {
+               }
+           } catch( Exception $e ) {
+               /** restore the backup
+               */
+               $this->loadAll($tmp, $event, true);
+               // `php -l` doesn't complain at all at this (it assumes string constants):
+               this + makes * no - sense;
+           }
 
-            default moo:
-                throw new r3_util_Exception( get_class( $genevent ) . " does not map" );
-        }
+           break;
 
-
-    };
+        default:
+           throw new r3_util_Exception( get_class( $genevent ) . " does not map" );
+    }
     
     if($something==true):
       $test = 'something';
@@ -236,7 +240,6 @@ EOSTRING
   <p>The header above will say 'This is an  example'.</p>
   <h1>This is an <?php // echo 'simple';?> example.</h1>
 
-  <?php echo; ?>
     <body>
 
 <?php echo "<html>
@@ -253,8 +256,52 @@ EOSTRING
   </body>
 </html>"; ?>
 
+
+<?php
+define('TEST', "");
+echo $GLOBALS['test'];
+echo __LINE__;
+function test($test){
+    return false;
+}
+/**
+ * @deprecated
+ */
+class Foo extends ReflactionClass implements Foo\IBar{
+    const E_ERROR = 45;
+    var $test;
+    public static $my_static = 'foo';
+    public function test($test){
+       return $this->test;
+    }
+    public static function foo(){
+       return false;
+    }
+}
+
+$text =<<<HEREDOC
+Hello, World!
+HEREDOC
+
+    /**
+     * Sample function
+     * @throws Exception
+     */
+    function foo($a){
+        if (func_num_args() != 1) {
+           throw new Exception ("Illegal number of arguments!");
+        }
+        // TODO: do something
+        $args = func_get_args();
+        print "{$args[0]}\n";
+    }
+    
+    
+  /* compile time constant http://php.net/manual/en/reserved.php */  
+    __FILE__
+    
+    
+?>
+
 </body>
 </html>
-
-
-    
