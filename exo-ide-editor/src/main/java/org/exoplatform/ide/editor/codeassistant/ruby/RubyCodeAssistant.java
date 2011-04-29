@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.editor.codeassistant.ruby;
 
+import com.google.gwt.core.client.RunAsyncCallback;
+
+import com.google.gwt.core.client.RunAsyncCallback;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.resources.client.ClientBundle;
@@ -29,12 +33,21 @@ import com.google.gwt.resources.client.TextResource;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
+import org.exoplatform.ide.editor.api.codeassitant.NumericProperty;
+import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
+import org.exoplatform.ide.editor.codeassistant.ruby.model.BuiltinMethodsDatabase;
+import org.exoplatform.ide.editor.codeassistant.ruby.model.BuiltinMethodsDatabase.Metaclass;
+import org.exoplatform.ide.editor.codeassistant.ruby.model.BuiltinMethodsDatabase.MethodInfo;
+import org.exoplatform.ide.editor.codeassistant.ruby.model.BuiltinMethodsDatabase.ModuleMetaclass;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -137,19 +150,103 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
     */
    private void autocompletion(List<Token> tokenList, Token currentToken)
    {
+      GWT.runAsync(new RunAsyncCallback()
+      {
+
+         @Override
+         public void onSuccess()
+         {
+            List<Token> tokens = new ArrayList<Token>();
+
+            if (beforeToken.endsWith("."))
+            {
+               Metaclass metaclass = BuiltinMethodsDatabase.get("Object");
+               tokens.addAll(getTokenFromModules(metaclass.getMetaClass().getIncludedModules()));
+               tokens.addAll(getTokenFromModules(metaclass.getIncludedModules()));
+               //               tokens.addAll(getObjectMethods(BuiltinMethodsDatabase.objectMethods));
+            }
+            else
+            {
+               tokens.addAll(defaultTokens);
+            }
+
+            Collections.sort(tokens, RubyCodeAssistant.this);
+            openForm(tokens, widgetFactory, RubyCodeAssistant.this);
+         }
+
+         @Override
+         public void onFailure(Throwable reason)
+         {
+            reason.printStackTrace();
+         }
+      });
+
+   }
+
+   /**
+    * @param includedModules
+    * @return
+    */
+   protected Collection<? extends Token> getTokenFromModules(ModuleMetaclass[] includedModules)
+   {
       List<Token> tokens = new ArrayList<Token>();
-
-      if (beforeToken.endsWith("."))
+      for (ModuleMetaclass module : includedModules)
       {
-      }
-      else
-      {
-         
+         for (MethodInfo method : module.getMethods())
+         {
+            Token m = new TokenImpl(method.getName(), TokenType.METHOD);
+            m.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(module.getName()));
+            m.setProperty(TokenProperties.MODIFIERS, new NumericProperty(method.getFlags()));
+            m.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(getParameters(method.getArity())));
+            tokens.add(m);
+         }
+         tokens.addAll(getTokenFromModules(module.getIncludedModules()));
+         tokens.addAll(getTokenFromModules(module.getMetaClass().getSuperClass().getIncludedModules()));
       }
 
-      tokens.addAll(defaultTokens);
-      Collections.sort(tokens, this);
-      openForm(tokens, widgetFactory, this);
+      return tokens;
+   }
+
+   /**
+    * @param arity
+    * @return
+    */
+   private String getParameters(int arity)
+   {
+      String par = "(";
+
+      if (arity < 0)
+      {
+         par += "*args";
+      }
+      else if (arity > 0)
+      {
+         for (int i = 0; i <= arity; i++)
+         {
+            par += "arg" + i + ", ";
+         }
+         if (par.endsWith(", "))
+            par = par.substring(0,par.lastIndexOf(", "));
+
+      }
+
+      par += ")";
+      return par;
+   }
+
+   /**
+    * @param objectMethods
+    * @return
+    */
+   protected Collection<? extends Token> getObjectMethods(String[] objectMethods)
+   {
+      List<Token> tokens = new ArrayList<Token>();
+      for (String method : objectMethods)
+      {
+         Token m = new TokenImpl(method, TokenType.METHOD);
+         tokens.add(m);
+      }
+      return tokens;
    }
 
    private void parseTokenLine(String line, int cursorPos)

@@ -22,6 +22,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.ruby.ui.RubyKeyWordWidget;
+import org.exoplatform.ide.editor.codeassistant.ruby.ui.RubyMethodWidget;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,6 +42,9 @@ public class RubyTokenWidgetFactory implements TokenWidgetFactory
       {
          case KEYWORD :
             return new RubyKeyWordWidget(token);
+
+         case METHOD :
+            return new RubyMethodWidget(token);
 
          default :
             return new RubyKeyWordWidget(token);
