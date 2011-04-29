@@ -9,7 +9,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  */
 public class GwtTestPhpEditor extends GWTTestCase {
    
-   String content = "";
+   String content = "<? echo \"Hello\" ?>";
 
   /**
    * Must refer to a valid module that sources this class.
