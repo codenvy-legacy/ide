@@ -43,19 +43,21 @@ span.php-operator {
 
 /* __FILE__ etc.; http://php.net/manual/en/reserved.php */
 span.php-compile-time-constant {
-  color: #776088;
+  color: BlueViolet;
+  /*color: black;*/
   font-weight: bold;
 }
 
 /* output of get_defined_constants(). Differs from http://php.net/manual/en/reserved.constants.php */
 span.php-predefined-constant {
   color: rgb(0,0,192);
-
+  font-weight: bold;
 }
 
 /* PHP reserved "language constructs"... echo() etc.; http://php.net/manual/en/reserved.php */
 span.php-reserved-language-construct {
-  color: rgb(127, 0, 85);
+/*  color: rgb(127, 0, 85);*/
+  color: DarkMagenta;
   font-weight: bold;
 }
 
@@ -66,7 +68,7 @@ span.php-predefined-function {
 
 /* PHP predefined classes: PDO, Exception etc.; output of get_declared_classes() and different from http://php.net/manual/en/reserved.classes.php */
 span.php-predefined-class {
-  color: green;
+  color: black;
 }
 
 span.php-atom {
@@ -79,16 +81,18 @@ span.php-t_string {
 }
 
 span.php-variable {
-  color: black;
+  color: Purple;
 }
 
 
 span.js-localvariable {
-  color: #004499;
+  /* color: black;*/
+  color: Purple;
 }
 
 span.php-comment {
-  color: rgb(63, 85, 191);
+  /*color: rgb(63, 85, 191);*/
+  color: rgb(85, 127, 95);
 }
 
 span.php-string-single-quoted, span.php-string-double-quoted {
@@ -102,7 +106,7 @@ span.php-string-double-quoted
 }
 
 span.syntax-error {
-  color: red;
+/*  color: red; */
 }
 
 span.deprecated {
