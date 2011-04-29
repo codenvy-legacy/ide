@@ -20,19 +20,18 @@ package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
@@ -42,42 +41,45 @@ import java.io.IOException;
 public class DeleteCurrentLineTest extends BaseTest
 {
    private static final String TEST_FOLDER = DeleteCurrentLineTest.class.getSimpleName();
-   
+
    private static final String FILE_NAME_1 = "file-" + DeleteCurrentLineTest.class.getSimpleName();
-   
+
    private static final String FILE_NAME_2 = "file-" + DeleteCurrentLineTest.class.getSimpleName() + "111";
-   
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
+
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
+
+   private static final String WAIT_APPEAR_STATUSBAR = Locators.STATUS_BAR_LOCATOR + "[text()='1 : 1']";
+
    private interface Lines
    {
       public static final String LINE_1 = "<html>\n";
-      
+
       public static final String LINE_2 = "<head>\n";
-      
+
       public static final String LINE_3 = "<title> </title>\n";
-      
+
       public static final String LINE_4 = "</head>\n";
-      
+
       public static final String LINE_5 = "<body>\n";
-      
+
       public static final String LINE_6 = "</body>\n";
-      
+
       public static final String LINE_7 = "</html>";
-      
+
       public static final String DEFAULT_TEXT = LINE_1 + LINE_2 + LINE_3 + LINE_4 + LINE_5 + LINE_6 + LINE_7;
-      
+
       public static final String TEXT_LINE_1 = "line 1";
    }
-   
+
    private String currentTextInEditor;
-   
+
    @BeforeClass
    public static void setUp()
    {
       final String filePath1 = "src/test/resources/org/exoplatform/ide/operation/edit/delete-current-line.html";
       final String filePath2 = "src/test/resources/org/exoplatform/ide/operation/edit/delete-current-line.txt";
-      
+
       try
       {
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
@@ -93,7 +95,7 @@ public class DeleteCurrentLineTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -110,92 +112,93 @@ public class DeleteCurrentLineTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    //IDE-151
    @Test
    public void deleteLine() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
-     
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + TEST_FOLDER + "/" + FILE_NAME_1, false);
+
       currentTextInEditor = Lines.DEFAULT_TEXT;
-      assertEquals(currentTextInEditor,IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
       assertEquals("1 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
-      
+
       //----- 1 -----------
       // Click on "Edit->Delete Current Line" top menu command.
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       assertEquals("1 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
-      
+
       currentTextInEditor = Lines.LINE_2 + Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_5 + Lines.LINE_6 + Lines.LINE_7;
-      assertEquals(currentTextInEditor,IDE.EDITOR.getTextFromCodeEditor(0));
-      
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
+
       //----- 2 -----------
       //Press "Ctrl+D" keys.
-     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
-      
+      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+
       assertEquals("1 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
-      
+
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_5 + Lines.LINE_6 + Lines.LINE_7;
-      assertEquals(currentTextInEditor,IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
 
       //----- 3 -----------
       //Move cursor down on 2 lines
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-        
+      //      Thread.sleep(TestConstants.SLEEP_SHORT);
+
       //----- 4 -----------
       //Press "Ctrl+D"
-     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_6 + Lines.LINE_7;
-      assertEquals(currentTextInEditor,IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
       assertEquals("3 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
-      
+
       //----- 5 -----------
       //Click on "Edit->Delete Current Line" top menu command
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_7;
-      assertEquals(currentTextInEditor,IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
       assertEquals("3 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
 
       //----- 6 -----------
       //Click on "Edit->Delete Current Line" top menu command
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4.trim();
-      assertEquals(currentTextInEditor,IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
       assertEquals("3 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
-      
+
       //----- 7 -----------
       //Open empty text file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME_2, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + TEST_FOLDER + "/" + FILE_NAME_2, false);
+      waitForElementPresent(WAIT_APPEAR_STATUSBAR);
+
       assertEquals("1 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
-     IDE.EDITOR.typeTextIntoEditor(1, Lines.TEXT_LINE_1);
-      
+      IDE.EDITOR.typeTextIntoEditor(1, Lines.TEXT_LINE_1);
+
       //----- 8 -----------
       //Go to line 2 and click on "Edit->Delete Current Line" top menu command
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
-      assertEquals("",IDE.EDITOR.getTextFromCodeEditor(1));
-      
+      assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));
+
       //----- 9 -----------
       //Press "Ctrl+D" keys
-     IDE.EDITOR.runHotkeyWithinEditor(1, true, false, java.awt.event.KeyEvent.VK_D);
-      
-     IDE.EDITOR.selectTab(0);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-     IDE.EDITOR.selectTab(1);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+      IDE.EDITOR.runHotkeyWithinEditor(1, true, false, java.awt.event.KeyEvent.VK_D);
+
+      IDE.EDITOR.selectTab(0);
+
+      IDE.EDITOR.selectTab(1);
+
       assertEquals("1 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
-      assertEquals("",IDE.EDITOR.getTextFromCodeEditor(1));
-      
-     IDE.EDITOR.runHotkeyWithinEditor(1, true, false, java.awt.event.KeyEvent.VK_D);
+      assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));
+
+      IDE.EDITOR.runHotkeyWithinEditor(1, true, false, java.awt.event.KeyEvent.VK_D);
       assertEquals("1 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));
-      assertEquals("",IDE.EDITOR.getTextFromCodeEditor(1));
+      assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));
    }
 
 }
