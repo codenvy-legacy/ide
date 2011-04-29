@@ -63,7 +63,6 @@ public class GroovyTemplateParser extends CodeMirrorParserImpl
 
          currentContentMimeType = MimeType.APPLICATION_GROOVY;
          CodeMirrorParserImpl.getParser(currentContentMimeType).init();
-         node = Node.getNext(node); // pass parsed node
       }
 
       // recognize "%>" close tag
@@ -73,7 +72,6 @@ public class GroovyTemplateParser extends CodeMirrorParserImpl
 
          currentContentMimeType = MimeType.TEXT_HTML;
          CodeMirrorParserImpl.getParser(currentContentMimeType).init();
-         node = Node.getNext(node); // pass parsed node
       }
       
       currentToken = CodeMirrorParserImpl.getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true);  // call child parser
