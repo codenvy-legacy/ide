@@ -336,7 +336,6 @@ public class JGitConnection implements GitConnection
     */
    public GitConnection clone(CloneRequest request) throws URISyntaxException, GitException
    {
-      repository.fireEvent(new BeforeCommandEvent("clone"));
       try
       {
          File workDir = repository.getWorkTree();
@@ -459,10 +458,6 @@ public class JGitConnection implements GitConnection
       catch (IOException e)
       {
          throw new GitException(e.getMessage(), e);
-      }
-      finally
-      {
-         repository.fireEvent(new AfterCommandEvent("clone"));
       }
    }
 
@@ -608,7 +603,6 @@ public class JGitConnection implements GitConnection
    @Override
    public void fetch(FetchRequest request) throws GitException
    {
-      repository.fireEvent(new BeforeCommandEvent("fetch"));
       try
       {
          List<RefSpec> fetchRefSpecs = null;
@@ -649,10 +643,6 @@ public class JGitConnection implements GitConnection
       catch (InvalidRemoteException e)
       {
          throw new IllegalArgumentException(e.getMessage());
-      }
-      finally
-      {
-         repository.fireEvent(new AfterCommandEvent("fetch"));
       }
    }
 

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.git.server.jgit;
 
-import org.eclipse.jgit.events.ListenerList;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
@@ -32,10 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ServiceLoader;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -44,8 +41,6 @@ import java.util.ServiceLoader;
  */
 public class JGitConnectionFactory extends GitConnectionFactory
 {
-   private static ServiceLoader<GitCommandListener> gitCommandListeners = ServiceLoader.load(GitCommandListener.class);
-
    /*
     * XXX : Temporary solution to get access to remote Git Repository.
     * Need find appropriate place for it at least.
@@ -66,10 +61,6 @@ public class JGitConnectionFactory extends GitConnectionFactory
     */
    static
    {
-      ListenerList globalRepositoryListeners = Repository.getGlobalListenerList();
-      for (Iterator<GitCommandListener> iter = gitCommandListeners.iterator(); iter.hasNext();)
-         globalRepositoryListeners.addListener(GitCommandListener.class, iter.next());
-      
       InputStream ins = Thread.currentThread().getContextClassLoader().getResourceAsStream("GitCredentials.properties");
       if (ins != null)
       {
