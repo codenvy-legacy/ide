@@ -229,6 +229,12 @@
            <groupId>org.exoplatform.ide</groupId>
            <artifactId>exo-ide-editor-extension-ruby</artifactId>
            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-editor-extension-php</artifactId>
+           <version>${project.version}</version>
          </dependency>         
 
          <dependency>
@@ -660,7 +666,8 @@
       <module>exo-ide-editor-extension-netvibes</module>
       <module>exo-ide-editor-extension-java</module>
       <module>exo-ide-editor-extension-jsp</module>
-	  <module>exo-ide-editor-extension-ruby</module>
+      <module>exo-ide-editor-extension-ruby</module>
+      <module>exo-ide-editor-extension-php</module>
     
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>
@@ -668,7 +675,7 @@
       <module>exo-ide-extension-netvibes</module>
       <module>exo-ide-extension-chromattic</module>
       <module>exo-ide-extension-git</module>
-	  
+      
 
       <module>exo-ide-docs</module>
 
