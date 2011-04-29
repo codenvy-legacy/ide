@@ -5,15 +5,19 @@ html {
 .editbox {
   margin: .4em;
   padding: 0;
-  font-family: monospace;
+  font-family: "DejaVu Sans Mono", courier, monospace;
   font-size: 10pt;
   color: black;
+  line-height: 16px;
+  background-color: transparent;
 }
 
-.editbox .rb-linenum {
-  color:#888888;
+pre.code, .editbox {
+  color: #666666;
 }
-.editbox .rb-pan {
+
+.editbox p {
+  margin: 0;
 }
 
 .editbox .rb-comment, .editbox .rb-long-comment {
