@@ -101,7 +101,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //and check Ctrl+B, Ctrl+I, Ctrl+U
       waitForRootElement();
       openFolder();
-      openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, false);
+      openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE,"Google Gadget",false);
       
      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
@@ -167,7 +167,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       openFolder();
       //----- 1 ------------
       //open file in WYDIWYG editor
-      openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, false);
+      openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, "Google Gadget" ,false);
       //check Ctrl+F
      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
@@ -229,7 +229,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       openFolder();
       //----- 1 ------------
       //open file in WYDIWYG editor
-      openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, false);
+      openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, "Google Gadget" ,false);
       //select all
      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
@@ -346,7 +346,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       checkCreateFileFromTemplateFormAndClose();
       
       //open FCK editor
-      openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, false);
+      openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, "Google Gadget" ,false);
       
      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_N);
       
