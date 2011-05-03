@@ -46,23 +46,23 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    private static String FORMAT_HTML_FILE_NAME = "formating.html";
 
    private static String NON_FORMAT_HTML_FILE_NAME = "non-formating.html";
-   
+
    private static String FORMAT_CSS_FILE_NAME = "formating.css";
 
    private static String NON_FORMAT_CSS_FILE_NAME = "non-formating.css";
-   
+
    private static String FORMAT_JS_FILE_NAME = "formating.js";
 
    private static String NON_FORMAT_JS_FILE_NAME = "non-formating.js";
-   
+
    private static String FORMAT_GADGET_FILE_NAME = "formating.gadget";
 
    private static String NON_FORMAT_GADGET_FILE_NAME = "non-formating.gadget";
-   
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/formating/";
 
-   private final static String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String STORAGE_URL =
+      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    @BeforeClass
    public static void setUp()
@@ -85,91 +85,82 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       catch (ModuleException e)
       {
          e.printStackTrace();
-      }  
+      }
    }
-   
+
    @Test
    public void tesFormatingHtml() throws Exception
    {
-     
-      Thread.sleep(TestConstants.SLEEP);
+
+      waitForRootElement();
       IDE.NAVIGATION.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_HTML_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_HTML_FILE_NAME, false);
+      waitForElementPresent("//div[@panel-id='editor']");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-//      Thread.sleep(TestConstants.SLEEP);
-      
-      String postFormating =IDE.EDITOR.getTextFromCodeEditor(0);
+
+      String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_HTML_FILE_NAME);
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
    }
-   
+
    @Test
    public void tesFormatingCss() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.NAVIGATION.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_CSS_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-      
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_CSS_FILE_NAME, false);
+      waitForElementPresent("//div[@panel-id='editor']");
+
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-//      Thread.sleep(TestConstants.SLEEP);
-      
-      String postFormating =IDE.EDITOR.getTextFromCodeEditor(0);
+
+      String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_CSS_FILE_NAME);
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
    }
-   
+
    @Test
    public void tesFormatingJS() throws Exception
    {
-    
-      Thread.sleep(TestConstants.SLEEP);
+
+      waitForRootElement();
       IDE.NAVIGATION.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_JS_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_JS_FILE_NAME, false);
+      waitForElementPresent("//div[@panel-id='editor']");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-//      Thread.sleep(TestConstants.SLEEP);
-      
-      String postFormating =IDE.EDITOR.getTextFromCodeEditor(0);
+
+      String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_JS_FILE_NAME);
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
-      
+
    }
-   
+
    @Test
    public void tesFormatingGadget() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.NAVIGATION.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NON_FORMAT_GADGET_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-      
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_GADGET_FILE_NAME, false);
+      waitForElementPresent("//div[@panel-id='editor']");
+
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-//      Thread.sleep(TestConstants.SLEEP);
-      
-      String postFormating =IDE.EDITOR.getTextFromCodeEditor(0);
+
+      String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_GADGET_FILE_NAME);
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       assertEquals(formatingSource, postFormating);
    }
-   
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -191,5 +182,5 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
          e.printStackTrace();
       }
    }
- 
+
 }
