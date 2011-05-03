@@ -306,6 +306,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + htmlFile, false);
 
+      //TODO may be remove after fix ask dialog after reopen file
       if (selenium.isElementPresent("exoAskDialog"))
       {
          selenium.click("exoAskDialogYesButton");
@@ -317,6 +318,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.NAVIGATION.deleteSelectedItems();
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + googleGadgetFile, false);
+      //TODO may be remove after fix ask dialog after reopen file
       if (selenium.isElementPresent("exoAskDialog"))
       {
          selenium.click("exoAskDialogYesButton");
