@@ -81,7 +81,7 @@ public class HighlightCKEditorTest extends BaseTest
       //Thread.sleep(TestConstants.SLEEP);
 
       IDE.NAVIGATION.selectItem(URL + FOLDER_NAME+ "/" + FILE_NAME); 
-      openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
+      openFileFromNavigationTreeWithCkEditor(FILE_NAME,"HTML",false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
