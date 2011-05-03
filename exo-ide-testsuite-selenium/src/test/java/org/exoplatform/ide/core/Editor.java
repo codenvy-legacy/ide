@@ -57,7 +57,7 @@ public class Editor extends AbstractTestModule
     */
    public String getTabTitle(int index)
    {
-      return selenium().getText(getEditorTabScLocator(index) + "//span");
+      return selenium().getText(getEditorTabScLocator(index));
    }
 
    /**
@@ -68,7 +68,7 @@ public class Editor extends AbstractTestModule
     */
    public String getEditorTabScLocator(int tabIndex)
    {
-      return Locators.EDITOR_TABSET_LOCATOR + "//td[@tab-bar-index='" + tabIndex + "']";
+          return Locators.EDITOR_TABSET_LOCATOR + "//td[@tab-bar-index='" + tabIndex + "']";
    }
 
    /**
