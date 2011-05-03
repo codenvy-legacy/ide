@@ -91,7 +91,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
     * ----- 1-2 ------------
     * @throws Exception
     */
-  
+
    @Ignore
    @Test
    public void testDefaultHotkeys() throws Exception
@@ -114,7 +114,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+S
-     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
+      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       //check, that Save As dialog window appeared
       SaveFileUtils.checkSaveAsDialog(false);
       //close
@@ -139,7 +139,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //Open several tabs (open existed documents and create some new)
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
 
-      openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, false);
+      openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, "Google Gadget", false);
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
 
@@ -186,56 +186,56 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //----- 19 ------------
       //Try Ctrl+H and Alt+N hotkeys in several tabs
 
-     IDE.EDITOR.selectTab(2);
+      IDE.EDITOR.selectTab(2);
 
       //press Alt+N
-     IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
+      IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
       Thread.sleep(TestConstants.SLEEP);
 
       checkCreateFileFromTemplateFormAndClose();
 
       //press Ctrl+H
-     IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
+      IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
 
       //check new html file created
-      assertEquals("Untitled file.html *",IDE.EDITOR.getTabTitle(3));
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
+      assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
 
       //select first tab
-     IDE.EDITOR.selectTab(0);
-     IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
+      IDE.EDITOR.selectTab(0);
+      IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
       Thread.sleep(TestConstants.SLEEP);
 
       checkCreateFileFromTemplateFormAndClose();
       //press Ctrl+H
-     IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
+      IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
 
       //check new html file created
-      assertEquals("Untitled file.html *",IDE.EDITOR.getTabTitle(3));
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
+      assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
 
       //select second tab
-     IDE.EDITOR.selectTab(1);
-     IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
+      IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
 
       checkCreateFileFromTemplateFormAndClose();
 
       //press Ctrl+H
-     IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
+      IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
 
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //check new html file created
-      assertEquals("Untitled file.html *",IDE.EDITOR.getTabTitle(3));
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
+      assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
       Thread.sleep(TestConstants.SLEEP);
 
       //close all tabs
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    /**
@@ -307,8 +307,8 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
 
       //check new html file created
-      assertEquals("Untitled file.html *",IDE.EDITOR.getTabTitle(0));
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(0));
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       Thread.sleep(TestConstants.SLEEP);
 
       //----- 3 ------------
