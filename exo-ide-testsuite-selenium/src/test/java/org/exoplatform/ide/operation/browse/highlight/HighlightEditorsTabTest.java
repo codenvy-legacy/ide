@@ -44,8 +44,8 @@ import org.junit.Test;
 public class HighlightEditorsTabTest extends BaseTest
 {
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
+   private final static String URL =
+      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    private static String FOLDER_NAME = HighlightEditorsTabTest.class.getSimpleName();
 
@@ -58,8 +58,8 @@ public class HighlightEditorsTabTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
          VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html",
-            MimeType.TEXT_HTML, URL + FOLDER_NAME + "/" + FILE_NAME);
+            "src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html", MimeType.TEXT_HTML,
+            URL + FOLDER_NAME + "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -70,25 +70,25 @@ public class HighlightEditorsTabTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testHighlightEditorTab() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/"); 
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP);
 
       IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      
+
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_OutlineForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
@@ -97,24 +97,24 @@ public class HighlightEditorsTabTest extends BaseTest
 
       selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=ideOutlineForm]/icon");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       assertFalse(selenium
          .isElementPresent("//div[@eventproxy='isc_OutlineForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
 
-      openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
+      openFileFromNavigationTreeWithCkEditor(FILE_NAME, "HTML" ,false);
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_1'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
 
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
    }
-   
+
    @AfterClass
    public static void tierDown()
    {
