@@ -46,6 +46,8 @@ public class EditFileInWysiwygEditorTest extends BaseTest
    private final static String HTML_FILE = "EditFileInWysiwygEditor.html";
 
    private final static String TEST_FOLDER = EditFileInWysiwygEditorTest.class.getSimpleName();
+   
+   private final static String DIALOG_ASK_REOPEN ="Do you want to reopen Copy Of Untitled file.html in selected editor?";
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/" + TEST_FOLDER + "/";
@@ -68,7 +70,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       waitForRootElement();
 
       //------ 2 ---------------
-      openFileFromNavigationTreeWithCkEditor(URL + HTML_FILE, false);
+      openFileFromNavigationTreeWithCkEditor(URL + HTML_FILE,"HTML" ,false);
       Thread.sleep(2000);
       // waitForElementPresent("ideOpenFileWithForm");
       checkCkEditorOpened(0);
@@ -209,17 +211,15 @@ public class EditFileInWysiwygEditorTest extends BaseTest
             + "\t\t\t\t</tr>\n" + "\t\t\t</tbody>\n" + "\t\t</table>\n" + "\t\t<br />\n" + "\t</body>\n" + "</html>";
 
       assertEquals(textWithTable2x4InCkEditor, getTextFromSourceInCkEditor(0));
-
       //------ 12 ---------------
       IDE.NAVIGATION.deleteSelectedItems();
 
       //------ 13 ---------------
-
       //check second confirmation dialog
       checkDeleteConfirmationDialogOfModifiedText();
 
       //click No button in confirmation dialog
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+      selenium.click("exoAskDialogNoButton");
       Thread.sleep(TestConstants.SLEEP);
 
       //check file stays in CK editor
@@ -230,14 +230,14 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       //------ 14 ---------------
       //reopen file with CodeMirror
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_FILE, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + HTML_FILE, false);
       //reopne confirmatioin dialog
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
-      assertEquals("Info", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/headerLabel/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      assertTrue(selenium.isElementPresent("exoAskDialog"));
+      assertEquals("Info", selenium.getText("//div[@id='exoAskDialog']//div[@class='Caption']/span['info']"));
+      assertTrue(selenium.isElementPresent("exoAskDialogYesButton"));
+      assertTrue(selenium.isElementPresent("exoAskDialogNoButton"));
       //click Ok button
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
+      selenium.click("exoAskDialogYesButton");
       Thread.sleep(TestConstants.SLEEP);
 
       checkCodeEditorOpened(0);
@@ -279,10 +279,9 @@ public class EditFileInWysiwygEditorTest extends BaseTest
     */
    private void checkDeleteConfirmationDialogOfModifiedText()
    {
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/headerLabel/"));
-      assertEquals("Delete file", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/headerLabel/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/"));
+      assertTrue(selenium.isElementPresent("exoAskDialog"));
+      assertTrue(selenium.isElementPresent("exoAskDialogYesButton"));
+      assertTrue(selenium.isElementPresent("exoAskDialogNoButton"));
    }
 
    private void checkTable2x4Present()
