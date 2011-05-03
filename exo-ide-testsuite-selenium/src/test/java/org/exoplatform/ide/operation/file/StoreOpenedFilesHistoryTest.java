@@ -155,7 +155,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TEXT_FILE, false);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GADGET_FILE, false);
-      openFileFromNavigationTreeWithCkEditor(HTML_FILE, true);
+      openFileFromNavigationTreeWithCkEditor(HTML_FILE, "HTML" ,true);
       
       checkCkEditorOpened(2);
       
