@@ -485,19 +485,12 @@ public abstract class BaseTest
     * @param checkDefault do mark checkbox Use by default
     * @throws Exception
     */
-   protected void openFileFromNavigationTreeWithCkEditor(String fileName, boolean checkDefault) throws Exception
+   protected void openFileFromNavigationTreeWithCkEditor(String fileName, String typeFile, boolean checkDefault) throws Exception
    {
       //TODO add check form
       IDE.NAVIGATION.selectItem(fileName);
-      //      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
-      //      Thread.sleep(TestConstants.SLEEP_SHORT);
-      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      //      Thread.sleep(TestConstants.SLEEP);      
-      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), 'Open With')]", "");
-
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-
-      selenium.click("//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()='CKEditor HTML editor']");
+      selenium.click("//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" +" "+typeFile+ " " +"editor"+"'"+"]");
       if (checkDefault)
       {
          //click on checkbox Use as default editor
@@ -651,13 +644,13 @@ public abstract class BaseTest
    @Deprecated
    protected void checkCodeEditorOpened(int tabIndex) throws Exception
    {
-      String divIndex = String.valueOf(tabIndex + 2);
+      String divIndex = String.valueOf(tabIndex);
       //check Code Editor is present
-      assertTrue(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex
-         + "]//div[@class='CodeMirror-wrapping']/iframe"));
+      assertTrue(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+         +"//div[@class='CodeMirror-wrapping']/iframe"));
       //check CK editor is not present
-      assertFalse(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex
-         + "]//table[@class='cke_editor']//td[@class='cke_contents']/iframe"));
+      assertFalse(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+         +"//td[@class='cke_contents']/iframe"));
    }
 
    /**
@@ -765,9 +758,9 @@ public abstract class BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/body/"));
+      assertTrue(selenium.isElementPresent("ideUploadForm"));
       assertTrue(selenium
-         .isElementPresent("//div[@class='stretchImgButtonDisabled' and @eventproxy='ideUploadFormUploadButton']"));
+         .isElementPresent("ideUploadFormBrowseButton"));
       try
       {
          File file = new File(filePath);
@@ -781,7 +774,7 @@ public abstract class BaseTest
       assertEquals(
          filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()),
          selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideUploadFormDynamicForm\"]/item[name=ideUploadFormFilenameField]/element"));
+            .getValue("//div[@id='ideUploadForm']//table/tbody//div/input[@name='ideUploadFormFilenameField']"));
 
       selenium
          .type(
