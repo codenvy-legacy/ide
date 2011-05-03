@@ -128,7 +128,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       
       //----- 6 ----------
       //open file in CK editor and check is file locked
-      openFileFromNavigationTreeWithCkEditor(FILE_NAME, false);
+      openFileFromNavigationTreeWithCkEditor(FILE_NAME,"HTML" ,false);
       checkFileLocking(FILE_NAME, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
 
