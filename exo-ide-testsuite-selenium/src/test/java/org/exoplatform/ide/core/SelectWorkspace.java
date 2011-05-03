@@ -33,7 +33,7 @@ public class SelectWorkspace extends AbstractTestModule
    private static String SELECTED_WORKSPACE_LOCATOR =
       "//div[@view-id='ideSelectWorkspaceView']//table[@id='ideEntryPointListGrid']/tbody/tr[1]";
 
-   //TODO Method shol be refactor. After add in change in UI IDE and set attribute on  select element in Workspace Window tree
+   //TODO Method shold be refactor. After add in change in UI IDE and set attribute on  select element in Workspace Window tree
    public String getNonActiveWorkspaceName1() throws Exception
    {
       String secondWorkspaceUrl = null;
