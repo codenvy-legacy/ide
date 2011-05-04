@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.codeassistant.java.service.marshal.ClassDescriptionUnmarshaller;
 import org.exoplatform.ide.editor.codeassistant.java.service.marshal.FindClassesUnmarshaller;
@@ -116,9 +117,10 @@ public abstract class CodeAssistantService
       JavaClass classInfo = new JavaClass();
       callback.setResult(classInfo);
       ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller(classInfo);
-
+      int status[] = {HTTPStatus.NO_CONTENT, HTTPStatus.OK};
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
+      callback.setSuccessCodes(status);
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
    }
 

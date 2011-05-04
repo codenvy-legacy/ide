@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.editor.api.codeassitant.NumericProperty;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
@@ -89,7 +90,8 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
    {
       try
       {
-         parseClassDescription(response.getText());
+         if (response.getStatusCode() != HTTPStatus.NO_CONTENT)
+            parseClassDescription(response.getText());
       }
       catch (Exception e)
       {
@@ -98,8 +100,8 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
    }
 
    private native JavaScriptObject getClasses(String json)/*-{
-		return eval('(' + json + ')');
-   }-*/;
+                                                          return eval('(' + json + ')');
+                                                          }-*/;
 
    private void parseClassDescription(String json)
    {
@@ -175,7 +177,8 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
                token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
                token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(fi.get(DECLARING_CLASS).isString()
                   .stringValue()));
-               token.setProperty(TokenProperties.ELEMENT_TYPE, new StringProperty(fi.get(JAVA_TYPE).isString().stringValue()));
+               token.setProperty(TokenProperties.ELEMENT_TYPE, new StringProperty(fi.get(JAVA_TYPE).isString()
+                  .stringValue()));
                fields.add(token);
             }
          }
@@ -206,8 +209,10 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
                name = name.substring(name.lastIndexOf('.') + 1);
                Token token = new TokenImpl(name, TokenType.CONSTRUCTOR);
                token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
-               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(c.get(DECLARING_CLASS).isString().stringValue()));
-               token.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(c.get(PARAMETER_TYPES).isString().stringValue()));
+               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(c.get(DECLARING_CLASS).isString()
+                  .stringValue()));
+               token.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(c.get(PARAMETER_TYPES).isString()
+                  .stringValue()));
                constructors.add(token);
             }
 

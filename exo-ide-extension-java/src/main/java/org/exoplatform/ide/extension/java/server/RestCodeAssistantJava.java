@@ -85,7 +85,7 @@ public class RestCodeAssistantJava
 
       if (LOG.isDebugEnabled())
          LOG.error("Class info for " + fqn + " not found");
-      return new TypeInfo();
+      return null;
       
    }
 
