@@ -50,7 +50,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -160,17 +162,20 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
             if (beforeToken.endsWith("."))
             {
+               Map<String, Token> tokenMap = new HashMap<String, Token>();
                Metaclass metaclass = BuiltinMethodsDatabase.get("Object");
-               tokens.addAll(getTokenFromModules(metaclass.getMetaClass().getIncludedModules()));
-               tokens.addAll(getTokenFromModules(metaclass.getIncludedModules()));
-               //               tokens.addAll(getObjectMethods(BuiltinMethodsDatabase.objectMethods));
+               //               tokens.addAll(getTokenFromModules(metaclass.getMetaClass().getIncludedModules()));
+
+               tokenMap.putAll(getTokenFromModules(metaclass.getIncludedModules()));
+               convertMethodToToken(metaclass.getMetaClass().getSuperClass().getName(), metaclass.getMetaClass()
+                  .getSuperClass().getMethods(), tokenMap);
+               tokens.addAll(tokenMap.values());
             }
             else if (!"".equals(tokenToComplete) && Character.isUpperCase(tokenToComplete.charAt(0)))
             {
                for (Object className : BuiltinMethodsDatabase.metaclasses.keySet())
                {
-//                  if (String.valueOf(className).startsWith(tokenToComplete))
-                     tokens.add(getClassToken((Metaclass)BuiltinMethodsDatabase.metaclasses.get(className)));
+                  tokens.add(getClassToken((Metaclass)BuiltinMethodsDatabase.metaclasses.get(className)));
                }
             }
             else
@@ -204,7 +209,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
    protected Token getClassToken(Metaclass metaclass)
    {
       Token clazz = new TokenImpl(metaclass.getName(), TokenType.CLASS);
-      clazz.setProperty(TokenProperties.FQN, new StringProperty(metaclass.getName()+".rb"));
+      clazz.setProperty(TokenProperties.FQN, new StringProperty(metaclass.getName() + ".rb"));
       return clazz;
    }
 
@@ -212,26 +217,42 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
     * @param includedModules
     * @return
     */
-   protected Collection<? extends Token> getTokenFromModules(ModuleMetaclass[] includedModules)
+   protected Map<String, Token> getTokenFromModules(ModuleMetaclass[] includedModules)
    {
-      List<Token> tokens = new ArrayList<Token>();
+      Map<String, Token> tokenMap = new HashMap<String, Token>();
       for (ModuleMetaclass module : includedModules)
       {
-         for (MethodInfo method : module.getMethods())
-         {
-            Token m = new TokenImpl(method.getName(), TokenType.METHOD);
-            String param = getParameters(method.getArity());
-            m.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(module.getName()));
-            m.setProperty(TokenProperties.MODIFIERS, new NumericProperty(method.getFlags()));
-            m.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(param));
-            m.setProperty(TokenProperties.CODE, new StringProperty(method.getName() + param));
-            tokens.add(m);
-         }
-         tokens.addAll(getTokenFromModules(module.getIncludedModules()));
-         tokens.addAll(getTokenFromModules(module.getMetaClass().getSuperClass().getIncludedModules()));
+         convertMethodToToken(module.getName(), module.getMethods(), tokenMap);
+         tokenMap.putAll(getTokenFromModules(module.getIncludedModules()));
+         tokenMap.putAll(getTokenFromModules(module.getMetaClass().getSuperClass().getIncludedModules()));
+         convertMethodToToken(module.getMetaClass().getSuperClass().getName(), module.getMetaClass().getSuperClass()
+            .getMethods(), tokenMap);
+         convertMethodToToken(module.getMetaClass().getName(), module.getMetaClass().getMethods(), tokenMap);
+
       }
 
-      return tokens;
+      return tokenMap;
+   }
+
+   private void convertMethodToToken(String container, MethodInfo[] methods, Map<String, Token> tokens)
+   {
+      for (MethodInfo method : methods)
+      {
+         Token m = new TokenImpl(method.getName(), TokenType.METHOD);
+         String param = getParameters(method.getArity());
+         m.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(container));
+         m.setProperty(TokenProperties.MODIFIERS, new NumericProperty(method.getFlags()));
+         m.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(param));
+         m.setProperty(TokenProperties.CODE, new StringProperty(method.getName() + param));
+         
+         //to avoid overriding methods from Kernel
+         if (tokens.containsKey(m.getName() + param)
+            && tokens.get(m.getName() + param).getProperty(TokenProperties.DECLARING_CLASS).equals("Kernel"))
+            continue;
+
+         tokens.put(m.getName() + param, m);
+
+      }
    }
 
    /**
@@ -250,7 +271,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
       {
          for (int i = 0; i <= arity; i++)
          {
-            par += "arg" + i + ", ";
+            par += "arg" + (i + 1) + ", ";
          }
          if (par.endsWith(", "))
             par = par.substring(0, par.lastIndexOf(", "));
