@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.editor.codeassistant.ruby;
 
-import com.google.gwt.core.client.RunAsyncCallback;
-
-import com.google.gwt.core.client.RunAsyncCallback;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ExternalTextResource;
@@ -150,7 +147,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
     * @param tokenList
     * @param currentToken
     */
-   private void autocompletion(List<Token> tokenList, Token currentToken)
+   private void autocompletion(final List<Token> tokenList, Token currentToken)
    {
       GWT.runAsync(new RunAsyncCallback()
       {
@@ -159,6 +156,8 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
          public void onSuccess()
          {
             List<Token> tokens = new ArrayList<Token>();
+            
+            Map<String, Token> clazz = getClassesFromTokens(tokenList);
 
             if (beforeToken.endsWith("."))
             {
@@ -177,6 +176,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
                {
                   tokens.add(getClassToken((Metaclass)BuiltinMethodsDatabase.metaclasses.get(className)));
                }
+               tokens.addAll(clazz.values());
             }
             else
             {
@@ -200,6 +200,23 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
          }
       });
 
+   }
+
+   /**
+    * @param tokenList
+    * @return
+    */
+   private Map<String, Token> getClassesFromTokens(List<Token> tokenList)
+   {
+      Map<String, Token> classes = new HashMap<String, Token>();
+      for(Token t : tokenList)
+      {
+         if(t.getType() == TokenType.CLASS)
+         {
+            classes.put(t.getName(), t);
+         }
+      }
+      return classes;
    }
 
    /**

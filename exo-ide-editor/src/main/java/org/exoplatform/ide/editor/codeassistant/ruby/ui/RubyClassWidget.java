@@ -36,13 +36,14 @@ public class RubyClassWidget extends RubyBaseWidget
 {
 
    private Grid grid;
+
    /**
     * @param token
     */
    public RubyClassWidget(Token token)
    {
       super(token);
-      
+
       grid = new Grid(1, 3);
       grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
@@ -56,13 +57,13 @@ public class RubyClassWidget extends RubyBaseWidget
 
       grid.setWidget(0, 1, nameLabel);
 
-      String pack = token.getProperty(TokenProperties.FQN).isStringProperty().stringValue();
-//      if (pack.contains("."))
-//         pack = pack.substring(0, pack.lastIndexOf("."));
-      Label l = new Label("-" + pack, false);
-      l.setStyleName(CodeAssistantClientBundle.INSTANCE.css().fqnStyle());
-      grid.setWidget(0, 2, l);
-
+      if (token.hasProperty(TokenProperties.FQN))
+      {
+         String pack = token.getProperty(TokenProperties.FQN).isStringProperty().stringValue();
+         Label l = new Label("-" + pack, false);
+         l.setStyleName(CodeAssistantClientBundle.INSTANCE.css().fqnStyle());
+         grid.setWidget(0, 2, l);
+      }
       grid.getCellFormatter().setWidth(0, 0, "16px");
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
