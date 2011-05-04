@@ -70,7 +70,7 @@ public class OutputView extends ViewImpl implements org.exoplatform.ide.client.o
       OutputRecord record = new OutputRecord(message, odd);
       odd = !odd;
       outputLayout.add(record);
-      getScrollPanel().scrollToBottom();
+      //getScrollPanel().scrollToBottom();
    }
 
    public HasClickHandlers getClearOutputButton()

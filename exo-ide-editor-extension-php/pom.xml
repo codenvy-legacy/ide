@@ -59,48 +59,6 @@
       </resources>
       <sourceDirectory>src/main/java</sourceDirectory>
       <outputDirectory>target/classes</outputDirectory>
-      <plugins>
 
-         <!-- GWT Maven Plugin -->
-         <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>gwt-maven-plugin</artifactId>
-            <executions>
-               <execution>
-                  <goals>
-                     <goal>compile</goal>
-                     <goal>test</goal>
-                     <goal>i18n</goal>
-                  </goals>
-               </execution>
-            </executions>
-            <configuration>
-               <runTarget>PhpEditorExtension.html</runTarget>
-               <hostedWebapp>${webappDirectory}</hostedWebapp>
-               <i18nMessagesBundle>org.exoplatform.ide.editor.extension.php.client.Messages</i18nMessagesBundle>
-               <testTimeOut>500</testTimeOut>                                                                                                                                                                  
-               <mode>htmlunit</mode>                                                                                                                                                                           
-               <productionMode>false</productionMode>
-               <logLevel>ERROR</logLevel>
-            </configuration>
-         </plugin>
-
-         <!-- Copy static web files before executing gwt:run -->
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <executions>
-               <execution>
-                  <phase>compile</phase>
-                  <goals>
-                     <goal>exploded</goal>
-                  </goals>
-               </execution>
-            </executions>
-            <configuration>
-               <webappDirectory>${webappDirectory}</webappDirectory>
-            </configuration>
-         </plugin>
-      </plugins>
    </build>
 </project>

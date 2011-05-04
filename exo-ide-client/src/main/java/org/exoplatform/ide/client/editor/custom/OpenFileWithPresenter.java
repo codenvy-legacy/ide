@@ -75,8 +75,6 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
    public interface Display extends IsView
    {
 
-      String ID = "ideOpenFileWithView";
-
       EditorsListGrid getEditorsListGrid();
 
       void setSelectedItem(EditorInfo item);
@@ -133,7 +131,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
       {
          public void onClick(ClickEvent arg0)
          {
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -305,7 +303,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
                }
                else
                {
-                  IDE.getInstance().closeView(Display.ID);
+                  IDE.getInstance().closeView(display.asView().getId());
                }
             }
          });
@@ -357,7 +355,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
 
       if (display != null)
       {
-         IDE.getInstance().closeView(Display.ID);
+         IDE.getInstance().closeView(display.asView().getId());
       }
    }
 

@@ -19,6 +19,7 @@
 
 package org.exoplatform.ide.client.ui.impl.layout;
 
+import org.exoplatform.gwtframework.ui.client.Resizeable;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.ui.impl.Layer;
 
@@ -37,11 +38,15 @@ import com.google.gwt.user.client.ui.Widget;
 public class ViewsLayer extends Layer
 {
 
-   public class ViewContainer extends AbsolutePanel
+   public class ViewContainer extends AbsolutePanel implements Resizeable
    {
+
+      private View view;
 
       public ViewContainer(View view)
       {
+         this.view = view;
+
          DOM.setStyleAttribute(getElement(), "width", "100px");
          DOM.setStyleAttribute(getElement(), "height", "100px");
          DOM.setStyleAttribute(getElement(), "overflow", "hidden");
@@ -49,6 +54,22 @@ public class ViewsLayer extends Layer
          if (view instanceof Widget)
          {
             add((Widget)view);
+         }
+      }
+
+      @Override
+      public void resize(int width, int height)
+      {
+         System.out.println("Resizing view [" + view.getId() + "]");
+         System.out.println("width  > " + width);
+         System.out.println("height > " + height);
+
+         setSize(width + "px", height + "px");
+         
+         System.out.println("Resizing view content...");
+         if (view instanceof Resizeable)
+         {
+            ((Resizeable)view).resize(width, height);
          }
       }
 

@@ -47,6 +47,8 @@ public class OpenFileWithView extends ViewImpl implements
    interface OpenFileWithViewUiBinder extends UiBinder<Widget, OpenFileWithView>
    {
    }
+   
+   public static final String ID = "ideOpenFileWithView";
 
    /**
     * Initial width of this view
@@ -72,7 +74,7 @@ public class OpenFileWithView extends ViewImpl implements
 
    public OpenFileWithView()
    {
-      super(ID, "popup", "Open File With", new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), INITIAL_WIDTH,
+      super(ID, "modal", "Open File With", new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), INITIAL_WIDTH,
          INITIAL_HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }

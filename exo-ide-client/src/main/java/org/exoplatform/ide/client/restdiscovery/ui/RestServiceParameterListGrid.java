@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.restdiscovery.ui;
 
-import org.exoplatform.gwtframework.ui.client.Resizeable;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.restdiscovery.ParamExt;
 
@@ -31,7 +30,7 @@ import com.google.gwt.user.cellview.client.Column;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class RestServiceParameterListGrid extends ListGrid<ParamExt> implements Resizeable
+public class RestServiceParameterListGrid extends ListGrid<ParamExt>
 {
    
    private static final String NAME = "Name";
@@ -130,12 +129,6 @@ public class RestServiceParameterListGrid extends ListGrid<ParamExt> implements 
    private String getDivider(String title)
    {
       return "<b><font color=\"#3764A3\">" + title + "</font></b>";
-   }
-
-   @Override
-   public void resize(int width, int height)
-   {
-      setSize(width + "px", height + "px");
    }
 
 }

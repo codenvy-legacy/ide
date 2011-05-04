@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.ui.client.Resizeable;
 import org.exoplatform.gwtframework.ui.client.tab.TabButton;
 import org.exoplatform.gwtframework.ui.client.tab.TabPanel;
 import org.exoplatform.gwtframework.ui.client.tab.event.CloseTabEvent;
@@ -146,14 +147,14 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
     * Image for Restore button
     */
    private Image restoreImage = new Image(IDEImageBundle.INSTANCE.restore());
-   
+
    private boolean panelMaximized = false;
 
    public PanelImpl(String panelId, ViewsLayer viewsLayer)
    {
       this.panelId = panelId;
       this.viewsLayer = viewsLayer;
-      
+
       getElement().setAttribute("panel-id", panelId);
       setPanelMaximized(false);
 
@@ -166,6 +167,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
       tabPanel = new TabPanel();
       tabPanel.setWidth("100%");
       tabPanel.setHeight("100%");
+      tabPanel.setWrapperBorderSize(1);
       wrapper.add(tabPanel);
 
       tabPanel.addSelectionHandler(tabSelectionHandler);
@@ -339,20 +341,23 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          HidePanelEvent hidePanelEvent = new HidePanelEvent(panelId);
          hidePanelHandler.onHidePanel(hidePanelEvent);
       }
-      
+
       updateViewTabIndex();
    }
-   
-   private void updateViewTabIndex() {
+
+   private void updateViewTabIndex()
+   {
       int tabs = tabPanel.getTabBar().getTabCount();
-      for (int i = 0; i < tabs; i++) {
+      for (int i = 0; i < tabs; i++)
+      {
          String viewId = tabPanel.getTabIdByIndex(i);
 
          View view = views.get(viewId);
-         if (view == null) {
+         if (view == null)
+         {
             continue;
          }
-         
+
          Widget viewWidget = (Widget)view;
          DOM.setElementAttribute(viewWidget.getElement(), "tab-index", "" + i);
       }
@@ -366,8 +371,9 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          String viewId = event.getTabId();
          View view = views.get(viewId);
 
-         try {
-            
+         try
+         {
+
             if (closingViewHandler != null)
             {
                ClosingViewEvent closingViewEvent = new ClosingViewEvent(view);
@@ -379,10 +385,11 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
                }
             }
 
-         } catch (Exception e) {
+         }
+         catch (Exception e)
+         {
             e.printStackTrace();
          }
-         
 
          doCloseView(viewId);
       }
@@ -399,15 +406,6 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          ViewController viewController = viewControllerIterator.next();
          viewController.repositionOnly();
       }
-   }
-
-   public void resize(int width, int height)
-   {
-      this.width = width;
-      this.height = height;
-      DOM.setStyleAttribute(getElement(), "width", "" + width + "px");
-      DOM.setStyleAttribute(getElement(), "height", "" + height + "px");
-      onResize();
    }
 
    public String getPanelId()
@@ -468,8 +466,16 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
 
          DOM.setStyleAttribute(viewWrapper.getElement(), "left", "" + (left + 0) + "px");
          DOM.setStyleAttribute(viewWrapper.getElement(), "top", "" + (top + 0) + "px");
-         DOM.setStyleAttribute(viewWrapper.getElement(), "width", "" + width + "px");
-         DOM.setStyleAttribute(viewWrapper.getElement(), "height", "" + height + "px");
+
+         if (viewWrapper instanceof Resizeable)
+         {
+            ((Resizeable)viewWrapper).resize(width, height);
+         }
+         else
+         {
+            DOM.setStyleAttribute(viewWrapper.getElement(), "width", "" + width + "px");
+            DOM.setStyleAttribute(viewWrapper.getElement(), "height", "" + height + "px");
+         }
       }
 
       public void repositionOnly()
@@ -480,16 +486,6 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
          DOM.setStyleAttribute(viewWrapper.getElement(), "top", "" + (top + 0) + "px");
       }
 
-   }
-
-   @Override
-   public void onResize()
-   {
-      if (selectedViewId != null)
-      {
-         ViewController controller = viewControllers.get(selectedViewId);
-         controller.onResize();
-      }
    }
 
    public void setShowPanelHandler(ShowPanelHandler showPanelHandler)
@@ -557,11 +553,12 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
       final ViewController controller = new ViewController(view, viewWrapper);
       viewControllers.put(view.getId(), controller);
       tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, view.hasCloseButton());
-      
+
       /*
        * Set element attribute "panel-id" which is points to Panel with this ID.
        */
-      if (view instanceof Widget) {
+      if (view instanceof Widget)
+      {
          Widget viewWidget = (Widget)view;
          DOM.setElementAttribute(viewWidget.getElement(), "panel-id", panelId);
       }
@@ -640,7 +637,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
       }
 
       this.panelHidden = panelHidden;
-      
+
       getElement().setAttribute("panel-hidden", "" + panelHidden);
 
       setVisible(!panelHidden);
@@ -672,7 +669,30 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
    public void setPanelMaximized(boolean panelMaximized)
    {
       this.panelMaximized = panelMaximized;
-      getElement().setAttribute("panel-maximized", "" + panelMaximized);      
+      getElement().setAttribute("panel-maximized", "" + panelMaximized);
+   }
+
+   @Override
+   public void onResize()
+   {
+      System.out.println("onResize!!!!!!!!!!!!!!!!!!!1");
+
+      if (selectedViewId != null)
+      {
+         ViewController controller = viewControllers.get(selectedViewId);
+         controller.onResize();
+      }
+   }
+
+   public void resize(int width, int height)
+   {
+      System.out.println("resize panel [" + panelId + "]");
+
+      this.width = width;
+      this.height = height;
+      DOM.setStyleAttribute(getElement(), "width", "" + width + "px");
+      DOM.setStyleAttribute(getElement(), "height", "" + height + "px");
+      onResize();
    }
 
 }

@@ -68,7 +68,7 @@
 		<when-type-is class="org.exoplatform.ide.client.edit.FindTextPresenter.Display" />
 	</replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.restdiscovery.ui.NewDiscoveryView">
+	<replace-with class="org.exoplatform.ide.client.restdiscovery.ui.RestServicesDiscoveryView">
 		<when-type-is class="org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display" />
 	</replace-with>
 

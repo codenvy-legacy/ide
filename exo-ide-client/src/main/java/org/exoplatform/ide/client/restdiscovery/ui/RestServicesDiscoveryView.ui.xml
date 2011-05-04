@@ -5,9 +5,6 @@
 	xmlns:rd="urn:import:org.exoplatform.ide.client.restdiscovery.ui"
 	>
 	
-	<ui:style>
-	</ui:style>
-
 	<c:VPanel>
 
 		<c:HPanel>

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.Resizeable;
-import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
+import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
@@ -41,8 +41,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -56,21 +55,21 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    HasSetViewVisibleHandler, Resizeable
 {
 
-   /**
-    *
-    */
-   protected class ViewScrollPanel extends ScrollPanel
-   {
-      public ViewScrollPanel()
-      {
-         DOM.setStyleAttribute(getContainerElement(), "position", "absolute");
-         DOM.setStyleAttribute(getContainerElement(), "left", "0px");
-         DOM.setStyleAttribute(getContainerElement(), "top", "0px");
-         DOM.setStyleAttribute(getContainerElement(), "width", "100%");
-         DOM.setStyleAttribute(getContainerElement(), "height", "100%");
-         setSize("100%", "100%");
-      }
-   }
+//   /**
+//    *
+//    */
+//   protected class ViewScrollPanel extends ScrollPanel
+//   {
+//      public ViewScrollPanel()
+//      {
+//         DOM.setStyleAttribute(getContainerElement(), "position", "absolute");
+//         DOM.setStyleAttribute(getContainerElement(), "left", "0px");
+//         DOM.setStyleAttribute(getContainerElement(), "top", "0px");
+//         DOM.setStyleAttribute(getContainerElement(), "width", "100%");
+//         DOM.setStyleAttribute(getContainerElement(), "height", "100%");
+//         setSize("100%", "100%");
+//      }
+//   }
 
    /**
     * Is this view activated
@@ -117,10 +116,10 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
     */
    private String id;
 
-   /**
-    * Panel with scroll bars which will be placed into this view and which will be contains the content of this view.
-    */
-   private ViewScrollPanel scrollPanel;
+//   /**
+//    * Panel with scroll bars which will be placed into this view and which will be contains the content of this view.
+//    */
+//   private ViewScrollPanel scrollPanel;
 
    /**
     * List of SetViewVisibleHandler
@@ -137,10 +136,12 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
     */
    private String type;
 
-   /**
-    * Wrapper which will contains the content of this view ( includes ScrollPanel )
-    */
-   private Wrapper wrapper;
+//   /**
+//    * Wrapper which will contains the content of this view ( includes ScrollPanel )
+//    */
+//   private Wrapper wrapper;
+   
+   private Border viewBorder;
 
    /**
     * User defined content which will be displayed in this view.
@@ -210,9 +211,17 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       
       getElement().setAttribute("view-id", id);
 
-      wrapper = new Wrapper(3);
-      wrapper.setSize("100%", "100%");
-      super.add((Widget)wrapper);
+//      wrapper = new Wrapper(3);
+//      wrapper.setSize("100%", "100%");
+//      super.add((Widget)wrapper);
+      
+      viewBorder = new Border();
+      viewBorder.setBorderSize(3);
+      
+      
+      super.add(viewBorder);
+      viewBorder.setWidth("100%");
+      viewBorder.setHeight("100%");
 
       sinkEvents(Event.ONMOUSEDOWN);
    }
@@ -253,22 +262,24 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    public final void add(Widget viewWidget, boolean contentScrollable)
    {
       this.viewWidget = viewWidget;
+      viewBorder.add(viewWidget);
 
-      if (contentScrollable)
-      {
-         if (scrollPanel == null)
-         {
-            scrollPanel = new ViewScrollPanel();
-            DOM.setStyleAttribute(scrollPanel.getElement(), "zIndex", "0");
-            wrapper.add(scrollPanel);
-         }
-         scrollPanel.add(viewWidget);
-         viewWidget.setSize("100%", "100%");
-      }
-      else
-      {
-         wrapper.add(viewWidget);
-      }
+//      if (contentScrollable)
+//      {
+//         if (scrollPanel == null)
+//         {
+//            scrollPanel = new ViewScrollPanel();
+//            DOM.setStyleAttribute(scrollPanel.getElement(), "zIndex", "0");
+//            wrapper.add(scrollPanel);
+//         }
+//         scrollPanel.add(viewWidget);
+//         viewWidget.setSize("100%", "100%");
+//      }
+//      else
+//      {
+//         wrapper.add(viewWidget);
+//      }
+      
    }
 
    /**
@@ -373,15 +384,15 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       return id;
    }
 
-   /**
-    * Get ScrollPanel
-    * 
-    * @return ScrollPanel
-    */
-   public ScrollPanel getScrollPanel()
-   {
-      return scrollPanel;
-   }
+//   /**
+//    * Get ScrollPanel
+//    * 
+//    * @return ScrollPanel
+//    */
+//   public ScrollPanel getScrollPanel()
+//   {
+//      return scrollPanel;
+//   }
 
    /**
     * Get title of this view.
@@ -464,7 +475,8 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    public void setActivated(boolean activated)
    {
       this.activated = activated;
-      wrapper.setHighlited(activated);
+      viewBorder.setBorderColor(activated ? "#B6CCE8" : "transparent");
+//      wrapper.setHighlited(activated);
    }
 
    /**
@@ -535,11 +547,39 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    @Override
    public void resize(int width, int height)
    {
+      System.out.println("ViewImpl.resize( w: " + width + " h: " + height + " )");
+      
       setSize(width + "px", height + "px");
+      
+      if (viewWidget == null) {
+         System.out.println("widget is not set! returning...");
+         return;
+      }
+      
+      int viewWidth = width - 6;
+      int viewHeight = height - 6;
+      viewWidth = viewWidth < 0 ? 0 : viewWidth;
+      viewHeight = viewHeight < 0 ? 0 : viewHeight;
+      
+      if (viewWidget instanceof Resizeable) {
+         System.out.println("view widget is Resizeable");
+         ((Resizeable)viewWidget).resize(viewWidth, viewHeight);
+         return;
+      }
+      
+      viewWidget.setSize(viewWidth + "px", viewHeight + "px");
+      if (viewWidget instanceof RequiresResize) {
+         System.out.println("view widget is RequiresResize");
+         ((RequiresResize)viewWidget).onResize();
+         return;
+      }
+
+      /*
       if (viewWidget != null && viewWidget instanceof Resizeable)
       {
          ((Resizeable)viewWidget).resize(width - 6, height - 6);
       }
+      */
    }
 
 }

@@ -45,7 +45,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class NewDiscoveryView extends ViewImpl implements
+public class RestServicesDiscoveryView extends ViewImpl implements
    org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display
 {
 
@@ -62,9 +62,9 @@ public class NewDiscoveryView extends ViewImpl implements
    /**
     * UIBinder instance
     */
-   private static NewDiscoveryViewUiBinder uiBinder = GWT.create(NewDiscoveryViewUiBinder.class);
+   private static RestServicesDiscoveryViewUiBinder uiBinder = GWT.create(RestServicesDiscoveryViewUiBinder.class);
 
-   interface NewDiscoveryViewUiBinder extends UiBinder<Widget, NewDiscoveryView>
+   interface RestServicesDiscoveryViewUiBinder extends UiBinder<Widget, RestServicesDiscoveryView>
    {
    }
 
@@ -113,13 +113,11 @@ public class NewDiscoveryView extends ViewImpl implements
    /**
     * Creates new instance of this View
     */
-   public NewDiscoveryView()
+   public RestServicesDiscoveryView()
    {
       super(ID, "popup", "REST Services Discovery", new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()),
          INITIAL_WIDTH, INITIAL_HEIGHT);
-
-      Widget viewWidget = uiBinder.createAndBindUi(this);
-      add(viewWidget);
+      add(uiBinder.createAndBindUi(this));
    }
 
    /**
