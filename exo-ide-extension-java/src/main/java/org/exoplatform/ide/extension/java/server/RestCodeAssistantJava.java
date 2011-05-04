@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant;
 import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
@@ -86,7 +85,8 @@ public class RestCodeAssistantJava
 
       if (LOG.isDebugEnabled())
          LOG.error("Class info for " + fqn + " not found");
-      throw new CodeAssistantException(HTTPStatus.NOT_FOUND, "Class info for " + fqn + " not found");
+      return new TypeInfo();
+      
    }
 
    /**

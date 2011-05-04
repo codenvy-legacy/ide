@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.groovy.server.codeassistant;
 
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
@@ -138,7 +139,13 @@ public class CodeAssitantTest extends Base
       ContainerResponse cres =
          launcher.service("GET", "/ide/code-assistant/class-description?fqn=" + Address.class.getCanonicalName()
             + "error", "", null, null, null, null);
-      assertEquals(500, cres.getStatus());
+      assertEquals(HTTPStatus.OK, cres.getStatus());
+      TypeInfo info = (TypeInfo)cres.getEntity();
+      assertNull(info.getConstructors());
+      assertNull(info.getDeclaredFields());
+      assertNull(info.getName());
+      assertNull(info.getSuperClass());
+      assertNull(info.getFields());
    }
 
    @Test
