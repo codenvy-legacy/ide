@@ -224,6 +224,14 @@ public interface Images
       public static final String MODULE_ITEM = IMAGE_URL + "outline/module-item.png";
       
       public static final String LOCAL_VARIABLE_ITEM = IMAGE_URL + "outline/local-variable-item.png";      
+      
+      public static final String GLOBAL_VARIABLE_ITEM = IMAGE_URL + "outline/global-variable-item.png";
+      
+      public static final String CLASS_VARIABLE_ITEM = IMAGE_URL + "outline/class-variable-item.png";
+      
+      public static final String INSTANCE_VARIABLE_ITEM = IMAGE_URL + "outline/instance-variable-item.png";
+      
+      public static final String CONSTANT_ITEM = IMAGE_URL + "outline/constant-item.png";
    }
 
    public interface Versioning

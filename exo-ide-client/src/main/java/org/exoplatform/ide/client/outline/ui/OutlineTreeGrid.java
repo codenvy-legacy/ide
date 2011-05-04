@@ -91,6 +91,14 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    
    private static final String LOCAL_VARIABLE_ICON = Images.Outline.LOCAL_VARIABLE_ITEM;
 
+   private static final String GLOBAL_VARIABLE_ICON = Images.Outline.GLOBAL_VARIABLE_ITEM;
+
+   private static final String CLASS_VARIABLE_ICON = Images.Outline.CLASS_VARIABLE_ITEM;
+
+   private static final String INSTANCE_VARIABLE_ICON = Images.Outline.INSTANCE_VARIABLE_ITEM;
+
+   private static final String CONSTANT_ICON = Images.Outline.CONSTANT_ITEM;
+
    public OutlineTreeGrid(String id)
    {
       getElement().setId(id);
@@ -409,6 +417,18 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
 
          case LOCAL_VARIABLE:
             return LOCAL_VARIABLE_ICON;
+
+         case GLOBAL_VARIABLE:
+            return GLOBAL_VARIABLE_ICON;
+
+         case CLASS_VARIABLE:
+            return CLASS_VARIABLE_ICON;
+
+         case INSTANCE_VARIABLE:
+            return INSTANCE_VARIABLE_ICON;
+            
+         case CONSTANT:
+            return CONSTANT_ICON;            
             
          case CLASS :
             return CLASS_ICON;
