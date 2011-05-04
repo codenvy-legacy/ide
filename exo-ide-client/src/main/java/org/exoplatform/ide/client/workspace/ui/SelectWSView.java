@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.workspace.ui;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -26,6 +27,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -40,9 +42,9 @@ public class SelectWSView extends ViewImpl implements
    org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display
 {
 
-   private static final int DEFAULT_WIDTH = 400;
+   private static final int WIDTH = 450;
 
-   private static final int DEFAULT_HEIGHT = 250;
+   private static final int HEIGHT = 200;
 
    private static SelectWSViewUiBinder uiBinder = GWT.create(SelectWSViewUiBinder.class);
 
@@ -50,44 +52,49 @@ public class SelectWSView extends ViewImpl implements
    {
    }
 
+   @UiField
+   EntryPointListGrid entryPointListGrid;
+
+   @UiField
+   IButton okButton;
+
+   @UiField
+   IButton cancelButton;
+
    public SelectWSView()
    {
-      super(ID, "popup", "Workspace", new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), DEFAULT_WIDTH,
-         DEFAULT_HEIGHT, true);
+      super(ID, "popup", "Workspace", new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 
    @Override
    public ListGridItem<EntryPoint> getWorkspaceListGrid()
    {
-      return null;
+      return entryPointListGrid;
    }
 
    @Override
    public HasClickHandlers getOkButton()
    {
-      return null;
+      return okButton;
    }
 
    @Override
    public HasClickHandlers getCancelButton()
    {
-      return null;
-   }
-
-   @Override
-   public void enableOkButton()
-   {
-   }
-
-   @Override
-   public void disableOkButton()
-   {
+      return cancelButton;
    }
 
    @Override
    public void setSelectedItem(EntryPoint item)
    {
+      entryPointListGrid.selectItem(item);
+   }
+
+   @Override
+   public void setOkButtonEnabled(boolean enabled)
+   {
+      okButton.setEnabled(enabled);
    }
 
 }

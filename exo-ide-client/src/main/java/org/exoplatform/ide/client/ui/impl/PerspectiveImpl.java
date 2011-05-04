@@ -49,13 +49,13 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class PerspectiveImpl extends Layer implements Perspective, ViewVisibilityChangedHandler,
-   ViewOpenedHandler, ViewClosedHandler, ClosingViewHandler
+public class PerspectiveImpl extends Layer implements Perspective, ViewVisibilityChangedHandler, ViewOpenedHandler,
+   ViewClosedHandler, ClosingViewHandler
 {
 
-   private PopupWindowsLayer popupWindowsLayer;
+   private WindowsLayer popupWindowsLayer;
 
-   private ModalWindowsLayer modalWindowsLayer;
+   private WindowsLayer modalWindowsLayer;
 
    private List<ViewVisibilityChangedHandler> viewVisibilityChangedHandlers =
       new ArrayList<ViewVisibilityChangedHandler>();
@@ -74,32 +74,24 @@ public class PerspectiveImpl extends Layer implements Perspective, ViewVisibilit
 
       layout = new Layout();
       addLayer(layout);
-      
+
       layout.addViewVisibilityChangedHandler(this);
       layout.addViewOpenedHandler(this);
       layout.addClosingViewHandler(this);
       layout.addViewClosedHandler(this);
 
-      popupWindowsLayer = new PopupWindowsLayer();
+      popupWindowsLayer = new WindowsLayer("popup-windows");
       popupWindowsLayer.setViewOpenedHandler(this);
       popupWindowsLayer.setClosingViewHandler(this);
       popupWindowsLayer.setViewClosedHandler(this);
       addLayer(popupWindowsLayer);
 
-      modalWindowsLayer = new ModalWindowsLayer();
+      modalWindowsLayer = new WindowsLayer("modal-windows", true);
       modalWindowsLayer.setViewOpenedHandler(this);
       modalWindowsLayer.setClosingViewHandler(this);
       modalWindowsLayer.setViewClosedHandler(this);
       addLayer(modalWindowsLayer);
-
-//      layout.beginBuildLayout();
-//      buildPerspective();
-//      layout.finishBuildLayout();
    }
-
-//   public void buildPerspective()
-//   {
-//   }
 
    public Panel addPanel(String panelId, PanelDirection direction, int initialSize)
    {

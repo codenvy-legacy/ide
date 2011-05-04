@@ -327,13 +327,12 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
       viewWrapper.removeFromParent();
       viewWrappers.remove(viewId);
 
-      ViewController viewController = viewControllers.get(viewId);
       viewControllers.remove(viewId);
 
       if (viewClosedHandler != null)
       {
          ViewClosedEvent viewClosedEvent = new ViewClosedEvent(view);
-         viewClosedHandler.onViewClosed(new ViewClosedEvent(view));
+         viewClosedHandler.onViewClosed(viewClosedEvent);
       }
 
       if (views.size() == 0 && hidePanelHandler != null)
@@ -675,8 +674,6 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
    @Override
    public void onResize()
    {
-      System.out.println("onResize!!!!!!!!!!!!!!!!!!!1");
-
       if (selectedViewId != null)
       {
          ViewController controller = viewControllers.get(selectedViewId);
@@ -686,8 +683,6 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
 
    public void resize(int width, int height)
    {
-      System.out.println("resize panel [" + panelId + "]");
-
       this.width = width;
       this.height = height;
       DOM.setStyleAttribute(getElement(), "width", "" + width + "px");

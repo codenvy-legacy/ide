@@ -50,7 +50,7 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
    {
       super(id);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
@@ -59,7 +59,7 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
       eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
-   
+
    public boolean isItemsInSameFolder(List<Item> items)
    {
       List<String> hrefs = new ArrayList<String>();
@@ -97,7 +97,6 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
 
    protected abstract void updateEnabling();
 
-
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       this.entryPoint = event.getEntryPoint();
@@ -112,16 +111,14 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
 
    }
 
-
    /**
     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
     */
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (WorkspacePresenter.Display.ID.equals(event.getView().getId()))
+      if (event.getView() instanceof WorkspacePresenter.Display)
       {
-
          browserSelected = event.getView().isViewVisible();
          updateEnabling();
       }

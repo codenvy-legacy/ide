@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.ui.impl.event.HasSetViewVisibleHandl
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleEvent;
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleHandler;
 
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -54,22 +55,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTitleHandler, HasChangeViewIconHandler,
    HasSetViewVisibleHandler, Resizeable
 {
-
-//   /**
-//    *
-//    */
-//   protected class ViewScrollPanel extends ScrollPanel
-//   {
-//      public ViewScrollPanel()
-//      {
-//         DOM.setStyleAttribute(getContainerElement(), "position", "absolute");
-//         DOM.setStyleAttribute(getContainerElement(), "left", "0px");
-//         DOM.setStyleAttribute(getContainerElement(), "top", "0px");
-//         DOM.setStyleAttribute(getContainerElement(), "width", "100%");
-//         DOM.setStyleAttribute(getContainerElement(), "height", "100%");
-//         setSize("100%", "100%");
-//      }
-//   }
 
    /**
     * Is this view activated
@@ -116,11 +101,6 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
     */
    private String id;
 
-//   /**
-//    * Panel with scroll bars which will be placed into this view and which will be contains the content of this view.
-//    */
-//   private ViewScrollPanel scrollPanel;
-
    /**
     * List of SetViewVisibleHandler
     */
@@ -136,11 +116,6 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
     */
    private String type;
 
-//   /**
-//    * Wrapper which will contains the content of this view ( includes ScrollPanel )
-//    */
-//   private Wrapper wrapper;
-   
    private Border viewBorder;
 
    /**
@@ -199,7 +174,8 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
     * @param defaultHeight view's default height
     * @param canResize is this view resizeable
     */
-   public ViewImpl(String id, String type, String title, Image icon, int defaultWidth, int defaultHeight, boolean canResize)
+   public ViewImpl(String id, String type, String title, Image icon, int defaultWidth, int defaultHeight,
+      boolean canResize)
    {
       this.id = id;
       this.type = type;
@@ -208,17 +184,13 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       this.defaultWidth = defaultWidth;
       this.defaultHeight = defaultHeight;
       this.canResize = canResize;
-      
-      getElement().setAttribute("view-id", id);
 
-//      wrapper = new Wrapper(3);
-//      wrapper.setSize("100%", "100%");
-//      super.add((Widget)wrapper);
-      
+      getElement().setAttribute("view-id", id);
+      getElement().getStyle().setOverflow(Overflow.HIDDEN);
+
       viewBorder = new Border();
       viewBorder.setBorderSize(3);
-      
-      
+
       super.add(viewBorder);
       viewBorder.setWidth("100%");
       viewBorder.setHeight("100%");
@@ -263,23 +235,6 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    {
       this.viewWidget = viewWidget;
       viewBorder.add(viewWidget);
-
-//      if (contentScrollable)
-//      {
-//         if (scrollPanel == null)
-//         {
-//            scrollPanel = new ViewScrollPanel();
-//            DOM.setStyleAttribute(scrollPanel.getElement(), "zIndex", "0");
-//            wrapper.add(scrollPanel);
-//         }
-//         scrollPanel.add(viewWidget);
-//         viewWidget.setSize("100%", "100%");
-//      }
-//      else
-//      {
-//         wrapper.add(viewWidget);
-//      }
-      
    }
 
    /**
@@ -384,16 +339,6 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       return id;
    }
 
-//   /**
-//    * Get ScrollPanel
-//    * 
-//    * @return ScrollPanel
-//    */
-//   public ScrollPanel getScrollPanel()
-//   {
-//      return scrollPanel;
-//   }
-
    /**
     * Get title of this view.
     * 
@@ -476,7 +421,6 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    {
       this.activated = activated;
       viewBorder.setBorderColor(activated ? "#B6CCE8" : "transparent");
-//      wrapper.setHighlited(activated);
    }
 
    /**
@@ -547,39 +491,25 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    @Override
    public void resize(int width, int height)
    {
-      System.out.println("ViewImpl.resize( w: " + width + " h: " + height + " )");
-      
       setSize(width + "px", height + "px");
-      
-      if (viewWidget == null) {
-         System.out.println("widget is not set! returning...");
-         return;
-      }
-      
+
       int viewWidth = width - 6;
       int viewHeight = height - 6;
       viewWidth = viewWidth < 0 ? 0 : viewWidth;
       viewHeight = viewHeight < 0 ? 0 : viewHeight;
-      
-      if (viewWidget instanceof Resizeable) {
-         System.out.println("view widget is Resizeable");
+
+      if (viewWidget instanceof Resizeable)
+      {
          ((Resizeable)viewWidget).resize(viewWidth, viewHeight);
          return;
       }
-      
+
       viewWidget.setSize(viewWidth + "px", viewHeight + "px");
-      if (viewWidget instanceof RequiresResize) {
-         System.out.println("view widget is RequiresResize");
+      if (viewWidget instanceof RequiresResize)
+      {
          ((RequiresResize)viewWidget).onResize();
          return;
       }
-
-      /*
-      if (viewWidget != null && viewWidget instanceof Resizeable)
-      {
-         ((Resizeable)viewWidget).resize(width - 6, height - 6);
-      }
-      */
    }
 
 }

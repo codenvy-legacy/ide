@@ -8,9 +8,7 @@
 	<c:VPanel>
 	
 		<c:Border margin="5">
-		
-			<w:EntryPointListGrid></w:EntryPointListGrid>
-			
+			<w:EntryPointListGrid ui:field="entryPointListGrid"></w:EntryPointListGrid>
 		</c:Border>
 
 		<c:Panel height="40px">
@@ -32,5 +30,3 @@
 	</c:VPanel>
 	
 </ui:UiBinder>
- 
- 

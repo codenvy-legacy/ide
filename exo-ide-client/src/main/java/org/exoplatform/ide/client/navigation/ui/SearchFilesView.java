@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id:   $
  *
  */
-public class SearchForm extends ViewImpl implements org.exoplatform.ide.client.navigation.SearchPresenter.Display
+public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.client.navigation.SearchPresenter.Display
 {
 
    private static final int WIDTH = 450;
@@ -99,7 +99,7 @@ public class SearchForm extends ViewImpl implements org.exoplatform.ide.client.n
       return searchButton;
    }
 
-   public SearchForm()
+   public SearchFilesView()
    {
       super(ID, "popup", "Search", new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
 
@@ -123,7 +123,6 @@ public class SearchForm extends ViewImpl implements org.exoplatform.ide.client.n
       paramForm.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
       paramForm.getElement().setId(ID_DYNAMIC_FORM);
       paramForm.setSpacing(3);
-      // paramForm.setWidth(FORM_WIDTH + "px");
 
       pathField = createValueField("Path", PATH_FIELD);
 
@@ -145,7 +144,6 @@ public class SearchForm extends ViewImpl implements org.exoplatform.ide.client.n
       textField.setTitle("<NOBR>" + title + "</NOBR>");
       textField.setHeight(FIELD_HEIGHT);
       textField.setWidth(FIELD_WIDTH);
-      // textField.setSelectOnFocus(true);
       return textField;
    }
 
@@ -185,12 +183,7 @@ public class SearchForm extends ViewImpl implements org.exoplatform.ide.client.n
       button.setHeight(BUTTON_HEIGHT);
       return button;
    }
-
-   public void closeForm()
-   {
-
-   }
-
+   
    /**
     * @see org.exoplatform.ide.client.search.file.AskForNamePresenter.Display#getPathItem()
     */

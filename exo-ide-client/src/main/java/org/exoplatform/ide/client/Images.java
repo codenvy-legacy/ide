@@ -87,7 +87,7 @@ public interface Images
    public interface OutputPanel
    {
 
-      public static final String BUTTON_CLEAR = IMAGE_URL + "panel/output/buttonClear.png";
+      public static final String CLEAR_OUTPUT = IMAGE_URL + "panel/output/clearOutput.png";
 
    }
 

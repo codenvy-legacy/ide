@@ -121,9 +121,8 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (WorkspacePresenter.Display.ID.equals(event.getView().getId()))
+      if (event.getView() instanceof WorkspacePresenter.Display)
       {
-
          browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();
       }

@@ -21,6 +21,7 @@
 <module>
 	<inherits name='com.google.gwt.user.User' />
 
+
 	<replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceView">
 		<when-type-is class="org.exoplatform.ide.client.navigation.WorkspacePresenter.Display" />
 	</replace-with>   
@@ -45,10 +46,7 @@
 		<when-type-is class="org.exoplatform.ide.client.navigation.GetItemURLPresenter.Display" />
 	</replace-with>
 
-<!-- 
 	<replace-with class="org.exoplatform.ide.client.workspace.ui.SelectWSView">
- -->
-	<replace-with class="org.exoplatform.ide.client.workspace.ui.SelectWorkspaceView">
 		<when-type-is class="org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display" />
 	</replace-with>
 
@@ -78,6 +76,10 @@
 
 	<replace-with class="org.exoplatform.ide.client.editor.custom.OpenFileWithView">
 		<when-type-is class="org.exoplatform.ide.client.editor.custom.OpenFileWithPresenter.Display" />
+	</replace-with>
+
+	<replace-with class="org.exoplatform.ide.client.operation.ui.OutputViewEx">
+		<when-type-is class="org.exoplatform.ide.client.operation.OutputPresenter.Display" />
 	</replace-with>
 
 </module>

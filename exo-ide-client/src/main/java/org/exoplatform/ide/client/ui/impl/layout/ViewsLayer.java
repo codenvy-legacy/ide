@@ -60,13 +60,7 @@ public class ViewsLayer extends Layer
       @Override
       public void resize(int width, int height)
       {
-         System.out.println("Resizing view [" + view.getId() + "]");
-         System.out.println("width  > " + width);
-         System.out.println("height > " + height);
-
          setSize(width + "px", height + "px");
-         
-         System.out.println("Resizing view content...");
          if (view instanceof Resizeable)
          {
             ((Resizeable)view).resize(width, height);

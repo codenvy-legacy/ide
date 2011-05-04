@@ -29,7 +29,6 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.operation.ui.OutputView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -49,8 +48,6 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
 
    public interface Display extends IsView
    {
-      
-      String ID = "ideOutputView";
 
       void clearOutput();
 
@@ -75,7 +72,6 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
 
    public void bindDisplay()
    {
-
       display.getClearOutputButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -85,35 +81,43 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
          }
       });
 
+      for (OutputMessage message : messages)
+      {
+         display.outMessage(message);
+      }
    }
 
    public void onOutput(OutputEvent event)
    {
       try
       {
-         //eventBus.fireEvent(new RestorePerspectiveEvent());
+
          if (display == null)
          {
-            display = GWT.create(OutputView.class);
-            bindDisplay();
+            display = GWT.create(Display.class);
             IDE.getInstance().openView((View)display);
+            bindDisplay();
          }
          else
          {
             ((View)display).setViewVisible();
          }
+
          OutputMessage message = new OutputMessage(event.getMessage(), event.getOutputType());
          if (message.getType() == OutputMessage.Type.LOG)
          {
             return;
          }
+
          messages.add(message);
          display.outMessage(message);
+
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
+
    }
 
    /**

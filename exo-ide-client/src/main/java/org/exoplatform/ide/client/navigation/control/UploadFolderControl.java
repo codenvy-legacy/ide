@@ -45,8 +45,8 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 @RolesAllowed({"administrators", "developers"})
-public class UploadFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, ViewVisibilityChangedHandler,
-   EntryPointChangedHandler
+public class UploadFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+   ViewVisibilityChangedHandler, EntryPointChangedHandler
 {
 
    private final static String ID = "File/Upload Zipped Folder...";
@@ -121,9 +121,8 @@ public class UploadFolderControl extends SimpleControl implements IDEControl, It
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (WorkspacePresenter.Display.ID.equals(event.getView().getId()))
+      if (event.getView() instanceof WorkspacePresenter.Display)
       {
-
          browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();
       }

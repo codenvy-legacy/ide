@@ -28,6 +28,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -39,20 +40,23 @@ import com.google.gwt.user.client.ui.Image;
 
 public class WorkspaceView extends ViewImpl implements org.exoplatform.ide.client.navigation.WorkspacePresenter.Display
 {
- 
+   
+   static final String ID = "ideWorkspaceView";   
+
    private static final String TREE_ID = "ideNavigatorItemTreeGrid";
-   
+
    private static final String TREE_PREFIX_ID = "navigation";
-   
+
    private ItemTree treeGrid;
 
    public WorkspaceView()
    {
       super(ID, "navigation", "Workspace", new Image(IDEImageBundle.INSTANCE.workspace()));
       setHasCloseButton(false);
-      
+
       treeGrid = new ItemTree(TREE_ID, TREE_PREFIX_ID);
-      
+      DOM.setStyleAttribute(treeGrid.getElement(), "zIndex", "0");
+
       add(treeGrid, true);
    }
 

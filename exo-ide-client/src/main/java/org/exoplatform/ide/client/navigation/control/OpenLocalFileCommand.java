@@ -107,9 +107,8 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, I
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (WorkspacePresenter.Display.ID.equals(event.getView().getId()))
+      if (event.getView() instanceof WorkspacePresenter.Display)
       {
-
          browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();
       }

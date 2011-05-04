@@ -69,8 +69,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class SelectWorkspacePresenter implements EditorFileOpenedHandler,
-   EditorFileClosedHandler, ApplicationSettingsReceivedHandler, SelectWorkspaceHandler, ViewClosedHandler
+public class SelectWorkspacePresenter implements EditorFileOpenedHandler, EditorFileClosedHandler,
+   ApplicationSettingsReceivedHandler, SelectWorkspaceHandler, ViewClosedHandler
 {
 
    public interface Display extends IsView
@@ -96,15 +96,12 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler,
        */
       HasClickHandlers getCancelButton();
 
-      /*
-       * Enables Ok button
+      /**
+       * Enables or disables Ok button.
+       * 
+       * @param enabled is Ok button enabled
        */
-      void enableOkButton();
-
-      /*
-       * Disables Ok button
-       */
-      void disableOkButton();
+      void setOkButtonEnabled(boolean enabled);
 
       /**
        * 
@@ -215,18 +212,21 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler,
     */
    public void onSelectWorkspace(SelectWorkspaceEvent event)
    {
+      if (display != null)
+      {
+         return;
+      }
+
       DiscoveryService.getInstance().getEntryPoints(new DiscoveryCallback()
       {
          @Override
          protected void onSuccess(List<EntryPoint> result)
          {
             workspaceList = result;
-            if (display == null)
-            {
-               display = GWT.create(Display.class);
-               IDE.getInstance().openView(display.asView());
-               bindDisplay();
-            }
+
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
          }
       });
 
@@ -271,7 +271,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler,
          }
       });
 
-      display.disableOkButton();
+      display.setOkButtonEnabled(false);
       updateWorkspacesListGrid();
    }
 
@@ -314,17 +314,17 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler,
 
       if (selectedWorkspace == null)
       {
-         display.disableOkButton();
+         display.setOkButtonEnabled(false);
          return;
       }
 
       if (selectedWorkspace.getHref().equals(workingWorkspace))
       {
-         display.disableOkButton();
+         display.setOkButtonEnabled(false);
       }
       else
       {
-         display.enableOkButton();
+         display.setOkButtonEnabled(true);
       }
    }
 

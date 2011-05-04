@@ -101,7 +101,6 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
       }
    }
 
-
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       if (event.getEntryPoint() != null)
@@ -114,16 +113,14 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
       }
    }
 
-
    /**
     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
     */
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (WorkspacePresenter.Display.ID.equals(event.getView().getId()))
+      if (event.getView() instanceof WorkspacePresenter.Display)
       {
-
          browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();
       }

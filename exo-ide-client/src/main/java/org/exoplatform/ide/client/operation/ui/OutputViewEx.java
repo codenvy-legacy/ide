@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide.client.operation.ui;
 
+import org.exoplatform.gwtframework.ui.client.button.IconButton;
+import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
+import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -26,7 +30,10 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -39,9 +46,11 @@ import com.google.gwt.user.client.ui.Widget;
 public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client.operation.OutputPresenter.Display
 {
 
-   public static final int INITIAL_WIDTH = 450;
+   private static final String ID = "ideOutputView";
 
-   public static final int INITIAL_HEIGHT = 250;
+   public static final int WIDTH = 450;
+
+   public static final int HEIGHT = 250;
 
    private static OutputViewExUiBinder uiBinder = GWT.create(OutputViewExUiBinder.class);
 
@@ -49,27 +58,52 @@ public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client
    {
    }
 
+   private IconButton clearOutputButton;
+
+   @UiField
+   ScrollPanel scrollPanel;
+
+   @UiField
+   FlowPanel contentPanel;
+
+   @UiField
+   Toolbar toolbar;
+
+   private boolean odd = true;
+
    public OutputViewEx()
    {
-      super(ID, ViewType.OPERATION, "Output", new Image(IDEImageBundle.INSTANCE.output()),
-         INITIAL_WIDTH, INITIAL_HEIGHT);
+      super(ID, ViewType.OPERATION, "Output", new Image(IDEImageBundle.INSTANCE.output()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
+
+      String normalIcon = ImageHelper.getImageHTML(Images.OutputPanel.CLEAR_OUTPUT);
+      String disabledIcon = ImageHelper.getImageHTML(Images.OutputPanel.CLEAR_OUTPUT);
+      clearOutputButton = new IconButton(normalIcon, disabledIcon);
+      clearOutputButton.setTitle("Clear output");
+
+      toolbar.addItem(clearOutputButton, true);
    }
 
    @Override
    public void clearOutput()
    {
+      contentPanel.clear();
+      scrollPanel.scrollToTop();
    }
 
    @Override
    public void outMessage(OutputMessage message)
    {
+      OutputRecord record = new OutputRecord(message, odd);
+      odd = !odd;
+      contentPanel.add(record);
+      scrollPanel.scrollToBottom();
    }
 
    @Override
    public HasClickHandlers getClearOutputButton()
    {
-      return null;
+      return clearOutputButton;
    }
 
 }

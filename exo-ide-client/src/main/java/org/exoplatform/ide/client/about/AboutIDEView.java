@@ -41,19 +41,15 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client.about.AboutIDEPresenter.Display
 {
 
-   private static final int DEFAULT_WIDTH = 280;
+   private static final int WIDTH = 280;
 
-   private static final int DEFAULT_HEIGHT = 345;
+   private static final int HEIGHT = 345;
 
    private static final String OK_BUTTON_ID = "ideAboutFormOkButton";
 
    private final int LOGO_WIDTH = 200;
 
    private final int LOGO_HEIGHT = 75;
-
-   private final int BUTTON_WIDTH = 90;
-
-   private final int BUTTON_HEIGHT = 22;
 
    private final String VERSION;
 
@@ -75,7 +71,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    public AboutIDEView()
    {
-      super(ID, "modal", "About", new Image(IDEImageBundle.INSTANCE.about()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      super(ID, "modal", "About", new Image(IDEImageBundle.INSTANCE.about()), WIDTH, HEIGHT, false);
       BuildNumber buildNumber = GWT.create(BuildNumber.class);
       REVISION = "Revision: " + buildNumber.buildNumber();
       VERSION = "Version: " + buildNumber.version();
@@ -114,12 +110,10 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
       okButton = new IButton(OK);
       okButton.setID(OK_BUTTON_ID);
       okButton.setIcon(Images.Buttons.OK);
-      okButton.setWidth(BUTTON_WIDTH);
-      okButton.setHeight(BUTTON_HEIGHT);
 
       HorizontalPanel hLayout = new HorizontalPanel();
       hLayout.setSpacing(10);
-      hLayout.setHeight(BUTTON_HEIGHT + "px");
+      hLayout.setHeight("22px");
       hLayout.add(okButton);
       return hLayout;
    }
@@ -133,11 +127,9 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
       Label infoLabel = new Label();
       infoLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
       //     infoLabel.setCanSelectText(true);
-      infoLabel.getElement()
-         .setInnerHTML(
-            "<h3>" + NAME + "</h3>" + "<b>" + VERSION + "</b>" + "<br>" + YEAR + "&nbsp;" + COMPANY_NAME + "&nbsp;"
-               + COPYRIGHT + "<br><br>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>" + BUILD_TIME
-               + "</b>");
+      infoLabel.getElement().setInnerHTML(
+         "<h3>" + NAME + "</h3>" + "<b>" + VERSION + "</b>" + "<br>" + YEAR + "&nbsp;" + COMPANY_NAME + "&nbsp;"
+            + COPYRIGHT + "<br><br>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>" + BUILD_TIME + "</b>");
       infoLayout.add(infoLabel);
       return infoLayout;
    }
