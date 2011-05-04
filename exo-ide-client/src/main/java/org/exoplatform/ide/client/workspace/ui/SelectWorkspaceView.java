@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class SelectWSView extends ViewImpl implements
+public class SelectWorkspaceView extends ViewImpl implements
    org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display
 {
 
@@ -46,9 +46,9 @@ public class SelectWSView extends ViewImpl implements
 
    private static final int HEIGHT = 200;
 
-   private static SelectWSViewUiBinder uiBinder = GWT.create(SelectWSViewUiBinder.class);
+   private static SelectWorkspaceViewUiBinder uiBinder = GWT.create(SelectWorkspaceViewUiBinder.class);
 
-   interface SelectWSViewUiBinder extends UiBinder<Widget, SelectWSView>
+   interface SelectWorkspaceViewUiBinder extends UiBinder<Widget, SelectWorkspaceView>
    {
    }
 
@@ -61,7 +61,7 @@ public class SelectWSView extends ViewImpl implements
    @UiField
    IButton cancelButton;
 
-   public SelectWSView()
+   public SelectWorkspaceView()
    {
       super(ID, "popup", "Workspace", new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));

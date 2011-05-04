@@ -251,7 +251,7 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
       new RestoreToVersionCommandHandler(eventBus);
 
       new WorkspacePresenter(eventBus);
-      new SearchPresenter(eventBus, selectedItems, entryPoint);
+      new SearchFilesPresenter(eventBus, selectedItems, entryPoint);
       new SearchResultsPresenter(eventBus);
       new DeleteItemsPresenter(eventBus);
       new GetItemURLPresenter(eventBus);

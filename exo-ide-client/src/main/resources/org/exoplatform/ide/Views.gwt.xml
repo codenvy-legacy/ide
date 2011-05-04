@@ -26,9 +26,10 @@
 		<when-type-is class="org.exoplatform.ide.client.navigation.WorkspacePresenter.Display" />
 	</replace-with>   
 	
-	<replace-with class="org.exoplatform.ide.client.navigation.ui.SearchForm">
-		<when-type-is class="org.exoplatform.ide.client.navigation.SearchPresenter.Display" />
+	<replace-with class="org.exoplatform.ide.client.navigation.ui.SearchFilesView">
+		<when-type-is class="org.exoplatform.ide.client.navigation.SearchFilesPresenter.Display" />
 	</replace-with>
+	
 
 	<replace-with class="org.exoplatform.ide.client.navigation.ui.SearchResultsView">
 		<when-type-is class="org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display" />
@@ -46,7 +47,7 @@
 		<when-type-is class="org.exoplatform.ide.client.navigation.GetItemURLPresenter.Display" />
 	</replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.workspace.ui.SelectWSView">
+	<replace-with class="org.exoplatform.ide.client.workspace.ui.SelectWorkspaceView">
 		<when-type-is class="org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display" />
 	</replace-with>
 

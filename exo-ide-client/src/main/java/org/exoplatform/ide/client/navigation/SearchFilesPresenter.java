@@ -29,7 +29,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
@@ -54,14 +53,12 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id:   $
  *
  */
-public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, ViewClosedHandler, ItemsSelectedHandler,
+public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandler, ViewClosedHandler, ItemsSelectedHandler,
    EntryPointChangedHandler
 {
 
    public interface Display extends IsView
    {
-
-      static final String ID = "ideSearchView";
 
       HasClickHandlers getSearchButton();
 
@@ -85,7 +82,7 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
 
    private HandlerManager eventBus;
 
-   public SearchPresenter(HandlerManager eventBus, List<Item> selectedItems, String entryPoint)
+   public SearchFilesPresenter(HandlerManager eventBus, List<Item> selectedItems, String entryPoint)
    {
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;
@@ -96,10 +93,8 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
       eventBus.addHandler(SearchFilesEvent.TYPE, this);
    }
 
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      display = d;
-
       display.getSearchButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -112,7 +107,7 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
       {
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -179,7 +174,7 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
          protected void onSuccess(Folder result)
          {
             eventBus.fireEvent(new SearchResultReceivedEvent(folder));
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
 
          @Override
@@ -208,15 +203,19 @@ public class SearchPresenter implements SearchFilesHandler, ViewOpenedHandler, V
 
    public void onSearchFiles(SearchFilesEvent event)
    {
-      Display d = GWT.create(Display.class);
-      IDE.getInstance().openView((View)d);
-      bindDisplay(d);
+      if (display != null) {
+         return;
+      }
+      
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
    }
 
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (Display.ID.equals(event.getView().getId()))
+      if (event.getView() instanceof Display)
       {
          display = null;
       }

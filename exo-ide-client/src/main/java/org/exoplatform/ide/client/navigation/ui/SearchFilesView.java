@@ -38,8 +38,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id:   $
  *
  */
-public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.client.navigation.SearchPresenter.Display
+public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.client.navigation.SearchFilesPresenter.Display
 {
+   
+   private static final String ID = "ideSearchView";
 
    private static final int WIDTH = 450;
 
