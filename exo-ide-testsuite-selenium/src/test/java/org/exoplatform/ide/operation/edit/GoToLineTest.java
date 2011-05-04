@@ -41,7 +41,7 @@ public class GoToLineTest extends BaseTest
    {
       //      Open new Groovy file in editor.
 
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
@@ -53,19 +53,16 @@ public class GoToLineTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //      Select Groovy file.
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]");
+      IDE.EDITOR.waitTabPresent(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
       selenium.selectFrame("relative=top");
 
       //      Go to menu and click "View->Go To Line".
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
 
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGoToLineForm\"]/headerLabel/"));
-      assertTrue(selenium.isTextPresent("Enter line number (1..13):"));
+      IDE.GOTOLINE.checkAppearGoToLineForm();
+      IDE.GOTOLINE.checkLineNumberLabel("Enter line number (1..13):");
+      
 
       //      selenium
       //         .type(
@@ -76,6 +73,7 @@ public class GoToLineTest extends BaseTest
          .type(
             "scLocator=//DynamicForm[ID=\"ideGoToLineFormDynamicForm\"]/item[name=ideGoToLineFormLineNumberField||title=ideGoToLineFormLineNumberField||index=2||Class=TextItem]/element",
             "");
+      IDE.GOTOLINE.checkAppearExoWarningDialogGoToLineForm();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       assertTrue(selenium.isTextPresent("Go"));
@@ -192,5 +190,7 @@ public class GoToLineTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
    }
+
+
 
 }

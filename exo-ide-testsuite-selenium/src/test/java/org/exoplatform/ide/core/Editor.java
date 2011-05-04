@@ -535,4 +535,17 @@ public class Editor extends AbstractTestModule
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
+   
+   /**
+ * wait present tab editor element 
+ * @param tabIndex
+ * @throws Exception
+ */
+public void waitTabPresent(int tabIndex) throws Exception
+   {
+      waitForElementPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table");
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+   }
+   
+   
 }

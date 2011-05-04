@@ -35,7 +35,7 @@ import org.exoplatform.ide.core.Statusbar;
 import org.exoplatform.ide.core.Toolbar;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.Workspace;
-
+import org.exoplatform.ide.core.GoToLine;
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -102,6 +102,8 @@ public class IDE
    public Workspace WORKSPACE = new Workspace();
    
    public OpenWith OPENWITH = new OpenWith();
+   
+   public GoToLine GOTOLINE = new GoToLine();
 
    /**
     * Select main frame of IDE.

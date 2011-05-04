@@ -31,7 +31,7 @@ public class Statusbar extends AbstractTestModule
 
    public String getCursorPosition()
    {
-      return selenium().getText("//div[@control-id='__editor_cursor_position']//td[@text-button-text='']");
+      return selenium().getText("//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']/nobr");
    }
 
 }
