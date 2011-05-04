@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.codemirror.parser;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Stack;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -40,13 +42,24 @@ public class RubyParser extends CodeMirrorParserImpl
     * Stack of blocks "def ... end" etc.
     */
    private Stack<TokenType> enclosers = new Stack<TokenType>();
-      
+
+   private HashMap<TokenType, LinkedList<String>> localVariables = new HashMap<TokenType, LinkedList<String>>();
+   
+   private LinkedList<String> globalVariables = new LinkedList<String>();
+   
    @Override
    public void init()
    {
       super.init();
 
       nodeStack.clear();
+      
+      // initialize variable lists
+      localVariables.put(TokenType.ROOT, new LinkedList<String>());
+      localVariables.put(TokenType.CLASS, new LinkedList<String>()); 
+      localVariables.put(TokenType.MODULE, new LinkedList<String>());      
+      localVariables.put(TokenType.METHOD, new LinkedList<String>()); 
+      globalVariables.clear();
    }
 
    @Override
@@ -75,18 +88,19 @@ public class RubyParser extends CodeMirrorParserImpl
       if (isClassName(nodeStack))
       {
          currentToken = addSubToken(lineNumber, currentToken, TokenType.CLASS);
+
       }
 
       // verify on module name 
       else if (isModuleName(nodeStack))
       {
-         currentToken = addSubToken(lineNumber, currentToken, TokenType.MODULE);
+         currentToken = addSubToken(lineNumber, currentToken, TokenType.MODULE);         
       }      
       
       // verify on method name 
       else if (isMethodName(nodeStack))
       {
-         currentToken = addSubToken(lineNumber, currentToken, TokenType.METHOD);
+         currentToken = addSubToken(lineNumber, currentToken, TokenType.METHOD);         
       }
       
       else if (isBlockNode(nodeStack.lastElement()))
@@ -113,6 +127,31 @@ public class RubyParser extends CodeMirrorParserImpl
          nodeStack.clear();
       }
       
+//      // recognize local variable
+//      else if (isLocalVariable(nodeStack.lastElement().getType()))
+//      {
+//         if (isFirstVariableOccurance(nodeStack.lastElement().getContent(), TokenType.LOCAL_VARIABLE, currentToken))
+//         {
+//            addToken(currentToken, nodeStack.lastElement().getContent(), TokenType.LOCAL_VARIABLE, lineNumber);
+//         }
+//      }
+
+      // recognize global variable
+//    else if (isGlobalVariable(nodeStack.lastElement().getType()))
+//    {
+//       if (isFirstVariableOccurance(nodeStack.lastElement().getContent(), TokenType.GLOBAL_VARIABLE, currentToken))
+//       {
+//          addToken(currentToken, nodeStack.lastElement().getContent(), TokenType.GLOBAL_VARIABLE, lineNumber, null);
+//       }
+//    }      
+      
+      // recognize variable
+      else if ((newToken = isVariableWithAssigmentValue(nodeStack, currentToken)) != null)
+      {
+         addToken(newToken, lineNumber, currentToken);
+      }
+      
+      
       // recognize "("
       else if (isOpenBracket(nodeStack.lastElement()))
       {        
@@ -136,8 +175,112 @@ public class RubyParser extends CodeMirrorParserImpl
       return parseLine(Node.getNext(javaScriptNode), lineNumber, currentToken, false);
    }
 
-   private TokenBeenImpl addSubToken(int lineNumber, TokenBeenImpl currentToken, TokenType tokenType)
+//   private void addToken(TokenBeenImpl currentToken, String tokenName, TokenType tokenType, int lineNumber, String elementType)
+//   {
+//      TokenBeenImpl newToken = new TokenBeenImpl(tokenName, tokenType, lineNumber, MimeType.APPLICATION_RUBY);
+//
+//      switch (tokenType) {
+//         case LOCAL_VARIABLE:
+//            updateLocalVariableList(currentToken, tokenName);
+//            break;
+//            
+//         case GLOBAL_VARIABLE:
+//            globalVariables.add(tokenName);
+//            newToken.setElementType("nil");
+//            newToken.setName(newToken.getName() + " : nil");
+//            break;
+// 
+//         default:
+//      }
+//
+//      currentToken.addSubToken(newToken);
+//      nodeStack.clear();
+//   }
+   
+   private void addToken(TokenBeenImpl newToken, int lineNumber, TokenBeenImpl currentToken)
    {
+      switch (newToken.getType()) {
+         case LOCAL_VARIABLE:
+            updateLocalVariableList(currentToken, newToken.getName());
+            break;
+            
+         case GLOBAL_VARIABLE:
+            globalVariables.add(newToken.getName());
+//            newToken.setElementType("nil");
+//            newToken.setName(newToken.getName() + " : nil");
+            break;
+ 
+         default:
+      }
+
+      newToken.setLineNumber(lineNumber);
+      currentToken.addSubToken(newToken);
+      nodeStack.clear();
+   }
+
+   /**
+    * Search local variable with name variableName among the method's local variable, module's local variable, class's local variable, at top level of ruby file;  
+    * @param variableName
+    * @param variableType
+    * @param currentToken
+    * @return
+    */
+   private boolean isFirstVariableOccurance(String variableName, TokenType variableType, TokenBeenImpl currentToken)
+   {
+      switch (variableType) {
+         case LOCAL_VARIABLE:
+                        
+            // find variable in the toplevel local variable list
+            if (currentToken.getParentToken() == null)
+            {
+               if (localVariables.get(TokenType.ROOT).contains(variableName))
+                     return false;
+            }
+
+            // find variable in the method's local variable list
+            else if (TokenType.METHOD.equals(currentToken.getType()))
+            {
+               if (localVariables.get(TokenType.METHOD).contains(variableName))
+                  return false;
+            }       
+            
+            // find variable in the class's local variable list
+            else if (TokenType.CLASS.equals(currentToken.getParentToken().getType())
+                     || TokenType.CLASS.equals(currentToken.getType()))
+            {
+               if (localVariables.get(TokenType.CLASS).contains(variableName))
+                  return false;
+
+            }
+
+            // find variable in the module's local variable list
+            else if (TokenType.MODULE.equals(currentToken.getParentToken().getType())
+                     || TokenType.MODULE.equals(currentToken.getType()))
+            {
+               if (localVariables.get(TokenType.CLASS).contains(variableName))
+                  return false;
+            }
+            
+            else if (localVariables.get(TokenType.ROOT).contains(variableName))
+               return false;                        
+
+            break;
+            
+         case GLOBAL_VARIABLE:
+            if (globalVariables.contains(variableName))
+               return false;
+            
+            break;
+            
+         default:
+            return true;
+      }
+      
+      return true;
+   }
+
+   private TokenBeenImpl addSubToken(int lineNumber, TokenBeenImpl currentToken, TokenType tokenType)
+   {      
       TokenBeenImpl newToken = new TokenBeenImpl(nodeStack.lastElement().getContent(), tokenType, lineNumber, MimeType.APPLICATION_RUBY);
       currentToken.addSubToken(newToken);
       enclosers.push(tokenType);
@@ -147,10 +290,62 @@ public class RubyParser extends CodeMirrorParserImpl
 
    private TokenBeenImpl closeToken(int lineNumber, TokenBeenImpl currentToken)
    {
+      clearVariables(currentToken.getType());
       currentToken.setLastLineNumber(lineNumber);
       enclosers.pop();
       nodeStack.clear();
       return currentToken.getParentToken();
+   }
+
+   /**
+    * Clear variable list within the method, or module, or class
+    * @param currentTokenType
+    */
+   private void clearVariables(TokenType tokenType)
+   {
+      switch (tokenType)
+      {
+         case CLASS:
+            localVariables.get(TokenType.CLASS).clear();
+            break;
+            
+         case MODULE:
+            localVariables.get(TokenType.MODULE).clear();
+            break;
+
+         case METHOD:
+            localVariables.get(TokenType.METHOD).clear();
+            break;
+            
+         default:
+      }
+   }
+   
+   private void updateLocalVariableList(TokenBeenImpl currentToken, String localVariableName)
+   {
+      // update toplevel local variable list
+      if (currentToken.getParentToken() == null)
+      {
+         localVariables.get(TokenType.ROOT).add(localVariableName);
+      }
+      
+      // update method's local variable list
+      else if (TokenType.METHOD.equals(currentToken.getType()))
+      {
+         localVariables.get(TokenType.METHOD).add(localVariableName);
+      }
+
+      // update module's local variable list
+      else if (TokenType.MODULE.equals(currentToken.getType()))
+      {
+         localVariables.get(TokenType.MODULE).add(localVariableName);
+      }
+      
+      // update class's local variable list
+      else if (TokenType.CLASS.equals(currentToken.getType()))
+      {
+         localVariables.get(TokenType.CLASS).add(localVariableName);
+      }
    }
    
    private boolean isClassName(Stack<Node> nodeStack)
@@ -366,4 +561,284 @@ public class RubyParser extends CodeMirrorParserImpl
    {
       return "whitespace".equals(node.getType());
    }
+   
+   /**
+    * Recognize ruby local variable
+    * @param nodeType
+    * @return
+    */
+   private boolean isLocalVariable(String nodeType)
+   {
+      return "rb-variable".equals(nodeType);
+   }
+
+   /**
+    * Recognize ruby global variable like "$globalVar"
+    * @param nodeType
+    * @return
+    */
+   private boolean isGlobalVariable(String nodeType)
+   {
+      return "rb-global-variable".equals(nodeType);
+   }
+   
+   /**
+    * Recognize instance variable like "@instanceVar"
+    * @param nodeType
+    * @return
+    */
+   private boolean isInstanceVariable(String nodeType)
+   {
+      return "rb-instance-var".equals(nodeType);
+   }
+   
+   /**
+    * Recognize class variable like "@@classVar"
+    * @param nodeType
+    * @return
+    */
+   private boolean isClassVariable(String nodeType)
+   {
+      return "rb-class-var".equals(nodeType);
+   }
+   
+   /**
+    * Recognize variable with assigment "h = 11" 
+    * @param nodeStack 
+    * @param currentToken
+    * @return element type from "number", "string" etc.
+    */
+   private TokenBeenImpl isVariableWithAssigmentValue(Stack<Node> nodeStack, TokenBeenImpl currentToken)
+   {
+      if (nodeStack.size() > 2)
+      {
+         // recognize type of assignment
+         Stack<Node> cloneNodeStack = (Stack<Node>) nodeStack.clone();
+         String possibleElementType = null;
+         Node lastNode = cloneNodeStack.pop();
+         
+         if (isFixNumber(lastNode.getType()))
+         {
+            possibleElementType = "Fixnum";
+         }
+
+         else if (isFloatNumber(lastNode.getType()))
+         {
+            possibleElementType = "Float";
+         }
+
+         else if (isHexNumber(lastNode.getType())
+                  || isBinaryNumber(lastNode.getType())
+                 )
+         {
+            possibleElementType = "Number";
+         }
+         
+         else if (isAscii(lastNode.getType()))
+         {
+            possibleElementType = "Ascii";
+         }         
+         
+         else if (isRegexp(lastNode.getType()))
+         {
+            possibleElementType = "Regexp";
+         }
+         
+         // recognize start of array
+         else if (isOpenSquareBracket(lastNode))
+         {
+            possibleElementType = "Array";
+         }
+         
+         // recognize start of hashes
+         else if (isOpenBrace(lastNode))
+         {
+            possibleElementType = "Hash";
+         }
+         
+         // test if this is symbol like ":name"
+         else if (isSymbol(lastNode))
+         {
+            possibleElementType = "Symbol";
+         }   
+         
+         // test if this is "nil" value
+         else if (isNil(lastNode))
+         {
+            possibleElementType = "NilClass";
+         }
+         
+         // test if this is string value
+         else if (isString(lastNode.getType()))
+         {
+            possibleElementType = "String";
+         }
+      
+         // recognize variable assignment statement like "a ="
+         TokenBeenImpl newToken;
+         if (cloneNodeStack.size() > 1
+                && (newToken = isVariableWithAssignmentStatement(cloneNodeStack, currentToken)) != null)
+         {
+            if (possibleElementType != null)
+            {
+               newToken.setElementType(possibleElementType);
+               newToken.setName(newToken.getName() + " : " + possibleElementType);
+            }
+            
+            return newToken;
+         }
+      }
+         
+      return null;
+   }
+
+   /**
+    * 
+    * @param currentToken
+    * @param safe nodeStack
+    * @return element type
+    */
+   private TokenBeenImpl isVariableWithAssignmentStatement(Stack<Node> nodeStack, TokenBeenImpl currentToken)
+   {
+      if (nodeStack.size() > 1)
+      {         
+         Stack<Node> cloneNodeStack = (Stack<Node>) nodeStack.clone();
+         TokenType variableType;
+         if (isEqualSign(cloneNodeStack.get(cloneNodeStack.size() - 1))
+              && (variableType = isVariable(cloneNodeStack.get(cloneNodeStack.size() - 2).getType())) != null 
+              && isFirstVariableOccurance(
+                    cloneNodeStack.get(cloneNodeStack.size() - 2).getContent(),
+                    variableType,
+                    currentToken
+                 )
+            )
+         {
+            TokenBeenImpl newToken = new TokenBeenImpl(cloneNodeStack.get(cloneNodeStack.size() - 2).getContent(), variableType, 0, MimeType.APPLICATION_RUBY);
+            newToken.setElementType("Object");
+            return newToken;
+         }
+      }
+      
+      return null;
+   }
+   
+   /**
+    * Return TokenType of variable or null 
+    * @param node type
+    * @return
+    */
+   private TokenType isVariable(String nodeType)   {
+      if (isLocalVariable(nodeType))
+         return TokenType.LOCAL_VARIABLE;
+         
+      if (isGlobalVariable(nodeType))
+         return TokenType.GLOBAL_VARIABLE;
+
+      if (isInstanceVariable(nodeType))
+         return TokenType.INSTANCE_VARIABLE;
+      
+      if (isClassVariable(nodeType))
+         return TokenType.CLASS_VARIABLE;
+      
+      return null;
+   }
+
+   /**
+    * @return true if this is fix number
+    */
+   private boolean isFixNumber(String nodeType) {
+      return nodeType.contains("rb-fixnum");
+   };
+   
+   /**
+    * @param node
+    * @return true if this is keyword "true" or "false"
+    */
+   private boolean isBoolean(Node node)
+   {
+      return "rb-keyword".equals(node.getType()) 
+               && ("true".equals(node.getContent()) 
+                    || "false".equals(node.getContent())
+                  );
+   }
+   
+   /**
+    * @param type
+    * @return true if this is string value
+    */
+   private boolean isString(String nodeType)
+   {
+      return "rb-string".equals(nodeType);
+   }
+   
+   /**
+    * @param node
+    * @return true if this is "nil" value
+    */
+   private boolean isNil(Node node)
+   {
+      return "rb-keyword".equals(node.getType()) && ("nil".equals(node.getContent()));
+   }
+   
+   /**
+    * @param node
+    * @return true if this is "symbol" value
+    */
+   private boolean isSymbol(Node node)
+   {
+      return "rb-symbol".equals(node.getType());
+   }
+
+   /**
+    * @return true if this is float number
+    */
+   private boolean isFloatNumber(String nodeType)
+   {
+      return "rb-float".equals(nodeType);
+   }
+   
+   /**
+    * @return true if this is regular expression
+    */
+   private boolean isRegexp(String nodeType)
+   {
+      return "rb-regexp".equals(nodeType);
+   }
+   
+   /**
+    * @param node
+    * @return true if this is "["
+    */
+   private boolean isOpenSquareBracket(Node node)
+   {
+      return "rb-normal".equals(node.getType()) && ("[".equals(node.getContent()));
+   }
+   
+   /**
+    * @param nodeType
+    * @return true if this is hex number like  "0xffff"
+    */
+   private boolean isHexNumber(String nodeType)
+   {
+      return "rb-hexnum".equals(nodeType);
+   }
+   
+   /**
+    * @param nodeType
+    * @return true if this is binary number like  "0b01011"
+    */
+   private boolean isBinaryNumber(String nodeType)
+   {
+      return "rb-binary".equals(nodeType);
+   }
+
+   /**
+    * @param nodeType
+    * @return true if this is ascii value like "?\C-a  "
+    */
+   private boolean isAscii(String nodeType)
+   {
+      return "rb-ascii".equals(nodeType);
+   }
+   
 }
