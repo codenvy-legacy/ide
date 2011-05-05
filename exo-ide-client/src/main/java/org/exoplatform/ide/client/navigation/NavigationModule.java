@@ -356,7 +356,7 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
       {
          public void onKeyPress(KeyPressEvent event)
          {
-            if (event.getCharCode() == KeyCodes.KEY_ENTER)
+            if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
             {
                createFolder(href, form);
             }

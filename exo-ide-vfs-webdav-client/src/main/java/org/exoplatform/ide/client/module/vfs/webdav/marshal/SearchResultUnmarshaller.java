@@ -131,7 +131,7 @@ public class SearchResultUnmarshaller implements Unmarshallable
          String icon = getIcon(contentType);
          item.setIcon(icon);
       }
-
+      item.setName(getProperty(item, ItemProperty.DISPLAYNAME).getValue()); 
       folder.getChildren().add(item);
    }
    

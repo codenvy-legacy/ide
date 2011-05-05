@@ -8,7 +8,7 @@ LOG_OPTS="-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.Log4J
 SECURITY_OPTS="-Djava.security.auth.login.config=../conf/jaas.conf"
 EXO_CONFIG_OPTS="-Xshare:auto -Xms128m -Xmx512m"
 JAVA_SRC="$JAVA_HOME/src.zip"
-EXO_OPTS="-Djavasrc=$JAVA_HOME/src.zip -Djre.lib=$JAVA_HOME/jre/lib"
+EXO_OPTS="-Djavasrc=$JAVA_HOME/src.zip -Djre.lib=$JAVA_HOME/jre/lib -Dorg.exoplatform.mimetypes=conf/mimetypes.properties"
 #REMOTE_DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"
 
 JAVA_OPTS="$JAVA_OPTS $LOG_OPTS $SECURITY_OPTS $EXO_CONFIG_OPTS $EXO_OPTS $REMOTE_DEBUG"

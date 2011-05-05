@@ -21,6 +21,8 @@ package org.exoplatform.ide.client.framework.vfs;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.google.gwt.http.client.URL;
+
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
 
@@ -33,6 +35,8 @@ import org.exoplatform.gwtframework.commons.xml.QName;
 public abstract class Item
 {
 
+   private String name;
+   
    private String href;
 
    private Collection<Property> properties = new ArrayList<Property>();
@@ -99,7 +103,7 @@ public abstract class Item
       return null;
    }
 
-   public String getName()
+   private String getNameFromHref()
    {
       String name = href;
       if (name.endsWith("/"))
@@ -140,5 +144,23 @@ public abstract class Item
    public void setSystem(boolean isSystem)
    {
       this.isSystem = isSystem;
+   }
+   
+   /**
+    * @return display name 
+    */
+   public String getName()
+   {
+      if (name == null)
+         return getNameFromHref();
+      return name;
+   }
+   
+   /**
+    * @param name
+    */
+   public void setName(String name)
+   {
+      this.name = name;
    }
 }

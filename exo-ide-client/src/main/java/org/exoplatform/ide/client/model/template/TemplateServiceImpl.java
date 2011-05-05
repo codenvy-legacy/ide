@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.samples.netvibes.NetvibesSamples;
 import org.exoplatform.ide.client.samples.sc.ShoppingCardProject;
 import org.exoplatform.ide.client.samples.twittertrends.TwitterTrendsProject;
 
+import com.gargoylesoftware.htmlunit.util.StringUtils;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Random;
@@ -164,7 +165,7 @@ public class TemplateServiceImpl extends TemplateService
       
       TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
       int[] acceptStatus = new int[]{HTTPStatus.OK, HTTPStatus.NOT_FOUND};
-
+ 
       callback.setResult(templateList);
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);

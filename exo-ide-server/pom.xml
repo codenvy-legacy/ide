@@ -193,6 +193,10 @@
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
+      <dependency>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-vfs</artifactId>
+   </dependency>
    </dependencies>
    <build>
       <resources>

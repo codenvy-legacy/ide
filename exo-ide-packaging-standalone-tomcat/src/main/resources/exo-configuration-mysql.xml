@@ -30,6 +30,12 @@
       <type>org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyClassLoaderProvider</type>
    </component>
 
+
+  <component>
+      <key>org.exoplatform.services.jcr.ext.distribution.DataDistributionManager</key>
+      <type>org.exoplatform.services.jcr.ext.distribution.impl.DataDistributionManagerImpl</type>
+   </component>
+
  <component>
       <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
       <type>org.exoplatform.services.log.LogConfigurationInitializer</type>

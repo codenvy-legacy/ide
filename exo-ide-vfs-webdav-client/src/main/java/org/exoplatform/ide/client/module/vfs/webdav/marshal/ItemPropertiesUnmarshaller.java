@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 
 /**
  * Created by The eXo Platform SAS .
@@ -76,7 +77,8 @@ public class ItemPropertiesUnmarshaller implements Unmarshallable
       PropfindResponse propfindResponse = PropfindResponse.parse(body);
       Resource resource = propfindResponse.getResource();
 
-      item.setHref(resource.getHref());
+      item.setHref(URL.decode(resource.getHref()));
+      item.setName(resource.getDisplayname());
 
       item.getProperties().clear();
       item.getProperties().addAll(resource.getProperties());

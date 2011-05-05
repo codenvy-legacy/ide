@@ -21,10 +21,10 @@
       <exo.snapshots.repo.url>http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
       <exo.product.name>exo-ide</exo.product.name>
       <!-- eXo Modules -->
-      <org.exoplatform.jcr.version>1.14.0-CR1</org.exoplatform.jcr.version>
-      <org.exoplatform.kernel.version>2.3.0-CR1</org.exoplatform.kernel.version>
-      <org.exoplatform.core.version>2.4.0-CR1</org.exoplatform.core.version>
-      <org.exoplatform.ws.version>2.2.0-CR1</org.exoplatform.ws.version>
+      <org.exoplatform.jcr.version>1.14.0-GA-SNAPSHOT</org.exoplatform.jcr.version>
+      <org.exoplatform.kernel.version>2.3.0-GA-SNAPSHOT</org.exoplatform.kernel.version>
+      <org.exoplatform.core.version>2.4.0-GA-SNAPSHOT</org.exoplatform.core.version>
+      <org.exoplatform.ws.version>2.2.0-GA-SNAPSHOT</org.exoplatform.ws.version>
       <org.exoplatform.gwtframework.version>1.2.0-SNAPSHOT</org.exoplatform.gwtframework.version>
       <org.exoplatform.gatein.version>3.1.4-PLF</org.exoplatform.gatein.version>
       <!-- Third parties -->

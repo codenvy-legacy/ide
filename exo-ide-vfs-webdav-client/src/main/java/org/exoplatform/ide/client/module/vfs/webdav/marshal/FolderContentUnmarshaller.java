@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 
 /**
  * Created by The eXo Platform SAS .
@@ -96,8 +97,8 @@ public class FolderContentUnmarshaller implements Unmarshallable
          
          Resource child = resources.get(i);
 
-         String href = child.getHref();
-
+         String href = URL.decode(child.getHref());
+         
          Item item;
          if (child.isCollection())
          {
@@ -121,6 +122,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
             item.setIcon(icon);
          }
          checkIsSystemItem(item);
+         item.setName(child.getDisplayname()); //IDE-760
          folder.getChildren().add(item);
       }
       
