@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -59,9 +60,12 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
 
    private final String TITLE = "Version history";
 
-   private IButton openVersionButton;
+//   private IButton openVersionButton;
+//   private IButton closeButton;
 
-   private IButton closeButton;
+   private ImageButton openVersionButton;
+   
+   private ImageButton closeButton;
 
    private VersionsGrid versionsGrid;
 
@@ -109,8 +113,14 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
       hLayout.setHeight(BUTTON_HEIGHT + "px");
       hLayout.setSpacing(5);
 
-      openVersionButton = createButton("Open", ID_OPEN_VERSION_BUTTON, Images.Buttons.OK);
-      closeButton = createButton("Close", ID_CLOSE_BUTTON, Images.Buttons.CANCEL);
+      openVersionButton = new ImageButton("Open", "ok");
+      openVersionButton.setId(ID_OPEN_VERSION_BUTTON);
+      
+      closeButton = new ImageButton("Close", "cancel");
+      closeButton.setId(ID_CLOSE_BUTTON);
+      
+//      openVersionButton = createButton("Open", ID_OPEN_VERSION_BUTTON, Images.Buttons.OK);
+//      closeButton = createButton("Close", ID_CLOSE_BUTTON, Images.Buttons.CANCEL);
 
       hLayout.add(openVersionButton);
       hLayout.add(closeButton);
@@ -118,15 +128,15 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
       return hLayout;
    }
 
-   private IButton createButton(String title, String id, String image)
-   {
-      IButton button = new IButton(title);
-      button.setID(id);
-      button.setHeight(BUTTON_HEIGHT);
-      button.setWidth(BUTTON_WIDTH);
-      button.setIcon(image);
-      return button;
-   }
+//   private IButton createButton(String title, String id, String image)
+//   {
+//      IButton button = new IButton(title);
+//      button.setID(id);
+//      button.setHeight(BUTTON_HEIGHT);
+//      button.setWidth(BUTTON_WIDTH);
+//      button.setIcon(image);
+//      return button;
+//   }
 
    /**
     * @see org.exoplatform.ide.client.versioning.ViewVersionsPresenter.Display#getOpenVersionButton()
@@ -185,11 +195,13 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
    {
       if (enable)
       {
-         openVersionButton.enable();
+         //openVersionButton.enable();
+         openVersionButton.setEnabled(true);
       }
       else
       {
-         openVersionButton.disable();
+         //openVersionButton.disable();
+         openVersionButton.setEnabled(false);
       }
 
    }

@@ -35,6 +35,22 @@ public interface IDEImageBundle extends ClientBundle
    public static final IDEImageBundle INSTANCE = GWT.create(IDEImageBundle.class);
 
    /*
+    * BUTTONS
+    */
+   
+   @Source("bundled-images/ok.png")
+   ImageResource ok();
+
+   @Source("bundled-images/ok-disabled.png")
+   ImageResource okDisabled();
+   
+   @Source("bundled-images/cancel.png")
+   ImageResource cancel();
+
+   @Source("bundled-images/cancel-disabled.png")
+   ImageResource cancelDisabled();
+
+   /*
     * BROWSER
     */
 

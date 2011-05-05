@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.template.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
@@ -68,19 +69,18 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
 
    private static final String TITLE = "Save file as template";
 
-   private final String SAVE = "Save";
-
-   private final String CANCEL = "Cancel";
-
    private TextField nameField;
 
    private TextAreaItem descriptionField;
 
    private TextField typeField;
 
-   private IButton saveButton;
+//   private IButton saveButton;
+//   private IButton cancelButton;
 
-   private IButton cancelButton;
+   private ImageButton saveButton;
+   
+   private ImageButton cancelButton;
 
    private SaveAsTemplatePresenter presenter;
 
@@ -146,17 +146,23 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       buttonsLayout.setSpacing(5);
       buttonsLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-      saveButton = new IButton(SAVE);
-      saveButton.setID(ID_SAVE_BUTTON);
-      saveButton.setWidth(BUTTON_WIDTH);
-      saveButton.setHeight(BUTTON_HEIGHT);
-      saveButton.setIcon(Images.Buttons.OK);
+//      saveButton = new IButton(SAVE);
+//      saveButton.setID(ID_SAVE_BUTTON);
+//      saveButton.setWidth(BUTTON_WIDTH);
+//      saveButton.setHeight(BUTTON_HEIGHT);
+//      saveButton.setIcon(Images.Buttons.OK);
+//
+//      cancelButton = new IButton(CANCEL);
+//      cancelButton.setID(ID_CANCEL_BUTTON);
+//      cancelButton.setWidth(BUTTON_WIDTH);
+//      cancelButton.setHeight(BUTTON_HEIGHT);
+//      cancelButton.setIcon(Images.Buttons.NO);
 
-      cancelButton = new IButton(CANCEL);
-      cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(BUTTON_WIDTH);
-      cancelButton.setHeight(BUTTON_HEIGHT);
-      cancelButton.setIcon(Images.Buttons.NO);
+      saveButton = new ImageButton("Save", "ok");
+      saveButton.setId(ID_SAVE_BUTTON);
+
+      cancelButton = new ImageButton("Cancel", "cancel");
+      cancelButton.setId(ID_CANCEL_BUTTON);
 
       buttonsLayout.add(saveButton);
       buttonsLayout.add(cancelButton);
@@ -218,7 +224,8 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
     */
    public void disableSaveButton()
    {
-      saveButton.disable();
+      //saveButton.disable();
+      saveButton.setEnabled(false);
    }
 
    /**
@@ -226,7 +233,8 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
     */
    public void enableSaveButton()
    {
-      saveButton.enable();
+      //saveButton.enable();
+      saveButton.setEnabled(true);
    }
 
 }

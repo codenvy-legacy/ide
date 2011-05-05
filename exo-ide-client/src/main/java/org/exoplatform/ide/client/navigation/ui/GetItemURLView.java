@@ -19,11 +19,10 @@
 package org.exoplatform.ide.client.navigation.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
@@ -48,8 +47,6 @@ public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.clie
 
    private static final int DEFAULT_HEIGHT = 150;
    
-   private static final int BUTTON_WIDTH = 90;
-
    private static final int BUTTON_HEIGHT = 22;
 
    public static final String URL_FIELD = "ideGetItemURLFormURLField";
@@ -60,7 +57,8 @@ public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.clie
 
    private TextField urlField;
 
-   private IButton okButton;
+   //private IButton okButton;
+   private ImageButton okButton;
    
    private VerticalPanel mainPanel;
 
@@ -115,12 +113,14 @@ public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.clie
       HorizontalPanel buttonsLayout = new HorizontalPanel();
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
 
-      okButton = new IButton("OK");
-      okButton.setID(ID_OK_BUTTON);
-      okButton.setWidth(BUTTON_WIDTH);
-      okButton.setHeight(BUTTON_HEIGHT);
-      okButton.setIcon(Images.Buttons.OK);
+//      okButton = new IButton("OK");
+//      okButton.setID(ID_OK_BUTTON);
+//      okButton.setWidth(BUTTON_WIDTH);
+//      okButton.setHeight(BUTTON_HEIGHT);
+//      okButton.setIcon(Images.Buttons.OK);
 
+      okButton = new ImageButton("Ok", "ok");
+      okButton.setId(ID_OK_BUTTON);
       buttonsLayout.add(okButton);
       
       mainPanel.add(buttonsLayout);

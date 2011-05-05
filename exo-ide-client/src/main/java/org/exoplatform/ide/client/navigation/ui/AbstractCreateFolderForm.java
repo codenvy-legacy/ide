@@ -19,11 +19,10 @@
 package org.exoplatform.ide.client.navigation.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
-import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.navigation.CreateFolderDisplay;
 
@@ -66,9 +65,11 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
 
    private TextField folderNameField;
 
-   private IButton createButton;
+//   private IButton createButton;
+//   private IButton cancelButton;
 
-   private IButton cancelButton;
+   private ImageButton createButton;
+   private ImageButton cancelButton;
 
    private String submitButtonTitle;
 
@@ -127,17 +128,23 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
 
-      createButton = new IButton(submitButtonTitle);
-      createButton.setID(ID_CREATE_BUTTON);
-      createButton.setWidth(BUTTON_WIDTH);
-      createButton.setHeight(BUTTON_HEIGHT);
-      createButton.setIcon(Images.Buttons.OK);
+//      createButton = new IButton(submitButtonTitle);
+//      createButton.setID(ID_CREATE_BUTTON);
+//      createButton.setWidth(BUTTON_WIDTH);
+//      createButton.setHeight(BUTTON_HEIGHT);
+//      createButton.setIcon(Images.Buttons.OK);
+//
+//      cancelButton = new IButton("Cancel");
+//      cancelButton.setID(ID_CANCEL_BUTTON);
+//      cancelButton.setWidth(BUTTON_WIDTH);
+//      cancelButton.setHeight(BUTTON_HEIGHT);
+//      cancelButton.setIcon(Images.Buttons.NO);
 
-      cancelButton = new IButton("Cancel");
-      cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(BUTTON_WIDTH);
-      cancelButton.setHeight(BUTTON_HEIGHT);
-      cancelButton.setIcon(Images.Buttons.NO);
+      createButton = new ImageButton(submitButtonTitle, "ok");
+      createButton.setId(ID_CREATE_BUTTON);
+
+      cancelButton = new ImageButton("Cancel", "cencel");
+      cancelButton.setId(ID_CANCEL_BUTTON);
 
       buttonsLayout.add(createButton);
       buttonsLayout.add(cancelButton);

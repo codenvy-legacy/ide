@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.edit.ui;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
@@ -64,9 +65,11 @@ public class GoToLineForm extends DialogWindow implements org.exoplatform.ide.cl
 
    private TextField lineNumberField;
 
-   private IButton goButton;
+//   private IButton goButton;
+//   private IButton cancelButton;
 
-   private IButton cancelButton;
+   private ImageButton goButton;
+   private ImageButton cancelButton;
 
    private DynamicForm paramsForm;
 
@@ -134,17 +137,23 @@ public class GoToLineForm extends DialogWindow implements org.exoplatform.ide.cl
       buttonsLayout.setSpacing(5);
       buttonsLayout.setHeight((22 + 25) + "px");
 
-      goButton = new IButton("Go");
-      goButton.setID(ID_GO_BUTTON);
-      goButton.setWidth(90);
-      goButton.setHeight(22);
-      goButton.setIcon(Images.Buttons.OK);
+//      goButton = new IButton("Go");
+//      goButton.setID(ID_GO_BUTTON);
+//      goButton.setWidth(90);
+//      goButton.setHeight(22);
+//      goButton.setIcon(Images.Buttons.OK);
 
-      cancelButton = new IButton("Cancel");
-      cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(90);
-      cancelButton.setHeight(22);
-      cancelButton.setIcon(Images.Buttons.NO);
+      goButton = new ImageButton("Go", "ok");
+      goButton.setId(ID_GO_BUTTON);
+
+      cancelButton = new ImageButton("Cancel", "cancel");
+      cancelButton.setId(ID_CANCEL_BUTTON);
+
+//      cancelButton = new IButton("Cancel");
+//      cancelButton.setID(ID_CANCEL_BUTTON);
+//      cancelButton.setWidth(90);
+//      cancelButton.setHeight(22);
+//      cancelButton.setIcon(Images.Buttons.NO);
 
       buttonsLayout.add(goButton);
       buttonsLayout.add(cancelButton);

@@ -137,7 +137,7 @@ public interface Images
    public interface Buttons
    {
 
-      public static final String OK = IMAGE_URL + "buttons/ok.png";
+      //public static final String OK = IMAGE_URL + "buttons/ok.png";
 
       public static final String NO = IMAGE_URL + "buttons/no.png";
 

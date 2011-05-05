@@ -19,12 +19,11 @@
 package org.exoplatform.ide.client.navigation.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.navigation.CreateFolderDisplay;
@@ -51,8 +50,6 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
 
    public static final int HEIGHT = 160;
 
-   private static final int BUTTON_WIDTH = 90;
-
    private static final int BUTTON_HEIGHT = 22;
 
    public static final String ID = "ideCreateFolderForm";
@@ -69,9 +66,11 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
 
    private TextField folderNameField;
 
-   private IButton createButton;
+//   private IButton createButton;
+//   private IButton cancelButton;
 
-   private IButton cancelButton;
+   private ImageButton createButton;
+   private ImageButton cancelButton;
 
    private String submitButtonTitle;
 
@@ -143,17 +142,23 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
 
-      createButton = new IButton(submitButtonTitle);
-      createButton.setID(ID_CREATE_BUTTON);
-      createButton.setWidth(BUTTON_WIDTH);
-      createButton.setHeight(BUTTON_HEIGHT);
-      createButton.setIcon(Images.Buttons.OK);
+//      createButton = new IButton(submitButtonTitle);
+//      createButton.setID(ID_CREATE_BUTTON);
+//      createButton.setWidth(BUTTON_WIDTH);
+//      createButton.setHeight(BUTTON_HEIGHT);
+//      createButton.setIcon(Images.Buttons.OK);
+//
+//      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
+//      cancelButton.setID(ID_CANCEL_BUTTON);
+//      cancelButton.setWidth(BUTTON_WIDTH);
+//      cancelButton.setHeight(BUTTON_HEIGHT);
+//      cancelButton.setIcon(Images.Buttons.NO);
 
-      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
-      cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(BUTTON_WIDTH);
-      cancelButton.setHeight(BUTTON_HEIGHT);
-      cancelButton.setIcon(Images.Buttons.NO);
+      createButton = new ImageButton(submitButtonTitle, "ok");
+      createButton.setId(ID_CREATE_BUTTON);
+
+      cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton(), "cancel");
+      cancelButton.setId(ID_CANCEL_BUTTON);
 
       buttonsLayout.add(createButton);
       buttonsLayout.add(cancelButton);

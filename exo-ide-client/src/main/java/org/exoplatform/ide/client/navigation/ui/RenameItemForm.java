@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
@@ -91,9 +92,11 @@ public class RenameItemForm extends DialogWindow implements
 
    private ComboBoxField mimeTypesField;
 
-   private IButton renameButton;
+//   private IButton renameButton;
+//   private IButton cancelButton;
 
-   private IButton cancelButton;
+   private ImageButton renameButton;
+   private ImageButton cancelButton;
 
    private RenameItemPresenter presenter;
 
@@ -168,17 +171,23 @@ public class RenameItemForm extends DialogWindow implements
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
 
-      renameButton = new IButton("Rename");
-      renameButton.setID(ID_RENAME_BUTTON);
-      renameButton.setWidth(BUTTON_WIDTH);
-      renameButton.setHeight(BUTTON_HEIGHT);
-      renameButton.setIcon(Images.Buttons.OK);
+//      renameButton = new IButton("Rename");
+//      renameButton.setID(ID_RENAME_BUTTON);
+//      renameButton.setWidth(BUTTON_WIDTH);
+//      renameButton.setHeight(BUTTON_HEIGHT);
+//      renameButton.setIcon(Images.Buttons.OK);
+//
+//      cancelButton = new IButton("Cancel");
+//      cancelButton.setID(ID_CANCEL_BUTTON);
+//      cancelButton.setWidth(BUTTON_WIDTH);
+//      cancelButton.setHeight(BUTTON_HEIGHT);
+//      cancelButton.setIcon(Images.Buttons.NO);
 
-      cancelButton = new IButton("Cancel");
-      cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(BUTTON_WIDTH);
-      cancelButton.setHeight(BUTTON_HEIGHT);
-      cancelButton.setIcon(Images.Buttons.NO);
+      renameButton = new ImageButton("Rename", "ok");
+      renameButton.setId(ID_RENAME_BUTTON);
+
+      cancelButton = new ImageButton("Cancel", "cancel");
+      cancelButton.setId(ID_CANCEL_BUTTON);
 
       buttonsLayout.add(renameButton);
       buttonsLayout.add(cancelButton);
@@ -249,7 +258,8 @@ public class RenameItemForm extends DialogWindow implements
     */
    public void enableRenameButton()
    {
-      renameButton.enable();
+      //renameButton.enable();
+      renameButton.setEnabled(true);
    }
 
    /**
@@ -257,7 +267,8 @@ public class RenameItemForm extends DialogWindow implements
     */
    public void disableRenameButton()
    {
-      renameButton.disable();
+      //renameButton.disable();
+      renameButton.setEnabled(false);
    }
 
    public void addLabel(String style, String text)

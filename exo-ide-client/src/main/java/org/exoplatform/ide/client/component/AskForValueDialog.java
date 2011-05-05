@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
@@ -75,7 +76,8 @@ public class AskForValueDialog extends DialogWindow
 
    protected TextField textItem;
 
-   private IButton okButton;
+   //private IButton okButton;
+   private ImageButton okButton;
 
    public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback,
       ValueDiscardCallback discardCallback)
@@ -150,7 +152,8 @@ public class AskForValueDialog extends DialogWindow
          {
             if (event.getValue() == null)
             {
-               okButton.setDisabled(true);
+               //okButton.setDisabled(true);
+               okButton.setEnabled(false);
                return;
             }
             if (event.getValue() instanceof String)
@@ -158,11 +161,13 @@ public class AskForValueDialog extends DialogWindow
                final String value = (String)event.getValue();
                if (value.length() == 0)
                {
-                  okButton.setDisabled(true);
+                  //okButton.setDisabled(true);
+                  okButton.setEnabled(false);
                }
                else
                {
-                  okButton.setDisabled(false);
+                  //okButton.setDisabled(false);
+                  okButton.setEnabled(true);
                }
             }
          }
@@ -179,15 +184,22 @@ public class AskForValueDialog extends DialogWindow
       buttonsLayout.setHeight(22 + "px");
       buttonsLayout.setSpacing(5);
 
-      okButton = new IButton("Yes");
-      okButton.setID(ID_OK_BUTTON);
-      okButton.setWidth(90);
-      okButton.setHeight(22);
-      okButton.setIcon(Images.Buttons.OK);
+//      okButton = new IButton("Yes");
+//      okButton.setID(ID_OK_BUTTON);
+//      okButton.setWidth(90);
+//      okButton.setHeight(22);
+//      okButton.setIcon(Images.Buttons.OK);
+//      if (defaultValue == null || defaultValue.length() == 0)
+//      {
+//         okButton.setDisabled(true);
+//      }
+      
+      okButton = new ImageButton("Yes", "yes");
+      okButton.setId(ID_OK_BUTTON);
       if (defaultValue == null || defaultValue.length() == 0)
       {
-         okButton.setDisabled(true);
-      }
+         okButton.setEnabled(false);
+      }      
 
       IButton cancelButton = new IButton("Cancel");
       cancelButton.setID(ID_CANCEL_BUTTON);

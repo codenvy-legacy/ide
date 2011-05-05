@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.about;
 
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.BuildNumber;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -45,7 +46,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final int HEIGHT = 345;
 
-   private static final String OK_BUTTON_ID = "ideAboutFormOkButton";
+   private static final String OK_BUTTON_ID = "ideAboutViewOkButton";
 
    private final int LOGO_WIDTH = 200;
 
@@ -65,9 +66,8 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final String YEAR = "2009-2011";
 
-   private final String OK = "Ok";
-
-   private IButton okButton;
+   //private IButton okButton;
+   private ImageButton okButton;
 
    public AboutIDEView()
    {
@@ -107,9 +107,9 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    private HorizontalPanel createButtonLayout()
    {
-      okButton = new IButton(OK);
-      okButton.setID(OK_BUTTON_ID);
-      okButton.setIcon(Images.Buttons.OK);
+      okButton = new ImageButton("Ok", "ok");
+      okButton.setId(OK_BUTTON_ID);
+      //okButton.setIcon(Images.Buttons.OK);
 
       HorizontalPanel hLayout = new HorizontalPanel();
       hLayout.setSpacing(10);
