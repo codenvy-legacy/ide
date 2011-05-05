@@ -61,7 +61,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       ExternalTextResource javakeyWords();
    }
 
-   private enum Action {
+   protected enum Action {
 
       /**
        * Get all <b>public</b> methods and fields;
@@ -110,9 +110,9 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
    private JavaCodeAssistantErrorHandler errorHandler;
 
-   private String curentFqn;
+   protected String curentFqn;
 
-   private Action action;
+   protected Action action;
 
    private List<Token> tokenFromParser;
 
@@ -204,50 +204,10 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
          if (token.contains("."))
          {
-
             String varToken = token.substring(0, token.lastIndexOf('.'));
             tokenToComplete = token.substring(token.lastIndexOf('.') + 1);
             beforeToken = subToken.substring(0, subToken.lastIndexOf(varToken) + varToken.length() + 1);
-
-            if (currentToken == null)
-            {
-               openForm(new ArrayList<Token>(), factory, this);
-               return;
-            }
-
-            if (currentToken.getType() != null && currentToken.getType() == TokenType.TYPE)
-            {
-               action = Action.PUBLIC_STATIC;
-            }
-            else
-            {
-               action = Action.PUBLIC;
-            }
-
-            if (!currentToken.hasProperty(TokenProperties.FQN))
-            {
-               openForm(new ArrayList<Token>(), factory, this);
-               return;
-            }
-
-            curentFqn = currentToken.getProperty(TokenProperties.FQN).isStringProperty().stringValue();
-
-            service.getClassDescription(curentFqn, activeFileHref,
-               new AsyncRequestCallback<JavaClass>()
-               {
-
-                  @Override
-                  protected void onSuccess(JavaClass result)
-                  {
-                     classDescriptionReceived(result);
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     errorHandler.handleError(exception);
-                  }
-               });
+            showMethods(currentToken, varToken);
          }
          else
          {
@@ -311,6 +271,63 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       {
          e.printStackTrace();
       }
+   }
+
+   /**
+    * @param currentToken
+    * @param subToken
+    * @param token
+    */
+   protected void showMethods(Token currentToken,   String varToken)
+   {
+
+      if (currentToken == null)
+      {
+         openForm(new ArrayList<Token>(), factory, this);
+         return;
+      }
+
+      if (currentToken.getType() != null && currentToken.getType() == TokenType.TYPE)
+      {
+         action = Action.PUBLIC_STATIC;
+      }
+      else
+      {
+         action = Action.PUBLIC;
+      }
+
+      if (!currentToken.hasProperty(TokenProperties.FQN))
+      {
+         openForm(new ArrayList<Token>(), factory, this);
+         return;
+      }
+
+      curentFqn = currentToken.getProperty(TokenProperties.FQN).isStringProperty().stringValue();
+
+      getClassDescription();
+   }
+
+   /**
+    * Send request for class description(methods, fields, constructors ...)
+    */
+   protected void getClassDescription()
+   {
+      service.getClassDescription(curentFqn, activeFileHref,
+         new AsyncRequestCallback<JavaClass>()
+         {
+
+            @Override
+            protected void onSuccess(JavaClass result)
+            {
+               classDescriptionReceived(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               errorHandler.handleError(exception);
+            }
+         });
    }
 
    private List<Token> filterTokenFromParser(List<Token> tokenFromParser, Token currentToken)
@@ -483,8 +500,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                      {
                         parseKeyWords(resource);
                         token.addAll(keywords);
-                        Collections.sort(token, JavaCodeAssistant.this);
-                        openForm(token, factory, JavaCodeAssistant.this);
+                        callOpenForm(token);
                      }
 
                      @Override
@@ -506,8 +522,13 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
          }
       }
-      Collections.sort(token, this);
-      openForm(token, factory, this);
+      callOpenForm(token);
+   }
+   
+   protected void callOpenForm(List<Token> tokens)
+   {
+      Collections.sort(tokens, this);
+      openForm(tokens, factory, this);
    }
 
    private StringProperty getDecalringClassName(Token token)
@@ -584,7 +605,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       {
          return 1;
       }
-      //      
 
       return t1.getName().compareTo(t2.getName());
    }

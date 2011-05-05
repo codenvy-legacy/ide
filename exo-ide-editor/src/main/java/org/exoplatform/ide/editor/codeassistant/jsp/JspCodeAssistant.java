@@ -18,16 +18,28 @@
  */
 package org.exoplatform.ide.editor.codeassistant.jsp;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
+import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -36,6 +48,14 @@ import java.util.List;
  */
 public class JspCodeAssistant extends JavaCodeAssistant
 {
+
+   public interface JspBundle extends ClientBundle
+   {
+      @Source("org/exoplatform/ide/editor/public/tokens/jsp_tokens.js")
+      ExternalTextResource jspImplicitObjects();
+   }
+
+   private static Map<String, Token> implicitObjects;
 
    /**
     * @param service
@@ -46,6 +66,39 @@ public class JspCodeAssistant extends JavaCodeAssistant
       JavaCodeAssistantErrorHandler errorHandler)
    {
       super(service, factory, errorHandler);
+      if (implicitObjects == null)
+      {
+
+         JspBundle bundle = GWT.create(JspBundle.class);
+         try
+         {
+            bundle.jspImplicitObjects().getText(new ResourceCallback<TextResource>()
+            {
+
+               @Override
+               public void onSuccess(TextResource resource)
+               {
+                  JSONTokenParser parser = new JSONTokenParser();
+                  List<Token> objects = parser.getTokens(new JSONArray(parseJson(resource.getText())));
+                  implicitObjects = new HashMap<String, Token>();
+                  for (Token t : objects)
+                  {
+                     implicitObjects.put(t.getName(), t);
+                  }
+               }
+
+               @Override
+               public void onError(ResourceException e)
+               {
+                  e.printStackTrace();
+               }
+            });
+         }
+         catch (ResourceException e)
+         {
+            e.printStackTrace();
+         }
+      }
    }
 
    /**
@@ -65,6 +118,35 @@ public class JspCodeAssistant extends JavaCodeAssistant
       {
          CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, mimeType, cursorOffsetX,
             cursorOffsetY, lineContent, cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant#callOpenForm(java.util.List)
+    */
+   @Override
+   protected void callOpenForm(List<Token> tokens)
+   {
+      if (action == Action.CLASS_NAME_AND_LOCAL_VAR || action == Action.LOCAL_VAR)
+         tokens.addAll(implicitObjects.values());
+      super.callOpenForm(tokens);
+   }
+   
+   /**
+    * @see org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant#showMethods(org.exoplatform.ide.editor.api.codeassitant.Token, java.lang.String, java.lang.String)
+    */
+   @Override
+   protected void showMethods(Token currentToken, String varToken)
+   {
+      if(implicitObjects.containsKey(varToken))
+      {
+         action = Action.PUBLIC;
+         curentFqn = implicitObjects.get(varToken).getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
+         getClassDescription();
+      }
+      else
+      {
+         super.showMethods(currentToken, varToken);         
       }
    }
 }

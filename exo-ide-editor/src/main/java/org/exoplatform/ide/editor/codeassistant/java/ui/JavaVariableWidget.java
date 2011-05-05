@@ -18,15 +18,16 @@
  */
 package org.exoplatform.ide.editor.codeassistant.java.ui;
 
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
-
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 
 /**
  * Created by The eXo Platform SAS.
@@ -81,6 +82,12 @@ public class JavaVariableWidget extends JavaTokenWidgetBase
    @Override
    public Widget getTokenDecription()
    {
+      if(token.hasProperty(TokenProperties.FULL_TEXT))
+      {
+         Widget w = new SimplePanel();
+         w.getElement().setInnerHTML(token.getProperty(TokenProperties.FULL_TEXT).isStringProperty().stringValue());
+         return w;
+      }
       return null;
    }
 
