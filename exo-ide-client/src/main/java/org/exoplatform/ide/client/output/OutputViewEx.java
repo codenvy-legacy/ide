@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation.ui;
+package org.exoplatform.ide.client.output;
 
 import org.exoplatform.gwtframework.ui.client.button.IconButton;
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
@@ -43,7 +43,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client.operation.OutputPresenter.Display
+public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client.output.OutputPresenter.Display
 {
 
    private static final String ID = "ideOutputView";

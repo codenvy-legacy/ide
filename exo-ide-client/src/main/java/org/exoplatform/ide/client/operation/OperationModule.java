@@ -23,6 +23,7 @@ import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.outline.OutlinePresenter;
 import org.exoplatform.ide.client.outline.ShowOutlineControl;
+import org.exoplatform.ide.client.output.OutputPresenter;
 import org.exoplatform.ide.client.preview.PreviewHTMLControl;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;

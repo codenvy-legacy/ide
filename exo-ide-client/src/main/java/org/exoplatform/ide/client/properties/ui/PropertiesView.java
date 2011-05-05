@@ -88,7 +88,7 @@ public class PropertiesView extends ViewImpl implements
       }
 
       contentWidget = w;
-      add(contentWidget, true);
+      add(contentWidget);
    }
 
    public Map<String, String> getVisibleProperties(Collection<Property> properties)

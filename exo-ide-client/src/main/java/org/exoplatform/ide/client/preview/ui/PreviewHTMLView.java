@@ -67,7 +67,7 @@ public class PreviewHTMLView extends ViewImpl implements
       }
       else
       {
-         add(previewPanel, true);
+         add(previewPanel);
       }
       
       previewDisabledHTML = new HTML();

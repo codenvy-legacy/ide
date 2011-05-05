@@ -51,8 +51,6 @@ public class GetFileURLControl extends SimpleControl implements IDEControl, Item
 
    private static final String PROMPT = "Get URL";
 
-   private boolean browserPanelSelected = true;
-
    private Item selectedItem;
 
    public GetFileURLControl()
@@ -87,12 +85,6 @@ public class GetFileURLControl extends SimpleControl implements IDEControl, Item
 
    private void updateEnabling()
    {
-      //      if (!browserPanelSelected)
-      //      {
-      //         setEnabled(false);
-      //         return;
-      //      }
-
       if (selectedItem == null)
       {
          setEnabled(false);
@@ -124,7 +116,6 @@ public class GetFileURLControl extends SimpleControl implements IDEControl, Item
    {
       if (event.getView() instanceof WorkspacePresenter.Display)
       {
-         browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();
       }
    }

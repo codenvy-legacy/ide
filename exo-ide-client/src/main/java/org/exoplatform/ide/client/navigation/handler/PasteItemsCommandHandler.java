@@ -18,8 +18,11 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -49,11 +52,7 @@ import org.exoplatform.ide.client.navigation.event.PasteItemsCompleteEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.

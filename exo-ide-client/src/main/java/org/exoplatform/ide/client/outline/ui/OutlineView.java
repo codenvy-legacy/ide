@@ -61,7 +61,7 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
       super(ID, "information", "Outline", OUTLINE_TAB_ICON);
 
       outlinePanel = new FlowPanel();
-      add(outlinePanel, true);
+      add(outlinePanel);
 
       outlineDisabledHTML =
          new HTML(

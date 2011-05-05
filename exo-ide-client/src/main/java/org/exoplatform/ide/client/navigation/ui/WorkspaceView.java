@@ -57,7 +57,7 @@ public class WorkspaceView extends ViewImpl implements org.exoplatform.ide.clien
       treeGrid = new ItemTree(TREE_ID, TREE_PREFIX_ID);
       DOM.setStyleAttribute(treeGrid.getElement(), "zIndex", "0");
 
-      add(treeGrid, true);
+      add(treeGrid);
    }
 
    public TreeGridItem<Item> getBrowserTree()

@@ -217,23 +217,12 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    /**
     * Add user defined content into this view.
     * 
-    * @param viewWidget user defined widget
+    * @param w user defined widget
     */
    @Override
    public final void add(Widget w)
    {
-      add(w, false);
-   }
-
-   /**
-    * Add user defined content into this view.
-    * 
-    * @param viewWidget user defined widget
-    * @param contentScrollable is content scrollable
-    */
-   public final void add(Widget viewWidget, boolean contentScrollable)
-   {
-      this.viewWidget = viewWidget;
+      viewWidget = w;
       viewBorder.add(viewWidget);
    }
 
@@ -483,6 +472,8 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       }
    }
 
+   private boolean calledFromResize = false;
+
    /**
     * Resize this view.
     * 
@@ -491,20 +482,21 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    @Override
    public void resize(int width, int height)
    {
+      calledFromResize = true;
       setSize(width + "px", height + "px");
+      calledFromResize = false;
 
       int viewWidth = width - 6;
       int viewHeight = height - 6;
       viewWidth = viewWidth < 0 ? 0 : viewWidth;
       viewHeight = viewHeight < 0 ? 0 : viewHeight;
 
+      viewWidget.setSize(viewWidth + "px", viewHeight + "px");
       if (viewWidget instanceof Resizeable)
       {
          ((Resizeable)viewWidget).resize(viewWidth, viewHeight);
-         return;
       }
 
-      viewWidget.setSize(viewWidth + "px", viewHeight + "px");
       if (viewWidget instanceof RequiresResize)
       {
          ((RequiresResize)viewWidget).onResize();

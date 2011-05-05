@@ -51,7 +51,7 @@ public class SearchResultsView extends ViewImpl implements
       super(ID, "navigation", "Search", new Image(IDEImageBundle.INSTANCE.search()));
 
       searchItemTreeGrid = new ItemTree(TREE_ID, TREE_PREFIX_ID);
-      add(searchItemTreeGrid, true);
+      add(searchItemTreeGrid);
    }
 
    public TreeGridItem<Item> getSearchResultTree()
