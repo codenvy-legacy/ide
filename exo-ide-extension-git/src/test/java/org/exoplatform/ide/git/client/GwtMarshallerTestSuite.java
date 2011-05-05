@@ -45,6 +45,7 @@ public class GwtMarshallerTestSuite extends TestCase
       suite.addTestSuite(RemoveMarshallerGwtTest.class);
       suite.addTestSuite(ResetMarshallerGwtTest.class);
       suite.addTestSuite(StatusMarshallerGwtTest.class);
+      suite.addTestSuite(DiffMarshallerGwtTest.class);
       return suite;
    }
 }
