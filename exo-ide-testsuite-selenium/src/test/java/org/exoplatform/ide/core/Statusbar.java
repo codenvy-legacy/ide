@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.core;
 
+import org.exoplatform.ide.TestConstants;
+
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -29,9 +31,30 @@ package org.exoplatform.ide.core;
 public class Statusbar extends AbstractTestModule
 {
 
+   public static String STATUSBAR_LOCATOR ="//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']/nobr";
+   
+   /**
+    * get text on statusbar
+    * @return
+    */
    public String getCursorPosition()
    {
-      return selenium().getText("//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']/nobr");
+      return selenium().getText(STATUSBAR_LOCATOR);
    }
 
+   
+   
+   /**
+    * click on statusbar and check appear GoToLine form
+    * @throws InterruptedException
+    */
+   public void clickOnStatusBar() throws InterruptedException
+   {
+      selenium().click(STATUSBAR_LOCATOR);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE().GOTOLINE.checkAppearGoToLineForm();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   
 }
