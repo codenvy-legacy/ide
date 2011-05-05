@@ -149,6 +149,8 @@
                               	../lib/chromattic.*.jar;
                               	../lib/jsr250-api-1.0.jar;
                               	../lib/jsr311-api-1.0.jar;
+                                ../lib/jsp-api.jar;
+                                ../lib/servlet-api.jar;
                               	../lib/exo.ws.commons*.jar;
                               	../lib/exo.ws.frameworks.json*.jar;
                               	../lib/exo.ws.rest.core*.jar;
