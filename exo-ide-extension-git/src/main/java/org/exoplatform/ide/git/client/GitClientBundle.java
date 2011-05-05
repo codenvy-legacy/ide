@@ -29,122 +29,146 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface GitClientBundle extends ClientBundle
 {
-   GitClientBundle INSTANCE = GWT.<GitClientBundle>create(GitClientBundle.class);
-   
+   GitClientBundle INSTANCE = GWT.<GitClientBundle> create(GitClientBundle.class);
+
    @Source("org/exoplatform/ide/git/images/push/arrow.png")
    ImageResource arrow();
-   
+
    @Source("org/exoplatform/ide/git/images/buttons/ok.png")
    ImageResource ok();
-   
+
    @Source("org/exoplatform/ide/git/images/buttons/ok_Disabled.png")
    ImageResource okDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/buttons/add.png")
    ImageResource add();
-   
+
    @Source("org/exoplatform/ide/git/images/buttons/add_Disabled.png")
    ImageResource addDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/remove.png")
    ImageResource removeFiles();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/remove_Disabled.png")
    ImageResource removeFilesDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/reset.png")
    ImageResource reset();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/reset_Disabled.png")
    ImageResource resetDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/buttons/cancel.png")
    ImageResource cancel();
-   
+
    @Source("org/exoplatform/ide/git/images/buttons/cancel_Disabled.png")
    ImageResource cancelDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/buttons/remove.png")
    ImageResource remove();
-   
+
    @Source("org/exoplatform/ide/git/images/buttons/remove_Disabled.png")
    ImageResource removeDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/cloneRepo.png")
    ImageResource cloneRepo();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/cloneRepo_Disabled.png")
    ImageResource cloneRepoDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/initRepo.png")
    ImageResource initRepo();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/initRepo_Disabled.png")
    ImageResource initRepoDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/add.png")
    ImageResource addToIndex();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/add_Disabled.png")
    ImageResource addToIndexDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/branches.png")
    ImageResource branches();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/branches_Disabled.png")
    ImageResource branchesDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/remotes.png")
    ImageResource remotes();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/remotes_Disabled.png")
    ImageResource remotesDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/commit.png")
    ImageResource commit();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/commit_Disabled.png")
    ImageResource commitDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/push.png")
    ImageResource push();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/push_Disabled.png")
    ImageResource pushDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/pull.png")
    ImageResource pull();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/pull_Disabled.png")
    ImageResource pullDisabled();
+
+   @Source("org/exoplatform/ide/git/images/history/history.png")
+   ImageResource history();
    
+   @Source("org/exoplatform/ide/git/images/history/history_Disabled.png")
+   ImageResource historyDisabled();
+   
+   @Source("org/exoplatform/ide/git/images/history/project_level.png")
+   ImageResource projectLevel();
+
+   @Source("org/exoplatform/ide/git/images/history/project_level_Disabled.png")
+   ImageResource projectLevelDisabled();
+
+   @Source("org/exoplatform/ide/git/images/history/resource_level.png")
+   ImageResource resourceLevel();
+
+   @Source("org/exoplatform/ide/git/images/history/resource_level_Disabled.png")
+   ImageResource resourceLevelDisabled();
+
+   @Source("org/exoplatform/ide/git/images/history/refresh.png")
+   ImageResource refresh();
+
+   @Source("org/exoplatform/ide/git/images/history/refresh_Disabled.png")
+   ImageResource refreshDisabled();
+
    @Source("org/exoplatform/ide/git/images/controls/fetch.png")
    ImageResource fetch();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/fetch_Disabled.png")
    ImageResource fetchDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/status.png")
    ImageResource status();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/status_Disabled.png")
    ImageResource statusDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/items/item_in_repository.png")
    ImageResource itemInRepoditory();
-   
+
    @Source("org/exoplatform/ide/git/images/items/item_in_repository_question.png")
    ImageResource itemNew();
-   
+
    @Source("org/exoplatform/ide/git/images/items/item_in_repository_star.png")
    ImageResource itemChanged();
-   
+
    @Source("org/exoplatform/ide/git/images/items/item_not_commited.png")
    ImageResource itemNotCommited();
-   
+
    @Source("org/exoplatform/ide/git/images/items/repository_root.png")
    ImageResource repositoryRoot();
-   
+
    @Source("org/exoplatform/ide/git/images/branch/current.png")
    ImageResource currentBranch();
 }

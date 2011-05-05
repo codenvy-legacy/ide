@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.git.client.marshaller.DiffResponse;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
@@ -26,6 +27,7 @@ import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 
 import java.util.List;
 
@@ -258,6 +260,17 @@ public abstract class GitClientService
     */
    public abstract void commit(String workDir, String message, boolean all, AsyncRequestCallback<Revision> callback);
 
+   /**
+    * Get the diff for pointed file(s) or for the whole project in text format.
+    * 
+    * @param workDir location of Git repository working directory
+    * @param fileFilter files for which to show changes
+    * @param type type of diff format
+    * @param noRenames don't show renamed files
+    * @param callback callback
+    */
+   public abstract void diff(String workDir, String[] fileFilter, DiffType type, boolean noRenames, AsyncRequestCallback<DiffResponse> callback);
+   
    /**
     * Get log of commits.
     * The result is the list of {@link Revision},  which is returned

@@ -16,41 +16,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
+package org.exoplatform.ide.git.client.marshaller;
 
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
+import com.google.gwt.http.client.Response;
+
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
 /**
- * Control for showing the status of the Git working tree.
+ * Unmarshaller to get {@link DiffResponse} from response.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 2:57:35 PM anya $
+ * @version $Id:  May 4, 2011 11:11:03 AM anya $
  *
  */
-public class ShowStatusControl extends GitControl
+public class DiffResponseUnmarshaller implements Unmarshallable
 {
    /**
-    * Control ID.
+    * Diff response.
     */
-   public static final String ID = "Git/Status";
+   private DiffResponse diffResponse;
 
    /**
-    * Control's title.
+    * @param diffResponse diff response
     */
-   public static final String TITLE = "Show Status";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Show the work tree status";
-
-   public ShowStatusControl()
+   public DiffResponseUnmarshaller(DiffResponse diffResponse)
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new ShowWorkTreeStatusEvent());
-      setImages(GitClientBundle.INSTANCE.status(), GitClientBundle.INSTANCE.statusDisabled());
+      this.diffResponse = diffResponse;
    }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+    */
+   @Override
+   public void unmarshal(Response response) throws UnmarshallerException
+   {
+      diffResponse.setDiffText(response.getText());
+   }
+
 }

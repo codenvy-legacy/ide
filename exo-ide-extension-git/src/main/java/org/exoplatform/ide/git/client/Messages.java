@@ -51,6 +51,8 @@ public interface Messages
 
    public static final String COMMIT_FAILED = "Commit failed.";
    
+   public static final String DIFF_FAILED = "Diff failed.";
+   
    public static final String NOTHING_TO_COMMIT = "Nothing to commit.";
    
    public static final String LOG_FAILED = "Failed to get history of commits.";

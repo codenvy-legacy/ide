@@ -19,38 +19,39 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
+import org.exoplatform.ide.git.client.history.ShowInHistoryEvent;
 
 /**
- * Control for showing the status of the Git working tree.
+ * Control for showing the history of commits.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 2:57:35 PM anya $
+ * @version $Id:  Apr 29, 2011 3:04:01 PM anya $
  *
  */
-public class ShowStatusControl extends GitControl
+public class ShowInHistoryControl extends GitControl
 {
    /**
     * Control ID.
     */
-   public static final String ID = "Git/Status";
+   public static final String ID = "Git/Show in history...";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Show Status";
+   public static final String TITLE = "Show in history...";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Show the work tree status";
+   public static final String PROMPT = "Show in history";
 
-   public ShowStatusControl()
+   public ShowInHistoryControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new ShowWorkTreeStatusEvent());
-      setImages(GitClientBundle.INSTANCE.status(), GitClientBundle.INSTANCE.statusDisabled());
+      setEvent(new ShowInHistoryEvent());
+      setImages(GitClientBundle.INSTANCE.history(), GitClientBundle.INSTANCE.historyDisabled());
+      setDelimiterBefore(true);
    }
 }

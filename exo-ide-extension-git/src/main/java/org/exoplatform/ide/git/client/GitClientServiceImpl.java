@@ -35,6 +35,9 @@ import org.exoplatform.ide.git.client.marshaller.BranchListUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.BranchUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.CloneRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.CommitRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.DiffRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.DiffResponse;
+import org.exoplatform.ide.git.client.marshaller.DiffResponseUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.FetchRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.InitRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.LogRequestMarshaller;
@@ -61,6 +64,8 @@ import org.exoplatform.ide.git.shared.BranchDeleteRequest;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
+import org.exoplatform.ide.git.shared.DiffRequest;
+import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.FetchRequest;
 import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.LogRequest;
@@ -88,11 +93,7 @@ import java.util.List;
 public class GitClientServiceImpl extends GitClientService
 {
    public static final String ADD = "/ide/git/add";
-
-   public static final String CLONE = "/ide/git/clone";
-
-   public static final String COMMIT = "/ide/git/commit";
-
+   
    public static final String BRANCH_LIST = "/ide/git/branch-list";
 
    public static final String BRANCH_CHECKOUT = "/ide/git/branch-checkout";
@@ -100,6 +101,12 @@ public class GitClientServiceImpl extends GitClientService
    public static final String BRANCH_CREATE = "/ide/git/branch-create";
 
    public static final String BRANCH_DELETE = "/ide/git/branch-delete";
+
+   public static final String CLONE = "/ide/git/clone";
+
+   public static final String COMMIT = "/ide/git/commit";
+
+   public static final String DIFF = "/ide/git/diff";
 
    public static final String FETCH = "/ide/git/fetch";
 
@@ -589,4 +596,30 @@ public class GitClientServiceImpl extends GitClientService
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#diff(java.lang.String, java.lang.String[], org.exoplatform.ide.git.shared.DiffRequest.DiffType, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void diff(String href, String[] fileFilter, DiffType type, boolean noRenames,
+      AsyncRequestCallback<DiffResponse> callback)
+   {
+      String url = restServiceContext + DIFF;
+      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
+      callback.setEventBus(eventBus);
+      
+      DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, 0);
+      DiffRequestMarshaller marshaller = new DiffRequestMarshaller(diffRequest);
+      
+      DiffResponse diffResponse = new DiffResponse();
+      DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller(diffResponse);
+      callback.setResult(diffResponse);
+      callback.setPayload(unmarshaller);
+      
+      String params = "workdir=" + workDir;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
 }

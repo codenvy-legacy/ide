@@ -67,6 +67,8 @@ public interface Constants
    
    public static final String MESSAGE = "message";
    
+   public static final String NO_RENAMES = "noRenames";
+   
    public static final String REMOTE = "remote";
    
    public static final String PATH = "path";

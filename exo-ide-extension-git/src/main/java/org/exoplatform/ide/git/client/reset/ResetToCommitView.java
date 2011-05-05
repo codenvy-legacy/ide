@@ -36,6 +36,7 @@ import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.RadioItem;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.commit.RevisionGrid;
 import org.exoplatform.ide.git.shared.Revision;
 
 /**

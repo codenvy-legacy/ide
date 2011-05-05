@@ -16,41 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
-
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
+package org.exoplatform.ide.git.client.marshaller;
 
 /**
- * Control for showing the status of the Git working tree.
+ * Response with changes between commits, commit and working tree.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 2:57:35 PM anya $
+ * @version $Id:  May 4, 2011 10:53:57 AM anya $
  *
  */
-public class ShowStatusControl extends GitControl
+public class DiffResponse
 {
    /**
-    * Control ID.
+    * Diff in text format.
     */
-   public static final String ID = "Git/Status";
+   private String diffText;
 
    /**
-    * Control's title.
+    * @return diff in text format
     */
-   public static final String TITLE = "Show Status";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Show the work tree status";
-
-   public ShowStatusControl()
+   public String getDiffText()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new ShowWorkTreeStatusEvent());
-      setImages(GitClientBundle.INSTANCE.status(), GitClientBundle.INSTANCE.statusDisabled());
+      return diffText;
+   }
+
+   /**
+    * @param diffText diff in text format
+    */
+   public void setDiffText(String diffText)
+   {
+      this.diffText = diffText;
    }
 }

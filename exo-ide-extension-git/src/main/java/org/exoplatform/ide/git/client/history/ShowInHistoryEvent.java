@@ -16,41 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
+package org.exoplatform.ide.git.client.history;
 
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Control for showing the status of the Git working tree.
+ * Event occurs, when user tries to view the history of commits.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 2:57:35 PM anya $
+ * @version $Id:  Apr 29, 2011 3:13:45 PM anya $
  *
  */
-public class ShowStatusControl extends GitControl
+public class ShowInHistoryEvent extends GwtEvent<ShowInHistoryHandler>
 {
+
    /**
-    * Control ID.
+    * Type used to register this event.
     */
-   public static final String ID = "Git/Status";
+   public static final GwtEvent.Type<ShowInHistoryHandler> TYPE = new GwtEvent.Type<ShowInHistoryHandler>();
 
    /**
-    * Control's title.
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
-   public static final String TITLE = "Show Status";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Show the work tree status";
-
-   public ShowStatusControl()
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowInHistoryHandler> getAssociatedType()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new ShowWorkTreeStatusEvent());
-      setImages(GitClientBundle.INSTANCE.status(), GitClientBundle.INSTANCE.statusDisabled());
+      return TYPE;
    }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(ShowInHistoryHandler handler)
+   {
+      handler.onShowInHistory(this);
+   }
+
 }

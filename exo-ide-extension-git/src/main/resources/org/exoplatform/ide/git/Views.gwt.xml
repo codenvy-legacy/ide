@@ -55,16 +55,20 @@
    <replace-with class="org.exoplatform.ide.git.client.reset.ResetToCommitView">
       <when-type-is class="org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.git.client.remote.RemoteView">
       <when-type-is class="org.exoplatform.ide.git.client.remote.RemotePresenter.Display" />
    </replace-with>
-   
-    <replace-with class="org.exoplatform.ide.git.client.pull.PullView">
+
+   <replace-with class="org.exoplatform.ide.git.client.pull.PullView">
       <when-type-is class="org.exoplatform.ide.git.client.pull.PullPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.git.client.fetch.FetchView">
       <when-type-is class="org.exoplatform.ide.git.client.fetch.FetchPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.git.client.history.HistoryView">
+      <when-type-is class="org.exoplatform.ide.git.client.history.HistoryPresenter.Display" />
    </replace-with>
 </module>

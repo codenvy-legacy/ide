@@ -1,0 +1,39 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:c="urn:import:org.exoplatform.ide.git.client.commit" xmlns:t="urn:import:org.exoplatform.gwtframework.ui.client.toolbar" xmlns:i="urn:import:org.exoplatform.gwtframework.ui.client.button.ext">
+   <ui:style>
+      .green {
+      	background-color: green;
+      }
+      
+      .diffTextField {
+      	background-color: #FFFFFF;
+      	color: #000000;
+      }
+   </ui:style>
+
+
+   <f:VPanel>
+      <t:Toolbar height="28px" ui:field="toolbar">
+      </t:Toolbar>
+
+      <g:SplitLayoutPanel>
+         <g:north size="100">
+            <f:StretchPanel>
+               <f:Border margin="5">
+                  <c:RevisionGrid ui:field="revisionGrid"></c:RevisionGrid>
+               </f:Border>
+            </f:StretchPanel>
+         </g:north>
+         <g:center>
+            <f:StretchPanel>
+               <f:Border margin="5">
+                  <f:TextAreaItem ui:field="diffTextField" enabled="false" styleName="{style.diffTextField}" showDisabled="false"
+                     hasBorder="false"></f:TextAreaItem>
+               </f:Border>
+            </f:StretchPanel>
+         </g:center>
+      </g:SplitLayoutPanel>
+   </f:VPanel>
+
+</ui:UiBinder>
