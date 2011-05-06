@@ -394,8 +394,8 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             true, // can be outlined
             true, // can be autocompleted
             new RubyParser(), // exoplatform code parser
-            new RubyAutocompleteHelper()
-            , new RubyCodeAssistant())));
+            new RubyAutocompleteHelper(), // autocomplete helper
+            new RubyCodeAssistant())));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_PHP, "CodeMirror php-script editor", "php", "", true,
          new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']", // generic code parsers
