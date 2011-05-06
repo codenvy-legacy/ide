@@ -63,6 +63,7 @@ import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JspAutocompleteHelper;
+import org.exoplatform.ide.editor.codemirror.autocomplete.RubyAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 import org.exoplatform.ide.editor.codemirror.parser.GoogleGadgetParser;
 import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
@@ -392,7 +393,8 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             "['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']", // code styles
             true, // can be outlined
             true, // can be autocompleted
-            new RubyParser() // exoplatform code parser         
+            new RubyParser(), // exoplatform code parser
+            new RubyAutocompleteHelper()
             , new RubyCodeAssistant())));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_PHP, "CodeMirror php-script editor", "php", "", true,

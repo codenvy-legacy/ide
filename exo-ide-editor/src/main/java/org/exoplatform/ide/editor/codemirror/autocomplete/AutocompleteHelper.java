@@ -118,12 +118,12 @@ public abstract class AutocompleteHelper
       }
    }
 
-   private static boolean isVariable(String nodeType)
+   protected static boolean isVariable(String nodeType)
    {
       return GroovyParser.isGroovyVariable(nodeType) || JavaParser.isJavaVariable(nodeType) || JavaScriptParser.isJsVariable(nodeType) || JavaScriptParser.isJsLocalVariable(nodeType);
    }
 
-   private static boolean isPoint(String nodeType, String nodeContent)
+   protected static boolean isPoint(String nodeType, String nodeContent)
    {
       return GroovyParser.isPoint(nodeType, nodeContent) || JavaParser.isPoint(nodeType, nodeContent) || JavaScriptParser.isPoint(nodeType, nodeContent);
    }
