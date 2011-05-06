@@ -517,7 +517,7 @@ public class RubyParser extends CodeMirrorParserImpl
     * @param node
     * @return
     */
-   private boolean isConstant(String nodeType)
+   private static boolean isConstant(String nodeType)
    {
       return "rb-constant".equals(nodeType);
    }
@@ -663,7 +663,7 @@ public class RubyParser extends CodeMirrorParserImpl
     * @param nodeType
     * @return
     */
-   private boolean isLocalVariable(String nodeType)
+   private static boolean isLocalVariable(String nodeType)
    {
       return "rb-variable".equals(nodeType);
    }
@@ -673,7 +673,7 @@ public class RubyParser extends CodeMirrorParserImpl
     * @param nodeType
     * @return
     */
-   private boolean isGlobalVariable(String nodeType)
+   private static boolean isGlobalVariable(String nodeType)
    {
       return "rb-global-variable".equals(nodeType);
    }
@@ -683,7 +683,7 @@ public class RubyParser extends CodeMirrorParserImpl
     * @param nodeType
     * @return
     */
-   private boolean isInstanceVariable(String nodeType)
+   private static boolean isInstanceVariable(String nodeType)
    {
       return "rb-instance-var".equals(nodeType);
    }
@@ -693,7 +693,7 @@ public class RubyParser extends CodeMirrorParserImpl
     * @param nodeType
     * @return
     */
-   private boolean isClassVariable(String nodeType)
+   private static boolean isClassVariable(String nodeType)
    {
       return "rb-class-var".equals(nodeType);
    }
@@ -717,6 +717,19 @@ public class RubyParser extends CodeMirrorParserImpl
          if (lastNode.isLineBreak())
          {
             return null;
+         }
+         
+         // parse object creation like "b = ClassName.new" 
+         else if (isNewMethodCall(lastNode))
+         {
+            if ((possibleElementType = readClassName(cloneNodeStack)) == null)
+               return null;
+         }
+         
+         // pass constant to recognize object creation in the next cycle
+         else if (isConstant(lastNode.getType()))
+         {
+            return null; 
          }
          
          else if (isFixNumber(lastNode.getType()))
@@ -819,6 +832,32 @@ public class RubyParser extends CodeMirrorParserImpl
    }
    
    /**
+    * Recognize ".new" node in object creation statement like "b = ClassName.new"
+    * @param node
+    * @return
+    */
+   private boolean isNewMethodCall(Node node)
+   {
+      return "rb-method-call".equals(node.getType()) && ".new".equals(node.getContent());
+   }
+
+   /**
+    * b = ClassName.new
+    * b = ClassName.new()
+    * b = ClassName.new v, t
+    * @param nodeStack
+    * @return ClassName
+    */
+   private String readClassName(Stack<Node> nodeStack)
+   {
+      Node classNode = nodeStack.pop();
+      if (isConstant(classNode.getType()))
+         return classNode.getContent();
+      
+      return null;
+   }
+
+   /**
     * Recognize GLOBAL_VARIABLE or INSTANCE_VARIABLE variable without assignment like "@h /n" 
     * @param safe nodeStack
     * @return CodeMirrorTokenImpl with global variable in case like "$a /n"
@@ -853,7 +892,7 @@ public class RubyParser extends CodeMirrorParserImpl
     * @param node type
     * @return
     */
-   private TokenType isVariable(String nodeType)   {
+   public static TokenType isVariable(String nodeType)   {
       if (isLocalVariable(nodeType))
          return TokenType.LOCAL_VARIABLE;
          
