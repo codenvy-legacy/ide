@@ -35,6 +35,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Test for preview gadget feature.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
