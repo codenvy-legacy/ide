@@ -39,9 +39,9 @@ import com.google.gwt.event.shared.HandlerManager;
 public class ShowGroovyTemplatePreviewControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "Run/Show Groovy Template Preview";
+   public static final String ID = "Run/Show Template Preview";
 
-   public static final String TITLE = "Show Groovy Template Preview";
+   public static final String TITLE = "Show Template Preview";
 
    public ShowGroovyTemplatePreviewControl()
    {
