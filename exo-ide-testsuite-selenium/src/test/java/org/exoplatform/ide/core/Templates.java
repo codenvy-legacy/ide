@@ -53,18 +53,35 @@ public class Templates extends AbstractTestModule
       waitForElementPresent(FILE_NAME_INPUT_LOCATOR);
    }
    
+   /**
+    * Select template in list grid.
+    * 
+    * @param templateName - the name of template
+    * @throws InterruptedException
+    */
    public void selectTemplate(String templateName) throws InterruptedException
    {
       selenium().click(FILE_FROM_TEMPLATE_DIALOG_LOCATOR + "//span[@title='" + templateName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
+   /**
+    * Type new name to input name field.
+    * 
+    * @param name - the new name of item.
+    * @throws InterruptedException
+    */
    public void typeNameToInputField(String name) throws InterruptedException
    {
       selenium().type(FILE_NAME_INPUT_LOCATOR, name);
       Thread.sleep(TestConstants.SLEEP_SHORT);
    }
    
+   /**
+    * Click create button and wait until templates form disappeared.
+    * 
+    * @throws Exception
+    */
    public void clickCreateButton() throws Exception
    {
       selenium().click(CREATE_BUTTON_ID);

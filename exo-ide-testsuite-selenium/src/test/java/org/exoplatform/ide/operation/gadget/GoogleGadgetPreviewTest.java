@@ -79,7 +79,6 @@ public class GoogleGadgetPreviewTest extends BaseTest
       IDE.NAVIGATION.waitForItem(URL);
       IDE.NAVIGATION.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.waitForItem(URL + FILE_NAME);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
