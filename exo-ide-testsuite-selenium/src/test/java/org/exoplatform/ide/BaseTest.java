@@ -753,14 +753,12 @@ public abstract class BaseTest
             + MenuCommands.File.UPLOAD_FILE);
       }
 
-      //runTopMenuCommand(MenuCommands.File.FILE, formName);
       IDE.MENU.runCommand(MenuCommands.File.FILE, formName);
 
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isElementPresent("ideUploadForm"));
-      assertTrue(selenium
-         .isElementPresent("ideUploadFormBrowseButton"));
+      assertTrue(selenium.isElementPresent("ideUploadFormBrowseButton"));
       try
       {
          File file = new File(filePath);
@@ -771,22 +769,16 @@ public abstract class BaseTest
       }
       Thread.sleep(TestConstants.SLEEP);
 
-      assertEquals(
-         filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()),
-         selenium
-            .getValue("//div[@id='ideUploadForm']//table/tbody//div/input[@name='ideUploadFormFilenameField']"));
+      assertEquals(filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()),
+         selenium.getValue("ideUploadFormFilenameField"));
 
-      selenium
-         .type(
-            "scLocator=//Window[ID=\"ideUploadForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideUploadFormMimeTypeField]/element",
-            mimeType);
-      assertTrue(selenium
-         .isElementPresent("//div[@class='stretchImgButton' and @eventproxy='ideUploadFormUploadButton']"));
+      selenium.type("ideUploadFormMimeTypeField", mimeType);
+      assertTrue(selenium.isElementPresent("ideUploadFormUploadButton"));
 
-      selenium.click("scLocator=//IButton[ID=\"ideUploadFormUploadButton\"]/");
+      selenium.click("ideUploadFormUploadButton");
       Thread.sleep(TestConstants.SLEEP);
 
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/"));
+      assertFalse(selenium.isElementPresent("ideUploadForm"));
    }
 
    /**

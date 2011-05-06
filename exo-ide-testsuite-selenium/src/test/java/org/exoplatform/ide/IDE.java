@@ -18,10 +18,13 @@
  */
 package org.exoplatform.ide;
 
+import com.thoughtworks.selenium.Selenium;
+
 import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.ErrorDialog;
+import org.exoplatform.ide.core.GoToLine;
 import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigation;
@@ -33,10 +36,9 @@ import org.exoplatform.ide.core.SaveAs;
 import org.exoplatform.ide.core.SelectWorkspace;
 import org.exoplatform.ide.core.Statusbar;
 import org.exoplatform.ide.core.Toolbar;
+import org.exoplatform.ide.core.Upload;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.Workspace;
-import org.exoplatform.ide.core.GoToLine;
-import com.thoughtworks.selenium.Selenium;
 
 /**
  * 
@@ -104,6 +106,8 @@ public class IDE
    public OpenWith OPENWITH = new OpenWith();
    
    public GoToLine GOTOLINE = new GoToLine();
+   
+   public Upload UPLOAD = new Upload();
 
    /**
     * Select main frame of IDE.

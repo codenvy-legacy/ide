@@ -30,11 +30,11 @@ import static org.junit.Assert.fail;
 
 public class SaveAs extends AbstractTestModule
 {
+   public static final String SAVE_AS_DIALOG_LOCATOR = "//div[@id='ideAskForValueDialog']//div[@class='Caption']/span[text()='Save file as']";
 
    public void checkSaveAsIsOpened(boolean isOpened)
    {
-      String locator = "//div[@id='ideAskForValueDialog']//div[@class='Caption']/span[text()='Save file as']";
-      assertEquals(isOpened, selenium().isElementPresent(locator));
+      assertEquals(isOpened, selenium().isElementPresent(SAVE_AS_DIALOG_LOCATOR));
    }
 
    public String getFileName()
@@ -50,7 +50,8 @@ public class SaveAs extends AbstractTestModule
 
    public void clickYes()
    {
-      fail();
+      String locator = "//div[@id='ideAskForValueDialog']//div[@id='ideAskForValueDialogOkButton']";
+      selenium().click(locator);
    }
 
    public void clickNo()
@@ -62,6 +63,11 @@ public class SaveAs extends AbstractTestModule
    public void clickCancel()
    {
       fail();
+   }
+   
+   public void waitForDialog() throws Exception
+   {
+      waitForElementPresent(SAVE_AS_DIALOG_LOCATOR);
    }
 
 }

@@ -20,6 +20,7 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.TestConstants;
 
@@ -117,6 +118,31 @@ public class Toolbar extends AbstractTestModule
             "//div[@id=\"exoIDEToolbar\" and @class=\"exoToolbarPanel\"]//div[@enabled=\"false\" and @title=\"" + name
                + "\"]";
          assertTrue(selenium().isElementPresent(locator));
+      }
+   }
+   
+   public void waitForButtonEnabled(String name, boolean enabled)
+   {
+      String locator = null;
+      if (enabled)
+      {
+         locator =
+            "//div[@id=\"exoIDEToolbar\" and @class=\"exoToolbarPanel\"]//div[@enabled=\"true\" and @title=\"" + name
+               + "\"]";
+      }
+      else
+      {
+         locator =
+            "//div[@id=\"exoIDEToolbar\" and @class=\"exoToolbarPanel\"]//div[@enabled=\"false\" and @title=\"" + name
+               + "\"]";
+      }
+      for (int second = 0;; second++)
+      {
+         if (second >= TestConstants.WAIT_PERIOD)
+            fail("timeout for element " + locator);
+
+         if (selenium().isElementPresent(locator))
+            break;
       }
    }
 

@@ -69,5 +69,57 @@ public abstract class AbstractTestModule
          Thread.sleep(100);
       }
    }
+   
+   /**
+    * Wait while element not present.
+    * 
+    * @param locator - element locator
+    * @throws Exception
+    */
+   protected void waitForElementNotPresent(String locator) throws Exception
+   {
+      int WAITING_MAX_SECONDS = 10;
+
+      for (int second = 0;; second++)
+      {
+         if (second >= WAITING_MAX_SECONDS * 10)
+         {
+            fail("timeout for element " + locator);
+         }
+
+         if (!selenium().isElementPresent(locator))
+         {
+            break;
+         }
+
+         Thread.sleep(100);
+      }
+   }
+   
+   /**
+    * Wait while text present.
+    * 
+    * @param text
+    * @throws Exception
+    */
+   protected void waitForTextPresent(String text) throws Exception
+   {
+      int WAITING_MAX_SECONDS = 10;
+
+      for (int second = 0;; second++)
+      {
+         if (second >= WAITING_MAX_SECONDS * 10)
+         {
+            fail("timeout for text " + text);
+         }
+
+         if (!selenium().isTextPresent(text))
+         {
+            break;
+         }
+
+         Thread.sleep(100);
+      }
+   }
 
 }

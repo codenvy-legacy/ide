@@ -92,9 +92,9 @@ public interface MenuCommands
 
       public static final String DEPLOY_NODE_TYPE = "Deploy node type";
 
-      public static final String DEPLOY_GADGET = "Deploy Gadget to GateIn";
+      public static final String DEPLOY_GADGET = "Deploy Gadget";
 
-      public static final String UNDEPLOY_GADGET = "UnDeploy Gadget from GateIn";
+      public static final String UNDEPLOY_GADGET = "UnDeploy Gadget";
    }
 
    public interface View
