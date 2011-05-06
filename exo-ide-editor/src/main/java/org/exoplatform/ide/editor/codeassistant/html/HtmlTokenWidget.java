@@ -38,8 +38,9 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class HtmlTokenWidget extends TokenWidget
 {
-   
+
    private Grid grid;
+
    /**
     * @param token
     */
@@ -55,12 +56,12 @@ public class HtmlTokenWidget extends TokenWidget
       grid.setWidget(0, 0, i);
 
       String name = token.getName();
-      if (token.hasProperty(TokenProperties.SHORT_HINT)  && token.getType()!= TokenType.TEMPLATE)
+      if (token.hasProperty(TokenProperties.SHORT_HINT))
       {
          String hint = token.getProperty(TokenProperties.SHORT_HINT).isStringProperty().stringValue();
          Label hintLabel = new Label(hint, false);
          grid.setWidget(0, 2, hintLabel);
-         
+
       }
 
       Label nameLabel = new Label(name, false);
@@ -81,12 +82,25 @@ public class HtmlTokenWidget extends TokenWidget
     */
    private Image getImage()
    {
-      if(token.getType() == TokenType.ATTRIBUTE)
+      if (token.getType() == TokenType.ATTRIBUTE)
          return new Image(CodeAssistantClientBundle.INSTANCE.attribute());
-      else if(token.getType() == TokenType.TAG)
+      else if (token.getType() == TokenType.TAG)
          return new Image(CodeAssistantClientBundle.INSTANCE.tag());
-      
-      return new Image(CodeAssistantClientBundle.INSTANCE.property());
+      switch (token.getType())
+      {
+         case ATTRIBUTE :
+            return new Image(CodeAssistantClientBundle.INSTANCE.attribute());
+
+         case TAG :
+            return new Image(CodeAssistantClientBundle.INSTANCE.tag());
+
+         case TEMPLATE :
+            return new Image(CodeAssistantClientBundle.INSTANCE.template());
+
+         default :
+            return new Image(CodeAssistantClientBundle.INSTANCE.property());
+      }
+
    }
 
    /**
@@ -107,7 +121,7 @@ public class HtmlTokenWidget extends TokenWidget
    @Override
    public Widget getTokenDecription()
    {
-      if(token.hasProperty(TokenProperties.FULL_TEXT))
+      if (token.hasProperty(TokenProperties.FULL_TEXT))
       {
          Widget w = new SimplePanel();
          w.getElement().setInnerHTML(token.getProperty(TokenProperties.FULL_TEXT).isStringProperty().stringValue());

@@ -52,7 +52,7 @@ import com.google.gwt.resources.client.TextResource;
 public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator<Token>
 {
 
-   public interface JavaScriptBuandle extends ClientBundle
+   public interface JavaScriptBundle extends ClientBundle
    {
       @Source("org/exoplatform/ide/editor/public/tokens/java_script_api.js")
       ExternalTextResource jsApiTokens();
@@ -88,7 +88,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
 
          if (defaultTokens == null)
          {
-            JavaScriptBuandle buandle = GWT.create(JavaScriptBuandle.class);
+            JavaScriptBundle buandle = GWT.create(JavaScriptBundle.class);
             buandle.jsApiTokens().getText(new ResourceCallback<TextResource>()
             {
 

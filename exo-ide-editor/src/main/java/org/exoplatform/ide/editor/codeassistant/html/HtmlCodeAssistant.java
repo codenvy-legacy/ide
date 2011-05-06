@@ -54,7 +54,7 @@ import com.google.gwt.resources.client.TextResource;
 public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFactory, Comparator<Token>
 {
 
-   public interface HtmlBuandle extends ClientBundle
+   public interface HtmlBundle extends ClientBundle
    {
 
       @Source("org/exoplatform/ide/editor/public/tokens/html_tokens.js")
@@ -166,7 +166,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
     */
    protected void getTokens(final String lineContent, final int cursorPositionX) throws ResourceException
    {
-      HtmlBuandle buandle = GWT.create(HtmlBuandle.class);
+      HtmlBundle buandle = GWT.create(HtmlBundle.class);
       buandle.htmlTokens().getText(new ResourceCallback<TextResource>()
       {
 
@@ -202,9 +202,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
       if (!isTag)
       {
-         token.addAll(htmlTokens);
-         Collections.sort(token, this);
-         openForm(token, this, this);
+         showDefaultTags(token);
          return;
       }
 
@@ -261,7 +259,19 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
    }
 
    /**
-    * @param line
+    * 
+    * @param token
+    */
+   protected void showDefaultTags(List<Token> token)
+   {
+      token.addAll(htmlTokens);
+      Collections.sort(token, this);
+      openForm(token, this, this);
+   }
+
+   /**
+    * Parse string line received from editor
+    * @param line current line where autocompletion called
     */
    private void parseTokenLine(String line, int cursorPos)
    {
@@ -288,6 +298,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       {
          beforeToken = tokenLine;
          tokenToComplete = "";
+         isTag  = false;
       }
 
    }

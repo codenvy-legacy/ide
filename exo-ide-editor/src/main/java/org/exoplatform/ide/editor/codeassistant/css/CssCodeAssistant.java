@@ -42,7 +42,7 @@ import com.google.gwt.resources.client.TextResource;
 public class CssCodeAssistant extends CodeAssistant
 {
 
-   public interface CssBuandle extends ClientBundle
+   public interface CssBundle extends ClientBundle
    {
       @Source("org/exoplatform/ide/editor/public/tokens/css_tokens.js")
       ExternalTextResource cssTokens();
@@ -72,7 +72,7 @@ public class CssCodeAssistant extends CodeAssistant
          this.posY = cursorOffsetY;
          if (cssProperty == null)
          {
-            CssBuandle buandle = GWT.create(CssBuandle.class);
+            CssBundle buandle = GWT.create(CssBundle.class);
             buandle.cssTokens().getText( new ResourceCallback<TextResource>()
             {
                

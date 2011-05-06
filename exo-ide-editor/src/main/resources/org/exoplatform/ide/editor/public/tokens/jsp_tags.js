@@ -1,4 +1,4 @@
-[
+{"jsp_tags":[
 		{
 			"name" : "jsp:useBean",
 			"type" : "TAG",
@@ -369,7 +369,45 @@
 						"type" : "ATTRIBUTE",
 						"code" : "doctype-public=\"\"",
 						"fullDescription" : "Must not be speciﬁed unless doctype-system is speciﬁed. Gives the value for the Public ID for the generated DOCTYPE."
-					} ]
+         	} ]
 		}
 
-]
+    ],
+"jsp_templates" : [
+   {
+	"name" : "JSP declaration(s)",
+	"type" : "TEMPLATE",
+	"shortDescription" : "<%!  %>",
+	"code" : "<%!  %>",
+	"fullDescription" : "<pre><%!  %></pre>"      
+    },
+    {
+     "name" : "JSP hidden comment",
+     "type" : "TEMPLATE",
+     "shortDescription" : "<%--  --%>",
+     "code" : "<%--  --%>",
+     "fullDescription" : "<pre><%--  --%></pre>"      
+    },
+    {
+     "name" : "JSP scriptlet",
+ 	 "type" : "TEMPLATE",
+ 	 "shortDescription" : "<% %>",
+ 	 "code" : "<% %>",
+ 	 "fullDescription" : "<pre><% %></pre>" 
+    },{
+ 	 "name" : "JSP include directive",
+ 	 "type" : "TEMPLATE",
+ 	 "code" : "<%@ include file=\"\" %>",
+ 	 "fullDescription" : "<pre><%@ include file=\"\" %></pre>" 
+    },{
+   	 "name" : "JSP page directive",
+ 	 "type" : "TEMPLATE",
+ 	 "code" : "<%@ page contentType=\"text/html; charset=UTF-8\" %>",
+ 	 "fullDescription" : "<pre><%@ page contentType=\"text/html; charset=UTF-8\" %></pre>" 
+    },{
+ 	 "name" : "JSP taglib directive",
+ 	 "type" : "TEMPLATE",
+ 	 "code" : "<%@ taglib uri=\"\" prefix=\"\" %>",
+ 	 "fullDescription" : "<pre><%@ taglib uri=\"\" prefix=\"\" %></pre>" 
+    }]
+}

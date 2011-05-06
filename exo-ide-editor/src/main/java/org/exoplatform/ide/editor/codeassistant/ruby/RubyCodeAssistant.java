@@ -59,7 +59,7 @@ import java.util.Map;
 public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token>
 {
 
-   public interface RubyBuandle extends ClientBundle
+   public interface RubyBundle extends ClientBundle
    {
       @Source("org/exoplatform/ide/editor/public/tokens/ruby_tokens.js")
       ExternalTextResource rubyTokens();
@@ -107,7 +107,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
          //         printTokens(tokenList, 2);
          if (defaultTokens == null)
          {
-            RubyBuandle buandle = GWT.create(RubyBuandle.class);
+            RubyBundle buandle = GWT.create(RubyBundle.class);
             buandle.rubyTokens().getText(new ResourceCallback<TextResource>()
             {
 

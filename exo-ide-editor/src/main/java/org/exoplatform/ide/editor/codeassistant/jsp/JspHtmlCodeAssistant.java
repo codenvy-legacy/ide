@@ -19,7 +19,8 @@
 package org.exoplatform.ide.editor.codeassistant.jsp;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ExternalTextResource;
 import com.google.gwt.resources.client.ResourceCallback;
@@ -45,6 +46,8 @@ class JspHtmlCodeAssistant extends HtmlCodeAssistant
       @Source("org/exoplatform/ide/editor/public/tokens/jsp_tags.js")
       ExternalTextResource jspTagsTokens();
    }
+   
+   private List<Token> templates;
 
    /**
     * @see org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant#getTokens(java.lang.String, int)
@@ -69,7 +72,10 @@ class JspHtmlCodeAssistant extends HtmlCodeAssistant
             try
             {
                JSONTokenParser parser = new JSONTokenParser();
-               List<Token> objects = parser.getTokens(new JSONArray(parseJson(resource.getText())));
+               JavaScriptObject o = parseJson(resource.getText());
+               JSONObject obj = new JSONObject(o);
+               List<Token> objects = parser.getTokens(obj.get("jsp_tags").isArray());
+               templates = parser.getTokens(obj.get("jsp_templates").isArray());
                for (Token t : objects)
                {
                   htmlTokens.add(t);
@@ -103,6 +109,17 @@ class JspHtmlCodeAssistant extends HtmlCodeAssistant
          }
       });
 
+   }
+   
+   /**
+    * @see org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant#showDefaultTags(java.util.List)
+    */
+   @Override
+   protected void showDefaultTags(List<Token> token)
+   {
+      if(templates != null)
+         token.addAll(templates);
+      super.showDefaultTags(token);
    }
 
 }
