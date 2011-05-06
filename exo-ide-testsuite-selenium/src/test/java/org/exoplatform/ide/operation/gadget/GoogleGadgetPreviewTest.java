@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
@@ -41,10 +42,12 @@ import org.junit.Test;
 public class GoogleGadgetPreviewTest extends BaseTest
 {
 
-   
    private final static String FILE_NAME = "Calculator.xml";
+
    private final static String FOLDER = GoogleGadgetPreviewTest.class.getSimpleName();
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -53,9 +56,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/Calculator.xml";
       try
       {
-         //TODO*******change*****
          VirtualFileSystemUtils.mkcol(URL);
-         //******************
          VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + FILE_NAME);
       }
       catch (IOException e)
@@ -71,22 +72,20 @@ public class GoogleGadgetPreviewTest extends BaseTest
    @Test
    public void testGadgetPreview() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-       IDE.NAVIGATION.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      //TODO*********change****
-      IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER);
-      //*********************
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
-           
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(URL);
+      IDE.NAVIGATION.selectItem(URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.waitForItem(URL + FILE_NAME);
 
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(0);
 
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      Thread.sleep(3000);
+      
       assertTrue(selenium.isElementPresent("//div[@class='LeftCalculator']"));
 
       assertTrue(selenium.isElementPresent("//div[@class='Display']"));
@@ -95,8 +94,8 @@ public class GoogleGadgetPreviewTest extends BaseTest
 
       selenium.click("//body[@class='editbox']/");
 
-     IDE.EDITOR.clickOnEditor();
-     IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.deleteFileContent();
 
       String hello =
          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "  <ModulePrefs title=\"Hello World!\" />\n"
@@ -106,14 +105,14 @@ public class GoogleGadgetPreviewTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, hello);
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'Hello,world!')]"));
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
    }
-   
+
    @AfterClass
    public static void tearDown()
    {

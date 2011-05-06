@@ -85,6 +85,8 @@ public interface MenuCommands
       public static final String RUN_GROOVY_SERVICE = "Run in Sandbox";
 
       public static final String SHOW_PREVIEW = "Show Preview";
+      
+      public static final String SHOW_GADGET_PREVIEW = "Show Gadget Preview";
 
       public static final String VALIDATE = "Validate";
 
