@@ -112,7 +112,7 @@ public class Navigation extends AbstractTestModule
       selenium().click(getItemIdSearch(itemHref));
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
-      
+
    /**
     * Assert present item in search tree
     * @param itemHref
@@ -132,7 +132,7 @@ public class Navigation extends AbstractTestModule
    {
       assertFalse(selenium().isElementPresent(getItemIdSearch(itemHref)));
    }
-   
+
    /**
     * Check navigation workspace tree contains item.
     * @param itemHref Href of item
@@ -148,7 +148,11 @@ public class Navigation extends AbstractTestModule
     */
    public void assertItemNotPresent(String itemHref) throws Exception
    {
-      assertFalse(selenium().isElementPresent(getItemId(itemHref)));
+      String id = getItemId(itemHref);
+      if (selenium().isElementPresent(id))
+      {
+         assertFalse(selenium().isVisible(id));
+      }
    }
 
    /**

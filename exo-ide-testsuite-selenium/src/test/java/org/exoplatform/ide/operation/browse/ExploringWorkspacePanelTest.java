@@ -136,8 +136,8 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL);
       waitForRootElement();
       IDE.NAVIGATION.assertItemPresent(FOLDER_1_URL);
-      IDE.NAVIGATION.assertItemNotPresent(FOLDER_1_1_URL);
-      IDE.NAVIGATION.assertItemNotPresent(FOLDER_1_2_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_1_1_URL);
+      IDE.NAVIGATION.assertItemPresent(FOLDER_1_2_URL);
       IDE.NAVIGATION.assertItemPresent(FOLDER_2_URL);
       IDE.NAVIGATION.assertItemNotPresent(FOLDER_2_1_URL);
       IDE.NAVIGATION.assertItemNotPresent(FOLDER_2_2_URL);
