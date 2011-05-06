@@ -267,6 +267,13 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       {
          name += "<span style='color:#644a17;'>" + getElementType(token) + "</span>";
       }
+
+      // display type of RUBY variables
+      else if (MimeType.APPLICATION_RUBY.equals(token.getMimeType()) && token.getElementType() != null)
+      {
+         name += "<span style='color:#644a17;'>" + getElementType(token) + "</span>";
+      }
+      
       return name;
    }
 
