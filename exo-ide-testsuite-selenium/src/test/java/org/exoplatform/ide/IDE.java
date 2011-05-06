@@ -24,6 +24,7 @@ import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.ErrorDialog;
+import org.exoplatform.ide.core.FindReplace;
 import org.exoplatform.ide.core.GoToLine;
 import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Menu;
@@ -35,7 +36,6 @@ import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.core.SaveAs;
 import org.exoplatform.ide.core.SelectWorkspace;
 import org.exoplatform.ide.core.Statusbar;
-import org.exoplatform.ide.core.Templates;
 import org.exoplatform.ide.core.Toolbar;
 import org.exoplatform.ide.core.Upload;
 import org.exoplatform.ide.core.WarningDialog;
@@ -109,6 +109,8 @@ public class IDE
    public GoToLine GOTOLINE = new GoToLine();
    
    public Upload UPLOAD = new Upload();
+   
+   public FindReplace FINDREPLACE = new FindReplace();
    
    public Templates TEMPLATES = new Templates();
 
