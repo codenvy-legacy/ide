@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.outline.event;
+package org.exoplatform.ide.client.outline;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -26,33 +26,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id:
  *
  */
-public class ShowOutlineEvent extends GwtEvent<ShowOutlineHandler>
+public interface ShowOutlineHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<ShowOutlineHandler> TYPE = new GwtEvent.Type<ShowOutlineHandler>();
-   
-   private boolean show;
-
-   public ShowOutlineEvent(boolean show)
-   {
-      this.show = show;
-   }
-
-   @Override
-   protected void dispatch(ShowOutlineHandler handler)
-   {
-      handler.onShowOutline(this);
-   }
-
-   public boolean isShow()
-   {
-      return show;
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowOutlineHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onShowOutline(ShowOutlineEvent event);
 
 }

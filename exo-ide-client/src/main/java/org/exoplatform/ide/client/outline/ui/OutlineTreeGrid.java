@@ -42,7 +42,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $Id:
  *
  */
-public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gwtframework.ui.client.component.Tree<T>
+public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.component.Tree<TokenBeenImpl>
 {
 
    private static final String VAR_ICON = Images.Outline.VAR_ITEM;
@@ -88,7 +88,7 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    private static final String MODULE_ICON = Images.Outline.MODULE_ITEM;
 
    private static final String INTERFACE_ICON = Images.Outline.INTERFACE_ITEM;
-   
+
    private static final String LOCAL_VARIABLE_ICON = Images.Outline.LOCAL_VARIABLE_ITEM;
 
    private static final String GLOBAL_VARIABLE_ICON = Images.Outline.GLOBAL_VARIABLE_ITEM;
@@ -99,6 +99,10 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
 
    private static final String CONSTANT_ICON = Images.Outline.CONSTANT_ITEM;
 
+   public OutlineTreeGrid()
+   {
+   }
+   
    public OutlineTreeGrid(String id)
    {
       getElement().setId(id);
@@ -201,8 +205,7 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
       boolean isDeprecated = isDeprecated(token);
       // add info about java type, parameters and annotations
       if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType())
-         || MimeType.APPLICATION_JAVA.equals(token.getMimeType())
-         )
+         || MimeType.APPLICATION_JAVA.equals(token.getMimeType()))
       {
          //icon, that displays in right bottom corner, if token is CLASS, 
          //and shows access modifier
@@ -297,17 +300,16 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    private String getTokenIcon(TokenBeenImpl token)
    {
       if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()) && !TokenType.GROOVY_TAG.equals(token.getType())
-         || MimeType.APPLICATION_JAVA.equals(token.getMimeType()) && !TokenType.JSP_TAG.equals(token.getType())
-         )
+         || MimeType.APPLICATION_JAVA.equals(token.getMimeType()) && !TokenType.JSP_TAG.equals(token.getType()))
       {
          return getIconForJavaFiles(token);
       }
-      
+
       else if (MimeType.APPLICATION_RUBY.equals(token.getMimeType()))
       {
          return getIconForRubyFile(token);
       }
-      
+
       switch (token.getType())
       {
          case FUNCTION :
@@ -415,21 +417,21 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
          case METHOD :
             return PUBLIC_METHOD_ICON;
 
-         case LOCAL_VARIABLE:
+         case LOCAL_VARIABLE :
             return LOCAL_VARIABLE_ICON;
 
-         case GLOBAL_VARIABLE:
+         case GLOBAL_VARIABLE :
             return GLOBAL_VARIABLE_ICON;
 
-         case CLASS_VARIABLE:
+         case CLASS_VARIABLE :
             return CLASS_VARIABLE_ICON;
 
-         case INSTANCE_VARIABLE:
+         case INSTANCE_VARIABLE :
             return INSTANCE_VARIABLE_ICON;
-            
-         case CONSTANT:
-            return CONSTANT_ICON;            
-            
+
+         case CONSTANT :
+            return CONSTANT_ICON;
+
          case CLASS :
             return CLASS_ICON;
 
@@ -440,7 +442,7 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
             return "";
       }
    }
-   
+
    /**
     * @param token {@link TokenBeenImpl} 
     * @return html element with modifers
@@ -714,9 +716,15 @@ public class OutlineTreeGrid<T extends TokenBeenImpl> extends org.exoplatform.gw
    }
 
    @Override
-   public void setValue(T value)
+   public void setValue(TokenBeenImpl value)
    {
       super.setValue(value);
       hideHighlighter();
    };
+
+   public void setTreeGridId(String id)
+   {
+      getElement().setId(id);
+   }
+
 }

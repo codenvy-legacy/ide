@@ -48,7 +48,14 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 {
    private Map<String, String> locktokens;
 
+   private String id;
+
    private String prefixId;
+
+   public ItemTree()
+   {
+
+   }
 
    /**
     * @param id of UI component
@@ -57,7 +64,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    public ItemTree(String id, String prefixId)
    {
       getElement().setId(id);
-      this.prefixId = prefixId + "-";
+      this.prefixId = prefixId;
    }
 
    @Override
@@ -157,8 +164,8 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
             parentNode.getChild(0).remove();
          }
       }
-      
-       //to avoid send open event (thus extra refresh folder is not done)  
+
+      //to avoid send open event (thus extra refresh folder is not done)  
       parentNode.setState(true, false);
    }
 
@@ -370,6 +377,32 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
          treeIcon.removeIcon(itemsIcons.get(item));
       }
+   }
+
+   public String getId()
+   {
+      return id;
+   }
+
+   public void setId(String id)
+   {
+      this.id = id;
+      getElement().setId(id);
+   }
+   
+   public void setTreeGridId(String id) {
+      this.id = id;
+      getElement().setId(id);      
+   }
+
+   public String getPrefixId()
+   {
+      return prefixId;
+   }
+
+   public void setPrefixId(String prefixId)
+   {
+      this.prefixId = prefixId;
    }
 
 }

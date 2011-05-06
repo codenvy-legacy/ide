@@ -70,7 +70,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, SetViewVisibleHandler
+public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, RequiresResize, SetViewVisibleHandler
 {
 
    /**
@@ -674,6 +674,10 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
    @Override
    public void onResize()
    {
+//      System.out.println("PanelImpl.onResize()");
+//      System.out.println("panel offset width: " + getOffsetWidth());
+//      System.out.println("panel offset height: " + getOffsetHeight());
+      
       if (selectedViewId != null)
       {
          ViewController controller = viewControllers.get(selectedViewId);
@@ -683,6 +687,10 @@ public class PanelImpl extends AbsolutePanel implements Panel, RequiresResize, S
 
    public void resize(int width, int height)
    {
+//      System.out.println("PanelImpl.resize()");
+//      System.out.println("width > " + width);
+//      System.out.println("height > " + height);
+      
       this.width = width;
       this.height = height;
       DOM.setStyleAttribute(getElement(), "width", "" + width + "px");

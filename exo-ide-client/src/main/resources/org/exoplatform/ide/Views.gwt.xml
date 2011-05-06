@@ -21,7 +21,10 @@
 <module>
 	<inherits name='com.google.gwt.user.User' />
 
+<!-- 
 	<replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceView">
+ -->
+	<replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceViewExtended">
 		<when-type-is class="org.exoplatform.ide.client.navigation.WorkspacePresenter.Display" />
 	</replace-with>   
 	
@@ -29,7 +32,10 @@
 		<when-type-is class="org.exoplatform.ide.client.navigation.SearchFilesPresenter.Display" />
 	</replace-with>
 
+<!-- 
 	<replace-with class="org.exoplatform.ide.client.navigation.ui.SearchResultsView">
+ -->
+	<replace-with class="org.exoplatform.ide.client.navigation.ui.SearchResultsViewExtended">
 		<when-type-is class="org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display" />
 	</replace-with>
 
@@ -49,7 +55,10 @@
 		<when-type-is class="org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display" />
 	</replace-with>
 
+<!-- 
 	<replace-with class="org.exoplatform.ide.client.outline.ui.OutlineView">
+ -->
+	<replace-with class="org.exoplatform.ide.client.outline.ui.OutlineViewExtended">
 		<when-type-is class="org.exoplatform.ide.client.outline.OutlinePresenter.Display" />
 	</replace-with>
 
@@ -79,6 +88,10 @@
 
 	<replace-with class="org.exoplatform.ide.client.output.OutputViewEx">
 		<when-type-is class="org.exoplatform.ide.client.output.OutputPresenter.Display" />
+	</replace-with>
+
+	<replace-with class="org.exoplatform.ide.client.debug.ShowImagesView">
+		<when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display" />
 	</replace-with>
 
 </module>

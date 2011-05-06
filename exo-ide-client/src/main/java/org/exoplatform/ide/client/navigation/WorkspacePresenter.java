@@ -52,6 +52,8 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -98,7 +100,7 @@ import com.google.gwt.user.client.Timer;
 */
 public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPointHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockResultReceivedHandler,
-   ApplicationSettingsReceivedHandler, ViewClosedHandler, AddItemTreeIconHandler,
+   ApplicationSettingsReceivedHandler, ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler,
    RemoveItemTreeIconHandler
 {
 
@@ -159,6 +161,8 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
    private Display display;
 
+   private boolean viewOpened = false;
+
    private HandlerManager eventBus;
 
    /**
@@ -176,19 +180,21 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    public WorkspacePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
+      handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE,
+         eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this));
+
       handlerRegistrations.put(RefreshBrowserEvent.TYPE, eventBus.addHandler(RefreshBrowserEvent.TYPE, this));
       handlerRegistrations.put(ItemUnlockedEvent.TYPE, eventBus.addHandler(ItemUnlockedEvent.TYPE, this));
       handlerRegistrations.put(ItemLockResultReceivedEvent.TYPE,
          eventBus.addHandler(ItemLockResultReceivedEvent.TYPE, this));
       handlerRegistrations.put(SwitchEntryPointEvent.TYPE, eventBus.addHandler(SwitchEntryPointEvent.TYPE, this));
       handlerRegistrations.put(SelectItemEvent.TYPE, eventBus.addHandler(SelectItemEvent.TYPE, this));
-      handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE,
-         eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this));
       handlerRegistrations.put(ApplicationSettingsReceivedEvent.TYPE,
          eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
       handlerRegistrations.put(AddItemTreeIconEvent.TYPE, eventBus.addHandler(AddItemTreeIconEvent.TYPE, this));
       handlerRegistrations.put(RemoveItemTreeIconEvent.TYPE, eventBus.addHandler(RemoveItemTreeIconEvent.TYPE, this));
 
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
 
       display = GWT.create(Display.class);
@@ -287,10 +293,11 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       @Override
       public void run()
       {
-         if (display == null) {
+         if (display == null)
+         {
             return;
          }
-         
+
          selectedItems = display.getSelectedItems();
          eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
       }
@@ -516,11 +523,15 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
     */
    public void onSwitchEntryPoint(SwitchEntryPointEvent event)
    {
-      if (display == null) {
+      if (display == null)
+      {
          return;
       }
-      
-      IDE.getInstance().openView(display.asView());
+
+      if (!viewOpened)
+      {
+         IDE.getInstance().openView(display.asView());
+      }
 
       display.getBrowserTree().setValue(null);
       selectedItems.clear();
@@ -625,15 +636,6 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       //      }
    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
    /**
     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
     */
@@ -662,6 +664,25 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    public void onAddItemTreeIcon(AddItemTreeIconEvent event)
    {
       display.addItemsIcons(event.getTreeItemIcons());
+   }
+
+   @Override
+   public void onViewOpened(ViewOpenedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         viewOpened = true;
+      }
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+         viewOpened = false;
+      }
    }
 
 }

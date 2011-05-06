@@ -28,8 +28,11 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,70 +41,79 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public class WorkspaceView extends ViewImpl implements org.exoplatform.ide.client.navigation.WorkspacePresenter.Display
+public class WorkspaceViewExtended extends ViewImpl implements
+   org.exoplatform.ide.client.navigation.WorkspacePresenter.Display
 {
-   
-   static final String ID = "ideWorkspaceView";   
 
-   private static final String TREE_ID = "ideNavigatorItemTreeGrid";
+   public static final String ID = "ideWorkspaceView";
 
-   private static final String TREE_PREFIX_ID = "navigation";
+   /**
+    * Initial width of this view
+    */
+   private static int WIDTH = 250;
 
-   private ItemTree treeGrid;
+   /**
+    * Initial height of this view
+    */
+   private static int HEIGHT = 450;
 
-   public WorkspaceView()
+   private static WorkspaceViewExtendedUiBinder uiBinder = GWT.create(WorkspaceViewExtendedUiBinder.class);
+
+   interface WorkspaceViewExtendedUiBinder extends UiBinder<Widget, WorkspaceViewExtended>
    {
-      super(ID, "navigation", "Workspace", new Image(IDEImageBundle.INSTANCE.workspace()));
-      setHasCloseButton(false);
+   }
+   
+   @UiField
+   ItemTree treeGrid;
 
-      treeGrid = new ItemTree(TREE_ID, TREE_PREFIX_ID);
-      DOM.setStyleAttribute(treeGrid.getElement(), "zIndex", "0");
-      
-      add(treeGrid);
+   public WorkspaceViewExtended()
+   {
+      super(ID, "navigation", "Workspace", new Image(IDEImageBundle.INSTANCE.workspace()), WIDTH, HEIGHT);
+      add(uiBinder.createAndBindUi(this));
    }
 
+   @Override
    public TreeGridItem<Item> getBrowserTree()
    {
       return treeGrid;
    }
 
-   public void selectItem(String path)
-   {
-      treeGrid.selectItem(path);
-   }
-
+   @Override
    public List<Item> getSelectedItems()
    {
       return treeGrid.getSelectedItems();
    }
 
-   public void updateItemState(File file)
+   @Override
+   public void selectItem(String path)
    {
-      treeGrid.updateFileState(file);
+      treeGrid.selectItem(path);
    }
 
-   public void setLockTokens(Map<String, String> locktokens)
-   {
-      treeGrid.setLocktokens(locktokens);
-   }
-
+   @Override
    public void deselectItem(String path)
    {
       treeGrid.deselectItem(path);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.WorkspacePresenter.Display#addItemsIcons(java.util.Map)
-    */
+   @Override
+   public void updateItemState(File file)
+   {
+      treeGrid.updateFileState(file);
+   }
+
+   @Override
+   public void setLockTokens(Map<String, String> locktokens)
+   {
+      treeGrid.setLocktokens(locktokens);
+   }
+
    @Override
    public void addItemsIcons(Map<Item, Map<TreeIconPosition, String>> itemsIcons)
    {
       treeGrid.addItemsIcons(itemsIcons);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.WorkspacePresenter.Display#removeItemIcons(java.util.Map)
-    */
    @Override
    public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)
    {

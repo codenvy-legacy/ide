@@ -19,12 +19,11 @@
 package org.exoplatform.ide.client.navigation.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -71,9 +70,9 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
 
    private TextField pathField;
 
-   private IButton searchButton;
+   private ImageButton searchButton;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
    private ComboBoxField mimeTypesField;
 
@@ -167,8 +166,11 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
 
-      searchButton = createButton("Search", Images.Buttons.SEARCH, ID_SEARCH_BUTTON);
-      cancelButton = createButton("Cancel", Images.Buttons.CANCEL, ID_CANCEL_BUTTON);
+      searchButton = new ImageButton("Search", "search");
+      searchButton.setId(ID_SEARCH_BUTTON);
+      
+      cancelButton = new ImageButton("Cancel", "cancel");
+      cancelButton.setId(ID_CANCEL_BUTTON);
 
       buttonsLayout.add(searchButton);
       buttonsLayout.add(cancelButton);
@@ -176,16 +178,6 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
       return buttonsLayout;
    }
 
-   private IButton createButton(String title, String icon, String id)
-   {
-      IButton button = new IButton(title);
-      button.setID(id);
-      button.setIcon(icon);
-      button.setWidth(BUTTON_WIDTH);
-      button.setHeight(BUTTON_HEIGHT);
-      return button;
-   }
-   
    /**
     * @see org.exoplatform.ide.client.search.file.AskForNamePresenter.Display#getPathItem()
     */

@@ -91,6 +91,8 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(SearchFilesEvent.TYPE, this);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay()

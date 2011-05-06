@@ -37,8 +37,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.client.outline.event.ShowOutlineEvent;
-import org.exoplatform.ide.client.outline.event.ShowOutlineHandler;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;

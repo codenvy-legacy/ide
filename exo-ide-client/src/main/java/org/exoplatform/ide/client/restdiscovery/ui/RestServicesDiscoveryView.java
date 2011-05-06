@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.restdiscovery.ui;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.Border;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -72,7 +72,7 @@ public class RestServicesDiscoveryView extends ViewImpl implements
     * Ok button
     */
    @UiField
-   IButton okButton;
+   ImageButton okButton;
 
    /**
     * Rest services tree

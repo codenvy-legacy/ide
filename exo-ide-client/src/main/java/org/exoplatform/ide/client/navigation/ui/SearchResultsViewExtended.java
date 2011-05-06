@@ -16,16 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.workspace.ui;
+package org.exoplatform.ide.client.navigation.ui;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import java.util.List;
+
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.vfs.Item;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
@@ -38,63 +38,58 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class SelectWorkspaceView extends ViewImpl implements
-   org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display
+public class SearchResultsViewExtended extends ViewImpl implements org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display
 {
+   
+   private static final String ID = "ideSearchResultView";
+   
+   /**
+    * Initial width of this view
+    */
+   private static int WIDTH = 250;
 
-   private static final int WIDTH = 450;
+   /**
+    * Initial height of this view
+    */
+   private static int HEIGHT = 450;   
 
-   private static final int HEIGHT = 200;
+   private static SearchResultsViewExtendedUiBinder uiBinder = GWT.create(SearchResultsViewExtendedUiBinder.class);
 
-   private static SelectWorkspaceViewUiBinder uiBinder = GWT.create(SelectWorkspaceViewUiBinder.class);
-
-   interface SelectWorkspaceViewUiBinder extends UiBinder<Widget, SelectWorkspaceView>
+   interface SearchResultsViewExtendedUiBinder extends UiBinder<Widget, SearchResultsViewExtended>
    {
    }
-
+   
    @UiField
-   EntryPointListGrid entryPointListGrid;
+   ItemTree treeGrid;
 
-   @UiField
-   ImageButton okButton;
-
-   @UiField
-   ImageButton cancelButton;
-
-   public SelectWorkspaceView()
+   public SearchResultsViewExtended()
    {
-      super(ID, "popup", "Workspace", new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), WIDTH, HEIGHT);
+      super(ID, "navigation", "Search", new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 
    @Override
-   public ListGridItem<EntryPoint> getWorkspaceListGrid()
+   public TreeGridItem<Item> getSearchResultTree()
    {
-      return entryPointListGrid;
+      return treeGrid;
    }
 
    @Override
-   public HasClickHandlers getOkButton()
+   public List<Item> getSelectedItems()
    {
-      return okButton;
+      return treeGrid.getSelectedItems();
    }
 
    @Override
-   public HasClickHandlers getCancelButton()
+   public void selectItem(String href)
    {
-      return cancelButton;
+      treeGrid.selectItem(href);
    }
 
    @Override
-   public void setSelectedItem(EntryPoint item)
+   public void deselectAllItems()
    {
-      entryPointListGrid.selectItem(item);
+      treeGrid.deselectAllRecords();
    }
-
-   @Override
-   public void setOkButtonEnabled(boolean enabled)
-   {
-      okButton.setEnabled(enabled);
-   }
-
+   
 }

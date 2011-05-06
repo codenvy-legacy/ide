@@ -50,7 +50,7 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
 
    private FlowPanel outlinePanel;
 
-   private OutlineTreeGrid<TokenBeenImpl> treeGrid;
+   private OutlineTreeGrid treeGrid;
 
    private HTML outlineDisabledHTML;
 
@@ -69,7 +69,7 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
       outlineDisabledHTML.setSize("100%", "100%");
       outlinePanel.add(outlineDisabledHTML);
 
-      treeGrid = new OutlineTreeGrid<TokenBeenImpl>(OUTLINE_TREE_GRID_ID);
+      treeGrid = new OutlineTreeGrid(OUTLINE_TREE_GRID_ID);
       treeGrid.setSize("100%", "100%");
       treeGrid.setVisible(false);
       DOM.setStyleAttribute(treeGrid.getElement(), "zIndex", "0");

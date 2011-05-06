@@ -37,6 +37,8 @@ import com.google.gwt.user.client.ui.Image;
 public class SearchResultsView extends ViewImpl implements
    org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display
 {
+   
+   private static final String ID = "ideSearchResultView";   
 
    private static final String TREE_ID = "ideSearchResultItemTreeGrid";
 

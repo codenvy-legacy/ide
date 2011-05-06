@@ -60,8 +60,6 @@ ViewClosedHandler, SearchResultReceivedHandler
    public interface Display extends IsView
    {
 
-      static final String ID = "ideSearchResultView";
-
       TreeGridItem<Item> getSearchResultTree();
 
       List<Item> getSelectedItems();
@@ -212,17 +210,17 @@ ViewClosedHandler, SearchResultReceivedHandler
 
    private Timer updateSelectionTimer = new Timer()
    {
-
       @Override
       public void run()
       {
+         if (display == null) {
+            return;
+         }
+         
          selectedItems = display.getSelectedItems();
-         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, Display.ID));
+         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
       }
-
    };
-
-
 
    /**
     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
