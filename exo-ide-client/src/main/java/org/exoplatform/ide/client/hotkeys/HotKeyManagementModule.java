@@ -31,22 +31,16 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class HotKeyManagementModule
 {
-   
+
    private HandlerManager eventBus;
-   
-   public HotKeyManagementModule(HandlerManager eventBus) {
+
+   public HotKeyManagementModule(HandlerManager eventBus)
+   {
       this.eventBus = eventBus;
 
       eventBus.fireEvent(new RegisterControlEvent(new CustomizeHotKeysControl()));
-      
-      
-   }
 
-   /*
-   public void onCustomizeHotKeys(CustomizeHotKeysEvent event)
-   {
-      new CustomizeHotKeysPanel(eventBus, applicationSettings, controls);
+      new CustomizeHotKeysPresenter(eventBus);
    }
-   */
 
 }

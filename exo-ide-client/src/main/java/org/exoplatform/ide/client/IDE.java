@@ -102,7 +102,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       new HotKeyManagementModule(EVENT_BUS);
       
-      new DebugModule(EVENT_BUS);
+      //new DebugModule(EVENT_BUS);
 
       //initialize extensions
       for (Extension ext : extensions)

@@ -32,6 +32,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 import java.util.List;
 
@@ -115,13 +116,14 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       vLayout.setHeight("100%");
       vLayout.setSpacing(10);
 
+      createHotKeysListGrid();
+      
       hLayout = new HorizontalPanel();
       hLayout.setHeight((BUTTON_HEIGHT + 4)+"px");
       hLayout.setWidth("100%");
-      createHotKeysListGrid();
 
-
-
+      
+      
       hLayout.add(createHotKeyForm());
       hLayout.add(createBindButtonsForm());
       HorizontalPanel buttonsPanel = createButtonsForm();
@@ -133,17 +135,17 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
 
       setWidget(vLayout);
 
-      try
-      {
-         show();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-
-      presenter = new CustomizeHotKeysPresenter(eventBus, applicationSettings, controls);
-      presenter.bindDisplay(this);
+//      try
+//      {
+//         show();
+//      }
+//      catch (Exception e)
+//      {
+//         e.printStackTrace();
+//      }
+//
+//      presenter = new CustomizeHotKeysPresenter(eventBus, applicationSettings, controls);
+//      presenter.bindDisplay(this);
    }
 
    @Override
@@ -267,44 +269,9 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       return saveButton;
    }
 
-   public void closeForm()
-   {
-      hide();
-   }
-
    public void disableSaveButton(boolean disabled)
    {
       saveButton.setDisabled(disabled);
-   }
-
-   public void disableSaveButton()
-   {
-      saveButton.setDisabled(true);
-   }
-
-   public void enableSaveButton()
-   {
-      saveButton.setDisabled(false);
-   }
-
-   public void disableBindButton()
-   {
-      bindButton.disable();
-   }
-
-   public void disableUnbindButton()
-   {
-      unbindButton.disable();
-   }
-
-   public void enableBindButton()
-   {
-      bindButton.enable();
-   }
-
-   public void enableUnbindButton()
-   {
-      unbindButton.enable();
    }
 
    public HasClickHandlers getBindButton()
@@ -322,21 +289,6 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
       return hotKeyField;
    }
 
-   public void clearHotKeyField()
-   {
-      hotKeyField.clearValue();
-   }
-
-   public void disableHotKeyField()
-   {
-      hotKeyField.setDisabled(true);
-   }
-
-   public void enableHotKeyField()
-   {
-      hotKeyField.setDisabled(false);
-   }
-
    public void focusOnHotKeyField()
    {
       hotKeyField.focusInItem();
@@ -345,6 +297,37 @@ public class CustomizeHotKeysPanel extends DialogWindow implements CustomizeHotK
    public HotKeyItem getSelectedItem()
    {
       return hotKeyItemListGrid.getSelectedItems().get(0);
+   }
+
+   @Override
+   public View asView()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public void setSaveButtonEnabled(boolean enabled)
+   {
+      saveButton.setEnabled(enabled);
+   }
+
+   @Override
+   public void setBindButtonEnabled(boolean enabled)
+   {
+      bindButton.setEnabled(false);
+   }
+
+   @Override
+   public void setUnbindButtonEnabled(boolean enabled)
+   {
+      unbindButton.setEnabled(enabled);
+   }
+
+   @Override
+   public void setHotKeyFieldEnabled(boolean enabled)
+   {
+      hotKeyField.setEnabled(enabled);
    }
 
 }
