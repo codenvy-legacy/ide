@@ -323,6 +323,8 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    {
       //Commented to fix bug with selection of new folder
       //      itemToSelect = null;
+      if (openedFolder.getChildren() != null)
+         return;
       foldersToRefresh = new ArrayList<Folder>();
       foldersToRefresh.add(openedFolder);
       refreshNextFolder();
