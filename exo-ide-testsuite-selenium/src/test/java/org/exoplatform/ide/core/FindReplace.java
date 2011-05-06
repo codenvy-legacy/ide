@@ -24,10 +24,6 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
 
-
-
-
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -37,8 +33,8 @@ import org.exoplatform.ide.Utils;
 
 public class FindReplace extends AbstractTestModule
 {
-   
-   private void checkFindReplaceFormAppeared()
+
+   public void checkFindReplaceFormAppeared()
    {
       assertTrue(selenium().isElementPresent("ideFindReplaceTextView"));
       assertTrue(selenium().isElementPresent("ideFindReplaceTextFormFindButton"));
@@ -46,41 +42,138 @@ public class FindReplace extends AbstractTestModule
       assertTrue(selenium().isElementPresent("ideFindReplaceTextFormReplaceFindButton"));
       assertTrue(selenium().isElementPresent("ideFindReplaceTextFormReplaceAllButton"));
       assertTrue(selenium().isElementPresent("ideFindReplaceTextFormCancelButton"));
-      assertTrue(selenium()
-         .isElementPresent("ideFindReplaceTextFormFindField"));
-      assertTrue(selenium()
-         .isElementPresent("ideFindReplaceTextFormReplaceField"));
-      assertTrue(selenium()
-         .isElementPresent("ideFindReplaceTextFormCaseSensitiveField"));
+      assertTrue(selenium().isElementPresent("ideFindReplaceTextFormFindField"));
+      assertTrue(selenium().isElementPresent("ideFindReplaceTextFormReplaceField"));
+      assertTrue(selenium().isElementPresent("ideFindReplaceTextFormCaseSensitiveField"));
       // Check buttons state
-      assertFalse(isButtonEnabled("Find"));
-      assertFalse(isButtonEnabled("Replace/Find"));
-      assertFalse(isButtonEnabled("Replace"));
-      assertFalse(isButtonEnabled("Replace All"));
-      assertTrue(isButtonEnabled("Cancel"));
-   }   
+      //      assertFalse(isButtonEnabled("Find"));
+      //      assertFalse(isButtonEnabled("Replace/Find"));
+      //      assertFalse(isButtonEnabled("Replace"));
+      //      assertFalse(isButtonEnabled("Replace All"));
+      //      assertTrue(isButtonEnabled("Cancel"));
+   }
 
-   
-   private boolean isButtonEnabled(String title)
+   /**
+    * @param state
+    */
+   public void checkStateButtonEnabled(boolean state)
    {
-      if (selenium().isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='" + title + "']"))
+      if (state == false)
       {
-         return true;
+         assertTrue(selenium().isElementPresent(
+            "//div[@id='ideFindReplaceTextFormFindButton' and @button-enabled='false']"));
       }
-      else if (selenium().isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleOver' and text()='" + title
-         + "']"))
+      else if (state == true)
       {
-         return true;
+         assertTrue(selenium().isElementPresent(
+         "//div[@id='ideFindReplaceTextFormFindButton' and @button-enabled='true']"));
       }
-      else if (selenium().isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleDisabled' and text()='"
-         + title + "']"))
+      else
       {
-         return false;
+         assertTrue(false);
       }
-      return false;
+
+   }
+   
+   public void checkStateButtonReplace(boolean state)
+   {
+      if (state == false)
+      {
+         assertTrue(selenium().isElementPresent(
+            "//div[@id='ideFindReplaceTextFormReplaceButton' and @button-enabled='false']"));
+      }
+      else if (state == true)
+      {
+         assertTrue(selenium().isElementPresent(
+         "//div[@id='ideFindReplaceTextFormReplaceButton' and @button-enabled='true']"));
+      }
+      else
+      {
+         assertTrue(false);
+      }
+   }
+    
+   
+   
+   public void checkStateButtonReplaseFind (boolean state)
+      {
+         if (state == false)
+         {
+            assertTrue(selenium().isElementPresent(
+               "//div[@id='ideFindReplaceTextFormFindButton' and @button-enabled='false']"));
+         }
+         else if (state == true)
+         {
+            assertTrue(selenium().isElementPresent(
+            "//div[@id='ideFindReplaceTextFormFindButton' and @button-enabled='true']"));
+         }
+         else
+         {
+            assertTrue(false);
+         }
+
+      }
+   
+   
+    public void checkStateButtonReplaceAll(boolean state)
+   {
+      if (state == false)
+      {
+         assertTrue(selenium().isElementPresent(
+            "//div[@id='ideFindReplaceTextFormFindButton' and @button-enabled='false']"));
+      }
+      else if (state == true)
+      {
+         assertTrue(selenium().isElementPresent(
+         "//div[@id='ideFindReplaceTextFormFindButton' and @button-enabled='true']"));
+      }
+      else
+      {
+         assertTrue(false);
+      }
+
+   }
+   
+  
+    
+    public void checkStateButtonCancel(boolean state)
+    {
+       if (state == false)
+       {
+          assertTrue(selenium().isElementPresent(
+             "//div[@id='ideFindReplaceTextFormFindButton' and @button-enabled='false']"));
+       }
+       else if (state == true)
+       {
+          assertTrue(selenium().isElementPresent(
+          "//div[@id='ideFindReplaceTextFormFindButton' and @button-enabled='true']"));
+       }
+       else
+       {
+          assertTrue(false);
+       }
+
+    }
+
+    
+    
+    
+    
    }
    
    
    
    
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
 }
