@@ -118,6 +118,16 @@ public class CodeMirrorParserImpl extends Parser
       return rootToken.getSubTokenList();
    };
    
+   /**
+    * Recognize break line node with name "BR" and type "whitespace"
+    * @param node
+    * @return
+    */
+   protected boolean isLineBreak(Node node)
+   {
+      return "whitespace".equals(node.getType()) && "BR".equals(node.getContent());
+   }
+
    private static String possibleMimeType;
 
    private static int nearestTokenLineNumber;

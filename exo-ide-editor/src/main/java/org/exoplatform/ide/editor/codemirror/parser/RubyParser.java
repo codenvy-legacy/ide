@@ -45,7 +45,13 @@ public class RubyParser extends CodeMirrorParserImpl
 
    private HashMap<TokenType, LinkedList<String>> localVariables = new HashMap<TokenType, LinkedList<String>>();
    
+   private HashMap<TokenType, LinkedList<String>> classVariables = new HashMap<TokenType, LinkedList<String>>();
+   
+   private HashMap<TokenType, LinkedList<String>> instanceVariables = new HashMap<TokenType, LinkedList<String>>();
+   
    private LinkedList<String> globalVariables = new LinkedList<String>();
+   
+   private LinkedList<String> constants = new LinkedList<String>();
    
    @Override
    public void init()
@@ -60,27 +66,25 @@ public class RubyParser extends CodeMirrorParserImpl
       localVariables.put(TokenType.MODULE, new LinkedList<String>());      
       localVariables.put(TokenType.METHOD, new LinkedList<String>()); 
       globalVariables.clear();
+      
+      classVariables.put(TokenType.ROOT, new LinkedList<String>());
+      classVariables.put(TokenType.CLASS, new LinkedList<String>()); 
+      instanceVariables.put(TokenType.ROOT, new LinkedList<String>());
+      instanceVariables.put(TokenType.CLASS, new LinkedList<String>()); 
+      
+      constants.clear();
    }
 
    @Override
    TokenBeenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of content
-      if (javaScriptNode == null || Node.getName(javaScriptNode).equals("BR"))
+      if (javaScriptNode == null)
       {
          return currentToken;
       }
-//      
-//      // interrupt at the end of the line
-//      else if (Node.getName(javaScriptNode).equals("BR"))
-//      {
-//         nodeStack.push(new Node("BR", ""));
-//      }
       
-      else
-      {
-         nodeStack.push(new Node(javaScriptNode));
-      }
+      nodeStack.push(new Node(javaScriptNode));
       
       TokenBeenImpl newToken;
 
@@ -114,7 +118,8 @@ public class RubyParser extends CodeMirrorParserImpl
          if (!enclosers.empty())
          {
             // to filter block nodes like "if ... end"
-            if (!enclosers.lastElement().equals(TokenType.BLOCK))
+            if (!enclosers.lastElement().equals(TokenType.BLOCK)
+                 && currentToken.getParentToken() != null)
             {        
                currentToken = closeToken(lineNumber, currentToken);
             }
@@ -134,16 +139,7 @@ public class RubyParser extends CodeMirrorParserImpl
 //         {
 //            addToken(currentToken, nodeStack.lastElement().getContent(), TokenType.LOCAL_VARIABLE, lineNumber);
 //         }
-//      }
-
-      // recognize global variable
-//    else if (isGlobalVariable(nodeStack.lastElement().getType()))
-//    {
-//       if (isFirstVariableOccurance(nodeStack.lastElement().getContent(), TokenType.GLOBAL_VARIABLE, currentToken))
-//       {
-//          addToken(currentToken, nodeStack.lastElement().getContent(), TokenType.GLOBAL_VARIABLE, lineNumber, null);
-//       }
-//    }      
+//      }   
       
       // recognize variable
       else if ((newToken = isVariableWithAssigmentValue(nodeStack, currentToken)) != null)
@@ -151,6 +147,12 @@ public class RubyParser extends CodeMirrorParserImpl
          addToken(newToken, lineNumber, currentToken);
       }
       
+      // recognize global and instance variable without assignments like "$test/n" or "@test/n", so has nil value
+      else if ((newToken = isVariableWithoutAssignment(nodeStack, currentToken)) != null)
+      {
+         newToken.setElementType("nil");
+         addToken(newToken, lineNumber, currentToken);
+      }
       
       // recognize "("
       else if (isOpenBracket(nodeStack.lastElement()))
@@ -172,33 +174,19 @@ public class RubyParser extends CodeMirrorParserImpl
       {                 
       }
 
+      if (Node.isLineBreak(javaScriptNode)) 
+      {
+         return currentToken; // return current token if this is the end of line node
+      } 
+      
       return parseLine(Node.getNext(javaScriptNode), lineNumber, currentToken, false);
    }
-
-//   private void addToken(TokenBeenImpl currentToken, String tokenName, TokenType tokenType, int lineNumber, String elementType)
-//   {
-//      TokenBeenImpl newToken = new TokenBeenImpl(tokenName, tokenType, lineNumber, MimeType.APPLICATION_RUBY);
-//
-//      switch (tokenType) {
-//         case LOCAL_VARIABLE:
-//            updateLocalVariableList(currentToken, tokenName);
-//            break;
-//            
-//         case GLOBAL_VARIABLE:
-//            globalVariables.add(tokenName);
-//            newToken.setElementType("nil");
-//            newToken.setName(newToken.getName() + " : nil");
-//            break;
-// 
-//         default:
-//      }
-//
-//      currentToken.addSubToken(newToken);
-//      nodeStack.clear();
-//   }
    
    private void addToken(TokenBeenImpl newToken, int lineNumber, TokenBeenImpl currentToken)
    {
+      newToken.setLineNumber(lineNumber);
+      nodeStack.clear();
+      
       switch (newToken.getType()) {
          case LOCAL_VARIABLE:
             updateLocalVariableList(currentToken, newToken.getName());
@@ -206,20 +194,51 @@ public class RubyParser extends CodeMirrorParserImpl
             
          case GLOBAL_VARIABLE:
             globalVariables.add(newToken.getName());
-//            newToken.setElementType("nil");
-//            newToken.setName(newToken.getName() + " : nil");
             break;
- 
+
+         case CLASS_VARIABLE:
+            updateClassVariableList(currentToken, newToken.getName());
+            
+            // Pull Up class variable from method level to class level
+            if (TokenType.METHOD.equals(currentToken.getType())
+                  && currentToken.getParentToken() != null
+                  && TokenType.CLASS.equals(currentToken.getParentToken().getType())
+                )
+            {
+               currentToken.getParentToken().addSubToken(newToken);
+               return;
+            }
+
+            break;       
+
+         case INSTANCE_VARIABLE:
+            updateInstanceVariableList(currentToken, newToken.getName());
+            
+            // Pull Up instance variable from method level to class level
+            if (TokenType.METHOD.equals(currentToken.getType())
+                  && currentToken.getParentToken() != null
+                  && TokenType.CLASS.equals(currentToken.getParentToken().getType())
+                )
+            {
+               currentToken.getParentToken().addSubToken(newToken);
+               return;
+            }
+            
+            break;
+            
+         case CONSTANT:
+            constants.add(newToken.getName());
+            break;
+            
          default:
       }
 
-      newToken.setLineNumber(lineNumber);
       currentToken.addSubToken(newToken);
-      nodeStack.clear();
+
    }
 
    /**
-    * Search local variable with name variableName among the method's local variable, module's local variable, class's local variable, at top level of ruby file;  
+    * Search variable and constants with name variableName among the previous variables or constants assignments  
     * @param variableName
     * @param variableType
     * @param currentToken
@@ -229,7 +248,6 @@ public class RubyParser extends CodeMirrorParserImpl
    {
       switch (variableType) {
          case LOCAL_VARIABLE:
-                        
             // find variable in the toplevel local variable list
             if (currentToken.getParentToken() == null)
             {
@@ -238,15 +256,14 @@ public class RubyParser extends CodeMirrorParserImpl
             }
 
             // find variable in the method's local variable list
-            else if (TokenType.METHOD.equals(currentToken.getType()))
+            if (TokenType.METHOD.equals(currentToken.getType()))
             {
                if (localVariables.get(TokenType.METHOD).contains(variableName))
                   return false;
             }       
             
             // find variable in the class's local variable list
-            else if (TokenType.CLASS.equals(currentToken.getParentToken().getType())
-                     || TokenType.CLASS.equals(currentToken.getType()))
+            else if (TokenType.CLASS.equals(currentToken.getType()))
             {
                if (localVariables.get(TokenType.CLASS).contains(variableName))
                   return false;
@@ -254,23 +271,65 @@ public class RubyParser extends CodeMirrorParserImpl
             }
 
             // find variable in the module's local variable list
-            else if (TokenType.MODULE.equals(currentToken.getParentToken().getType())
-                     || TokenType.MODULE.equals(currentToken.getType()))
+            else if (TokenType.MODULE.equals(currentToken.getType()))
             {
-               if (localVariables.get(TokenType.CLASS).contains(variableName))
+               if (localVariables.get(TokenType.MODULE).contains(variableName))
                   return false;
-            }
-            
-            else if (localVariables.get(TokenType.ROOT).contains(variableName))
-               return false;                        
+            }                     
 
             break;
             
          case GLOBAL_VARIABLE:
-            if (globalVariables.contains(variableName))
+            // Ruby does not allow redefinitions of constants in a method.
+            if (TokenType.METHOD.equals(currentToken.getType()) 
+                 || globalVariables.contains(variableName)
+               )
+            {   
+               return false;
+            }            
+            break;
+            
+         case CLASS_VARIABLE:            
+            // find variable in the toplevel local variable list
+            if (currentToken.getParentToken() == null)
+            {
+               if (classVariables.get(TokenType.ROOT).contains(variableName))
+                     return false;
+            }
+
+            // find variable in the class's local variable list
+            else if (TokenType.METHOD.equals(currentToken.getType())
+                     || TokenType.CLASS.equals(currentToken.getType()))
+            {
+               if (classVariables.get(TokenType.CLASS).contains(variableName))
+                  return false;
+            }                        
+
+            break;            
+
+         case INSTANCE_VARIABLE:
+            // find variable in the toplevel local variable list
+            if (currentToken.getParentToken() == null)
+            {
+               if (instanceVariables.get(TokenType.ROOT).contains(variableName))
+                     return false;
+            }
+
+            // find variable in the instance's local variable list
+            else if (TokenType.METHOD.equals(currentToken.getType())
+                     || TokenType.CLASS.equals(currentToken.getType()))
+            {
+               if (instanceVariables.get(TokenType.CLASS).contains(variableName))
+                  return false;
+            }                        
+
+            break;
+            
+         case CONSTANT:
+            if (constants.contains(variableName))
                return false;
             
-            break;
+            break;            
             
          default:
             return true;
@@ -307,6 +366,11 @@ public class RubyParser extends CodeMirrorParserImpl
       {
          case CLASS:
             localVariables.get(TokenType.CLASS).clear();
+            
+            classVariables.get(TokenType.CLASS).clear();
+            
+            instanceVariables.get(TokenType.CLASS).clear();
+            
             break;
             
          case MODULE:
@@ -348,11 +412,43 @@ public class RubyParser extends CodeMirrorParserImpl
       }
    }
    
+   private void updateClassVariableList(TokenBeenImpl currentToken, String classVariableName)
+   {
+      // update toplevel variable list
+      if (currentToken.getParentToken() == null)
+      {
+         classVariables.get(TokenType.ROOT).add(classVariableName);
+      }
+      
+      // update class's variable list
+      else if (TokenType.METHOD.equals(currentToken.getType())
+               || TokenType.CLASS.equals(currentToken.getType()))
+      {
+         classVariables.get(TokenType.CLASS).add(classVariableName);
+      }
+   }
+
+   private void updateInstanceVariableList(TokenBeenImpl currentToken, String instanceVariableName)
+   {
+      // update toplevel variable list
+      if (currentToken.getParentToken() == null)
+      {
+         instanceVariables.get(TokenType.ROOT).add(instanceVariableName);
+      }
+      
+      // update instance's variable list
+      else if (TokenType.METHOD.equals(currentToken.getType())
+               || TokenType.CLASS.equals(currentToken.getType()))
+      {
+         instanceVariables.get(TokenType.CLASS).add(instanceVariableName);
+      }
+   }
+   
    private boolean isClassName(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 1
                && isClassNode(nodeStack.get(nodeStack.size() - 2))
-               && isConstant(nodeStack.lastElement())
+               && isConstant(nodeStack.lastElement().getType())
           )
       {
          return true;
@@ -366,7 +462,7 @@ public class RubyParser extends CodeMirrorParserImpl
       if (nodeStack.size() > 1
                && isModuleNode(nodeStack.get(nodeStack.size() - 2))
                && (isMethodNode(nodeStack.lastElement().getType()) 
-                     || isConstant(nodeStack.lastElement())
+                     || isConstant(nodeStack.lastElement().getType())
                    )
           )
       {
@@ -421,9 +517,9 @@ public class RubyParser extends CodeMirrorParserImpl
     * @param node
     * @return
     */
-   private boolean isConstant(Node node)
+   private boolean isConstant(String nodeType)
    {
-      return "rb-constant".equals(node.getType());
+      return "rb-constant".equals(nodeType);
    }
    
    /**
@@ -603,7 +699,7 @@ public class RubyParser extends CodeMirrorParserImpl
    }
    
    /**
-    * Recognize variable with assigment "h = 11" 
+    * Recognize variable and constant with first assigment "h = 11" 
     * @param nodeStack 
     * @param currentToken
     * @return element type from "number", "string" etc.
@@ -616,8 +712,14 @@ public class RubyParser extends CodeMirrorParserImpl
          Stack<Node> cloneNodeStack = (Stack<Node>) nodeStack.clone();
          String possibleElementType = null;
          Node lastNode = cloneNodeStack.pop();
+       
+         // parse wrong statement like "a = /n"
+         if (lastNode.isLineBreak())
+         {
+            return null;
+         }
          
-         if (isFixNumber(lastNode.getType()))
+         else if (isFixNumber(lastNode.getType()))
          {
             possibleElementType = "Fixnum";
          }
@@ -632,6 +734,18 @@ public class RubyParser extends CodeMirrorParserImpl
                  )
          {
             possibleElementType = "Number";
+         }
+         
+         // recognize TrueClass
+         else if (isTrue(lastNode))
+         {
+            possibleElementType = "TrueClass";
+         }
+
+         // recognize FalseClass
+         else if (isFalse(lastNode))
+         {
+            possibleElementType = "FalseClass";
          }
          
          else if (isAscii(lastNode.getType()))
@@ -676,54 +790,66 @@ public class RubyParser extends CodeMirrorParserImpl
       
          // recognize variable assignment statement like "a ="
          TokenBeenImpl newToken;
-         if (cloneNodeStack.size() > 1
-                && (newToken = isVariableWithAssignmentStatement(cloneNodeStack, currentToken)) != null)
+         if (cloneNodeStack.size() > 1)
          {
-            if (possibleElementType != null)
+            TokenType variableType;
+            if (isEqualSign(cloneNodeStack.get(cloneNodeStack.size() - 1))
+                 && (variableType = isVariable(cloneNodeStack.get(cloneNodeStack.size() - 2).getType())) != null 
+                 && isFirstVariableOccurance(
+                       cloneNodeStack.get(cloneNodeStack.size() - 2).getContent(),
+                       variableType,
+                       currentToken
+                    )
+               )
             {
-               newToken.setElementType(possibleElementType);
-               newToken.setName(newToken.getName() + " : " + possibleElementType);
-            }
+               newToken = new TokenBeenImpl(cloneNodeStack.get(cloneNodeStack.size() - 2).getContent(), variableType, 0, MimeType.APPLICATION_RUBY);
+               newToken.setElementType("Object");
             
-            return newToken;
+               if (possibleElementType != null)
+               {
+                  newToken.setElementType(possibleElementType);
+               }
+            
+               return newToken;
+            }
          }
       }
          
       return null;
    }
-
+   
    /**
-    * 
-    * @param currentToken
+    * Recognize GLOBAL_VARIABLE or INSTANCE_VARIABLE variable without assignment like "@h /n" 
     * @param safe nodeStack
-    * @return element type
+    * @return CodeMirrorTokenImpl with global variable in case like "$a /n"
     */
-   private TokenBeenImpl isVariableWithAssignmentStatement(Stack<Node> nodeStack, TokenBeenImpl currentToken)
+   private TokenBeenImpl isVariableWithoutAssignment(Stack<Node> nodeStack, TokenBeenImpl currentToken)
    {
       if (nodeStack.size() > 1)
-      {         
-         Stack<Node> cloneNodeStack = (Stack<Node>) nodeStack.clone();
+      {
          TokenType variableType;
-         if (isEqualSign(cloneNodeStack.get(cloneNodeStack.size() - 1))
-              && (variableType = isVariable(cloneNodeStack.get(cloneNodeStack.size() - 2).getType())) != null 
-              && isFirstVariableOccurance(
-                    cloneNodeStack.get(cloneNodeStack.size() - 2).getContent(),
-                    variableType,
-                    currentToken
-                 )
-            )
-         {
-            TokenBeenImpl newToken = new TokenBeenImpl(cloneNodeStack.get(cloneNodeStack.size() - 2).getContent(), variableType, 0, MimeType.APPLICATION_RUBY);
-            newToken.setElementType("Object");
-            return newToken;
+         if (nodeStack.get(nodeStack.size() - 1).isLineBreak()
+             && (variableType = isVariable(nodeStack.get(nodeStack.size() - 2).getType())) != null
+             && (TokenType.GLOBAL_VARIABLE.equals(variableType) 
+                   || TokenType.INSTANCE_VARIABLE.equals(variableType)
+                )
+             && isFirstVariableOccurance(
+                nodeStack.get(nodeStack.size() - 2).getContent(),
+                 variableType,
+                 currentToken
+             )
+         )
+         {            
+            return new TokenBeenImpl(nodeStack.get(nodeStack.size() - 2).getContent(), variableType, 0, MimeType.APPLICATION_RUBY);
          }
       }
       
       return null;
-   }
+   }  
+   
    
    /**
-    * Return TokenType of variable or null 
+    * Return TokenType of variable or constant or null 
     * @param node type
     * @return
     */
@@ -740,6 +866,9 @@ public class RubyParser extends CodeMirrorParserImpl
       if (isClassVariable(nodeType))
          return TokenType.CLASS_VARIABLE;
       
+      if (isConstant(nodeType))
+         return TokenType.CONSTANT;
+      
       return null;
    }
 
@@ -749,18 +878,6 @@ public class RubyParser extends CodeMirrorParserImpl
    private boolean isFixNumber(String nodeType) {
       return nodeType.contains("rb-fixnum");
    };
-   
-   /**
-    * @param node
-    * @return true if this is keyword "true" or "false"
-    */
-   private boolean isBoolean(Node node)
-   {
-      return "rb-keyword".equals(node.getType()) 
-               && ("true".equals(node.getContent()) 
-                    || "false".equals(node.getContent())
-                  );
-   }
    
    /**
     * @param type
@@ -778,6 +895,24 @@ public class RubyParser extends CodeMirrorParserImpl
    private boolean isNil(Node node)
    {
       return "rb-keyword".equals(node.getType()) && ("nil".equals(node.getContent()));
+   }
+   
+   /**
+    * @param node
+    * @return true if this is "true" value
+    */
+   private boolean isTrue(Node node)
+   {
+      return "rb-keyword".equals(node.getType()) && ("true".equals(node.getContent()));
+   }   
+
+   /**
+    * @param node
+    * @return true if this is "false" value
+    */
+   private boolean isFalse(Node node)
+   {
+      return "rb-keyword".equals(node.getType()) && ("false".equals(node.getContent()));
    }
    
    /**

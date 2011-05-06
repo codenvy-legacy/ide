@@ -32,10 +32,22 @@ public class Node
    
    public Node(JavaScriptObject node)
    {
-      this.type = getType(node);
-      this.content = getContent(node).trim(); // returns text without ended space " " in the text         
+      if (isLineBreak(node))
+      {
+         this.type = "line-break";
+      }
+      else
+      {
+         this.type = getType(node);
+         this.content = getContent(node).trim(); // returns text without ended space " " in the text
+      }
    }
    
+   public static boolean isLineBreak(JavaScriptObject node)
+   {
+      return "BR".equals(getName(node));
+   }
+
    public Node(String type, String content)
    { 
       this.type = type;
@@ -144,5 +156,12 @@ public class Node
    public native static String getTextFromEditor(JavaScriptObject editor)/*-{
       return editor.getCode();
    }-*/;
-   
+
+   /**
+    * @return true if node has type "line-break"
+    */
+   public boolean isLineBreak()
+   {
+      return "line-break".equals(this.type);
+   }
 }

@@ -58,24 +58,15 @@ public class JavaScriptParser extends CodeMirrorParserImpl
       {
          return currentToken;
       }
-      
-      // interrupt at the end of the line
-      else if (Node.getName(javaScriptNode).equals("BR"))
-      {
-         nodeStack.push(new Node("BR", ""));
-      }
-      
-      else
-      {
-         nodeStack.push(new Node(javaScriptNode));
-      }
-      
+
+      nodeStack.push(new Node(javaScriptNode));
+            
       Stack<Node> cloneNodeStack = null;
       TokenBeenImpl newToken = null;
      
       // recognize ended line break or ";" or "// ....." or whitespace
       if (nodeStack.size() > 1
-            && (isLineBreak(nodeStack.lastElement()) 
+            && (nodeStack.lastElement().isLineBreak() 
                      || isSemicolonNode(nodeStack.lastElement())
                      || isJsComment(nodeStack.lastElement())
                      || isWhitespace(nodeStack.lastElement()) 
@@ -196,7 +187,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
       }
       
       if (hasParentParser 
-               || (!nodeStack.isEmpty() && isLineBreak(nodeStack.lastElement()))) 
+               || Node.isLineBreak(javaScriptNode)) 
       {
          return currentToken; // return current token to parent parser
       } 
@@ -411,7 +402,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
                }
                
                // return if there is non-BR or non-whitespace node between ") ....  {"
-               else if (!(isLineBreak(node) || isWhitespace(node)))
+               else if (!(node.isLineBreak() || isWhitespace(node)))
                {
                   return null;
                }
@@ -460,7 +451,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
                }
                
                // return if there is non-BR or non-whitespace node between ") ....  {"
-               else if (!(isLineBreak(node) || isWhitespace(node)))
+               else if (!(node.isLineBreak() || isWhitespace(node)))
                {
                   return -1;
                }
@@ -715,16 +706,6 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    }
    
    /**
-    * Recognize break line node with type "BR"
-    * @param node
-    * @return
-    */
-   private boolean isLineBreak(Node node)
-   {
-      return "BR".equals(node.getType());
-   }
-
-   /**
     * Recognize open brackets "(" 
     * @param node 
     * @return
@@ -846,7 +827,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
       while (cloneNodeStack.size() > 0)
       {
          if (isWhitespace(cloneNodeStack.firstElement())
-                  || isLineBreak(cloneNodeStack.firstElement()))
+                  || cloneNodeStack.firstElement().isLineBreak())
          {
             cloneNodeStack.removeElementAt(0);
          }
