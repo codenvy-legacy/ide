@@ -57,6 +57,8 @@ public class JspCodeAssistant extends JavaCodeAssistant
 
    private static Map<String, Token> implicitObjects;
 
+   private JspHtmlCodeAssistant jspHtmlCodeAssistant;
+
    /**
     * @param service
     * @param factory
@@ -66,6 +68,8 @@ public class JspCodeAssistant extends JavaCodeAssistant
       JavaCodeAssistantErrorHandler errorHandler)
    {
       super(service, factory, errorHandler);
+      jspHtmlCodeAssistant = new JspHtmlCodeAssistant();
+
       if (implicitObjects == null)
       {
 
@@ -116,8 +120,8 @@ public class JspCodeAssistant extends JavaCodeAssistant
       }
       else
       {
-         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, mimeType, cursorOffsetX,
-            cursorOffsetY, lineContent, cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+         jspHtmlCodeAssistant.autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
+            cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
       }
    }
 
@@ -131,22 +135,23 @@ public class JspCodeAssistant extends JavaCodeAssistant
          tokens.addAll(implicitObjects.values());
       super.callOpenForm(tokens);
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant#showMethods(org.exoplatform.ide.editor.api.codeassitant.Token, java.lang.String, java.lang.String)
     */
    @Override
    protected void showMethods(Token currentToken, String varToken)
    {
-      if(implicitObjects.containsKey(varToken))
+      if (implicitObjects.containsKey(varToken))
       {
          action = Action.PUBLIC;
-         curentFqn = implicitObjects.get(varToken).getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
+         curentFqn =
+            implicitObjects.get(varToken).getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
          getClassDescription();
       }
       else
       {
-         super.showMethods(currentToken, varToken);         
+         super.showMethods(currentToken, varToken);
       }
    }
 }

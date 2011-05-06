@@ -19,6 +19,8 @@
 package org.exoplatform.ide.editor.codeassistant.html;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -49,7 +51,7 @@ import com.google.gwt.resources.client.TextResource;
  * @version $Id: HtmlCodeAssistant Feb 22, 2011 2:36:49 PM evgen $
  *
  */
-public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFactory
+public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFactory, Comparator<Token>
 {
 
    public interface HtmlBuandle extends ClientBundle
@@ -59,17 +61,17 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       ExternalTextResource htmlTokens();
    }
 
-   private static List<Token> htmlTokens;
+   protected List<Token> htmlTokens = new ArrayList<Token>();
 
-   private static List<Token> htmlCoreAttributes;
+   private List<Token> htmlCoreAttributes;
 
-   private static List<Token> htmlBaseEvents;
+   private List<Token> htmlBaseEvents;
 
-   private static List<String> noEndTag = new ArrayList<String>();
+   protected static List<String> noEndTag = new ArrayList<String>();
 
-   private static List<String> noCoreAttributes = new ArrayList<String>();
+   protected static List<String> noCoreAttributes = new ArrayList<String>();
 
-   private static List<String> noBaseEvents = new ArrayList<String>();
+   protected static List<String> noBaseEvents = new ArrayList<String>();
 
    static
    {
@@ -142,30 +144,9 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       try
       {
 
-         if (htmlTokens == null)
+         if (htmlTokens.size() == 0)
          {
-            HtmlBuandle buandle = GWT.create(HtmlBuandle.class);
-            buandle.htmlTokens().getText(new ResourceCallback<TextResource>()
-            {
-
-               @Override
-               public void onSuccess(TextResource resource)
-               {
-                  JavaScriptObject o = parseJson(resource.getText());
-                  JSONObject obj = new JSONObject(o);
-                  JSONTokenParser parser = new JSONTokenParser();
-                  htmlTokens = parser.getTokens(obj.get("tag").isArray());
-                  htmlCoreAttributes = parser.getTokens(obj.get("attributes").isArray());
-                  htmlBaseEvents = parser.getTokens(obj.get("baseEvents").isArray());
-                  autocompletion(lineContent, cursorPositionX);
-               }
-
-               @Override
-               public void onError(ResourceException e)
-               {
-                  e.printStackTrace();
-               }
-            });
+            getTokens(lineContent, cursorPositionX);
             return;
          }
 
@@ -178,8 +159,39 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
    }
 
    /**
-    * @param cursorOffsetX
-    * @param cursorOffsetY
+    * Receive and parse tokens
+    * @param lineContent
+    * @param cursorPositionX
+    * @throws ResourceException
+    */
+   protected void getTokens(final String lineContent, final int cursorPositionX) throws ResourceException
+   {
+      HtmlBuandle buandle = GWT.create(HtmlBuandle.class);
+      buandle.htmlTokens().getText(new ResourceCallback<TextResource>()
+      {
+
+         @Override
+         public void onSuccess(TextResource resource)
+         {
+            JavaScriptObject o = parseJson(resource.getText());
+            JSONObject obj = new JSONObject(o);
+            JSONTokenParser parser = new JSONTokenParser();
+            htmlTokens.addAll(parser.getTokens(obj.get("tag").isArray()));
+            htmlCoreAttributes = parser.getTokens(obj.get("attributes").isArray());
+            htmlBaseEvents = parser.getTokens(obj.get("baseEvents").isArray());
+            autocompletion(lineContent, cursorPositionX);
+         }
+
+         @Override
+         public void onError(ResourceException e)
+         {
+            e.printStackTrace();
+         }
+      });
+   }
+
+   /**
+    * Do autocompletion
     * @param lineContent
     * @param cursorPositionX
     */
@@ -191,6 +203,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       if (!isTag)
       {
          token.addAll(htmlTokens);
+         Collections.sort(token, this);
          openForm(token, this, this);
          return;
       }
@@ -243,6 +256,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
          token.addAll(htmlTokens);
       }
 
+      Collections.sort(token, this);
       openForm(token, this, this);
    }
 
@@ -303,6 +317,24 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
    public TokenWidget buildTokenWidget(Token token)
    {
       return new HtmlTokenWidget(token);
+   }
+
+   /**
+    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+    */
+   @Override
+   public int compare(Token t1, Token t2)
+   {
+      if (t1.getType() == t2.getType())
+         return t1.getName().compareToIgnoreCase(t2.getName());
+
+      if (t1.getType() == TokenType.TAG)
+         return -1;
+      else if (t2.getType() == TokenType.TAG)
+         return 1;
+      else
+         return 0;
+
    }
 
 }
