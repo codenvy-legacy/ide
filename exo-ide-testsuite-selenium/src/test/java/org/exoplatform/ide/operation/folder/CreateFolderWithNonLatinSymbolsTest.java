@@ -56,7 +56,7 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
       assertEquals(200, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME, "UTF-8")).getStatusCode());
       Thread.sleep(120000);
       //TODO will be possible check nonlatin folders name in navigator; ((further code is not working))
-      IDE.NAVIGATION.assertItemPresent(URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_NAME + "/");
 
       selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
       selenium.mouseUpAt("//div[@title='Delete Item(s)...']//img", "");
@@ -69,7 +69,7 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
       selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + URLEncoder.encode(FOLDER_NAME, "UTF-8") + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + URLEncoder.encode(FOLDER_NAME, "UTF-8") + "/");
       assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME, "UTF-8")).getStatusCode());
    }
 

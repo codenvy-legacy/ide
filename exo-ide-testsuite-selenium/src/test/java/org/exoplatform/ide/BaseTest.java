@@ -449,7 +449,7 @@ public abstract class BaseTest
 
    protected void openFileFromSearchResultsWithCodeEditor(String fileName) throws Exception
    {
-      IDE.NAVIGATION.selectItemInSerchTree(fileName);
+      IDE.NAVIGATION.selectItemInSearchTree(fileName);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 

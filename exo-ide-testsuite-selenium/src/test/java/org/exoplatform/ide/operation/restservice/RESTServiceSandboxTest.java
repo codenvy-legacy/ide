@@ -75,7 +75,7 @@ public class RESTServiceSandboxTest extends BaseTest
    public void testDeployUndeploy() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/");
       //Create REST Service file and save it:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);

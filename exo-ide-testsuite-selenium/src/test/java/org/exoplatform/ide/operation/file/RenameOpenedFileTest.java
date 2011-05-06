@@ -127,8 +127,8 @@ public class RenameOpenedFileTest extends BaseTest
       selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
 
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());

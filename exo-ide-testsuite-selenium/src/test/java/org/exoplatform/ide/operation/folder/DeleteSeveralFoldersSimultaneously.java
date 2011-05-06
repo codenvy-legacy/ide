@@ -122,10 +122,10 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
 
       chekDisappearDeleteItemForm();
 
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME_1 + "/");
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME_1 + "/" + FOLDER_NAME_2 + "/");
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME_3 + "/");
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME_3 + "/" + "test.groovy");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME_1 + "/" + FOLDER_NAME_2 + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME_3 + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME_3 + "/" + "test.groovy");
 
       assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_1, "UTF-8")).getStatusCode());
       assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_3, "UTF-8")).getStatusCode());

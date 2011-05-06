@@ -71,7 +71,7 @@ public class CreateFolderTest extends BaseTest
       waitForElementNotPresent("ideCreateFolderFormNameField");
       assertFalse(selenium.isElementPresent("ideCreateFolderFormNameField"));
       assertTrue(selenium.isTextPresent(FOLDER_NAME_TOOLBAR));
-      IDE.NAVIGATION.assertItemPresent(URL + FOLDER_NAME_TOOLBAR + "/");
+      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_NAME_TOOLBAR + "/");
       assertEquals(200, VirtualFileSystemUtils.get(URL + FOLDER_NAME_TOOLBAR).getStatusCode());
    }
 
@@ -95,7 +95,7 @@ public class CreateFolderTest extends BaseTest
       //check disapear menu after create of folder
       assertFalse(selenium.isElementPresent("ideCreateFolderForm"));
       //check folder in tread menu
-      IDE.NAVIGATION.assertItemPresent(URL + FOLDER_NAME_DEFOLT + "/");
+      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_NAME_DEFOLT + "/");
       assertEquals(200, VirtualFileSystemUtils.get(URL + URLEncoder.encode("New Folder", "UTF-8")).getStatusCode());
    }
 

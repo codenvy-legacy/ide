@@ -72,7 +72,7 @@ public class SearchInRootFolderTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, restFileContent);
       saveAsByTopMenu(restFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + folder1Name + "/" + restFileName);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + folder1Name + "/" + restFileName);
 
       //Create second folder
       IDE.NAVIGATION.selectRootOfWorkspace();
@@ -80,11 +80,11 @@ public class SearchInRootFolderTest extends BaseTest
       //Save in second folder first time
       saveAsUsingToolbarButton(copyofRestFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + folder2Name + "/" + copyofRestFileName);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + folder2Name + "/" + copyofRestFileName);
       //Save in second folder second time
       saveAsUsingToolbarButton(restFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + folder2Name + "/" + restFileName);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + folder2Name + "/" + restFileName);
 
      IDE.EDITOR.closeTab(0);
 
@@ -122,8 +122,8 @@ public class SearchInRootFolderTest extends BaseTest
       selenium.controlKeyUp();
       IDE.NAVIGATION.deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folder1Name + "/");
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folder2Name + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + folder1Name + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + folder2Name + "/");
 
       Thread.sleep(TestConstants.SLEEP);
    }

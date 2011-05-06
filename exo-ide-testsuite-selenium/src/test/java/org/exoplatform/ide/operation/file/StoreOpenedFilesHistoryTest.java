@@ -195,8 +195,8 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.NAVIGATION.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.NAVIGATION.assertItemPresent(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
-      IDE.NAVIGATION.assertItemPresent(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
+      IDE.NAVIGATION.assertItemVisible(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
+      IDE.NAVIGATION.assertItemVisible(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
    }
    
    /**

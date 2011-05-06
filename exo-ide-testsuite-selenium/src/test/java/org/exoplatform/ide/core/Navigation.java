@@ -107,46 +107,54 @@ public class Navigation extends AbstractTestModule
     * @param itemHref
     * @throws Exception
     */
-   public void selectItemInSerchTree(String itemHref) throws Exception
+   public void selectItemInSearchTree(String itemHref) throws Exception
    {
-      selenium().click(getItemIdSearch(itemHref));
+      selenium().clickAt(getItemIdSearch(itemHref), "0");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    /**
-    * Assert present item in search tree
+    * Assert item is shown in search tree.
     * @param itemHref
     * @throws Exception
     */
-   public void assertElementPresentInSerchTree(String itemHref) throws Exception
+   public void assertItemVisibleInSearchTree(String itemHref) throws Exception
    {
-      assertTrue(selenium().isElementPresent(getItemIdSearch(itemHref)));
+      String id = getItemIdSearch(itemHref);
+      assertTrue(selenium().isElementPresent(id));
+      assertTrue(selenium().isVisible(id));
    }
 
    /**
-    * Assert not present item in search tree
+    * Assert item is not shown in search tree.
     * @param itemHref
     * @throws Exception
     */
-   public void assertElementNotPresentInSerchTree(String itemHref) throws Exception
+   public void assertItemNotVisibleInSearchTree(String itemHref) throws Exception
    {
-      assertFalse(selenium().isElementPresent(getItemIdSearch(itemHref)));
+      String id = getItemIdSearch(itemHref);
+      if (selenium().isElementPresent(id))
+      {
+         assertFalse(selenium().isVisible(id));
+      }
    }
 
    /**
     * Check navigation workspace tree contains item.
     * @param itemHref Href of item
     */
-   public void assertItemPresent(String itemHref) throws Exception
+   public void assertItemVisible(String itemHref) throws Exception
    {
-      assertTrue(selenium().isElementPresent(getItemId(itemHref)));
+      String id = getItemId(itemHref);
+      assertTrue(selenium().isElementPresent(id));
+      assertTrue(selenium().isVisible(id));
    }
 
    /**
     * Check navigation workspace tree doesn't contain item.
     * @param itemHref Href of item
     */
-   public void assertItemNotPresent(String itemHref) throws Exception
+   public void assertItemNotVisible(String itemHref) throws Exception
    {
       String id = getItemId(itemHref);
       if (selenium().isElementPresent(id))

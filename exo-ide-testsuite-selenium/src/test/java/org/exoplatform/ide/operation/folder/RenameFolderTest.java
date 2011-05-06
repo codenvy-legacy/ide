@@ -94,8 +94,8 @@ public class RenameFolderTest extends BaseTest
       selenium.keyPress("ideRenameItemFormRenameField", "\\13");
       // check appear folder with new name
       waitForElementPresent(IDE.NAVIGATION.getItemId(RENAME_URL + "/"));
-      IDE.NAVIGATION.assertItemNotPresent(ORIG_URL + "/");
-      IDE.NAVIGATION.assertItemPresent(RENAME_URL + "/");
+      IDE.NAVIGATION.assertItemNotVisible(ORIG_URL + "/");
+      IDE.NAVIGATION.assertItemVisible(RENAME_URL + "/");
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
    }

@@ -136,7 +136,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.NAVIGATION.assertItemPresent(STORAGE_URL + fileName);
+      IDE.NAVIGATION.assertItemVisible(STORAGE_URL + fileName);
    }
 
    private void testFilesCreatedOnServer()

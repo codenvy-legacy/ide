@@ -158,19 +158,19 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 3. Check new project created
        */
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/");
       
       IDE.NAVIGATION.clickOpenIconOfFolder(PROJECT_NAME);      
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
       
       
       IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER_ORG);
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
       
       IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER_EXOPLATFORM);
       
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
    }
    
    /**
@@ -195,22 +195,22 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 3. Check sample project created
        */
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
       
       IDE.NAVIGATION.clickOpenIconOfFolder(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
       
       IDE.NAVIGATION.clickOpenIconOfFolder("logic");
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/" + "GreetingRESTService.grs");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/" + "GreetingRESTService.grs");
       
       IDE.NAVIGATION.clickOpenIconOfFolder("UI");
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/" + "GreetingGoogleGadget.xml");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/" + "GreetingGoogleGadget.xml");
       
       IDE.NAVIGATION.clickOpenIconOfFolder("data");
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"DataObject.groovy"); 
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"Pojo.groovy");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"DataObject.groovy"); 
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"Pojo.groovy");
    }
    
    /**
@@ -235,7 +235,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 3. Check new project created
        */
-      IDE.NAVIGATION.assertItemNotPresent(PROJECT_FOLDER_URL + EMPTY_PROJECT + "/");
+      IDE.NAVIGATION.assertItemNotVisible(PROJECT_FOLDER_URL + EMPTY_PROJECT + "/");
    }
    
    /**

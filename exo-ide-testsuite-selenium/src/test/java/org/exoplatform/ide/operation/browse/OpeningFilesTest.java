@@ -63,13 +63,13 @@ public class OpeningFilesTest extends BaseTest
       saveAsUsingToolbarButton(file2Name);
       waitForRootElement();
       IDE.EDITOR.closeTab(0);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/" + file2Name);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
 
       // Delete one file  
       IDE.NAVIGATION.selectItem(WS_URL + folderName + "/" + file2Name);
       IDE.NAVIGATION.deleteSelectedItems();
       waitForRootElement();
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folderName + "/" + file2Name);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + folderName + "/" + file2Name);
 
       //Open another file from the same folder
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + folderName + "/" + file1Name, false);
@@ -84,8 +84,8 @@ public class OpeningFilesTest extends BaseTest
       waitForRootElement();
 
       //Check items not present in navigation tree
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folderName + "/");
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folderName + "/" + file1Name);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + folderName + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + folderName + "/" + file1Name);
    }
 
 }

@@ -119,10 +119,10 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
 
       //is file saved
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
 
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -153,11 +153,11 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       refresh();
 
       //Test folder is closed, no file in navigation tree
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       //open Test folder
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       //see xml file in navigation tree
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
 
       //----- 8 ------------
       //Open "RepoFile.xml" file
@@ -189,7 +189,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.NAVIGATION.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
 
@@ -217,7 +217,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.NAVIGATION.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
 
@@ -226,7 +226,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
      IDE.EDITOR.closeTab(0);
 
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
      IDE.EDITOR.typeTextIntoEditor(0, "X");
       Thread.sleep(TestConstants.REDRAW_PERIOD);

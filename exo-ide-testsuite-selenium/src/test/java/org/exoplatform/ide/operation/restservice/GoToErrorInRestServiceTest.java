@@ -169,7 +169,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 2 -----------------
       //delete file
-      IDE.NAVIGATION.assertItemPresent(URL + FILE_WITH_ERROR);
+      IDE.NAVIGATION.assertItemVisible(URL + FILE_WITH_ERROR);
       IDE.NAVIGATION.deleteSelectedItems();
 
       //---- 3 -----------------
@@ -323,7 +323,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //open file
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.waitForItem(URL + FILE_WITH_ERROR);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_WITH_ERROR, false);

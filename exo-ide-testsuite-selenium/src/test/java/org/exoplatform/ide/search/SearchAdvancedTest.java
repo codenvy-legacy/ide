@@ -108,7 +108,7 @@ public class SearchAdvancedTest extends BaseTest
       IDE.NAVIGATION.selectItem(WS_URL + googleGadgetFileName);
       IDE.NAVIGATION.deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + googleGadgetFileName);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + googleGadgetFileName);
    }
    
    @AfterClass

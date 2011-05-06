@@ -91,16 +91,16 @@ public class CutFolderTest extends BaseTest
        */
       IDE.NAVIGATION.selectRootOfWorkspace();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 1/");
-      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 2/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 2/");
 
       IDE.NAVIGATION.selectItem(WS_URL + "folder 1/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 1/folder 2/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/folder 2/");
 
       IDE.NAVIGATION.selectItem(WS_URL + "folder 1/folder 2/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 1/folder 2/file.groovy");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/folder 2/file.groovy");
 
       /*
        * 2.Open file "test 1/test 2/test.groovy".
@@ -189,7 +189,7 @@ public class CutFolderTest extends BaseTest
        * Check, that file name stays the same (IDE-225 issue).
        */
       assertEquals("file.groovy",IDE.EDITOR.getTabTitle(0));
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + "folder 1/folder 2/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + "folder 1/folder 2/");
       checkItemsOnWebDav();
 
       /*
@@ -207,15 +207,15 @@ public class CutFolderTest extends BaseTest
      IDE.EDITOR.checkIsTabPresentInEditorTabset("file.groovy", true);
       assertEquals(CHANGED_FILE_CONTENT + FILE_CONTENT,IDE.EDITOR.getTextFromCodeEditor(0));
 
-      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 1/");
-      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 2/");
-      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 2/folder 2/");
-      IDE.NAVIGATION.assertItemPresent(WS_URL + "folder 2/folder 2/file.groovy");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 2/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 2/folder 2/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 2/folder 2/file.groovy");
 
       /*
        * check there is no "folder 1/folder 2" in the tree
        */
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + "folder 1/folder 2/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + "folder 1/folder 2/");
 
       /*
        * close editor

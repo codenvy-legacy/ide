@@ -71,7 +71,7 @@ public class SearchByMimeTypeTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, jsFileContent);
       saveAsByTopMenu(jsFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + jsFileName);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + jsFileName);
 
       IDE.NAVIGATION.selectRootOfWorkspace();
       createFolder(folder2Name);
@@ -101,8 +101,8 @@ public class SearchByMimeTypeTest extends BaseTest
       IDE.NAVIGATION.deleteSelectedItems();
 
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folder1Name + "/");
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + folder2Name + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + folder1Name + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + folder2Name + "/");
    }
    
    @AfterClass

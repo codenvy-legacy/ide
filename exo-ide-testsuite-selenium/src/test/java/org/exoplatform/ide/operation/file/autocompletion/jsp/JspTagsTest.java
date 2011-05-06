@@ -75,7 +75,7 @@ public class JspTagsTest extends BaseTest
    public void testJspTag() throws Exception
    {
       waitForRootElement();
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
 
       IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);

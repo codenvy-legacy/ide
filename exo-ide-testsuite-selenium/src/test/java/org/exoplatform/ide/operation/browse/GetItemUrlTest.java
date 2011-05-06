@@ -65,7 +65,7 @@ public class GetItemUrlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP * 3);
 
      IDE.EDITOR.closeTab(0);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + file1Name);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + file1Name);
 
       createFolder(folderName);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
@@ -75,7 +75,7 @@ public class GetItemUrlTest extends BaseTest
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
      IDE.EDITOR.closeTab(0);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/" + file2Name);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
       
       //Refresh root item
       IDE.NAVIGATION.selectRootOfWorkspace();
@@ -157,13 +157,13 @@ public class GetItemUrlTest extends BaseTest
       String workspaceName = selenium.getText(WORK_SPACE_LOCATOR);
 
       //Check get URL for first file
-      IDE.NAVIGATION.selectItemInSerchTree(WS_URL + file1Name);
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL + file1Name);
       String url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + file1Name));
 
       //Check get URL for second file
-      IDE.NAVIGATION.selectItemInSerchTree(WS_URL + folderName + "/" + file2Name);
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL + folderName + "/" + file2Name);
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));

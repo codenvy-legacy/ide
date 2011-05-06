@@ -101,7 +101,7 @@ public class UsingKeyboardTest extends BaseTest
       waitForRootElement();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       waitForRootElement();
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
       IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -110,7 +110,7 @@ public class UsingKeyboardTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       waitForRootElement();
       IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
 
       // test keyboard with opened Content Panel
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
@@ -120,7 +120,7 @@ public class UsingKeyboardTest extends BaseTest
       waitForRootElement();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       waitForRootElement();
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
@@ -147,7 +147,7 @@ public class UsingKeyboardTest extends BaseTest
       createSaveAndCloseFile(MenuCommands.New.GOOGLE_GADGET_FILE, TEST_FILE, 0);
 
       performSearch("/" + TEST_FOLDER + "/", "", MimeType.GOOGLE_GADGET);
-      IDE.NAVIGATION.assertElementPresentInSerchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
 
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT
       selectItemInSearchResultsTree(TEST_FILE);
@@ -155,16 +155,16 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.assertElementNotPresentInSerchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
+      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
-      IDE.NAVIGATION.selectItemInSerchTree(WS_URL);
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       Thread.sleep(TestConstants.SLEEP);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       //IDE.NAVIGATION.selectItemInSerchTree(WS_URL);
 
-      IDE.NAVIGATION.assertElementPresentInSerchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
    }
 
    /**

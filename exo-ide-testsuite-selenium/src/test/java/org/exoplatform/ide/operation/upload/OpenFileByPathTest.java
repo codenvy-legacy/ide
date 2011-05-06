@@ -88,14 +88,14 @@ public class OpenFileByPathTest extends BaseTest
       
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.assertItemPresent(WS_URL+ TEST_FOLDER + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL+ TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);   
 
       // create file 
       createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME, 0);     
       
       // get file's url
-      IDE.NAVIGATION.assertItemPresent(WS_URL+ TEST_FOLDER + "/" + FILE_NAME);
+      IDE.NAVIGATION.assertItemVisible(WS_URL+ TEST_FOLDER + "/" + FILE_NAME);
       fileUrl = getSelectedItemUrl();
       
       // switch on to second workspace

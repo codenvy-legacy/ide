@@ -164,8 +164,8 @@ public class CopyFolderTest extends BaseTest
       IDE.NAVIGATION.selectRootOfWorkspace();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_1 + "/");      
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_1_1 + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_1 + "/");      
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_1_1 + "/");
 
       /*
        * Change text in file.

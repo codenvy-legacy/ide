@@ -67,7 +67,7 @@ public class RESTServiceDeployWrongTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
       Thread.sleep(TestConstants.SLEEP);
 

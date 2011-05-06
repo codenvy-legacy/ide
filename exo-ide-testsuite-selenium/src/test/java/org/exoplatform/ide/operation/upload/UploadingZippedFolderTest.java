@@ -106,19 +106,19 @@ public class UploadingZippedFolderTest extends BaseTest
       
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.NAVIGATION.assertItemPresent(URL + "/" + testFolder + "/");
-      IDE.NAVIGATION.assertItemPresent(URL + "/" + folder + "/");
-      IDE.NAVIGATION.assertItemPresent(URL + "/" + sampleFile);
-      IDE.NAVIGATION.assertItemPresent(URL + "/" + settingsFile);
+      IDE.NAVIGATION.assertItemVisible(URL + "/" + testFolder + "/");
+      IDE.NAVIGATION.assertItemVisible(URL + "/" + folder + "/");
+      IDE.NAVIGATION.assertItemVisible(URL + "/" + sampleFile);
+      IDE.NAVIGATION.assertItemVisible(URL + "/" + settingsFile);
       
       IDE.NAVIGATION.selectItem(URL + "/" + folder + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.assertItemPresent(URL + "/" + folder + "/" + projectFolder + "/");
+      IDE.NAVIGATION.assertItemVisible(URL + "/" + folder + "/" + projectFolder + "/");
       
       IDE.NAVIGATION.selectItem(URL + "/" + testFolder + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.assertItemPresent(URL + "/" + testFolder + "/" + exoFolder + "/");      
-      IDE.NAVIGATION.assertItemPresent(URL + "/" + mineFile);
+      IDE.NAVIGATION.assertItemVisible(URL + "/" + testFolder + "/" + exoFolder + "/");      
+      IDE.NAVIGATION.assertItemVisible(URL + "/" + mineFile);
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(settingsFile, false);
       checkCodeEditorOpened(0);

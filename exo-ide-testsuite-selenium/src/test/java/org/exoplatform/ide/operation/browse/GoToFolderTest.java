@@ -93,7 +93,7 @@ public class GoToFolderTest extends BaseTest
       waitForRootElement();
       //Close first folder
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_1 + "/");
-      IDE.NAVIGATION.assertItemNotPresent(URL + FOLDER_1 + "/" + FILE_1);
+      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_1 + "/" + FILE_1);
 
       waitForRootElement();
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
@@ -105,7 +105,7 @@ public class GoToFolderTest extends BaseTest
       waitForRootElement();
       //Check file is shown in tree
       //TODO check selected state
-      IDE.NAVIGATION.assertItemPresent(URL + FOLDER_1 + "/" + FILE_1);
+      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_1 + "/" + FILE_1);
 
       IDE.NAVIGATION.selectRootOfWorkspace();
       IDE.TOOLBAR.runCommand("Refresh Selected Folder");
@@ -118,7 +118,7 @@ public class GoToFolderTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       waitForRootElement();
       //TODO check selected state
-      IDE.NAVIGATION.assertItemPresent(URL + FOLDER_2 + "/" + FILE_2);
+      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_2 + "/" + FILE_2);
 
       //Close opened tabs
      IDE.EDITOR.closeTab(0);
@@ -142,16 +142,16 @@ public class GoToFolderTest extends BaseTest
 
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.NAVIGATION.assertItemNotPresent(URL + FOLDER_1 + "/" + FILE_1);
-      IDE.NAVIGATION.assertItemNotPresent(URL + FOLDER_2 + "/" + FILE_2);
-      IDE.NAVIGATION.assertItemNotPresent(URL + FOLDER_1 + "/");
-      IDE.NAVIGATION.assertItemNotPresent(URL + FOLDER_2 + "/");
+      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_1 + "/" + FILE_1);
+      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_2 + "/" + FILE_2);
+      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_1 + "/");
+      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_2 + "/");
 
       performSearch("/", "", "");
       waitForRootElement();
       //Check files are found
-      IDE.NAVIGATION.selectItemInSerchTree(URL + FOLDER_1 + "/" + FILE_1);
-      IDE.NAVIGATION.selectItemInSerchTree(URL + FOLDER_2 + "/" + FILE_2);
+      IDE.NAVIGATION.selectItemInSearchTree(URL + FOLDER_1 + "/" + FILE_1);
+      IDE.NAVIGATION.selectItemInSearchTree(URL + FOLDER_2 + "/" + FILE_2);
       //Open second file
       //      selectItemInSearchResultsTree(FILE_2);
       openFileFromSearchResultsWithCodeEditor(URL + FOLDER_2 + "/" + FILE_2);
@@ -162,10 +162,10 @@ public class GoToFolderTest extends BaseTest
       waitForRootElement();
 
       //TODO check selected
-      IDE.NAVIGATION.assertItemPresent(URL + FOLDER_2 + "/" + FILE_2);
-      IDE.NAVIGATION.assertItemNotPresent(URL + FOLDER_1 + "/" + FILE_1);
-      IDE.NAVIGATION.assertItemPresent(URL + FOLDER_1 + "/");
-      IDE.NAVIGATION.assertItemPresent(URL + FOLDER_2 + "/");
+      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_2 + "/" + FILE_2);
+      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_1 + "/" + FILE_1);
+      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_1 + "/");
+      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_2 + "/");
    }
 
    @AfterClass

@@ -161,7 +161,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       IDE.NAVIGATION.selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
       
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
@@ -336,7 +336,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * Check new project created.
        */
-      IDE.NAVIGATION.assertItemPresent(WS_URL + CREATED_PROJECT_NAME + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + CREATED_PROJECT_NAME + "/");
       /*
        * Check .groovyclasspath file
        */

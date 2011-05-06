@@ -59,12 +59,12 @@ public class RootFolderTest extends BaseTest
       createFolder(folderName);
 
       //check new folder appeared in navigation tree
-      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/");
       //refresh workspace folder
       IDE.NAVIGATION.selectRootOfWorkspace();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       //check new folder is present in navigation tree
-      IDE.NAVIGATION.assertItemPresent(WS_URL + folderName + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/");
    }
 
    @AfterClass

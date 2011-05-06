@@ -49,7 +49,7 @@ public class WorkspaceTest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       //check default workspace is root of navigation tree
-      IDE.NAVIGATION.assertItemPresent(WS_URL);
+      IDE.NAVIGATION.assertItemVisible(WS_URL);
       checkCurrentWorkspace(WS_NAME);
    }
 

@@ -87,7 +87,7 @@ public class DeleteFolderTest extends BaseTest
       //chek Disappear Form
       chekDisappearDeleteItemForm();
       //chek Disappear in menu of navigator
-      IDE.NAVIGATION.assertItemNotPresent(URL_TOOLBAR + "/");
+      IDE.NAVIGATION.assertItemNotVisible(URL_TOOLBAR + "/");
       assertEquals(404, VirtualFileSystemUtils.get(URL_TOOLBAR).getStatusCode());
    }
 
@@ -112,7 +112,7 @@ public class DeleteFolderTest extends BaseTest
       //and chek delete
       chekDisappearDeleteItemForm();
       //chek Disappear in menu of navigator
-      IDE.NAVIGATION.assertItemNotPresent(URL_MENU + FOLDER_NAME_MENU + "/");
+      IDE.NAVIGATION.assertItemNotVisible(URL_MENU + FOLDER_NAME_MENU + "/");
       assertEquals(404, VirtualFileSystemUtils.get(URL_MENU).getStatusCode());
    }
 

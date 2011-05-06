@@ -86,7 +86,7 @@ public class SearchLoadFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       saveAsByTopMenu(restFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + restFileName);
      IDE.EDITOR.closeTab(0);
       IDE.NAVIGATION.selectRootOfWorkspace();
 
@@ -119,7 +119,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + restFileName);
       //TODO check selected
 
       IDE.TOOLBAR.assertButtonEnabled("Delete Item(s)...", true);
@@ -152,7 +152,7 @@ public class SearchLoadFileTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, gadgetFileContent);
       saveAsByTopMenu(gadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
      IDE.EDITOR.closeTab(0);
       IDE.NAVIGATION.selectRootOfWorkspace();
 
@@ -185,7 +185,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + restFileName);
       //TODO check selected
 
       IDE.TOOLBAR.assertButtonEnabled("Delete Item(s)...", true);
@@ -214,8 +214,8 @@ public class SearchLoadFileTest extends BaseTest
       IDE.NAVIGATION.deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + restFileName);
-      IDE.NAVIGATION.assertItemNotPresent(WS_URL + TEST_FOLDER + "/" + gadgetFileContent);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + gadgetFileContent);
 
       Thread.sleep(TestConstants.SLEEP);
    }

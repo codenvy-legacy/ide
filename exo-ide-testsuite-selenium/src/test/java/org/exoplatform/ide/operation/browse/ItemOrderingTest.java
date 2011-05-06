@@ -96,22 +96,22 @@ public class ItemOrderingTest extends BaseTest
    
    private void checkItemOrderingInNavigationPanel() throws Exception
    {
-      IDE.NAVIGATION.assertItemPresent(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/"); 
+      IDE.NAVIGATION.assertItemVisible(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/"); 
       assertEquals(UPPERCASE_TEST_FOLDER_1, getItemNameFromWorkspaceTree(UPPERCASE_TEST_FOLDER_1));
             
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER_1 + "/"); 
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER_1 + "/"); 
       assertEquals(TEST_FOLDER_1, getItemNameFromWorkspaceTree(TEST_FOLDER_1));
       
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FOLDER_1_2 + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER_1_2 + "/");
       assertEquals(TEST_FOLDER_1_2, getItemNameFromWorkspaceTree(TEST_FOLDER_1_2));
       
-      IDE.NAVIGATION.assertItemPresent(WS_URL + UPPERCASE_TEST_FILE_1);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + UPPERCASE_TEST_FILE_1);
       assertEquals(UPPERCASE_TEST_FILE_1, getItemNameFromWorkspaceTree(UPPERCASE_TEST_FILE_1));
       
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FILE_1);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FILE_1);
       assertEquals(TEST_FILE_1, getItemNameFromWorkspaceTree(TEST_FILE_1));
       
-      IDE.NAVIGATION.assertItemPresent(WS_URL + TEST_FILE_1_2);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FILE_1_2);
       assertEquals(TEST_FILE_1_2, getItemNameFromWorkspaceTree(TEST_FILE_1_2));
    }
    

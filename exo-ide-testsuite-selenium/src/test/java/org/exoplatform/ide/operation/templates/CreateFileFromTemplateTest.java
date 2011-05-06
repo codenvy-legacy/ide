@@ -117,7 +117,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       // -------- 1 ----------
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER + "/");
       // -------- 2-4 ----------
       testTemplate(GROOVY_REST_SERVICE, GROOVY_FILE_NAME);
       
@@ -138,7 +138,7 @@ public class CreateFileFromTemplateTest extends BaseTest
    public void testCreateFileFromTemplateWithDuplicatedName() throws Exception
    {
       refresh();
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER + "/");
       /*
        * 1. Open two html files. 
        * They will have names: Untitled file.html, Untitled file 1.html
@@ -285,7 +285,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       //new file with appropriate name should be appeared in the root folder of  
       //"Workspace" panel in the "Gadget " window and in the root folder of  "Server" window.
       assertEquals(fileName,IDE.EDITOR.getTabTitle(0));
-      IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER + "/" + fileName);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER + "/" + fileName);
      IDE.EDITOR.closeTab(0);
       
       //check file created on server

@@ -166,18 +166,18 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
 
       //----- 3 ----------------
       //check new project created
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + "/"); 
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/"); 
 
       clickOpenIconOfFolder(PROJECT_NAME);
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
 
       clickOpenIconOfFolder(FOLDER_ORG);
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
 
       clickOpenIconOfFolder(FOLDER_EXOPLATFORM);
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
-      IDE.NAVIGATION.assertItemPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
-      IDE.NAVIGATION.assertItemNotPresent(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + UNEXISTING_FILE_HTML);
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
+      IDE.NAVIGATION.assertItemNotVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + UNEXISTING_FILE_HTML);
    }
 
    private void clickOpenIconOfFolder(String folderName) throws Exception
