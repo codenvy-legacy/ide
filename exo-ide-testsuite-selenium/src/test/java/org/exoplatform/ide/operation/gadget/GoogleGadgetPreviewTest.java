@@ -93,8 +93,6 @@ public class GoogleGadgetPreviewTest extends BaseTest
 
       assertTrue(selenium.isElementPresent("//div[@class='Number']"));
 
-      selenium.click("//body[@class='editbox']/");
-
       IDE.EDITOR.clickOnEditor();
       IDE.EDITOR.deleteFileContent();
 

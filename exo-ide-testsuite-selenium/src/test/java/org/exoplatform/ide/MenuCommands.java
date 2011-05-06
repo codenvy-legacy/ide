@@ -87,6 +87,8 @@ public interface MenuCommands
       public static final String SHOW_PREVIEW = "Show Preview";
       
       public static final String SHOW_GADGET_PREVIEW = "Show Gadget Preview";
+      
+      public static final String SHOW_GROOVY_TEMPLATE_PREVIEW = "Show Template Preview";
 
       public static final String VALIDATE = "Validate";
 

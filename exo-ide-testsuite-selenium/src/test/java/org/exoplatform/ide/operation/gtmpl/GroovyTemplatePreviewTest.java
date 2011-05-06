@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -33,7 +34,8 @@ import org.junit.Test;
 import java.io.IOException;
 
 /**
- * Created by The eXo Platform SAS.
+ * Test for preview of groovy template.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
@@ -41,20 +43,18 @@ import java.io.IOException;
 public class GroovyTemplatePreviewTest extends BaseTest
 {
 
-   
    private final static String FILE_NAME = "GroovyTemplatePreviewTest.gtmpl";
-   
-   private final static String TEST_FOLDER =GroovyTemplatePreviewTest.class.getSimpleName() ;
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
-   
-   private static String GTMPL = "<html><body><% import org.exoplatform.services.security.Identity\n"                                                                                                                                                           
+   private final static String TEST_FOLDER = GroovyTemplatePreviewTest.class.getSimpleName();
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + TEST_FOLDER + "/";
+
+   private static String GTMPL = "<html><body><% import org.exoplatform.services.security.Identity\n"
       + " import org.exoplatform.services.security.ConversationState\n "
-      + " ConversationState curentState = ConversationState.getCurrent();\n"                                                                                                                                        
+      + " ConversationState curentState = ConversationState.getCurrent();\n"
       + " if (curentState != null){ Identity identity = curentState.getIdentity();\n"
-      + " 3.times { println \"Hello \" + identity.getUserId()}}%><br></body></html>";  
-
-
+      + " 3.times { println \"Hello \" + identity.getUserId()}}%><br></body></html>";
 
    @BeforeClass
    public static void setUp()
@@ -78,20 +78,23 @@ public class GroovyTemplatePreviewTest extends BaseTest
    @Test
    public void testGtmplPreview() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-       IDE.NAVIGATION.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);     
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      selenium.selectFrame("eXo-IDE-preview-frame");         
+      IDE.EDITOR.waitTabPresent(0);
+      
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      IDE.PREVIEW.selectPreviewIFrame();
       assertTrue(selenium.isTextPresent("root"));
    }
-   
+
    @AfterClass
    public static void tearDown()
    {

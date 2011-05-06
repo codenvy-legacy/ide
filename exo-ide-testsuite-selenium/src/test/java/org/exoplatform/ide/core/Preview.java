@@ -42,6 +42,14 @@ public class Preview extends AbstractTestModule
    {
       selenium().selectFrame("//iframe[@src='" + iFrameURL + "']");
    }
+   
+   /**
+    * Selenium selects preview iframe.
+    */
+   public void selectPreviewIFrame()
+   {
+      selenium().selectFrame("eXo-IDE-preview-frame");
+   }
 
    public void close() throws Exception
    {
