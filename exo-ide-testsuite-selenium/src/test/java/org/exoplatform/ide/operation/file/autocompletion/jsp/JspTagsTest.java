@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.file.autocompletion.jsp;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.common.http.client.ModuleException;
@@ -35,18 +36,18 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: JspImplicitObjectsTest May 5, 2011 3:03:29 PM evgen $
+ * @version $Id: JspTagsTest May 6, 2011 12:01:55 PM evgen $
  *
  */
-public class JspImplicitObjectsTest extends BaseTest
+public class JspTagsTest extends BaseTest
 {
 
-   private static final String FOLDER_NAME = JspImplicitObjectsTest.class.getSimpleName();
+   private static final String FOLDER_NAME = JspTagsTest.class.getSimpleName();
 
-   private static final String FILE_NAME = "JspImplicitObjectsTest.jsp";
+   private static final String FILE_NAME = "JspTagsTest.jsp";
 
    private String docMessage =
-      "The servlet context obtained from the servlet conﬁguration object (as in the call getServletConfig().getContext())";
+      "A jsp:useBean action associates an instance of a Java programming language object defined within a given scope and available with a given id with a newly declared scripting variable of the same id. When a <jsp:useBean> action is used in an scriptless page, or in an scriptless context (as in the body of an action so indicated), there are no Java scripting variables created but instead an EL variable is created.";
 
    @BeforeClass
    public static void setUp()
@@ -55,7 +56,7 @@ public class JspImplicitObjectsTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME + "/");
          VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/jsp/testImplicitObject.jsp",
+            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/jsp/testJspTag.jsp",
             MimeType.APPLICATION_JSP, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       }
       catch (IOException e)
@@ -71,7 +72,7 @@ public class JspImplicitObjectsTest extends BaseTest
    }
 
    @Test
-   public void testJspImplicitObjects() throws Exception
+   public void testJspTag() throws Exception
    {
       waitForRootElement();
       IDE.NAVIGATION.assertItemPresent(WS_URL + FOLDER_NAME + "/");
@@ -82,25 +83,31 @@ public class JspImplicitObjectsTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       goToLine(10);
+      IDE.EDITOR.typeTextIntoEditor(0, "<jsp:");
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("application:javax.servlet.ServletContext");
-      IDE.CODEASSISTANT.checkElementPresent("config:javax.servlet.ServletConfig");
-      IDE.CODEASSISTANT.checkElementPresent("exception:java.lang.Throwable");
-      IDE.CODEASSISTANT.checkElementPresent("out:javax.servlet.jsp.JspWriter");
-      IDE.CODEASSISTANT.checkElementPresent("page:java.lang.Object");
-      IDE.CODEASSISTANT.checkElementPresent("pageContext:javax.servlet.jsp.PageContext");
-      IDE.CODEASSISTANT.checkElementPresent("request:javax.servlet.http.HttpServletRequest");
-      IDE.CODEASSISTANT.checkElementPresent("response:javax.servlet.http.HttpServletResponse");
-      IDE.CODEASSISTANT.checkElementPresent("session:javax.servlet.http.HttpSession");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:attribute");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:body");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:element");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:fallback");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:forward");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:getProperty");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:include");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:invoke");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:output");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:plugin");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:text");
+      IDE.CODEASSISTANT.checkElementPresent("jsp:useBean");
+
+      IDE.CODEASSISTANT.typeToInput("use");
       
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
       IDE.CODEASSISTANT.checDocFormPresent();
       assertEquals(docMessage, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
+      IDE.CODEASSISTANT.insertSelectedItem();
       
-      IDE.CODEASSISTANT.closeForm();
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("<jsp:useBean id=\"\"></jsp:useBean>"));
       
-      IDE.EDITOR.closeTab(0);
-
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    @AfterClass
@@ -119,5 +126,4 @@ public class JspImplicitObjectsTest extends BaseTest
          e.printStackTrace();
       }
    }
-
 }
