@@ -121,7 +121,7 @@ public class Toolbar extends AbstractTestModule
       }
    }
    
-   public void waitForButtonEnabled(String name, boolean enabled)
+   public void waitForButtonEnabled(String name, boolean enabled, int waitPeriod)
    {
       String locator = null;
       if (enabled)
@@ -138,7 +138,7 @@ public class Toolbar extends AbstractTestModule
       }
       for (int second = 0;; second++)
       {
-         if (second >= TestConstants.WAIT_PERIOD)
+         if (second >= waitPeriod)
             fail("timeout for element " + locator);
 
          if (selenium().isElementPresent(locator))

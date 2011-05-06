@@ -19,97 +19,84 @@
 package org.exoplatform.ide.operation.gadget;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
+ * Test for creating gadget from template.
+ * 
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
  * @version $Id: Aug 11, 2010
  *
  */
 public class GadgetDevelopmentTest extends BaseTest
 {
-   /**
-    * 
-    */
-   private static final String FILE_NAME = "Test Gadget File.xml";
-   
+
+   private static final String FILE_NAME = "Test Gadget File";
+
+   private static final String FILE_NAME_FULL = "Test Gadget File.xml";
+
    private static final String FOLDER_NAME = GadgetDevelopmentTest.class.getSimpleName();
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
-   
-   
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME + "/";
+
+   @BeforeClass
+   public static void setUp() throws IOException, ModuleException
+   {
+      VirtualFileSystemUtils.mkcol(URL);
+   }
+
    //IDE-78
    @Test
    public void createGadgetFromTemplate() throws Exception
    {
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(URL);
+      IDE.NAVIGATION.selectItem(URL);
 
-      //      Click on "New->From Template" button.
-      VirtualFileSystemUtils.mkcol(URL);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);      
-      
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-      
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/headerLabel/"));
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormDeleteButton\"]/"));
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/"));
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/"));
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      //    Select "Google Gadget" in the central column, change "File Name" field text on "Test Gadget File" name, click on "Create" button.
-      selenium.click("scLocator=//ListGrid[ID=\"ideCreateFileFromTemplateFormTemplateListGrid\"]/body/row[3]/col[1]");
 
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[name=ideCreateFileFromTemplateFormFileNameField||index=0]/element",
-            "Test Gadget File");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=1]/title").matches(
-         "^Test Gadget File [\\s\\S]*$"));
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      //      Click on "Save As" button and save file "Test Gadget File" with default name.
-      saveAsUsingToolbarButton(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FILE_NAME).getStatusCode());    
-      
-     IDE.EDITOR.closeTab(0);
+      //wait for File from template form appeared
+      IDE.TEMPLATES.waitForFileFromTemplateForm();
 
-      
+      //Select "Google Gadget" in the central column, change "File Name" field text on "Test Gadget File" name, click on "Create" button.
+      IDE.TEMPLATES.selectTemplate("Google Gadget");
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-      assertEquals(FILE_NAME, selenium.getText("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/title"));
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      //     Remove created folder with file.
-      IDE.NAVIGATION.deleteSelectedItems();
+      IDE.TEMPLATES.typeNameToInputField(FILE_NAME);
+      IDE.TEMPLATES.clickCreateButton();
+
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.checkIsTabPresentInEditorTabset(FILE_NAME + " *", true);
+
+      //Click on "Save As" button and save file "Test Gadget File" with default name.
+      saveAsUsingToolbarButton(FILE_NAME_FULL);
+
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FILE_NAME_FULL).getStatusCode());
+
+      IDE.EDITOR.closeTab(0);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME_FULL, false);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.checkIsTabPresentInEditorTabset("Test Gadget File.xml", true);
    }
 
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws IOException, ModuleException
    {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      VirtualFileSystemUtils.delete(URL);
    }
 
 }

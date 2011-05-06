@@ -280,7 +280,7 @@ public class Editor extends AbstractTestModule
                break;
             }
          }
-         fail("Can't find " + tabTitle + "in tab titles");
+         fail("Can't find " + tabTitle + " in tab titles");
       }
       else
       {
@@ -289,7 +289,7 @@ public class Editor extends AbstractTestModule
             if (selenium().isElementPresent(getEditorTabScLocator(i)))
             {
                if (tabTitle.equals(getTabTitle(i)))
-                  fail(tabTitle + "is present in tab titles");
+                  fail(tabTitle + " is present in tab titles");
             }
             else
             {

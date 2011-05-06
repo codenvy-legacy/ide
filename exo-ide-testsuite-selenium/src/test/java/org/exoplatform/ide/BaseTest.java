@@ -442,17 +442,6 @@ public abstract class BaseTest
     */
    protected void saveAsByTopMenu(String name) throws Exception
    {
-      //      //open menu File
-      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      //      Thread.sleep(TestConstants.SLEEP);
-      //
-      //      //check is Save As enabled
-      //      assertTrue(selenium.isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='Save As...']"));
-      //
-      //      //click Save As
-      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='Save As...']", "");
-      //      Thread.sleep(TestConstants.SLEEP);
-
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
 
       SaveFileUtils.checkSaveAsDialogAndSave(name, false);

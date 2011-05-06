@@ -35,6 +35,7 @@ import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.core.SaveAs;
 import org.exoplatform.ide.core.SelectWorkspace;
 import org.exoplatform.ide.core.Statusbar;
+import org.exoplatform.ide.core.Templates;
 import org.exoplatform.ide.core.Toolbar;
 import org.exoplatform.ide.core.Upload;
 import org.exoplatform.ide.core.WarningDialog;
@@ -108,6 +109,8 @@ public class IDE
    public GoToLine GOTOLINE = new GoToLine();
    
    public Upload UPLOAD = new Upload();
+   
+   public Templates TEMPLATES = new Templates();
 
    /**
     * Select main frame of IDE.
