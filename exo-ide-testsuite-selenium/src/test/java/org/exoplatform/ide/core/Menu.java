@@ -97,18 +97,17 @@ public class Menu extends AbstractTestModule
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       if (enabled)
       {
-         assertTrue(selenium().isElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName
-            + "']"));
+         assertTrue(selenium().isElementPresent("//table[@class=\"exo-popupMenuTable\"]//td[@class=\"exo-popupMenuTitleFieldOver\"]"));
       }
       else
       {
-         assertTrue(selenium().isElementPresent("//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='"
+         assertTrue(selenium().isElementPresent("//table[@class=\"exo-popupMenuTable\"]//td[@class=\"exo-popupMenuTitleFieldDisabled\"]/nobr[text()='"
             + commandName + "']"));
       }
       selenium().mouseDown("//div[@class='exo-lockLayer']/");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
-
+   
    /**
     * Get the XPATH locator for top menu command.
     * 
