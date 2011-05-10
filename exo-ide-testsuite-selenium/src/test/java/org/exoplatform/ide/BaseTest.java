@@ -416,11 +416,11 @@ public abstract class BaseTest
 
    /**
     * Calls Save As command by clicking Save As... icon on toolbar.
-    * 
+    * <p/>
     * Checks is dialog appears, and do all elements are present in window.
-    * 
+    * <p/>
     * Enters name to text field and click Ok button.
-    * 
+    * <p/>
     * If name is null, will created with proposed default name.
     * 
     * @param name file name
