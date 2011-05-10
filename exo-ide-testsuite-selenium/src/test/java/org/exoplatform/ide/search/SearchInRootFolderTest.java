@@ -74,6 +74,7 @@ public class SearchInRootFolderTest extends BaseTest
       //Create second folder
       IDE.NAVIGATION.selectRootOfWorkspace();
       createFolder(folder2Name);
+      IDE.NAVIGATION.waitForItem(WS_URL + folder2Name + "/");
       //Save in second folder first time
       saveAsUsingToolbarButton(copyofRestFileName);
       Thread.sleep(TestConstants.SLEEP);
