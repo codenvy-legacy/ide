@@ -74,18 +74,18 @@ public abstract class LockFileAbstract extends BaseTest
       }
    }
 
-   protected void checkIsFileReadOnlyInEditorTab(String fileName)
+   protected void checkIsFileReadOnlyInEditorTab()
    {
-      assertTrue(selenium.isElementPresent("//div[@eventproxy='ideEditorFormTabSet_tabBar']//span[contains(text(), '"+fileName+"')]//img[@id='fileReadonly']"));
+      assertTrue(selenium.isElementPresent("//table//span[@title=\"File opened in read only mode. Use SaveAs command.\"]/img[@id='fileReadonly']"));
    }
 
    /**
     * @throws Exception
     * @throws InterruptedException
     */
-   protected void checkCantSaveLockedFile(String fileName) throws Exception, InterruptedException
+   protected void checkCantSaveLockedFile() throws Exception, InterruptedException
    {
-      checkIsFileReadOnlyInEditorTab(fileName);
+      checkIsFileReadOnlyInEditorTab();
    
      IDE.EDITOR.typeTextIntoEditor(0, "change dasda111");
    

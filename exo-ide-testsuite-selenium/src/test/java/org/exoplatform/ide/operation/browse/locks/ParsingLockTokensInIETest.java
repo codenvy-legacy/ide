@@ -27,6 +27,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -47,6 +48,7 @@ public abstract class ParsingLockTokensInIETest extends BaseTest
 
    private static String FILE_NAME = "lhntklshbadsygfbolthg";
    
+   @Ignore
    @Test
    public void testParsingLockTokensInIE() throws Exception
    {

@@ -91,7 +91,7 @@ public class OpenLockedFileTest extends LockFileAbstract
 
       //----- 1 ----------
       //open file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/"+FILE_NAME, false);
       
       //----- 2 ----------
       //lock file
@@ -106,8 +106,9 @@ public class OpenLockedFileTest extends LockFileAbstract
       
       //----- 4 ----------
       //check that file is locked
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
-      checkCantSaveLockedFile(FILE_NAME);
+     // IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
+Thread.sleep(30000);
+      checkCantSaveLockedFile();
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       
@@ -116,9 +117,9 @@ public class OpenLockedFileTest extends LockFileAbstract
       //----- 5 ----------
       //close and open file
      IDE.EDITOR.closeTab(0);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/"+FILE_NAME, false);
 
-      checkCantSaveLockedFile(FILE_NAME);
+      checkCantSaveLockedFile();
 
      IDE.EDITOR.closeTab(0);
    }
