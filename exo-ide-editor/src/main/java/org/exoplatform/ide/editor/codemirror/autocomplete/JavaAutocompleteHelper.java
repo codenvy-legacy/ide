@@ -107,7 +107,7 @@ public class JavaAutocompleteHelper extends GroovyAutocompleteHelper
       // if this is "name_" or " _" cases, return Token of parent element, like method or class
       else
       {
-         return (Token) getParentToken(lineNumber, (List<TokenBeenImpl>) tokenList);
+         return (Token) getContainerToken(lineNumber, (List<TokenBeenImpl>) tokenList);
       }
       
       return null;

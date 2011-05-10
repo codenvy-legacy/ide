@@ -102,6 +102,12 @@ public class RubyAutocompleteHelper extends AutocompleteHelper
             }
          }
       }
+
+      // if this is "name_" or " _" cases, return Token of container element like method, class or module, from token list         
+      else
+      {
+         return (Token) getContainerToken(lineNumber, (List<TokenBeenImpl>) tokenList);
+      }
          
       return null;
    }
@@ -161,10 +167,8 @@ public class RubyAutocompleteHelper extends AutocompleteHelper
          {
            return nearestToken;
          }
-         
 
-      } 
-         
+      }  
          
       return null;
    }
@@ -226,4 +230,15 @@ public class RubyAutocompleteHelper extends AutocompleteHelper
       }
    }
 
+   @Override
+   /**
+    * Test if this is CLASS or METHOD or INTERFACE token
+    * @param targetLineNumber
+    * @param token
+    * @return
+    */
+   protected boolean isPossibleContainerTokenType(TokenBeenImpl token)
+   {
+      return TokenType.CLASS.equals(token.getType()) || TokenType.METHOD.equals(token.getType()) || TokenType.MODULE.equals(token.getType());
+   }
 }

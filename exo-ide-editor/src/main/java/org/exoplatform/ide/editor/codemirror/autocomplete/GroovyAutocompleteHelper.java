@@ -102,10 +102,10 @@ public class GroovyAutocompleteHelper extends AutocompleteHelper
          
       }
       
-      // if this is "name_" or " _" cases, return Token of parent element, like method or class
+      // if this is "name_" or " _" cases, return Token of container element like method, class or module, from token list
       else
       {
-         return (Token) getParentToken(lineNumber, (List<TokenBeenImpl>) tokenList);
+         return (Token) getContainerToken(lineNumber, (List<TokenBeenImpl>) tokenList);
       }
       
       return null;
@@ -200,103 +200,5 @@ public class GroovyAutocompleteHelper extends AutocompleteHelper
 
       return null;
    } 
-   
-   private static TokenBeenImpl possibleContainerToken;
-
-   private static int nearestTokenLineNumber;
-   
-   /**
-    * Recognize container token of line with lineNumber.  
-    * @param targetLineNumber
-    * @param tokenList
-    * @return container token with token.lineNumber <= targetLineNumber < token.lastLineNumber.
-    */
-   public TokenBeenImpl getParentToken(int targetLineNumber, List<TokenBeenImpl> tokenList)
-   {
-      if (tokenList == null || tokenList.size() == 0)
-         return null;
-
-      possibleContainerToken = null;
-      nearestTokenLineNumber = 0;
-
-      for (TokenBeenImpl token : tokenList)
-      {
-         // break if token is started at the line after the targetLine
-         if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
-         {
-            break;
-         }
-         
-         // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber)
-         else if (isCurrentLineAfterTheContainerToken(targetLineNumber, token.getLastLineNumber()))
-         {
-            continue;
-         }
-         
-         else if (isPossibleContainerTokenType(token)) 
-         {
-            searchContainerToken(targetLineNumber, token);
-         }
-      }
-
-      return possibleContainerToken;
-   }
-
-   private void searchContainerToken(int targetLineNumber, TokenBeenImpl currentToken)
-   {
-      // search appropriate token among the sub token
-      List<TokenBeenImpl> subTokenList = currentToken.getSubTokenList();
-
-      if (subTokenList != null && subTokenList.size() != 0)
-      {
-         for (TokenBeenImpl token : subTokenList)
-         {
-            // break if token is started at the line after the targetLine
-            if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
-            {
-               break;
-            }
-            
-            // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber)
-            else if (isCurrentLineAfterTheContainerToken(targetLineNumber, token.getLastLineNumber()))
-            {
-               continue;
-            }
-            
-            else if (isPossibleContainerTokenType(token)) 
-            {
-               searchContainerToken(targetLineNumber, token);
-            }
-         }
-      }
-
-      int currentTokenLineNumber = currentToken.getLineNumber();
-      if ((currentTokenLineNumber <= targetLineNumber) && (currentTokenLineNumber >= nearestTokenLineNumber) // taking in mind the last token among them in the line
-      )
-      {
-         nearestTokenLineNumber = currentTokenLineNumber;
-         possibleContainerToken = currentToken;
-      }
-   }
-   
-   /**
-    * Test if this is CLASS or METHOD or INTERFACE token
-    * @param targetLineNumber
-    * @param token
-    * @return
-    */
-   private boolean isPossibleContainerTokenType(TokenBeenImpl token)
-   {
-      return TokenType.CLASS.equals(token.getType()) || TokenType.METHOD.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType());
-   }   
-   
-   /**
-    * @param targetLineNumber
-    * @param lastContainerLineNumber
-    * @return true if targetLineNumber => lastContainerLine
-    */
-   protected static boolean isCurrentLineAfterTheContainerToken(int targetLineNumber, int lastContainerLineNumber)
-   {
-      return (targetLineNumber >= lastContainerLineNumber);
-   }   
+      
 }

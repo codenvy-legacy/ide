@@ -204,5 +204,100 @@ public abstract class AutocompleteHelper
       }
       
       return null;
-   }      
+   }
+   
+   
+   /**
+    * @param targetLineNumber
+    * @param lastContainerLineNumber
+    * @return true if targetLineNumber => lastContainerLine
+    */
+   protected static boolean isCurrentLineAfterTheContainerToken(int targetLineNumber, int lastContainerLineNumber)
+   {
+      return (targetLineNumber >= lastContainerLineNumber);
+   }
+
+
+   static TokenBeenImpl possibleContainerToken;
+   static int nearestTokenLineNumber;   
+   
+   /**
+    * Recognize container token of line with lineNumber.  
+    * @param targetLineNumber
+    * @param tokenList
+    * @return container token with token.lineNumber <= targetLineNumber < token.lastLineNumber.
+    */
+   public TokenBeenImpl getContainerToken(int targetLineNumber, List<TokenBeenImpl> tokenList)
+   {
+      if (tokenList == null || tokenList.size() == 0)
+         return null;
+   
+      possibleContainerToken = null;
+      nearestTokenLineNumber = 0;
+   
+      for (TokenBeenImpl token : tokenList)
+      {
+         // break if token is started at the line after the targetLine
+         if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+         {
+            break;
+         }
+         
+         // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber)
+         else if (isCurrentLineAfterTheContainerToken(targetLineNumber, token.getLastLineNumber()))
+         {
+            continue;
+         }
+         
+         else if (isPossibleContainerTokenType(token)) 
+         {
+            searchContainerToken(targetLineNumber, token);
+         }
+      }
+   
+      return possibleContainerToken;
+   }
+
+   protected boolean isPossibleContainerTokenType(TokenBeenImpl token)
+   {
+      return TokenType.CLASS.equals(token.getType()) || TokenType.METHOD.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType());
+   }
+
+   void searchContainerToken(int targetLineNumber, TokenBeenImpl currentToken)
+   {
+      // search appropriate token among the sub token
+      List<TokenBeenImpl> subTokenList = currentToken.getSubTokenList();
+   
+      if (subTokenList != null && subTokenList.size() != 0)
+      {
+         for (TokenBeenImpl token : subTokenList)
+         {
+            // break if token is started at the line after the targetLine
+            if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+            {
+               break;
+            }
+            
+            // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber)
+            else if (isCurrentLineAfterTheContainerToken(targetLineNumber, token.getLastLineNumber()))
+            {
+               continue;
+            }
+            
+            else if (isPossibleContainerTokenType(token)) 
+            {
+               searchContainerToken(targetLineNumber, token);
+            }
+         }
+      }
+   
+      int currentTokenLineNumber = currentToken.getLineNumber();
+      if ((currentTokenLineNumber <= targetLineNumber) && (currentTokenLineNumber >= nearestTokenLineNumber) // taking in mind the last token among them in the line
+      )
+      {
+         nearestTokenLineNumber = currentTokenLineNumber;
+         possibleContainerToken = currentToken;
+      }
+   }
+
 }
