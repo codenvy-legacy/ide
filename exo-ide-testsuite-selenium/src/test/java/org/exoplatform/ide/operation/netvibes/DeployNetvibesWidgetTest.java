@@ -114,6 +114,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
    {
       IDE.NAVIGATION.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
@@ -199,9 +200,9 @@ public class DeployNetvibesWidgetTest extends BaseTest
       
       IDE.NAVIGATION.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       //Create new UWA widget
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);

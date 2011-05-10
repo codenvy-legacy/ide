@@ -1069,8 +1069,8 @@ public abstract class BaseTest
       //elements are appears in SLEEP tile.
       //Thats why, wait for WAIT_PERIOD for root element
       //of navigation tree.
-      waitForElementPresent(Navigation.NAVIGATION_TREE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.waitForItem(WS_URL);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
    /**

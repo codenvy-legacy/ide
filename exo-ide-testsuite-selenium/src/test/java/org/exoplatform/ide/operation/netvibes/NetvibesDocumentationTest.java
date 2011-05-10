@@ -33,6 +33,8 @@ import org.junit.AfterClass;
 import org.junit.Test;
 
 /**
+ * Test for netvibes documentation frame.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: NetVibesDocumentationTest Jan 24, 2011 2:25:35 PM evgen $
  *
@@ -43,57 +45,57 @@ public class NetvibesDocumentationTest extends BaseTest
    /**
     *  Locator for documentation iframe
     */
-   private static final String DE_DOCUMENTATION_FRAME = "//iframe[@id='gwt-debug-ideDocumentationFrame']";
+   private static final String IDE_DOCUMENTATION_FRAME = "//iframe[@id='gwt-debug-ideDocumentationFrame']";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
 
-   private static String FILE_NAME = NetvibesDocumentationTest.class.getName(); 
-   
+   private static String FILE_NAME = NetvibesDocumentationTest.class.getSimpleName();
+
    @Test
    public void testNetvibesDocumentation() throws Exception
    {
-      waitForRootElement();
-      
+      IDE.NAVIGATION.waitForItem(WS_URL);
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.SHOW_DOCUMENTATION, true, TestConstants.WAIT_PERIOD * 10);
+
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_DOCUMENTATION);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      
-      assertTrue(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
-      
+      waitForElementPresent(IDE_DOCUMENTATION_FRAME);
+      assertTrue(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      
-      assertFalse(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
-      
-     IDE.EDITOR.selectTab(0);
-      
-      assertTrue(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
-      
+      IDE.EDITOR.waitTabPresent(1);
+      waitForElementNotPresent(IDE_DOCUMENTATION_FRAME);
+      assertFalse(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+
+      IDE.EDITOR.selectTab(0);
+      waitForElementPresent(IDE_DOCUMENTATION_FRAME);
+      assertTrue(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+
       saveAsByTopMenu(FILE_NAME);
+      waitForElementPresent(IDE_DOCUMENTATION_FRAME);
+      assertTrue(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+
+      IDE.EDITOR.selectTab(1);
+      waitForElementNotPresent(IDE_DOCUMENTATION_FRAME);
+      assertFalse(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+
+      refresh();
+      IDE.NAVIGATION.waitForItem(WS_URL + FILE_NAME);
+      waitForElementPresent(IDE_DOCUMENTATION_FRAME);
       
-      assertTrue(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
-      
-     IDE.EDITOR.selectTab(1);
-      
-      assertFalse(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
-      
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      waitForRootElement();
-      
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertTrue(selenium.isElementPresent(DE_DOCUMENTATION_FRAME));
-      
+      assertTrue(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL+FILE_NAME);
+         VirtualFileSystemUtils.delete(URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -104,5 +106,5 @@ public class NetvibesDocumentationTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
 }
