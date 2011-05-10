@@ -96,4 +96,7 @@ public interface CodeAssistantClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/local.png")
    ImageResource variable();
+   
+   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/constant-item.png")
+   ImageResource rubyConstant();
 }

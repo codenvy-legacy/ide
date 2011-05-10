@@ -35,8 +35,6 @@ import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 public class RubyClassWidget extends RubyBaseWidget
 {
 
-   private Grid grid;
-
    /**
     * @param token
     */
