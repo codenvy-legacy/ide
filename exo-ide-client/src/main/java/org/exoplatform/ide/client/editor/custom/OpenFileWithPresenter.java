@@ -127,6 +127,8 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
 
    public void bindDisplay()
    {
+      selectedEditor = null;
+      
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent arg0)
@@ -155,7 +157,6 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
 
       display.getEditorsListGrid().addSelectionHandler(new SelectionHandler<EditorInfo>()
       {
-
          public void onSelection(SelectionEvent<EditorInfo> event)
          {
             if (event.getSelectedItem().getEditor() == selectedEditor)
@@ -231,8 +232,8 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
          {
             display.setSelectedItem(defaultEditorItem);
          }
-
       }
+      
       catch (EditorNotFoundException e)
       {
          String message = "Can't find editor for type <b>" + mimeType + "</b>";

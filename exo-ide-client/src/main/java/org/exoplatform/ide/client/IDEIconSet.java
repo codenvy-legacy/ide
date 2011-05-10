@@ -33,6 +33,8 @@ public class IDEIconSet
    public static void init() {
       ImageFactory.addImage("ok", IDEImageBundle.INSTANCE.ok(), IDEImageBundle.INSTANCE.okDisabled());
       ImageFactory.addImage("cancel", IDEImageBundle.INSTANCE.cancel(), IDEImageBundle.INSTANCE.cancelDisabled());
+      ImageFactory.addImage("yes", IDEImageBundle.INSTANCE.ok(), IDEImageBundle.INSTANCE.okDisabled());
+      ImageFactory.addImage("no", IDEImageBundle.INSTANCE.cancel(), IDEImageBundle.INSTANCE.cancelDisabled());
       ImageFactory.addImage("search", IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
    }
 

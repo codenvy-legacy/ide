@@ -218,38 +218,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       handlerRegistrations.clear();
    }
 
-   ///*
-   // *  Fired when editor is initialized
-   // */
-   //public void onEditorInitialized(EditorInitializedEvent event)
-   //{
-   //   try
-   //   {
-   //      String editorId = event.getEditorId();
-   //      String path = display.getPathByEditorId(editorId);
-   //      final File file = openedFiles.get(path);
-   //      if (file == null)
-   //         return;
-   //      display.setTabContent(file.getHref(), file.getContent());
-   //
-   //      new Timer()
-   //      {
-   //         @Override
-   //         public void run()
-   //         {
-   //            eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
-   //         }
-   //
-   //      }.schedule(200);
-   //      //eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
-   //      //eventBus.fireEvent(new EditorActiveFileChangedEvent(file, display.getEditor(file.getHref())));         
-   //   }
-   //   catch (Exception exc)
-   //   {
-   //      exc.printStackTrace();
-   //   }
-   //}
-
    /* 
     * Editor content changed handler
     */
