@@ -199,6 +199,8 @@ public interface MenuCommands
       public static final String LOCK_FILE = "Lock File";
 
       public static final String UNLOCK_FILE = "Unlock File";
+      
+      public static final String LUCK_UNLOCK_FILE = "Unlock File";
    }
 
    public interface CodeEditors
