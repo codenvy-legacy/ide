@@ -25,14 +25,21 @@ import com.jcraft.jsch.Session;
 import org.eclipse.jgit.transport.OpenSshConfig;
 import org.eclipse.jgit.transport.SshConfigSessionFactory;
 import org.eclipse.jgit.util.FS;
-import org.exoplatform.services.security.ConversationState;
+
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public abstract class IdeSshSessionFactory extends SshConfigSessionFactory
+public abstract class IdeSshSessionFactory extends SshConfigSessionFactory implements SshKeyProvider
 {
+   /** Cached JSch instances. */
+   private Map<String, JSch> jschCache;
+
    public IdeSshSessionFactory()
    {
       init();
@@ -41,9 +48,19 @@ public abstract class IdeSshSessionFactory extends SshConfigSessionFactory
    /**
     * Initial this SshSessionFactory. By default turn of using "know-hosts" file.
     */
+   @SuppressWarnings("serial")
    protected void init()
    {
       JSch.setConfig("StrictHostKeyChecking", "no");
+      // TODO : improve. At the moment simple solution that limit number of instances JSch at 256. 
+      jschCache = new LinkedHashMap<String, JSch>()
+      {
+         @Override
+         protected boolean removeEldestEntry(Entry<String, JSch> eldest)
+         {
+            return size() > 256;
+         }
+      };
    }
 
    /**
@@ -62,11 +79,26 @@ public abstract class IdeSshSessionFactory extends SshConfigSessionFactory
    @Override
    protected final JSch getJSch(OpenSshConfig.Host hc, FS fs) throws JSchException
    {
-      ConversationState state = ConversationState.getCurrent();
-      if (state == null)
-         throw new JSchException("Creation SSH connection failed. ConversationState is not configured properly. ");
-      return getJSch(state.getIdentity().getUserId(), hc, fs);
+      String host = hc.getHostName();
+      KeyFile key = getPrivateKey(host);
+      String keyIdentifier = key.getIdentifier();
+      JSch jsch = jschCache.get(keyIdentifier);
+      if (jsch == null)
+      {
+         jsch = new JSch();
+         try
+         {
+            byte[] bytes = key.getBytes();
+            if (bytes == null)
+               throw new JSchException("SSH connection failed. Key file not found. ");
+            jsch.addIdentity(keyIdentifier, bytes, null, null);
+         }
+         catch (IOException ioe)
+         {
+            throw new JSchException(ioe.getMessage());
+         }
+         jschCache.put(keyIdentifier, jsch);
+      }
+      return jsch;
    }
-
-   protected abstract JSch getJSch(String userId, OpenSshConfig.Host hc, FS fs) throws JSchException;
 }

@@ -20,24 +20,28 @@ package org.exoplatform.ide.git.server.jgit.ssh;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.KeyPair;
 
-import org.eclipse.jgit.transport.OpenSshConfig.Host;
 import org.eclipse.jgit.transport.SshSessionFactory;
-import org.eclipse.jgit.util.FS;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.access.PermissionType;
+import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.IdentityConstants;
 import org.picocontainer.Startable;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Calendar;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -49,6 +53,7 @@ import javax.jcr.Session;
  * <p>
  * Example of configuration JcrSshSessionFactory as components of ExoContainer:
  * </p>
+ * 
  * <pre>
  * &lt;component&gt;
  *    &lt;type&gt;org.exoplatform.ide.git.server.jgit.ssh.JcrSshSessionFactory&lt;/type&gt;
@@ -73,17 +78,80 @@ import javax.jcr.Session;
  */
 public class JcrSshSessionFactory extends IdeSshSessionFactory implements Startable
 {
+   private static class JcrKeyFile implements KeyFile
+   {
+      private final ManageableRepository repository;
+      private final String workspace;
+      private final String path;
+
+      public JcrKeyFile(String path, ManageableRepository repository, String workspace)
+      {
+         this.path = path;
+         this.repository = repository;
+         this.workspace = workspace;
+      }
+
+      @Override
+      public String getIdentifier()
+      {
+         return path;
+      }
+
+      @Override
+      public byte[] getBytes() throws IOException
+      {
+         Session session = null;
+         try
+         {
+            // Login with current identity. ConversationState.getCurrent(). 
+            session = repository.login(workspace);
+            Item item = null;
+            try
+            {
+               item = session.getItem(path);
+            }
+            catch (PathNotFoundException pnfe)
+            {
+            }
+            if (item == null)
+               return null;
+            Property property = ((Node)item).getNode("jcr:content").getProperty("jcr:data");
+            long length = property.getLength();
+            byte[] buf = new byte[(int)length];
+            InputStream stream = property.getStream();
+            try
+            {
+               stream.read(buf);
+            }
+            finally
+            {
+               stream.close();
+            }
+            return buf;
+         }
+         catch (RepositoryException re)
+         {
+            throw new RuntimeException(re.getMessage(), re);
+         }
+         finally
+         {
+            if (session != null)
+               session.logout();
+         }
+      }
+   }
+
    /** Name of JCR workspace that store SSH keys. */
    private String workspace;
 
    /** JCR node that is root node for storing SSH keys. */
    private String keyStore = "/";
 
-   /** Cached JSch instances. */
-   private Map<String, JSch> jschCache;
-
    /** JCR RepositoryService. */
    private RepositoryService repositoryService;
+
+   /** JSch used for generate keys. */
+   private JSch genJsch;
 
    public JcrSshSessionFactory(RepositoryService repositoryService, InitParams initParams)
    {
@@ -111,25 +179,7 @@ public class JcrSshSessionFactory extends IdeSshSessionFactory implements Starta
          if (!this.keyStore.endsWith("/"))
             this.keyStore += "/";
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory#init()
-    */
-   @SuppressWarnings("serial")
-   @Override
-   protected void init()
-   {
-      super.init();
-      // TODO : improve. At the moment simple solution that limit number of instances JSch at 256. 
-      jschCache = new LinkedHashMap<String, JSch>()
-      {
-         @Override
-         protected boolean removeEldestEntry(Entry<String, JSch> eldest)
-         {
-            return size() > 256;
-         }
-      };
+      genJsch = new JSch();
    }
 
    /**
@@ -147,76 +197,112 @@ public class JcrSshSessionFactory extends IdeSshSessionFactory implements Starta
    @Override
    public void stop()
    {
+      SshSessionFactory.setInstance(null);
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory#getJSch(java.lang.String,
-    *      org.eclipse.jgit.transport.OpenSshConfig.Host, org.eclipse.jgit.util.FS)
+    * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#getPrivateKey(java.lang.String)
     */
    @Override
-   protected JSch getJSch(String userId, Host hc, FS fs) throws JSchException
+   public KeyFile getPrivateKey(String host)
    {
+      String path = keyStore + ConversationState.getCurrent().getIdentity().getUserId() + "/" + host + ".key";
+      return getKeyFile(path);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#getPublicKey(java.lang.String)
+    */
+   @Override
+   public KeyFile getPublicKey(String host) throws IOException
+   {
+      String path = keyStore + ConversationState.getCurrent().getIdentity().getUserId() + "/" + host + ".pub";
+      return getKeyFile(path);
+   }
+
+   private KeyFile getKeyFile(String path)
+   {
+      ManageableRepository repository;
       try
       {
-         ManageableRepository repository = repositoryService.getCurrentRepository();
-         String path = keyStore + userId + "/" + hc.getHostName() + ".key";
-         String key = key(repository, workspace, path);
-         JSch jsch = jschCache.get(key);
-         if (jsch == null)
-         {
-            Session session = null;
-            try
-            {
-               session = repository.login(workspace);
-               jsch = new JSch();
-               byte[] keyFile = readKeyFile(session, path);
-               if (keyFile == null)
-                  throw new JSchException("Creation SSH connection failed. Key file not found. ");
-               jsch.addIdentity(path, keyFile, null, null);
-               jschCache.put(key, jsch);
-            }
-            finally
-            {
-               if (session != null)
-                  session.logout();
-            }
-         }
-         return jsch;
+         repository = repositoryService.getCurrentRepository();
       }
       catch (RepositoryException re)
       {
-         throw new JSchException(re.getMessage());
+         throw new RuntimeException(re.getMessage(), re);
       }
-      catch (IOException ioe)
-      {
-         throw new JSchException(ioe.getMessage());
-      }
+      return new JcrKeyFile(path, repository, workspace);
    }
 
-   private String key(ManageableRepository repository, String workspace, String path)
+   /**
+    * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#genKeyFiles(java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   public void genKeyFiles(String host, String comment, String passphrase) throws IOException
    {
-      return repository.getConfiguration().getName() + '/' + workspace + path;
-   }
-
-   private byte[] readKeyFile(Session session, String path) throws RepositoryException, IOException
-   {
-      if (!session.itemExists(path))
-         return null;
-      Item item = session.getItem(path);
-      Property property = ((Node)item).getNode("jcr:content").getProperty("jcr:data");
-      long length = property.getLength();
-      byte[] buf = new byte[(int)length];
-      InputStream stream = null;
+      Session session = null;
       try
       {
-         stream = property.getStream();
-         stream.read(buf);
+         KeyPair keyPair;
+         try
+         {
+            keyPair = KeyPair.genKeyPair(genJsch, 2, 2048);
+         }
+         catch (JSchException jsce)
+         {
+            throw new RuntimeException(jsce.getMessage(), jsce);
+         }
+         keyPair.setPassphrase(passphrase);
+
+         ManageableRepository repository = repositoryService.getCurrentRepository();
+         // Login with current identity. ConversationState.getCurrent(). 
+         session = repository.login(workspace);
+         String user = session.getUserID();
+         String userKeysPath = keyStore + user;
+
+         Node userKeys;
+         try
+         {
+            userKeys = (Node)session.getItem(userKeysPath);
+         }
+         catch (PathNotFoundException pnfe)
+         {
+            userKeys = ((Node)session.getItem(keyStore)).addNode(user, "nt:folder");
+         }
+
+         ByteArrayOutputStream buff = new ByteArrayOutputStream();
+         keyPair.writePrivateKey(buff);
+         writeKeyFile(userKeys, host + ".key", user, buff.toByteArray());
+
+         buff.reset();
+         keyPair.writePublicKey(buff, comment != null ? comment : "");
+         writeKeyFile(userKeys, host + ".pub", user, buff.toByteArray());
+
+         session.save();
+      }
+      catch (RepositoryException re)
+      {
+         throw new RuntimeException(re.getMessage(), re);
       }
       finally
       {
-         if (stream != null)
-            stream.close();
+         if (session != null)
+            session.logout();
       }
-      return buf;
+   }
+
+   private void writeKeyFile(Node parent, String name, String user, byte[] content) throws RepositoryException
+   {
+      ExtendedNode fileNode = (ExtendedNode)parent.addNode(name, "nt:file");
+      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
+      contentNode.setProperty("jcr:mimeType", "text/plain");
+      contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
+      contentNode.setProperty("jcr:data", new ByteArrayInputStream(content));
+      // Make file accessible for current user only.
+      fileNode.addMixin("exo:privilegeable");
+      fileNode.setPermission("john", PermissionType.ALL);
+      fileNode.clearACL();
+      fileNode.setPermission(user, PermissionType.ALL);
+      fileNode.removePermission(IdentityConstants.ANY);
    }
 }
