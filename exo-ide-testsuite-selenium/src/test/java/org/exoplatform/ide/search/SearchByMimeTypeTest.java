@@ -38,20 +38,20 @@ public class SearchByMimeTypeTest extends BaseTest
    private final String folder1Name = "Users";
 
    private final String jsFileName = "Example.js";
-   
+
    private final String folder2Name = "Test";
 
    private final String jsFileMimeType = "application/javascript";
 
    private final String copyJsFileName = "Copy Of Example.js";
 
-   private final String jsFileContent =
-      "// CodeMirror main module" + "var CodeMirrorConfig = window.CodeMirrorConfig || {};\n"
+   private final String jsFileContent = "// CodeMirror main module"
+      + "var CodeMirrorConfig = window.CodeMirrorConfig || {};\n"
 
       + "var CodeMirror = (function(){\n" + "function setDefaults(object, defaults) {\n"
-         + "for (var option in defaults) {\n" + "if (!object.hasOwnProperty(option))\n"
-         + "object[option] = defaults[option];\n" + "}\n" + "}\n" + "function forEach(array, action) {\n"
-         + "for (var i = 0; i < array.length; i++)\n" + "action(array[i]);\n" + "}";
+      + "for (var option in defaults) {\n" + "if (!object.hasOwnProperty(option))\n"
+      + "object[option] = defaults[option];\n" + "}\n" + "}\n" + "function forEach(array, action) {\n"
+      + "for (var i = 0; i < array.length; i++)\n" + "action(array[i]);\n" + "}";
 
    /**
     * IDE-32:Searching file by Mime Type from subfolder test.
@@ -60,51 +60,37 @@ public class SearchByMimeTypeTest extends BaseTest
    @Test
    public void testSearchByMimeType() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       createFolder(folder1Name);
 
       //Create and save 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitTabPresent(0);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, jsFileContent);
       saveAsByTopMenu(jsFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + jsFileName);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + folder1Name + "/" + jsFileName);
 
       IDE.NAVIGATION.selectRootOfWorkspace();
       createFolder(folder2Name);
 
       saveAsUsingToolbarButton(copyJsFileName);
       Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
 
       IDE.NAVIGATION.selectItem(WS_URL + folder2Name + "/");
 
-      performSearch("/" + folder2Name + "/", "", jsFileMimeType);
+      IDE.SEARCH.performSearch("/" + folder2Name + "/", "", jsFileMimeType);
 
-      Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentSearchResultsTree(copyJsFileName);
-      assertElementNotPresentSearchResultsTree(jsFileName);
+      IDE.SEARCH.waitSearchResultsPresent();
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folder2Name + "/" + copyJsFileName);
+      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + folder1Name + "/" + jsFileName);
 
-      openFileFromSearchResultsWithCodeEditor(copyJsFileName);
-      Thread.sleep(TestConstants.SLEEP);
-      assertEquals(getItemNameFromWorkspaceTree(WS_URL) + "/" + folder2Name, getStatusbarText());
-
-      //Clear created items
-      selectWorkspaceTab();
-      IDE.NAVIGATION.selectItem(WS_URL + folder1Name + "/");
-      selenium.controlKeyDown();
-      IDE.NAVIGATION.selectItem(WS_URL + folder2Name + "/");
-      selenium.controlKeyUp();
-      IDE.NAVIGATION.deleteSelectedItems();
-
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + folder1Name + "/");
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + folder2Name + "/");
+      openFileFromSearchResultsWithCodeEditor(WS_URL + folder2Name + "/" + copyJsFileName);
+      IDE.EDITOR.waitTabPresent(0);
+      assertEquals(IDE.NAVIGATION.getRowTitle(1) + "/" + folder2Name, IDE.STATUSBAR.getStatusbarText());
    }
-   
+
    @AfterClass
    public static void tearDown()
    {

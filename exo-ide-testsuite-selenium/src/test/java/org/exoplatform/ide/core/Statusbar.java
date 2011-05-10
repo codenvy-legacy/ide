@@ -42,7 +42,15 @@ public class Statusbar extends AbstractTestModule
       return selenium().getText(STATUSBAR_LOCATOR);
    }
 
-   
+   /**
+    * Get text shown in status bar.
+    * 
+    * @return {@link String} text
+    */
+   public String getStatusbarText()
+   {
+      return selenium().getText("//table[@class='exo-statusText-table']");
+   }
    
    /**
     * click on statusbar and check appear GoToLine form

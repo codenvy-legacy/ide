@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
@@ -58,30 +59,29 @@ public class GetItemUrlTest extends BaseTest
       //Create first file
       waitForRootElement();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-     IDE.EDITOR.deleteLinesInEditor(7);
-      assertEquals("",IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.EDITOR.deleteLinesInEditor(7);
+      assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content1);
       saveAsUsingToolbarButton(file1Name);
       Thread.sleep(TestConstants.SLEEP * 3);
 
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + file1Name);
 
       createFolder(folderName);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals("",IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content2);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
-      
+
       //Refresh root item
       IDE.NAVIGATION.selectRootOfWorkspace();
       IDE.TOOLBAR.runCommand("Refresh Selected Folder");
-      String workspaceName =
-         selenium.getText("//div[@ID=\"ideNavigatorItemTreeGrid\"]//div[@class=\"ide-Tree-label\"]/");
+      String workspaceName = IDE.NAVIGATION.getRowTitle(1);
       String url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/"));
@@ -130,29 +130,22 @@ public class GetItemUrlTest extends BaseTest
    public void testGetFileUrlWithSearch() throws Exception
    {
       IDE.NAVIGATION.selectRootOfWorkspace();
-      IDE.TOOLBAR.runCommand("Search...");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SEARCH);
+      IDE.SEARCH.checkSearchViewVisible();
 
-      chekAppearSerchForm();
       //Check form inputs
-      assertEquals("/",
-         selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormPathField\"]"));
-      assertEquals("",
-         selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]"));
-      assertEquals("",
-         selenium
-            .getValue("//table[@id=\"ideSearchFormDynamicForm\"]//tr/td/input[@name=\"ideSearchFormMimeTypeField\"]"));
+      assertEquals("/", IDE.SEARCH.getPathFieldValue());
+      assertEquals("", IDE.SEARCH.getContainingTextFieldValue());
+      assertEquals("", IDE.SEARCH.getMimeTypeFieldValue());
       //Type content to input
-      selenium.click("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]");
-      selenium.type("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]",
-         searchPhrase);
+      IDE.SEARCH.typeContainingTextFieldValue(searchPhrase);
       //Click "Search" button
-      selenium.click("ideSearchFormSearchButton");
-      Thread.sleep(TestConstants.SLEEP);
-
+      IDE.SEARCH.clickSearchButton();
+      IDE.SEARCH.checkSearchViewClosed();
+      
       //Check files are found
-      assertElementPresentSearchResultsTree(file1Name);
-      assertElementPresentSearchResultsTree(file2Name);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + file1Name);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folderName + "/" + file2Name);
 
       String workspaceName = selenium.getText(WORK_SPACE_LOCATOR);
 
@@ -173,17 +166,6 @@ public class GetItemUrlTest extends BaseTest
       IDE.NAVIGATION.deleteSelectedItems();
       IDE.NAVIGATION.selectItem(WS_URL + file1Name);
       IDE.NAVIGATION.deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   /**
-    * method for check Appear Serch Form
-    */
-   public void chekAppearSerchForm()
-   {
-      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideSearchView\"]"));
-      assertTrue(selenium.isElementPresent("ideSearchFormSearchButton"));
-      assertTrue(selenium.isElementPresent("ideSearchFormCancelButton"));
    }
 
    /**

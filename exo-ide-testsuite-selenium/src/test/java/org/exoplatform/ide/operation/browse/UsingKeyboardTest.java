@@ -19,10 +19,6 @@
 package org.exoplatform.ide.operation.browse;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -35,6 +31,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -91,7 +89,6 @@ public class UsingKeyboardTest extends BaseTest
       //create subfolder 
       VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       //refresh workspace    
-      waitForRootElement();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       waitForRootElement();
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
@@ -146,11 +143,11 @@ public class UsingKeyboardTest extends BaseTest
 
       createSaveAndCloseFile(MenuCommands.New.GOOGLE_GADGET_FILE, TEST_FILE, 0);
 
-      performSearch("/" + TEST_FOLDER + "/", "", MimeType.GOOGLE_GADGET);
+      IDE.SEARCH.performSearch("/" + TEST_FOLDER + "/", "", MimeType.GOOGLE_GADGET);
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
 
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT
-      selectItemInSearchResultsTree(TEST_FILE);
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);

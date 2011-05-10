@@ -48,60 +48,58 @@ public class SearchAdvancedTest extends BaseTest
    @Test
    public void testAdvancedSearch() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.SLEEP);
-      String workspace = IDE.NAVIGATION.getItemId(WS_URL);
+      waitForRootElement();
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.deleteLinesInEditor(7);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.deleteLinesInEditor(7);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, googleGadgetFileContent);
+      
       saveAsByTopMenu(googleGadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.selectItem(WS_URL + googleGadgetFileName);
       IDE.NAVIGATION.selectRootOfWorkspace();
       
       //Step 5
-      performSearch("/", "text", "");
-      Thread.sleep(TestConstants.SLEEP);
-      assertElementNotPresentSearchResultsTree(googleGadgetFileName);
+      IDE.SEARCH.performSearch("/", "text", "");
+      IDE.SEARCH.waitSearchResultsPresent();
+      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + googleGadgetFileName);
       
       //Step 6
-      selectItemInSearchResultsTree(workspace);
-      performSearch("/", "", "script/groovy");
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
+      IDE.SEARCH.performSearch("/", "", "script/groovy");
       Thread.sleep(TestConstants.SLEEP);
-      assertElementNotPresentSearchResultsTree(googleGadgetFileName);
+      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + googleGadgetFileName);
       
       //Step 7
-      selectItemInSearchResultsTree(workspace);
-      performSearch("/", "ÐŸÑ€Ð¸Ð²ÐµÑ‚, Ñ�Ð²ÐµÑ‚!", "script/groovy");
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
+      IDE.SEARCH.performSearch("/", "ÐŸÑ€Ð¸Ð²ÐµÑ‚, Ñ�Ð²ÐµÑ‚!", "script/groovy");
       Thread.sleep(TestConstants.SLEEP);
-      assertElementNotPresentSearchResultsTree(googleGadgetFileName);
+      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + googleGadgetFileName);
 
       //Step 8
-      selectItemInSearchResultsTree(workspace);
-      performSearch("/", "", "");
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
+      IDE.SEARCH.performSearch("/", "", "");
       Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentSearchResultsTree(googleGadgetFileName);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
       
       //Step 9
-      selectItemInSearchResultsTree(workspace);
-      performSearch("/", "ÐŸÑ€Ð¸Ð²ÐµÑ‚, Ñ�Ð²ÐµÑ‚!", "");
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
+      IDE.SEARCH.performSearch("/", "ÐŸÑ€Ð¸Ð²ÐµÑ‚, Ñ�Ð²ÐµÑ‚!", "");
       Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentSearchResultsTree(googleGadgetFileName);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
       
       //Step 10
-      selectItemInSearchResultsTree(workspace);
-      performSearch("/", "", "application/x-google-gadget");
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
+      IDE.SEARCH.performSearch("/", "", "application/x-google-gadget");
       Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentSearchResultsTree(googleGadgetFileName);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
       
       //Step 11
-      selectItemInSearchResultsTree(workspace);
-      performSearch("/", "Test", "application/x-google-gadget");
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
+      IDE.SEARCH.performSearch("/", "Test", "application/x-google-gadget");
       Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentSearchResultsTree(googleGadgetFileName);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
 
       //Clear test items
       selectWorkspaceTab();

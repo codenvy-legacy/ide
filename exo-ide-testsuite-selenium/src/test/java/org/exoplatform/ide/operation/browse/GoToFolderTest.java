@@ -147,7 +147,7 @@ public class GoToFolderTest extends BaseTest
       IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_1 + "/");
       IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_2 + "/");
 
-      performSearch("/", "", "");
+      IDE.SEARCH.performSearch("/", "", "");
       waitForRootElement();
       //Check files are found
       IDE.NAVIGATION.selectItemInSearchTree(URL + FOLDER_1 + "/" + FILE_1);

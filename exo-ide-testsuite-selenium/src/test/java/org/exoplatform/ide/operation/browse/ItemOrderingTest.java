@@ -38,102 +38,95 @@ import org.junit.Test;
  */
 public class ItemOrderingTest extends BaseTest
 {
-   
+
    private static final String TEST_FOLDER_1 = "folder-1";
-   
+
    private static final String UPPERCASE_TEST_FOLDER_1 = "Folder-1";
-   
+
    private static final String TEST_FOLDER_1_2 = "folder-1-2";
 
    private static final String TEST_FILE_1 = "file-1";
-   
-   private static final String UPPERCASE_TEST_FILE_1 = "File-1";   
-   
+
+   private static final String UPPERCASE_TEST_FILE_1 = "File-1";
+
    private static final String TEST_FILE_1_2 = "file-1-2";
-  
-   
+
    @BeforeClass
    public static void setUp()
    {
       cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
    }
-   
+
    @Test
    public void testItemOrdering() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      
+      waitForRootElement();
       // create test files
       IDE.NAVIGATION.selectRootOfWorkspace();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1_2, 0);
       IDE.NAVIGATION.selectRootOfWorkspace();
-      createSaveAndCloseFile(MenuCommands.New.XML_FILE, UPPERCASE_TEST_FILE_1, 0);      
+      createSaveAndCloseFile(MenuCommands.New.XML_FILE, UPPERCASE_TEST_FILE_1, 0);
       IDE.NAVIGATION.selectRootOfWorkspace();
-      createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1, 0);      
-      
+      createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1, 0);
+
       // create test folders
       IDE.NAVIGATION.selectRootOfWorkspace();
       createFolder(TEST_FOLDER_1_2);
       IDE.NAVIGATION.selectRootOfWorkspace();
       createFolder(UPPERCASE_TEST_FOLDER_1);
       IDE.NAVIGATION.selectRootOfWorkspace();
-      createFolder(TEST_FOLDER_1);      
+      createFolder(TEST_FOLDER_1);
 
-      checkItemOrderingInNavigationPanel();      
+      checkItemOrderingInNavigationPanel();
 
       // test ordering within the Navigation Panel after the refreshing root folder
       IDE.NAVIGATION.selectRootOfWorkspace();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.IDE_INITIALIZATION_PERIOD);      
-      
+      Thread.sleep(TestConstants.IDE_INITIALIZATION_PERIOD);
+
       // test ordering within the Search Panel
       IDE.NAVIGATION.selectRootOfWorkspace();
-      performSearch("/", "", MimeType.TEXT_XML);
-      
+      IDE.SEARCH.performSearch("/", "", MimeType.TEXT_XML);
       checkItemOrderngInSearchResultPanel();
    }
-   
-   
+
    private void checkItemOrderingInNavigationPanel() throws Exception
    {
-      IDE.NAVIGATION.assertItemVisible(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/"); 
-      assertEquals(UPPERCASE_TEST_FOLDER_1, getItemNameFromWorkspaceTree(UPPERCASE_TEST_FOLDER_1));
-            
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER_1 + "/"); 
-      assertEquals(TEST_FOLDER_1, getItemNameFromWorkspaceTree(TEST_FOLDER_1));
-      
+      IDE.NAVIGATION.assertItemVisible(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/");
+      assertEquals(UPPERCASE_TEST_FOLDER_1, IDE.NAVIGATION.getRowTitle(2));
+
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER_1 + "/");
+      assertEquals(TEST_FOLDER_1, IDE.NAVIGATION.getRowTitle(3));
+
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER_1_2 + "/");
-      assertEquals(TEST_FOLDER_1_2, getItemNameFromWorkspaceTree(TEST_FOLDER_1_2));
-      
+      assertEquals(TEST_FOLDER_1_2, IDE.NAVIGATION.getRowTitle(4));
+
       IDE.NAVIGATION.assertItemVisible(WS_URL + UPPERCASE_TEST_FILE_1);
-      assertEquals(UPPERCASE_TEST_FILE_1, getItemNameFromWorkspaceTree(UPPERCASE_TEST_FILE_1));
-      
+      assertEquals(UPPERCASE_TEST_FILE_1, IDE.NAVIGATION.getRowTitle(5));
+
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FILE_1);
-      assertEquals(TEST_FILE_1, getItemNameFromWorkspaceTree(TEST_FILE_1));
-      
+      assertEquals(TEST_FILE_1, IDE.NAVIGATION.getRowTitle(6));
+
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FILE_1_2);
-      assertEquals(TEST_FILE_1_2, getItemNameFromWorkspaceTree(TEST_FILE_1_2));
+      assertEquals(TEST_FILE_1_2, IDE.NAVIGATION.getRowTitle(7));
    }
-   
+
    private void checkItemOrderngInSearchResultPanel() throws Exception
    {
-      assertElementPresentSearchResultsTree(UPPERCASE_TEST_FILE_1);
-      assertEquals(UPPERCASE_TEST_FILE_1, getItemNameFromSearchResultsTree(UPPERCASE_TEST_FILE_1));
-      
-      assertElementPresentSearchResultsTree(TEST_FILE_1);
-      assertEquals(TEST_FILE_1, getItemNameFromSearchResultsTree(TEST_FILE_1));
-      
-      assertElementPresentSearchResultsTree(TEST_FILE_1_2);
-      assertEquals(TEST_FILE_1_2, getItemNameFromSearchResultsTree(TEST_FILE_1_2));
-      Thread.sleep(6000);
-   }   
-      
-   
-   
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + UPPERCASE_TEST_FILE_1);
+      assertEquals(UPPERCASE_TEST_FILE_1, IDE.NAVIGATION.getRowTitleInSearchTree(2));
+
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FILE_1);
+      assertEquals(TEST_FILE_1, IDE.NAVIGATION.getRowTitleInSearchTree(3));
+
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FILE_1_2);
+      assertEquals(TEST_FILE_1_2, IDE.NAVIGATION.getRowTitleInSearchTree(4));
+   }
+
    @AfterClass
    public static void tearDown() throws Exception
    {
       cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME);
    }
-   
+
 }

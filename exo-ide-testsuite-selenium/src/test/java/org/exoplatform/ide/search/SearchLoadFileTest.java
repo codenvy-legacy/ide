@@ -26,6 +26,7 @@ import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
@@ -44,11 +45,12 @@ public class SearchLoadFileTest extends BaseTest
 
    private final String gadgetFileName = "gadget.xml";
 
-   private final String gadgetFileContent =
-      "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
-         + "<Content type=\"html\">\n" + "<![CDATA[ Hello, world!\n" + "Hello, world!\n" + "]]></Content></Module>";
+   private final String gadgetFileContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n"
+      + "<ModulePrefs title=\"Hello World!\" />\n" + "<Content type=\"html\">\n" + "<![CDATA[ Hello, world!\n"
+      + "Hello, world!\n" + "]]></Content></Module>";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
 
    private final static String TEST_FOLDER = "testFolder";
 
@@ -69,8 +71,6 @@ public class SearchLoadFileTest extends BaseTest
       }
    }
 
-   
-   
    /**
     * IDE-33:Load found file in the Content Panel
     * 
@@ -79,30 +79,28 @@ public class SearchLoadFileTest extends BaseTest
    @Test
    public void testLoadFoundFile() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      
+      waitForRootElement();
+
       IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitTabPresent(0);
       saveAsByTopMenu(restFileName);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + restFileName);
-     IDE.EDITOR.closeTab(0);
+      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.EDITOR.closeTab(0);
       IDE.NAVIGATION.selectRootOfWorkspace();
 
-      performSearch("/", "", "");
-      Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentSearchResultsTree(restFileName);
+      IDE.SEARCH.performSearch("/", "", "");
+      IDE.SEARCH.waitSearchResultsPresent();
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + restFileName);
 
-      openFileFromSearchResultsWithCodeEditor(restFileName);
-      Thread.sleep(TestConstants.SLEEP);
-      assertEquals(restFileName,IDE.EDITOR.getTabTitle(0));
-     
-      IDE.TOOLBAR.assertButtonEnabled("Delete Item(s)...", false);
-      IDE.TOOLBAR.assertButtonEnabled("Cut Selected Item(s)", false);
-      IDE.TOOLBAR.assertButtonEnabled("Copy Selected Item(s)", false);
-      IDE.TOOLBAR.assertButtonEnabled("Paste Selected Item(s)", false);
-      IDE.TOOLBAR.assertButtonEnabled("Refresh Selected Folder", false);
+      openFileFromSearchResultsWithCodeEditor(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.EDITOR.waitTabPresent(0);
+      assertEquals(restFileName, IDE.EDITOR.getTabTitle(0));
+
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.REFRESH, false);
 
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, false);
@@ -119,14 +117,14 @@ public class SearchLoadFileTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + restFileName);
-      //TODO check selected
+      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      //TODO add test selected
 
-      IDE.TOOLBAR.assertButtonEnabled("Delete Item(s)...", true);
-      IDE.TOOLBAR.assertButtonEnabled("Cut Selected Item(s)", true);
-      IDE.TOOLBAR.assertButtonEnabled("Copy Selected Item(s)", true);
-      IDE.TOOLBAR.assertButtonEnabled("Paste Selected Item(s)", false);
-      IDE.TOOLBAR.assertButtonEnabled("Refresh Selected Folder", true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.REFRESH, true);
 
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
@@ -142,33 +140,32 @@ public class SearchLoadFileTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
 
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-      
-     IDE.EDITOR.deleteLinesInEditor(7);
-      
+      IDE.EDITOR.waitTabPresent(0);
+
+      IDE.EDITOR.deleteLinesInEditor(7);
+
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, gadgetFileContent);
       saveAsByTopMenu(gadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
       IDE.NAVIGATION.selectRootOfWorkspace();
 
-      performSearch("/", "", "");
-      Thread.sleep(TestConstants.SLEEP);
-      assertElementPresentSearchResultsTree(gadgetFileName);
+      IDE.SEARCH.performSearch("/", "", "");
+      IDE.SEARCH.waitSearchResultsPresent();
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
 
-      openFileFromSearchResultsWithCodeEditor(gadgetFileName);
-      Thread.sleep(TestConstants.SLEEP);
-      assertEquals(gadgetFileName,IDE.EDITOR.getTabTitle(0));
+      openFileFromSearchResultsWithCodeEditor(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
+      IDE.EDITOR.waitTabPresent(0);
+      assertEquals(gadgetFileName, IDE.EDITOR.getTabTitle(0));
 
-      IDE.TOOLBAR.assertButtonEnabled("Delete Item(s)...", false);
-      IDE.TOOLBAR.assertButtonEnabled("Cut Selected Item(s)", false);
-      IDE.TOOLBAR.assertButtonEnabled("Copy Selected Item(s)", false);
-      IDE.TOOLBAR.assertButtonEnabled("Paste Selected Item(s)", false);
-      IDE.TOOLBAR.assertButtonEnabled("Refresh Selected Folder", false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.REFRESH, false);
 
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, false);
@@ -185,14 +182,14 @@ public class SearchLoadFileTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + restFileName);
-      //TODO check selected
-
-      IDE.TOOLBAR.assertButtonEnabled("Delete Item(s)...", true);
-      IDE.TOOLBAR.assertButtonEnabled("Cut Selected Item(s)", true);
-      IDE.TOOLBAR.assertButtonEnabled("Copy Selected Item(s)", true);
-      IDE.TOOLBAR.assertButtonEnabled("Paste Selected Item(s)", false);
-      IDE.TOOLBAR.assertButtonEnabled("Refresh Selected Folder", true);
+      //TODO test selected
+      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, true);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.REFRESH, true);
 
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
@@ -207,19 +204,8 @@ public class SearchLoadFileTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
-
-      selenium.controlKeyDown();
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/" + restFileName);
-      selenium.controlKeyUp();
-      IDE.NAVIGATION.deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + restFileName);
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + gadgetFileContent);
-
-      Thread.sleep(TestConstants.SLEEP);
    }
-   
+
    @AfterClass
    public static void tearDown()
    {

@@ -37,6 +37,8 @@ public class Navigation extends AbstractTestModule
 
    public static final String NAVIGATION_TREE = "ideNavigatorItemTreeGrid";
 
+   public static final String SEARCH_RESULT_TREE = "ideSearchResultItemTreeGrid";
+
    static final String TREE_PREFIX_ID = "navigation-";
 
    static final String TREE_PREFIX_SERCH_ID = "search-";
@@ -56,9 +58,48 @@ public class Navigation extends AbstractTestModule
 
    public String getRowTitle(int rowNumber)
    {
-      fail();
+      int size =
+         selenium().getXpathCount("//div[@id='" + NAVIGATION_TREE + "']//div[@class='ide-Tree-label']").intValue();
+      if (size <= 0)
+         return null;
+      int index = 0;
+
+      for (int i = 1; i <= size; i++)
+      {
+         if (selenium().isVisible(
+            "xpath=(//div[@id='" + NAVIGATION_TREE + "']//div[@class='ide-Tree-label'])[position()=" + i + "]"))
+            ;
+         index++;
+         if (index == rowNumber)
+         {
+            return selenium().getText(
+               "xpath=(//div[@id='" + NAVIGATION_TREE + "']//div[@class='ide-Tree-label'])[position()=" + i + "]");
+         }
+      }
       return null;
-      //      return selenium.getText(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[0]");
+   }
+
+   public String getRowTitleInSearchTree(int rowNumber)
+   {
+      int size =
+         selenium().getXpathCount("//div[@id='" + SEARCH_RESULT_TREE + "']//div[@class='ide-Tree-label']").intValue();
+      if (size <= 0)
+         return null;
+      int index = 0;
+
+      for (int i = 1; i <= size; i++)
+      {
+         if (selenium().isVisible(
+            "xpath=(//div[@id='" + SEARCH_RESULT_TREE + "']//div[@class='ide-Tree-label'])[position()=" + i + "]"))
+            ;
+         index++;
+         if (index == rowNumber)
+         {
+            return selenium().getText(
+               "xpath=(//div[@id='" + SEARCH_RESULT_TREE + "']//div[@class='ide-Tree-label'])[position()=" + i + "]");
+         }
+      }
+      return null;
    }
 
    /**

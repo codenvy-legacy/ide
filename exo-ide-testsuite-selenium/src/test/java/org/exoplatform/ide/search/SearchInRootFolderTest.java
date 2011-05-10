@@ -19,8 +19,6 @@
 package org.exoplatform.ide.search;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -49,11 +47,10 @@ public class SearchInRootFolderTest extends BaseTest
 
    private final String copyofRestFileName = "Copy Of Example.groovy";
 
-   private final String restFileContent =
-      "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
-         + "import javax.ws.rs.PathParam\n" + "@Path(\"/\")\n" + "public class HelloWorld {\n" + "@GET\n"
-         + "@Path(\"helloworld/{name}\")\n" + "public String hello(@PathParam(\"name\") String name) {\n"
-         + "return \"Hello \" + name\n" + "}\n" + "}\n";
+   private final String restFileContent = "// simple groovy script\n" + "import javax.ws.rs.Path\n"
+      + "import javax.ws.rs.GET\n" + "import javax.ws.rs.PathParam\n" + "@Path(\"/\")\n"
+      + "public class HelloWorld {\n" + "@GET\n" + "@Path(\"helloworld/{name}\")\n"
+      + "public String hello(@PathParam(\"name\") String name) {\n" + "return \"Hello \" + name\n" + "}\n" + "}\n";
 
    /**
     * IDE-31:Searching file from root folder test.
@@ -63,12 +60,12 @@ public class SearchInRootFolderTest extends BaseTest
    @Test
    public void testSearchInRootFolder() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       createFolder(folder1Name);
       //Create and save 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.deleteLinesInEditor(14);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.deleteLinesInEditor(14);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, restFileContent);
       saveAsByTopMenu(restFileName);
       Thread.sleep(TestConstants.SLEEP);
@@ -86,46 +83,32 @@ public class SearchInRootFolderTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folder2Name + "/" + restFileName);
 
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
 
       IDE.NAVIGATION.selectRootOfWorkspace();
 
-      performSearch("/", "Hello", "text/html");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.SEARCH.performSearch("/", "Hello", "text/html");
+      IDE.SEARCH.waitSearchResultsPresent();
 
-      assertTrue(selenium
-         .isElementPresent("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[0]/col[0]"));
-      assertFalse(selenium
-         .isElementPresent("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[1]/col[0]"));
+      assertEquals(0, IDE.SEARCH.getResultsCount());
 
       selectWorkspaceTab();
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      performSearch("/", "Hello", restFileMimeType);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.SEARCH.performSearch("/", "Hello", restFileMimeType);
+      IDE.SEARCH.waitSearchResultsPresent();
+      assertEquals(3, IDE.SEARCH.getResultsCount());
 
-      assertElementPresentSearchResultsTree(restFileName);
-      assertElementPresentSearchResultsTree(copyofRestFileName);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folder1Name + "/" + restFileName);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folder2Name + "/" + restFileName);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folder2Name + "/" + copyofRestFileName);
       //Open first file from search results
-      openFileFromSearchResultsWithCodeEditor(restFileName);
-      Thread.sleep(TestConstants.SLEEP);
-      assertEquals(restFileName,IDE.EDITOR.getTabTitle(0));
+      openFileFromSearchResultsWithCodeEditor(WS_URL + folder1Name + "/" + restFileName);
+      IDE.EDITOR.waitTabPresent(0);
+      assertEquals(restFileName, IDE.EDITOR.getTabTitle(0));
 
       //Open second file from search results
-      openFileFromSearchResultsWithCodeEditor(copyofRestFileName);
-      Thread.sleep(TestConstants.SLEEP);
-      assertEquals(copyofRestFileName,IDE.EDITOR.getTabTitle(1));
-
-      selectWorkspaceTab();
-      IDE.NAVIGATION.selectItem(WS_URL + folder1Name + "/");
-      selenium.controlKeyDown();
-      IDE.NAVIGATION.selectItem(WS_URL + folder2Name + "/");
-      selenium.controlKeyUp();
-      IDE.NAVIGATION.deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + folder1Name + "/");
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + folder2Name + "/");
-
-      Thread.sleep(TestConstants.SLEEP);
+      openFileFromSearchResultsWithCodeEditor(WS_URL + folder2Name + "/" + copyofRestFileName);
+      IDE.EDITOR.waitTabPresent(1);
+      assertEquals(copyofRestFileName, IDE.EDITOR.getTabTitle(1));
    }
 
    @AfterClass

@@ -280,67 +280,6 @@ public abstract class BaseTest
       return selenium.getEval("if (window.getSelection) { window.getSelection();}");
    }
 
-   /**
-    * Select the item in the search results tree. 
-    * 
-    * @param name item's name
-    * @throws Exception
-    */
-   protected void selectItemInSearchResultsTree(String name) throws Exception
-   {
-      selenium.click("//td/div[@class='ide-Tree-label' and text()=" + "'" + name + "'" + "]");
-   }
-
-   /**
-    * Check item is shown in search results tree.
-    * 
-    * @param name
-    * @throws Exception
-    */
-   protected void assertElementPresentSearchResultsTree(String name) throws Exception
-   {
-
-      assertTrue(selenium.isElementPresent("//td/div[@class='ide-Tree-label' and text()=" + "'" + name + "'" + "]"));
-   }
-
-   /**
-    * Check item is not shown in search results tree.
-    * 
-    * @param name
-    * @throws Exception
-    */
-   protected void assertElementNotPresentSearchResultsTree(String name) throws Exception
-   {
-      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideSearchResultItemTreeGrid\"]/body/row[name="
-         + name + "]/col[0]"));
-   }
-
-   /**
-    * Get name of item in workspace tree by it's index.
-    * 
-    * @param index
-    * @return {@link String} name
-    */
-   protected String getItemNameFromWorkspaceTree(String name)
-   {
-      return selenium
-         .getText("//div[@ID=\"ideNavigatorItemTreeGrid\"]//table//td/div[@class=\"ide-Tree-label\" and text()=" + "'"
-            + name + "'" + "]");
-   }
-
-   /**
-   * Get name of item in search tree by it's index.
-   * 
-   * @param index starting from 0
-   * @return {@link String} name
-   */
-   protected String getItemNameFromSearchResultsTree(String name)
-   {
-      return selenium
-         .getText("//div[@ID=\"ideSearchResultItemTreeGrid\"]//table//tbody//td/div[@class=\"ide-Tree-label\" and text()="
-            + "'" + name + "'" + "]");
-   }
-
    /*  protected void typeTextTo(String locator, String text) throws Exception
    {
       selenium.click(locator);
@@ -570,55 +509,20 @@ public abstract class BaseTest
       selenium.click("//div[@panel-id='navigation']//td[text()='Workspace']");
    }
 
-   /**
+  /* *//**
     * Select "Search Result" tab in navigation panel
-    */
+    *//*
    protected void selectSearchResultTab()
    {
       selenium.click("scLocator=//TabSet[ID=\"ideNavigationTabSet\"]/tab[ID=SearchResultPanel]");
-   }
-
-   /**
-    * Performs search by pointed params.
-    * 
-    * @param checkPath path to check
-    * @param text text to search
-    * @param mimeType mime type to search
-    * @throws Exception 
-    */
-   protected void performSearch(String checkPath, String text, String mimeType) throws Exception
-   {
-      IDE.TOOLBAR.runCommand("Search...");
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideSearchView\"]"));
-      assertTrue(selenium.isElementPresent("ideSearchFormSearchButton"));
-      assertTrue(selenium.isElementPresent("ideSearchFormCancelButton"));
-      //Check form inputs
-      assertEquals(checkPath,
-         selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormPathField\"]"));
-      assertEquals("",
-         selenium.getValue("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]"));
-      assertEquals("",
-         selenium
-            .getValue("//table[@id=\"ideSearchFormDynamicForm\"]//tr/td/input[@name=\"ideSearchFormMimeTypeField\"]"));
-      //Type content to input
-      selenium.click("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]");
-      selenium.type("//table[@id=\"ideSearchFormDynamicForm\"]//div/input[@name=\"ideSearchFormContentField\"]", text);
-      //Type mime type
-      selenium.click("//table[@id=\"ideSearchFormDynamicForm\"]//tr/td/input[@name=\"ideSearchFormMimeTypeField\"]");
-      selenium.type("//table[@id=\"ideSearchFormDynamicForm\"]//tr/td/input[@name=\"ideSearchFormMimeTypeField\"]",
-         mimeType);
-      //Click "Search" button
-      selenium.click("ideSearchFormSearchButton");
-      Thread.sleep(TestConstants.SLEEP);
-   }
+   }*/
 
    /**
     * Get text shown in status bar.
     * 
     * @return {@link String} text
     */
+   @Deprecated
    protected String getStatusbarText()
    {
       return selenium.getText("//table[@class='exo-statusText-table']");
