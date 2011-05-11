@@ -47,6 +47,8 @@ public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client
 {
 
    private static final String ID = "ideOutputView";
+   
+   private static final String CONTENT_ID = "ideOutputContent";
 
    public static final int WIDTH = 450;
 
@@ -82,6 +84,8 @@ public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client
       clearOutputButton.setTitle("Clear output");
 
       toolbar.addItem(clearOutputButton, true);
+      
+      contentPanel.getElement().setId(CONTENT_ID);
    }
 
    @Override
