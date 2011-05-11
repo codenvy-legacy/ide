@@ -105,7 +105,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
          parseTokenLine(lineContent, cursorPositionX);
          currentLineNumber = cursorPositionY;
 
-         //         printTokens(tokenList, 2);
+         printTokens(tokenList, 2);
          if (defaultTokens == null)
          {
             RubyBundle buandle = GWT.create(RubyBundle.class);
@@ -189,6 +189,25 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
             }
             else
             {
+               if (currentToken != null)
+               {
+                  if (currentToken.getType() == TokenType.METHOD)
+                  {
+                     Token klass =
+                        (Token)currentToken.getProperty(TokenProperties.PARENT_TOKEN).isObjectProperty().objectValue();
+                     addTokenFromMethod(currentToken, tokens);
+                     addMethodsAndGlobal(klass, klass.getName(), tokens);
+                     addGlobalScriptVariables(tokenList, tokens);
+                  }
+                  else if (currentToken.getType() == TokenType.CLASS)
+                  {
+                     addMethodsAndGlobal(currentToken, currentToken.getName(), tokens);
+                  }
+               }
+               else
+               {
+                  addScriptVariables(tokenList, tokens);
+               }
                tokens.addAll(defaultTokens);
             }
             try
@@ -212,6 +231,92 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
    }
 
    /**
+    * Find, recursive, all global variables defined in Ruby script
+    * @param tokenList List of tokens
+    * @param tokens List of tokens where global and local variables will be stored
+    */
+   @SuppressWarnings("unchecked")
+   private void addGlobalScriptVariables(final List<Token> tokenList, final List<Token> tokens)
+   {
+      for (Token t : tokenList)
+      {
+         if (t.getType() == TokenType.GLOBAL_VARIABLE)
+         {
+            tokens.add(t);
+         }
+         if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
+            && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
+         {
+            addGlobalScriptVariables((List<Token>)t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue(),
+               tokens);
+         }
+      }
+   }
+
+   /**
+    * Find all global and local variables defined on root of Ruby script
+    * @param tokenList List of tokens, received from editor
+    * @param tokens List of tokens where global and local variables will be stored
+    */
+   private void addScriptVariables(final List<Token> tokenList, final List<Token> tokens)
+   {
+      for (Token t : tokenList)
+      {
+         if (t.getType() == TokenType.GLOBAL_VARIABLE || t.getType() == TokenType.LOCAL_VARIABLE)
+         {
+            tokens.add(t);
+         }
+      }
+   }
+
+   /**
+    * Get all methods and variables (of class and of instance)
+    * @param classToken Token that describes Ruby class
+    * @param tokens List of tokens 
+    */
+   private void addMethodsAndGlobal(final Token classToken, final String className, final List<Token> tokens)
+   {
+      if (classToken.hasProperty(TokenProperties.SUB_TOKEN_LIST))
+      {
+         for (Token t : classToken.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue())
+         {
+            t.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(className));
+            if (t.getType() == TokenType.METHOD)
+            {
+               tokens.add(t);
+               addMethodsAndGlobal(t, className, tokens);
+               continue;
+            }
+            if (t.getType() == TokenType.CLASS_VARIABLE || t.getType() == TokenType.INSTANCE_VARIABLE)
+            {
+               tokens.add(t);
+            }
+         }
+      }
+   }
+
+   /**
+    * Add all tokens from methodToken to tokens, also filter local variables defined after {@link RubyCodeAssistant#currentLineNumber}
+    * @param methodToken token that represent Ruby method 
+    * @param tokens List of tokens
+    */
+   private void addTokenFromMethod(final Token methodToken, final List<Token> tokens)
+   {
+      if (methodToken.hasProperty(TokenProperties.PARAMETERS))
+      {
+         tokens.addAll(methodToken.getProperty(TokenProperties.PARAMETERS).isArrayProperty().arrayValue());
+      }
+      if (methodToken.hasProperty(TokenProperties.SUB_TOKEN_LIST))
+         for (Token t : methodToken.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue())
+         {
+            if (t.getProperty(TokenProperties.LINE_NUMBER).isNumericProperty().numberValue().intValue() <= currentLineNumber)
+            {
+               tokens.add(t);
+            }
+         }
+   }
+
+   /**
     * Get all Ruby constants form token list
     * @param tokenList List of tokens received from editor
     * @param tokenConstant List where constants store
@@ -228,7 +333,8 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
          if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
             && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
          {
-            getConstants((List<Token>)t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue(), tokenConstant);
+            getConstants((List<Token>)t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue(),
+               tokenConstant);
          }
       }
    }

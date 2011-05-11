@@ -18,70 +18,46 @@
  */
 package org.exoplatform.ide.editor.codeassistant.ruby.ui;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: RubyMethodWidget Apr 29, 2011 2:38:38 PM evgen $
+ * @version $Id: RubyVariableWidget May 10, 2011 2:56:42 PM evgen $
  *
  */
-public class RubyMethodWidget extends RubyBaseWidget
+public class RubyVariableWidget extends RubyBaseWidget
 {
 
    /**
     * @param token
     */
-   public RubyMethodWidget(Token token)
+   public RubyVariableWidget(Token token, ImageResource image)
    {
       super(token);
-      grid = new Grid(1, 3);
+      grid = new Grid(1, 2);
       grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
-
-      Image i = getImage();
+      grid.setWidth("100%");
+      Image i = new Image(image);
       i.setHeight("16px");
+
       grid.setWidget(0, 0, i);
 
-      String name = token.getName();
-      if (token.hasProperty(TokenProperties.PARAMETER_TYPES))
-         name += token.getProperty(TokenProperties.PARAMETER_TYPES).isStringProperty().stringValue();
-
-      Label nameLabel = new Label(name, false);
-      nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
+      Label nameLabel = new Label(token.getName(), false);
       grid.setWidget(0, 1, nameLabel);
-
-      String pack = token.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue();
-      Label label = new Label("-" + pack, false);
-      label.setStyleName(CodeAssistantClientBundle.INSTANCE.css().fqnStyle());
-      grid.setWidget(0, 2, label);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setWidth(0, 2, "100%");
 
       initWidget(grid);
-      setWidth("100%");
-   }
-
-   private Image getImage()
-   {
-
-      if (modifieres == 0)
-      {
-         return new Image(CodeAssistantClientBundle.INSTANCE.publicMethod());
-      }
-      else
-      {
-         return new Image(CodeAssistantClientBundle.INSTANCE.defaultMethod());
-      }
    }
 
 }
