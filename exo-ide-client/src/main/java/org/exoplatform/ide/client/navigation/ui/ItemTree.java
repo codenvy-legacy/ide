@@ -307,7 +307,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       }
       TreeItem parentItem = fileNode.getParentItem();
       parentItem.removeItem(fileNode);
-      fileNode = new TreeItem(createItemWidget(file.getIcon(), getTitle(file)));
+      fileNode = createTreeNode(file);
       parentItem.addItem(fileNode);
 
       fileNode.setState(true);
