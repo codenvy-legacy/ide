@@ -113,7 +113,7 @@ public abstract class AbstractTestModule
             fail("timeout for text " + text);
          }
 
-         if (!selenium().isTextPresent(text))
+         if (selenium().isTextPresent(text))
          {
             break;
          }

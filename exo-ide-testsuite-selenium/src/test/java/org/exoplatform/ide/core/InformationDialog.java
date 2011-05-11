@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
+
+import org.exoplatform.ide.TestConstants;
 
 /**
- * Created by The eXo Platform SAS .
+ * Operations with information dialogs.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
@@ -29,26 +31,67 @@ import static org.junit.Assert.fail;
 
 public class InformationDialog extends AbstractTestModule
 {
-   
-   public void checkIsOpened() {
-      fail();
+   private static final String INFO_DIALOG_ID = "exoInfoDialog";
+
+   private static final String INFO_BUTTON_OK_ID = "exoInfoDialogOkButton";
+
+   /**
+    * Check, is information dialog appeared.
+    */
+   public void checkIsOpened()
+   {
+      assertTrue(selenium().isElementPresent(INFO_DIALOG_ID));
+      assertTrue(selenium().isElementPresent(INFO_BUTTON_OK_ID));
+   }
+
+   /**
+    * Check, is information dialog with <code>message</code> appeared.
+    * @param message - the message
+    * @throws Exception
+    */
+   public void checkIsOpened(String message) throws Exception
+   {
+      checkIsOpened();
+      assertTrue(selenium().isTextPresent(message));
+   }
+
+   /**
+    * Click Ok button at information dialog.
+    * @throws InterruptedException
+    */
+   public void clickOk() throws InterruptedException
+   {
+      selenium().click("//div[@id='" + INFO_DIALOG_ID + "']//div[@id='" + INFO_BUTTON_OK_ID + "']");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+
+   public void clickYes()
+   {
+   }
+
+   public void clickNo()
+   {
    }
    
-   public void checkIsOpened(String message) throws Exception {
-      
-      Thread.sleep(Integer.MAX_VALUE);
-      
-      fail();
+   /**
+    * Wait for information dialog.
+    * @throws Exception
+    */
+   public void waitForInfoDialog() throws Exception
+   {
+      waitForElementPresent(INFO_DIALOG_ID);
+      waitForElementPresent(INFO_BUTTON_OK_ID);
    }
    
-   public void clickOk() {
-      fail();
-   }
-   
-   public void clickYes() {
-   }
-   
-   public void clickNo() {
+   /**
+    * Wait for information dialog with <code>message</code>.
+    * @param message - the message at information dialog.
+    * @throws Exception
+    */
+   public void waitForInfoDialog(String message) throws Exception
+   {
+      waitForInfoDialog();
+      waitForTextPresent(message);
    }
 
 }

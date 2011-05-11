@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.ide.TestConstants;
 
 /**
@@ -29,9 +32,12 @@ import org.exoplatform.ide.TestConstants;
  */
 public class Templates extends AbstractTestModule
 {
-   private static final String FILE_FROM_TEMPLATE_ID = "ideCreateFileFromTemplateForm";
+   //------Create from template form elements-------------------
+   private static final String FILE_FROM_TEMPLATE_FORM_ID = "ideCreateFileFromTemplateForm";
 
    private static final String TEMPLATES_LIST_GRID_ID = "ideCreateFileFromTemplateFormTemplateListGrid";
+   
+   private static final String FILE_NAME_INPUT_ID = "ideCreateFileFromTemplateFormFileNameField";
 
    private static final String DELETE_BUTTON_ID = "ideCreateFileFromTemplateFormDeleteButton";
 
@@ -41,11 +47,11 @@ public class Templates extends AbstractTestModule
 
    private static final String FILE_NAME_INPUT_LOCATOR = "//input[@name='ideCreateFileFromTemplateFormFileNameField']";
 
-   private static final String FILE_FROM_TEMPLATE_DIALOG_LOCATOR = "//div[@id='" + FILE_FROM_TEMPLATE_ID + "']";
+   private static final String FILE_FROM_TEMPLATE_DIALOG_LOCATOR = "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']";
    
    public void waitForFileFromTemplateForm() throws Exception
    {
-      waitForElementPresent(FILE_FROM_TEMPLATE_ID);
+      waitForElementPresent(FILE_FROM_TEMPLATE_FORM_ID);
       waitForElementPresent(TEMPLATES_LIST_GRID_ID);
       waitForElementPresent(DELETE_BUTTON_ID);
       waitForElementPresent(CREATE_BUTTON_ID);
@@ -86,7 +92,36 @@ public class Templates extends AbstractTestModule
    {
       selenium().click(CREATE_BUTTON_ID);
 
-      waitForElementNotPresent(FILE_FROM_TEMPLATE_ID);
+      waitForElementNotPresent(FILE_FROM_TEMPLATE_FORM_ID);
    }
-
+   
+   /**
+    * Check, that form "Create file from template" appeared and displayed correctly.
+    */
+   public void checkCreateFileFromTemplateWindow()
+   {
+      assertTrue(selenium().isElementPresent(FILE_FROM_TEMPLATE_FORM_ID));
+      assertEquals("Create file", selenium().getText("//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']//div[@class='Caption']/span"));
+      assertTrue(selenium().isElementPresent(FILE_NAME_INPUT_ID));
+      assertTrue(selenium().isElementPresent(TEMPLATES_LIST_GRID_ID));
+      assertTrue(selenium().isElementPresent(DELETE_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(CREATE_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(CANCEL_BUTTON_ID));
+      //check that Delete and Create buttons are disabled and Cancel is enabled
+      checkButtonState(DELETE_BUTTON_ID, false);
+      checkButtonState(CREATE_BUTTON_ID, false);
+      checkButtonState(CANCEL_BUTTON_ID, true);
+   }
+   
+   /**
+    * Check the state of button (enabled, disabled) by button id.
+    * 
+    * @param buttonId - the id of button
+    * @param isEnabled - is enabled
+    */
+   public void checkButtonState(String buttonId, boolean isEnabled)
+   {
+      assertTrue(selenium().isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
+   }
+   
 }

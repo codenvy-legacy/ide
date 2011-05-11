@@ -18,21 +18,23 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.SaveAsTemplate;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
+ * Test for creating template from big file.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
@@ -43,7 +45,8 @@ public class BigTemplateTest extends BaseTest
 
    private final static String FOLDER = BigTemplateTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -68,50 +71,45 @@ public class BigTemplateTest extends BaseTest
    @Test
    public void testBigTemplate() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.waitForItem(WS_URL);
       IDE.NAVIGATION.selectRootOfWorkspace();
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER + "/");
+      IDE.NAVIGATION.selectItem(WS_URL + FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER + "/" + FILE_NAME);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER + "/" + FILE_NAME, false);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
 
-      TemplateUtils.checkSaveAsTemplateWindow(selenium);
+      IDE.SAVE_AS_TEMPLATE.checkSaveAsTemplateWindow();
 
-      // ----------------------------
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideSaveAsTemplateFormDynamicForm\"]/item[name=ideSaveAsTemplateFormNameField]/element",
-            "Calc");
-      // --------3--------------
-      selenium.click("scLocator=//IButton[ID=\"ideSaveAsTemplateFormSaveButton\"]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      selenium.type(SaveAsTemplate.NAME_FIELD_ID, "Calc");
+
+      selenium.click(SaveAsTemplate.SAVE_BUTTON_ID);
+      IDE.INFORMATION_DIALOG.waitForInfoDialog("Template created successfully!");
 
       //check info dialog, that template crated successfully
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/"));
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/"));
-      assertTrue(selenium.isTextPresent("Template created successfully!"));
+      IDE.INFORMATION_DIALOG.checkIsOpened("Template created successfully!");
 
       //click OK button
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.INFORMATION_DIALOG.clickOk();
 
-     IDE.EDITOR.closeTab(0);
-
+      IDE.EDITOR.closeTab(0);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.TEMPLATES.waitForFileFromTemplateForm();
 
       // check "Create file" dialog window
-      TemplateUtils.checkCreateFileFromTemplateWindow(selenium);
-      TemplateUtils.selectItemInTemplateList(selenium, "Calc");
+      IDE.TEMPLATES.checkCreateFileFromTemplateWindow();
+      IDE.TEMPLATES.selectTemplate("Calc");
       //click Create button
-      selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.TEMPLATES.clickCreateButton();
+      
+      IDE.EDITOR.waitTabPresent(0);
 
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
    @AfterClass
