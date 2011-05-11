@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -39,12 +40,16 @@ import org.junit.Test;
  */
 public class OpenLockedFileTest extends LockFileAbstract
 {
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
 
    private static final String FOLDER_NAME = OpenLockedFileTest.class.getSimpleName();
 
    static final String FILE_NAME = "file-" + OpenLockedFileTest.class.getSimpleName();
-   
+
+   static final String LOCK_BUTTON =
+      "//div[@class=\"exoIconButtonPanel\"and @enabled='false' and @title=\"Lock File\"]";
+
    @BeforeClass
    public static void setUp()
    {
@@ -63,7 +68,7 @@ public class OpenLockedFileTest extends LockFileAbstract
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tierDown()
    {
@@ -91,8 +96,8 @@ public class OpenLockedFileTest extends LockFileAbstract
 
       //----- 1 ----------
       //open file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/"+FILE_NAME, false);
-      
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
+
       //----- 2 ----------
       //lock file
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
@@ -103,25 +108,26 @@ public class OpenLockedFileTest extends LockFileAbstract
       //delete lock tokens from cookies and refresh
       deleteLockTokensCookies();
       refresh();
-      
+
       //----- 4 ----------
       //check that file is locked
-     // IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
-Thread.sleep(30000);
+      waitForElementPresent(LOCK_BUTTON);
+
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
       checkCantSaveLockedFile();
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      
-      checkFileLocking(FILE_NAME, true);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL + FOLDER_NAME + "/");
+      checkFileLocking(URL + FOLDER_NAME + "/" + FILE_NAME, true);
 
       //----- 5 ----------
       //close and open file
-     IDE.EDITOR.closeTab(0);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/"+FILE_NAME, false);
+      IDE.EDITOR.closeTab(0);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       checkCantSaveLockedFile();
 
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
    }
 
 }
