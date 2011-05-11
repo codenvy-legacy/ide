@@ -92,12 +92,12 @@ public class Menu extends AbstractTestModule
     */
    public void checkCommandEnabled(String topMenuName, String commandName, boolean enabled) throws Exception
    {
-      selenium().mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "0");
+      selenium().mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
 
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       if (enabled)
       {
-         assertTrue(selenium().isElementPresent("//table[@class=\"exo-popupMenuTable\"]//td[@class=\"exo-popupMenuTitleFieldOver\"]/nobr[text()='"
+         assertTrue(selenium().isElementPresent("//table[@class=\"exo-popupMenuTable\"]//td[@class=\"exo-popupMenuTitleField\"]/nobr[text()='"
             + commandName + "']"));
       }
       else
