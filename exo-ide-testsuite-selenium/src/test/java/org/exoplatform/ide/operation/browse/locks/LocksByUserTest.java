@@ -44,8 +44,8 @@ public class LocksByUserTest extends LockFileAbstract
 
    private final static String TEST_FOLDER = LocksByUserTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
-      + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + TEST_FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -67,42 +67,41 @@ public class LocksByUserTest extends LockFileAbstract
       }
    }
 
-   
    @Test
    public void testLocksByUser() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
+
       //----- 1 --------
       //open file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+
       //----- 2 --------
       //lock file
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
-      
+
       //----- 3 --------
       //logout
       logout();
-      
+
       //----- 4 --------
       //login under another user
       standaloneLogin(TestConstants.Users.JOHN);
-      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-      
+      waitForRootElement();
+
       //----- 5 --------
       IDE.NAVIGATION.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      checkFileLocking(FILE_NAME, true);
+
+      checkFileLocking(URL + FILE_NAME, true);
       //open file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      
-     /////////////// checkCantSaveLockedFile(FILE_NAME);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+
+      checkCantSaveLockedFile();
    }
-   
+
    @AfterClass
    public static void tierDown()
    {
