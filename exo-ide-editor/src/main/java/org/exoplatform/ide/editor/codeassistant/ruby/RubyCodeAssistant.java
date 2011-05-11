@@ -105,7 +105,6 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
          parseTokenLine(lineContent, cursorPositionX);
          currentLineNumber = cursorPositionY;
 
-         printTokens(tokenList, 2);
          if (defaultTokens == null)
          {
             RubyBundle buandle = GWT.create(RubyBundle.class);
@@ -560,6 +559,75 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
    @Override
    public int compare(Token t1, Token t2)
    {
+      if (t1.getType() == t2.getType())
+      {
+         return t1.getName().compareTo(t2.getName());
+      }
+
+      if ((t1.getType() == TokenType.PARAMETER && t2.getType() == TokenType.LOCAL_VARIABLE)
+         || (t1.getType() == TokenType.LOCAL_VARIABLE && t2.getType() == TokenType.PARAMETER))
+      {
+         return t1.getName().compareTo(t2.getName());
+      }
+
+      if (t2.getType() == TokenType.PARAMETER)
+      {
+         return 1;
+      }
+      if (t1.getType() == TokenType.PARAMETER)
+      {
+         return -1;
+      }
+
+      if (t2.getType() == TokenType.LOCAL_VARIABLE)
+      {
+         return 1;
+      }
+      if (t1.getType() == TokenType.LOCAL_VARIABLE)
+      {
+         return -1;
+      }
+      
+      if (t1.getType() == TokenType.CLASS_VARIABLE)
+      {
+         return -1;
+      }
+
+      if (t2.getType() == TokenType.CLASS_VARIABLE)
+      {
+         return 1;
+      }
+      
+      if (t1.getType() == TokenType.INSTANCE_VARIABLE)
+      {
+         return -1;
+      }
+
+      if (t2.getType() == TokenType.INSTANCE_VARIABLE)
+      {
+         return 1;
+      }
+      
+      if (t1.getType() == TokenType.GLOBAL_VARIABLE)
+      {
+         return -1;
+      }
+
+      if (t2.getType() == TokenType.GLOBAL_VARIABLE)
+      {
+         return 1;
+      }
+
+      if (t1.getType() == TokenType.METHOD || t1.getType() == TokenType.PROPERTY)
+      {
+         return -1;
+      }
+
+      if (t2.getType() == TokenType.METHOD || t2.getType() == TokenType.PROPERTY)
+      {
+         return 1;
+      }
+
       return t1.getName().compareTo(t2.getName());
    }
 
