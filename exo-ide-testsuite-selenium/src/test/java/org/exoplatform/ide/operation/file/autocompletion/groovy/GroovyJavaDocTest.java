@@ -63,7 +63,7 @@ public class GroovyJavaDocTest extends BaseTest
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
       Thread.sleep(TestConstants.SLEEP);
-      IDE.CODEASSISTANT.checDocFormPresent();
+      IDE.CODEASSISTANT.checkDocFormPresent();
       Thread.sleep(TestConstants.SLEEP);
       selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
       assertFalse(selenium.isElementPresent("//body/pre[text()='Not found']"));

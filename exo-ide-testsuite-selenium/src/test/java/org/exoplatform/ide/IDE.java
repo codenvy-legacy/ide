@@ -31,8 +31,10 @@ import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigation;
 import org.exoplatform.ide.core.OpenWith;
 import org.exoplatform.ide.core.Outline;
+import org.exoplatform.ide.core.Output;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Preview;
+import org.exoplatform.ide.core.RESTService;
 import org.exoplatform.ide.core.SaveAs;
 import org.exoplatform.ide.core.SaveAsTemplate;
 import org.exoplatform.ide.core.Search;
@@ -119,7 +121,11 @@ public class IDE
    
    public SaveAsTemplate SAVE_AS_TEMPLATE = new SaveAsTemplate();
    
+   public RESTService REST_SERVICE = new RESTService();
+   
    public Search SEARCH = new Search();
+   
+   public Output OUTPUT = new Output();
 
    /**
     * Select main frame of IDE.

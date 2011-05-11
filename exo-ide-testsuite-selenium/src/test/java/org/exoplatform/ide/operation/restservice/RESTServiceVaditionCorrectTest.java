@@ -82,7 +82,7 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      RestServiceUtils.validate(FILE_NAME, 0);
+      IDE.REST_SERVICE.validate(FILE_NAME, 0);
    }
 
  

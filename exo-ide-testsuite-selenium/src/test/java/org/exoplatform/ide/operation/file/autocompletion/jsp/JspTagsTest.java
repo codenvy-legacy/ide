@@ -101,7 +101,7 @@ public class JspTagsTest extends BaseTest
       IDE.CODEASSISTANT.typeToInput("use");
       
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
-      IDE.CODEASSISTANT.checDocFormPresent();
+      IDE.CODEASSISTANT.checkDocFormPresent();
       assertEquals(docMessage, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
       IDE.CODEASSISTANT.insertSelectedItem();
       

@@ -139,7 +139,7 @@ public class CodeAssistant extends AbstractTestModule
       selenium().focus(Locators.INPUT);
    }
    
-   public void checDocFormPresent()
+   public void checkDocFormPresent()
    {
       assertTrue(selenium().isElementPresent(Locators.JAVADOC_DIV));
    }

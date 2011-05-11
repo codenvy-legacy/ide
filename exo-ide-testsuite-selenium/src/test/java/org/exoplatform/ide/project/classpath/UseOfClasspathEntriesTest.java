@@ -27,7 +27,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.operation.restservice.RestServiceUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -131,27 +130,27 @@ public class UseOfClasspathEntriesTest extends BaseTest
       /*
        * 2. Validate REST Service and check, that is was successful.
        */
-      RestServiceUtils.validate(REST_SERVICE_FILE_NAME, 0);
+      IDE.REST_SERVICE.validate(REST_SERVICE_FILE_NAME, 0);
       
       /*
        * 3. Deploy REST Service.
        */
-      RestServiceUtils.deploy(PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME, 1);
+      IDE.REST_SERVICE.deploy(PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME, 1);
       
       /*
        * 4. Launch REST Service and try to send request.
        */
-      launchRestService();
+      IDE.REST_SERVICE.launchRestService();
       /*
        * Click Send button.
        */
-      selenium.click(RestServiceUtils.Locators_Rest.SC_LAUNCH_SEND_BTN);
+      selenium.click(IDE.REST_SERVICE.LAUNCH_SEND_BTN);
       Thread.sleep(TestConstants.SLEEP);
       
       /*
        * Check output message.
        */
-      final String msg = RestServiceUtils.getOutputMsgText(2);
+      final String msg = IDE.REST_SERVICE.getOutputMsgText(2);
       assertTrue(msg.endsWith("Hello {name} Ivanov"));
    }
 

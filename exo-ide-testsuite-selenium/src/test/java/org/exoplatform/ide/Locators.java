@@ -103,7 +103,7 @@ public class Locators
       /**
        * Form, where notifications are shown.
        */
-      public static final String OUTPUT_FORM_LOCATOR = "//div[@eventproxy='ideOutputForm']";
+      public static final String OUTPUT_FORM_LOCATOR = "//div[@id='ideOutputContent']";
    }
 
    /**

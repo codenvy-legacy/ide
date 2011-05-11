@@ -19,10 +19,7 @@
 package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -34,6 +31,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -47,20 +46,21 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
    private final static String FILE_NAME = "AnnotationInheritance.groovy";
 
    private final static String FOLDER = RESTServiceAnnotationInheritanceTest.class.getSimpleName();
-   
-   private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER+ "/";
-   
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER + "/";
+
    @BeforeClass
    public static void setUp()
    {
-      
-      String filePath ="src/test/resources/org/exoplatform/ide/operation/restservice/AnnotationInheritance.groovy";
+
+      String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/AnnotationInheritance.groovy";
       try
       {
-        //*********TODO******************
+         //*********TODO******************
          VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE,"exo:groovyResourceContainer", URL + FILE_NAME);
-        //********************************
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, "exo:groovyResourceContainer", URL + FILE_NAME);
+         //********************************
       }
       catch (IOException e)
       {
@@ -71,56 +71,50 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
-   
+
    @Test
    public void testAnnotationInheritance() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      
-       IDE.NAVIGATION.selectItem(WS_URL);
+
+      IDE.NAVIGATION.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
       //Call the "Run->Launch REST Service" topmenu command
-      launchRestService();
+      IDE.REST_SERVICE.launchRestService();
 
-      assertEquals("/testAnnotationInheritance/InnerPath/{pathParam}", selenium
-         .getValue("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element"));
+      assertEquals("/testAnnotationInheritance/InnerPath/{pathParam}", IDE.REST_SERVICE.getPathFieldValue());
 
       assertParameters();
 
-      // is enabled Body tab
-      assertFalse(selenium.isElementPresent("//td[@class='tabTitleSelectedDisabled']"));
+     IDE.REST_SERVICE.openPathList();
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.REST_SERVICE.checkPathListTextPresent("/testAnnotationInheritance");
+      
+      IDE.REST_SERVICE.checkPathListTextPresent("/testAnnotationInheritance/InnerPath/{pathParam}");
 
-      assertTrue(selenium.isElementPresent("//nobr[contains(text(), '/testAnnotationInheritance')]"));
-      assertTrue(selenium
-         .isElementPresent("//nobr[contains(text(), '/testAnnotationInheritance/InnerPath/{pathParam}')]"));
+      IDE.REST_SERVICE.selectPathSuggestPanelItem("/testAnnotationInheritance/InnerPath/{pathParam}");
 
-      selenium.click("//nobr[contains(text(), '/testAnnotationInheritance/InnerPath/{pathParam}')]");
-
-      selenium.type("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element",
+      IDE.REST_SERVICE.typeToPathField(
          "/testAnnotationInheritance/InnerPath/Ñ‚ÐµÑ�Ñ‚");
       Thread.sleep(TestConstants.SLEEP);
 
       assertParameters();
 
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
-      Thread.sleep(TestConstants.SLEEP_SHORT);  
-      String mess = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
+      IDE.REST_SERVICE.sendRequst();
+      String mess = IDE.OUTPUT.getOutputMessageText(2);
 
       assertTrue(mess.contains("PathParam:Ñ‚ÐµÑ�Ñ‚"));
       
+      IDE.EDITOR.closeTab(0);
+
    }
 
    /**
@@ -128,25 +122,21 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
     */
    private void assertParameters()
    {
-      assertEquals("POST", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/textbox"));
+      assertEquals("POST", IDE.REST_SERVICE.getMethodFieldValue());
 
-      assertEquals("text/plain", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/textbox"));
+      assertEquals("text/plain", IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
 
-      assertEquals("text/html", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceResponse]/textbox"));
+      assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
 
-      assertEquals("No items to show.", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body"));
+      assertEquals("", selenium.getText(IDE.REST_SERVICE.QUERY_TABLE));
 
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceHeaderTab]/");
-      assertEquals("No items to show.", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body"));
+      IDE.REST_SERVICE.selectHeaderParametersTab();
 
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceQueryTab]/");
+      assertEquals("", selenium.getText(IDE.REST_SERVICE.HEADER_TABLE));
+
+      IDE.REST_SERVICE.selectQueryParametersTab();
    }
-   
+
    @AfterClass
    public static void tearDown()
    {

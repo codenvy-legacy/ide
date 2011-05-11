@@ -574,19 +574,6 @@ public abstract class BaseTest
    }
 
    /**
-    * Call the "Run->Launch REST Service" topmenu command
-    * 
-    * @throws Exception
-    * @throws InterruptedException
-    */
-   protected void launchRestService() throws Exception, InterruptedException
-   {
-      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-   }
-
-   /**
     * Read value from cursor position panel in status bar.
     * 
     * @return {@link String}

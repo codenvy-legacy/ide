@@ -87,7 +87,7 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      launchRestService();
+      IDE.REST_SERVICE.launchRestService();
       checkParam();
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/[icon='picker']");

@@ -91,7 +91,7 @@ public class RESTServiceFilterParametersTest extends BaseTest
       //TODO*************change
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      launchRestService();
+      IDE.REST_SERVICE.launchRestService();
       //************************
 
       selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceHeaderTab]/");

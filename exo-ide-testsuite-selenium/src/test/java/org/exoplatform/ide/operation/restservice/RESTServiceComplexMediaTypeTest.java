@@ -89,7 +89,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //Call the "Run->Launch REST Service" topmenu command
-      launchRestService();
+      IDE.REST_SERVICE.launchRestService();
 
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
@@ -112,7 +112,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       assertTrue(mess
          .contains("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><application xmlns=\"http://research.sun.com/wadl/2006/10\">"));
 
-      launchRestService();
+      IDE.REST_SERVICE.launchRestService();
       //Choose path:
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
@@ -170,7 +170,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
 
       assertTrue(mess.contains("Body: value4"));
       
-      launchRestService();
+      IDE.REST_SERVICE.launchRestService();
 
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");

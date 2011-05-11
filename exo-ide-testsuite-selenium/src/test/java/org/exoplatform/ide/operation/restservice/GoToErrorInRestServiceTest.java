@@ -83,7 +83,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 1 -----------------
       //click on validation message to go to error
-      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputContent']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //check, cursor go to position
@@ -106,7 +106,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 2 -----------------
       //click on validation message to go to error
-      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputContent']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //file must be opened and cursor must stay on error
@@ -136,7 +136,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 2 -----------------
       //click on validation message to go to error
-      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputContent']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //check, tab with rest service must be opened
@@ -174,7 +174,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 3 -----------------
       //click on validation message to go to error
-      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputContent']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //check, error dialog appeared
@@ -216,12 +216,12 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //check, validation fails
       String validationMsg =
-         selenium.getText("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span");
+         selenium.getText("//div[@id='ideOutputContent']/div/table//font[@color='#880000']/span");
       assertTrue(validationMsg.contains("validation failed"));
 
       //---- 3 -----------------
       //click on validation message to go to error
-      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputContent']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //fix validation error
@@ -250,13 +250,13 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //check, validation fails
       validationMsg =
-         selenium.getText("//div[@id='ideOutputForm']/div[2]/table//font[@color='#880000']/span");
+         selenium.getText("//div[@id='ideOutputContent']/div[2]/table//font[@color='#880000']/span");
       assertTrue(validationMsg.contains("validation failed"));
 
       //---- 5 -----------------
       //click on validation message to go to error
       Thread.sleep(TestConstants.SLEEP);
-      selenium.clickAt("//div[@id='ideOutputForm']/div[2]/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputContent']/div[2]/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //check cursor went to position
@@ -265,7 +265,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //---- 6 -----------------
       //click on first validation message to check, 
       //that cursor can go to previous error (event, it is already fixed)
-      selenium.clickAt("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputContent']/div/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       //check cursor went to position
@@ -274,7 +274,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //---- 7 -----------------
       //delete some text and check
       //that cursor stays if try to go to nonexistent line
-      selenium.clickAt("//div[@id='ideOutputForm']/div[2]/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputContent']/div[2]/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
      IDE.EDITOR.selectIFrameWithEditor(0);
@@ -308,7 +308,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       assertEquals("1 : 24", getCursorPositionUsingStatusBar());
 
       //when 3d line is deleted, try to go to it
-      selenium.clickAt("//div[@id='ideOutputForm']/div[2]/table//font[@color='#880000']/span", "5,5");
+      selenium.clickAt("//div[@id='ideOutputContent']/div[2]/table//font[@color='#880000']/span", "5,5");
       Thread.sleep(TestConstants.SLEEP);
 
       assertEquals("1 : 24", getCursorPositionUsingStatusBar());
@@ -336,7 +336,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //check, validation fails
       final String validationMsg =
-         selenium.getText("//div[@id='ideOutputForm']/div/table//font[@color='#880000']/");
+         selenium.getText("//div[@id='ideOutputContent']/div/table//font[@color='#880000']/");
       assertTrue(validationMsg.contains("validation failed"));
    }
 

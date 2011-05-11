@@ -94,7 +94,7 @@ public class JspImplicitObjectsTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("session:javax.servlet.http.HttpSession");
       
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
-      IDE.CODEASSISTANT.checDocFormPresent();
+      IDE.CODEASSISTANT.checkDocFormPresent();
       assertEquals(docMessage, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
       
       IDE.CODEASSISTANT.closeForm();

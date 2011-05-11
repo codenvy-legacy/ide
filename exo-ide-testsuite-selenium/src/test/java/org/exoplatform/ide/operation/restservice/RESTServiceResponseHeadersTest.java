@@ -90,7 +90,7 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       assertEquals("[INFO] " + BASE_URL + "rest/private/" + WEBDAV_CONTEXT + "/repository/dev-monit/"+FOLDER_NAME+"/"+ FILE_NAME
          + " deployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_0')]"));
 
-      launchRestService();
+      IDE.REST_SERVICE.launchRestService();
 
       selenium
          .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
