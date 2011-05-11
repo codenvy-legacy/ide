@@ -409,14 +409,14 @@ public abstract class BaseTest
 
    /**
     * Open file from navigation tree with CK (WYSIWYG) editor
-    * @param fileName name of file to open
+    * @param fileURL name of file to open
     * @param checkDefault do mark checkbox Use by default
     * @throws Exception
     */
-   protected void openFileFromNavigationTreeWithCkEditor(String fileName, String typeFile, boolean checkDefault) throws Exception
+   protected void openFileFromNavigationTreeWithCkEditor(String fileURL, String typeFile, boolean checkDefault) throws Exception
    {
       //TODO add check form
-      IDE.NAVIGATION.selectItem(fileName);
+      IDE.NAVIGATION.selectItem(fileURL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       selenium.click("//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" +" "+typeFile+ " " +"editor"+"'"+"]");
       if (checkDefault)
