@@ -45,25 +45,29 @@ public abstract class LockFileAbstract extends BaseTest
     * 
     * @param fileName
     * @param isLocked
+    * @throws Exception 
     */
-   protected void checkFileLocking(String fileName, boolean isLocked)
+   protected void checkFileLocking(String fileURL, boolean isLocked) throws Exception
    {
+
+      String name;
+      name = IDE.NAVIGATION.getItemId(fileURL);
+
       if (isLocked)
+
       {
-         assertTrue(selenium.isElementPresent("//nobr[contains(text(),\""+fileName+"\")]/img[@id='resourceLocked']"));
-//         assertTrue(selenium.isTextPresent(fileName + "   [ Locked ]"));
+         assertTrue(selenium.isElementPresent("//div[@id=" + "'" + name + "'" + "]" + "//img[@id='resourceLocked']"));
       }
       else
-         //assertTrue(selenium.isElementPresent("//img[@id='resourceLocked']"));
+
       {
-         assertFalse(selenium.isElementPresent("//nobr[contains(text(),\""+fileName+"\")]/img[@id='resourceLocked']"));
-//         assertFalse(selenium.isTextPresent(fileName + "   [ Locked ]"));
+         assertFalse(selenium.isElementPresent("//div[@id=" + "'" + name + "'" + "]" + "//img[@id='resourceLocked']"));
       }
    }
 
    protected void deleteLockTokensCookies()
    {
-      String cookieName= "eXo-IDE-" + USER_NAME + "-lock-tokens_map";
+      String cookieName = "eXo-IDE-" + USER_NAME + "-lock-tokens_map";
       if (selenium.isCookiePresent(cookieName))
       {
          selenium.deleteCookie(cookieName, "path=/, recurse=true");
@@ -76,7 +80,8 @@ public abstract class LockFileAbstract extends BaseTest
 
    protected void checkIsFileReadOnlyInEditorTab()
    {
-      assertTrue(selenium.isElementPresent("//table//span[@title=\"File opened in read only mode. Use SaveAs command.\"]/img[@id='fileReadonly']"));
+      assertTrue(selenium
+         .isElementPresent("//table//span[@title=\"File opened in read only mode. Use SaveAs command.\"]/img[@id='fileReadonly']"));
    }
 
    /**
@@ -86,9 +91,9 @@ public abstract class LockFileAbstract extends BaseTest
    protected void checkCantSaveLockedFile() throws Exception, InterruptedException
    {
       checkIsFileReadOnlyInEditorTab();
-   
-     IDE.EDITOR.typeTextIntoEditor(0, "change dasda111");
-   
+
+      IDE.EDITOR.typeTextIntoEditor(0, "change dasda111");
+
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
    }
 
