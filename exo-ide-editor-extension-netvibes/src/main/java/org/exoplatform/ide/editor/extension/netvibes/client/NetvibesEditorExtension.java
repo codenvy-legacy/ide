@@ -47,7 +47,7 @@ public class NetvibesEditorExtension extends Extension
          new CodeMirrorProducer(
             MimeType.UWA_WIDGET,
             "CodeMirror Netvibes editor",
-            "xml",
+            "html",
             Images.UWA_WIGET,
             true,
             new CodeMirrorConfiguration(
