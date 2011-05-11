@@ -223,7 +223,7 @@ public class Navigation extends AbstractTestModule
       if (checkDefault)
       {
          //click on checkbox Use as default editor
-         selenium().click("//span[@id='ideOpenFileWithDefaulCheckbox']/input");
+         selenium().click("ideOpenWithIsDefault");
          Thread.sleep(TestConstants.ANIMATION_PERIOD);
       }
 
