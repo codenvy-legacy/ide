@@ -162,10 +162,17 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
                Metaclass metaclass = null;
                if (currentToken != null)
                {
-                  metaclass =
-                     BuiltinMethodsDatabase.get(currentToken.getProperty(TokenProperties.ELEMENT_TYPE)
-                        .isStringProperty().stringValue());
-                  selectClassTokensFromMetaClass((ClassMetaclass)metaclass, tokenMap);
+                  String type = currentToken.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
+                  if (clazz.containsKey(type))
+                  {
+                     Token rubyClass = clazz.get(type);
+                     addMethodFromClass(rubyClass, tokens);
+                  }
+                  else
+                  {
+                     metaclass = BuiltinMethodsDatabase.get(type);
+                     selectClassTokensFromMetaClass((ClassMetaclass)metaclass, tokenMap);
+                  }
                }
                else
                {
@@ -229,6 +236,22 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
    }
 
+   private void addMethodFromClass(final Token clazz, final List<Token> tokens)
+   {
+      if (clazz.hasProperty(TokenProperties.SUB_TOKEN_LIST)
+         && clazz.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
+      {
+         for (Token t : clazz.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue())
+         {
+            if (t.getType() == TokenType.METHOD)
+            {
+               t.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(clazz.getName()));
+               tokens.add(t);
+            }
+         }
+      }
+   }
+
    /**
     * Find, recursive, all global variables defined in Ruby script
     * @param tokenList List of tokens
@@ -246,8 +269,8 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
          if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
             && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
          {
-            addGlobalScriptVariables((List<Token>)t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue(),
-               tokens);
+            addGlobalScriptVariables((List<Token>)t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty()
+               .arrayValue(), tokens);
          }
       }
    }
@@ -587,7 +610,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
       {
          return -1;
       }
-      
+
       if (t1.getType() == TokenType.CLASS_VARIABLE)
       {
          return -1;
@@ -597,7 +620,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
       {
          return 1;
       }
-      
+
       if (t1.getType() == TokenType.INSTANCE_VARIABLE)
       {
          return -1;
@@ -607,7 +630,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
       {
          return 1;
       }
-      
+
       if (t1.getType() == TokenType.GLOBAL_VARIABLE)
       {
          return -1;
