@@ -22,7 +22,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
 
-import org.eclipse.jgit.transport.SshSessionFactory;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -31,7 +30,6 @@ import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.IdentityConstants;
-import org.picocontainer.Startable;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -47,16 +45,16 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 /**
- * Loads private keys from JCR. Lookups keys in current repository, <code>workspace</code> and <code>keyStore</code>. If
+ * Loads SSH keys from JCR. Lookups keys in current repository, <code>workspace</code> and <code>keyStore</code>. If
  * current user is <i>john</i> and he need access to <i>github.com</i> then keys must be located in file
  * {KEY_STORE}/john/github.com.key
  * <p>
- * Example of configuration JcrSshSessionFactory as components of ExoContainer:
+ * Example of configuration JcrSshKeyProvider as components of ExoContainer:
  * </p>
  * 
  * <pre>
  * &lt;component&gt;
- *    &lt;type&gt;org.exoplatform.ide.git.server.jgit.ssh.JcrSshSessionFactory&lt;/type&gt;
+ *    &lt;type&gt;org.exoplatform.ide.git.server.jgit.ssh.JcrSshKeyProvider&lt;/type&gt;
  *    &lt;init-params&gt;
  *       &lt;value-param&gt;
  *          &lt;name&gt;workspace&lt;/name&gt;
@@ -69,14 +67,11 @@ import javax.jcr.Session;
  *    &lt;/init-params&gt;
  * &lt;/component&gt;
  * </pre>
- * <p>
- * User interactivity (e.g. password authentication) is not supported.
- * </p>
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class JcrSshSessionFactory extends IdeSshSessionFactory implements Startable
+public class JcrSshKeyProvider implements SshKeyProvider
 {
    private static class JcrKeyFile implements KeyFile
    {
@@ -153,7 +148,7 @@ public class JcrSshSessionFactory extends IdeSshSessionFactory implements Starta
    /** JSch used for generate keys. */
    private JSch genJsch;
 
-   public JcrSshSessionFactory(RepositoryService repositoryService, InitParams initParams)
+   public JcrSshKeyProvider(RepositoryService repositoryService, InitParams initParams)
    {
       this(repositoryService, readValueParam(initParams, "workspace"), readValueParam(initParams, "key-store"));
    }
@@ -169,7 +164,7 @@ public class JcrSshSessionFactory extends IdeSshSessionFactory implements Starta
       return null;
    }
 
-   protected JcrSshSessionFactory(RepositoryService repositoryService, String workspace, String keyStore)
+   protected JcrSshKeyProvider(RepositoryService repositoryService, String workspace, String keyStore)
    {
       this.repositoryService = repositoryService;
       this.workspace = workspace;
@@ -183,28 +178,50 @@ public class JcrSshSessionFactory extends IdeSshSessionFactory implements Starta
    }
 
    /**
-    * @see org.picocontainer.Startable#start()
+    * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#addPrivateKey(java.lang.String, byte[])
     */
    @Override
-   public void start()
+   public void addPrivateKey(String host, byte[] key) throws IOException
    {
-      SshSessionFactory.setInstance(this);
-   }
+      Session session = null;
+      try
+      {
+         ManageableRepository repository = repositoryService.getCurrentRepository();
+         // Login with current identity. ConversationState.getCurrent(). 
+         session = repository.login(workspace);
+         String user = session.getUserID();
+         String userKeysPath = keyStore + user;
 
-   /**
-    * @see org.picocontainer.Startable#stop()
-    */
-   @Override
-   public void stop()
-   {
-      SshSessionFactory.setInstance(null);
+         Node userKeys;
+         try
+         {
+            userKeys = (Node)session.getItem(userKeysPath);
+         }
+         catch (PathNotFoundException pnfe)
+         {
+            userKeys = ((Node)session.getItem(keyStore)).addNode(user, "nt:folder");
+         }
+
+         writeKeyFile(userKeys, host + ".key", user, key);
+
+         session.save();
+      }
+      catch (RepositoryException re)
+      {
+         throw new RuntimeException(re.getMessage(), re);
+      }
+      finally
+      {
+         if (session != null)
+            session.logout();
+      }
    }
 
    /**
     * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#getPrivateKey(java.lang.String)
     */
    @Override
-   public KeyFile getPrivateKey(String host)
+   public KeyFile getPrivateKey(String host) throws IOException
    {
       String path = keyStore + ConversationState.getCurrent().getIdentity().getUserId() + "/" + host + ".key";
       return getKeyFile(path);
@@ -235,10 +252,11 @@ public class JcrSshSessionFactory extends IdeSshSessionFactory implements Starta
    }
 
    /**
-    * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#genKeyFiles(java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#genKeyPair(java.lang.String, java.lang.String,
+    *      java.lang.String)
     */
    @Override
-   public void genKeyFiles(String host, String comment, String passphrase) throws IOException
+   public void genKeyPair(String host, String comment, String passphrase) throws IOException
    {
       Session session = null;
       try
@@ -300,9 +318,46 @@ public class JcrSshSessionFactory extends IdeSshSessionFactory implements Starta
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(content));
       // Make file accessible for current user only.
       fileNode.addMixin("exo:privilegeable");
-      fileNode.setPermission("john", PermissionType.ALL);
       fileNode.clearACL();
       fileNode.setPermission(user, PermissionType.ALL);
       fileNode.removePermission(IdentityConstants.ANY);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#removeKeys(java.lang.String)
+    */
+   @Override
+   public void removeKeys(String host)
+   {
+      Session session = null;
+      try
+      {
+         ManageableRepository repository = repositoryService.getCurrentRepository();
+         // Login with current identity. ConversationState.getCurrent(). 
+         session = repository.login(workspace);
+         String user = session.getUserID();
+
+         for (String keyPath : new String[]{keyStore + user + "/" + host + ".key", keyStore + user + "/" + host + ".pub"})
+         {
+            try
+            {
+               Node hostKeys = (Node)session.getItem(keyPath);
+               hostKeys.remove();
+            }
+            catch (PathNotFoundException pnfe)
+            {
+            }
+         }
+         session.save();
+      }
+      catch (RepositoryException re)
+      {
+         throw new RuntimeException(re.getMessage(), re);
+      }
+      finally
+      {
+         if (session != null)
+            session.logout();
+      }
    }
 }

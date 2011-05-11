@@ -18,10 +18,16 @@
  */
 package org.exoplatform.ide.git.server.jgit.ssh;
 
+import java.io.IOException;
+
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,23 +42,98 @@ import javax.ws.rs.core.SecurityContext;
 @Path("ide/keys")
 public class KeyService
 {
-   private SshKeyProvider keyProvider;
+   private SshKeyProvider delegate;
 
    public KeyService(SshKeyProvider keyProvider)
    {
-      this.keyProvider = keyProvider;
+      this.delegate = keyProvider;
    }
 
+   /**
+    * Generate SSH key pair.
+    */
    @POST
-   @Path("generate")
+   @Path("gen")
    @RolesAllowed({"users"})
    @Consumes(MediaType.APPLICATION_JSON)
-   public Response genKeys(@Context SecurityContext security, GenKeyRequest request) throws Exception
+   public Response genKeyPair(@Context SecurityContext security, GenKeyRequest request)
    {
-      /*if (!security.isSecure())
+      if (!security.isSecure())
          throw new WebApplicationException(Response.status(400)
-            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());*/
-      keyProvider.genKeyFiles(request.getHost(), request.getComment(), request.getPassphrase());
+            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+      try
+      {
+         delegate.genKeyPair(request.getHost(), request.getComment(), request.getPassphrase());
+      }
+      catch (IOException ioe)
+      {
+         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
+            .build());
+      }
       return Response.ok().build();
+   }
+
+   /**
+    * Add prepared private key.
+    */
+   @POST
+   @Path("add")
+   @RolesAllowed({"users"})
+   public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host, byte[] keyBody)
+   {
+      if (!security.isSecure())
+         throw new WebApplicationException(Response.status(400)
+            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+      try
+      {
+         delegate.addPrivateKey(host, keyBody);
+      }
+      catch (IOException ioe)
+      {
+         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
+            .build());
+      }
+      return Response.ok().build();
+   }
+
+   /**
+    * Get public key.
+    * 
+    * @see {@link SshKeyProvider#genKeyPair(String, String, String)}
+    * @see {@link SshKeyProvider#getPublicKey(String)}
+    */
+   @GET
+   @RolesAllowed({"users"})
+   @Produces(MediaType.TEXT_PLAIN)
+   public Response getPublicKey(@Context SecurityContext security, @QueryParam("host") String host)
+   {
+      if (!security.isSecure())
+         throw new WebApplicationException(Response.status(400)
+            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+      try
+      {
+         KeyFile publicKey = delegate.getPublicKey(host);
+         byte[] bytes = publicKey.getBytes();
+         if (bytes != null)
+            return Response.ok().entity(bytes).type(MediaType.TEXT_PLAIN).build();
+         throw new WebApplicationException(Response.status(404).entity("Public key for host " + host + " not found. ")
+            .type(MediaType.TEXT_PLAIN).build());
+      }
+      catch (IOException ioe)
+      {
+         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
+            .build());
+      }
+   }
+
+   /**
+    * Remove SSH keys.
+    */
+   @POST
+   @Path("remove")
+   @RolesAllowed({"users"})
+   public void removeKeys(@QueryParam("host") String host)
+   {
+      delegate.removeKeys(host);
    }
 }

@@ -24,7 +24,9 @@ import com.jcraft.jsch.Session;
 
 import org.eclipse.jgit.transport.OpenSshConfig;
 import org.eclipse.jgit.transport.SshConfigSessionFactory;
+import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.util.FS;
+import org.picocontainer.Startable;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -32,16 +34,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
+ * SSH session factory that use SshKeyProvider to get access to private keys. Factory does not support user
+ * interactivity (e.g. password authentication).
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public abstract class IdeSshSessionFactory extends SshConfigSessionFactory implements SshKeyProvider
+public class IdeSshSessionFactory extends SshConfigSessionFactory implements Startable
 {
    /** Cached JSch instances. */
    private Map<String, JSch> jschCache;
 
-   public IdeSshSessionFactory()
+   private SshKeyProvider keyProvider;
+
+   public IdeSshSessionFactory(SshKeyProvider keyProvider)
    {
+      this.keyProvider = keyProvider;
       init();
    }
 
@@ -80,7 +88,15 @@ public abstract class IdeSshSessionFactory extends SshConfigSessionFactory imple
    protected final JSch getJSch(OpenSshConfig.Host hc, FS fs) throws JSchException
    {
       String host = hc.getHostName();
-      KeyFile key = getPrivateKey(host);
+      KeyFile key;
+      try
+      {
+         key = keyProvider.getPrivateKey(host);
+      }
+      catch (IOException ioe)
+      {
+         throw new JSchException(ioe.getMessage(), ioe);
+      }
       String keyIdentifier = key.getIdentifier();
       JSch jsch = jschCache.get(keyIdentifier);
       if (jsch == null)
@@ -95,10 +111,28 @@ public abstract class IdeSshSessionFactory extends SshConfigSessionFactory imple
          }
          catch (IOException ioe)
          {
-            throw new JSchException(ioe.getMessage());
+            throw new JSchException(ioe.getMessage(), ioe);
          }
          jschCache.put(keyIdentifier, jsch);
       }
       return jsch;
+   }
+
+   /**
+    * @see org.picocontainer.Startable#start()
+    */
+   @Override
+   public void start()
+   {
+      SshSessionFactory.setInstance(this);
+   }
+
+   /**
+    * @see org.picocontainer.Startable#stop()
+    */
+   @Override
+   public void stop()
+   {
+      SshSessionFactory.setInstance(null);
    }
 }

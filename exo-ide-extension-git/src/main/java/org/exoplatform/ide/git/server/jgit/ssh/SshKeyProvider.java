@@ -29,18 +29,30 @@ import java.io.IOException;
 public interface SshKeyProvider
 {
    /**
+    * Add prepared private key.
+    * 
+    * @param host host name
+    * @param key private key as byte array
+    * @throws IOException if any i/o error occurs
+    */
+   void addPrivateKey(String host, byte[] key) throws IOException;
+
+   /**
     * Get SSH private key for <code>host</code>.
     * 
     * @param host host name
     * @return private key
+    * @throws IOException if any i/o error occurs
     */
-   KeyFile getPrivateKey(String host);
+   KeyFile getPrivateKey(String host) throws IOException;
 
    /**
-    * Get SSH public key for <code>host</code>.
+    * Get SSH public key for <code>host</code>. Obtained key should be copied to remote host. Typically this method
+    * should be used after generated key-pair with method {@link #genKeyPair(String, String, String)}.
     * 
     * @param host host name
     * @return public key
+    * @throws IOException if any i/o error occurs
     */
    KeyFile getPublicKey(String host) throws IOException;
 
@@ -52,5 +64,13 @@ public interface SshKeyProvider
     * @param passphrase optional passphrase to protect private key
     * @throws IOException if any i/o error occurs
     */
-   void genKeyFiles(String host, String comment, String passphrase) throws IOException;
+   void genKeyPair(String host, String comment, String passphrase) throws IOException;
+
+   /**
+    * Remove both private and public (if any) keys.
+    * 
+    * @param host host name
+    * @throws IOException if any i/o error occurs
+    */
+   void removeKeys(String host);
 }
