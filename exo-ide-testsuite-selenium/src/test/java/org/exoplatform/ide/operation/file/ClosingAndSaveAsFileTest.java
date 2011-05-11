@@ -106,7 +106,7 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       //close save file as dialog
       closeForm(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR);
       //file stays in editor panel
-      checkCodeEditorOpened(1);
+      IDE.EDITOR.checkCodeEditorOpened(1);
       
       //----- 3 ----------
       //select first file (text file)
@@ -115,8 +115,8 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME_1);
       
       //file stays in editor panel
-      checkCodeEditorOpened(0);
-      checkCodeEditorOpened(1);
+      IDE.EDITOR.checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(1);
       assertEquals(FILE_NAME_1,IDE.EDITOR.getTabTitle(0));
    }
    
@@ -138,13 +138,13 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       //close save file as dialog
       closeForm(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR);
       //file stays in editor panel
-      checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(0);
       
       //----- 3 ----------
       //try to save as new xml file
       saveAsUsingToolbarButton(FILE_NAME_1);
       //file stays in editor panel
-      checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(0);
    }
    
 }

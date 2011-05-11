@@ -34,12 +34,21 @@ public class InformationDialog extends AbstractTestModule
       fail();
    }
    
-   public void checkIsOpened(String message) {
+   public void checkIsOpened(String message) throws Exception {
+      
+      Thread.sleep(Integer.MAX_VALUE);
+      
       fail();
    }
    
    public void clickOk() {
       fail();
+   }
+   
+   public void clickYes() {
+   }
+   
+   public void clickNo() {
    }
 
 }

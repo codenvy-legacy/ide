@@ -77,7 +77,7 @@ public class UploadingHtmlFileTest extends BaseTest
       uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.TEXT_HTML);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_NAME, false);
-      checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(0);
 
       String text =IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.length() > 0);

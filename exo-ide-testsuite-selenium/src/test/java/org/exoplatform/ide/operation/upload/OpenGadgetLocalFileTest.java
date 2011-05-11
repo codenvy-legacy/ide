@@ -78,7 +78,7 @@ public class OpenGadgetLocalFileTest extends BaseTest
       uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);
       Thread.sleep(TestConstants.SLEEP);
 
-      checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(0);
 
       String text =IDE.EDITOR.getTextFromCodeEditor(0);
 

@@ -20,6 +20,8 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.ide.TestConstants;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: AskDialog Apr 27, 2011 2:28:35 PM evgen $
@@ -31,8 +33,6 @@ public class AskDialog extends AbstractTestModule
    {
       String ASK_ID = "exoAskDialog";
 
-      String YES_BUTTON = "exoAskDialogYesButton";
-
       String NO_BUTTON = "exoAskDialogNoButton";
       
       String ASK_TITLE = "//div[@id='"+ ASK_ID +"']//div[@class='Caption']/span";
@@ -41,6 +41,10 @@ public class AskDialog extends AbstractTestModule
    public void assertOpened()
    {
       assertTrue(selenium().isElementPresent(Locators.ASK_ID));
+   }
+   
+   public void assertOpened(String message) {
+      assertTrue(isDialogOpened(message));
    }
    
    public boolean isDialogOpened()
@@ -53,9 +57,15 @@ public class AskDialog extends AbstractTestModule
       return selenium().isElementPresent(Locators.ASK_TITLE + "[contains(text(), '" + message+"')]");
    }
    
-   public void clickNo()
+   public void clickNo() throws Exception
    {
       selenium().click(Locators.NO_BUTTON);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+   
+   public void clickYes() throws Exception {
+      selenium().click("//div[@id='exoAskDialog']//div[@id='exoAskDialogYesButton']");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
 }

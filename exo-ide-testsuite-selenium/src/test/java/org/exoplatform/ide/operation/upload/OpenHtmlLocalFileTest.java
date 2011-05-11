@@ -78,7 +78,7 @@ public class OpenHtmlLocalFileTest extends BaseTest
       uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.TEXT_HTML);
       Thread.sleep(TestConstants.SLEEP);
 
-      checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(0);
 
       String text =IDE.EDITOR.getTextFromCodeEditor(0);
 

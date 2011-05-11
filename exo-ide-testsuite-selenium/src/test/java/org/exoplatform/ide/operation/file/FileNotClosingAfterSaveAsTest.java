@@ -88,7 +88,7 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
       
       saveAsUsingToolbarButton(FILE_NAME_2);
       
-      checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(0);
       
    }
    

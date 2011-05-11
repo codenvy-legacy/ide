@@ -452,27 +452,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       //CookieManager.getInstance().storeOpenedFiles(context);
    }
 
-   /**
-    * Select file
-    */
-   private void selectFile(File file)
-   {
-      if (file == null)
-      {
-         return;
-      }
-      //   display.selectTab(file.getHref());
-      Editor editor = editors.get(file.getHref());
-      
-      editorsViews.get(editor.getEditorId()).activate();
-      //eventBus.fireEvent(new SelectViewEvent(editorsViews.get(editor.getEditorId()).getId()));
-
-      activeFile = file;
-
-      //   String href = file.getHref();
-      eventBus.fireEvent(new EditorActiveFileChangedEvent(file, editor));
-   }
-
    public void onEditorOpenFile(EditorOpenFileEvent event)
    {
       File file = event.getFile();
@@ -484,18 +463,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
 
       if (openedFiles.get(file.getHref()) != null
          && event.getEditorProducer().getDescription().equals(openedEditors.get(file.getHref())))
-      {
-         
-//         
-//         File openedFile = openedFiles.get(file.getHref());
-//         ignoreContentChangedList.add(file.getHref());
-//
-//         //      display.selectTab(openedFile.getHref());
-//         Editor editor = editors.get(file.getHref());
-//         EditorView view = editorsViews.get(editor.getEditorId());
-//         view.setContent(file);
-//         view.setViewVisible();
-         //      display.setTabContent(file.getHref(), file.getContent());
+      {         
          return;
       }
 
@@ -526,9 +494,14 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
             Editor oldEditor = editors.get(file.getHref());
             file.setContent(oldEditor.getText());
             EditorView editorView = editorsViews.get(oldEditor.getEditorId());
+
+            String oldEditorWidth = oldEditor.getElement().getStyle().getProperty("width");
+            String oldEditorHeight = oldEditor.getElement().getStyle().getProperty("height");
             
             oldEditor.removeFromParent();
-            //editorView.remove(oldEditor);
+            
+            editor.getElement().getStyle().setProperty("width", oldEditorWidth);
+            editor.getElement().getStyle().setProperty("height", oldEditorHeight);
             
             editorView.add(editor);
             editors.put(file.getHref(), editor);
@@ -543,8 +516,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
             waitForEditorInitialized = true;
             IDE.getInstance().openView(view);
          }
-         //      display.openTab(file, lineNumbers, event.getEditor(), isReadOnly(file));
-         //      display.selectTab(file.getHref());
       }
       catch (Throwable e)
       {
@@ -556,8 +527,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       } catch (Exception e) {
          e.printStackTrace();
       }
-      
-      //         eventBus.fireEvent(new EditorActiveFileChangedEvent(file,editors.get(file.getHref())));
    }
 
    /**

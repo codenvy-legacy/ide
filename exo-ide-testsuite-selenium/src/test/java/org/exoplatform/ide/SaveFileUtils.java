@@ -70,7 +70,7 @@ public class SaveFileUtils
       }
    
       selenium.click(ASK_FOR_VALUE_OK_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       assertFalse(selenium.isElementPresent(ASK_FOR_VALUE_DIALOG_LOCATOR));
    }
    

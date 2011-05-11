@@ -68,7 +68,7 @@ public class Editor extends AbstractTestModule
     */
    public String getEditorTabScLocator(int tabIndex)
    {
-          return Locators.EDITOR_TABSET_LOCATOR + "//td[@tab-bar-index='" + tabIndex + "']";
+      return Locators.EDITOR_TABSET_LOCATOR + "//td[@tab-bar-index='" + tabIndex + "']";
    }
 
    /**
@@ -94,10 +94,10 @@ public class Editor extends AbstractTestModule
    public void closeTab(int index) throws Exception
    {
       selenium().mouseOver(Locators.getTabCloseButtonLocator(index));
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       selenium().click(Locators.getTabCloseButtonLocator(index));
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    /**
@@ -129,7 +129,7 @@ public class Editor extends AbstractTestModule
       {
          IDE().ASK_DIALOG.clickNo();
       }
-      else if(selenium().isElementPresent(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR))
+      else if (selenium().isElementPresent(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR))
       {
          selenium().click(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
       }
@@ -178,7 +178,7 @@ public class Editor extends AbstractTestModule
       {
          fail("Unknown warning dialog!");
       }
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    /**
@@ -229,28 +229,28 @@ public class Editor extends AbstractTestModule
          SaveFileUtils.checkSaveAsDialog(true);
          selenium().click(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
       }
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
 
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
 
    public void checkEditorTabSelected(String tabTitle, boolean isSelected)
    {
+      String locator = Locators.EDITOR_TABSET_LOCATOR;
       if (isSelected)
       {
          //used //td[contains(@class, 'tabTitleSelected')] locator, instead of equals,
          //because after refreshing tab is overed by mouse and there is no 'tabTitleSelected'
          //class, but there is 'tabTitleSelectedOver'.
-         assertTrue(selenium().isElementPresent(
-            Locators.EDITOR_TABSET_LOCATOR
-               + "//td[contains(@class, 'gwt-TabBarItem-wrapper-selected')]//span[contains(text(), '" + tabTitle
-               + "')]"));
+         locator += "//td[contains(@class, 'gwt-TabBarItem-wrapper-selected')]//span[contains(text(), '" + tabTitle + "')]";
       }
       else
       {
-         assertTrue(selenium().isElementPresent(
-            Locators.EDITOR_TABSET_LOCATOR + "//div[@role='tab']//span[contains(text(), '"
-               + tabTitle + "')]"));
+         locator += "//div[@role='tab']//span[contains(text(), '" + tabTitle + "')]";
       }
+
+      System.out.println("locator [" + locator + "]");
+      
+      assertTrue(selenium().isElementPresent(locator));
    }
 
    /**
@@ -545,5 +545,32 @@ public class Editor extends AbstractTestModule
       waitForElementPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
-   
+
+   /**
+    * Check is file in tabIndex tab opened with CK editor.
+    * 
+    * @param tabIndex index of tab
+    * @throws Exception
+    */
+   public void checkCkEditorOpened(int tabIndex) throws Exception
+   {
+      String locator =
+         "//div[@panel-id='editor' and @tab-index='" + tabIndex
+            + "']//table[@class='cke_editor']//td[@class='cke_contents']/iframe";
+      assertTrue(selenium().isElementPresent(locator));
+   }
+
+   /**
+    * Check is file in tabIndex tab opened with Code Editor.
+    * 
+    * @param tabIndex
+    * @throws Exception
+    */
+   public void checkCodeEditorOpened(int tabIndex) throws Exception
+   {
+      String locator =
+         "//div[@panel-id='editor'and @tab-index=" + "'" + tabIndex + "']//div[@class='CodeMirror-wrapping']/iframe";
+      assertTrue(selenium().isElementPresent(locator));
+   }
+
 }

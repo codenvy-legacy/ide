@@ -21,18 +21,16 @@ package org.exoplatform.ide.operation.file;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.common.http.client.ModuleException;
+import java.io.IOException;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.EnumBrowserCommand;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * TODO: doesn't work on windows, because double click is used.
@@ -52,7 +50,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
-   private static String GOOGLE_GADGET_FILE_NAME = "Calculator.xml";
+   private static String GADGET_FILE_NAME = "Calculator.xml";
 
    @BeforeClass
    public static void setUp()
@@ -61,7 +59,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
          VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + GOOGLE_GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, WS_URL + FOLDER_NAME + "/" + GADGET_FILE_NAME);
       }
       catch (Exception e)
       {
@@ -73,7 +71,8 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    public void testOpenFileWithNonDefaultEditor() throws Exception
    {
       waitForRootElement();
-
+      
+      
       /*
        * Select file newHtmlFile.html in the Workspace Panel and then call "File->Open with.." topmenu command.
        */
@@ -86,53 +85,70 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
       IDE.OPENWITH.open();
-      
-      //callOpenWithWindow(CUR_TIME + HTML_FILE_NAME);
-      
-      Thread.sleep(60000);
-      
-      /*
+
       //gadget displayed "Open File with" dialog window with second items in the central column: 
       //"Code Editor [Default]" and "WYSYWYG editor".
-      checkOpenWithWindowCodeEditorIsDefault();
+      String selectedEditor = IDE.OPENWITH.getSelectedEditor();
+      assertEquals("CodeMirror HTML editor [Default]", selectedEditor);
       
-      //---- 3 -------------------------
-      //Select "WYSYWYG editor" item and then click on "Open" button.
-      selectEditorAndOpen(MenuCommands.CodeEditors.CK_EDITOR, false);
-      Thread.sleep(TestConstants.SLEEP);
-      //gadget opened newHtmlFile.html file in the Content Panel in the WYSYWYG editor.
-      checkCkEditorOpened(0);
-      Thread.sleep(TestConstants.SLEEP);
+      /*
+       * Select "CKEditor HTML editor" item and then click on "Open" button.
+       */
+      IDE.OPENWITH.selectEditor("CKEditor HTML editor");
+      IDE.OPENWITH.clickOpen();
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       
-      //---- 4 -------------------------
-      //Select file newHtmlFile.html in the Workspace Panel again, 
-      //then call the "File->Open with.." topmenu command, 
-      //select "Code Editor" item and click on "Open" button.
-      callOpenWithWindow(CUR_TIME + HTML_FILE_NAME);
-      checkOpenWithWindowCodeEditorIsDefault();
-      selectEditorAndOpen(MenuCommands.CodeEditors.CODE_MIRROR, false);
-      Thread.sleep(TestConstants.SLEEP);
+      /*
+       * CKEditor must be opened.
+       */
+      IDE.selectMainFrame();      
+      IDE.EDITOR.checkCkEditorOpened(0);
+
+      /*
+       * Select file newHtmlFile.html in the Workspace Panel again, 
+       * then call the "File->Open with.." topmenu command, 
+       * select "Code Editor" item and click on "Open" button.
+       */
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+      IDE.OPENWITH.open();
+      //IDE.OPENWITH.selectEditor("CodeMirror HTML editor [Default]");
+      IDE.OPENWITH.selectEditorByIndex(1);
+      IDE.OPENWITH.clickOpen();
+
+      /*
+       * gadget displayed confirmation dialog with message "Do you want to reopen file newHtmlFile.html 
+       * in selected editor?"
+       * Click No button in Ask dialog.
+       */
+      IDE.ASK_DIALOG.clickNo();
       
-      //gadget displayed confirmation dialog with message "Do you want to reopen file newHtmlFile.html 
-      //in selected editor?"
-      //---- 5 -------------------------
-      //Click on "No" button.
-      checkReopenWarningDialog(false);
-      Thread.sleep(TestConstants.SLEEP);
+      /*
+       * CKEditor must be still opened.
+       */
+      IDE.selectMainFrame();      
+      IDE.EDITOR.checkCkEditorOpened(0);
+
       
-      //---- 6 -------------------------
       //Select file newHtmlFile.html in the Workspace Panel again, then call the "File->Open with.." 
       //topmenu command, double click on "Code Editor" item, then click "Yes" in "Info" dialog window.
-      callOpenWithWindow(CUR_TIME + HTML_FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-      checkOpenWithWindowCodeEditorIsDefault();
-      selectEditorAndOpen(MenuCommands.CodeEditors.CODE_MIRROR, false);
-      Thread.sleep(TestConstants.SLEEP);
-      checkReopenWarningDialog(true);
-      Thread.sleep(TestConstants.SLEEP);
-      //gadget should reopen file newHtmlFile.html new tab in the Code Editor with appropriate highlighting.
-      checkCodeEditorOpened(0);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OPENWITH.open();
+      //IDE.OPENWITH.selectEditor("CodeMirror HTML editor [Default]");
+      IDE.OPENWITH.selectEditorByIndex(2);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.OPENWITH.selectEditorByIndex(1);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.OPENWITH.clickOpen();
+      IDE.ASK_DIALOG.clickYes();
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.EDITOR.checkCodeEditorOpened(1);
+      
+      Thread.sleep(60000);
+
+      
+      
+      
+      
+      /*
 
       //---- 7 -------------------------
       //Close file newHtmlFile.html, select this one in the Workspace Panel again, 
@@ -241,22 +257,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
          Thread.sleep(TestConstants.SLEEP);
       }
    }
-   
-   private void callOpenWithWindow(String fileName) throws Exception
-   {
-      //select file
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + fileName + "]/col[1]");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-      
-//      //call Open With window
-//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-//      Thread.sleep(TestConstants.SLEEP);
-//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[text()='"
-//         + MenuCommands.File.OPEN_WITH + "']", "");
-//      Thread.sleep(TestConstants.SLEEP);
-   }
+
    
    private void checkOpenWithWindowCodeEditorIsDefault() throws Exception
    {
@@ -342,18 +343,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       }
       */
    }
-   
-   private void doubleClickItemInNavigationTree(String name) throws Exception
-   {
-      // Enable navigation by using keyboard in the Navigation, Search and Outline Panel to improve IDE accessibility. 
-      //http://jira.exoplatform.org/browse/IDE-258    
 
-      String locator = "scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + name + "]/col[1]";
-      selenium.click(locator);
-      selenium.click(locator); 
-      
-      Thread.sleep(5000);
-   }
    
     /**
     * Clean up cookie, registry, repository after each test of in the each class:<br>

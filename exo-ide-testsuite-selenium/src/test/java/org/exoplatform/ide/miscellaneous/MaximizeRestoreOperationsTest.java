@@ -143,7 +143,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //there is new file opened in the file tab of Content Panel. 
       //There is Properties Tab opened in the bottom part of Content Panel. 
-      checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(0);
       
       //check, properties tab appeared
       assertTrue(selenium.isVisible(Locators.OperationForm.PROPERTIES_TAB_LOCATOR));

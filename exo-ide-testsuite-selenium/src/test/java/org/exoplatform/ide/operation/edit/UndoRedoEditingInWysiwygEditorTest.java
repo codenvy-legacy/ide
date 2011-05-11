@@ -73,7 +73,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       createSaveAndCloseFile(MenuCommands.New.HTML_FILE, htmlFile, 0);
       //open with WYSIWYG editor and make default
       openFileFromNavigationTreeWithCkEditor(URL + htmlFile, "HTML", false);
-      checkCkEditorOpened(0);
+      IDE.EDITOR.checkCkEditorOpened(0);
 
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNDO, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.REDO, true);

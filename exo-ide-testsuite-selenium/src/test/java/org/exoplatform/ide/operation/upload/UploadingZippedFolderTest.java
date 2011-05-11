@@ -121,7 +121,7 @@ public class UploadingZippedFolderTest extends BaseTest
       IDE.NAVIGATION.assertItemVisible(URL + "/" + mineFile);
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(settingsFile, false);
-      checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(0);
 
       String text =IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.length() > 0);

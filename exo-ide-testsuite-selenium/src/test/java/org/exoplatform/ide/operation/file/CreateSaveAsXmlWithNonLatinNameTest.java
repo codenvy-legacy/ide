@@ -145,7 +145,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE, false);
 
-      checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(0);
 
       //change file content
      IDE.EDITOR.deleteFileContent();

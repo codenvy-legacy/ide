@@ -73,7 +73,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       openFileFromNavigationTreeWithCkEditor(URL + HTML_FILE,"HTML" ,false);
       Thread.sleep(2000);
       // waitForElementPresent("ideOpenFileWithForm");
-      checkCkEditorOpened(0);
+      IDE.EDITOR.checkCkEditorOpened(0);
       //TODO:
       //how to check, that cursor should be at the start of editor.
 
@@ -240,7 +240,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       selenium.click("exoAskDialogYesButton");
       Thread.sleep(TestConstants.SLEEP);
 
-      checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(0);
 
       final String table2x3FromCodeEditor =
          "<html><head><title></title></head><body>"

@@ -29,12 +29,12 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-//   PreviewHtmlFileTest.class
-   OpenFileWithNonDefaultEditorTest.class
-//   OpenAndSaveXmlFileWithNonLatinNameTest.class,
-//   DeleteSeveralFilesSimultaniouslyTest.class,
-//   CreatingAndSavingAsNewFileTest.class,
-//   DisplayingWarningMessageTest.class,
+//   PreviewHtmlFileTest.class,                              // OK
+//   OpenFileWithNonDefaultEditorTest.class
+//   OpenAndSaveXmlFileWithNonLatinNameTest.class
+//  DeleteSeveralFilesSimultaniouslyTest.class,            // OK
+//   CreatingAndSavingAsNewFileTest.class                  // OK
+   DisplayingWarningMessageTest.class
 //   StoreOpenedFilesHistoryTest.class,
 //   ShowHideLineNumbersTest.class,
 //   CreateSaveAsXmlWithNonLatinNameTest.class,

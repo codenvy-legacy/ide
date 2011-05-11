@@ -82,7 +82,7 @@ public class UploadingGroovyFileTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GROOVY_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       
-      checkCodeEditorOpened(0);
+      IDE.EDITOR.checkCodeEditorOpened(0);
       String text =IDE.EDITOR.getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);

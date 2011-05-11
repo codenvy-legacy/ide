@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.editor.custom;
 
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
@@ -67,10 +68,10 @@ public class OpenFileWithView extends ViewImpl implements
    CheckboxItem isDefaultCheckItem;
 
    @UiField
-   IButton openButton;
+   ImageButton openButton;
 
    @UiField
-   IButton cancelButton;
+   ImageButton cancelButton;
 
    public OpenFileWithView()
    {

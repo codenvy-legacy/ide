@@ -175,7 +175,7 @@ public abstract class BaseTest
 
       IDE.setWorkspaceURL(WS_URL);
    }
-
+   
    protected void logout() throws Exception
    {
       if (isRunIdeUnderPortal())
@@ -459,19 +459,6 @@ public abstract class BaseTest
    }
 
    /**
-    * Check is file in tabIndex tab opened with CK editor.
-    * 
-    * @param tabIndex index of tab
-    * @throws Exception
-    */
-   protected void checkCkEditorOpened(int tabIndex) throws Exception
-   {
-      String divIndex = String.valueOf(tabIndex);
-      assertTrue(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-         + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"));
-   }
-
-   /**
     * Get the URL of selected item.
     * 
     * @return {@link String} URL
@@ -528,23 +515,6 @@ public abstract class BaseTest
       return selenium.getText("//table[@class='exo-statusText-table']");
    }
 
-   /**
-    * Check is file in tabIndex tab opened with Code Editor.
-    * 
-    * @param tabIndex
-    * @throws Exception
-    */
-   @Deprecated
-   protected void checkCodeEditorOpened(int tabIndex) throws Exception
-   {
-      String divIndex = String.valueOf(tabIndex);
-      //check Code Editor is present
-      assertTrue(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-         +"//div[@class='CodeMirror-wrapping']/iframe"));
-      //check CK editor is not present
-      assertFalse(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-         +"//td[@class='cke_contents']/iframe"));
-   }
 
    /**
     * Use to create new file in selected folder
@@ -1127,7 +1097,6 @@ public abstract class BaseTest
     */
    public void waitForRootElement() throws Exception
    {
-      //Thread.sleep(TestConstants.SLEEP);
       waitForElementPresent(Navigation.NAVIGATION_TREE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }

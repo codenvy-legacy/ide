@@ -157,7 +157,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GADGET_FILE, false);
       openFileFromNavigationTreeWithCkEditor(HTML_FILE, "HTML" ,true);
       
-      checkCkEditorOpened(2);
+      IDE.EDITOR.checkCkEditorOpened(2);
       
       //delete Test Folder to Delete from server
       try
@@ -184,7 +184,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
 //      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
       waitForElementPresent(Editor.EditorLocators.CK_EDITOR);
       
-      checkCkEditorOpened(1);
+      IDE.EDITOR.checkCkEditorOpened(1);
       
       checkOpenedFilesHistory();
       

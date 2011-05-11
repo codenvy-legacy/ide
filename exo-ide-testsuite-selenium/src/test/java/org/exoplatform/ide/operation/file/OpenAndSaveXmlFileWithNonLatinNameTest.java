@@ -20,6 +20,10 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -29,10 +33,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * IDE-48: Opening and Saving new XML file with non-latin name.
@@ -50,25 +50,17 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
    private static final ResourceBundle rb = ResourceBundle.getBundle("FileMsg", Locale.getDefault());
 
    private static final String FILE_NAME = rb.getString("xml.file.name");
-   
+
    private static final String FOLDER_NAME = OpenAndSaveXmlFileWithNonLatinNameTest.class.getSimpleName();
-   
-    
-   private static String XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>\n" +
-                                         "<test>\n" +  
-                                        "<settings>value</settings>\n" +
-                                        "</test>";
-    
-    
-    private static String XML_CONTENT_2 =  "<?xml version='1.0' encoding='UTF-8'?>\n" +
-    "<test>\n"+
-     "<settings>param</settings>\n" +
-    "<bean>\n" +
-    "<name>MineBean</name>\n" +
-    "</bean>\n" +
-     "</test>";
-      
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+
+   private static String XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>\n" + "<test>\n"
+      + "<settings>value</settings>\n" + "</test>";
+
+   private static String XML_CONTENT_2 = "<?xml version='1.0' encoding='UTF-8'?>\n" + "<test>\n"
+      + "<settings>param</settings>\n" + "<bean>\n" + "<name>MineBean</name>\n" + "</bean>\n" + "</test>";
+
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
 
    @BeforeClass
    public static void setUp()
@@ -77,16 +69,12 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -94,49 +82,45 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
- 
+
    @Test
    public void testOpenAndSaveXmlFileWithNonLatinName() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP*2);
+      Thread.sleep(TestConstants.SLEEP * 2);
       IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
-      
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      
-      assertEquals("Untitled file.xml *",IDE.EDITOR.getTabTitle(0));
-      
+
+      assertEquals("Untitled file.xml *", IDE.EDITOR.getTabTitle(0));
+
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
-      
-     IDE.EDITOR.deleteFileContent();
-     IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
-      
+
+      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
+
       saveAsUsingToolbarButton(FILE_NAME);
-     IDE.EDITOR.closeTab(0);
-      
+      IDE.EDITOR.closeTab(0);
+
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-     IDE.EDITOR.deleteFileContent();
-     IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT_2);
-     
+      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT_2);
+
       //Save command enabled
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, true);
       //File name ends with *
-      assertEquals(FILE_NAME + " *",IDE.EDITOR.getTabTitle(0));
-      
+      assertEquals(FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
+
       saveCurrentFile();
-      
+
       //File name doesn't end with *
-      assertEquals(FILE_NAME,IDE.EDITOR.getTabTitle(0));
-      
+      assertEquals(FILE_NAME, IDE.EDITOR.getTabTitle(0));
+
       //Save command disabled
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
    }

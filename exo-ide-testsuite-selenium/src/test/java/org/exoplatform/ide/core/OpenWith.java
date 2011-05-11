@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.core;
 
+import static org.junit.Assert.fail;
+
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-
-import static org.junit.Assert.fail;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,20 +32,54 @@ import static org.junit.Assert.fail;
 
 public class OpenWith extends AbstractTestModule
 {
-   
-   public void checkIsOpened() {
+
+   public void checkIsOpened()
+   {
       fail();
    }
-   
-   public void checkIsOpened(boolean isOpened) {
+
+   public void checkIsOpened(boolean isOpened)
+   {
       fail();
    }
-   
-   public void open() throws Exception {
+
+   public void open() throws Exception
+   {
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 
+      waitForElementPresent("//div[@view-id='ideOpenFileWithView']");
       String locator = "//table[@id='ideOpenFileWithListGrid']";
       waitForElementPresent(locator);
+   }
+
+   public String getSelectedEditor() throws Exception
+   {
+      String locator = "//table[@id='ideOpenFileWithListGrid']/tbody/tr/td/div[@tabindex='0']";
+      return selenium().getText(locator);
+   }
+   
+   public void selectEditorByIndex(int index)
+   {
+      IDE().selectMainFrame();
+      String locator = "//table[@id='ideOpenFileWithListGrid']/tbody[1]/tr[" + index + "]/td/div";
+      selenium().click(locator);
+   }
+
+   public void selectEditor(String value)
+   {
+      IDE().selectMainFrame();
+      String locator = "//table[@id='ideOpenFileWithListGrid']/tbody/tr/td/div[text()='" + value + "']";
+      selenium().click(locator);
+   }
+
+   public void clickOpen() throws Exception
+   {
+      selenium().click("ideOpenFileWithOkButton");
+   }
+
+   public void clickCancel()
+   {
+      selenium().click("ideOpenFileWithCancelButton");
    }
 
    /**
@@ -75,6 +109,5 @@ public class OpenWith extends AbstractTestModule
       //time remaining to open editor
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
-   
-   
+
 }
