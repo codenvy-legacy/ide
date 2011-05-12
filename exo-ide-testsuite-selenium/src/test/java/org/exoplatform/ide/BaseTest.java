@@ -1027,6 +1027,7 @@ public abstract class BaseTest
       //Thats why, wait for WAIT_PERIOD for root element
       //of navigation tree.
       IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
