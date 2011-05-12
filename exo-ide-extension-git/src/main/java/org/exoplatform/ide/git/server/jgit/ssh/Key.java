@@ -26,7 +26,7 @@ import java.io.IOException;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface KeyFile
+public interface Key
 {
    /**
     * Identifier of key file.

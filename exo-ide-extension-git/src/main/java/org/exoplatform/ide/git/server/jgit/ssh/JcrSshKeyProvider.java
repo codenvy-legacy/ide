@@ -73,13 +73,13 @@ import javax.jcr.Session;
  */
 public class JcrSshKeyProvider implements SshKeyProvider
 {
-   private static class JcrKeyFile implements KeyFile
+   private static class JcrKey implements Key
    {
       private final ManageableRepository repository;
       private final String workspace;
       private final String path;
 
-      public JcrKeyFile(String path, ManageableRepository repository, String workspace)
+      public JcrKey(String path, ManageableRepository repository, String workspace)
       {
          this.path = path;
          this.repository = repository;
@@ -221,7 +221,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
     * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#getPrivateKey(java.lang.String)
     */
    @Override
-   public KeyFile getPrivateKey(String host) throws IOException
+   public Key getPrivateKey(String host) throws IOException
    {
       String path = keyStore + ConversationState.getCurrent().getIdentity().getUserId() + "/" + host + ".key";
       return getKeyFile(path);
@@ -231,13 +231,13 @@ public class JcrSshKeyProvider implements SshKeyProvider
     * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#getPublicKey(java.lang.String)
     */
    @Override
-   public KeyFile getPublicKey(String host) throws IOException
+   public Key getPublicKey(String host) throws IOException
    {
       String path = keyStore + ConversationState.getCurrent().getIdentity().getUserId() + "/" + host + ".pub";
       return getKeyFile(path);
    }
 
-   private KeyFile getKeyFile(String path)
+   private Key getKeyFile(String path)
    {
       ManageableRepository repository;
       try
@@ -248,7 +248,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
       {
          throw new RuntimeException(re.getMessage(), re);
       }
-      return new JcrKeyFile(path, repository, workspace);
+      return new JcrKey(path, repository, workspace);
    }
 
    /**

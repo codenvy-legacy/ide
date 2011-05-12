@@ -88,7 +88,7 @@ public class IdeSshSessionFactory extends SshConfigSessionFactory implements Sta
    protected final JSch getJSch(OpenSshConfig.Host hc, FS fs) throws JSchException
    {
       String host = hc.getHostName();
-      KeyFile key;
+      Key key;
       try
       {
          key = keyProvider.getPrivateKey(host);

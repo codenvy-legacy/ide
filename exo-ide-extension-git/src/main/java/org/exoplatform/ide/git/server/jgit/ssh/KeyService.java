@@ -112,7 +112,7 @@ public class KeyService
             .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
       try
       {
-         KeyFile publicKey = delegate.getPublicKey(host);
+         Key publicKey = delegate.getPublicKey(host);
          byte[] bytes = publicKey.getBytes();
          if (bytes != null)
             return Response.ok().entity(bytes).type(MediaType.TEXT_PLAIN).build();
