@@ -19,13 +19,10 @@
 package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -45,20 +42,21 @@ import java.util.ResourceBundle;
  */
 public class RESTServiceCreateTest extends BaseTest
 {
-   
+
    /**
     * Resource bundle for non-latin names.
     */
    private static final ResourceBundle rb = ResourceBundle.getBundle("FileMsg", Locale.getDefault());
-   
-   private static final String FOLDER_NAME=RESTServiceCreateTest.class.getSimpleName();
-   
+
+   private static final String FOLDER_NAME = RESTServiceCreateTest.class.getSimpleName();
+
    private static final String FIRST_NAME = "test.grs";
-   
+
    private static final String SECOND_NAME = rb.getString("new.file.name") + ".grs";
-   
-   private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
+
    @BeforeClass
    public static void setUp()
    {
@@ -75,7 +73,7 @@ public class RESTServiceCreateTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -99,50 +97,40 @@ public class RESTServiceCreateTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
       
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      assertEquals("Untitled file.grs *",IDE.EDITOR.getTabTitle(0));
+      assertEquals("Untitled file.grs *", IDE.EDITOR.getTabTitle(0));
       saveAsUsingToolbarButton(FIRST_NAME);
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
-
-      assertTrue(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
-
-      assertEquals("false", selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextAutoload]/textbox"));
-      assertEquals(TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER,
-         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextContentNodeType]/textbox"));
-      assertEquals(MimeType.GROOVY_SERVICE,
-         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextContentType]/textbox"));
-      assertEquals(FIRST_NAME,
-         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextDisplayName]/textbox"));
-      assertEquals(TestConstants.NodeTypes.NT_FILE,
-         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextFileNodeType]/textbox"));
-
-      selenium.click(Locators.OperationForm.PROPERTIES_TAB_LOCATOR + Locators.CLOSE_ICON);
       
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.PROPERTIES.openProperties();
 
-      assertFalse(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
+      assertProperties(FIRST_NAME);
 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
+      IDE.PROPERTIES.closeProperties();
 
-      assertTrue(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR));
+     IDE.PROPERTIES.openProperties();
 
       saveAsUsingToolbarButton(SECOND_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
-      assertEquals("false", selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextAutoload]/textbox"));
-      assertEquals(TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER,
-         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextContentNodeType]/textbox"));
-      assertEquals(MimeType.GROOVY_SERVICE,
-         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextContentType]/textbox"));
-      assertEquals(
-         SECOND_NAME,
-         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextDisplayName]/textbox"));
-      assertEquals(TestConstants.NodeTypes.NT_FILE,
-         selenium.getText(Locators.OperationForm.PROPERTIES_FORM_LOCATOR + "/item[name=idePropertiesTextFileNodeType]/textbox"));
+      assertProperties(SECOND_NAME);
+      
+      IDE.EDITOR.closeTab(0);
    }
-   
+
+   /**
+    * Check file properties 
+    */
+   private void assertProperties(String name)
+   {
+      assertEquals("false", IDE.PROPERTIES.getAutoloadProperty());
+      assertEquals(TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, IDE.PROPERTIES.getContentNodeType());
+      assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
+      assertEquals(name, IDE.PROPERTIES.getDisplayName());
+      assertEquals(TestConstants.NodeTypes.NT_FILE, IDE.PROPERTIES.getFileNodeType());
+   }
+
 }

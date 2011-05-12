@@ -34,6 +34,7 @@ import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Output;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Preview;
+import org.exoplatform.ide.core.Properties;
 import org.exoplatform.ide.core.RESTService;
 import org.exoplatform.ide.core.SaveAs;
 import org.exoplatform.ide.core.SaveAsTemplate;
@@ -126,6 +127,8 @@ public class IDE
    public Search SEARCH = new Search();
    
    public Output OUTPUT = new Output();
+   
+   public Properties PROPERTIES = new Properties();
 
    /**
     * Select main frame of IDE.
