@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="Hello World!" />
+  <Content type="html">
+    <![CDATA[
+    <div id="content_div">
+      <form name="sample">
+        Enter your name:<br>
+        <input type="text" name="user">
+        <input type="button" name="button1" value="Ok" onClick="hello(this.form)">
+      </form>
+      <span id="response"></span>
+    </div>
+    <script type="text/javascript">
+
+      function hello(form) {
+        if (form.user.value == "")
+          document.getElementById('response').innerHTML="Please enter name!";
+        else {
+          getGreeting(form.user.value);
+        }
+      }
+
+      function getGreeting(userName) {
+        var params = {};
+        params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
+        var url = 'http://' + location.host + '/rest/my-service/helloworld/' + userName;
+        gadgets.io.makeRequest(url, response, params);
+      }
+      // Callback function to process the response
+      function response(obj) {
+        var responseText = obj.text;
+
+        var html = "<div style='padding: 5px;background-color: #FFFFBF;font-family:Arial, Helvetica;"
+            + "text-align:left;font-size:90%'>";
+
+        html += responseText;
+        html += "</div>";
+        // Output html in div.
+        document.getElementById('response').innerHTML = html;
+      }
+
+    </script>
+    ]]></Content></Module>

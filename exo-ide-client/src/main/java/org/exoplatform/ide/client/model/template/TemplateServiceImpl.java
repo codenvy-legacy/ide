@@ -26,12 +26,12 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshaller;
 import org.exoplatform.ide.client.model.template.marshal.TemplateMarshaller;
+import org.exoplatform.ide.client.samples.ide.DefaultIdeProject;
 import org.exoplatform.ide.client.samples.linkedin.LinkedinContactsProject;
 import org.exoplatform.ide.client.samples.netvibes.NetvibesSamples;
 import org.exoplatform.ide.client.samples.sc.ShoppingCardProject;
 import org.exoplatform.ide.client.samples.twittertrends.TwitterTrendsProject;
 
-import com.gargoylesoftware.htmlunit.util.StringUtils;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Random;
@@ -161,6 +161,11 @@ public class TemplateServiceImpl extends TemplateService
       
       LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
       templateList.getTemplates().addAll(linkedinContactsProject.getTemplateList());
+
+      DefaultIdeProject defaultIdeProject = new DefaultIdeProject();
+      templateList.getTemplates().addAll(defaultIdeProject.getTemplateList());
+      
+      templateList.getTemplates().add(getEmptyProject());
      
       
       TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
@@ -173,5 +178,12 @@ public class TemplateServiceImpl extends TemplateService
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
+   private static ProjectTemplate getEmptyProject()
+   {
+      ProjectTemplate sampleProject = new ProjectTemplate("new-project");
+      sampleProject.setDescription("Empty project");
+
+      return sampleProject;
+   }
 
 }
