@@ -41,19 +41,25 @@ import java.io.IOException;
 public class RESTServiceDeployExistPathTest extends BaseTest
 {
 
+   /**
+    * 
+    */
+   private static final String FOLDER_NAME = "Test";
+
    private static final String FIRST_NAME = System.currentTimeMillis() + ".groovy";
 
    private static final String SECOND_NAME = System.currentTimeMillis() + "copy.groovy";
-   
-   private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
 
    @Test
    public void testDeployExistPath() throws Exception
    {
-      
-      Thread.sleep(TestConstants.SLEEP);
+
+      waitForRootElement();
       //TODO*****************change**************change add folder for locked file
-      createFolder("Test");
+      createFolder(FOLDER_NAME);
       //*************************************
       IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
       //createFileFromToolbar("REST Service");
@@ -66,51 +72,47 @@ public class RESTServiceDeployExistPathTest extends BaseTest
 
       saveAsUsingToolbarButton(SECOND_NAME);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FIRST_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FIRST_NAME, false);
 
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.EDITOR.selectTab(0);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      String mess = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
+      String mess = IDE.OUTPUT.getOutputMessageText(2);
       assertTrue(mess.startsWith("[ERROR]"));
       assertTrue(mess.contains(SECOND_NAME + " deploy failed. Error (400: Bad Request)"));
 
-            
       //***************fix GOTO static string message****************     
       //      assertTrue(mess
       //         .contains("Can't bind script " + SECOND_NAME + ", it is not root resource or root resource with the same URI pattern already registered"));
 
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=1]/");
+      IDE.EDITOR.selectTab(1);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
+      IDE.EDITOR.selectTab(0);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      mess = selenium.getText("//div[contains(@eventproxy,'Record_3')]");
+      mess = IDE.OUTPUT.getOutputMessageText(4);
 
       assertTrue(mess.contains("[INFO]"));
 
       assertTrue(mess.contains(SECOND_NAME + " deployed successfully."));
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
    }
-   
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FIRST_NAME);
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + SECOND_NAME);
-         VirtualFileSystemUtils.delete(URL + FIRST_NAME);
-         VirtualFileSystemUtils.delete(URL + SECOND_NAME);
+         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FOLDER_NAME + "/" + FIRST_NAME);
+         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FOLDER_NAME + "/" + SECOND_NAME);
+         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
       catch (IOException e)
       {
