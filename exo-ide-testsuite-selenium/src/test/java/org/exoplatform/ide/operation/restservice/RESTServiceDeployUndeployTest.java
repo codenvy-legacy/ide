@@ -18,10 +18,7 @@
  */
 package org.exoplatform.ide.operation.restservice;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
@@ -32,6 +29,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -40,34 +39,37 @@ import org.junit.Test;
 public class RESTServiceDeployUndeployTest extends BaseTest
 {
 
+   private static final String FOLDER_NAME = System.currentTimeMillis() + "RESTService";
+
    private static String FILE_NAME = "DeployUndeployTest.groovy";
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+
+   private final static String FILE_URL = WS_URL + FOLDER_NAME + "/" + FILE_NAME;
 
    @Test
    public void testDeployUndeploy() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       //TODO*******************change add folder for locked file
-      createFolder("Test");
+      createFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //*****************************
-      IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      System.out.println(FILE_URL);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_URL, false);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
+      IDE.OUTPUT.checkOutputOpened();
 
-      String mess = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
+      String mess = IDE.OUTPUT.getOutputMessageText(1);
 
       assertTrue(mess.contains("[INFO]"));
       assertTrue(mess.contains(FILE_NAME + " deployed successfully."));
@@ -75,37 +77,33 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
+      //**********fix TODO static string message 
+      assertTrue(IDE.OUTPUT.getOutputMessageText(2).contains(FOLDER_NAME + "/" + FILE_NAME + " undeployed successfully."));
 
-    //**********fix TODO static string message 
-      assertEquals("[INFO] http://127.0.0.1:8080/rest/private/"+WEBDAV_CONTEXT+"/repository/dev-monit/Test/" + FILE_NAME
-         + " undeployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_1')]"));
-   
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      mess = selenium.getText("//div[contains(@eventproxy,'Record_2')]");
+      mess = IDE.OUTPUT.getOutputMessageText(3);
       assertTrue(mess.contains("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
-      Thread.sleep(10000);
-      
+
       //**********fix TODO static string message
-      assertTrue(mess
-         .contains("Can't unbind script Test"+ "/" + FILE_NAME + ", not bound or has wrong mapping to the resource class"));
+      assertTrue(mess.contains("Can't unbind script " + FOLDER_NAME +"/" + FILE_NAME
+         + ", not bound or has wrong mapping to the resource class"));
       //****************************************
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
 
-      IDE.NAVIGATION.assertItemVisible(URL);
+      IDE.NAVIGATION.assertItemVisible(FILE_URL);
 
-      IDE.NAVIGATION.deleteSelectedItems();
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL);
-         VirtualFileSystemUtils.delete(URL);
+         Utils.undeployService(BASE_URL, REST_CONTEXT, FILE_URL);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
       }
       catch (IOException e)
       {

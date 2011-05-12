@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.core;
 
+import static org.junit.Assert.assertTrue;
+
+import org.exoplatform.ide.Locators;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Output May 11, 2011 5:05:08 PM evgen $
@@ -35,6 +39,14 @@ public class Output extends AbstractTestModule
    {
       String locator = String.format("//div[@id='ideOutputContent']/div[%1s]/", messageNumber);
       return selenium().getText(locator);
+   }
+   
+   /**
+    * Check is Output form opened 
+    */
+   public void checkOutputOpened()
+   {
+      assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR));
    }
    
 }

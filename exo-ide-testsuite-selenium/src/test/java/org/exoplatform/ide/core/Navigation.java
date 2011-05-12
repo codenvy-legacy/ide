@@ -124,6 +124,7 @@ public class Navigation extends AbstractTestModule
     */
    public String getItemId(String href) throws Exception
    {
+      System.out.println(TREE_PREFIX_ID + Utils.md5(href));
       return TREE_PREFIX_ID + Utils.md5(href);
    }
 
