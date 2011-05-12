@@ -33,31 +33,36 @@ import org.exoplatform.ide.TestConstants;
  */
 public class RESTService extends AbstractTestModule
 {
+   public final String REST_SERVICE_METHOD = "ideGroovyServiceMethod";
+
+   public final String LAUNCH_SEND_BTN = "ideGroovyServiceSend";
+
+   public final String REST_SERVICE_FORM = "ideGroovyServiceForm";
+
+   public final String QUERY_TABLE = "//table[@id='ideGroovyServiceQueryTable']/tbody";
+
+   public final String HEADER_TABLE = "//table[@id='ideGroovyServiceHeaderTable']/tbody";
+
+   public final String BODY_TEXT_FIELD = "ideGroovyServiceBodyFormText";
 
    private static final String PATH_SUGGEST_PANEL_TEXT_LOCATOR =
       "//div[@id='exoSuggestPanel']/div[@class='popupContent']/div/table//td[contains(text(), '%1s')]";
 
    private static final String REST_SERVICE_REQUEST_MEDIATYPE = "ideGroovyServiceRequest";
 
-   public final String REST_SERVICE_METHOD = "ideGroovyServiceMethod";
-
    private static final String REST_SERVICE_PATH = "ideGroovyServicePath";
 
    private static final String REST_SERVICE_RESPONSE_MEDIATYPE = "ideGroovyServiceResponse";
 
-   public final String LAUNCH_SEND_BTN = "ideGroovyServiceSend";
+   private static final String QUERY_TABLE_ID = "ideGroovyServiceQueryTable";
 
-   public final String REST_SERVICE_FORM = "ideGroovyServiceForm";
+   private static final String HEADER_TABLE_ID = "ideGroovyServiceHeaderTable";
 
    private static final String TABS_LOCATORS = "//table[@id='ideGroovyServiceTabSet']//td[@tab-bar-index=%1s]/table";
 
-   public final String QUERY_TABLE = "//table[@id='ideGroovyServiceQueryTable']/tbody";
-
-   public final String HEADER_TABLE = "//table[@id='ideGroovyServiceHeaderTable']/tbody";
-
-   private final String SEND_REQUEST_BUTTON = "ideGroovyServiceSend";
+   private static final String SEND_REQUEST_BUTTON = "ideGroovyServiceSend";
    
-   public final String BODY_TEXT_FIELD = "ideGroovyServiceBodyFormText";
+   private static final String CANCEL_BUTTON = "ideGroovyServiceCancel";
 
    /**
     * Call the "Run->Launch REST Service" topmenu command
@@ -252,7 +257,7 @@ public class RESTService extends AbstractTestModule
          assertTrue(contais);
       }
    }
-   
+
    private void selectValueInSelectElement(String selectLocator, String value)
    {
       selenium().select(selectLocator, value);
@@ -266,7 +271,7 @@ public class RESTService extends AbstractTestModule
    {
       checSelectElementContainsValue(REST_SERVICE_REQUEST_MEDIATYPE, val);
    }
-   
+
    /**
     * Select specific value in Request Media Type Field.
     * @param value To select. <b>Value must contains in Select field</b>
@@ -275,5 +280,108 @@ public class RESTService extends AbstractTestModule
    {
       selectValueInSelectElement(REST_SERVICE_REQUEST_MEDIATYPE, value);
    }
+   
+   /**
+    * Select specific value in Method Filed
+    * @param value to select.
+    */
+   public void setMethodFieldValue(String value)
+   {
+      selectValueInSelectElement(REST_SERVICE_METHOD, value);
+   }
 
+   private String getTableValue(String tableId, int rowIndex, int cellIndex)
+   {
+      String locator = String.format("//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div", tableId, rowIndex, cellIndex);
+      return selenium().getText(locator);
+   }
+
+   /**
+    * Get Query parameter name
+    * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
+    * @return Query parameter name
+    */
+   public String getQueryParameterName(int parameterIndex)
+   {
+      return getTableValue(QUERY_TABLE_ID, parameterIndex, 2);
+   }
+   
+   /**
+    * Get Query parameter type
+    * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
+    * @return Query parameter type
+    */
+   public String getQueryParameterType(int parameterIndex)
+   {
+      return getTableValue(QUERY_TABLE_ID, parameterIndex, 3);
+   }
+
+   /**
+    * Get Query parameter default value
+    * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
+    * @return Query parameter default value
+    */
+   public String getQueryParameterDefaultValue(int parameterIndex)
+   {
+      return getTableValue(QUERY_TABLE_ID, parameterIndex, 4);
+   }
+   
+   /**
+    * Get Query parameter value
+    * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
+    * @return Query parameter value
+    */
+   public String getQueryParameterValue(int parameterIndex)
+   {
+      return getTableValue(QUERY_TABLE_ID, parameterIndex, 5);
+   }
+   
+   /**
+    * Get Header parameter name
+    * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
+    * @return Header parameter name
+    */
+   public String getHeaderParameterName(int parameterIndex)
+   {
+      return getTableValue(HEADER_TABLE_ID, parameterIndex, 2);
+   }
+   
+   /**
+    * Get Header parameter type
+    * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
+    * @return Header parameter type
+    */
+   public String getHeaderParameterType(int parameterIndex)
+   {
+      return getTableValue(HEADER_TABLE_ID, parameterIndex, 3);
+   }
+
+   /**
+    * Get Header parameter default value
+    * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
+    * @return Header parameter default value
+    */
+   public String getHeaderParameterDefaultValue(int parameterIndex)
+   {
+      return getTableValue(HEADER_TABLE_ID, parameterIndex, 4);
+   }
+   
+   /**
+    * Get Header parameter value
+    * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
+    * @return Header parameter value
+    */
+   public String getHeaderParameterValue(int parameterIndex)
+   {
+      return getTableValue(HEADER_TABLE_ID, parameterIndex, 5);
+   }
+   
+   /**
+    * Close Launch REST Service form, by press Cancel button
+    */
+   public void closeForm()
+   {
+      selenium().click(CANCEL_BUTTON);
+   }
+   
 }

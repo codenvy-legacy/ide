@@ -45,8 +45,8 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
 
    private final static String TEST_FOLDER = "DefaultHTTPParameters";
 
-   private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
-      + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + TEST_FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -81,23 +81,19 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
    public void testDefaultHTTPParameters() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       IDE.REST_SERVICE.launchRestService();
       checkParam();
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium.click("//nobr[contains(text(), 'GET')]");
+      IDE.REST_SERVICE.setMethodFieldValue("GET");
 
       checkParam();
 
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceCancel\"]/");
+      IDE.REST_SERVICE.closeForm();
 
    }
 
@@ -106,30 +102,19 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
     */
    private void checkParam()
    {
-      assertEquals("TestQueryParam 1",
-         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[1]"));
+      assertEquals("TestQueryParam 1", IDE.REST_SERVICE.getQueryParameterName(1));
+      assertEquals("boolean", IDE.REST_SERVICE.getQueryParameterType(1));
+      assertEquals("true", IDE.REST_SERVICE.getQueryParameterDefaultValue(1));
+      assertEquals("", IDE.REST_SERVICE.getQueryParameterValue(1));
 
-      assertEquals("boolean",
-         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[2]"));
+      IDE.REST_SERVICE.selectHeaderParametersTab();
 
-      assertEquals("true",
-         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[3]"));
+      assertEquals("Test-Header", IDE.REST_SERVICE.getHeaderParameterName(1));
+      assertEquals("integer", IDE.REST_SERVICE.getHeaderParameterType(1));
+      assertEquals("3", IDE.REST_SERVICE.getHeaderParameterDefaultValue(1));
+      assertEquals("", IDE.REST_SERVICE.getHeaderParameterValue(1));
 
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[4]"));
-
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceHeaderTab]/");
-
-      assertEquals("Test-Header",
-         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[1]"));
-
-      assertEquals("integer",
-         selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[2]"));
-
-      assertEquals("3", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[3]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[4]"));
-
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceQueryTab]/");
+      IDE.REST_SERVICE.selectQueryParametersTab();
    }
 
    @AfterClass
