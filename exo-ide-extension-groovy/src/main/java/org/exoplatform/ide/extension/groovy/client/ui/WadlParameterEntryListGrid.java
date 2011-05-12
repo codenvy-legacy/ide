@@ -64,6 +64,16 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry>
          };
 
       sendColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      sendColumn.setFieldUpdater(new FieldUpdater<WadlParameterEntry, Boolean>()
+      {
+
+         @Override
+         public void update(int index, WadlParameterEntry object, Boolean value)
+         {
+            object.setSend(value);
+         }
+      });
+
       getCellTable().addColumn(sendColumn, SEND);
       getCellTable().setColumnWidth(sendColumn, 33, Unit.PX);
 
@@ -104,7 +114,7 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry>
 
       };
       getCellTable().addColumn(defaultColumn, DEFAULT);
-      
+
       //value column
       Column<WadlParameterEntry, String> valueColumn = new Column<WadlParameterEntry, String>(new EditTextCell())
       {

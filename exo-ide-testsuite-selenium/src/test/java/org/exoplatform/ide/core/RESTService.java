@@ -61,7 +61,7 @@ public class RESTService extends AbstractTestModule
    private static final String TABS_LOCATORS = "//table[@id='ideGroovyServiceTabSet']//td[@tab-bar-index=%1s]/table";
 
    private static final String SEND_REQUEST_BUTTON = "ideGroovyServiceSend";
-   
+
    private static final String CANCEL_BUTTON = "ideGroovyServiceCancel";
 
    /**
@@ -280,7 +280,7 @@ public class RESTService extends AbstractTestModule
    {
       selectValueInSelectElement(REST_SERVICE_REQUEST_MEDIATYPE, value);
    }
-   
+
    /**
     * Select specific value in Method Filed
     * @param value to select.
@@ -305,7 +305,7 @@ public class RESTService extends AbstractTestModule
    {
       return getTableValue(QUERY_TABLE_ID, parameterIndex, 2);
    }
-   
+
    /**
     * Get Query parameter type
     * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
@@ -325,7 +325,7 @@ public class RESTService extends AbstractTestModule
    {
       return getTableValue(QUERY_TABLE_ID, parameterIndex, 4);
    }
-   
+
    /**
     * Get Query parameter value
     * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
@@ -335,7 +335,7 @@ public class RESTService extends AbstractTestModule
    {
       return getTableValue(QUERY_TABLE_ID, parameterIndex, 5);
    }
-   
+
    /**
     * Get Header parameter name
     * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
@@ -345,7 +345,7 @@ public class RESTService extends AbstractTestModule
    {
       return getTableValue(HEADER_TABLE_ID, parameterIndex, 2);
    }
-   
+
    /**
     * Get Header parameter type
     * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
@@ -365,7 +365,7 @@ public class RESTService extends AbstractTestModule
    {
       return getTableValue(HEADER_TABLE_ID, parameterIndex, 4);
    }
-   
+
    /**
     * Get Header parameter value
     * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
@@ -375,7 +375,7 @@ public class RESTService extends AbstractTestModule
    {
       return getTableValue(HEADER_TABLE_ID, parameterIndex, 5);
    }
-   
+
    /**
     * Close Launch REST Service form, by press Cancel button
     */
@@ -383,5 +383,19 @@ public class RESTService extends AbstractTestModule
    {
       selenium().click(CANCEL_BUTTON);
    }
-   
+
+   private void clickOnTableCheckBox(String tableId, int row, int col)
+   {
+      String locator = String.format("//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div/input[@type='checkbox']", tableId, row, col);
+      selenium().click(locator);
+   }
+   /**
+    * Click on Header Parameter Send check box
+    * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
+    */
+   public void clickOnHeaderParameterSendCheckBox(int parameterIndex)
+   {
+       clickOnTableCheckBox(HEADER_TABLE_ID, parameterIndex, 1);
+   }
+
 }

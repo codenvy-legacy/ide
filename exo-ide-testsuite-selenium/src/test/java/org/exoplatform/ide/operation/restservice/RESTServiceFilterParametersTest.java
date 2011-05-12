@@ -18,14 +18,12 @@
  */
 package org.exoplatform.ide.operation.restservice;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
@@ -33,6 +31,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -48,8 +48,8 @@ public class RESTServiceFilterParametersTest extends BaseTest
    private final static String TEST_FOLDER = RESTServiceFilterParametersTest.class.getSimpleName();
 
    //***************************** 
-   private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
-      + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + TEST_FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -79,7 +79,7 @@ public class RESTServiceFilterParametersTest extends BaseTest
    public void testFilterParameters() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       //TODO*************change
@@ -89,23 +89,26 @@ public class RESTServiceFilterParametersTest extends BaseTest
       //****************************
 
       //TODO*************change
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       IDE.REST_SERVICE.launchRestService();
       //************************
 
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceHeaderTab]/");
-      selenium.click("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[fieldName=value||4]");
-      selenium.keyPress("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[fieldName=value||4]",
-         "\\13");
-      selenium
-         .click("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/editRowForm/item[name=send||title=send||value=true||index=0||Class=CheckboxItem]/textbox");
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]/");
+      IDE.REST_SERVICE.selectHeaderParametersTab();
+      IDE.REST_SERVICE.clickOnHeaderParameterSendCheckBox(1);
 
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      //      selenium.keyPress("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[fieldName=value||4]",
+      //         "\\13");
+      //      selenium
+      //         .click("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/editRowForm/item[name=send||title=send||value=true||index=0||Class=CheckboxItem]/textbox");
+      IDE.REST_SERVICE.sendRequst();
+
+      waitForElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR);
+
+      IDE.OUTPUT.checkOutputOpened();
 
       Thread.sleep(TestConstants.SLEEP);
-      String mess = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
+      String mess = IDE.OUTPUT.getOutputMessageText(1);
       assertTrue(mess
          .contains("POST PathParam: {pathParam}; POST Test-Header: 3; POST TestQueryParam: false; POST Body:"));
    }
