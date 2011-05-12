@@ -21,6 +21,7 @@ package org.exoplatform.ide;
 import com.thoughtworks.selenium.Selenium;
 
 import org.exoplatform.ide.core.AskDialog;
+import org.exoplatform.ide.core.ClasspathProject;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.ErrorDialog;
@@ -129,6 +130,8 @@ public class IDE
    public Output OUTPUT = new Output();
    
    public Properties PROPERTIES = new Properties();
+   
+   public ClasspathProject CLASSPATH_PROJECT = new ClasspathProject();
 
    /**
     * Select main frame of IDE.

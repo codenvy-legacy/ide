@@ -103,7 +103,7 @@ public class BigTemplateTest extends BaseTest
 
       // check "Create file" dialog window
       IDE.TEMPLATES.checkCreateFileFromTemplateWindow();
-      IDE.TEMPLATES.selectTemplate("Calc");
+      IDE.TEMPLATES.selectFileTemplate("Calc");
       //click Create button
       IDE.TEMPLATES.clickCreateButton();
       

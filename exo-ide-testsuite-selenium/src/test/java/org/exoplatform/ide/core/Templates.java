@@ -19,9 +19,10 @@
 package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 
 /**
@@ -33,7 +34,7 @@ import org.exoplatform.ide.TestConstants;
  */
 public class Templates extends AbstractTestModule
 {
-   //------Create from template form elements-------------------
+   //------Create file from template form elements-------------------
    private static final String FILE_FROM_TEMPLATE_FORM_ID = "ideCreateFileFromTemplateForm";
 
    private static final String TEMPLATES_LIST_GRID_ID = "ideCreateFileFromTemplateFormTemplateListGrid";
@@ -50,6 +51,13 @@ public class Templates extends AbstractTestModule
 
    private static final String FILE_FROM_TEMPLATE_DIALOG_LOCATOR = "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']";
    
+   //------Create project from template form elements------------------
+   public static final String DEFAULT_PROJECT_TEMPLATE_NAME = "ide-project";
+   
+   public static final String EMPTY_PROJECT_TEMPLATE_NAME = "new-project";
+   
+   private static final String PROJECT_CREATE_FORM_LOCATOR = "//div[@class='gwt-DialogBox']//div[@view-id='ideCreateProjectFromTemplateView']";
+   
    public void waitForFileFromTemplateForm() throws Exception
    {
       waitForElementPresent(FILE_FROM_TEMPLATE_FORM_ID);
@@ -61,14 +69,29 @@ public class Templates extends AbstractTestModule
    }
    
    /**
+    * Wait, while Project From Template form appears.
+    * @throws Exception
+    */
+   public void waitForProjectCreateForm() throws Exception
+   {
+      waitForElementPresent(PROJECT_CREATE_FORM_LOCATOR);
+   }
+   
+   /**
     * Select template in list grid.
     * 
     * @param templateName - the name of template
     * @throws InterruptedException
     */
-   public void selectTemplate(String templateName) throws InterruptedException
+   public void selectFileTemplate(String templateName) throws InterruptedException
    {
       selenium().click(FILE_FROM_TEMPLATE_DIALOG_LOCATOR + "//span[@title='" + templateName + "']");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+   }
+   
+   public void selectProjectTemplate(String templateName) throws InterruptedException
+   {
+      selenium().click(PROJECT_CREATE_FORM_LOCATOR + "//span[@title='" + templateName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
@@ -122,6 +145,11 @@ public class Templates extends AbstractTestModule
       checkInputFieldState(false);
    }
    
+   public void checkProjectCreateForm()
+   {
+      assertTrue(selenium().isElementPresent(PROJECT_CREATE_FORM_LOCATOR));
+   }
+   
    /**
     * Check the state of button (enabled, disabled) by button id.
     * 
@@ -144,6 +172,20 @@ public class Templates extends AbstractTestModule
       {
          assertTrue(selenium().isElementPresent("//input[@name='" + INPUT_FIELD_NAME + "' and @disabled='']"));
       }
+   }
+   
+   public void createProjectFromTemplate(String templateName, String projectName) throws Exception
+   {
+      IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+      waitForProjectCreateForm();
+      checkProjectCreateForm();
+      
+      selectProjectTemplate(templateName);
+      if (projectName != null)
+      {
+         typeNameToInputField(projectName);
+      }
+      clickCreateButton();
    }
    
 }

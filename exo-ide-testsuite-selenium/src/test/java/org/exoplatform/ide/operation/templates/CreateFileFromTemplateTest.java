@@ -161,7 +161,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       /*
        * 3. Select "Empty HTML" template and click "Create" button
        */
-      IDE.TEMPLATES.selectTemplate(EMPTY_HTML);
+      IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
       IDE.TEMPLATES.clickCreateButton();
       IDE.EDITOR.waitTabPresent(2);
 
@@ -183,7 +183,7 @@ public class CreateFileFromTemplateTest extends BaseTest
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitForFileFromTemplateForm();
-      IDE.TEMPLATES.selectTemplate(NETVIBES_WIDGET);
+      IDE.TEMPLATES.selectFileTemplate(NETVIBES_WIDGET);
       IDE.TEMPLATES.clickCreateButton();
       IDE.EDITOR.waitTabPresent(3);
 
@@ -215,7 +215,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       
       //---- 2 ----------
       //select template in list
-      IDE.TEMPLATES.selectTemplate(EMPTY_HTML);
+      IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
       
       IDE.TEMPLATES.checkInputFieldState(true);
       IDE.TEMPLATES.checkButtonState(Templates.CREATE_BUTTON_ID, true);
@@ -228,7 +228,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       //---- 3 ----------
       //deselect template
       selenium.controlKeyDown();
-      IDE.TEMPLATES.selectTemplate(EMPTY_HTML);
+      IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
@@ -238,9 +238,9 @@ public class CreateFileFromTemplateTest extends BaseTest
       
       //---- 4 ----------
       //select several templates
-      IDE.TEMPLATES.selectTemplate(EMPTY_HTML);
+      IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
       selenium.controlKeyDown();
-      IDE.TEMPLATES.selectTemplate(EMPTY_TEXT);
+      IDE.TEMPLATES.selectFileTemplate(EMPTY_TEXT);
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
@@ -250,7 +250,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       
       //---- 5 ----------
       //select one template
-      IDE.TEMPLATES.selectTemplate(EMPTY_XML);
+      IDE.TEMPLATES.selectFileTemplate(EMPTY_XML);
       //remove text from name field
       IDE.TEMPLATES.typeNameToInputField("");
       
@@ -274,7 +274,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       // -------3-------
       //Select "Groovy REST Service" item in the "Create file" window, 
       //change "File Name" field text on "Test Groovy File.groovy" name, click on "Create" button.
-      IDE.TEMPLATES.selectTemplate(templateName);
+      IDE.TEMPLATES.selectFileTemplate(templateName);
       IDE.TEMPLATES.typeNameToInputField(fileName);
       IDE.TEMPLATES.clickCreateButton();
       IDE.EDITOR.waitTabPresent(0);

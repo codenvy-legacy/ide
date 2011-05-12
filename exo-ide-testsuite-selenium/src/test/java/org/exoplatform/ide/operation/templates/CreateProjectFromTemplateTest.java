@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import static org.exoplatform.ide.operation.templates.TemplateUtils.*;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.project.classpath.ClasspathUtils;
+import org.exoplatform.ide.core.Templates;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +32,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 /**
- * Created by The eXo Platform SAS.
+ * Test, that checks creating project from template.
  *	
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:   ${date} ${time}
@@ -132,43 +131,49 @@ public class CreateProjectFromTemplateTest extends BaseTest
    @Test
    public void testCreateProjectFromTemplate() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       /*
        * 1. Open Create Project From Template form
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
-      
-      checkCreateProjectFromTemplateForm(selenium);
+      IDE.TEMPLATES.waitForProjectCreateForm();
+      IDE.TEMPLATES.checkProjectCreateForm();
       
       /*
        * 2. Select project template from list, type project name, click Create button
        */
-      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
-      typeProjectName(selenium, PROJECT_NAME);
-      
-      selenium.click(CREATE_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.TEMPLATES.selectProjectTemplate(PROJECT_TEMPLATE_NAME);
+      IDE.TEMPLATES.typeNameToInputField(PROJECT_NAME);
+      IDE.TEMPLATES.clickCreateButton();
       
       /*
        * Configure classpath window dialog appeared. Close it
        */
-      ClasspathUtils.checkConfigureClasspathDialog();
-      ClasspathUtils.clickCancel();
+      IDE.CLASSPATH_PROJECT.waitForClasspathDialog();
+      IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
+      IDE.CLASSPATH_PROJECT.clickCancelButton();
       
       /*
        * 3. Check new project created
        */
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/");
       
-      IDE.NAVIGATION.clickOpenIconOfFolder(PROJECT_NAME);      
+      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
       
       
-      IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER_ORG);
+      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
       
-      IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER_EXOPLATFORM);
-      
+      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
    }
@@ -182,33 +187,49 @@ public class CreateProjectFromTemplateTest extends BaseTest
    {
       refresh();
       /*
-       * 1. Create project from defaulte template
+       * 1. Create project from default template
        */
-      TemplateUtils.createProjectFromTemplate(selenium, TemplateUtils.DEFAULT_PROJECT_TEMPLATE_NAME, PROJECT_FROM_DEFAULT_TEMPLATE);
+      IDE.TEMPLATES.createProjectFromTemplate(Templates.DEFAULT_PROJECT_TEMPLATE_NAME, PROJECT_FROM_DEFAULT_TEMPLATE);
       
       /*
        * 2. Configure classpath window dialog appeared. Close it
        */
-      ClasspathUtils.checkConfigureClasspathDialog();
-      ClasspathUtils.clickCancel();
+      IDE.CLASSPATH_PROJECT.waitForClasspathDialog();
+      IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
+      IDE.CLASSPATH_PROJECT.clickCancelButton();
       
       /*
        * 3. Check sample project created
        */
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
       
-      IDE.NAVIGATION.clickOpenIconOfFolder(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
+      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
+      
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
       
-      IDE.NAVIGATION.clickOpenIconOfFolder("logic");
+      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/" + "GreetingRESTService.grs");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/" + "GreetingRESTService.grs");
       
-      IDE.NAVIGATION.clickOpenIconOfFolder("UI");
+      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/" + "GreetingGoogleGadget.xml");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/" + "GreetingGoogleGadget.xml");
       
-      IDE.NAVIGATION.clickOpenIconOfFolder("data");
+      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"DataObject.groovy");
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"Pojo.groovy");
+      
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"DataObject.groovy"); 
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"Pojo.groovy");
    }
@@ -224,18 +245,20 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 1. Create new empty project
        */
-      TemplateUtils.createProjectFromTemplate(selenium, TemplateUtils.EMPTY_PROJECT_TEMPLATE_NAME, EMPTY_PROJECT);
+      IDE.TEMPLATES.createProjectFromTemplate(Templates.EMPTY_PROJECT_TEMPLATE_NAME, EMPTY_PROJECT);
       
       /*
        * 2. Configure classpath window dialog appeared. Close it
        */
-      ClasspathUtils.checkConfigureClasspathDialog();
-      ClasspathUtils.clickCancel();
+      IDE.CLASSPATH_PROJECT.waitForClasspathDialog();
+      IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
+      IDE.CLASSPATH_PROJECT.clickCancelButton();
       
       /*
        * 3. Check new project created
        */
-      IDE.NAVIGATION.assertItemNotVisible(PROJECT_FOLDER_URL + EMPTY_PROJECT + "/");
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + EMPTY_PROJECT + "/");
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + EMPTY_PROJECT + "/");
    }
    
    /**
@@ -244,105 +267,105 @@ public class CreateProjectFromTemplateTest extends BaseTest
     * 
     * @throws Exception
     */
-   @Test
-   public void testEnablingDisablingElements() throws Exception
-   {
-      putProjectTemplateToRegistry();
-      refresh();
-      
-      /*
-       * 1. Open create project from template form
-       */
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
-      
-      /*
-       * Name field, Delete and Create buttons are disabled
-       */
-      checkNameFieldEnabled(selenium, false);
-      checkDeleteButtonEnabled(selenium, false);
-      checkCreateButtonEnabled(selenium, false);
-      
-      /*
-       * 2. Select one template. 
-       */
-      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
-      
-      /*
-       * Name field, Delete and Create buttons are enabled
-       */
-      checkNameFieldEnabled(selenium, true);
-      checkDeleteButtonEnabled(selenium, true);
-      checkCreateButtonEnabled(selenium, true);
-      
-      /*
-       * 3. Deselect one template
-       */
-      selenium.controlKeyDown();
-      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
-      selenium.controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      /*
-       * Name field, Delete and Create buttons are disabled
-       */
-      checkNameFieldEnabled(selenium, false);
-      checkDeleteButtonEnabled(selenium, false);
-      checkCreateButtonEnabled(selenium, false);
-      
-      /*
-       * 4. Select several templates (one is default)
-       */
-      selectProjectTemplate(selenium, TemplateUtils.DEFAULT_PROJECT_TEMPLATE_NAME);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.controlKeyDown();
-      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME_2);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.controlKeyUp();
-      
-      /*
-       * Name field, Delete and Create buttons are disabled
-       */
-      checkNameFieldEnabled(selenium, false);
-      checkDeleteButtonEnabled(selenium, false);
-      checkCreateButtonEnabled(selenium, false);
-      
-      /*
-       * 5. Select one template
-       */
-      Thread.sleep(TestConstants.SLEEP);
-      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
-      
-      /*
-       * Name field, Delete and Create buttons are enabled
-       */
-      checkNameFieldEnabled(selenium, true);
-      checkDeleteButtonEnabled(selenium, true);
-      checkCreateButtonEnabled(selenium, true);
-      
-      /*
-       * 6. Remove text from name field
-       */
-      selenium.type(NAME_FIELD_LOCATOR, "");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      /*
-       * Create button is disabled
-       */
-      checkCreateButtonEnabled(selenium, false);
-      
-      /*
-       * 7. Type some text to name field
-       */
-      selenium.type(NAME_FIELD_LOCATOR, "a");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      /*
-       * 8. Create button is enabled
-       */
-      checkCreateButtonEnabled(selenium, true);
-      
-      closeCreateFromTemplateForm(selenium);
-   }
+//   @Test
+//   public void testEnablingDisablingElements() throws Exception
+//   {
+//      putProjectTemplateToRegistry();
+//      refresh();
+//      
+//      /*
+//       * 1. Open create project from template form
+//       */
+//      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+//      
+//      /*
+//       * Name field, Delete and Create buttons are disabled
+//       */
+//      checkNameFieldEnabled(selenium, false);
+//      checkDeleteButtonEnabled(selenium, false);
+//      checkCreateButtonEnabled(selenium, false);
+//      
+//      /*
+//       * 2. Select one template. 
+//       */
+//      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
+//      
+//      /*
+//       * Name field, Delete and Create buttons are enabled
+//       */
+//      checkNameFieldEnabled(selenium, true);
+//      checkDeleteButtonEnabled(selenium, true);
+//      checkCreateButtonEnabled(selenium, true);
+//      
+//      /*
+//       * 3. Deselect one template
+//       */
+//      selenium.controlKeyDown();
+//      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
+//      selenium.controlKeyUp();
+//      Thread.sleep(TestConstants.REDRAW_PERIOD);
+//      
+//      /*
+//       * Name field, Delete and Create buttons are disabled
+//       */
+//      checkNameFieldEnabled(selenium, false);
+//      checkDeleteButtonEnabled(selenium, false);
+//      checkCreateButtonEnabled(selenium, false);
+//      
+//      /*
+//       * 4. Select several templates (one is default)
+//       */
+//      selectProjectTemplate(selenium, TemplateUtils.DEFAULT_PROJECT_TEMPLATE_NAME);
+//      Thread.sleep(TestConstants.REDRAW_PERIOD);
+//      selenium.controlKeyDown();
+//      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME_2);
+//      Thread.sleep(TestConstants.REDRAW_PERIOD);
+//      selenium.controlKeyUp();
+//      
+//      /*
+//       * Name field, Delete and Create buttons are disabled
+//       */
+//      checkNameFieldEnabled(selenium, false);
+//      checkDeleteButtonEnabled(selenium, false);
+//      checkCreateButtonEnabled(selenium, false);
+//      
+//      /*
+//       * 5. Select one template
+//       */
+//      Thread.sleep(TestConstants.SLEEP);
+//      selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
+//      
+//      /*
+//       * Name field, Delete and Create buttons are enabled
+//       */
+//      checkNameFieldEnabled(selenium, true);
+//      checkDeleteButtonEnabled(selenium, true);
+//      checkCreateButtonEnabled(selenium, true);
+//      
+//      /*
+//       * 6. Remove text from name field
+//       */
+//      selenium.type(NAME_FIELD_LOCATOR, "");
+//      Thread.sleep(TestConstants.REDRAW_PERIOD);
+//      
+//      /*
+//       * Create button is disabled
+//       */
+//      checkCreateButtonEnabled(selenium, false);
+//      
+//      /*
+//       * 7. Type some text to name field
+//       */
+//      selenium.type(NAME_FIELD_LOCATOR, "a");
+//      Thread.sleep(TestConstants.REDRAW_PERIOD);
+//      
+//      /*
+//       * 8. Create button is enabled
+//       */
+//      checkCreateButtonEnabled(selenium, true);
+//      
+//      closeCreateFromTemplateForm(selenium);
+//   }
    
    private void putProjectTemplateToRegistry()
    {
