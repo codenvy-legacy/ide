@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleEvent;
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleHandler;
 
 import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -187,6 +188,9 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
 
       getElement().setAttribute("view-id", id);
       getElement().getStyle().setOverflow(Overflow.HIDDEN);
+
+      getElement().getStyle().setLeft(-1000, Unit.PT);
+      getElement().getStyle().setTop(-1000, Unit.PT);
 
       viewBorder = new Border();
       viewBorder.setBorderSize(3);
@@ -485,6 +489,11 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       calledFromResize = true;
       setSize(width + "px", height + "px");
       calledFromResize = false;
+
+      if (viewWidget == null)
+      {
+         return;
+      }
 
       int viewWidth = width - 6;
       int viewHeight = height - 6;
