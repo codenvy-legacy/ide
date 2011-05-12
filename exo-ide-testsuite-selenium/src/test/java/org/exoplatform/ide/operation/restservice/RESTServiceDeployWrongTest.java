@@ -38,13 +38,14 @@ import java.io.IOException;
  */
 public class RESTServiceDeployWrongTest extends BaseTest
 {
-   
-   private static String FILE_NAME = "DeployWrongTest.groovy";
-   
+
+   private static String FILE_NAME = "DeployWrongTest.grs";
+
    private final static String TEST_FOLDER = RESTServiceDeployWrongTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
+
    @BeforeClass
    public static void setUp()
    {
@@ -61,20 +62,22 @@ public class RESTServiceDeployWrongTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testDeployUndeploy() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      
+      waitForRootElement();
+
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
+      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
 
-     IDE.EDITOR.typeTextIntoEditor(0, "1");
+      IDE.EDITOR.typeTextIntoEditor(0, "1");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       saveAsUsingToolbarButton(FILE_NAME);
@@ -83,21 +86,21 @@ public class RESTServiceDeployWrongTest extends BaseTest
       IDE.MENU.runCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
+      IDE.OUTPUT.checkOutputOpened();
 
-      String mess = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
-      
+      String mess = IDE.OUTPUT.getOutputMessageText(1);
+
       assertTrue(mess.startsWith("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " deploy failed. Error (400: Bad Request)"));
-   
+
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL+TEST_FOLDER);
+         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
       {
