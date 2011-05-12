@@ -75,16 +75,6 @@ public class Layout extends Layer implements ViewVisibilityChangedHandler, ViewO
       addLayer(viewsLayer);
    }
 
-//   public void beginBuildLayout()
-//   {
-//      layoutLayer.beginBuildLayot();
-//   }
-//
-//   public void finishBuildLayout()
-//   {
-//      layoutLayer.finishBuildLayot();
-//   }
-
    public Panel addPanel(String panelId, PanelDirection direction, int size)
    {
       PanelImpl panel = panelsLayer.addPanel(panelId);

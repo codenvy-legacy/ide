@@ -33,7 +33,10 @@
 		<when-type-is class="org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display" />
 	</replace-with>
 
+<!-- 
 	<replace-with class="org.exoplatform.ide.client.properties.ui.PropertiesView">
+ -->
+	<replace-with class="org.exoplatform.ide.client.properties.ui.PropertiesViewEx">
 		<when-type-is class="org.exoplatform.ide.client.properties.PropertiesPresenter.Display" />
 	</replace-with>
 

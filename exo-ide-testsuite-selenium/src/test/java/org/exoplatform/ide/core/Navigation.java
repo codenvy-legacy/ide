@@ -242,8 +242,6 @@ public class Navigation extends AbstractTestModule
    public void openFileFromNavigationTreeWithCodeEditor(String fileURL, boolean checkDefault) throws Exception
    {
       selectItem(fileURL);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
       openSelectedFileWithCodeEditor(checkDefault);
    }
 

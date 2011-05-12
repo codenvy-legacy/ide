@@ -50,8 +50,6 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
    public interface Display extends IsView
    {
 
-      String ID = "ideFilePropertiesView";
-
       void showProperties(File file);
 
    }
@@ -82,7 +80,7 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
 
       if (!event.isShowProperties() && display != null)
       {
-         IDE.getInstance().closeView(Display.ID);
+         IDE.getInstance().closeView(display.asView().getId());
       }
    }
 

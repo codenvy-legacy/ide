@@ -37,11 +37,14 @@ public class EditorFileOpenedEvent extends GwtEvent<EditorFileOpenedHandler>
 
    private File file;
 
+   private String editorDescription;
+
    private Map<String, File> openedFiles;
 
-   public EditorFileOpenedEvent(File file, Map<String, File> openedFiles)
+   public EditorFileOpenedEvent(File file, String editorDescription, Map<String, File> openedFiles)
    {
       this.file = file;
+      this.editorDescription = editorDescription;
       this.openedFiles = openedFiles;
    }
 
@@ -53,6 +56,11 @@ public class EditorFileOpenedEvent extends GwtEvent<EditorFileOpenedHandler>
    public Map<String, File> getOpenedFiles()
    {
       return openedFiles;
+   }
+
+   public String getEditorDescription()
+   {
+      return editorDescription;
    }
 
    @Override

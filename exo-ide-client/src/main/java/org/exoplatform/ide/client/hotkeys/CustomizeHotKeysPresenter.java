@@ -18,15 +18,13 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -36,18 +34,23 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysEvent;
 import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysHandler;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for customize hotkeys form.
@@ -56,7 +59,7 @@ import java.util.Map.Entry;
  * @version $Id:
  *
  */
-public class CustomizeHotKeysPresenter implements HotKeyPressedListener, CustomizeHotKeysHandler
+public class CustomizeHotKeysPresenter implements HotKeyPressedListener, CustomizeHotKeysHandler, ViewOpenedHandler, ViewClosedHandler
 {
 
    public interface LabelStyle 
@@ -115,6 +118,8 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       this.eventBus = eventBus;
       
       eventBus.addHandler(CustomizeHotKeysEvent.TYPE, this);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
    
    @Override
@@ -130,7 +135,18 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    }
 
    
-   
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+   }
+
+   @Override
+   public void onViewOpened(ViewOpenedEvent event)
+   {
+      if (event.getView() instanceof Display) {
+         display = null;
+      }
+   }   
    
    
    
@@ -544,5 +560,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          display.setBindButtonEnabled(false);
       }
    }
+
+
 
 }

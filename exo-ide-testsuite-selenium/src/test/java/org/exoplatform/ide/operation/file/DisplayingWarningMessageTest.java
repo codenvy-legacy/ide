@@ -133,22 +133,20 @@ public class DisplayingWarningMessageTest extends BaseTest
       //Trying to reopen created earlier xml file. 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME, false);
       
-      //      //check warning dialog
-      //      IDE.dialogs().checkTwoBtnDialog("Info");
-      //      //click Ok button
-      //      IDE.dialogs().clickYesButton();
-
       IDE.ASK_DIALOG.assertOpened("Info");
-      IDE.ASK_DIALOG.clickYes();
-
-      Thread.sleep(Integer.MAX_VALUE);
+      IDE.ASK_DIALOG.clickNo();
 
       //After the step 8: file tab with created earlier xml file should be opened, 
       //content in this tab should be changed, title will be marked by "*" and buttom "Save" and "File->Save" top menu command will be enabled.
 
+      System.out.println("opened file 1 > " + IDE.EDITOR.getTabTitle(0));
+      System.out.println("opened file 2 > " + IDE.EDITOR.getTabTitle(1));
+      
       assertEquals(XML_FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
       IDE.EDITOR.checkIsTabPresentInEditorTabset(XML_FILE_NAME + " *", true);
       
+      Thread.sleep(Integer.MAX_VALUE);
+
       IDE.EDITOR.checkEditorTabSelected(XML_FILE_NAME, true);
       IDE.EDITOR.checkCodeEditorOpened(0);
 

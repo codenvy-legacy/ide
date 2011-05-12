@@ -42,16 +42,31 @@ public class SelectWorkspaceView extends ViewImpl implements
    org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display
 {
 
+   /**
+    * Initial width of this view.
+    */
    private static final int WIDTH = 450;
 
+   /**
+    * Initial height of this view.
+    */
    private static final int HEIGHT = 200;
 
+   /**
+    * UIBinder instance
+    */
    private static SelectWorkspaceViewUiBinder uiBinder = GWT.create(SelectWorkspaceViewUiBinder.class);
 
+   /**
+    * 
+    */
    interface SelectWorkspaceViewUiBinder extends UiBinder<Widget, SelectWorkspaceView>
    {
    }
 
+   /**
+    * Grid for displaying list of available workspaces.
+    */
    @UiField
    EntryPointListGrid entryPointListGrid;
 

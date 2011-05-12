@@ -285,31 +285,33 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
 
    private void closeFile(File file)
    {
+      System.out.println("close file !!!!!");
+      
       Editor editor = editors.get(file.getHref());
+      EditorView editorView = editorsViews.get(editor.getEditorId());
+      
+      System.out.println("editor > " + editor);
+      String editorDescription = openedEditors.get(file.getHref());
+      System.out.println("editor description > " + editorDescription);
+      
       editors.remove(file.getHref());
-
-      IDE.getInstance().closeView(editorsViews.get(editor.getEditorId()).getId());
       editorsViews.remove(editor.getEditorId());
-      //   display.closeTab(file.getHref());
+      openedFiles.remove(file.getHref());
+      openedEditors.remove(file.getHref());
+
+      IDE.getInstance().closeView(editorView.getId());
 
       file.setContent(null);
       file.setContentChanged(false);
-
-      openedFiles.remove(file.getHref());
+      
       if (ignoreContentChangedList.contains(file.getHref()))
       {
          ignoreContentChangedList.remove(file.getHref());
       }
 
-      try
-      {
-         eventBus.fireEvent(new EditorFileClosedEvent(file, openedFiles));
-         if (editors.isEmpty())
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(null, null));
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
+      eventBus.fireEvent(new EditorFileClosedEvent(file, editorDescription, openedFiles));
+      if (editors.isEmpty()) {
+         eventBus.fireEvent(new EditorActiveFileChangedEvent(null, null));
       }
    }
 
@@ -477,56 +479,45 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
          lineNumbers = applicationSettings.getValueAsBoolean("line-numbers");
       }
 
-      try
-      {
-         List<String> hotKeyList = new ArrayList<String>((applicationSettings.getValueAsMap("hotkeys")).keySet());
-         HashMap<String, Object> params = new HashMap<String, Object>();
+      List<String> hotKeyList = new ArrayList<String>((applicationSettings.getValueAsMap("hotkeys")).keySet());
+      HashMap<String, Object> params = new HashMap<String, Object>();
 
-         params.put(EditorParameters.IS_READ_ONLY, isReadOnly(file));
-         params.put(EditorParameters.IS_SHOW_LINE_NUMER, lineNumbers);
-         params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
-         EditorProducer producer = event.getEditorProducer();
-         Editor editor = producer.createEditor(file.getContent(), eventBus, params);
-         DOM.setStyleAttribute(editor.getElement(), "zIndex", "0");
+      params.put(EditorParameters.IS_READ_ONLY, isReadOnly(file));
+      params.put(EditorParameters.IS_SHOW_LINE_NUMER, lineNumbers);
+      params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
+      EditorProducer producer = event.getEditorProducer();
+      Editor editor = producer.createEditor(file.getContent(), eventBus, params);
+      DOM.setStyleAttribute(editor.getElement(), "zIndex", "0");
+      
+      if (editors.containsKey(file.getHref()))
+      {
+         Editor oldEditor = editors.get(file.getHref());
+         file.setContent(oldEditor.getText());
+         EditorView editorView = editorsViews.get(oldEditor.getEditorId());
+
+         String oldEditorWidth = oldEditor.getElement().getStyle().getProperty("width");
+         String oldEditorHeight = oldEditor.getElement().getStyle().getProperty("height");
          
-         if (editors.containsKey(file.getHref()))
-         {
-            Editor oldEditor = editors.get(file.getHref());
-            file.setContent(oldEditor.getText());
-            EditorView editorView = editorsViews.get(oldEditor.getEditorId());
-
-            String oldEditorWidth = oldEditor.getElement().getStyle().getProperty("width");
-            String oldEditorHeight = oldEditor.getElement().getStyle().getProperty("height");
-            
-            oldEditor.removeFromParent();
-            
-            editor.getElement().getStyle().setProperty("width", oldEditorWidth);
-            editor.getElement().getStyle().setProperty("height", oldEditorHeight);
-            
-            editorView.add(editor);
-            editors.put(file.getHref(), editor);
-            editorsViews.put(editor.getEditorId(), editorView);
-         }
-         else
-         {
-            editors.put(file.getHref(), editor);
-
-            EditorView view = new EditorView(editor, file, getFileTitle(file));
-            editorsViews.put(editor.getEditorId(), view);
-            waitForEditorInitialized = true;
-            IDE.getInstance().openView(view);
-         }
+         oldEditor.removeFromParent();
+         
+         editor.getElement().getStyle().setProperty("width", oldEditorWidth);
+         editor.getElement().getStyle().setProperty("height", oldEditorHeight);
+         
+         editorView.add(editor);
+         editors.put(file.getHref(), editor);
+         editorsViews.put(editor.getEditorId(), editorView);
       }
-      catch (Throwable e)
+      else
       {
-         e.printStackTrace();
-      }
+         editors.put(file.getHref(), editor);
 
-      try {
-         eventBus.fireEvent(new EditorFileOpenedEvent(file, openedFiles));
-      } catch (Exception e) {
-         e.printStackTrace();
+         EditorView view = new EditorView(editor, file, getFileTitle(file));
+         editorsViews.put(editor.getEditorId(), view);
+         waitForEditorInitialized = true;
+         IDE.getInstance().openView(view);
       }
+      
+      eventBus.fireEvent(new EditorFileOpenedEvent(file, producer.getDescription(), openedFiles));
    }
 
    /**
