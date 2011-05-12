@@ -44,27 +44,28 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
 {
 
    private final static String FILE_NAME = "ComplexMediaType.groovy";
-   
-   private final static String FOLDER_NAME=RESTServiceComplexMediaTypeTest.class.getSimpleName();
-   
- //**************
-   private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME+ "/"; 
-   
+
+   private final static String FOLDER_NAME = RESTServiceComplexMediaTypeTest.class.getSimpleName();
+
+   //**************
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME + "/";
+
    /**
     * Create REST service for test in test folder.
     */
    @BeforeClass
    public static void setUp()
    {
-      
+
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/ComplexMediaTypes.groovy";
       try
       {
          //TODO*******change***************
          VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL+FILE_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
          //**********************
-         Utils.deployService(BASE_URL, REST_CONTEXT, URL+FILE_NAME);
+         Utils.deployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -80,156 +81,104 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
    public void testComplexMediaType() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       //Open REST Service file:
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
       //Call the "Run->Launch REST Service" topmenu command
       IDE.REST_SERVICE.launchRestService();
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.REST_SERVICE.openPathList();
 
-      assertTrue(selenium.isElementPresent("//nobr[contains(text(), '/testMediaTypes')]"));
-      assertTrue(selenium.isElementPresent("//nobr[contains(text(), '/testMediaTypes/InnerPath')]"));
+      IDE.REST_SERVICE.checkPathListTextPresent("/testMediaTypes");
+      IDE.REST_SERVICE.checkPathListTextPresent("/testMediaTypes/InnerPath");
 
-      selenium.click("//nobr[contains(text(), '/testMediaTypes')]");
+      IDE.REST_SERVICE.selectPathSuggestPanelItem("/testMediaTypes");
 
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
+      IDE.REST_SERVICE.sendRequst();
 
       //Expected 3
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-      Thread.sleep(TestConstants.SLEEP);
-      
+      assertFalse(selenium.isElementPresent(IDE.REST_SERVICE.REST_SERVICE_FORM));
+
       //Check received message:
-      String mess = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
+      String mess = IDE.OUTPUT.getOutputMessageText(1);
 
       assertTrue(mess
          .contains("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><application xmlns=\"http://research.sun.com/wadl/2006/10\">"));
 
       IDE.REST_SERVICE.launchRestService();
       //Choose path:
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("//nobr[contains(text(), '/testMediaTypes/InnerPath')]");
+      IDE.REST_SERVICE.openPathList();
+
+      IDE.REST_SERVICE.selectPathSuggestPanelItem("/testMediaTypes/InnerPath");
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertEquals("POST", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/textbox"));
+      assertEquals("POST", IDE.REST_SERVICE.getMethodFieldValue());
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/[icon='picker']");
+      IDE.REST_SERVICE.checkRequestFieldContainsValues("application/json", "text/plain");
+
+      IDE.REST_SERVICE.setRequestMediaTypeFieldValue("text/plain");
+
+      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
+
+      IDE.REST_SERVICE.setRequestMediaTypeFieldValue("application/json");
+      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
+
+      IDE.REST_SERVICE.typeToPathField("/testMediaTypes/InnerPath");
       Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isElementPresent("//nobr[contains(text(), 'application/json')]"));
-      assertTrue(selenium.isElementPresent("//nobr[contains(text(), 'text/plain')]"));
+      IDE.REST_SERVICE.selectBodyTab();
 
-      selenium.click("//nobr[contains(text(), 'text/plain')]");
-      Thread.sleep(TestConstants.SLEEP);
+      selenium.type(IDE.REST_SERVICE.BODY_TEXT_FIELD, "{\"value\" : \"value4\"}");
+      IDE.REST_SERVICE.sendRequst();
 
-      assertEquals("text/plain", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceResponse]/textbox"));
-    
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
-      
-      //Choose "application/json" type:
-      selenium.click("//nobr[contains(text(), 'application/json')]");
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertEquals("text/plain", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceResponse]/textbox"));
-
-      selenium.type("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element",
-         "/testMediaTypes/InnerPath");
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceBodyTab]/");
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceBodyForm\"]/item[name=ideGroovyServiceBodyFormText]/element");
-      selenium.type(
-         "scLocator=//DynamicForm[ID=\"ideGroovyServiceBodyForm\"]/item[name=ideGroovyServiceBodyFormText]/element",
-         "{\"value\" : \"value4\"}");
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
-
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-      
       Thread.sleep(TestConstants.SLEEP);
 
       //Check received message:
-      mess = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
+      mess = IDE.OUTPUT.getOutputMessageText(2);
 
       assertTrue(mess.contains("Body: value4"));
-      
+
       IDE.REST_SERVICE.launchRestService();
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("//nobr[contains(text(), '/testMediaTypes/InnerPath')]");
+      IDE.REST_SERVICE.openPathList();
+      IDE.REST_SERVICE.checkPathListTextPresent("/testMediaTypes/InnerPath");
+      IDE.REST_SERVICE.selectPathSuggestPanelItem("/testMediaTypes/InnerPath");
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertEquals("POST", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/textbox"));
+      assertEquals("POST", IDE.REST_SERVICE.getMethodFieldValue());
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/[icon='picker']");
+      IDE.REST_SERVICE.checkRequestFieldContainsValues("application/json", "text/plain");
+      IDE.REST_SERVICE.setRequestMediaTypeFieldValue("text/plain");
+
+      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
+
+      IDE.REST_SERVICE.setRequestMediaTypeFieldValue("text/plain");
+
+      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
+
+      IDE.REST_SERVICE.typeToPathField("/testMediaTypes/InnerPath");
+
+      IDE.REST_SERVICE.selectBodyTab();
+      selenium.type(IDE.REST_SERVICE.BODY_TEXT_FIELD, "{\"value\" : \"value4\"}");
       Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isElementPresent("//nobr[contains(text(), 'application/json')]"));
-      assertTrue(selenium.isElementPresent("//nobr[contains(text(), 'text/plain')]"));
+      IDE.REST_SERVICE.sendRequst();
 
-      selenium.click("//nobr[contains(text(), 'text/plain')]");
       Thread.sleep(TestConstants.SLEEP);
 
-      assertEquals("text/plain", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceResponse]/textbox"));
-    
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium.click("//nobr[contains(text(), 'text/plain')]");
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertEquals("text/plain", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceResponse]/textbox"));
-
-      selenium.type("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element",
-         "/testMediaTypes/InnerPath");
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceBodyTab]/");
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceBodyForm\"]/item[name=ideGroovyServiceBodyFormText]/element");
-      selenium.type(
-         "scLocator=//DynamicForm[ID=\"ideGroovyServiceBodyForm\"]/item[name=ideGroovyServiceBodyFormText]/element",
-         "{\"value\" : \"value4\"}");
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
-
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-      
-      Thread.sleep(TestConstants.SLEEP);
-      
       //Check received message:
-      mess = selenium.getText("//div[contains(@eventproxy,'Record_2')]");
+      mess = IDE.OUTPUT.getOutputMessageText(3);
 
       assertTrue(mess.contains("{\"value\" : \"value4\"}"));
-      
-     IDE.EDITOR.closeTab(0);
+
+      IDE.EDITOR.closeTab(0);
    }
-   
+
    /**
     * Clear test results.
     */

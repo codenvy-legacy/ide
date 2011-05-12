@@ -34,11 +34,12 @@ import org.exoplatform.ide.TestConstants;
 public class RESTService extends AbstractTestModule
 {
 
-   private static final String PATH_SUGGEST_PANEL_TEXT_LOCATOR = "//div[@id='exoSuggestPanel']/div[@class='popupContent']/div/table//td[contains(text(), '%1s')]";
+   private static final String PATH_SUGGEST_PANEL_TEXT_LOCATOR =
+      "//div[@id='exoSuggestPanel']/div[@class='popupContent']/div/table//td[contains(text(), '%1s')]";
 
    private static final String REST_SERVICE_REQUEST_MEDIATYPE = "ideGroovyServiceRequest";
 
-   private static final String REST_SERVICE_METHOD = "ideGroovyServiceMethod";
+   public final String REST_SERVICE_METHOD = "ideGroovyServiceMethod";
 
    private static final String REST_SERVICE_PATH = "ideGroovyServicePath";
 
@@ -53,8 +54,10 @@ public class RESTService extends AbstractTestModule
    public final String QUERY_TABLE = "//table[@id='ideGroovyServiceQueryTable']/tbody";
 
    public final String HEADER_TABLE = "//table[@id='ideGroovyServiceHeaderTable']/tbody";
-   
+
    private final String SEND_REQUEST_BUTTON = "ideGroovyServiceSend";
+   
+   public final String BODY_TEXT_FIELD = "ideGroovyServiceBodyFormText";
 
    /**
     * Call the "Run->Launch REST Service" topmenu command
@@ -199,12 +202,10 @@ public class RESTService extends AbstractTestModule
     */
    public void checkPathListTextPresent(String text)
    {
-      String locator =
-         String.format(
-            PATH_SUGGEST_PANEL_TEXT_LOCATOR, text);
+      String locator = String.format(PATH_SUGGEST_PANEL_TEXT_LOCATOR, text);
       assertTrue(selenium().isElementPresent(locator));
    }
-   
+
    /**
     * Select item from Path suggest panel
     * @param itemText Path suggest panel item text
@@ -214,7 +215,7 @@ public class RESTService extends AbstractTestModule
       String locator = String.format(PATH_SUGGEST_PANEL_TEXT_LOCATOR, itemText);
       selenium().click(locator);
    }
-   
+
    /**
     * Type text to Path field
     * @param text to type
@@ -223,7 +224,7 @@ public class RESTService extends AbstractTestModule
    {
       selenium().type(REST_SERVICE_PATH, text);
    }
-   
+
    /**
     * Send request via click on "Send: button
     * @throws Exception 
@@ -233,5 +234,46 @@ public class RESTService extends AbstractTestModule
       selenium().click(SEND_REQUEST_BUTTON);
       waitForElementNotPresent(REST_SERVICE_FORM);
    }
-      
+
+   private void checSelectElementContainsValue(String selectLocator, String val[])
+   {
+      String[] options = selenium().getSelectOptions(selectLocator);
+      for (String o : options)
+      {
+         boolean contais = false;
+         for (String v : val)
+         {
+            if (o.equals(v))
+            {
+               contais = true;
+               break;
+            }
+         }
+         assertTrue(contais);
+      }
+   }
+   
+   private void selectValueInSelectElement(String selectLocator, String value)
+   {
+      selenium().select(selectLocator, value);
+   }
+
+   /**
+    * Check is Request media type field has values
+    * @param val  Request media type field values
+    */
+   public void checkRequestFieldContainsValues(String... val)
+   {
+      checSelectElementContainsValue(REST_SERVICE_REQUEST_MEDIATYPE, val);
+   }
+   
+   /**
+    * Select specific value in Request Media Type Field.
+    * @param value To select. <b>Value must contains in Select field</b>
+    */
+   public void setRequestMediaTypeFieldValue(String value)
+   {
+      selectValueInSelectElement(REST_SERVICE_REQUEST_MEDIATYPE, value);
+   }
+
 }
