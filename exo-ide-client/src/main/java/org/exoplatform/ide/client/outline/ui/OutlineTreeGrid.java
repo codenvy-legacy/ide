@@ -463,9 +463,6 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       //Get annotation list like string:
       String annotationList = getAnnotationList(token);
 
-      //Count size for better align the html elments:
-      int size = (annotationList.length() > 0) ? 25 : 21;
-
       String span =
          "<span style = \"position: relative; top: -5px; margin-left: -10px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; text-align: right;' \">";
       span += (isTransient(token)) ? "<span class='item-modifier' color ='#6d0000'>t</span>" : "";
