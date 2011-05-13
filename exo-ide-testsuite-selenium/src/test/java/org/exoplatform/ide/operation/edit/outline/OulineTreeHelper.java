@@ -135,19 +135,20 @@ public class OulineTreeHelper extends BaseTest
 
    }
    
+   // Updated
    /**
     * Check outline item by clicking in outline panel on row with <b>itemRowNumber</b> and verifying <b>fileLineNumber</b> in the Status Bar   
     * @param itemRowNumber starting from 0
     * @param fileLineNumber starting from 1
-    * @throws InterruptedException 
+    * @throws Exception 
     * @throws Exception 
     */
-   private void checkOutlineItemFromOutlinePanel(Integer itemRowNumber, String itemName, int fileLineNumber) throws InterruptedException
+   private void checkOutlineItemFromOutlinePanel(Integer itemRowNumber, String itemName, int fileLineNumber) throws Exception
    {
-      assertEquals(itemName, selenium.getText("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + itemRowNumber + "]/col[0]"));
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + itemRowNumber + "]/col[1]");
+      assertEquals(itemName, IDE.OUTLINE.getItemLabel(itemRowNumber));
+      IDE.OUTLINE.selectRow(itemRowNumber);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals(fileLineNumber + " : 1", getCursorPositionUsingStatusBar());      
+      assertEquals(fileLineNumber + " : 1", IDE.STATUSBAR.getCursorPosition());      
    }
    
    /**

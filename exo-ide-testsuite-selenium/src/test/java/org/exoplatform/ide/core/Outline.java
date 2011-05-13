@@ -34,68 +34,133 @@ public class Outline extends AbstractTestModule
 {
    interface Locators
    {
-      String TREE_ID = "ideOutlineTreeGrid";
+      static final String TREE_ID = "ideOutlineTreeGrid";
 
-      String TREE = "//div[@id='" + TREE_ID + "']/";
+      static final String TREE_PREFIX_ID = "outline-";
+      
+      static final String TREE = "//div[@id='" + TREE_ID + "']/";
    }
 
+   @Deprecated
    /**
     * Get title of outline node.
     * 
     * @param row - row number (from 0)
     * @param col - column number (from 0)
     * @return title in (row, col) position in outline tree
-    * @throws InterruptedException 
     */
-   public String getTitle(int row, int col) throws InterruptedException
+   public String getTitle(int row, int col)
    {
-      String subDiv = "";
-      if (col > 0)
+      return selenium().getText(
+         "scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col["
+            + String.valueOf(col) + "]");
+   }
+   
+   /**
+    * Return label of item at row
+    * 1 - number of root node (workspace).  
+    * @param rowNumber
+    * @param labelType
+    * @return
+    */
+   public String getItemLabel(int rowNumber, LabelType labelType)
+   {      
+      int size =
+         selenium().getXpathCount("//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label']").intValue();
+      if (size <= 0)
+         return null;
+      int index = 0;
+
+      for (int i = 1; i <= size; i++)
       {
-         return selenium().getText(
-            "//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]" + "/div/div["
-               + String.valueOf(col) + "]");
-
+         if (selenium().isVisible(
+            "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]"))
+            ;
+         index++;
+         if (index == rowNumber)
+         {
+            if (labelType != null)
+            {
+               return selenium().getText("xpath=(//div[@id='" + Locators.TREE_ID + "']//span[@class='" + labelType + "'])[position()=" + i + "]");               
+            }
+            else
+            {
+               return selenium().getText("xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]");
+            }
+         }
       }
-
-      else
-         return selenium().getText("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]");
-
+      return null;
    }
 
+   /**
+    * Return full item label at row
+    * 1 - number of root node (workspace).  
+    * @param rowNumber - number of row.
+    */
+   public String getItemLabel(int rowNumber)
+   {
+      return getItemLabel(rowNumber, null);
+   }
+   
+   @Deprecated
    /**
     * Click on open icon of outline node.
     * 
     * Can open or close node.
     * 
     * @param row - row number (from 0)
-    * @param col - subImg number (from 0)
+    * @param col - column number (from 0)
     * @throws Exception
     */
-   public void clickOpenImg(int row, int subImg) throws Exception
+   public void clickOpenImg(int row, int col) throws Exception
    {
-      String subDiv = "";
-      if (subImg > 0)
-      {
-         for (int i = 0; i < subImg; i++)
-         {
-            subDiv = "/" + "div";
-         }
-
-         selenium().mouseDown("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]//td/img");
-         selenium().mouseUp("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]//td/img");
-         Thread.sleep(TestConstants.REDRAW_PERIOD);
-         selenium().mouseDown(
-            "//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]" + subDiv + "//td/img");
-         selenium().mouseUp("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]//td/img");
-      }
-      else
-
-         selenium().mouseDown("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]//td/img");
-      selenium().mouseUp("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]//td/img");
+      selenium().click(
+         "scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col["
+            + String.valueOf(col) + "]/open");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
+   /**
+    * Double click the item at row
+    * 
+    * @param row - row number (from 0)
+    * @throws Exception
+    */
+   public void doubleClickItem(int row) throws Exception
+   {
+      int size =
+         selenium().getXpathCount("//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label']").intValue();
+      if (size <= 0)
+         return;
+      int index = 0;
+
+      for (int i = 1; i <= size; i++)
+      {
+         if (selenium().isVisible(
+            "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]"))
+            ;
+         index++;
+         if (index == row)
+         {
+            selenium().doubleClickAt(
+               "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]", "0");
+            break;
+         }
+      };
+   }
+   
+   /**
+    * Double click the item with label 
+    * 
+    * @throws Exception
+    */
+   public void doubleClickItem(String label) throws Exception
+   {
+      selenium().doubleClickAt("xpath=(//div[@id='" + Locators.TREE_ID + "']//span[text() = '" + label + "']", "0");
+   }
+   
+   
+   @Deprecated
    /**
     * Select row in outline tree.
     * 
@@ -109,7 +174,35 @@ public class Outline extends AbstractTestModule
       selenium().click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
+   
+   /**
+    * Select row in outline tree.
+    * @param row - number of row (from 1).
+    * @throws Exception
+    */
+   public void selectRow(int rowNumber) throws Exception
+   {
+      int size =
+         selenium().getXpathCount("//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label']").intValue();
+      if (size <= 0)
+         return;
+      int index = 0;
 
+      for (int i = 1; i <= size; i++)
+      {
+         if (selenium().isVisible(
+            "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]"))
+            ;
+         index++;
+         if (index == rowNumber)
+         {
+            selenium().clickAt(
+               "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]", "0");
+            break;
+         }
+      }
+   }
+   
    /**
     * Check is Outline Panel visible.
     * Note: you can't use this method, to check is Outline Panel visible,
@@ -120,27 +213,23 @@ public class Outline extends AbstractTestModule
     * 
     * @param isVisible
     */
-   public void checkOutlineVisibility(boolean isVisible)
+   public void checkOutlinePanelVisibility(boolean isVisible)
    {
       if (isVisible)
       {
          assertTrue(selenium().isElementPresent(
-            "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[text()='Outline']"));
-         assertFalse(selenium().isElementPresent(
             "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[text()='Outline']"));
       }
       else
       {
          assertFalse(selenium().isElementPresent(
             "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[text()='Outline']"));
-         assertTrue(selenium().isElementPresent(
-            "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[text()='Outline']"));
       }
    }
 
    /**
+    * TODO this method should be verified
     * Check is node in Outline tree is selected
-    * 
     * @param rowNumber number of item in treegrid starting from 0
     * @param name name of item
     * @param isSelected is node selected
@@ -163,6 +252,7 @@ public class Outline extends AbstractTestModule
    }
 
    /**
+    * TODO this method should be verified 
     * Check item is shown in outline tree.
     * 
     * @param name
@@ -171,10 +261,11 @@ public class Outline extends AbstractTestModule
    public void assertElementPresentOutlineTree(String name) throws Exception
    {
       assertTrue(selenium().isElementPresent(
-         "//div[@id=\"ideOutlineTreeGrid\"]//div[@class=\"gwt-Label\"and text()=" + "'" + name + "'" + "]"));
+         "//div[@id=\"ideOutlineTreeGrid\"]//div[@class=\"gwt-Label\" and text()=" + "'" + name + "'" + "]"));
    }
 
    /**
+    * TODO this method should be verified 
     * Check item is not shown in outline tree.
     * 
     * @param name
@@ -187,6 +278,7 @@ public class Outline extends AbstractTestModule
          "//div[@id=\"ideOutlineTreeGrid\"]//div[@class=\"gwt-Label\"and text()=" + "'" + name + "'" + "]"));
    }
 
+   @Deprecated
    /**
     * Select the item in the outline tree. 
     * 
@@ -197,21 +289,54 @@ public class Outline extends AbstractTestModule
    {
       selenium().click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name + "]/col[1]");
    }
-
+   
+   /**
+    * TODO this method should be fixed 
+    * Select item in tree
+    * @param name nome of item
+    */
+   public void selectItem(String name) throws Exception
+   {
+      selenium().clickAt("//div[@id='" + Locators.TREE_ID + "']//span[contains(text(), '" + name + "')]", "0");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+   }  
+   
    /**
     * Check is outline tree present in DOM 
     */
    public void assertOutlineTreePresent()
    {
-      assertTrue(selenium().isElementPresent(Locators.TREE_ID));
+      assertTrue(selenium().isElementPresent(Locators.TREE));
    }
 
    /**
+    * TODO this method should be verified 
     * Check is element present in outline tree
     * @param id of row
     */
    public void assertElmentPresentById(String id)
    {
       assertTrue(selenium().isElementPresent(Locators.TREE + "/div[@id='" + id + "']"));
+   }
+   
+   public enum LabelType 
+   {
+      NAME("item-name"), 
+      TYPE("item-type"), 
+      PARAMETER("item-parameter"),
+      MODIFIER("item-modifier");
+
+      private String className;
+
+      LabelType(String className)
+      {
+         this.className = className;
+      }
+
+      @Override
+      public String toString()
+      {
+         return this.className;
+      }
    }
 }
