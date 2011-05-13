@@ -18,51 +18,24 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.core.CreateProjectTemplate;
 import org.junit.After;
 import org.junit.Test;
 
 /**
+ * Test, that checks "Create project template" form:
+ * create new project template and the behavior of form.
+ * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  *
  */
 public class CreateProjectTemplateTest extends BaseTest
 {
-   
-   private static final String NAME_FIELD = "scLocator=//DynamicForm[ID=\"ideCreateProjectTemplateFormNameFieldsForm\"]/item[name=ideCreateProjectTemplateFormNameField]/element";
-   
-   private static final String DESCRIPTION_FIELD = "scLocator=//DynamicForm[ID=\"ideCreateProjectTemplateFormNameFieldsForm\"]/item[name=ideCreateProjectTemplateFormDescriptionField]/element";
-   
-   private static final String TREE_GRID = "scLocator=//TreeGrid[ID=\"ideProjectTemplateTreeGrid\"]/";
-   
-   private static final String ADD_FOLDER_BUTTON = "scLocator=//IButton[ID=\"ideCreateProjectTemplateFormAddFolderButton\"]/";
-   
-   private static final String ADD_FILE_BUTTON = "scLocator=//IButton[ID=\"ideCreateProjectTemplateFormAddFileButton\"]/";
-   
-   private static final String DELETE_BUTTON = "scLocator=//IButton[ID=\"ideCreateProjectTemplateFormDeleteButton\"]/";
-   
-   private static final String CREATE_BUTTON = "scLocator=//IButton[ID=\"ideCreateProjectTemplateFormCreateButton\"]/";
-   
-   private static final String CANCEL_BUTTON = "scLocator=//IButton[ID=\"ideCreateProjectTemplateFormCancelButton\"]/";
-   
-   private static final String ADD_FOLDER_BUTTON_TITLE = "Add Folder";
-   
-   private static final String ADD_FILE_BUTTON_TITLE = "Add File";
-   
-   private static final String DELETE_BUTTON_TITLE = "Delete";
-   
-   private static final String CREATE_BUTTON_TITLE = "Create";
-   
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
-   
-   private static final String ROOT_NODE_NAME = "/";
    
    private String myFolder = CreateProjectTemplateTest.class.getSimpleName();
    
@@ -79,254 +52,168 @@ public class CreateProjectTemplateTest extends BaseTest
    @Test
    public void testCreateProjectTemplate() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       //=================== Check adding folder ====================
       //----- 1 ----------------
       //open Create Project Template Form
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
-      checkCreateProjectTemplateForm();
-      checkTreeNodeSelected(ROOT_NODE_NAME);
+      IDE.PROJECT_TEMPLATE.waitForDialog();
+      IDE.PROJECT_TEMPLATE.checkCreateProjectTemplateDialog();
+//      checkTreeNodeSelected(ROOT_NODE_NAME);
       
       //----- 2 ----------------
       //add folder
       addFolder(myFolder);
       //check folder added
-      checkTreeNodeSelected(myFolder);
-      checkButtonEnabled(ADD_FILE_BUTTON_TITLE);
-      checkButtonEnabled(ADD_FOLDER_BUTTON_TITLE);
-      checkButtonEnabled(DELETE_BUTTON_TITLE);
+//      checkTreeNodeSelected(myFolder);
+      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FILE_BUTTON_ID, true);
+      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FOLDER_BUTTON_ID, true);
+      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.DELETE_BUTTON_ID, true);
       
       //----- 3 ----------------
       //select root of tree
-      selectRootNode();
+      IDE.PROJECT_TEMPLATE.selectRootNode();
       
       //try to add folder with the same name
       addFolder(myFolder);
       
       //error dialog appears
-      assertEquals("Error", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/"));
+      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
+      IDE.WARNING_DIALOG.checkIsOpened("Folder with such name already exists");
       //close
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
+      IDE.WARNING_DIALOG.clickOk();
       
       //=================== Check adding file ====================
       //----- 4 ----------------
       //add file
-      addFile(3, gadgetFileName);
+      addFile("Google Gadget", gadgetFileName);
       //check new file selected
-      checkTreeNodeSelected(gadgetFileName + "(from Google Gadget)");
+//      checkTreeNodeSelected(gadgetFileName + "(from Google Gadget)");
       //check buttons
-      checkButtonDisabled(ADD_FOLDER_BUTTON_TITLE);
-      checkButtonDisabled(ADD_FILE_BUTTON_TITLE);
-      checkButtonEnabled(DELETE_BUTTON_TITLE);
+      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FILE_BUTTON_ID, false);
+      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FOLDER_BUTTON_ID, false);
+      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.DELETE_BUTTON_ID, true);
       
       //----- 5 ----------------
       //select root node
-      selectRootNode();
+      IDE.PROJECT_TEMPLATE.selectRootNode();
       
       //----- 6 ----------------
       //try to add file with existing name
-      addFile(3, gadgetFileName);
+      addFile("Google Gadget", gadgetFileName);
       
       //error dialog appears
-      assertEquals("Error", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/"));
+      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
       //close
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
+      IDE.WARNING_DIALOG.clickOk();
       
       //=================== Change project name ====================
       //----- 7 ----------------
       //type new project name to name field
-      selenium.type(NAME_FIELD, newProjectName);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      IDE.PROJECT_TEMPLATE.typeNameToInputField(newProjectName);
       
       //----- 8 ----------------
       //type description to description field
       final String description = "Sample project for test";
-      selenium.type(DESCRIPTION_FIELD, description);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      IDE.PROJECT_TEMPLATE.typeDescriptionToInputField(description);
       
       //=================== Create project template ====================
       //----- 9 ----------------
       //click Create button
-      selenium.click(CREATE_BUTTON);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.PROJECT_TEMPLATE.clickCreateButton();
+      IDE.PROJECT_TEMPLATE.waitForDialogNotPresent();
       
       //check info dialog appears
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
-      assertEquals("Info", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header"));
-      assertEquals("Template created successfully!", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/blurb/"));
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
-      
-      //check template form disappears
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/"));
+      IDE.INFORMATION_DIALOG.waitForInfoDialog("Template created successfully!");
+      IDE.INFORMATION_DIALOG.clickOk();
       
       //----- 10 ----------------
       //check cancel button
-      Thread.sleep(TestConstants.SLEEP);
       //call create project template form
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
-      checkCreateProjectTemplateForm();
+      IDE.PROJECT_TEMPLATE.waitForDialog();
       
       //click cancel button
-      selenium.click(CANCEL_BUTTON);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      //check template form disappears
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/"));
+      IDE.PROJECT_TEMPLATE.clickCancelButton();
       
       //=================== Create project template with existing name ====================
-      Thread.sleep(TestConstants.SLEEP);
       //----- 11 ----------------
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
-      checkCreateProjectTemplateForm();
+      IDE.PROJECT_TEMPLATE.waitForDialog();
       
       //type new project name to name field
-      selenium.type(NAME_FIELD, newProjectName);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      IDE.PROJECT_TEMPLATE.typeNameToInputField(newProjectName);
       
       //click create button
-      selenium.click(CREATE_BUTTON);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.PROJECT_TEMPLATE.clickCreateButton();
       
       //check warn dialog appears
-      assertTrue(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/"));
-      assertEquals("Error", selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/"));
+      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
       //click ok button and close
-      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/okButton/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.WARNING_DIALOG.clickOk();
       
       //check template form
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/"));
+      IDE.PROJECT_TEMPLATE.checkDialogOpened();
       
       //----- 12 ----------------
       //close
       //click cancel button
-      selenium.click(CANCEL_BUTTON);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      //check template form disappears
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/"));
-      
+      IDE.PROJECT_TEMPLATE.clickCancelButton();
    }
    
    @Test
    public void testEnablingDisablingButtons() throws Exception
    {
       refresh();
+      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       
       //----- 1 ----------------
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
-      checkButtonDisabled(CREATE_BUTTON_TITLE);
+      IDE.PROJECT_TEMPLATE.waitForDialog();
+      IDE.PROJECT_TEMPLATE.checkCreateProjectTemplateDialog();
+      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.DELETE_BUTTON_ID, false);
+      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.CREATE_BUTTON_ID, false);
       
       //----- 2 ----------------
       //type text to name field
-      selenium.type(NAME_FIELD, "a");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      checkButtonEnabled(CREATE_BUTTON_TITLE);
+      IDE.PROJECT_TEMPLATE.typeNameToInputField("a");
+      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.CREATE_BUTTON_ID, true);
       
       //----- 3 ----------------
       //remove text
-      selenium.type(NAME_FIELD, "");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      checkButtonDisabled(CREATE_BUTTON_TITLE);
+      IDE.PROJECT_TEMPLATE.typeNameToInputField("");
+      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.CREATE_BUTTON_ID, false);
       
       //----- 3 ----------------
       //close
       //click cancel button
-      selenium.click(CANCEL_BUTTON);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      //check template form disappears
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/"));
+      IDE.PROJECT_TEMPLATE.clickCancelButton();
    }
    
-   private void addFile(int fileListGridLineNumber, String fileName) throws Exception
+   private void addFile(String templateName, String fileName) throws Exception
    {
-    //click add file button
-      selenium.click(ADD_FILE_BUTTON);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      //click add file button
+      IDE.PROJECT_TEMPLATE.clickAddFileButton();
       //add file form appeared
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/"));
+      IDE.TEMPLATES.checkCreateFileFromTemplateWindowComponents();
       //select file template
-      selenium.click("scLocator=//ListGrid[ID=\"ideCreateFileFromTemplateFormTemplateListGrid\"]/body/row[" 
-         + String.valueOf(fileListGridLineNumber) + "]/col[fieldName=name||1]");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      IDE.TEMPLATES.selectFileTemplate(templateName);
       //type file name to name field
-      selenium.type("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[name=ideCreateFileFromTemplateFormFileNameField]/element", 
-         fileName);
+      IDE.TEMPLATES.typeNameToInputField(fileName);
       //click ok button
-      selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.TEMPLATES.clickCreateButton();
 
    }
    
    private void addFolder(String folderName) throws Exception
    {
-      selenium.click(ADD_FOLDER_BUTTON);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkAddFolderForm();
+      IDE.PROJECT_TEMPLATE.clickAddFolderButton();
       //set folder's name
-      selenium.type("scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element", 
-         folderName);
+      IDE.FOLDER.typeFolderName(folderName);
       //click ok button
-      selenium.click("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.FOLDER.clickCreateButton();
    }
    
-   private void selectRootNode() throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideProjectTemplateTreeGrid\"]/body/row[0]/col[1]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-   
-   private void checkAddFolderForm()
-   {
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFolderForm\"]/"));
-      assertEquals("Add folder", selenium.getText("scLocator=//Window[ID=\"ideCreateFolderForm\"]/header"));
-      assertTrue(selenium.isElementPresent("scLocator=//DynamicForm[ID=\"ideCreateFolderFormDynamicForm\"]/item[name=ideCreateFolderFormNameField]/element"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCreateButton\"]/"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFolderFormCancelButton\"]/"));
-   }
-   
-   private void checkButtonEnabled(String buttonText)
-   {
-      assertTrue(selenium.isElementPresent("//div[@eventproxy='ideCreateProjectTemplateForm']//td[@class='buttonTitle' and text()='"
-         + buttonText + "']"));
-   }
-   
-   private void checkButtonDisabled(String buttonText)
-   {
-      assertTrue(selenium.isElementPresent("//div[@eventproxy='ideCreateProjectTemplateForm']//td[@class='buttonTitleDisabled' and text()='"
-         + buttonText + "']"));
-   }
-   
-   private void checkTreeNodeSelected(String name)
-   {
-      assertTrue(selenium.isElementPresent("//div[@eventproxy='ideCreateProjectTemplateForm']//td[@class='treeCellSelected']/nobr[text()='" 
-         + name + "']"));
-   }
-   
-   private void checkCreateProjectTemplateForm()
-   {
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/"));
-      assertEquals("Create project template", selenium.getText("scLocator=//Window[ID=\"ideCreateProjectTemplateForm\"]/header"));
-      assertTrue(selenium.isElementPresent(NAME_FIELD));
-      assertTrue(selenium.isElementPresent(DESCRIPTION_FIELD));
-      assertTrue(selenium.isElementPresent(TREE_GRID));
-      assertTrue(selenium.isElementPresent(ADD_FOLDER_BUTTON));
-      checkButtonEnabled(ADD_FOLDER_BUTTON_TITLE);
-      assertTrue(selenium.isElementPresent(ADD_FILE_BUTTON));
-      checkButtonEnabled(ADD_FILE_BUTTON_TITLE);
-      assertTrue(selenium.isElementPresent(DELETE_BUTTON));
-      checkButtonDisabled(DELETE_BUTTON_TITLE);
-      assertTrue(selenium.isElementPresent(CREATE_BUTTON));
-      checkButtonDisabled(CREATE_BUTTON_TITLE);
-      assertTrue(selenium.isElementPresent(CANCEL_BUTTON));
-      checkButtonEnabled(CANCEL_BUTTON_TITLE);
-      
-      //check first element selected
-      checkTreeNodeSelected(ROOT_NODE_NAME);
-   }
-
 }

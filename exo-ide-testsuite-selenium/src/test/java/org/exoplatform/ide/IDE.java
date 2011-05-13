@@ -23,9 +23,11 @@ import com.thoughtworks.selenium.Selenium;
 import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.ClasspathProject;
 import org.exoplatform.ide.core.CodeAssistant;
+import org.exoplatform.ide.core.CreateProjectTemplate;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.ErrorDialog;
 import org.exoplatform.ide.core.FindReplace;
+import org.exoplatform.ide.core.Folder;
 import org.exoplatform.ide.core.GoToLine;
 import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Menu;
@@ -135,6 +137,10 @@ public class IDE
    public ClasspathProject CLASSPATH_PROJECT = new ClasspathProject();
    
    public Versions VERSIONS = new Versions(); 
+   
+   public CreateProjectTemplate PROJECT_TEMPLATE = new CreateProjectTemplate();
+   
+   public Folder FOLDER = new Folder();
 
    /**
     * Select main frame of IDE.

@@ -142,8 +142,17 @@ public class Templates extends AbstractTestModule
     */
    public void checkCreateFileFromTemplateWindow()
    {
-      assertTrue(selenium().isElementPresent(FILE_FROM_TEMPLATE_FORM_ID));
       assertEquals("Create file", selenium().getText("//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']//div[@class='Caption']/span"));
+      checkCreateFileFromTemplateWindowComponents();
+   }
+   
+   /**
+    * The same, as checkCreateFileFromTemplateWindow() method,
+    * but doesn't check the title of window.
+    */
+   public void checkCreateFileFromTemplateWindowComponents()
+   {
+      assertTrue(selenium().isElementPresent(FILE_FROM_TEMPLATE_FORM_ID));
       assertTrue(selenium().isElementPresent(INPUT_FIELD_NAME));
       assertTrue(selenium().isElementPresent(TEMPLATES_LIST_GRID_ID));
       assertTrue(selenium().isElementPresent(DELETE_BUTTON_ID));
