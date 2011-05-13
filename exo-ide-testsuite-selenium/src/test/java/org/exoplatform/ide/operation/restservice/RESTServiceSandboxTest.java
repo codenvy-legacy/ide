@@ -40,11 +40,12 @@ import org.junit.Test;
 public class RESTServiceSandboxTest extends BaseTest
 {
 
-   private static String FILE_NAME = RESTServiceSandboxTest.class.getSimpleName()+".grs";
-   
+   private static String FILE_NAME = RESTServiceSandboxTest.class.getSimpleName() + ".grs";
+
    private static String TEST_FOLDER = RESTServiceSandboxTest.class.getSimpleName();
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
 
    /**
     * Create test folder.
@@ -66,7 +67,7 @@ public class RESTServiceSandboxTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    /**
     * Test deploy REST service to sandbox 
     * and undeploy from sandbox.
@@ -84,34 +85,33 @@ public class RESTServiceSandboxTest extends BaseTest
 
       //Deploy service to sandbox:
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX);
-      Thread.sleep(TestConstants.SLEEP);
-      
+      IDE.OUTPUT.waitForOutputOpened();
+
       //Check deploy request:
-      assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
-      String mess = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
+      String mess = IDE.OUTPUT.getOutputMessageText(1);
       assertTrue(mess.contains("[INFO]"));
       assertTrue(mess.contains(FILE_NAME + " deployed successfully."));
-      
+
       //Undeploy service from sandbox:
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OUTPUT.waitForMessageShow(2);
 
       //Check undeploy request:
-      mess = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
+      mess = IDE.OUTPUT.getOutputMessageText(2);
       assertTrue(mess.contains("[INFO]"));
       assertTrue(mess.contains(FILE_NAME + " undeployed successfully."));
-   
+
       //Try undeploy undeployed service:
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OUTPUT.waitForMessageShow(3);
 
-      mess = selenium.getText("//div[contains(@eventproxy,'Record_2')]");
+      mess = IDE.OUTPUT.getOutputMessageText(3);
       assertTrue(mess.contains("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
-      
-     IDE.EDITOR.closeTab(0);
+
+      IDE.EDITOR.closeTab(0);
    }
-   
+
    /**
     * Clear test results.
     */
@@ -132,5 +132,5 @@ public class RESTServiceSandboxTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
 }
