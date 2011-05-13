@@ -250,28 +250,32 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
          }
          String annotationList = getAnnotationList(token);
          String deprecateSign = (isDeprecated) ? "style='text-decoration:line-through;'" : "";
-         name =
-            getModifiersContainer(token) + modfImg + synchImg + "<span " + deprecateSign + " title=\"" + annotationList
-               + "\">&nbsp;&nbsp;" + name + "</span>";
-
+         name = getModifiersContainer(token) + modfImg + synchImg + "<span class='item-label' " + deprecateSign + " style='margin-left: 5px;' title=\"" + annotationList
+                  + "\">" + name + "</span>";            
+ 
          if (TokenType.METHOD.equals(token.getType()))
          {
             name += getParametersList(token);
          }
          //Field type or method return type:
-         name += "<span style='color:#644a17;' title=\"" + annotationList + "\">" + getElementType(token) + "</span>";
+         name += "<span style='color:#644a17;' class='item-type-label' title=\"" + annotationList + "\">" + getElementType(token) + "</span>";
       }
 
       // display type of javascript variables
       else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType()) && token.getElementType() != null)
       {
-         name += "<span style='color:#644a17;'>" + getElementType(token) + "</span>";
+         name += "<span style='color:#644a17;' class='item-type-label' style='margin-left: 5px;'>" + getElementType(token) + "</span>";
       }
 
       // display type of RUBY variables
       else if (MimeType.APPLICATION_RUBY.equals(token.getMimeType()) && token.getElementType() != null)
       {
-         name += "<span style='color:#644a17;'>" + getElementType(token) + "</span>";
+         name += "<span style='color:#644a17;' class='item-type-label' style='margin-left: 5px;'>" + getElementType(token) + "</span>";
+      }
+      
+      else
+      {
+         name = "<span class='item-label'>" + name + "</span>";
       }
       
       return name;
@@ -460,17 +464,16 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       String annotationList = getAnnotationList(token);
 
       //Count size for better align the html elments:
-      int size = (annotationList.length() > 0) ? 28 : 22;
+      int size = (annotationList.length() > 0) ? 25 : 21;
 
       String span =
-         "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: " + size
-            + "px; height: 10px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; \">";
-      span += (annotationList.length() > 0) ? "<font color ='#000000' style='float: right;'>@</font>" : "";
-      span += (isAbstract(token)) ? "<font color ='#004e00' style='float: right;'>a</font>" : "";
-      span += (isFinal(token)) ? "<font color ='#174c83' style='float: right;'>f</font>" : "";
-      span += (isStatic(token)) ? "<font color ='#6d0000' style='float: right;'>s</font>" : "";
-      span += (isVolative(token)) ? "<font color ='#6d0000' style='float: right;'>v</font>" : "";
-      span += (isTransient(token)) ? "<font color ='#6d0000' style='float: right;'>t</font>" : "";
+         "<span style = \"position: relative; top: -5px; margin-left: -10px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; text-align: right;' \">";
+      span += (isTransient(token)) ? "<span class='item-modifier' color ='#6d0000'>t</span>" : "";
+      span += (isVolative(token)) ? "<span class='item-modifier' color ='#6d0000'>v</span>" : "";
+      span += (isStatic(token)) ? "<span class='item-modifier' color ='#6d0000'>s</span>" : "";
+      span += (isFinal(token)) ? "<span class='item-modifier' color ='#174c83'>f</span>" : "";      
+      span += (isAbstract(token)) ? "<span class='item-modifier' color ='#004e00'>a</span>" : "";
+      span += (annotationList.length() > 0) ? "<span color ='#000000'>@</span>" : "";
       span += "</span>";
       return span;
    }
@@ -527,7 +530,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
    private static final String getAnnotationSign(String annotationList)
    {
       return (!annotationList.isEmpty()
-         ? "<span style = \"font-family: Verdana, Bitstream Vera Sans, sans-serif; color: #525252; width: 9px; height: 9 px; position: absolute; margin-top: -5px;\">@</span>&nbsp;&nbsp;&nbsp;"
+         ? "<span style = \"font-family: Verdana, Bitstream Vera Sans, sans-serif; color: #525252; position: relative; top: -5px;\">@</span>"
          : "");
    }
 
@@ -616,7 +619,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
 
             parametersDescription +=
                "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList)
-                  + parameter.getElementType() + "</span>";
+                  + "<span class='item-parameter-label'>" + parameter.getElementType() + "</span></span>";
          }
       }
 
