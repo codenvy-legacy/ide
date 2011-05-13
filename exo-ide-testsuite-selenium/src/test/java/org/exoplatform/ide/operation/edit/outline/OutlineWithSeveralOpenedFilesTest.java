@@ -83,13 +83,13 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       //Close Outline tab 
       selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[index=0]/icon");
       Thread.sleep(TestConstants.SLEEP);
-      IDE.OUTLINE.checkOutlineVisibility(false);
+      IDE.OUTLINE.checkOutlinePanelVisibility(false);
 
       //---- 5 --------------
       //go to javascript file
      IDE.EDITOR.selectTab(0);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.OUTLINE.checkOutlineVisibility(false);
+      IDE.OUTLINE.checkOutlinePanelVisibility(false);
 
       //end
      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
