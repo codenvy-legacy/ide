@@ -187,6 +187,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       this.canResize = canResize;
 
       getElement().setAttribute("view-id", id);
+      getElement().setAttribute("is-active", "false");
       getElement().getStyle().setOverflow(Overflow.HIDDEN);
 
       getElement().getStyle().setLeft(-1000, Unit.PT);
@@ -414,6 +415,11 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    {
       this.activated = activated;
       viewBorder.setBorderColor(activated ? "#B6CCE8" : "transparent");
+
+      /*
+       *  Attribute for Selenium Tests
+       */
+      getElement().setAttribute("is-active", "" + activated);      
    }
 
    /**
@@ -476,8 +482,6 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       }
    }
 
-   private boolean calledFromResize = false;
-
    /**
     * Resize this view.
     * 
@@ -486,9 +490,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    @Override
    public void resize(int width, int height)
    {
-      calledFromResize = true;
       setSize(width + "px", height + "px");
-      calledFromResize = false;
 
       if (viewWidget == null)
       {
@@ -511,6 +513,12 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
          ((RequiresResize)viewWidget).onResize();
          return;
       }
+   }
+
+   @Override
+   public boolean isActive()
+   {
+      return activated;
    }
 
 }

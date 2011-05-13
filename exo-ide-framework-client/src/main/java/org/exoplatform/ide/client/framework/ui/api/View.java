@@ -121,4 +121,11 @@ public interface View
     */
    void activate();
    
+   /**
+    * Determines whether window is active.
+    * 
+    * @return <b>true</b> if this view is active, <b>false</b> otherwise.
+    */
+   boolean isActive();
+   
 }
