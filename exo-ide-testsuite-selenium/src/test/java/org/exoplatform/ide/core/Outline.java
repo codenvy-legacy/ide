@@ -45,12 +45,22 @@ public class Outline extends AbstractTestModule
     * @param row - row number (from 0)
     * @param col - column number (from 0)
     * @return title in (row, col) position in outline tree
+    * @throws InterruptedException 
     */
-   public String getTitle(int row, int col)
+   public String getTitle(int row, int col) throws InterruptedException
    {
-      return selenium().getText(
-         "scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col["
-            + String.valueOf(col) + "]");
+      String subDiv = "";
+      if (col > 0)
+      {
+         return selenium().getText(
+            "//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]" + "/div/div["
+               + String.valueOf(col) + "]");
+
+      }
+
+      else
+         return selenium().getText("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]");
+
    }
 
    /**
@@ -59,14 +69,30 @@ public class Outline extends AbstractTestModule
     * Can open or close node.
     * 
     * @param row - row number (from 0)
-    * @param col - column number (from 0)
+    * @param col - subImg number (from 0)
     * @throws Exception
     */
-   public void clickOpenImg(int row, int col) throws Exception
+   public void clickOpenImg(int row, int subImg) throws Exception
    {
-      selenium().click(
-         "scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col["
-            + String.valueOf(col) + "]/open");
+      String subDiv = "";
+      if (subImg > 0)
+      {
+         for (int i = 0; i < subImg; i++)
+         {
+            subDiv = "/" + "div";
+         }
+
+         selenium().mouseDown("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]//td/img");
+         selenium().mouseUp("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]//td/img");
+         Thread.sleep(TestConstants.REDRAW_PERIOD);
+         selenium().mouseDown(
+            "//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]" + subDiv + "//td/img");
+         selenium().mouseUp("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]//td/img");
+      }
+      else
+
+         selenium().mouseDown("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]//td/img");
+      selenium().mouseUp("//div[@id='ideOutlineTreeGrid']/div[" + String.valueOf(row + 2) + "]//td/img");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
@@ -98,21 +124,17 @@ public class Outline extends AbstractTestModule
    {
       if (isVisible)
       {
-         assertTrue(selenium()
-            .isElementPresent(
-               "//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
-         assertFalse(selenium()
-            .isElementPresent(
-               "//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
+         assertTrue(selenium().isElementPresent(
+            "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[text()='Outline']"));
+         assertFalse(selenium().isElementPresent(
+            "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[text()='Outline']"));
       }
       else
       {
-         assertFalse(selenium()
-            .isElementPresent(
-               "//div[@eventproxy='ideCodeHelperPanel' and not(contains(@style,'visibility: hidden;'))]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
-         assertTrue(selenium()
-            .isElementPresent(
-               "//div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: hidden;')]/div[@eventproxy='ideCodeHelperPanel' and contains(@style,'visibility: inherit;')]"));
+         assertFalse(selenium().isElementPresent(
+            "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[text()='Outline']"));
+         assertTrue(selenium().isElementPresent(
+            "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[text()='Outline']"));
       }
    }
 
