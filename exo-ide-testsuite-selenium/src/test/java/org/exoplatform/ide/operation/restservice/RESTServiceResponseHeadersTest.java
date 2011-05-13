@@ -19,10 +19,7 @@
 package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -35,6 +32,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -44,11 +43,12 @@ public class RESTServiceResponseHeadersTest extends BaseTest
 {
 
    private final static String FILE_NAME = "ResponseHeaders.groovy";
-   private final static String FOLDER_NAME = RESTServiceResponseHeadersTest.class.getSimpleName();
-   
-   private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
 
-   
+   private final static String FOLDER_NAME = RESTServiceResponseHeadersTest.class.getSimpleName();
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME + "/";
+
    @BeforeClass
    public static void setUp()
    {
@@ -70,67 +70,47 @@ public class RESTServiceResponseHeadersTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testResponseHeaders() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-       IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.NAVIGATION.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      selectFolder(FOLDER_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-      
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      IDE.NAVIGATION.waitForItem(URL + FILE_NAME);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
-          
-    
-      assertEquals("[INFO] " + BASE_URL + "rest/private/" + WEBDAV_CONTEXT + "/repository/dev-monit/"+FOLDER_NAME+"/"+ FILE_NAME
-         + " deployed successfully.", selenium.getText("//div[contains(@eventproxy,'Record_0')]"));
+      IDE.OUTPUT.waitForOutputOpened();
+
+      assertEquals("[INFO] " + BASE_URL + "rest/private/" + WEBDAV_CONTEXT + "/repository/dev-monit/" + FOLDER_NAME
+         + "/" + FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessageText(1));
 
       IDE.REST_SERVICE.launchRestService();
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.REST_SERVICE.selectPathValue("/test/testgroovy/{name}");
 
-      selenium.click("//nobr[contains(text(), '/test/testgroovy/{name}')]");
+      IDE.REST_SERVICE.typeToPathField("/test/testgroovy/Evgen");
+      IDE.REST_SERVICE.sendRequst();
 
-      selenium.type("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element",
-         "/test/testgroovy/Evgen");
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-      String mess = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
+      String mess = IDE.OUTPUT.getOutputMessageText(2);
 
       assertTrue(mess.contains("[OUTPUT] - -Status - - - - - - - -"));
-
       assertTrue(mess.contains("200 OK"));
       assertTrue(mess.contains("Content-Type : */*"));
       assertTrue(mess.contains("- -Text - - - - - - - - -"));
       assertTrue(mess.contains("Hello Evgen"));
    }
-   
-   
-   
-   protected void selectFolder(String folderName) throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
-         + "]/col[1]/open");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-   }
-   
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL);
+         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
          VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)

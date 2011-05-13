@@ -32,7 +32,7 @@ public class Output extends AbstractTestModule
 
    /**
     * Get Output message text
-    * @param messageNumber Number of message. <b>Message count starts with 0 !</b>
+    * @param messageNumber Number of message. <b>Message count starts with 1 !</b>
     * @return Text of output message 
     */
    public String getOutputMessageText(int messageNumber)
@@ -47,6 +47,11 @@ public class Output extends AbstractTestModule
    public void checkOutputOpened()
    {
       assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR));
+   }
+   
+   public void waitForOutputOpened() throws Exception
+   {
+      waitForElementPresent("ideOutputContent");
    }
    
 }
