@@ -76,7 +76,7 @@ public interface MenuCommands
 
       public static final String UNDEPLOY_SANDBOX = "Undeploy from Sandbox";
 
-      public static final String SET_AUTOLOAD = "Set Autoload";
+      public static final String SET_AUTOLOAD = "Set \\ Unset Autoload";
 
       public static final String UNSET_AUTOLOAD = "Unset Autoload";
 
