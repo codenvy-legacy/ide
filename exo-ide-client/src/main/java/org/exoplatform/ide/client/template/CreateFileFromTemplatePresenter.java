@@ -28,6 +28,8 @@ import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateDeletedCallback;
+import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 
@@ -224,7 +226,15 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       
       if (usedProjectTemplates.size() == 0)
       {
-         deleteOneTemplate(fileTemplate);
+         TemplateService.getInstance().deleteTemplate(fileTemplate, new TemplateDeletedCallback()
+         {
+            @Override
+            protected void onSuccess(Template result)
+            {
+               selectedTemplates.remove(result);
+               deleteNextTemplate();
+            }
+         });
          return;
       }
       
@@ -250,7 +260,15 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
             }
             if (value)
             {
-               deleteOneTemplate(fileTemplate);
+               TemplateService.getInstance().deleteTemplate(fileTemplate, new TemplateDeletedCallback()
+               {
+                  @Override
+                  protected void onSuccess(Template result)
+                  {
+                     selectedTemplates.remove(result);
+                     deleteNextTemplate();
+                  }
+               });
             }
             else
             {
