@@ -20,12 +20,15 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
+
+import java.awt.event.KeyEvent;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -51,12 +54,12 @@ public class RESTService extends AbstractTestModule
 
    public final String BODY_TEXT_FIELD = "ideGroovyServiceBodyFormText";
 
+   public final String REST_SERVICE_PATH = "ideGroovyServicePath";
+
    private static final String PATH_SUGGEST_PANEL_TEXT_LOCATOR =
       "//div[@id='exoSuggestPanel']/div[@class='popupContent']/div/table//td[contains(text(), '%1s')]";
 
    private static final String REST_SERVICE_REQUEST_MEDIATYPE = "ideGroovyServiceRequest";
-
-   private static final String REST_SERVICE_PATH = "ideGroovyServicePath";
 
    private static final String REST_SERVICE_RESPONSE_MEDIATYPE = "ideGroovyServiceResponse";
 
@@ -111,7 +114,7 @@ public class RESTService extends AbstractTestModule
       IDE().MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_TAB_LOCATOR));
+      assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR));
 
       final String msg = IDE().OUTPUT.getOutputMessageText(numberOfRecord);
 
@@ -440,4 +443,44 @@ public class RESTService extends AbstractTestModule
       waitForElementNotPresent(GET_REST_SERVICE_URL_FORM);
    }
 
+   /**
+    * Select specific value from Path combobox
+    * @param pathValue value to select
+    * @throws Exception
+    */
+   public void selectPathValue(String pathValue) throws Exception
+   {
+      openPathList();
+      selectPathSuggestPanelItem(pathValue);
+   }
+
+   private void typeToTableValue(String tableId, int row, int col, String value)
+   {
+      String locator = String.format("//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div", tableId, row, col);
+
+      selenium().click(locator);
+      locator += "/input[@type='text']";
+
+      assertTrue(selenium().isElementPresent(locator));
+      selenium().focus(locator);
+      selenium().typeKeys(locator, value);
+      selenium().keyPressNative("" + KeyEvent.VK_ENTER);
+      assertFalse(selenium().isElementPresent(locator));
+
+   }
+
+   public void typeToHeaderParameterValue(int parameterIndex, String value)
+   {
+      typeToTableValue(HEADER_TABLE_ID, parameterIndex, 5, value);
+   }
+
+   public void typeToQueryParameterValue(int parameterIndex, String value)
+   {
+      typeToTableValue(QUERY_TABLE_ID, parameterIndex, 5, value);
+   }
+
+   public void typeToBodyField(String text)
+   {
+      selenium().typeKeys(BODY_TEXT_FIELD, text);
+   }
 }

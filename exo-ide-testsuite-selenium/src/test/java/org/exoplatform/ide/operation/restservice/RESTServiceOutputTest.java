@@ -19,10 +19,7 @@
 package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -35,6 +32,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -46,8 +45,9 @@ public class RESTServiceOutputTest extends BaseTest
    private final static String FILE_NAME = "RESTServiceOutputTest.groovy";
 
    private final static String TEST_FOLDER = RESTServiceOutputTest.class.getSimpleName();
-   
-   private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + TEST_FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -56,10 +56,10 @@ public class RESTServiceOutputTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceOutput.groovy";
       try
       {
-       //TODO***********change************
+         //TODO***********change************
          VirtualFileSystemUtils.mkcol(URL);
          VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
-      //*************************
+         //*************************
       }
       catch (IOException e)
       {
@@ -70,295 +70,156 @@ public class RESTServiceOutputTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testOutput() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-       IDE.NAVIGATION.selectItem(WS_URL);
+
+      waitForRootElement();
+      IDE.NAVIGATION.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //TODO***********change************
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       Thread.sleep(TestConstants.SLEEP);
       //****************************
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
-      IDE.MENU.runCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.REST_SERVICE.deploy(TEST_FOLDER + "/" + FILE_NAME, 1);
+      IDE.REST_SERVICE.launchRestService();
+      
       //Expect 1
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      checkFields("/overralTest/Inner/node/{paramList: .+}", "POST", "text/plain", "application/xml;charset=utf-8");
 
-      assertEquals("/overralTest/Inner/node/{paramList: .+}", selenium
-         .getValue("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element"));
+      checkQueryParameter(1, "Test Query Parameter 1", "string", "", "");
 
-      assertEquals("POST", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/textbox"));
+      IDE.REST_SERVICE.selectHeaderParametersTab();
 
-      assertEquals("text/plain", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/textbox"));
-
-      assertEquals("application/xml;charset=utf-8", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceResponse]/textbox"));
-
-      assertEquals("Test Query Parameter 1", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[1]"));
-
-      assertEquals("string", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[2]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[3]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[4]"));
-
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceHeaderTab]/");
-
-      assertEquals("Test-Header1", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[1]"));
-
-      assertEquals("string", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[2]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[3]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[4]"));
-
-      assertFalse(selenium.isElementPresent("//td[@class='tabTitleSelectedDisabled']"));
+      checkHeaderParameter(1, "Test-Header1", "string", "", "");
 
       //Step 3
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium.click("//nobr[contains(text(), '/overralTest')]");
-
-      //Expected 2
-      assertEquals("/overralTest", selenium
-         .getValue("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element"));
-
-      assertEquals("OPTIONS", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/textbox"));
-
-      assertEquals("", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/textbox"));
-
-      assertEquals("application/vnd.sun.wadl+xml", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceResponse]/textbox"));
-
-      assertEquals("No items to show.", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body"));
-
-      assertEquals("No items to show.", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body"));
+      IDE.REST_SERVICE.selectPathValue("/overralTest");
+      checkFields("/overralTest", "OPTIONS", "", "application/vnd.sun.wadl+xml");
 
       //Step 4
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
+      IDE.REST_SERVICE.sendRequst();
 
       //Expected 3
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-      Thread.sleep(TestConstants.SLEEP);
 
-      String mess = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
+      String mess = IDE.OUTPUT.getOutputMessageText(2);
 
       assertTrue(mess
          .contains("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><application xmlns=\"http://research.sun.com/wadl/2006/10\">"));
 
       //Step 5
-      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      IDE.REST_SERVICE.launchRestService();
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      typeToPathField();
+      
+      IDE.REST_SERVICE.selectHeaderParametersTab();
+      IDE.REST_SERVICE.typeToHeaderParameterValue(1, "test");
+      
+      checkFields("/overralTest/Inner/node/param1", "POST", "text/plain", "application/xml;charset=utf-8");
 
-      for (int i = 0; i < 15; i++)
-      {
-         selenium.keyPress(
-            "scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element", "\\8");
-      }
+      IDE.REST_SERVICE.selectQueryParametersTab();
+      checkQueryParameter(1, "Test Query Parameter 1", "string", "", "");
+      
+      IDE.REST_SERVICE.selectHeaderParametersTab();
 
-      selenium.typeKeys("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element",
-         "param1");
-
-      selenium
-         .click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceHeaderTab||title=Header%20Parameter||index=1]/");
-//      selenium
-//         .click("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[name=Test-Header1]/col[fieldName=value||4]");
-//      selenium
-//         .click("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[name=Test-Header1]/col[fieldName=value||4]");
-      selenium.click("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[fieldName=value||4]");
-      selenium.keyPress("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[fieldName=value||4]", "\\13");
-//      selenium.typeKeys("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/editRowForm/item[name=value||title=value||value=||index=4||Class=TextItem]/element", "123");
-      selenium
-         .type(
-            "scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/editRowForm/item[name=value||title=value||value=test||index=4||Class=TextItem]/element",
-            "test");
-      //Expected 4
-      assertEquals("POST", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/textbox"));
-
-      assertEquals("text/plain", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/textbox"));
-
-      assertEquals("application/xml;charset=utf-8", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceResponse]/textbox"));
-
-      assertEquals("Test Query Parameter 1", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[1]"));
-
-      assertEquals("string", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[2]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[3]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[4]"));
-
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceHeaderTab]/");
-
-      assertEquals("Test-Header1", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[1]"));
-
-      assertEquals("string", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[2]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[3]"));
-
-      assertEquals("test", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[4]"));
-
+      checkHeaderParameter(1, "Test-Header1", "string", "", "test");
       //Step 6
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
-
-      //Expected 5
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-      Thread.sleep(TestConstants.SLEEP);
-      mess = selenium.getText("//div[contains(@eventproxy,'Record_2')]");
-
+      IDE.REST_SERVICE.sendRequst();
+      mess = IDE.OUTPUT.getOutputMessageText(3);
+     
       assertTrue(mess.contains("Param List 1:param1; Test Query Parameter 1: ; Test-Header 1: test; Body:"));
-
-      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      
+      IDE.REST_SERVICE.launchRestService();
 
       //Step 7
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      for (int i = 0; i < 15; i++)
-      {
-         selenium.keyPress(
-            "scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element", "\\8");
-      }
-
-      selenium.typeKeys("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element",
-         "param1");
-
-//      selenium.click("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[fieldName=value||4]");
-//      selenium.click("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[fieldName=value||4]");
-      selenium.click("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[fieldName=value||4]");
-      selenium.keyPress("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[fieldName=value||4]", "\\13");
-      selenium.type("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/editRowForm/item[name=value]/element",
-         "value 1");
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceHeaderTab]/");
-//      selenium
-//         .click("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[name=Test-Header1]/col[fieldName=value||4]");
-//      selenium
-//         .click("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[name=Test-Header1]/col[fieldName=value||4]");
-      selenium.click("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[fieldName=value||4]");
-      selenium.keyPress("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[fieldName=value||4]", "\\13");
-      selenium.type("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/editRowForm/item[name=value]/element",
-         "value 2");
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceBodyTab]/");
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceBodyForm\"]/item[name=ideGroovyServiceBodyFormText]/element");
-      selenium.type(
-         "scLocator=//DynamicForm[ID=\"ideGroovyServiceBodyForm\"]/item[name=ideGroovyServiceBodyFormText]/element",
-         "Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�");
-
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
+      typeToPathField();
+      
+      IDE.REST_SERVICE.typeToQueryParameterValue(1, "value 1");
+      
+      IDE.REST_SERVICE.selectHeaderParametersTab();
+      IDE.REST_SERVICE.typeToHeaderParameterValue(1, "value 2");
+      
+      IDE.REST_SERVICE.selectBodyTab();
+      
+      IDE.REST_SERVICE.typeToBodyField("Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�");
+      IDE.REST_SERVICE.sendRequst();
 
       //Expected 8
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-      Thread.sleep(TestConstants.SLEEP);
-      mess = selenium.getText("//div[contains(@eventproxy,'Record_3')]");
+      mess = IDE.OUTPUT.getOutputMessageText(4);
 
       assertTrue(mess
          .contains("Param List 1:param1; Test Query Parameter 1: value 1; Test-Header 1: value 2; Body:Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�"));
 
-      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-
+      IDE.REST_SERVICE.launchRestService();
       //Step 10
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.REST_SERVICE.typeToPathField("/overralTest/Inner/node/param1/param2/param3");
 
-      selenium.type("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath]/element",
-         "/overralTest/Inner/node/param1/param2/param3");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/[icon='picker']");
+      IDE.REST_SERVICE.setMethodFieldValue("GET");
+      assertEquals("", IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
+      assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
 
-      selenium.click("//nobr[contains(text(), 'GET')]");
+      checkQueryParameter(1, "Test Query Parameter 2", "string", "", "");
+      
+      IDE.REST_SERVICE.selectHeaderParametersTab();
 
-      assertEquals("", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceRequest]/textbox"));
+      checkHeaderParameter(1, "Test-Header2", "string", "", "");
+      
+      IDE.REST_SERVICE.typeToHeaderParameterValue(1, "value 2");
+      
+      IDE.REST_SERVICE.selectQueryParametersTab();
+      
+      IDE.REST_SERVICE.typeToQueryParameterValue(1, "value 1");
 
-      assertEquals("text/html", selenium
-         .getText("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceResponse]/textbox"));
-
-      assertEquals("Test Query Parameter 2", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[1]"));
-
-      assertEquals("string", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[2]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[3]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[4]"));
-
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceHeaderTab]/");
-
-      assertEquals("Test-Header2", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[1]"));
-
-      assertEquals("string", selenium
-         .getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[2]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[3]"));
-
-      assertEquals("", selenium.getText("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[4]"));
-
-      assertFalse(selenium.isElementPresent("//td[@class='tabTitleSelectedDisabled']"));
-
-      selenium.click("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[fieldName=value||4]");
-      selenium.keyPress("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[fieldName=value||4]", "\\13");
-      selenium.type("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/editRowForm/item[name=value]/element",
-         "value 2");
-      selenium.click("scLocator=//TabSet[ID=\"ideGroovyServiceTabSet\"]/tab[ID=ideGroovyServiceQueryTable]/");
-
-      selenium.click("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[fieldName=value||4]");
-      selenium.keyPress("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/body/row[0]/col[fieldName=value||4]", "\\13");
-      selenium.type("scLocator=//ListGrid[ID=\"ideGroovyServiceQueryTable\"]/editRowForm/item[name=value]/element",
-         "value 1");
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
+      IDE.REST_SERVICE.sendRequst();
 
       //Expected 11
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-      Thread.sleep(TestConstants.SLEEP);
-      mess = selenium.getText("//div[contains(@eventproxy,'Record_4')]");
+      mess = IDE.OUTPUT.getOutputMessageText(5);
 
-      assertTrue(mess.contains("Param List 2:param1/param2/param3; Test Query Parameter 2: ; Test-Header 2: value 2"));
+      assertTrue(mess.contains("Param List 2:param1/param2/param3; Test Query Parameter 2: value 1; Test-Header 2: value 2"));
 
-      
+   }
 
+   /**
+    * 
+    */
+   private void typeToPathField()
+   {
+      selenium.focus(IDE.REST_SERVICE.REST_SERVICE_PATH);
+
+      for (int i = 0; i < 15; i++)
+      {
+         selenium.keyPress(IDE.REST_SERVICE.REST_SERVICE_PATH, "\\8");
+      }
+
+      selenium.typeKeys(IDE.REST_SERVICE.REST_SERVICE_PATH, "param1");
+   }
+
+   private void checkFields(String path, String method, String request, String response)
+   {
+      assertEquals(path, IDE.REST_SERVICE.getPathFieldValue());
+      assertEquals(method, IDE.REST_SERVICE.getMethodFieldValue());
+      assertEquals(request, IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
+      assertEquals(response, IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
+   }
+
+   private void checkQueryParameter(int parameterIndex, String name, String type, String defaultValue, String value)
+   {
+      assertEquals(name, IDE.REST_SERVICE.getQueryParameterName(parameterIndex));
+      assertEquals(type, IDE.REST_SERVICE.getQueryParameterType(parameterIndex));
+      assertEquals(defaultValue, IDE.REST_SERVICE.getQueryParameterDefaultValue(parameterIndex));
+      assertEquals(value, IDE.REST_SERVICE.getQueryParameterValue(parameterIndex));
+   }
+
+   private void checkHeaderParameter(int parameterIndex, String name, String type, String defaultValue, String value)
+   {
+      assertEquals(name, IDE.REST_SERVICE.getHeaderParameterName(parameterIndex));
+      assertEquals(type, IDE.REST_SERVICE.getHeaderParameterType(parameterIndex));
+      assertEquals(defaultValue, IDE.REST_SERVICE.getHeaderParameterDefaultValue(parameterIndex));
+      assertEquals(value, IDE.REST_SERVICE.getHeaderParameterValue(parameterIndex));
    }
 
    @AfterClass
@@ -366,7 +227,7 @@ public class RESTServiceOutputTest extends BaseTest
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL);
+         Utils.undeployService(BASE_URL, REST_CONTEXT, URL+ FILE_NAME);
          VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
