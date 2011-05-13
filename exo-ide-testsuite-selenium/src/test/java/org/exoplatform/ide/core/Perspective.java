@@ -22,6 +22,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.junit.Assert;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -55,8 +57,9 @@ public class Perspective extends AbstractTestModule
       String locator = "//div[@id='" + panelId + "-maximize']";
       selenium().click(locator);
       String panelLocator = "//div[@panel-id='" + panelId + "']";
-      selenium().waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + panelLocator
-         + "\"); value.getAttribute('panel-maximized') == 'true' ", "5000");
+      selenium().waitForCondition(
+         "var value = selenium.browserbot.findElementOrNull(\"" + panelLocator
+            + "\"); value.getAttribute('panel-maximized') == 'true' ", "5000");
    }
 
    public void restorePanel(String panelId) throws Exception
@@ -64,8 +67,9 @@ public class Perspective extends AbstractTestModule
       String locator = "//div[@id='" + panelId + "-restore']";
       selenium().click(locator);
       String panelLocator = "//div[@panel-id='" + panelId + "']";
-      selenium().waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + panelLocator
-         + "\"); value.getAttribute('panel-maximized') == 'false' ", "5000");
+      selenium().waitForCondition(
+         "var value = selenium.browserbot.findElementOrNull(\"" + panelLocator
+            + "\"); value.getAttribute('panel-maximized') == 'false' ", "5000");
    }
 
    public void checkPanelIsMaximized(String panelId, boolean isMaximized)
@@ -87,17 +91,35 @@ public class Perspective extends AbstractTestModule
          assertFalse(selenium().isVisible(restoreButtonLocator));
       }
    }
-   
-   public void checkViewIsActive(String viewId) throws Exception {
-      fail();
+
+   public void checkViewIsActive(String viewId) throws Exception
+   {
+      assertTrue(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='true']"));
+   }
+
+   public void checkViewIsNotActive(String viewId) throws Exception
+   {
+      assertFalse(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='true']"));
+      assertTrue(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='false']"));
    }
    
-   public boolean isViewActive(String viewId) {
+   
+   public void checkViewIsNotPresent(String viewId) throws Exception
+   {
+      assertFalse(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='true']"));
+      assertFalse(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='false']"));
+   }
+   
+   
+   
+   public boolean isViewActive(String viewId)
+   {
       fail();
       return false;
    }
-   
-   public void activateView(String viewId) {
+
+   public void activateView(String viewId)
+   {
       fail();
    }
 
