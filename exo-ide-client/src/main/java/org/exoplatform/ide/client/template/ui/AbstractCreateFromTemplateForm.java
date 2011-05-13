@@ -81,8 +81,6 @@ implements CreateFromTemplateDisplay<T>
    
    private AbstractCreateFromTemplatePresenter<T> presenter;
    
-   private HandlerManager eventBus;
-   
    public AbstractCreateFromTemplateForm(HandlerManager eventBus, AbstractCreateFromTemplatePresenter<T> presenter)
    {
       super(WIDTH, HEIGHT, ID);
@@ -104,8 +102,6 @@ implements CreateFromTemplateDisplay<T>
     */
    private void initForm(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
-
       setTitle(getFormTitle());
       //TODO setCanDragResize(true);
       setCanMaximize(true);

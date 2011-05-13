@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.client.documentation;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.exoplatform.ide.client.documentation.control.ShowDocumentationControl;
 import org.exoplatform.ide.client.documentation.event.ShowDocumentationEvent;
 import org.exoplatform.ide.client.documentation.event.ShowDocumentationHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
@@ -41,8 +41,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

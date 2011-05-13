@@ -553,7 +553,7 @@ public class Editor extends AbstractTestModule
    /**
     * Check is file in tabIndex tab opened with CK editor.
     * 
-    * @param tabIndex index of tab
+    * @param tabIndex index of tab, starts at 0
     * @throws Exception
     */
    public void checkCkEditorOpened(int tabIndex) throws Exception

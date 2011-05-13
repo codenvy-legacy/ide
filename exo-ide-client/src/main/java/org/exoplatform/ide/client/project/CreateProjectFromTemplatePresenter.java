@@ -50,7 +50,6 @@ import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateDeletedCallback;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
@@ -70,7 +69,6 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -153,19 +151,14 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       void setNameFieldEnabled(boolean enabled);
 
    }
-   
-   private String baseHref;
-   
-   
-   protected Display display;
-   
-   
-   protected HandlerManager eventBus;
-   
-   private List<File> fileList = new ArrayList<File>();
-   
-   
 
+   private String baseHref;
+
+   protected Display display;
+
+   protected HandlerManager eventBus;
+
+   private List<File> fileList = new ArrayList<File>();
 
    private List<FileTemplate> fileTemplates = new ArrayList<FileTemplate>();
 
@@ -182,13 +175,9 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     */
    protected List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
 
-   
-
    private String restServiceContext;
 
    private List<Item> selectedItems = new ArrayList<Item>();
-
-   
 
    /**
     * The list of templates, that selected in list of templates.
@@ -214,7 +203,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    {
       folderList.clear();
       fileList.clear();
-      
+
       /*
        * If name field is empty - disable create button
        */
@@ -380,7 +369,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
       deleteTemplate(selectedTemplates.get(0));
    }
-   
+
    /**
     * Executes, when delete button pressed.
     * Show ask dialog.
@@ -417,7 +406,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          }
       });
    }
-   
+
    /**
     * Call template service to delete template.
     * If success, call method, that will delete next template from selected list.
@@ -435,7 +424,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          }
       });
    }
-   
+
    /**
     * Call, when create button pressed (or when double clicked on template).
     * Create new instance of selected template.
@@ -462,7 +451,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    private void finishProjectCreation()
    {
       IDE.getInstance().closeView(Display.ID);
-      
+
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
       eventBus.fireEvent(new ConfigureBuildPathEvent(projectFolder.getHref()));
    }
@@ -532,7 +521,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          itemsCreated++;
          return;
       }
-      
+
       if (fileList.size() == 0)
       {
          finishProjectCreation();
@@ -542,7 +531,6 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       saveFileContent(fileList.get(0));
       itemsCreated = 1;
    }
-
 
    /**
     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
@@ -560,7 +548,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       {
          display = null;
       }
-   }   
+   }
 
    /**
     * Refresh List of the templates, after deleting
@@ -603,7 +591,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
                itemsCreated++;
                return;
             }
-            
+
             finishProjectCreation();
          }
       });
@@ -617,7 +605,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    private void splitFileAndProjectTemplates(List<Template> templateList)
    {
       this.projectTemplates.clear();
-      this.fileTemplates.clear();      
+      this.fileTemplates.clear();
 
       for (Template template : templateList)
       {

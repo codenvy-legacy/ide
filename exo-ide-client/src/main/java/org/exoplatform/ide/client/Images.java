@@ -159,17 +159,6 @@ public interface Images
 
    }
 
-   //   public interface RepositoryService
-   //   {
-   //
-   //      public static final String SERVICE = imageUrl + "repository/service.png";
-   //
-   //      public static final String REPOSITORY = imageUrl + "repository/repository.png";
-   //
-   //      public static final String WORKSPACE = imageUrl + "repository/workspace.png";
-   //
-   //   }
-
    public interface Dialogs
    {
 
@@ -218,19 +207,19 @@ public interface Images
       public static final String DATA_ITEM = IMAGE_URL + "outline/data.png";
 
       public static final String ERROR_ITEM = IMAGE_URL + "outline/error.png";
-      
+
       public static final String INTERFACE_ITEM = IMAGE_URL + "outline/interface-item.png";
-      
+
       public static final String MODULE_ITEM = IMAGE_URL + "outline/module-item.png";
-      
-      public static final String LOCAL_VARIABLE_ITEM = IMAGE_URL + "outline/local-variable-item.png";      
-      
+
+      public static final String LOCAL_VARIABLE_ITEM = IMAGE_URL + "outline/local-variable-item.png";
+
       public static final String GLOBAL_VARIABLE_ITEM = IMAGE_URL + "outline/global-variable-item.png";
-      
+
       public static final String CLASS_VARIABLE_ITEM = IMAGE_URL + "outline/class-variable-item.png";
-      
+
       public static final String INSTANCE_VARIABLE_ITEM = IMAGE_URL + "outline/instance-variable-item.png";
-      
+
       public static final String CONSTANT_ITEM = IMAGE_URL + "outline/constant-item.png";
    }
 
@@ -246,7 +235,7 @@ public interface Images
    public interface RestService
    {
       public static final String CLASS = IMAGE_URL + "restservice/resource.png";
-      
+
       public static final String RESOURCE = IMAGE_URL + "restservice/parameter.png";
 
       public static final String METHOD = IMAGE_URL + "restservice/var.png";

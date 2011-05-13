@@ -68,7 +68,7 @@ public class SelectWorkspaceView extends ViewImpl implements
     * Grid for displaying list of available workspaces.
     */
    @UiField
-   EntryPointListGrid entryPointListGrid;
+   EntryPointsListGrid entryPointListGrid;
 
    @UiField
    ImageButton okButton;

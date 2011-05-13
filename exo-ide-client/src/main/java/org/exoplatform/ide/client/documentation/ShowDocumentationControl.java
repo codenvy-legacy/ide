@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.documentation.control;
+package org.exoplatform.ide.client.documentation;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -60,7 +60,5 @@ public class ShowDocumentationControl extends SimpleControl implements IDEContro
    public void initialize(HandlerManager eventBus)
    {
    }
-   
-
 
 }

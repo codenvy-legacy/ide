@@ -16,42 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.preview.event;
+package org.exoplatform.ide.client.preview;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS        .
  * @version $Id: $
  */
 
-public class PreviewHTMLEvent extends GwtEvent<PreviewHTMLHandler>
+public interface PreviewHTMLHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<PreviewHTMLHandler> TYPE = new GwtEvent.Type<PreviewHTMLHandler>();
-
-   private boolean showPreview;
-
-   public PreviewHTMLEvent(boolean showPreview)
-   {
-      this.showPreview = showPreview;
-   }
-
-   public boolean isShowPreview()
-   {
-      return showPreview;
-   }
-
-   @Override
-   protected void dispatch(PreviewHTMLHandler handler)
-   {
-      handler.onPreviewHTMLFile(this);
-   }
-
-   @Override
-   public GwtEvent.Type<PreviewHTMLHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onPreviewHTMLFile(PreviewHTMLEvent event);
 
 }

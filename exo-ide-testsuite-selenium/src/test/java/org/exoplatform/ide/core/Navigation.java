@@ -116,6 +116,20 @@ public class Navigation extends AbstractTestModule
       selenium().clickAt("//div[@id='" + getItemId(folderHref) + "']/table/tbody/tr/td[1]/img", "0");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
+   
+   public void doubleClickOnFile(String url) throws Exception {
+      System.out.println("DOUBLE click on [" + url + "]");
+      String locator = "//div[@id='" + getItemId(url) + "']/div/table/tbody/tr/td[2]";
+      System.out.println("LOCATOR [" + locator + "]");
+      
+      //mouseDown
+      selenium().mouseDown(locator);
+      selenium().mouseUp(locator);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      selenium().doubleClick(locator);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+   }
 
    /**
     * Generate item id 

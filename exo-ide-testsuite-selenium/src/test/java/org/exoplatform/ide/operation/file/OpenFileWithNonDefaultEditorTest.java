@@ -44,22 +44,22 @@ import org.junit.Test;
 public class OpenFileWithNonDefaultEditorTest extends BaseTest
 {
    
-   private static String FOLDER_NAME = OpenFileWithNonDefaultEditorTest.class.getSimpleName() ;
+   private static String FOLDER = OpenFileWithNonDefaultEditorTest.class.getSimpleName() ;
    
-   private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
-   
-   private static String HTML_FILE_NAME = "newHtmlFile.html";
+   private static String FILE = "newHtmlFile.html";
 
-   private static String GADGET_FILE_NAME = "Calculator.xml";
+   private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
    @BeforeClass
    public static void setUp()
    {
+      deleteCookies();
+      cleanRegistry();
+      
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, WS_URL + FOLDER_NAME + "/" + GADGET_FILE_NAME);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER);
+         VirtualFileSystemUtils.put(PATH + FILE, MimeType.TEXT_HTML, WS_URL + FOLDER + "/" + FILE);
       }
       catch (Exception e)
       {
@@ -67,11 +67,123 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       }
    }
    
+   /**
+    * Clean up cookie, registry, repository after each test of in the each class:<br>
+    *   - selenium.deleteAllVisibleCookies();<br>
+    *   - cleanRegistry();<br>
+    *   - cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");<>
+    * @throws IOException
+    */
+   @After
+   public void testTearDown() throws IOException
+   {
+      try {
+         deleteCookies();
+         cleanRegistry();
+
+         //cleanRepository(WS_URL);
+         
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER);
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+
+   
    @Test
    public void testOpenFileWithNonDefaultEditor() throws Exception
    {
       waitForRootElement();
       
+      /*
+       * 1. Open Folder
+       */
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER + "/");
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      
+      /*
+       * 2. Select and open html file by doubleclicking
+       */
+      IDE.NAVIGATION.doubleClickOnFile(WS_URL + FOLDER + "/" + FILE);
+      
+      /*
+       * 3. Codemirror Editor must be opened 
+       */
+      IDE.EDITOR.checkCodeEditorOpened(0);
+      
+      /*
+       * 4. Close editor
+       */
+      IDE.EDITOR.closeTab(0);
+      
+      /*
+       * 5. Run File > Open With
+       */
+      IDE.OPENWITH.open();
+      
+      /*
+       * 6. Select CKEditor and click Open
+       */
+      IDE.OPENWITH.selectEditorByIndex(2);
+      IDE.OPENWITH.clickOpen();
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      
+      /*
+       * 7. CKEditor must be opened
+       */
+      IDE.EDITOR.checkCkEditorOpened(0);
+      
+      /*
+       * 8. Close editor
+       */
+      IDE.EDITOR.closeTab(0);
+      
+      /*
+       * 9. Open html file by doubleclicking
+       */
+      IDE.NAVIGATION.doubleClickOnFile(WS_URL + FOLDER + "/" + FILE);
+      
+      /*
+       * 10. Check Codemirror must be opened
+       */
+      IDE.EDITOR.checkCodeEditorOpened(0);
+      
+      /*
+       * 11. Run File > Open With
+       */
+      IDE.OPENWITH.open();
+      
+      /*
+       * 12. Select CKEditor, check "Use as default editor" and click Open
+       */
+      IDE.OPENWITH.selectEditorByIndex(2);
+      
+      /*
+       * 13. Click Open when IDE asks for reopen file
+       */
+      
+      /*
+       * 14. Check CKEditor must be opened
+       */
+      
+      /*
+       * 15. Close editor
+       */
+      
+      /*
+       * 16. Open html file by doubleclicking
+       */
+      
+      /*
+       * 17. Check CKEditor must be opened
+       */
+      
+      /*
+       * 18. Close editor
+       */
+      
+      
+      Thread.sleep(Integer.MAX_VALUE);
       
       /*
        * Select file newHtmlFile.html in the Workspace Panel and then call "File->Open with.." topmenu command.
@@ -80,10 +192,10 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER + "/");
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/" + FILE);
       IDE.OPENWITH.open();
 
       //gadget displayed "Open File with" dialog window with second items in the central column: 
@@ -109,7 +221,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
        * then call the "File->Open with.." topmenu command, 
        * select "Code Editor" item and click on "Open" button.
        */
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/" + FILE);
       IDE.OPENWITH.open();
       //IDE.OPENWITH.selectEditor("CodeMirror HTML editor [Default]");
       IDE.OPENWITH.selectEditorByIndex(1);
@@ -345,19 +457,5 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    }
 
    
-    /**
-    * Clean up cookie, registry, repository after each test of in the each class:<br>
-    *   - selenium.deleteAllVisibleCookies();<br>
-    *   - cleanRegistry();<br>
-    *   - cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");<>
-    * @throws IOException
-    */
-   @After
-   public void testTearDown() throws IOException
-   {
-      deleteCookies();
-      cleanRegistry();
-      cleanRepository(WS_URL);
-   }
    
 }

@@ -18,19 +18,14 @@
  */
 package org.exoplatform.ide.client.project;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.model.template.TemplateNative;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -39,6 +34,7 @@ import java.util.List;
  */
 public class CreateProjectTemplateCommandHandler implements CreateProjectTemplateHandler
 {
+
    private HandlerManager eventBus;
 
    public CreateProjectTemplateCommandHandler(HandlerManager eventBus)
@@ -53,7 +49,7 @@ public class CreateProjectTemplateCommandHandler implements CreateProjectTemplat
     */
    public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
    {
-      
+
       //get default file templates
       TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
       {
@@ -71,4 +67,5 @@ public class CreateProjectTemplateCommandHandler implements CreateProjectTemplat
          }
       });
    }
+
 }

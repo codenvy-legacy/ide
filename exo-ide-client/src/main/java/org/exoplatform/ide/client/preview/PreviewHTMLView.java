@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.preview.ui;
+package org.exoplatform.ide.client.preview;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.PreviewFrame;
@@ -98,7 +98,7 @@ public class PreviewHTMLView extends ViewImpl implements
       {
          e.contentDocument.addEventListener(type,
             function() {
-               instance.@org.exoplatform.ide.client.preview.ui.PreviewHTMLView::activate()();
+               instance.@org.exoplatform.ide.client.preview.PreviewHTMLView::activate()();
             },
          false);
       }
@@ -106,7 +106,7 @@ public class PreviewHTMLView extends ViewImpl implements
       {
          e.contentWindow.document.attachEvent("on" + type,
             function() {
-               instance.@org.exoplatform.ide.client.preview.ui.PreviewHTMLView::activate()();
+               instance.@org.exoplatform.ide.client.preview.PreviewHTMLView::activate()();
             }
          );
       }

@@ -33,9 +33,6 @@
 		<when-type-is class="org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display" />
 	</replace-with>
 
-<!-- 
-	<replace-with class="org.exoplatform.ide.client.properties.ui.PropertiesView">
- -->
 	<replace-with class="org.exoplatform.ide.client.properties.ui.PropertiesViewEx">
 		<when-type-is class="org.exoplatform.ide.client.properties.PropertiesPresenter.Display" />
 	</replace-with>
@@ -56,7 +53,7 @@
 		<when-type-is class="org.exoplatform.ide.client.outline.OutlinePresenter.Display" />
 	</replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.preview.ui.PreviewHTMLView">
+	<replace-with class="org.exoplatform.ide.client.preview.PreviewHTMLView">
 		<when-type-is class="org.exoplatform.ide.client.preview.PreviewHTMLPresenter.Display" />
 	</replace-with>
 

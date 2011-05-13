@@ -32,20 +32,15 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
-import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.project.control.CreateProjectFromTemplateControl;
 import org.exoplatform.ide.client.project.control.CreateProjectTemplateControl;
-import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
-import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
-import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .

@@ -58,6 +58,12 @@ public class OpenWith extends AbstractTestModule
       return selenium().getText(locator);
    }
    
+   /**
+    * Selects editor by it's position in the list of editors.
+    * Note that numbering begins at one.
+    * 
+    * @param index
+    */
    public void selectEditorByIndex(int index)
    {
       IDE().selectMainFrame();

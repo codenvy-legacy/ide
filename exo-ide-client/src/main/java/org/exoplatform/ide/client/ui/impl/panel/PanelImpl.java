@@ -57,7 +57,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -233,34 +232,32 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       {
          int selectedTabIndex = event.getSelectedItem();
          String viewId = tabPanel.getTabIdByIndex(selectedTabIndex);
-         selectView(viewId);
+         
+         if (viewId.equals(selectedViewId)) {
+            View view = views.get(selectedViewId);
+            if (!view.isActive()) {
+               view.activate();
+            }
+            
+            return;
+         }
+
+         if (selectedViewId != null && !viewId.equals(selectedViewId)) {
+            setViewVisible(selectedViewId, false);
+            fireVisibilityChangedEvent(selectedViewId);            
+         }
+         
+         selectedViewId = viewId;
+         setViewVisible(selectedViewId, true);
+         resizeView(selectedViewId);
+         fireVisibilityChangedEvent(selectedViewId);
+         
+         View view = views.get(selectedViewId);
+         if (!view.isActive()) {
+            view.activate();
+         }
       }
    };
-
-   public void selectView(String viewId)
-   {
-      if (viewId == null)
-      {
-         Window.alert("View ID can not be NULL");
-      }
-
-      if (viewId == selectedViewId)
-      {
-         resizeView(selectedViewId);
-         return;
-      }
-
-      if (selectedViewId != null)
-      {
-         setViewVisible(selectedViewId, false);
-         fireVisibilityChangedEvent(selectedViewId);
-      }
-
-      selectedViewId = viewId;
-      setViewVisible(viewId, true);
-      resizeView(viewId);
-      fireVisibilityChangedEvent(viewId);
-   }
 
    /**
     * Set View and WiewWrapper are visible
@@ -443,14 +440,11 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
    private class ViewController extends FlowPanel implements RequiresResize
    {
 
-      private View view;
+      private Widget widget;
 
-      private Widget viewWrapper;
-
-      public ViewController(View view, Widget viewWrapper)
+      public ViewController(Widget widget)
       {
-         this.view = view;
-         this.viewWrapper = viewWrapper;
+         this.widget = widget;
          setWidth("100%");
          setHeight("100%");
       }
@@ -463,17 +457,17 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
          int width = getOffsetWidth();
          int height = getOffsetHeight();
 
-         DOM.setStyleAttribute(viewWrapper.getElement(), "left", "" + (left + 0) + "px");
-         DOM.setStyleAttribute(viewWrapper.getElement(), "top", "" + (top + 0) + "px");
+         DOM.setStyleAttribute(widget.getElement(), "left", "" + (left + 0) + "px");
+         DOM.setStyleAttribute(widget.getElement(), "top", "" + (top + 0) + "px");
 
-         if (viewWrapper instanceof Resizeable)
+         if (widget instanceof Resizeable)
          {
-            ((Resizeable)viewWrapper).resize(width, height);
+            ((Resizeable)widget).resize(width, height);
          }
          else
          {
-            DOM.setStyleAttribute(viewWrapper.getElement(), "width", "" + width + "px");
-            DOM.setStyleAttribute(viewWrapper.getElement(), "height", "" + height + "px");
+            DOM.setStyleAttribute(widget.getElement(), "width", "" + width + "px");
+            DOM.setStyleAttribute(widget.getElement(), "height", "" + height + "px");
          }
       }
 
@@ -481,8 +475,8 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       {
          int left = getAbsoluteLeft();
          int top = getAbsoluteTop();
-         DOM.setStyleAttribute(viewWrapper.getElement(), "left", "" + (left + 0) + "px");
-         DOM.setStyleAttribute(viewWrapper.getElement(), "top", "" + (top + 0) + "px");
+         DOM.setStyleAttribute(widget.getElement(), "left", "" + (left + 0) + "px");
+         DOM.setStyleAttribute(widget.getElement(), "top", "" + (top + 0) + "px");
       }
 
    }
@@ -529,6 +523,10 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
 
    public void onSetViewVisible(SetViewVisibleEvent event)
    {
+      if (event.getViewId().equals(selectedViewId)) {
+         return;
+      }
+      
       tabPanel.selectTab(event.getViewId());
    }
 
@@ -549,7 +547,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       views.put(view.getId(), view);
       viewWrappers.put(view.getId(), viewWrapper);
 
-      final ViewController controller = new ViewController(view, viewWrapper);
+      final ViewController controller = new ViewController(viewWrapper);
       viewControllers.put(view.getId(), controller);
       tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, view.hasCloseButton());
 

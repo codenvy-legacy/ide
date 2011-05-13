@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.about;
 
-import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.BuildNumber;
@@ -66,7 +65,6 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final String YEAR = "2009-2011";
 
-   //private IButton okButton;
    private ImageButton okButton;
 
    public AboutIDEView()
@@ -109,7 +107,6 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
    {
       okButton = new ImageButton("Ok", "ok");
       okButton.setId(OK_BUTTON_ID);
-      //okButton.setIcon(Images.Buttons.OK);
 
       HorizontalPanel hLayout = new HorizontalPanel();
       hLayout.setSpacing(10);

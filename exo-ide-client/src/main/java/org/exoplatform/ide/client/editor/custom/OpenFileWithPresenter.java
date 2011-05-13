@@ -173,7 +173,6 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
    private void onEditorSelected(EditorProducer editor) {
       if (openedEditorDescriptions.get(selectedFile.getHref()) != null &&
          editor.getDescription().equals(openedEditorDescriptions.get(selectedFile.getHref()))) {
-         System.out.println("return on first verification >>>");
          display.setOpenButtonEnabled(false);
          return;
       }
@@ -296,7 +295,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
     */
    private void showAskReopenDialog()
    {
-      Dialogs.getInstance().ask("Info",
+      Dialogs.getInstance().ask("IDE",
          "Do you want to reopen <b>" + selectedFile.getName() + "</b> in selected editor?",
          new BooleanValueReceivedHandler()
          {
@@ -311,10 +310,6 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
                {
                   openFile();
                }
-//               else
-//               {
-//                  IDE.getInstance().closeView(display.asView().getId());
-//               }
             }
          });
    }

@@ -27,7 +27,6 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.project.CreateProjectTemplatePresenter;
 import org.exoplatform.ide.client.template.ui.TemplateTree;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -48,6 +47,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class CreateProjectTemplateForm extends DialogWindow implements CreateProjectTemplatePresenter.Display
 {
+   
    public static final int WIDTH = 530;
 
    public static final int HEIGHT = 350;

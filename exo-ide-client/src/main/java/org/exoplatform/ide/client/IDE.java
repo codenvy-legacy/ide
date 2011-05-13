@@ -26,7 +26,6 @@ import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.application.ui.IDEForm;
-import org.exoplatform.ide.client.debug.DebugModule;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
@@ -102,8 +101,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       new HotKeyManagementModule(EVENT_BUS);
       
-      //new DebugModule(EVENT_BUS);
-
       //initialize extensions
       for (Extension ext : extensions)
       {

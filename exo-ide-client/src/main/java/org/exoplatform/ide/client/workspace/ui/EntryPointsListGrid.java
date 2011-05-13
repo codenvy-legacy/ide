@@ -31,11 +31,11 @@ import com.google.gwt.user.cellview.client.Column;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class EntryPointListGrid extends ListGrid<EntryPoint>
+public class EntryPointsListGrid extends ListGrid<EntryPoint>
 {
    private final String ID = "ideEntryPointListGrid"; 
    
-   public EntryPointListGrid()
+   public EntryPointsListGrid()
    {
       super();
       

@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -54,24 +52,6 @@ public class IDEMimeTypes
          extensions.put(mimeType, extension);
       }
    }
-
-//   static
-//   {
-//      add("html", MimeType.TEXT_HTML);
-//      add("htm", MimeType.TEXT_HTML);
-//      add("css", MimeType.TEXT_CSS);
-//      add("txt", MimeType.TEXT_PLAIN);
-//      add("js", MimeType.TEXT_JAVASCRIPT);
-//      add("js", MimeType.APPLICATION_JAVASCRIPT);
-//      add("js", MimeType.APPLICATION_X_JAVASCRIPT);
-//      add("xml", MimeType.TEXT_XML);
-//      add("grs", MimeType.GROOVY_SERVICE);
-//      add("groovy", MimeType.APPLICATION_GROOVY);
-//      add("xml", MimeType.GOOGLE_GADGET);
-//      add("html", MimeType.UWA_WIDGET);
-//      add("gtmpl", MimeType.GROOVY_TEMPLATE);      
-//      add("groovy", MimeType.CHROMATTIC_DATA_OBJECT);
-//   }
 
    public static boolean isMimeTypeSupported(String mimeType)
    {

@@ -57,15 +57,12 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
 
    }
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private List<OutputMessage> messages = new ArrayList<OutputMessage>();
 
    public OutputPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
       eventBus.addHandler(OutputEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }

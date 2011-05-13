@@ -42,6 +42,7 @@ import java.util.List;
  */
 public class ViewVersionsPresenter
 {
+   
    interface Display
    {
       HasClickHandlers getOpenVersionButton();

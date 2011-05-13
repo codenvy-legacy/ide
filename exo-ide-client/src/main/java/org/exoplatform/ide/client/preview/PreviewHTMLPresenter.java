@@ -26,8 +26,6 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.preview.event.PreviewHTMLEvent;
-import org.exoplatform.ide.client.preview.event.PreviewHTMLHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -68,8 +66,6 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
 
    }
 
-   private HandlerManager eventBus;
-
    /**
     * Instance of attached Display
     */
@@ -79,8 +75,6 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
 
    public PreviewHTMLPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
-
       eventBus.addHandler(PreviewHTMLEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);

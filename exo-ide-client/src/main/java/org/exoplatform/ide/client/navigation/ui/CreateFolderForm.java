@@ -66,15 +66,12 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
 
    private TextField folderNameField;
 
-//   private IButton createButton;
-//   private IButton cancelButton;
-
    private ImageButton createButton;
+
    private ImageButton cancelButton;
 
    private String submitButtonTitle;
 
-   
    private CreateFolderPresenter presenter;
 
    /**
@@ -106,11 +103,11 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
             destroy();
          }
       });
-      
+
       folderNameField.focusInItem();
-      
-//      presenter = new CreateFolderPresenter(eventBus, selectedItem, href);
-//      presenter.bindDisplay(this);
+
+      //      presenter = new CreateFolderPresenter(eventBus, selectedItem, href);
+      //      presenter.bindDisplay(this);
    }
 
    private void createFieldForm()
@@ -135,24 +132,23 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
       vLayout.setCellVerticalAlignment(paramsForm, HorizontalPanel.ALIGN_MIDDLE);
    }
 
-  
    private void createButtons()
    {
       HorizontalPanel buttonsLayout = new HorizontalPanel();
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
 
-//      createButton = new IButton(submitButtonTitle);
-//      createButton.setID(ID_CREATE_BUTTON);
-//      createButton.setWidth(BUTTON_WIDTH);
-//      createButton.setHeight(BUTTON_HEIGHT);
-//      createButton.setIcon(Images.Buttons.OK);
-//
-//      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
-//      cancelButton.setID(ID_CANCEL_BUTTON);
-//      cancelButton.setWidth(BUTTON_WIDTH);
-//      cancelButton.setHeight(BUTTON_HEIGHT);
-//      cancelButton.setIcon(Images.Buttons.NO);
+      //      createButton = new IButton(submitButtonTitle);
+      //      createButton.setID(ID_CREATE_BUTTON);
+      //      createButton.setWidth(BUTTON_WIDTH);
+      //      createButton.setHeight(BUTTON_HEIGHT);
+      //      createButton.setIcon(Images.Buttons.OK);
+      //
+      //      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
+      //      cancelButton.setID(ID_CANCEL_BUTTON);
+      //      cancelButton.setWidth(BUTTON_WIDTH);
+      //      cancelButton.setHeight(BUTTON_HEIGHT);
+      //      cancelButton.setIcon(Images.Buttons.NO);
 
       createButton = new ImageButton(submitButtonTitle, "ok");
       createButton.setId(ID_CREATE_BUTTON);
@@ -192,15 +188,14 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
       return (HasKeyPressHandlers)folderNameField;
    }
 
-
    /**
     * @see org.exoplatform.gwtframework.ui.client.window.Window#destroy()
     */
    @Override
    public void destroy()
    {
-//      presenter.destroy();
+      //      presenter.destroy();
       super.destroy();
    }
-   
+
 }

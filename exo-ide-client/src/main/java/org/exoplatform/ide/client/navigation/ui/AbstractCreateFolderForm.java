@@ -47,8 +47,6 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
 
    public static final int HEIGHT = 160;
 
-   private static final int BUTTON_WIDTH = 90;
-
    private static final int BUTTON_HEIGHT = 22;
 
    public static final String ID = "ideCreateFolderForm";
@@ -127,18 +125,6 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
       HorizontalPanel buttonsLayout = new HorizontalPanel();
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
-
-//      createButton = new IButton(submitButtonTitle);
-//      createButton.setID(ID_CREATE_BUTTON);
-//      createButton.setWidth(BUTTON_WIDTH);
-//      createButton.setHeight(BUTTON_HEIGHT);
-//      createButton.setIcon(Images.Buttons.OK);
-//
-//      cancelButton = new IButton("Cancel");
-//      cancelButton.setID(ID_CANCEL_BUTTON);
-//      cancelButton.setWidth(BUTTON_WIDTH);
-//      cancelButton.setHeight(BUTTON_HEIGHT);
-//      cancelButton.setIcon(Images.Buttons.NO);
 
       createButton = new ImageButton(submitButtonTitle, "ok");
       createButton.setId(ID_CREATE_BUTTON);

@@ -20,6 +20,7 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Created by The eXo Platform SAS .
@@ -85,6 +86,19 @@ public class Perspective extends AbstractTestModule
          assertTrue(selenium().isVisible(maximizeButtonLocator));
          assertFalse(selenium().isVisible(restoreButtonLocator));
       }
+   }
+   
+   public void checkViewIsActive(String viewId) throws Exception {
+      fail();
+   }
+   
+   public boolean isViewActive(String viewId) {
+      fail();
+      return false;
+   }
+   
+   public void activateView(String viewId) {
+      fail();
    }
 
 }

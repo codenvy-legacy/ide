@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.model.util.ImageUtil;
 
 public class TemplateListGrid<T extends Template> extends ListGrid<T>
 {
+   
    private static final String ID = "ideCreateFileFromTemplateFormTemplateListGrid";
    
    public TemplateListGrid()

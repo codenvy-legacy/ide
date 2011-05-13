@@ -107,7 +107,7 @@ public class CreateProjectTemplatePresenter
 
       String getTemplateLocationInProject(Template template);
    }
-   
+
    private HandlerManager eventBus;
 
    private Display display;
@@ -122,7 +122,6 @@ public class CreateProjectTemplatePresenter
    {
       this.eventBus = eventBus;
       this.templateList = templateList;
-
    }
 
    public void bindDisplay(Display d)
@@ -144,26 +143,10 @@ public class CreateProjectTemplatePresenter
       display.getTemplateTreeGrid().addSelectionHandler(templateSelectedHandler);
 
       ProjectTemplate projectTemplate = new ProjectTemplate("/");
-      
+
       display.getTemplateTreeGrid().setValue(projectTemplate);
       display.disableCreateButton();
    }
-   
-  /* private FileTemplate getClasspathTemplate()
-   {
-      FileTemplate classpathTemplate = null;
-      for (Template template : templateList)
-      {
-         //TODO check proper mime type when is ready:
-         if (template instanceof FileTemplate
-            && MimeType.APPLICATION_JSON.equals(((FileTemplate)template).getMimeType()))
-         {
-            classpathTemplate = (FileTemplate)template;
-         }
-      }
-      classpathTemplate.setFileName(CLASSPATH_FILENAME);
-      return  classpathTemplate;
-   }*/
 
    private ValueChangeHandler<String> valueChangeHandler = new ValueChangeHandler<String>()
    {
@@ -250,7 +233,7 @@ public class CreateProjectTemplatePresenter
             //can not delete classpath file
             display.disableDeleteButton();
          }
-            else
+         else
          {
             display.enableDeleteButton();
          }
@@ -432,7 +415,7 @@ public class CreateProjectTemplatePresenter
          protected void onSuccess(Template result)
          {
             display.closeForm();
-            Dialogs.getInstance().showInfo("Template created successfully!");            
+            Dialogs.getInstance().showInfo("Template created successfully!");
          }
       });
    }
@@ -440,15 +423,6 @@ public class CreateProjectTemplatePresenter
    public void destroy()
    {
    }
-
-//   /**
-//    * @see org.exoplatform.ide.client.model.template.event.TemplateCreatedHandler#onTemplateCreated(org.exoplatform.ide.client.model.template.event.TemplateCreatedEvent)
-//    */
-//   public void onTemplateCreated(TemplateCreatedEvent event)
-//   {
-//      display.closeForm();
-//      Dialogs.getInstance().showInfo("Template created successfully!");
-//   }
 
    private void addFileToProjectTemplate(FileTemplate fileTemplate)
    {
@@ -470,4 +444,5 @@ public class CreateProjectTemplatePresenter
       display.updateTree();
       display.selectTemplate(fileTemplate);
    }
+   
 }

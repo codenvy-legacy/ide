@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.client.template.ui;
 
-import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
@@ -145,18 +143,6 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       buttonsLayout.setHeight(BUTTON_HEIGHT + 20 +"px");
       buttonsLayout.setSpacing(5);
       buttonsLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-
-//      saveButton = new IButton(SAVE);
-//      saveButton.setID(ID_SAVE_BUTTON);
-//      saveButton.setWidth(BUTTON_WIDTH);
-//      saveButton.setHeight(BUTTON_HEIGHT);
-//      saveButton.setIcon(Images.Buttons.OK);
-//
-//      cancelButton = new IButton(CANCEL);
-//      cancelButton.setID(ID_CANCEL_BUTTON);
-//      cancelButton.setWidth(BUTTON_WIDTH);
-//      cancelButton.setHeight(BUTTON_HEIGHT);
-//      cancelButton.setIcon(Images.Buttons.NO);
 
       saveButton = new ImageButton("Save", "ok");
       saveButton.setId(ID_SAVE_BUTTON);
