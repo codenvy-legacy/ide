@@ -1041,7 +1041,7 @@ public abstract class BaseTest
    {
       for (int second = 0;; second++)
       {
-         if (second >= TestConstants.WAIT_PERIOD)
+         if (second >= TestConstants.WAIT_PERIOD*20)
             fail("timeout for element " + locator);
 
          if (selenium.isElementPresent(locator))

@@ -18,10 +18,8 @@
  */
 package org.exoplatform.ide.versioning;
 
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -29,12 +27,15 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 14, 2010 $
  *
  */
-public class ViewVersionListTest extends VersioningTest
+public class ViewVersionListTest extends BaseTest
 {
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
@@ -77,48 +78,46 @@ public class ViewVersionListTest extends VersioningTest
    @Test
    public void testViewVersionList() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      checkViewVersionHistoryButtonPresent(false);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
 
      IDE.EDITOR.deleteFileContent();
       saveAsUsingToolbarButton(FILE_1);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkViewVersionHistoryButtonPresent(true);
-      checkViewVersionHistoryButtonState(false);
+      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" +FILE_1);
+      IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
+      IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
       //Edit and save file
      IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkViewVersionHistoryButtonPresent(true);
-      checkViewVersionHistoryButtonState(true);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, true, 5000);
+      IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
 
       //Open version panel
-      //runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
-      
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
-      checkVersionPanelState(true);
-      checkTextOnVersionPanel(version1Text);
+      IDE.VERSIONS.waitVersionContentViewOpen();
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
 
-      checkViewVersionListButtonState(true);
+      IDE.VERSIONS.checkVersionPanelState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel(version1Text);
+
+      IDE.VERSIONS.checkViewVersionListButtonState(true);
       
-      //runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
-      
-      Thread.sleep(TestConstants.SLEEP);
-      checkViewVersionsListPanel(true);
-      checkOpenVersionButtonState(false);
-      checkVersionListSize(2);
+     IDE.VERSIONS.waitForViewVersionsListViewOpen();    
+
+     IDE.VERSIONS.checkViewVersionsListPanel(true);
+     IDE.VERSIONS.checkOpenVersionButtonState(false);
+     IDE.VERSIONS.checkVersionListSize(2);
 
       //Close version list panel:
-      clickCloseVersionListPanelButton();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkViewVersionsListPanel(false);
-      checkVersionPanelState(true);
+     IDE.VERSIONS.clickCloseVersionListPanelButton();
+     IDE.VERSIONS.waitForViewVersionsListViewClose();
+     IDE.VERSIONS.checkViewVersionsListPanel(false);
+      IDE.VERSIONS.checkVersionPanelState(true);
 
       //Edit file and save
      IDE.EDITOR.clickOnEditor();
@@ -128,28 +127,27 @@ public class ViewVersionListTest extends VersioningTest
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
      IDE.EDITOR.typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
-      checkViewVersionListButtonState(true);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkViewVersionListButtonState(true);
 
       //View version list
-      //runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
-      
-      Thread.sleep(TestConstants.SLEEP);
-      checkViewVersionsListPanel(true);
-      checkOpenVersionButtonState(false);
-      checkVersionListSize(3);
+      IDE.VERSIONS.waitForViewVersionsListViewOpen();
+      IDE.VERSIONS.checkViewVersionsListPanel(true);
+      IDE.VERSIONS.checkOpenVersionButtonState(false);
+      IDE.VERSIONS.checkVersionListSize(3);
 
-      selectVersionInVersionList(0);
-      clickOpenVersionButton();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-     
-      checkViewVersionsListPanel(false);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(false);
-      checkViewVersionListButtonState(true);
-      checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.VERSIONS.selectVersionInVersionList(1);
+      IDE.VERSIONS.waitOpenVersionButtonEnabled();
+      IDE.VERSIONS.clickOpenVersionButton();
+      IDE.VERSIONS.waitForViewVersionsListViewClose();
+      
+      IDE.VERSIONS.checkViewVersionsListPanel(false);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(false);
+      IDE.VERSIONS.checkViewVersionListButtonState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(0));
 
       //Edit file and save
      IDE.EDITOR.clickOnEditor();
@@ -159,28 +157,28 @@ public class ViewVersionListTest extends VersioningTest
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
      IDE.EDITOR.typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
-      checkViewVersionListButtonState(true);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_NEWER_VERSION, true, 5000);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkViewVersionListButtonState(true);
 
       //View version list
-      //runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
+      IDE.VERSIONS.waitForViewVersionsListViewOpen();
+      IDE.VERSIONS.checkViewVersionsListPanel(true);
+      IDE.VERSIONS.checkOpenVersionButtonState(false);
+      IDE.VERSIONS.checkVersionListSize(4);
+
+      IDE.VERSIONS.selectVersionInVersionList(4);
+      IDE.VERSIONS.waitOpenVersionButtonEnabled();
+      IDE.VERSIONS.clickOpenVersionButton();
+      IDE.VERSIONS.waitForViewVersionsListViewClose();
       
-      Thread.sleep(TestConstants.SLEEP);
-      checkViewVersionsListPanel(true);
-      checkOpenVersionButtonState(false);
-      checkVersionListSize(4);
-
-      selectVersionInVersionList(3);
-      clickOpenVersionButton();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      checkViewVersionsListPanel(false);
-      checkOlderVersionButtonState(false);
-      checkNewerVersionButtonState(true);
-      checkViewVersionListButtonState(true);
-      checkTextOnVersionPanel("");
+      IDE.VERSIONS.checkViewVersionsListPanel(false);
+      IDE.VERSIONS.checkOlderVersionButtonState(false);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkViewVersionListButtonState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel("");
 
      IDE.EDITOR.closeTab(0);
    }
@@ -194,23 +192,24 @@ public class ViewVersionListTest extends VersioningTest
    public void testViewVersionListWithNavigateVersions() throws Exception
    {
       refresh();
+      waitForRootElement();
       IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      checkViewVersionHistoryButtonPresent(false);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
       
      IDE.EDITOR.deleteFileContent();
       saveAsUsingToolbarButton(FILE_2);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkViewVersionHistoryButtonPresent(true);
-      checkViewVersionHistoryButtonState(false);
+      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_2);
+      IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
+      IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
       //Edit and save file
      IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkViewVersionHistoryButtonPresent(true);
-      checkViewVersionHistoryButtonState(true);
+      IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
+      IDE.VERSIONS.checkViewVersionHistoryButtonState(true);
      IDE.EDITOR.typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
      IDE.EDITOR.typeTextIntoEditor(0, version3Text);
@@ -219,109 +218,108 @@ public class ViewVersionListTest extends VersioningTest
       saveCurrentFile();
 
       //Open version panel
-      //runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
-      
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD * 2);
-      checkVersionPanelState(true);
-      checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.VERSIONS.waitVersionContentViewOpen();
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
 
-      checkViewVersionListButtonState(true);
+      IDE.VERSIONS.checkVersionPanelState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(0));
+
+      IDE.VERSIONS.checkViewVersionListButtonState(true);
       
-//      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
-//      Thread.sleep(TestConstants.SLEEP);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
+      IDE.VERSIONS.waitForViewVersionsListViewOpen();
       
-      checkViewVersionsListPanel(true);
-      checkOpenVersionButtonState(false);
-      checkVersionListSize(5);
-      clickCloseVersionListPanelButton();
+      IDE.VERSIONS.checkViewVersionsListPanel(true);
+      IDE.VERSIONS.checkOpenVersionButtonState(false);
+      IDE.VERSIONS.checkVersionListSize(5);
+      IDE.VERSIONS.clickCloseVersionListPanelButton();
       //Open version:
-      checkOpenVersion(1, version1Text + version2Text + version3Text);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkOpenVersion(2, version1Text + version2Text + version3Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
 
       //View older version:
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
-      checkTextOnVersionPanel(version1Text + version2Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text);
 
       //View newer version:
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
-      checkTextOnVersionPanel(version1Text + version2Text + version3Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text);
       //Open version:
-      checkOpenVersion(3, version1Text);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkOpenVersion(4, version1Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
 
       //View newer version:
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
-      checkTextOnVersionPanel(version1Text + version2Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text);
 
       //Open version:
-      checkOpenVersion(0, version1Text + version2Text + version3Text + version4Text);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(false);
+      IDE.VERSIONS.checkOpenVersion(1, version1Text + version2Text + version3Text + version4Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(false);
 
       //View older version:
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
-      checkTextOnVersionPanel(version1Text + version2Text + version3Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //View older version:
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
-      checkTextOnVersionPanel(version1Text + version2Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text);
 
       //Open version:
-      checkOpenVersion(2, version1Text + version2Text);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkOpenVersion(3, version1Text + version2Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
 
       //View newer version:
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
-      checkTextOnVersionPanel(version1Text + version2Text + version3Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //View newer version:
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(false);
-      checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(false);
+      IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
       //Open version:
-      checkOpenVersion(4, "");
-      checkOlderVersionButtonState(false);
-      checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkOpenVersion(5, "");
+      IDE.VERSIONS.checkOlderVersionButtonState(false);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
 
       //View newer version:
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkOlderVersionButtonState(true);
-      checkNewerVersionButtonState(true);
-      checkTextOnVersionPanel(version1Text);
+      IDE.VERSIONS.checkOlderVersionButtonState(true);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel(version1Text);
 
       //View older version:
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkOlderVersionButtonState(false);
-      checkNewerVersionButtonState(true);
-      checkTextOnVersionPanel("");
+      IDE.VERSIONS.checkOlderVersionButtonState(false);
+      IDE.VERSIONS.checkNewerVersionButtonState(true);
+      IDE.VERSIONS.checkTextOnVersionPanel("");
 
      IDE.EDITOR.closeTab(0);
    }

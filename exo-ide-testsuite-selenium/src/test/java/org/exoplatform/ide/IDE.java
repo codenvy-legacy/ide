@@ -45,6 +45,7 @@ import org.exoplatform.ide.core.Statusbar;
 import org.exoplatform.ide.core.Templates;
 import org.exoplatform.ide.core.Toolbar;
 import org.exoplatform.ide.core.Upload;
+import org.exoplatform.ide.core.Versions;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.Workspace;
 
@@ -132,6 +133,8 @@ public class IDE
    public Properties PROPERTIES = new Properties();
    
    public ClasspathProject CLASSPATH_PROJECT = new ClasspathProject();
+   
+   public Versions VERSIONS = new Versions(); 
 
    /**
     * Select main frame of IDE.

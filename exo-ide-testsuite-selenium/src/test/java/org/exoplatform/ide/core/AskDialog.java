@@ -34,36 +34,48 @@ public class AskDialog extends AbstractTestModule
       String ASK_ID = "exoAskDialog";
 
       String NO_BUTTON = "exoAskDialogNoButton";
-      
-      String ASK_TITLE = "//div[@id='"+ ASK_ID +"']//div[@class='Caption']/span";
+
+      String ASK_TITLE = "//div[@id='" + ASK_ID + "']//div[@class='Caption']/span";
+   }
+
+   public void waitForAskDialogOpened() throws Exception
+   {
+      waitForElementPresent(Locators.ASK_ID);
    }
    
+   public void waitForAskDialogClosed() throws Exception
+   {
+      waitForElementNotPresent(Locators.ASK_ID);
+   }
+
    public void assertOpened()
    {
       assertTrue(selenium().isElementPresent(Locators.ASK_ID));
    }
-   
-   public void assertOpened(String message) {
+
+   public void assertOpened(String message)
+   {
       assertTrue(isDialogOpened(message));
    }
-   
+
    public boolean isDialogOpened()
    {
       return selenium().isElementPresent(Locators.ASK_ID);
    }
-   
+
    public boolean isDialogOpened(String message)
    {
-      return selenium().isElementPresent(Locators.ASK_TITLE + "[contains(text(), '" + message+"')]");
+      return selenium().isElementPresent(Locators.ASK_TITLE + "[contains(text(), '" + message + "')]");
    }
-   
+
    public void clickNo() throws Exception
    {
       selenium().click(Locators.NO_BUTTON);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
-   public void clickYes() throws Exception {
+
+   public void clickYes() throws Exception
+   {
       selenium().click("//div[@id='exoAskDialog']//div[@id='exoAskDialogYesButton']");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }

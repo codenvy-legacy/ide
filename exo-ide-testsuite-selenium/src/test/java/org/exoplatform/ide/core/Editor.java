@@ -93,11 +93,15 @@ public class Editor extends AbstractTestModule
     */
    public void closeTab(int index) throws Exception
    {
-      selenium().mouseOver(Locators.getTabCloseButtonLocator(index));
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      String tabLocator = Locators.getTabCloseButtonLocator(index);
+      if (selenium().isElementPresent(tabLocator))
+      {
+         selenium().mouseOver(tabLocator);
+         Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      selenium().click(Locators.getTabCloseButtonLocator(index));
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+         selenium().click(tabLocator);
+         Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      }
    }
 
    /**
@@ -545,7 +549,7 @@ public class Editor extends AbstractTestModule
       waitForElementPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
-
+   
    /**
     * Check is file in tabIndex tab opened with CK editor.
     * 

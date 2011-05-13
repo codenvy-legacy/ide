@@ -120,7 +120,7 @@ public class Toolbar extends AbstractTestModule
          assertTrue(selenium().isElementPresent(locator));
       }
    }
-   
+
    public void waitForButtonEnabled(String name, boolean enabled, int waitPeriod)
    {
       String locator = null;
@@ -190,6 +190,19 @@ public class Toolbar extends AbstractTestModule
          if (selenium().isElementPresent(locator))
             assertFalse(selenium().isVisible(locator));
       }
+   }
+
+   /**
+    * Get the button's selected state.
+    * 
+    * @param name button's name
+    * @return if <code>true</code>, then button is selected
+    */
+   public boolean isButtonSelected(String name)
+   {
+      return selenium().isElementPresent(
+         "//div[@class='exo-toolbar16ButtonPanel_Right' and @title='" + name
+            + "']/div[@class='exo-toolbar16Button-selected' and @elementenabled='true']");
    }
 
    public void assertButtonPresent(String name, boolean present)

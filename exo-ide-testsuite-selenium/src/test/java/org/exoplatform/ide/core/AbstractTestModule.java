@@ -71,6 +71,32 @@ public abstract class AbstractTestModule
    }
    
    /**
+    * Wait while element is visible.
+    * 
+    * @param locator - element locator
+    * @throws Exception
+    */
+   protected void waitForElementVisible(String locator) throws Exception
+   {
+      int WAITING_MAX_SECONDS = 10;
+
+      for (int second = 0;; second++)
+      {
+         if (second >= WAITING_MAX_SECONDS * 10)
+         {
+            fail("timeout for element " + locator);
+         }
+
+         if (selenium().isVisible(locator))
+         {
+            break;
+         }
+
+         Thread.sleep(100);
+      }
+   }
+   
+   /**
     * Wait while element not present.
     * 
     * @param locator - element locator
