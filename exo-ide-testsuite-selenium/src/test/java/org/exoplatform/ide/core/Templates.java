@@ -192,6 +192,10 @@ public class Templates extends AbstractTestModule
    
    /**
     * Create project from template using "Create Project" (from template) form.
+    * 1. Call "Project From Template" form
+    * 2. Select <code>templateName</code> template in list grid
+    * 3. Type project name <code>projectName</code> (if null - leave the default project name)
+    * 4. Click Create button
     * 
     * @param templateName - the name of template.
     * @param projectName - the name of future project.
