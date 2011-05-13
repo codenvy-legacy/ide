@@ -250,7 +250,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
          }
          String annotationList = getAnnotationList(token);
          String deprecateSign = (isDeprecated) ? "style='text-decoration:line-through;'" : "";
-         name = getModifiersContainer(token) + modfImg + synchImg + "<span class='item-label' " + deprecateSign + " style='margin-left: 5px;' title=\"" + annotationList
+         name = getModifiersContainer(token) + modfImg + synchImg + "<span class='item-name' " + deprecateSign + " style='margin-left: 5px;' title=\"" + annotationList
                   + "\">" + name + "</span>";            
  
          if (TokenType.METHOD.equals(token.getType()))
@@ -258,24 +258,24 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
             name += getParametersList(token);
          }
          //Field type or method return type:
-         name += "<span style='color:#644a17;' class='item-type-label' title=\"" + annotationList + "\">" + getElementType(token) + "</span>";
+         name += "<span style='color:#644a17;' class='item-type' title=\"" + annotationList + "\">" + getElementType(token) + "</span>";
       }
 
       // display type of javascript variables
       else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType()) && token.getElementType() != null)
       {
-         name += "<span style='color:#644a17;' class='item-type-label' style='margin-left: 5px;'>" + getElementType(token) + "</span>";
+         name = "<span class='item-name'>" + name + "</span><span style='color:#644a17;' class='item-type' style='margin-left: 5px;'>" + getElementType(token) + "</span>";
       }
 
       // display type of RUBY variables
       else if (MimeType.APPLICATION_RUBY.equals(token.getMimeType()) && token.getElementType() != null)
       {
-         name += "<span style='color:#644a17;' class='item-type-label' style='margin-left: 5px;'>" + getElementType(token) + "</span>";
+         name = "<span class='item-name'>" + name + "</span><span style='color:#644a17;' class='item-type' style='margin-left: 5px;'>" + getElementType(token) + "</span>";
       }
       
       else
       {
-         name = "<span class='item-label'>" + name + "</span>";
+         name = "<span class='item-name'>" + name + "</span>";
       }
       
       return name;
@@ -616,7 +616,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
 
             parametersDescription +=
                "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList)
-                  + "<span class='item-parameter-label'>" + parameter.getElementType() + "</span></span>";
+                  + "<span class='item-parameter'>" + parameter.getElementType() + "</span></span>";
          }
       }
 
