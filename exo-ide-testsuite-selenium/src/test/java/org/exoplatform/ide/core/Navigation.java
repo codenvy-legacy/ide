@@ -45,17 +45,38 @@ public class Navigation extends AbstractTestModule
 
    /**
     * Select row in navigation tree.
-    * 0 - number of root node (workspace).
+    * 1 - number of root node (workspace).
     * @param rowNumber - number of row.
     * @throws Exception
     */
    public void selectRow(int rowNumber) throws Exception
    {
-      fail();
-      //      selenium.click(Locators.SC_NAVIGATION_TREE + "/body/row[" + rowNumber + "]/col[1]");
-      //      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      int size =
+         selenium().getXpathCount("//div[@id='" + NAVIGATION_TREE + "']//div[@class='ide-Tree-label']").intValue();
+      if (size <= 0)
+         return;
+      int index = 0;
+
+      for (int i = 1; i <= size; i++)
+      {
+         if (selenium().isVisible(
+            "xpath=(//div[@id='" + NAVIGATION_TREE + "']//div[@class='ide-Tree-label'])[position()=" + i + "]"))
+            ;
+         index++;
+         if (index == rowNumber)
+         {
+            selenium().clickAt(
+               "xpath=(//div[@id='" + NAVIGATION_TREE + "']//div[@class='ide-Tree-label'])[position()=" + i + "]", "0");
+            break;
+         }
+      }
    }
 
+   /**
+    * Return title of item at row started from
+    * 1 - number of root node (workspace).  
+    * @param rowNumber - number of row.
+    */
    public String getRowTitle(int rowNumber)
    {
       int size =
