@@ -31,16 +31,21 @@ public class Output extends AbstractTestModule
 {
 
    /**
+    * 
+    */
+   private static final String IDE_OUTPUT_CONTENT_DIV_1S = "//div[@id='ideOutputContent']/div[%1s]/";
+
+   /**
     * Get Output message text
     * @param messageNumber Number of message. <b>Message count starts with 1 !</b>
     * @return Text of output message 
     */
    public String getOutputMessageText(int messageNumber)
    {
-      String locator = String.format("//div[@id='ideOutputContent']/div[%1s]/", messageNumber);
+      String locator = String.format(IDE_OUTPUT_CONTENT_DIV_1S, messageNumber);
       return selenium().getText(locator);
    }
-   
+
    /**
     * Check is Output form opened 
     */
@@ -48,10 +53,21 @@ public class Output extends AbstractTestModule
    {
       assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR));
    }
-   
+
    public void waitForOutputOpened() throws Exception
    {
       waitForElementPresent("ideOutputContent");
    }
-   
+
+   /**
+    *  Wait for Output message present
+    * @param messageIndex of message. <b>Message count starts with 1 !</b>
+    * @throws Exception 
+    */
+   public void waitForMessageShow(int messageIndex) throws Exception
+   {
+      String locator = String.format(IDE_OUTPUT_CONTENT_DIV_1S, messageIndex);
+      waitForElementPresent(locator);
+   }
+
 }

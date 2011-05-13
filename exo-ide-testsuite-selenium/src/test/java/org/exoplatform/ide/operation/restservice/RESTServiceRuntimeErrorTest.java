@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.operation.restservice;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
@@ -26,7 +26,6 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -40,18 +39,18 @@ import java.io.IOException;
 public class RESTServiceRuntimeErrorTest extends BaseTest
 {
 
+   private static final String FOLDER_NAME = "RuntimeError";
+   
    private static final String FILE_NAME = "RESTServiceRuntimeErrorTest.groovy";
 
    @Test
    public void testDeployUndeploy() throws Exception
    {
+      waitForRootElement();
       
+      createFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
-      //TODO**********************
-      createFolder("RuntimeError");
-      //***************************
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       for (int i = 0; i < 10; i++)
@@ -60,7 +59,7 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
       }
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
 
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, " / 0");
+      IDE.EDITOR.typeTextIntoEditor(0, " / 0");
 
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
@@ -68,32 +67,17 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.REST_SERVICE.launchRestService();
+      
+      IDE.REST_SERVICE.selectPathValue("/helloworld/{name}");
 
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      IDE.REST_SERVICE.setMethodFieldValue("GET");
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.REST_SERVICE.sendRequst();
 
-      selenium.click("//nobr[contains(text(), '/helloworld/{name}')]");
+      IDE.OUTPUT.waitForMessageShow(2);
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServiceMethod]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium.click("//nobr[contains(text(), 'GET')]");
-
-      selenium.click("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]");
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
-
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-      Thread.sleep(TestConstants.SLEEP);
-
-      String mess = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
+      String mess = IDE.OUTPUT.getOutputMessageText(2);
       assertTrue(mess
          .startsWith("[ERROR]"));
       assertTrue(mess.contains("helloworld/{name} 500 Internal Server Error"));
@@ -102,11 +86,11 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      String url = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+      String url = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" +FOLDER_NAME+"/"+ FILE_NAME;
       try
       {
          Utils.undeployService(BASE_URL, REST_CONTEXT, url);
-         VirtualFileSystemUtils.delete(url);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
       }
       catch (IOException e)
       {
