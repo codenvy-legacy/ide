@@ -462,10 +462,18 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       {
          return;
       }
-
       if (openedFiles.get(file.getHref()) != null
          && event.getEditorProducer().getDescription().equals(openedEditors.get(file.getHref())))
       {         
+         File openedFile = openedFiles.get(file.getHref());
+         Editor editor = editors.get(openedFile.getHref());
+         editorsViews.get(editor.getEditorId()).setViewVisible();
+         if (openedFile.isContentChanged())
+         {
+            return;
+         }
+         ignoreContentChangedList.add(file.getHref());
+         editors.get(openedFile.getHref()).setText(file.getContent());
          return;
       }
 

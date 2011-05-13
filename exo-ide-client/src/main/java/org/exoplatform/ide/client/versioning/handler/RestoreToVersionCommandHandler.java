@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.versioning.event.RestoreToVersionEvent;
 import org.exoplatform.ide.client.versioning.event.RestoreToVersionHandler;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
+import org.exoplatform.ide.client.versioning.event.VersionRestoredEvent;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -104,7 +105,7 @@ public class RestoreToVersionCommandHandler implements ShowVersionContentHandler
             }
          });
    }
-   
+
    private void restoreToVersion()
    {
       File file = new File(activeVersion.getItemHref());
@@ -123,14 +124,15 @@ public class RestoreToVersionCommandHandler implements ShowVersionContentHandler
          }
       });
    }
-   
-   private void saveFileContent(File file)
+
+   private void saveFileContent(final File file)
    {
       VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback()
       {
          @Override
          protected void onSuccess(FileData result)
          {
+            eventBus.fireEvent(new VersionRestoredEvent(activeVersion, result.getFile()));
             eventBus.fireEvent(new OpenFileEvent(result.getFile()));
          }
       });

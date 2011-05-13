@@ -39,9 +39,9 @@ public class RestoreToVersionControl extends VersionControl implements ShowVersi
 
    private static final String ID = "File/Restore to Version";
 
-   private final String TITLE = "Restore To Version";
+   private final String TITLE = "Restore to Version";
 
-   private final String PROMPT = "Restore To Version";
+   private final String PROMPT = "Restore to Version";
 
    private Version version;
 

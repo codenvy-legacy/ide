@@ -19,13 +19,9 @@
 package org.exoplatform.ide.client.versioning;
 
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.ImageUtil;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
@@ -47,9 +43,9 @@ public class VersionContentPresenter implements ShowVersionContentHandler
 
    public interface Display extends IsView
    {
-      
-      String ID ="ideVersionContentView";
-      
+
+      String ID = "ideVersionContentView";
+
       String getEditorId();
 
       void setVersionContent(String content);
@@ -106,16 +102,13 @@ public class VersionContentPresenter implements ShowVersionContentHandler
    {
       version = event.getVersion();
       display.setTitle(getTitle());
-//      eventBus.fireEvent(new ChangePanelTitleEvent(VersionContentForm.ID, getTitle()));
       display.setVersionContent(event.getVersion().getContent());
    }
 
    private String getTitle()
    {
-      Image image = new Image(IDEImageBundle.INSTANCE.viewVersions());
-      String imageHTML = ImageUtil.getHTML(image);
       String hint = "title=\"" + version.getHref() + "\"";
-      String title = "<span " + hint + ">" + imageHTML + "&nbsp;" + "Version " + version.getDisplayName();
+      String title = "<span " + hint + ">" + "Version " + version.getDisplayName() + "</span>";
       return title;
    }
 }
