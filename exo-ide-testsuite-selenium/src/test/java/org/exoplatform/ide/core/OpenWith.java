@@ -57,7 +57,7 @@ public class OpenWith extends AbstractTestModule
       String locator = "//table[@id='ideOpenFileWithListGrid']/tbody/tr/td/div[@tabindex='0']";
       return selenium().getText(locator);
    }
-   
+
    /**
     * Selects editor by it's position in the list of editors.
     * Note that numbering begins at one.
@@ -114,6 +114,36 @@ public class OpenWith extends AbstractTestModule
       selenium().click("ideOpenFileWithOkButton");
       //time remaining to open editor
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+   }
+
+   /**
+    * Open file from navigation tree with CK (WYSIWYG) editor
+    * @param fileURL name of file to open
+    * @param checkDefault do mark checkbox Use by default
+    * @throws Exception
+    */
+   protected void openFileFromNavigationTreeWithCkEditor(String fileURL, String typeFile, boolean checkDefault)
+      throws Exception
+   {
+      //TODO add check form
+      IDE().NAVIGATION.selectItem(fileURL);
+      IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+      selenium().click(
+         "//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" + " " + typeFile + " "
+            + "editor" + "'" + "]");
+      if (checkDefault)
+      {
+         //click on checkbox Use as default editor
+         selenium()
+            .click(
+               "scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
+         Thread.sleep(TestConstants.SLEEP);
+      }
+      selenium().click("ideOpenFileWithOkButton");
+      Thread.sleep(TestConstants.SLEEP);
+      //time remaining to open CK editor
+      Thread.sleep(TestConstants.SLEEP);
+      //TODO add check that editor opened
    }
 
 }
