@@ -73,7 +73,7 @@ public class Navigation extends AbstractTestModule
    }
 
    /**
-    * Return title of item at row started from
+    * Return title of item at row
     * 1 - number of root node (workspace).  
     * @param rowNumber - number of row.
     */
