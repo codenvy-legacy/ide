@@ -25,6 +25,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -33,6 +34,11 @@ import org.exoplatform.ide.TestConstants;
  */
 public class RESTService extends AbstractTestModule
 {
+   /**
+    * 
+    */
+   private static final String GET_REST_SERVICE_URL_FORM = "ideGetRestServiceURLForm";
+
    public final String REST_SERVICE_METHOD = "ideGroovyServiceMethod";
 
    public final String LAUNCH_SEND_BTN = "ideGroovyServiceSend";
@@ -72,8 +78,7 @@ public class RESTService extends AbstractTestModule
     */
    public void launchRestService() throws Exception, InterruptedException
    {
-      IDE().TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE().TOOLBAR.runCommand(ToolbarCommands.Run.LAUNCH_REST_SERVICE);
       waitForElementPresent(REST_SERVICE_FORM);
    }
 
@@ -81,7 +86,7 @@ public class RESTService extends AbstractTestModule
     * Validate REST Service, and check, that all ok.
     * 
     * @param fileName - name of file
-    * @param numberOfRecord - number of notification record if Output Tab (from 0)
+    * @param numberOfRecord - number of notification record if Output Tab (from 1)
     * @throws Exception
     */
    public void validate(String fileName, int numberOfRecord) throws Exception
@@ -90,7 +95,7 @@ public class RESTService extends AbstractTestModule
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_TAB_LOCATOR));
 
-      final String msg = getOutputMsgText(numberOfRecord);
+      final String msg = IDE().OUTPUT.getOutputMessageText(numberOfRecord);
 
       assertEquals("[INFO] " + fileName + " validated successfully.", msg);
    }
@@ -98,7 +103,7 @@ public class RESTService extends AbstractTestModule
    /**
     * @param filePath - path to file in workspace tree
     * (e.g. SampleProject/server.RESTService.grs)
-    * @param numberOfRecord - number of notification record if Output Tab (from 0)
+    * @param numberOfRecord - number of notification record if Output Tab (from 1)
     * @throws Exception
     */
    public void deploy(String filePath, int numberOfRecord) throws Exception
@@ -108,22 +113,12 @@ public class RESTService extends AbstractTestModule
 
       assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_TAB_LOCATOR));
 
-      final String msg = getOutputMsgText(numberOfRecord);
+      final String msg = IDE().OUTPUT.getOutputMessageText(numberOfRecord);
 
       final String validateSuccessMsg =
          "[INFO] " + BaseTest.ENTRY_POINT_URL + BaseTest.WS_NAME + "/" + filePath + " deployed successfully.";
 
       assertEquals(validateSuccessMsg, msg);
-   }
-
-   //FIXME 
-   public String getOutputMsgText(int numberOfRecord)
-   {
-      //indexes of element in xpath starts from 1, but in out project all indexes start from 0
-      final int recordIndex = numberOfRecord + 1;
-      return selenium().getText(
-         Locators.OperationForm.OUTPUT_FORM_LOCATOR + "/div[contains(@eventproxy, " + "'isc_OutputRecord_')]["
-            + recordIndex + "]");
    }
 
    /**
@@ -231,13 +226,21 @@ public class RESTService extends AbstractTestModule
    }
 
    /**
-    * Send request via click on "Send: button
+    * Send request via click on "Send" button
     * @throws Exception 
     */
    public void sendRequst() throws Exception
    {
-      selenium().click(SEND_REQUEST_BUTTON);
+      clickSendButton();
       waitForElementNotPresent(REST_SERVICE_FORM);
+   }
+
+   /**
+    * Click on "Send" button
+    */
+   public void clickSendButton()
+   {
+      selenium().click(SEND_REQUEST_BUTTON);
    }
 
    private void checSelectElementContainsValue(String selectLocator, String val[])
@@ -384,18 +387,57 @@ public class RESTService extends AbstractTestModule
       selenium().click(CANCEL_BUTTON);
    }
 
-   private void clickOnTableCheckBox(String tableId, int row, int col)
+   private void changeTableCheckBox(String tableId, int row, int col, boolean check)
    {
-      String locator = String.format("//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div/input[@type='checkbox']", tableId, row, col);
+      String locator =
+         String.format("//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div/input[@type='checkbox']", tableId, row, col);
+
+      selenium().click(String.format("//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div", tableId, row, col));
       selenium().click(locator);
+      if (check)
+         selenium().check(locator);
+      else
+         selenium().uncheck(locator);
+
    }
+
    /**
-    * Click on Header Parameter Send check box
+    * Change Header parameter Send check box state  
     * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
+    * @param check check box state (checked/ unchecked)
     */
-   public void clickOnHeaderParameterSendCheckBox(int parameterIndex)
+   public void changeHeaderParameterSendCheckBoxState(int parameterIndex, boolean check)
    {
-       clickOnTableCheckBox(HEADER_TABLE_ID, parameterIndex, 1);
+      changeTableCheckBox(HEADER_TABLE_ID, parameterIndex, 1, check);
+   }
+
+   /**
+    * Open Get URL form, by press Get URL button
+    * @throws Exception
+    */
+   public void openGetURLForm() throws Exception
+   {
+      selenium().click("ideGroovyServiceGetURL");
+      waitForElementPresent(GET_REST_SERVICE_URL_FORM);
+   }
+
+   /**
+    * Get REST Service URL field value
+    * @return
+    */
+   public String getUrlFromGetURLForm()
+   {
+      return selenium().getValue("ideGetItemURLFormURLField");
+   }
+
+   /**
+    * Close Get URL form, by press Ok button
+    * @throws Exception
+    */
+   public void closeGetURLForm() throws Exception
+   {
+      selenium().click("ideGetRestServiceURLFormOkButton");
+      waitForElementNotPresent(GET_REST_SERVICE_URL_FORM);
    }
 
 }

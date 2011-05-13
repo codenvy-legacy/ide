@@ -43,7 +43,7 @@ public class RESTServiceGetURLTest extends BaseTest
 
    private static final String FILE_NAME = "RESTServiceGetURL.groovy";
 
-   private final static String TEST_FOLDER = RESTServiceGetURLTest.class.getSimpleName() ;
+   private final static String TEST_FOLDER = RESTServiceGetURLTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -51,7 +51,8 @@ public class RESTServiceGetURLTest extends BaseTest
       try
       {
          //TODO*****************change**************change add folder for locked file
-         String url = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
+         String url =
+            BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/";
          VirtualFileSystemUtils.mkcol(url);
          VirtualFileSystemUtils.put(
             "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy",
@@ -71,8 +72,9 @@ public class RESTServiceGetURLTest extends BaseTest
    @Test
    public void testGetUrl() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-       IDE.NAVIGATION.selectItem(WS_URL);
+      waitForRootElement();
+
+      IDE.NAVIGATION.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -81,87 +83,57 @@ public class RESTServiceGetURLTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       //****************************
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.TOOLBAR.runCommand(MenuCommands.Run.LAUNCH_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.REST_SERVICE.launchRestService();
 
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      IDE.REST_SERVICE.openPathList();
+      IDE.REST_SERVICE.selectPathSuggestPanelItem("/testService");
+      IDE.REST_SERVICE.openGetURLForm();
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium.click("//nobr[contains(text(), '/testService')]");
-
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceGetURL\"]");
-
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGetRestServiceURLForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideGetRestServiceURLFormOkButton\"]"));
-
-      String url =
-         selenium
-            .getValue("scLocator=//Window[ID=\"ideGetRestServiceURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element");
+      String url = IDE.REST_SERVICE.getUrlFromGetURLForm();
 
       assertTrue((BASE_URL + "rest/private/testService").equals(url));
       //Close form
-      selenium.click("scLocator=//IButton[ID=\"ideGetRestServiceURLFormOkButton\"]");
+      IDE.REST_SERVICE.closeGetURLForm();
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("//nobr[contains(text(), '/testService/Inner/{pathParam}')]");
+      IDE.REST_SERVICE.openPathList();
+      IDE.REST_SERVICE.selectPathSuggestPanelItem("/testService/Inner/{pathParam}");
 
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceGetURL\"]");
-
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGetRestServiceURLForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideGetRestServiceURLFormOkButton\"]"));
-
-      url =
-         selenium
-            .getValue("scLocator=//Window[ID=\"ideGetRestServiceURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element");
+      IDE.REST_SERVICE.openGetURLForm();
+      url = IDE.REST_SERVICE.getUrlFromGetURLForm();
 
       assertTrue((BASE_URL + "rest/private/testService/Inner/{pathParam}").equals(url));
 
       //Close form
-      selenium.click("scLocator=//IButton[ID=\"ideGetRestServiceURLFormOkButton\"]");
+      IDE.REST_SERVICE.closeGetURLForm();
+      IDE.REST_SERVICE.openPathList();
+      IDE.REST_SERVICE.selectPathSuggestPanelItem("/testService/Inner/{param}/node/{paramList: .+}");
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGroovyServiceForm\"]/item[name=ideGroovyServicePath||title=ideGroovyServicePath]/[icon='picker']");
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("//nobr[contains(text(), '/testService/Inner/{param}/node/{paramList: .+}')]");
-
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceGetURL\"]");
-
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGetRestServiceURLForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideGetRestServiceURLFormOkButton\"]"));
-
-      url =
-         selenium
-            .getValue("scLocator=//Window[ID=\"ideGetRestServiceURLForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideGetItemURLFormURLField]/element");
+      IDE.REST_SERVICE.openGetURLForm();
+      url = IDE.REST_SERVICE.getUrlFromGetURLForm();
 
       assertTrue((BASE_URL + "rest/private/testService/Inner/{param}/node/{paramList: .+}").equals(url));
 
       //Close form
-      selenium.click("scLocator=//IButton[ID=\"ideGetRestServiceURLFormOkButton\"]");
+      IDE.REST_SERVICE.closeGetURLForm();
 
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceCancel\"]/");
+      IDE.REST_SERVICE.closeForm();
 
    }
 
    @AfterClass
    public static void tearDown()
    {
-      String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
+      String url =
+         BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/"
+            + FILE_NAME;
       try
       {
          Utils.undeployService(BASE_URL, REST_CONTEXT, url);
-         VirtualFileSystemUtils.delete(url);
+         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
       }
       catch (IOException e)
       {

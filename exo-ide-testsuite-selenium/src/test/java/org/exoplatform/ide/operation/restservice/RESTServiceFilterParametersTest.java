@@ -95,12 +95,10 @@ public class RESTServiceFilterParametersTest extends BaseTest
       //************************
 
       IDE.REST_SERVICE.selectHeaderParametersTab();
-      IDE.REST_SERVICE.clickOnHeaderParameterSendCheckBox(1);
+      waitForElementPresent(IDE.REST_SERVICE.HEADER_TABLE);
+      
+      IDE.REST_SERVICE.changeHeaderParameterSendCheckBoxState(1, false);      
 
-      //      selenium.keyPress("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/body/row[0]/col[fieldName=value||4]",
-      //         "\\13");
-      //      selenium
-      //         .click("scLocator=//ListGrid[ID=\"ideGroovyServiceHeaderTable\"]/editRowForm/item[name=send||title=send||value=true||index=0||Class=CheckboxItem]/textbox");
       IDE.REST_SERVICE.sendRequst();
 
       waitForElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR);

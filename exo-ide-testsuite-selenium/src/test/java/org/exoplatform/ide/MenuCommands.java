@@ -80,7 +80,7 @@ public interface MenuCommands
 
       public static final String UNSET_AUTOLOAD = "Unset Autoload";
 
-      public static final String LAUNCH_REST_SERVICE = "Launch REST Service...";
+      public static final String LAUNCH_REST_SERVICE = "Launch REST Service";
 
       public static final String RUN_GROOVY_SERVICE = "Run in Sandbox";
 

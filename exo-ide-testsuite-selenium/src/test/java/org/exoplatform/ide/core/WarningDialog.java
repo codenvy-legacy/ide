@@ -35,6 +35,7 @@ import org.exoplatform.ide.TestConstants;
 public class WarningDialog extends AbstractTestModule
 {
 
+   
    /**
     * Check whether the Warning dialog is opened.
     */
@@ -53,6 +54,15 @@ public class WarningDialog extends AbstractTestModule
    {
       checkIsOpened();
       assertTrue(selenium().isTextPresent(message));
+   }
+   
+   /**
+    * Wait for Warning dialog opened
+    * @throws Exception
+    */
+   public void waitForWarningDialogOpened() throws Exception
+   {
+      waitForElementPresent("exoWarningDialog");
    }
 
    /**

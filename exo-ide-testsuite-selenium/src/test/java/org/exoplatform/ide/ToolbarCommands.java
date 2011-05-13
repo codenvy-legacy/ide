@@ -113,5 +113,7 @@ public interface ToolbarCommands
       public static final String PREVIEW_NODE_TYPE = "Preview node type";
 
       public static final String DEPLOY_NODE_TYPE = "Deploy node type";
+      
+      public static final String LAUNCH_REST_SERVICE = "Launch REST Service...";
    }
 }
