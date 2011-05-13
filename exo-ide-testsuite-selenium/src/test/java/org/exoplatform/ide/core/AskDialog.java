@@ -79,5 +79,21 @@ public class AskDialog extends AbstractTestModule
       selenium().click("//div[@id='exoAskDialog']//div[@id='exoAskDialogYesButton']");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
+   
+   public void waitForDialog() throws Exception
+   {
+      waitForElementPresent(Locators.ASK_ID);
+   }
+   
+   public void waitForDialog(String message) throws Exception
+   {
+      waitForDialog();
+      waitForTextPresent(message);
+   }
+   
+   public void waitForDialogNotPresent() throws Exception
+   {
+      waitForElementNotPresent(Locators.ASK_ID);
+   }
 
 }

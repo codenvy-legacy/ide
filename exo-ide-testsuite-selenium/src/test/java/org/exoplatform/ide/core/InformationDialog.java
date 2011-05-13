@@ -93,5 +93,10 @@ public class InformationDialog extends AbstractTestModule
       waitForInfoDialog();
       waitForTextPresent(message);
    }
+   
+   public void waitForInfoDialogNotPresent() throws Exception
+   {
+      waitForElementNotPresent(INFO_DIALOG_ID);
+   }
 
 }

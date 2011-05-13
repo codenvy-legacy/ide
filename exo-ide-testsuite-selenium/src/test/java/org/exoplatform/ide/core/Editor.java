@@ -541,7 +541,7 @@ public class Editor extends AbstractTestModule
 
    /**
    * wait present tab editor element 
-   * @param tabIndex
+   * @param tabIndex - index of tab, starts at 0
    * @throws Exception
    */
    public void waitTabPresent(int tabIndex) throws Exception

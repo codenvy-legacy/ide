@@ -1117,6 +1117,16 @@ public abstract class BaseTest
       selenium.click(locator + "CancelButton");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
+   
+   /**
+    * Wait, while loader dissapears (which meens, that operation is done).
+    * @throws Exception
+    */
+   protected void waitForLoaderDissapeared() throws Exception
+   {
+      waitForElementPresent("//div[contains(@url, loader-background-element.png)]");
+      waitForElementNotPresent("//div[contains(@url, loader-background-element.png)]");
+   }
 
    //   /**
    //    * @throws Exception 

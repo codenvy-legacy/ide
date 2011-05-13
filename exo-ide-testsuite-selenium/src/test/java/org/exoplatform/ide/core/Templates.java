@@ -89,6 +89,11 @@ public class Templates extends AbstractTestModule
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
+   /**
+    * Select project template in list grid.
+    * @param templateName
+    * @throws InterruptedException
+    */
    public void selectProjectTemplate(String templateName) throws InterruptedException
    {
       selenium().click(PROJECT_CREATE_FORM_LOCATOR + "//span[@title='" + templateName + "']");
@@ -117,6 +122,12 @@ public class Templates extends AbstractTestModule
       selenium().click(CREATE_BUTTON_ID);
 
       waitForElementNotPresent(FILE_FROM_TEMPLATE_FORM_ID);
+   }
+   
+   public void clickDeleteButton() throws Exception
+   {
+      selenium().click(DELETE_BUTTON_ID);
+      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
    }
    
    public void clickCancelButton() throws Exception
@@ -161,6 +172,11 @@ public class Templates extends AbstractTestModule
       assertTrue(selenium().isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
    }
    
+   /**
+    * Check, is input field enabled or disabled.
+    * 
+    * @param isEnabled - is enabled
+    */
    public void checkInputFieldState(boolean isEnabled)
    {
       if (isEnabled)
@@ -174,6 +190,13 @@ public class Templates extends AbstractTestModule
       }
    }
    
+   /**
+    * Create project from template using "Create Project" (from template) form.
+    * 
+    * @param templateName - the name of template.
+    * @param projectName - the name of future project.
+    * @throws Exception
+    */
    public void createProjectFromTemplate(String templateName, String projectName) throws Exception
    {
       IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
@@ -186,6 +209,48 @@ public class Templates extends AbstractTestModule
          typeNameToInputField(projectName);
       }
       clickCreateButton();
+   }
+   
+   /**
+    * Check, is template name present in list grid.
+    * @param templateName
+    * @param isPresent
+    */
+   public void checkTemplatePresent(String templateName, boolean isPresent)
+   {
+      final String locator = getTemplateRowLocatorByName(templateName);
+      if (isPresent)
+      {
+         assertTrue(selenium().isElementPresent(locator));
+      }
+      else
+      {
+         assertFalse(selenium().isElementPresent(locator));
+      }
+   }
+   
+   /**
+    * Wait, while template name dissapears from list grid.
+    * 
+    * @param templateName - the name of template
+    * @throws Exception
+    */
+   public void waitForTemplateDeleted(String templateName) throws Exception
+   {
+      final String locator = getTemplateRowLocatorByName(templateName);
+      waitForElementNotPresent(locator);
+   }
+   
+   /**
+    * Get the locator of row in list grid by template name.
+    * 
+    * @param templateName - the name of template.
+    * @return
+    */
+   private String getTemplateRowLocatorByName(String templateName)
+   {
+      final String locator = "//table[@id='" + TEMPLATES_LIST_GRID_ID + "']//span[text()='" + templateName + "']";
+      return locator;
    }
    
 }

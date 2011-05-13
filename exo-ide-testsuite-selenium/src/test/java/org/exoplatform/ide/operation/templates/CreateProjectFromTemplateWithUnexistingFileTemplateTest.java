@@ -18,18 +18,15 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.common.http.client.ProtocolNotSuppException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.project.classpath.ClasspathUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -39,7 +36,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by The eXo Platform SAS.
+ * Test for creating project from template.
  *	
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:   ${date} ${time}
@@ -47,12 +44,6 @@ import java.net.URL;
  */
 public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends BaseTest
 {
-   private static final String CREATE_BUTTON_LOCATOR =
-      "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/";
-
-   private static final String DELETE_BUTTON_LOCATOR =
-      "scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormDeleteButton\"]/";
-
    private static final String PROJECT_NAME = "Sample Project";
 
    private static final String PROJECT_TEMPLATE_NAME = "Test Project Template";
@@ -146,75 +137,46 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
    @Test
    public void testCreateProjectFromTemplate() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       //----- 1 ----------------
       //open create project from template form
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
 
-      checkCreateProjectFromTemplateForm();
+      IDE.TEMPLATES.checkProjectCreateForm();
 
       //----- 2 ----------------
       //select project template from list, type project name, click Create button
-      selectProjectTemplate(PROJECT_TEMPLATE_NAME);
-      typeProjectName(PROJECT_NAME);
+      IDE.TEMPLATES.selectProjectTemplate(PROJECT_TEMPLATE_NAME);
+      IDE.TEMPLATES.typeNameToInputField(PROJECT_NAME);
+      IDE.TEMPLATES.clickCreateButton();
 
-      selenium.click(CREATE_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.SLEEP);
-
-      ClasspathUtils.checkConfigureClasspathDialog();
-      ClasspathUtils.clickCancel();
+      IDE.CLASSPATH_PROJECT.waitForClasspathDialog();
+      IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
+      IDE.CLASSPATH_PROJECT.clickCancelButton();
 
       //----- 3 ----------------
       //check new project created
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/"); 
 
-      clickOpenIconOfFolder(PROJECT_NAME);
+      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
 
-      clickOpenIconOfFolder(FOLDER_ORG);
+      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
 
-      clickOpenIconOfFolder(FOLDER_EXOPLATFORM);
+      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
+      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
       IDE.NAVIGATION.assertItemNotVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + UNEXISTING_FILE_HTML);
-   }
-
-   private void clickOpenIconOfFolder(String folderName) throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
-         + "]/col[0]/open");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-
-   private void typeProjectName(String projectName) throws Exception
-   {
-      selenium.type("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item["
-         + "name=ideCreateFileFromTemplateFormFileNameField]/element", projectName);
-
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }
-
-   private void checkCreateProjectFromTemplateForm()
-   {
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/"));
-      assertEquals("Create project",
-         selenium.getText("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/header/"));
-      assertTrue(selenium.isElementPresent(DELETE_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent(CREATE_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/"));
-      assertTrue(selenium
-         .isElementPresent("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item[name=ideCreateFileFromTemplateFormFileNameField]/element"));
-   }
-
-   private void selectProjectTemplate(String projectTemplateName) throws Exception
-   {
-      selenium.mouseDownAt("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[text()='"
-         + projectTemplateName + "']", "");
-      selenium.mouseUpAt("//div[@eventproxy='ideCreateFileFromTemplateFormTemplateListGrid_body']//span[text()='"
-         + projectTemplateName + "']", "");
-
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
 }

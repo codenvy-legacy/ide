@@ -71,8 +71,7 @@ public class GadgetDeployUndeployTest extends BaseTest
       IDE.NAVIGATION.selectItem(URL);
 
       IDE.UPLOAD.open(FormName.OPEN_LOCAL_FILE, filePath, MimeType.GOOGLE_GADGET);
-      waitForElementPresent("//div[contains(@url, loader-background-element.png)]");
-      waitForElementNotPresent("//div[contains(@url, loader-background-element.png)]");
+      waitForLoaderDissapeared();
       IDE.EDITOR.waitTabPresent(0);
 
       // gadget deploy/undeploy command should be disabled
@@ -85,8 +84,7 @@ public class GadgetDeployUndeployTest extends BaseTest
       IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       IDE.SAVE_AS.waitForDialog();
       IDE.SAVE_AS.clickYes();
-      waitForElementPresent("//div[contains(@url, loader-background-element.png)]");
-      waitForElementNotPresent("//div[contains(@url, loader-background-element.png)]");
+      waitForLoaderDissapeared();
 
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, true, TestConstants.WAIT_PERIOD);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, true, TestConstants.WAIT_PERIOD);
