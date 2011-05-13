@@ -457,7 +457,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
    }
 
-   private void firstCheckJavaScriptOutlineTree()
+   private void firstCheckJavaScriptOutlineTree() throws Exception
    {
       assertEquals("a : Object", IDE.OUTLINE.getTitle(0, 0));
 //      assertEquals("\"a1\"", IDE.OUTLINE.getTitle(1, 0));
@@ -471,7 +471,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       assertEquals("f()", IDE.OUTLINE.getTitle(6, 0));
    } 
 
-   private void secondCheckJavaScriptOutlineTree()
+   private void secondCheckJavaScriptOutlineTree() throws Exception
    {
       assertEquals("a : Object", IDE.OUTLINE.getTitle(0, 0));
       assertEquals("b : Object", IDE.OUTLINE.getTitle(1, 0));
