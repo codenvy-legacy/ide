@@ -442,7 +442,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       
       if (token.getLastLineNumber() != 0)
       {
-         return currentLineNumber > token.getLineNumber()
+         return currentLineNumber >= token.getLineNumber()
                   && currentLineNumber <= token.getLastLineNumber();         
       }
          
@@ -452,7 +452,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return currentLineNumber < nextToken.getLineNumber();
       }
 
-      return currentLineNumber > token.getLineNumber();
+      return currentLineNumber >= token.getLineNumber();
    }
    
    /**
