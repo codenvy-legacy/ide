@@ -27,28 +27,28 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Outline.TokenType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a> 
  * @version $Id: Oct 25, 2010 $
  *
  */
-public class CodeOutLineGroovyTest extends BaseTest
+public class CodeOutLineRubyTest extends BaseTest
 {
-   private final static String FILE_NAME = "GroovyCodeOutline.groovy";
+   private final static String FILE_NAME = "TestRubyFile.rb";
 
-   private final static String FOLDER = CodeOutLineGroovyTest.class.getSimpleName();
+   private final static String FOLDER = CodeOutLineRubyTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
    
    private OulineTreeHelper outlineTreeHelper;
    
-   public CodeOutLineGroovyTest()
+   public CodeOutLineRubyTest()
    {
       this.outlineTreeHelper = new OulineTreeHelper();
    }
@@ -60,7 +60,7 @@ public class CodeOutLineGroovyTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_GROOVY, "exo:groovyResourceContainer", URL + FILE_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_RUBY, "nt:resource", URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -99,24 +99,35 @@ public class CodeOutLineGroovyTest extends BaseTest
       
       // create outline tree map
       OulineTreeHelper.init();
-      outlineTreeHelper.addOutlineItem("TestJSON", 6);
-      outlineTreeHelper.addOutlineItem("a1 : java.lang.A", 7);
-      outlineTreeHelper.addOutlineItem("a2 : java.lang.A", 7, false);
-      outlineTreeHelper.addOutlineItem("a3 : java.lang.A", 7, false);      
-      outlineTreeHelper.addOutlineItem("b1 : java.lang.B", 8);
-      outlineTreeHelper.addOutlineItem("b2 : java.lang.B", 8, false);
-      outlineTreeHelper.addOutlineItem("b3 : String", 8, false);
-      outlineTreeHelper.addOutlineItem("getValue1() : java.lang.String", 10); 
-      outlineTreeHelper.addOutlineItem("c1 : String", 11);
-      outlineTreeHelper.addOutlineItem("identity : Identity", 19);
-      outlineTreeHelper.addOutlineItem("c2 : String", 27);
-      outlineTreeHelper.addOutlineItem("d : java.lang.String", 31); 
-      outlineTreeHelper.addOutlineItem("setValue2(@String) : void", 33);
-      outlineTreeHelper.addOutlineItem("printClosureInner", 35);
-      outlineTreeHelper.addOutlineItem("printClosureOuter", 40);      
-      outlineTreeHelper.addOutlineItem("hello()", 42);
-      outlineTreeHelper.addOutlineItem("name4 : String", 44);
-      outlineTreeHelper.addOutlineItem("g : String", 47);     
+      outlineTreeHelper.addOutlineItem("TOPLEVEL_CONSTANT : String", 5, TokenType.CONSTANT);
+      outlineTreeHelper.addOutlineItem("@@n2 : Array", 7, TokenType.CLASS_VARIABLE);      
+      outlineTreeHelper.addOutlineItem("$global : nil", 11, TokenType.GLOBAL_VARIABLE);
+      outlineTreeHelper.addOutlineItem("@n1 : nil", 12, TokenType.INSTANCE_VARIABLE);
+      outlineTreeHelper.addOutlineItem("ClassName", 17, TokenType.CLASS);
+      outlineTreeHelper.addOutlineItem("CLASS_CONSTANT : Fixnum", 20, TokenType.CONSTANT);      
+      outlineTreeHelper.addOutlineItem("$global1 : Object", 22, TokenType.GLOBAL_VARIABLE);
+      outlineTreeHelper.addOutlineItem("@@class_variable : Regexp", 23, TokenType.CLASS_VARIABLE);
+      outlineTreeHelper.addOutlineItem("@field : Object", 24, TokenType.INSTANCE_VARIABLE);
+      outlineTreeHelper.addOutlineItem("initialize", 26, TokenType.METHOD);      
+      outlineTreeHelper.addOutlineItem("@@char : Ascii", 29, false, TokenType.CLASS_VARIABLE);
+      outlineTreeHelper.addOutlineItem("$myFile : File", 33, TokenType.GLOBAL_VARIABLE);
+      outlineTreeHelper.addOutlineItem("scale : String", 35, TokenType.LOCAL_VARIABLE);
+      outlineTreeHelper.addOutlineItem("f : Object", 38, TokenType.LOCAL_VARIABLE);      
+      outlineTreeHelper.addOutlineItem("@str4 : String", 40, TokenType.INSTANCE_VARIABLE);
+      outlineTreeHelper.addOutlineItem("@n1 : Float", 52, TokenType.INSTANCE_VARIABLE);
+      outlineTreeHelper.addOutlineItem("@@n2 : Float", 53, TokenType.CLASS_VARIABLE);
+      outlineTreeHelper.addOutlineItem("a : ClassName", 56, TokenType.LOCAL_VARIABLE);
+      outlineTreeHelper.addOutlineItem("TC_MyTest", 58, TokenType.CLASS);
+      outlineTreeHelper.addOutlineItem("foo", 60, TokenType.METHOD);
+      outlineTreeHelper.addOutlineItem("@@class_variable : Hash", 62, false, TokenType.CLASS_VARIABLE);
+      outlineTreeHelper.addOutlineItem("@field : Number", 63, false, TokenType.INSTANCE_VARIABLE);
+      outlineTreeHelper.addOutlineItem("a : Fixnum", 68, TokenType.LOCAL_VARIABLE);
+      outlineTreeHelper.addOutlineItem("TestModule", 71, TokenType.MODULE);
+      outlineTreeHelper.addOutlineItem("method", 72, TokenType.METHOD);
+      outlineTreeHelper.addOutlineItem("@@t : TrueClass", 73, TokenType.CLASS_VARIABLE);
+      outlineTreeHelper.addOutlineItem("A : Symbol", 76, TokenType.CONSTANT);
+      outlineTreeHelper.addOutlineItem("ascii1 : Ascii", 77, TokenType.LOCAL_VARIABLE);
+      outlineTreeHelper.addOutlineItem("@field : nil", 78, TokenType.INSTANCE_VARIABLE);      
       
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();

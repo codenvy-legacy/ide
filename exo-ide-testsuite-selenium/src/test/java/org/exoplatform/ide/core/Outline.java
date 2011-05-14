@@ -41,6 +41,35 @@ public class Outline extends AbstractTestModule
       static final String TREE = "//div[@id='" + TREE_ID + "']/";
    }
 
+   public enum TokenType {
+      CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION, 
+      /** Property type for JSON */
+      PROPERTY,
+      
+      /**
+       * HTML or XML tag.
+       */
+      TAG,
+      
+      /**
+       * HTML or XML attribute; 
+       */
+      ATTRIBUTE,
+      CDATA,
+
+      /** Property type for JavaScript */
+      BLOCK, 
+      
+      /** Property type for Groovy code */
+      GROOVY_TAG, PACKAGE, IMPORT, PARAMETER, TYPE,
+      
+      /** Property type for Java code */
+      JSP_TAG,
+      
+      /** Property type for Ruby code **/
+      ROOT, MODULE, LOCAL_VARIABLE, GLOBAL_VARIABLE, CLASS_VARIABLE, INSTANCE_VARIABLE, CONSTANT;
+   }
+   
    @Deprecated
    /**
     * Get title of outline node.
@@ -230,7 +259,7 @@ public class Outline extends AbstractTestModule
    /**
     * TODO this method should be verified
     * Check is node in Outline tree is selected
-    * @param rowNumber number of item in treegrid starting from 0
+    * @param rowNumber number of item in treegrid starting from 1
     * @param name name of item
     * @param isSelected is node selected
     */
