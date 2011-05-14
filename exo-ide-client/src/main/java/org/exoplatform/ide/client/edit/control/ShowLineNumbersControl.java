@@ -25,6 +25,8 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -41,7 +43,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 @RolesAllowed({"administrators", "developers"})
 public class ShowLineNumbersControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ApplicationSettingsSavedHandler
+   ApplicationSettingsSavedHandler, ApplicationSettingsReceivedHandler
 {
 
    private static final String ID = "Edit/Show \\ Hide Line Numbers";
@@ -56,6 +58,9 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
 
    private boolean showLineNumbers = true;
 
+   /**
+    * 
+    */
    public ShowLineNumbersControl()
    {
       super(ID);
@@ -63,7 +68,7 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
       setPrompt(TITLE_HIDE);
       setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
@@ -71,8 +76,12 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
+   /**
+    * 
+    */
    private void updateState()
    {
       if (showLineNumbers)
@@ -105,6 +114,9 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeEditor = event.getEditor();
@@ -112,6 +124,9 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
       updateState();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler#onApplicationSettingsSaved(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent)
+    */
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
       if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null)
@@ -125,5 +140,19 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
 
       updateState();
    }
-   
+
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   @Override
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null)
+      {
+         showLineNumbers = event.getApplicationSettings().getValueAsBoolean("line-numbers");
+      }
+
+      updateState();
+   }
+
 }

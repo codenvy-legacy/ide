@@ -186,8 +186,6 @@ public interface MenuCommands
 
       public static final String SHOW_LINE_NUMBERS = "Show Line Numbers";
       
-      public static final String SHOW_HIDE_NUMBERS = "Show"+ " " + "\\" +" "+ "Hide Line Numbers";
-
       public static final String FORMAT = "Format";
 
       public static final String GO_TO_LINE = "Go to Line...";

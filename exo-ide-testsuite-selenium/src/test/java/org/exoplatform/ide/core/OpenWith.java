@@ -60,7 +60,7 @@ public class OpenWith extends AbstractTestModule
 
    /**
     * Selects editor by it's position in the list of editors.
-    * Note that numbering begins at one.
+    * Note that numbering starts at 1.
     * 
     * @param index
     */
@@ -78,14 +78,20 @@ public class OpenWith extends AbstractTestModule
       selenium().click(locator);
    }
 
-   public void clickOpen() throws Exception
+   public void clickOpenButton() throws Exception
    {
       selenium().click("ideOpenFileWithOkButton");
    }
 
-   public void clickCancel()
+   public void clickCancelButton()
    {
       selenium().click("ideOpenFileWithCancelButton");
+   }
+   
+   public void clickUseAsDefaultCheckBox() throws Exception {
+      String locator = "//input[@name='ideOpenWithIsDefault']";
+      selenium().click(locator);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    /**

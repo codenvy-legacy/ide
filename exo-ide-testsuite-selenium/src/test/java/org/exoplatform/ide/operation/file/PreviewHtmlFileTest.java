@@ -38,9 +38,9 @@ import org.junit.Test;
  */
 public class PreviewHtmlFileTest extends BaseTest
 {
-   private final static String FILE_NAME = "PreviewHtmlFile.html";
-
    private final static String FOLDER_NAME = PreviewHtmlFileTest.class.getSimpleName();
+
+   private final static String FILE_NAME = "PreviewHtmlFile.html";
 
    @BeforeClass
    public static void setUp()
@@ -77,13 +77,14 @@ public class PreviewHtmlFileTest extends BaseTest
    @Test
    public void previewHtmlFile() throws Exception
    {
-      waitForRootElement();
-
+      //waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
+      
       /*
        * 1. create HTML file
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       /*
        * 2. "Preview" button must be disabled
@@ -95,8 +96,7 @@ public class PreviewHtmlFileTest extends BaseTest
       /*
        * 3. open "PreviewHtmlFileTest/PreviewHtmlFile.html" file
        */
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.selectAndRefreshFolder(WS_URL + FOLDER_NAME + "/");
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       /*
@@ -138,8 +138,13 @@ public class PreviewHtmlFileTest extends BaseTest
       /*
        * 9. Reopen "PreviewHtmlFile.html" and click "Preview".
        */
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      
+      IDE.NAVIGATION.doubleClickOnFolder(WS_URL);
+      Thread.sleep(3000);
+      IDE.NAVIGATION.doubleClickOnFolder(WS_URL);
+      Thread.sleep(3000);
+      
+      IDE.NAVIGATION.selectAndRefreshFolder(WS_URL + FOLDER_NAME + "/");
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
 

@@ -95,7 +95,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
    @Test
    public void testDeleteSeveralFilesSimultaniously() throws Exception
    {
-      waitForRootElement();
+      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER_NAME + "/");
 
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);

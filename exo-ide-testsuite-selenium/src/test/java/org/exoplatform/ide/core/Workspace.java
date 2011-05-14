@@ -30,9 +30,9 @@ import org.exoplatform.ide.Utils;
 
 public class Workspace extends AbstractTestModule
 {
-   
-   static final String TREE_PREFIX_ID = "navigation-";   
-   
+
+   static final String TREE_PREFIX_ID = "navigation-";
+
    /**
     * Select item in workspace tree
     * @param itemHref Href of item
@@ -43,17 +43,23 @@ public class Workspace extends AbstractTestModule
       selenium().clickAt(getItemId(itemHref), "0");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
-   
+
    /**
     * Selects root item in Workspace tree.
     * 
     * @throws Exception
     */
-   public void selectRootItem() throws Exception {
+   public void selectRootItem() throws Exception
+   {
       selectItem(IDE().getWorkspaceURL());
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);      
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
-   
+
+   public void waitForRootItem() throws Exception
+   {
+      waitForElementPresent(getItemId(IDE().getWorkspaceURL()));
+   }
+
    /**
     * Generate item id 
     * @param href of item 

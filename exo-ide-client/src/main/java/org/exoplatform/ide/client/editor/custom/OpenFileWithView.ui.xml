@@ -15,7 +15,7 @@
 		
 		<c:Panel height="30px">
 			<c:Border borderColor="transparent" margin="3">
-				<c:CheckboxItem name="ideOpenWithIsDefault" ui:field="isDefaultCheckItem" 
+				<c:CheckboxItem name="ideOpenWithIsDefault" ui:field="isDefaultCheckItem"
 					title="Use as default editor"></c:CheckboxItem>
 			</c:Border>
 		</c:Panel>

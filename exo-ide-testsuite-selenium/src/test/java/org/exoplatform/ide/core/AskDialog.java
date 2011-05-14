@@ -29,20 +29,21 @@ import org.exoplatform.ide.TestConstants;
  */
 public class AskDialog extends AbstractTestModule
 {
+
    interface Locators
    {
+
       String ASK_ID = "exoAskDialog";
 
-      String NO_BUTTON = "exoAskDialogNoButton";
-
       String ASK_TITLE = "//div[@id='" + ASK_ID + "']//div[@class='Caption']/span";
+
    }
 
    public void waitForAskDialogOpened() throws Exception
    {
       waitForElementPresent(Locators.ASK_ID);
    }
-   
+
    public void waitForAskDialogClosed() throws Exception
    {
       waitForElementNotPresent(Locators.ASK_ID);
@@ -53,9 +54,9 @@ public class AskDialog extends AbstractTestModule
       assertTrue(selenium().isElementPresent(Locators.ASK_ID));
    }
 
-   public void assertOpened(String message)
+   public void assertOpened(String title)
    {
-      assertTrue(isDialogOpened(message));
+      assertTrue(isDialogOpened(title));
    }
 
    public boolean isDialogOpened()
@@ -63,14 +64,14 @@ public class AskDialog extends AbstractTestModule
       return selenium().isElementPresent(Locators.ASK_ID);
    }
 
-   public boolean isDialogOpened(String message)
+   public boolean isDialogOpened(String title)
    {
-      return selenium().isElementPresent(Locators.ASK_TITLE + "[contains(text(), '" + message + "')]");
+      return selenium().isElementPresent(Locators.ASK_TITLE + "[contains(text(), '" + title + "')]");
    }
 
    public void clickNo() throws Exception
    {
-      selenium().click(Locators.NO_BUTTON);
+      selenium().click("exoAskDialogNoButton");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 

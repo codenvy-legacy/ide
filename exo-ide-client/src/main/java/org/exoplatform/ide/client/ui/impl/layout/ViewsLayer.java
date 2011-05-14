@@ -23,7 +23,8 @@ import org.exoplatform.gwtframework.ui.client.Resizeable;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.ui.impl.Layer;
 
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -46,10 +47,12 @@ public class ViewsLayer extends Layer
       public ViewContainer(View view)
       {
          this.view = view;
-
-         DOM.setStyleAttribute(getElement(), "width", "100px");
-         DOM.setStyleAttribute(getElement(), "height", "100px");
-         DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+         
+         getElement().getStyle().setLeft(-1000, Unit.PX);
+         getElement().getStyle().setTop(-1000, Unit.PX);
+         getElement().getStyle().setWidth(100, Unit.PX);
+         getElement().getStyle().setHeight(100, Unit.PX);
+         getElement().getStyle().setOverflow(Overflow.HIDDEN);
 
          if (view instanceof Widget)
          {

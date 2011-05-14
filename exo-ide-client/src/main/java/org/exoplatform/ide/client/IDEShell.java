@@ -33,7 +33,6 @@ public class IDEShell implements EntryPoint
    public void onModuleLoad()
    {
       GWT.setUncaughtExceptionHandler(new H());
-
       new IDE();
    }
 

@@ -72,7 +72,7 @@ public class Layer extends AbsolutePanel
    }
 
    /**
-    * Resize this layer.
+    * Resize layer.
     * 
     * @param width new width
     * @param height new height

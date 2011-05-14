@@ -145,7 +145,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       assertEquals(XML_FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
       IDE.EDITOR.checkIsTabPresentInEditorTabset(XML_FILE_NAME + " *", true);
       
-      Thread.sleep(Integer.MAX_VALUE);
+      
 
       IDE.EDITOR.checkEditorTabSelected(XML_FILE_NAME, true);
       IDE.EDITOR.checkCodeEditorOpened(0);
@@ -166,8 +166,6 @@ public class DisplayingWarningMessageTest extends BaseTest
       //Save, close file tab and open created earlier xml file again.
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
       IDE.EDITOR.closeTab(0);
-      
-      Thread.sleep(Integer.MAX_VALUE);                        
       
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);

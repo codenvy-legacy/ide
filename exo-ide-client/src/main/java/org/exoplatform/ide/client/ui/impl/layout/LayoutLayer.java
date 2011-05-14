@@ -102,12 +102,10 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
 
       if (panel.getViewMap().size() == 0)
       {
-         HidePanelEvent hidePanelEvent = new HidePanelEvent(panel.getPanelId());
          hidePanel(panel.getPanelId());
       }
       else
       {
-         ShowPanelEvent showPanelEvent = new ShowPanelEvent(panel.getPanelId());
          showPanel(panel.getPanelId());
       }
    }

@@ -171,11 +171,11 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
    }
    
    private void onEditorSelected(EditorProducer editor) {
-      if (openedEditorDescriptions.get(selectedFile.getHref()) != null &&
-         editor.getDescription().equals(openedEditorDescriptions.get(selectedFile.getHref()))) {
-         display.setOpenButtonEnabled(false);
-         return;
-      }
+//      if (openedEditorDescriptions.get(selectedFile.getHref()) != null &&
+//         editor.getDescription().equals(openedEditorDescriptions.get(selectedFile.getHref()))) {
+//         display.setOpenButtonEnabled(false);
+//         return;
+//      }
 
       selectedEditor = editor;
       display.setOpenButtonEnabled(true);      

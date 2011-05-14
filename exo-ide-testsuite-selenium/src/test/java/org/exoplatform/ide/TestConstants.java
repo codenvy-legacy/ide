@@ -38,7 +38,7 @@ public interface TestConstants
    
    public static final int PAGE_LOAD_PERIOD = 2000;
 
-   public static final int EDITOR_OPEN_PERIOD = 1500;
+   public static final int EDITOR_OPEN_PERIOD = 2000;
 
    public static final int IDE_LOAD_PERIOD = 20000;
    

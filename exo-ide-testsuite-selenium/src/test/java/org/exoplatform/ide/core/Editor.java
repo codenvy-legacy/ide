@@ -19,6 +19,7 @@
 package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.awt.Robot;
@@ -100,7 +101,7 @@ public class Editor extends AbstractTestModule
          Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
          selenium().click(tabLocator);
-         Thread.sleep(TestConstants.ANIMATION_PERIOD);
+         Thread.sleep(TestConstants.REDRAW_PERIOD);
       }
    }
 
@@ -573,8 +574,25 @@ public class Editor extends AbstractTestModule
    public void checkCodeEditorOpened(int tabIndex) throws Exception
    {
       String locator =
-         "//div[@panel-id='editor'and @tab-index=" + "'" + tabIndex + "']//div[@class='CodeMirror-wrapping']/iframe";
+         "//div[@panel-id='editor'and @tab-index='" + tabIndex + "']//div[@class='CodeMirror-wrapping']/iframe";
       assertTrue(selenium().isElementPresent(locator));
+   }
+   
+   /**
+    * Check is line numbers are shown in editor
+    * 
+    * @param visible is line numbers must be shown
+    */
+   public void checkLineNumbersVisible(boolean visible)
+   {
+      if (visible)
+      {
+         assertTrue(selenium().isElementPresent("//div[@class='CodeMirror-line-numbers']"));
+      }
+      else
+      {
+         assertFalse(selenium().isElementPresent("//div[@class='CodeMirror-line-numbers']"));
+      }
    }
 
 }

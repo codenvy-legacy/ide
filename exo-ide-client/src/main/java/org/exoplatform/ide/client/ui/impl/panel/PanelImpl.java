@@ -97,15 +97,30 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
     */
    private LinkedHashMap<String, Widget> viewWrappers = new LinkedHashMap<String, Widget>();
 
+   /**
+    * 
+    */
    private LinkedHashMap<String, ViewController> viewControllers =
       new LinkedHashMap<String, PanelImpl.ViewController>();
 
+   /**
+    * Id of currently selected view.
+    */
    private String selectedViewId;
 
+   /**
+    * 
+    */
    private List<String> acceptableTypes = new ArrayList<String>();
 
+   /**
+    * 
+    */
    private TabPanel tabPanel;
 
+   /**
+    * 
+    */
    private ShowPanelHandler showPanelHandler;
 
    private HidePanelHandler hidePanelHandler;
@@ -288,6 +303,9 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       selectedViewController.onResize();
    }
 
+   /**
+    * @param viewId
+    */
    private void fireVisibilityChangedEvent(String viewId)
    {
       View view = views.get(viewId);
@@ -299,12 +317,20 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.Panel#closeView(java.lang.String)
+    */
    public void closeView(String viewId)
    {
       tabPanel.removeTab(viewId);
       doCloseView(viewId);
    }
 
+   /**
+    * Closes view with specified id
+    * 
+    * @param viewId id of the view to be closed 
+    */
    protected void doCloseView(String viewId)
    {
       if (viewId.equals(selectedViewId))
@@ -341,6 +367,10 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       updateViewTabIndex();
    }
 
+   /**
+    * Updates value of a special attribute "tab-index" in each tab.
+    * This attribute uses in Selenium tests.
+    */
    private void updateViewTabIndex()
    {
       int tabs = tabPanel.getTabBar().getTabCount();

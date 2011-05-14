@@ -46,7 +46,7 @@ public class Menu extends AbstractTestModule
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       selenium().click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    public void runCommand(String menuName, String commandName, String subCommandName) throws Exception {
@@ -57,7 +57,7 @@ public class Menu extends AbstractTestModule
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
       selenium().click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + subCommandName + "']");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    /**

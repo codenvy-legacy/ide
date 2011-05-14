@@ -285,14 +285,10 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
 
    private void closeFile(File file)
    {
-      System.out.println("close file !!!!!");
-      
       Editor editor = editors.get(file.getHref());
       EditorView editorView = editorsViews.get(editor.getEditorId());
       
-      System.out.println("editor > " + editor);
       String editorDescription = openedEditors.get(file.getHref());
-      System.out.println("editor description > " + editorDescription);
       
       editors.remove(file.getHref());
       editorsViews.remove(editor.getEditorId());
@@ -607,7 +603,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       editorsViews.put(editor.getEditorId(), editorView);
       try
       {
-      editorView.setIcon(new Image(newFile.getIcon()));
+         editorView.setIcon(new Image(newFile.getIcon()));
       }
       catch (Exception e) {
          e.printStackTrace();

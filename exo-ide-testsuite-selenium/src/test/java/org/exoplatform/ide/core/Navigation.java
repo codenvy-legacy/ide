@@ -133,20 +133,32 @@ public class Navigation extends AbstractTestModule
     */
    public void clickOpenIconOfFolder(String folderHref) throws Exception
    {
-      //      selenium.click(getScLocator(folderHref, 0) + "/open");
-      selenium().clickAt("//div[@id='" + getItemId(folderHref) + "']/table/tbody/tr/td[1]/img", "0");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      System.out.println("Click on Open Icon > " + folderHref);
+      
+      String locator = "//div[@id='" + getItemId(folderHref) + "']/table/tbody/tr/td[1]/img";
+      System.out.println("Locator [" + locator + "]");
+      
+      selenium().clickAt(locator, "0");
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
    
-   public void doubleClickOnFile(String url) throws Exception {
-      System.out.println("DOUBLE click on [" + url + "]");
-      String locator = "//div[@id='" + getItemId(url) + "']/div/table/tbody/tr/td[2]";
-      System.out.println("LOCATOR [" + locator + "]");
+   public void doubleClickOnFolder(String folderURL) throws Exception {
+      String locator = "//div[@id='" + getItemId(folderURL) + "']/table/tbody/tr/td[2]";
       
-      //mouseDown
       selenium().mouseDown(locator);
       selenium().mouseUp(locator);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      
+      selenium().doubleClick(locator);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+   }
+   
+   public void doubleClickOnFile(String fileURL) throws Exception {
+      String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
+      
+      selenium().mouseDown(locator);
+      selenium().mouseUp(locator);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
       selenium().doubleClick(locator);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -173,10 +185,20 @@ public class Navigation extends AbstractTestModule
     * @param itemHref Href of item
     * <h1>Folder href MUST ends with "/"</h1>
     */
-   public void selectItem(String itemHref) throws Exception
+   public void selectItem(String url) throws Exception
    {
-      selenium().clickAt(getItemId(itemHref), "0");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      selenium().clickAt(getItemId(url), "0");
+      
+//      System.out.println("SELECT ITEM [" + url + "]");
+//      String locator = "//div[@id='" + getItemId(url) + "']/table/tbody/tr/td[2]/div";
+//      
+//      selenium().mouseDown(locator);
+//      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+//      selenium().mouseUp(locator);
+//      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+//      
+//      selenium().click(locator);
+//      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    /**
@@ -251,21 +273,31 @@ public class Navigation extends AbstractTestModule
     */
    public void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
    {
-      IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-
-      String locator = "//table[@id='ideOpenFileWithListGrid']";
-      waitForElementPresent(locator);
-
-      if (checkDefault)
-      {
-         //click on checkbox Use as default editor
-         selenium().click("ideOpenWithIsDefault");
-         Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      IDE().OPENWITH.open();
+      IDE().OPENWITH.selectEditorByIndex(1);
+      
+      if (checkDefault) {
+         IDE().OPENWITH.clickUseAsDefaultCheckBox();
       }
-
-      selenium().click("ideOpenFileWithOkButton");
-      //time remaining to open editor
+      
+      IDE().OPENWITH.clickOpenButton();
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+//      
+//      IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
+//
+//      String locator = "//table[@id='ideOpenFileWithListGrid']";
+//      waitForElementPresent(locator);
+//
+//      if (checkDefault)
+//      {
+//         //click on checkbox Use as default editor
+//         selenium().click("ideOpenWithIsDefault");
+//         Thread.sleep(TestConstants.ANIMATION_PERIOD);
+//      }
+//
+//      selenium().click("ideOpenFileWithOkButton");
+//      //time remaining to open editor
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
    /**
@@ -321,6 +353,18 @@ public class Navigation extends AbstractTestModule
    public void waitForItem(String itemHref) throws Exception
    {
       waitForElementPresent(getItemId(itemHref));
+   }
+   
+   /**
+    * Selects and refreshes folder in Workspace tree
+    * 
+    * @param itemURL
+    */
+   public void selectAndRefreshFolder(String folderURL) throws Exception {
+      selectItem(folderURL);
+      
+      IDE().TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);      
    }
 
 }

@@ -111,7 +111,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       createFileAndSaveAs(MenuCommands.New.GROOVY_TEMPLATE_FILE, "gtmpl", GROOVY_TEMPLATE_FILE_NANE);
       createFileAndSaveAs(MenuCommands.New.GROOVY_SCRIPT_FILE, "groovy", GROOVY_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.CHROMATTIC, "groovy", CHROMATTIC_FILE_NAME);
-      createFileAndSaveAs(MenuCommands.New.NETVIBES_WIDGET, "xml", NETVIBES_FILE_NAME);
+      createFileAndSaveAs(MenuCommands.New.NETVIBES_WIDGET, "html", NETVIBES_FILE_NAME);
    }
 
    private void createFileAndSaveAs(String menuTitle, String fileExtention, String fileName)
@@ -132,7 +132,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       IDE.EDITOR.closeTab(1);
 
       IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      
+
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + fileName);
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + fileName).getStatusCode());
    }

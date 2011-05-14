@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.menu;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -41,6 +44,8 @@ public class MenuImpl extends MenuBar implements Menu
    @Override
    public void refresh(List<Control> commands, HandlerManager eventBus)
    {
+      Map<SimpleControl, MenuItem> createdMenuItems = new HashMap<SimpleControl, MenuItem>();
+
       for (Control command : commands)
       {
          if (!(command instanceof SimpleControl))
@@ -50,7 +55,15 @@ public class MenuImpl extends MenuBar implements Menu
 
          SimpleControl control = (SimpleControl)command;
          MenuItem createdItem = add(null, control, 0);
-         new MenuItemControl(eventBus, createdItem, control);
+         createdMenuItems.put(control, createdItem);
+      }
+
+      Iterator<SimpleControl> controlIterator = createdMenuItems.keySet().iterator();
+      while (controlIterator.hasNext())
+      {
+         SimpleControl control = controlIterator.next();
+         MenuItem menuItem = createdMenuItems.get(control);
+         new MenuItemControl(eventBus, menuItem, control);
       }
    }
 
@@ -74,7 +87,7 @@ public class MenuImpl extends MenuBar implements Menu
                   parent.addItem(null);
                }
             }
-            
+
             item = parent.addItem(path[depth]);
          }
       }
