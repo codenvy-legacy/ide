@@ -102,16 +102,25 @@ public class Perspective extends AbstractTestModule
       assertFalse(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='true']"));
       assertTrue(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='false']"));
    }
-   
-   
+
    public void checkViewIsNotPresent(String viewId) throws Exception
    {
       assertFalse(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='true']"));
       assertFalse(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='false']"));
    }
-   
-   
-   
+
+   /**
+    * Locator in this method can be used to select the other menus 
+    * (change index in this part for select next tab.Start index value of 2 
+    * (mark *)//table[@id='operation-panel-switcher']/tbody/tr/td/table/tbody/tr/td[*])
+    * @param viewId
+    * @throws Exception
+    */
+   public void clickOnIconPropertiesTab(String viewId) throws Exception
+   {
+      selenium().click("//table[@id='operation-panel-switcher']/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img");
+   }
+
    public boolean isViewActive(String viewId)
    {
       fail();

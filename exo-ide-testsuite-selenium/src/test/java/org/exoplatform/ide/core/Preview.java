@@ -32,12 +32,18 @@ import org.exoplatform.ide.TestConstants;
 public class Preview extends AbstractTestModule
 {
 
-   public void checkIsOpened(boolean isOpened)
+   public void checkPreviewHTMLIsOpened(boolean isOpened)
    {
       String locator = "//div[@view-id='idePreviewHTMLView']";
       assertEquals(isOpened, selenium().isElementPresent(locator));
    }
 
+   public void checkPreviewGadgetIsOpened(boolean isOpened)
+   {
+      String locator = "//div[@view-id='gadgetpreview']";
+      assertEquals(isOpened, selenium().isElementPresent(locator));
+   }
+   
    public void selectIFrame(String iFrameURL)
    {
       selenium().selectFrame("//iframe[@src='" + iFrameURL + "']");

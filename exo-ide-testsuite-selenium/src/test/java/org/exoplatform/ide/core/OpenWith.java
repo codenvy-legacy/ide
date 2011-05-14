@@ -97,7 +97,7 @@ public class OpenWith extends AbstractTestModule
     * @param checkDefault - is click on checkbox "Use by default"
     * @throws Exception
     */
-   private void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
+   public void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 
@@ -122,7 +122,7 @@ public class OpenWith extends AbstractTestModule
     * @param checkDefault do mark checkbox Use by default
     * @throws Exception
     */
-   protected void openFileFromNavigationTreeWithCkEditor(String fileURL, String typeFile, boolean checkDefault)
+   public void openFileFromNavigationTreeWithCkEditor(String fileURL, String typeFile, boolean checkDefault)
       throws Exception
    {
       //TODO add check form

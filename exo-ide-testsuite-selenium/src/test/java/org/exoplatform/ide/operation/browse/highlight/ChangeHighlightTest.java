@@ -21,6 +21,8 @@ package org.exoplatform.ide.operation.browse.highlight;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.thoughtworks.selenium.Wait;
+
 import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
@@ -67,37 +69,30 @@ public class ChangeHighlightTest extends BaseTest
    @Test
    public void testChangeHighlihtTest() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME);
-      
-      selenium.click("scLocator=//VLayout[ID=\"ideVerticalSplitLayout\"]/child[Class=Snapbar||index=2||length=4||classIndex=0||classLength=1]/");
-//      Thread.sleep(TestConstants.SLEEP_SHORT);
-//      assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-//      
+      waitForRootElement();
+      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      assertFalse(selenium.isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      assertFalse(selenium
-         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME);
-      assertFalse(selenium.isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      selenium.click("scLocator=//VLayout[ID=\"ideOutputForm\"]/");
-      assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      assertFalse(selenium
-         .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
+      waitForElementPresent("//div[@panel-id='editor']");
+      IDE.PERSPECTIVE.checkViewIsActive("editor-0");
+      IDE.PERSPECTIVE.checkViewIsNotActive("ideWorkspaceView");
+
+      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.PERSPECTIVE.checkViewIsNotPresent("editor-0");
+      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      saveAsUsingToolbarButton("Gadget");
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
+      waitForElementNotPresent("//div[@view-id='gadgetpreview']");
+
+      IDE.PREVIEW.checkPreviewGadgetIsOpened(true);
+      IDE.PERSPECTIVE.checkViewIsActive("gadgetpreview");
+      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+
    }
-   
+
    @AfterClass
    public static void tierDown()
    {
