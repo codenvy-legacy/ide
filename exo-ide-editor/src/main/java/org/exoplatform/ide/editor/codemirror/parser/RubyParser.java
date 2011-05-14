@@ -329,6 +329,10 @@ public class RubyParser extends CodeMirrorParserImpl
             if (constants.contains(variableName))
                return false;
             
+            // ignore constant assigned within the method
+            else if (TokenType.METHOD.equals(currentToken.getType()))
+               return false;
+            
             break;            
             
          default:
@@ -815,6 +819,7 @@ public class RubyParser extends CodeMirrorParserImpl
                     )
                )
             {
+
                newToken = new TokenBeenImpl(cloneNodeStack.get(cloneNodeStack.size() - 2).getContent(), variableType, 0, MimeType.APPLICATION_RUBY);
                newToken.setElementType("Object");
             
