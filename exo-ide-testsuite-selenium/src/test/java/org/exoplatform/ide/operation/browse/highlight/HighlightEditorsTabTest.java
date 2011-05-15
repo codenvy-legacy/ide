@@ -101,7 +101,7 @@ public class HighlightEditorsTabTest extends BaseTest {
 		waitForElementPresent("//div[@panel-id='editor']");
 		IDE.PERSPECTIVE.checkViewIsActive("editor-1");
 
-		IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+		IDE.EDITOR.closeTab(0);
 		waitForElementNotPresent("//div[@panel-id='editor']");
 		//TODO fix problem return highlighter in workspace
 		//IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");

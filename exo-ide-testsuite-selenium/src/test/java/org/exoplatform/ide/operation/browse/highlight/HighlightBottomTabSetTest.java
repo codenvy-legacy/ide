@@ -50,7 +50,7 @@ public class HighlightBottomTabSetTest extends BaseTest
    private static String FILE_NAME = "HighlightBottomTabSetTestFILE";
 
    private static String SHOW_PROPERTIES_ICON_LOCATOR =
-      "//table[@id='operation-panel-switcher']/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img";
+      "//div[@panel-id='operation']//table/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img";
 
    @BeforeClass
    public static void setUp()

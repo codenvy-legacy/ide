@@ -49,7 +49,7 @@ public class DialogAboutTest extends BaseTest
       //      Thread.sleep(TestConstants.SLEEP);
       //check About form
       assertTrue(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]"));
-      assertTrue(selenium.isElementPresent("ideAboutFormOkButton"));
+      assertTrue(selenium.isElementPresent("ideAboutViewOkButton"));
       assertTrue(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]//td//img[@class=\"gwt-Image\"]"));
       assertTrue(selenium.isTextPresent(PRODUCT_NAME));
       assertTrue(selenium.isTextPresent(COMPANY));
@@ -57,8 +57,8 @@ public class DialogAboutTest extends BaseTest
       assertTrue(selenium.isTextPresent("Build Time:"));
 
       //click Ok button
-      selenium.click("ideAboutFormOkButton");
-      waitForElementNotPresent("ideAboutFormOkButton");
+      selenium.click("ideAboutViewOkButton");
+      waitForElementNotPresent("ideAboutViewOkButton");
 
       //check About form dissapeared
       assertFalse(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]"));

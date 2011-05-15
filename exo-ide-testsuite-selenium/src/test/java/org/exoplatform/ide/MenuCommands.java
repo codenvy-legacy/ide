@@ -153,7 +153,7 @@ public interface MenuCommands
 
       public static final String SEARCH = "Search...";
 
-      public static final String REFRESH = "Refresh Selected Folder";
+      public static final String REFRESH = "Refresh";
 
       public static final String RESTORE_VERSION = "Restore to Version";
 

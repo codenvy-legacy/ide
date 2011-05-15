@@ -84,7 +84,7 @@ public class ChangeHighlightTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       saveAsUsingToolbarButton("Gadget");
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
-      waitForElementNotPresent("//div[@view-id='gadgetpreview']");
+      waitForElementPresent("//div[@view-id='gadgetpreview']");
 
       IDE.PREVIEW.checkPreviewGadgetIsOpened(true);
       IDE.PERSPECTIVE.checkViewIsActive("gadgetpreview");

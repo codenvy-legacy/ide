@@ -233,7 +233,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + HTML_FILE, false);
       //reopne confirmatioin dialog
       assertTrue(selenium.isElementPresent("exoAskDialog"));
-      assertEquals("Info", selenium.getText("//div[@id='exoAskDialog']//div[@class='Caption']/span['info']"));
+      assertEquals("IDE", selenium.getText("//div[@id='exoAskDialog']//div[@class='Caption']/span['info']"));
       assertTrue(selenium.isElementPresent("exoAskDialogYesButton"));
       assertTrue(selenium.isElementPresent("exoAskDialogNoButton"));
       //click Ok button

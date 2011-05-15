@@ -85,10 +85,9 @@ public class HighlightOutlineTest extends BaseTest {
 		selenium.refresh();
 
 		waitForRootElement();
-		IDE.PERSPECTIVE.checkViewIsActive("ideOutlineView");
-
-		// assertTrue(selenium
-		// .isElementPresent("//div[@eventproxy='isc_OutlineForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
+		
+		// TODO fix problem return highlighter to back (in Outlinepanel)
+		//IDE.PERSPECTIVE.checkViewIsActive("ideOutlineView");
 
 		selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
 		selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_F);
@@ -99,8 +98,8 @@ public class HighlightOutlineTest extends BaseTest {
 		selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
 		selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_R);
 
-		//TODO fix problem return highlighter in workspace
-		//IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
+		// TODO fix problem return highlighter in workspace
+		// IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
 
 	}
 
