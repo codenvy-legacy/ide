@@ -124,16 +124,16 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       //select another workspace
       selectWorkspace(secondWorkspaceName);
       
-      IDE.NAVIGATION.selectItem(SECOND_WORKSPACE_URL);
+      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.NAVIGATION.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/");
+      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/");
       
       //create txt file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       saveAsUsingToolbarButton(TEXT_FILE);
       
-      IDE.NAVIGATION.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
       
       //create html file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
@@ -192,7 +192,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
      IDE.EDITOR.closeTabWithNonSaving(0);
       
       //open folder to select html file
-      IDE.NAVIGATION.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       IDE.NAVIGATION.assertItemVisible(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);

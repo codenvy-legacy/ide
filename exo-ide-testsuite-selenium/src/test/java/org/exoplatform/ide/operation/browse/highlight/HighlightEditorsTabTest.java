@@ -77,11 +77,11 @@ public class HighlightEditorsTabTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP);
 
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 

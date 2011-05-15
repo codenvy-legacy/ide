@@ -68,7 +68,7 @@ public class GetItemUrlTest extends BaseTest
       IDE.EDITOR.closeTab(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + file1Name);
 
-      createFolder(folderName);
+      IDE.NAVIGATION.createFolder(folderName);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
@@ -79,7 +79,7 @@ public class GetItemUrlTest extends BaseTest
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
 
       //Refresh root item
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand("Refresh Selected Folder");
       String workspaceName = IDE.NAVIGATION.getRowTitle(1);
       String url = getSelectedItemUrl();
@@ -95,13 +95,13 @@ public class GetItemUrlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //Check get URL for file in root of the tree
-      IDE.NAVIGATION.selectItem(WS_URL + file1Name);
+      IDE.WORKSPACE.selectItem(WS_URL + file1Name);
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + file1Name));
 
       //Check get URL for folder in root of the tree
-      IDE.NAVIGATION.selectItem(WS_URL + folderName + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + folderName + "/");
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/"));
@@ -116,7 +116,7 @@ public class GetItemUrlTest extends BaseTest
       //Check get URL for the file in the folder
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + folderName + "/");
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL + folderName + "/" + file2Name);
+      IDE.WORKSPACE.selectItem(WS_URL + folderName + "/" + file2Name);
       url = getSelectedItemUrl();
       assertTrue(url.startsWith(BASE_URL));
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
@@ -129,7 +129,7 @@ public class GetItemUrlTest extends BaseTest
    @Test
    public void testGetFileUrlWithSearch() throws Exception
    {
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SEARCH);
       IDE.SEARCH.checkSearchViewVisible();
 
@@ -162,9 +162,9 @@ public class GetItemUrlTest extends BaseTest
       assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
 
       selectWorkspaceTab();
-      IDE.NAVIGATION.selectItem(WS_URL + folderName + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + folderName + "/");
       IDE.NAVIGATION.deleteSelectedItems();
-      IDE.NAVIGATION.selectItem(WS_URL + file1Name);
+      IDE.WORKSPACE.selectItem(WS_URL + file1Name);
       IDE.NAVIGATION.deleteSelectedItems();
    }
 

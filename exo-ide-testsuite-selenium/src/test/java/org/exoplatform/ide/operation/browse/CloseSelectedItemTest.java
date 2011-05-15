@@ -107,14 +107,14 @@ public class CloseSelectedItemTest extends BaseTest
       IDE.NAVIGATION.clickOpenIconOfFolder(URL + ROOT_FOLDER + "/");
 
       //Select one first sub folder
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/");
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/");
       //Check status bar displays path to selected folder:
       String statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith(WS_NAME + "/" + ROOT_FOLDER + "/" + FOLDER1));
       //Select second folder
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/");
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/");
       selenium.controlKeyUp();
       //Check status bar number of selected folders:
       statusBarText = getStatusbarText();
@@ -130,7 +130,7 @@ public class CloseSelectedItemTest extends BaseTest
       checkCreateFolderButtonDisabled();
 
       //Select sub folder
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/");
       statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith(WS_NAME + "/" + ROOT_FOLDER));
       //Close workspace node
@@ -168,10 +168,10 @@ public class CloseSelectedItemTest extends BaseTest
       IDE.NAVIGATION.clickOpenIconOfFolder(URL + ROOT_FOLDER + "/" + FOLDER1 + "/");
       IDE.NAVIGATION.clickOpenIconOfFolder(URL + ROOT_FOLDER + "/" + FOLDER2 + "/");
       //Select files
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FILE1);
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FILE1);
       selenium.controlKeyDown();
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/" + FILE2);
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FILE3);
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/" + FILE2);
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FILE3);
       selenium.controlKeyUp();
 
       //Check status bar number of selected folders:
@@ -191,7 +191,7 @@ public class CloseSelectedItemTest extends BaseTest
       assertTrue(statusBarText.startsWith(WS_NAME + "/" + ROOT_FOLDER));
 
       //Close workspace:
-       IDE.NAVIGATION.selectItem(WS_URL);
+       IDE.WORKSPACE.selectItem(WS_URL);
       //Check the state of IDE when no selection in the Browser tree:
       statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith("No items selected!"));
@@ -219,26 +219,26 @@ public class CloseSelectedItemTest extends BaseTest
       IDE.NAVIGATION.clickOpenIconOfFolder(URL + ROOT_FOLDER + "/" + FOLDER2 + "/");
 
       //Select one first sub folder
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_1+"/");
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_1+"/");
       //Check status bar displays path to selected folder:
       String statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith(WS_NAME + "/" + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_1));
       //Select second folder
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_2 + "/");
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_2 + "/");
       //Check status bar number of selected folders:
       statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith("Selected: 2 items"));
 
       //Select third folder
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/" + FOLDER2_1 + "/");
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/" + FOLDER2_1 + "/");
       //Check status bar number of selected folders:
       statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith("Selected: 3 items"));
 
       //Select fourth folder
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/" + FOLDER2_2 + "/");
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FOLDER2 + "/" + FOLDER2_2 + "/");
       //Check status bar number of selected folders:
       statusBarText = getStatusbarText();
       assertTrue(statusBarText.startsWith("Selected: 4 items"));
@@ -261,11 +261,11 @@ public class CloseSelectedItemTest extends BaseTest
       //Select parent folder and subfolders:
       //Open parent folder
       IDE.NAVIGATION.clickOpenIconOfFolder(URL + ROOT_FOLDER + "/" + FOLDER1 + "/");
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/");
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/");
       selenium.controlKeyDown();
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_1 + "/");
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_1 + "/");
       
-      IDE.NAVIGATION.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_2 + "/");
+      IDE.WORKSPACE.selectItem(URL + ROOT_FOLDER + "/" + FOLDER1 + "/" + FOLDER1_2 + "/");
       selenium.controlKeyUp();
 
       //Check status bar number of selected folders:

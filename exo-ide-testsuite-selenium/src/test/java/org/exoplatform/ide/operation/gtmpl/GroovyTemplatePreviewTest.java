@@ -79,12 +79,12 @@ public class GroovyTemplatePreviewTest extends BaseTest
    public void testGtmplPreview() throws Exception
    {
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       IDE.EDITOR.waitTabPresent(0);

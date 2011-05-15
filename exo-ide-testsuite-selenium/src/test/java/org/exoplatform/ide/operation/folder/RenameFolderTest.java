@@ -79,10 +79,10 @@ public class RenameFolderTest extends BaseTest
    {
       waitForRootElement();
       //select and refresh workspace for appper folder
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       //select folder and run rename command
-      IDE.NAVIGATION.selectItem(ORIG_URL + "/");
+      IDE.WORKSPACE.selectItem(ORIG_URL + "/");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       chekAppearRenameForm();
       //set cursor on rename field

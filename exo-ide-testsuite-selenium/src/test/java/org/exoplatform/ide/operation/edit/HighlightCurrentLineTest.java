@@ -88,7 +88,7 @@ public class HighlightCurrentLineTest extends BaseTest
    {
       //open HTML-file with required text
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       waitForRootElement();
 

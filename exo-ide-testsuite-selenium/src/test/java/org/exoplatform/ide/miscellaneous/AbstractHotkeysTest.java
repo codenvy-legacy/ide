@@ -135,7 +135,7 @@ public abstract class AbstractHotkeysTest extends BaseTest
    void openFolder() throws Exception
    {
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
    }
    

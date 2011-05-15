@@ -114,10 +114,10 @@ public class CopyFolderTest extends BaseTest
    {
       waitForRootElement();
      
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/" + FILE_1, false);
@@ -125,7 +125,7 @@ public class CopyFolderTest extends BaseTest
       /* 
       * Select folder "/Test 1/Test 1.1"
       */
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
 
       /*
        * Check Copy must be enabled
@@ -155,13 +155,13 @@ public class CopyFolderTest extends BaseTest
       /* 
        * Select root in workspace tree and call "Edit/Paste"
        */
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
       
       /*
        * Check new folder appeared in root folder
        */
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_1 + "/");      
@@ -182,10 +182,10 @@ public class CopyFolderTest extends BaseTest
       /* 
        * Open "/Test 1.1/test.groovy"
        */
-      IDE.NAVIGATION.selectRootOfWorkspace();
+     IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1_1 + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1_1 + "/" + FILE_1, false);

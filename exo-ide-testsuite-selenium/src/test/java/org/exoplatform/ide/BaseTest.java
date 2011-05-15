@@ -312,46 +312,8 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
      }*/
 
-   /**
-    * Creates folder with name folderName.
-    * 
-    * Folder, that will be parent for folderName must be selected before.
-    * 
-    * Clicks on New button on toolbar, then click on Folder menu from list.
-    * 
-    * @param folderName folder name
-    */
-   protected void createFolder(String folderName) throws Exception
-   {
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
-
-      //      IDE.TOOLBAR.runCommand("New");
-      //      
-      //      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
-
-      //Check creation form elements
-      assertTrue(selenium.isElementPresent("ideCreateFolderForm"));
-      assertTrue(selenium.isTextPresent("Name of new folder:"));
-      assertTrue(selenium.isElementPresent("ideCreateFolderFormNameField"));
-      assertTrue(selenium.isElementPresent("ideCreateFolderFormCreateButton"));
-      assertTrue(selenium.isElementPresent("ideCreateFolderFormCancelButton"));
-
-      //clearFocus();
-
-      String locator = "ideCreateFolderFormNameField";
-
-      //selenium.select(locator, optionLocator)
-
-      AbstractTextUtil.getInstance().typeToInput(locator, folderName, true);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      selenium.click("ideCreateFolderFormCreateButton");
-
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      //Check creation form is not shown
-      assertFalse(selenium.isElementPresent("ideCreateFolderForm"));
-      //      assertElementPresentInWorkspaceTree(folderName);
-   }
+   
+   
 
    /**
     * Calls Save As command by clicking Save As... icon on toolbar.
@@ -416,7 +378,7 @@ public abstract class BaseTest
    protected void openFileFromNavigationTreeWithCkEditor(String fileURL, String typeFile, boolean checkDefault) throws Exception
    {
       //TODO add check form
-      IDE.NAVIGATION.selectItem(fileURL);
+      IDE.WORKSPACE.selectItem(fileURL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       selenium.click("//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" +" "+typeFile+ " " +"editor"+"'"+"]");
       if (checkDefault)
@@ -657,12 +619,19 @@ public abstract class BaseTest
    {
       assertTrue(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='"
          + templateName + "']"));
+      
+      
       selenium.mouseDownAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName
          + "']", "2,2");
+      
+      
       selenium.mouseUpAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName
          + "']", "2,2");
+      
+      
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
+      
       if (fileName != null)
       {
          //type file name into name field
@@ -1026,9 +995,9 @@ public abstract class BaseTest
       //elements are appears in SLEEP tile.
       //Thats why, wait for WAIT_PERIOD for root element
       //of navigation tree.
-      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
 
    /**

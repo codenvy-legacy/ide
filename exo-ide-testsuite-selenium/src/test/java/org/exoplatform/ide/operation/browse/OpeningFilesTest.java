@@ -50,7 +50,7 @@ public class OpeningFilesTest extends BaseTest
    public void testDeleteFileAndOpenFromOneFolder() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFolder(folderName);
+      IDE.NAVIGATION.createFolder(folderName);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       waitForElementPresent(Locators.EDITOR_TABSET_LOCATOR);
@@ -66,7 +66,7 @@ public class OpeningFilesTest extends BaseTest
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
 
       // Delete one file  
-      IDE.NAVIGATION.selectItem(WS_URL + folderName + "/" + file2Name);
+      IDE.WORKSPACE.selectItem(WS_URL + folderName + "/" + file2Name);
       IDE.NAVIGATION.deleteSelectedItems();
       waitForRootElement();
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + folderName + "/" + file2Name);
@@ -79,7 +79,7 @@ public class OpeningFilesTest extends BaseTest
       assertEquals(file1Content, text);
 
       //Delete folder with file
-      IDE.NAVIGATION.selectItem(WS_URL + folderName + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + folderName + "/");
       IDE.NAVIGATION.deleteSelectedItems();
       waitForRootElement();
 

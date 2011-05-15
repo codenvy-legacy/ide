@@ -110,10 +110,10 @@ public class DeletingFilesTest extends BaseTest
    public void testDeletingFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(CUR_TIME + GROOVY_FILE_NAME, false);

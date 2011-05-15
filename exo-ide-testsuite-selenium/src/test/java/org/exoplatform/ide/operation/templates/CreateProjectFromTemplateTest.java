@@ -131,7 +131,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
    @Test
    public void testCreateProjectFromTemplate() throws Exception
    {
-      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       /*
        * 1. Open Create Project From Template form
@@ -159,21 +159,21 @@ public class CreateProjectFromTemplateTest extends BaseTest
        */
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/");
       
-      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/");
+      IDE.WORKSPACE.selectItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
       
       
-      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
+      IDE.WORKSPACE.selectItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
       
-      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
+      IDE.WORKSPACE.selectItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_NAME + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
    }
@@ -201,34 +201,34 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 3. Check sample project created
        */
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
       
-      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
+      IDE.WORKSPACE.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
       
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
       
-      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
+      IDE.WORKSPACE.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/" + "GreetingRESTService.grs");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/" + "GreetingRESTService.grs");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "logic/" + "GreetingRESTService.grs");
       
-      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
+      IDE.WORKSPACE.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/" + "GreetingGoogleGadget.xml");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/" + "GreetingGoogleGadget.xml");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "UI/" + "GreetingGoogleGadget.xml");
       
-      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
+      IDE.WORKSPACE.selectItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"DataObject.groovy");
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"Pojo.groovy");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"DataObject.groovy");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"Pojo.groovy");
       
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"DataObject.groovy"); 
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" +"Pojo.groovy");
@@ -257,7 +257,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 3. Check new project created
        */
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + EMPTY_PROJECT + "/");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + EMPTY_PROJECT + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + EMPTY_PROJECT + "/");
    }
    

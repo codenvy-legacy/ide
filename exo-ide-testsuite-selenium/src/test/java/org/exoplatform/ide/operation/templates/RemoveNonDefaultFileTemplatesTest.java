@@ -77,7 +77,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
    public void testRemoveNonDefaultFileTemplates() throws Exception
    {
       putFileTemplateToRegistry();
-      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       
       //------ 1 ----------
@@ -117,7 +117,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
    {
       putFileTemplateWithProjectTemplateToRegistry();
       refresh();
-      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       
       //------ 1 --------

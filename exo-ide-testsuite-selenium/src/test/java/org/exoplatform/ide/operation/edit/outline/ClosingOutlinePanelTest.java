@@ -111,7 +111,7 @@ public class ClosingOutlinePanelTest extends BaseTest
       //----- 1 -------------
       //open JavaScript file.
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);

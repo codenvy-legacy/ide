@@ -50,7 +50,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
    {
       waitForRootElement();
       //TODO*******************change add folder for locked file
-      createFolder(FOLDER_NAME);
+      IDE.NAVIGATION.createFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       //*****************************
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);

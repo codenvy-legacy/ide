@@ -61,7 +61,7 @@ public class SearchByMimeTypeTest extends BaseTest
    public void testSearchByMimeType() throws Exception
    {
       waitForRootElement();
-      createFolder(folder1Name);
+      IDE.NAVIGATION.createFolder(folder1Name);
 
       //Create and save 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
@@ -71,14 +71,14 @@ public class SearchByMimeTypeTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folder1Name + "/" + jsFileName);
 
-      IDE.NAVIGATION.selectRootOfWorkspace();
-      createFolder(folder2Name);
+      IDE.WORKSPACE.selectRootItem();
+      IDE.NAVIGATION.createFolder(folder2Name);
 
       saveAsUsingToolbarButton(copyJsFileName);
       Thread.sleep(TestConstants.SLEEP);
       IDE.EDITOR.closeTab(0);
 
-      IDE.NAVIGATION.selectItem(WS_URL + folder2Name + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + folder2Name + "/");
 
       IDE.SEARCH.performSearch("/" + folder2Name + "/", "", jsFileMimeType);
 

@@ -79,13 +79,13 @@ public class CookiesTest extends BaseTest
       //wait
       waitForRootElement();
       //select
-      IDE.NAVIGATION
+      IDE.WORKSPACE
          .selectItem(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
       //refresh
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       waitForRootElement();
       //select and open file
-      IDE.NAVIGATION.selectItem(URL);
+      IDE.WORKSPACE.selectItem(URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       waitForRootElement();
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);

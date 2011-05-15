@@ -75,7 +75,7 @@ public class HighlightOutlineTest extends BaseTest
    public void testHighlightOutline() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(URL + "/");
+      IDE.WORKSPACE.selectItem(URL + "/");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);

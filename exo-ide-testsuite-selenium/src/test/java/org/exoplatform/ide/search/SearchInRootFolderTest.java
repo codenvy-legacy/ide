@@ -61,7 +61,7 @@ public class SearchInRootFolderTest extends BaseTest
    public void testSearchInRootFolder() throws Exception
    {
       waitForRootElement();
-      createFolder(folder1Name);
+      IDE.NAVIGATION.createFolder(folder1Name);
       //Create and save 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(0);
@@ -72,9 +72,9 @@ public class SearchInRootFolderTest extends BaseTest
       IDE.NAVIGATION.assertItemVisible(WS_URL + folder1Name + "/" + restFileName);
 
       //Create second folder
-      IDE.NAVIGATION.selectRootOfWorkspace();
-      createFolder(folder2Name);
-      IDE.NAVIGATION.waitForItem(WS_URL + folder2Name + "/");
+      IDE.WORKSPACE.selectRootItem();
+      IDE.NAVIGATION.createFolder(folder2Name);
+      IDE.WORKSPACE.waitForItem(WS_URL + folder2Name + "/");
       //Save in second folder first time
       saveAsUsingToolbarButton(copyofRestFileName);
       Thread.sleep(TestConstants.SLEEP);
@@ -86,7 +86,7 @@ public class SearchInRootFolderTest extends BaseTest
 
       IDE.EDITOR.closeTab(0);
 
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
 
       IDE.SEARCH.performSearch("/", "Hello", "text/html");
       IDE.SEARCH.waitSearchResultsPresent();

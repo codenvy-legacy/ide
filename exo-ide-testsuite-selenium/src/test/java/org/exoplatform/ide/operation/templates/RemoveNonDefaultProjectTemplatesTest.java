@@ -80,7 +80,7 @@ public class RemoveNonDefaultProjectTemplatesTest extends BaseTest
    @Test
    public void testDeleteProjectTemplate() throws Exception
    {
-      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       //----- 1 ----------------
       //open create project from template form

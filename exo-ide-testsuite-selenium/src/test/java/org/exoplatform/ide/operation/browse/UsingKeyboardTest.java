@@ -93,7 +93,7 @@ public class UsingKeyboardTest extends BaseTest
       waitForRootElement();
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       waitForRootElement();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
@@ -101,18 +101,18 @@ public class UsingKeyboardTest extends BaseTest
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       waitForRootElement();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
 
       // test keyboard with opened Content Panel
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       waitForRootElement();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
@@ -139,7 +139,7 @@ public class UsingKeyboardTest extends BaseTest
       waitForRootElement();
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
 
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
 
       createSaveAndCloseFile(MenuCommands.New.GOOGLE_GADGET_FILE, TEST_FILE, 0);
 
@@ -195,7 +195,7 @@ public class UsingKeyboardTest extends BaseTest
       // refresh page and open test file
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + TEST_FOLDER + "/" + TEST_FILE, false);

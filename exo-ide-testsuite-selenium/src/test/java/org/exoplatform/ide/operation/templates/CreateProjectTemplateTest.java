@@ -52,7 +52,7 @@ public class CreateProjectTemplateTest extends BaseTest
    @Test
    public void testCreateProjectTemplate() throws Exception
    {
-      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       //=================== Check adding folder ====================
       //----- 1 ----------------
@@ -166,7 +166,7 @@ public class CreateProjectTemplateTest extends BaseTest
    public void testEnablingDisablingButtons() throws Exception
    {
       refresh();
-      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       
       //----- 1 ----------------

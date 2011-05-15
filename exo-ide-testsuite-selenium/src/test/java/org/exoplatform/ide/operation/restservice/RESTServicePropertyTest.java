@@ -66,7 +66,7 @@ public class RESTServicePropertyTest extends BaseTest
    {
       
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 

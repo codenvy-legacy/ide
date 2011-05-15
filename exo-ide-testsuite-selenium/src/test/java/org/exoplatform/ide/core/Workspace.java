@@ -69,5 +69,39 @@ public class Workspace extends AbstractTestModule
    {
       return TREE_PREFIX_ID + Utils.md5(href);
    }
+   
+   public void doubleClickOnFolder(String folderURL) throws Exception
+   {
+      String locator = "//div[@id='" + getItemId(folderURL) + "']/table/tbody/tr/td[2]";
+
+      selenium().mouseDown(locator);
+      selenium().mouseUp(locator);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+
+      selenium().doubleClick(locator);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+   }
+
+   public void doubleClickOnFile(String fileURL) throws Exception
+   {
+      String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
+
+      selenium().mouseDown(locator);
+      selenium().mouseUp(locator);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+
+      selenium().doubleClick(locator);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+   }
+   
+   /**
+    * Wait for item present in workspace tree
+    * @param itemHref Href of the item
+    * @throws Exception 
+    */
+   public void waitForItem(String itemHref) throws Exception
+   {
+      waitForElementPresent(getItemId(itemHref));
+   }
 
 }

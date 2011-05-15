@@ -110,13 +110,13 @@ public class CopyFoldersAndFilesTest extends BaseTest
    {
       waitForRootElement();
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_GROOVY, false);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_GADGET, false);
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
 
       IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
       IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
@@ -126,14 +126,14 @@ public class CopyFoldersAndFilesTest extends BaseTest
       IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
       IDE.NAVIGATION.deleteSelectedItems();
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GADGET);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GADGET);
       IDE.NAVIGATION.deleteSelectedItems();
 
       //IDE.NAVIGATION.selectRootOfWorkspace();
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_2 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_2 + "/");
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 

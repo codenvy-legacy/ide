@@ -46,8 +46,8 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       // create and select folder
-      createFolder(TEST_FOLDER_NAME);
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER_NAME + "/");
+      IDE.NAVIGATION.createFolder(TEST_FOLDER_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER_NAME + "/");
       
       // check command accessibility in top menu and main toolbar when Content Panel is empty
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
@@ -95,7 +95,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       //------------------------------------------------------------------
       // TODO After of capability select the few elements in IDE navigator 
       selenium.controlKeyDown();
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER_NAME + "/");
       selenium.controlKeyUp();
       
       Thread.sleep(TestConstants.SLEEP);
@@ -191,10 +191,10 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
       //selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       
       // save and change new file
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER_NAME + "/");
       saveAsUsingToolbarButton(TEST_FILE_NAME);
       Thread.sleep(20000);
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER_NAME + "/" + TEST_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER_NAME + "/" + TEST_FILE_NAME);
       
       // change file content
      IDE.EDITOR.typeTextIntoEditor(0, "Sample text");
@@ -243,7 +243,7 @@ public class NavigationPanelWithoutSelectedItemTest extends BaseTest
 //      //------------------------------------------------------------------
 //      // TODO After of capability select the few elements in IDE navigator 
 //      selenium.controlKeyDown();
-//      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER_NAME + "/");
+//      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER_NAME + "/");
 //      selenium.controlKeyUp();
 //      
 //      Thread.sleep(TestConstants.SLEEP);

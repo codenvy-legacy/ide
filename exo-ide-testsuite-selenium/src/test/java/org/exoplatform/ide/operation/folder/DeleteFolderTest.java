@@ -77,10 +77,10 @@ public class DeleteFolderTest extends BaseTest
    {
       waitForRootElement();
       //select workspace and refresh
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //select folder
-      IDE.NAVIGATION.selectItem(URL_TOOLBAR + "/");
+      IDE.WORKSPACE.selectItem(URL_TOOLBAR + "/");
       //run delete
       IDE.NAVIGATION.deleteSelectedItems();
       //chek create form
@@ -102,10 +102,10 @@ public class DeleteFolderTest extends BaseTest
 
       waitForRootElement();
       //select workspace and refresh
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //select folder
-      IDE.NAVIGATION.selectItem(URL_MENU + "/");
+      IDE.WORKSPACE.selectItem(URL_MENU + "/");
       //run command through menicommands
       //delete item
       IDE.NAVIGATION.deleteSelectedItems();

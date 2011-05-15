@@ -32,13 +32,14 @@ import org.exoplatform.ide.core.GoToLine;
 import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigation;
-import org.exoplatform.ide.core.OpenWith;
+import org.exoplatform.ide.core.OpenWithDialog;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Output;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.core.Properties;
 import org.exoplatform.ide.core.RESTService;
+import org.exoplatform.ide.core.RenameDialog;
 import org.exoplatform.ide.core.SaveAs;
 import org.exoplatform.ide.core.SaveAsTemplate;
 import org.exoplatform.ide.core.Search;
@@ -114,7 +115,7 @@ public class IDE
    
    public Workspace WORKSPACE = new Workspace();
    
-   public OpenWith OPENWITH = new OpenWith();
+   public OpenWithDialog OPENWITH = new OpenWithDialog();
    
    public GoToLine GOTOLINE = new GoToLine();
    
@@ -141,6 +142,8 @@ public class IDE
    public CreateProjectTemplate PROJECT_TEMPLATE = new CreateProjectTemplate();
    
    public Folder FOLDER = new Folder();
+   
+   public RenameDialog RENAME_DIALOG = new RenameDialog();
 
    /**
     * Select main frame of IDE.

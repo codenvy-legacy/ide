@@ -109,7 +109,7 @@ public class Templates extends AbstractTestModule
    public void typeNameToInputField(String name) throws InterruptedException
    {
       selenium().type(FILE_NAME_INPUT_LOCATOR, name);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
    /**
@@ -222,6 +222,28 @@ public class Templates extends AbstractTestModule
          typeNameToInputField(projectName);
       }
       clickCreateButton();
+   }
+   
+   /**
+    * Creates new file from template
+    * 
+    * @param templateName name of template
+    * @param fileName name of created file
+    * @throws Exception
+    */
+   public void createFileFromTemplate(String templateName, String fileName) throws Exception {
+      IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE, false);
+
+      //wait for File from template form appeared
+      IDE().TEMPLATES.waitForFileFromTemplateForm();
+      
+      //Select "Google Gadget" in the central column, change "File Name" field text on "Test Gadget File" name, click on "Create" button.
+      IDE().TEMPLATES.selectFileTemplate(templateName);
+
+      IDE().TEMPLATES.typeNameToInputField(fileName);
+      IDE().TEMPLATES.clickCreateButton();
+      
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
    
    /**

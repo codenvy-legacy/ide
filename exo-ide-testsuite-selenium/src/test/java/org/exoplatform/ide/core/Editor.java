@@ -170,6 +170,9 @@ public class Editor extends AbstractTestModule
          assertTrue(selenium().isElementPresent("exoAskDialogYesButton"));
          assertTrue(selenium().isElementPresent("exoAskDialogNoButton"));
 
+         selenium().mouseOver("exoAskDialogNoButton");
+         Thread.sleep(TestConstants.ANIMATION_PERIOD);
+         
          //click No button
          selenium().click("exoAskDialogNoButton");
       }
@@ -177,6 +180,8 @@ public class Editor extends AbstractTestModule
       else if (selenium().isElementPresent(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR)
          && selenium().isVisible(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR))
       {
+         selenium().mouseOver(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
+         Thread.sleep(TestConstants.ANIMATION_PERIOD);
          selenium().click(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
       }
       else

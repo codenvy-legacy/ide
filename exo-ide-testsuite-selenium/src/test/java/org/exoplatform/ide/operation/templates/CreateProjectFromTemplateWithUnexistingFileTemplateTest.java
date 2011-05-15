@@ -137,7 +137,7 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
    @Test
    public void testCreateProjectFromTemplate() throws Exception
    {
-      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       //----- 1 ----------------
       //open create project from template form
@@ -157,23 +157,23 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
 
       //----- 3 ----------------
       //check new project created
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + "/");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/"); 
 
-      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + "/");
+      IDE.WORKSPACE.selectItem(PROJECT_FOLDER_URL + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
 
-      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
+      IDE.WORKSPACE.selectItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
 
-      IDE.NAVIGATION.selectItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
+      IDE.WORKSPACE.selectItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
-      IDE.NAVIGATION.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
       IDE.NAVIGATION.assertItemNotVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + UNEXISTING_FILE_HTML);

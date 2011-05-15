@@ -20,12 +20,8 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -40,176 +36,153 @@ import org.junit.Test;
  */
 public class SaveAllFilesTest extends BaseTest
 {
-   
-   private static final String FOLDER_NAME = SaveAllFilesTest.class.getSimpleName();
-   
-   private static final String FOLDER_NAME_2 = SaveAllFilesTest.class.getSimpleName()+"2";
-   
-   private static final String SAVED_FILE_XML = "Saved File.xml";
-   
-   private static final String SAVED_FILE_GROOVY = "Saved File.groovy";
-   
-   private static final String NEW_HTML_FILE_NAME = "Untitled file.html";
-   
-   private static final String NEW_TEXT_FILE_NAME = "Untitled file.txt";
-   
+
+   private static final String FOLDER_1 = "SaveAllFilesTest-1";
+
+   private static final String FOLDER_2 = "SaveAllFilesTest-2";
+
+   private static final String SAVED_XML = "Saved File.xml";
+
+   private static final String SAVED_GROOVY = "Saved File.groovy";
+
+   private static final String NEW_HTML = "Untitled file.html";
+
+   private static final String NEW_TEXT = "Untitled file.txt";
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME);
-         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME_2);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_1);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_2);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-   
+
    //IDE-54:Save All Files
    //@Ignore
    @Test
    public void saveAllFiles() throws Exception
    {
-      //---- 2 ----------------
-      //Create  "Test" and  "Test 2" folders in the root folder.
-    
-      //TODO*******fix******
-      Thread.sleep(TestConstants.SLEEP);
-      //*******************************
-      
-      createFolder(FOLDER_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.NAVIGATION.selectRootOfWorkspace();
-      createFolder(FOLDER_NAME_2);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      //---- 3 ----------------
-      //Create file "Saved File.xml" in "Test", "Saved File.groovy" in the "Test 2" folder.
-      
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      //create new xml file
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-      //check Save All command is disabled
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      //save file
-      saveAsUsingToolbarButton(SAVED_FILE_XML);
-      Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      //create new groovy file
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME_2 + "/");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-      //Save All command is disabled
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      saveAsByTopMenu(SAVED_FILE_GROOVY);
-      Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.SLEEP);
-      //Save All command is disabled
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      
-      //---- 4 ----------------
-      //Click on "Test 2" folder in "Workspace" panel.
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME_2 + "/");
-      //Save All command is disabled
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      
-      //---- 5 ----------------
-      //Click on "New->From Template" toolbar button, select "Empty HTML" template, 
-      //type name "Untitled file.html" and then click on "Create" button. 
-      //Click on "New->From Template" button, select "Empty TEXT" template, 
-      //type name "Untitled file.txt" and then click on "Create" button.
-      
-      //create Empty HTML
-      createFileFromTemplate("Empty HTML", NEW_HTML_FILE_NAME);
-      
-      //create Empty Text file
-      createFileFromTemplate("Empty TEXT", NEW_TEXT_FILE_NAME);
-      //Save All command is disabled
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      
-      //---- 6 ----------------
-      //Open and change content of  "Saved File.xml" and "Saved File.groovy".
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(SAVED_FILE_XML, false);
-      Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.typeTextIntoEditor(2, "<root>admin</root>");
-      
-      //open and change content of groovy file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(SAVED_FILE_GROOVY, false);
-      Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.typeTextIntoEditor(3, "changed content of file");
-      Thread.sleep(TestConstants.SLEEP);
-      
-      //Until the step 6 and after the step 7 the "File->Save All" top menu command 
-      //should be disabled.
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, true);
-      
-      //---- 7 ----------------
-      //Click on "Save All" button in File menu.
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
-//      Thread.sleep(TestConstants.SLEEP);
-      
-      //after step 7
+      IDE.WORKSPACE.waitForRootItem();
+
       /*
-       * - there are non-saved file tabs "Untitled file.html", "Untitled file.txt" 
-       * in the Content Panel marked with "*".
-       * 
-       * - there are saved files "Saved File.xml" in "Test" folder, 
-       * and "Saved File.groovy" in the "Test 2" folder with file tab title without "*".
+       * 1. Create Folder1 and Folder2 in root folder. 
        */
-      
-      assertEquals(NEW_HTML_FILE_NAME + " *",IDE.EDITOR.getTabTitle(0));
-      assertEquals(NEW_TEXT_FILE_NAME + " *",IDE.EDITOR.getTabTitle(1));
-      assertEquals(SAVED_FILE_XML,IDE.EDITOR.getTabTitle(2));
-      assertEquals(SAVED_FILE_GROOVY,IDE.EDITOR.getTabTitle(3));
-      
-      //---- 8 ----------------
-      //Save and reopen files "Untitled file.groovy" , "Untitled file.xml".
-     IDE.EDITOR.selectTab(0);
-      saveAsUsingToolbarButton(NEW_HTML_FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.closeTab(0);
-      
-      //save and close txt file
-     IDE.EDITOR.selectTab(0);
-      saveAsUsingToolbarButton(NEW_TEXT_FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.closeTab(0);
-      
-      //open files
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NEW_TEXT_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NEW_HTML_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      //After the step 8: there are changed files "Saved File.xml", 
-      //"Saved File.groovy", "Untitled file.html", "Untitled file.txt" in the Content Tab.
-      assertEquals(SAVED_FILE_XML,IDE.EDITOR.getTabTitle(0));
-      assertEquals(SAVED_FILE_GROOVY,IDE.EDITOR.getTabTitle(1));
-      assertEquals(NEW_TEXT_FILE_NAME,IDE.EDITOR.getTabTitle(2));
-      assertEquals(NEW_HTML_FILE_NAME,IDE.EDITOR.getTabTitle(3));
-      
-      //end
-      
-      IDE.NAVIGATION.deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME_2 + "/");
-      IDE.NAVIGATION.deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.selectRootItem();
+      IDE.NAVIGATION.createFolder(FOLDER_1);
+      IDE.WORKSPACE.selectRootItem();
+      IDE.NAVIGATION.createFolder(FOLDER_2);
+
+      /*
+       * 2. Create file "Saved File.xml" in "Folder1"
+       */
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      saveAsUsingToolbarButton(SAVED_XML);
+      IDE.EDITOR.closeTab(0);
+
+      /*
+       * 3. Create "Saved File.groovy" in "Folder2"
+       */
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_2 + "/");
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      saveAsByTopMenu(SAVED_GROOVY);
+      IDE.EDITOR.closeTab(0);
+
+      /*
+       * 4. Save All command must be disabled
+       */
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+
+      /*
+       * 5. Create HTML file from template "Empty HTML" and does not save it.
+       */
+      IDE.TEMPLATES.createFileFromTemplate("Empty HTML", NEW_HTML);
+
+      /*
+       * 6. Create TEXT from from template "Empty TEXT" and does not save it.
+       */
+      IDE.TEMPLATES.createFileFromTemplate("Empty TEXT", NEW_TEXT);
+
+      /*
+       * 7. Save All command must be disabled
+       */
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+
+      /*
+       * 8. Open and change content of files "Saved File.xml" and "Saved File.groovy"
+       */
+      //IDE.NAVIGATION.selectAndRefreshFolder(WS_URL + FOLDER_1 + "/");
+      //IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + SAVED_XML, false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_1 + "/" + SAVED_XML);
+      IDE.EDITOR.typeTextIntoEditor(2, "<root>admin</root>");
+
+      //IDE.NAVIGATION.selectAndRefreshFolder(WS_URL + FOLDER_2 + "/");
+      //IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_2 + "/" + SAVED_GROOVY, false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_2 + "/" + SAVED_GROOVY);
+      IDE.EDITOR.typeTextIntoEditor(3, "changed content of file");
+
+      /*
+       * 9. Save All command must be enabled.
+       */
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, true);
+
+      /*
+       * 10. Run command "Save All" from menu 
+       */
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
+
+      /*
+       * 11. Files "Untitled file.html" and  "Untitled file.txt" must have marker "*" in editor
+       *      Files "Saved File.xml" and "Saved File.groovy" must be without marker "*" in editor.
+       */
+      assertEquals(NEW_HTML + " *", IDE.EDITOR.getTabTitle(0));
+      assertEquals(NEW_TEXT + " *", IDE.EDITOR.getTabTitle(1));
+      assertEquals(SAVED_XML, IDE.EDITOR.getTabTitle(2));
+      assertEquals(SAVED_GROOVY, IDE.EDITOR.getTabTitle(3));
+
+      /*
+       * 12. Save "Untitled file.html" to Folder1
+       */
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.EDITOR.selectTab(0);
+      saveAsUsingToolbarButton(NEW_HTML);
+      IDE.EDITOR.closeTab(0);
+
+      /*
+       * 13. Save "Untitled file.txt" to Folder2
+       */
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_2 + "/");
+      IDE.EDITOR.selectTab(0);
+      saveAsUsingToolbarButton(NEW_TEXT);
+      IDE.EDITOR.closeTab(0);
+
+      /*
+       * 14. Open "Untitled file.groovy" and "Untitled file.xml"
+       */
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_1 + "/" + NEW_HTML);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_2 + "/" + NEW_TEXT);
+
+      /*
+       * 15. Now Save As command must be disabled and all files in editor must does not have a marker "*"
+       */
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
+      assertEquals(SAVED_XML, IDE.EDITOR.getTabTitle(0));
+      assertEquals(SAVED_GROOVY, IDE.EDITOR.getTabTitle(1));
+      assertEquals(NEW_HTML, IDE.EDITOR.getTabTitle(2));
+      assertEquals(NEW_TEXT, IDE.EDITOR.getTabTitle(3));
+
+      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTab(0);
    }
-   
 
 }

@@ -99,14 +99,14 @@ public class SaveFileAsTemplateTest extends BaseTest
    @Test
    public void testSaveFileAsTemplate() throws Exception
    {
-      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       //-------- 1 ----------
       //open file with text
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);

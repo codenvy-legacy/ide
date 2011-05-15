@@ -30,7 +30,7 @@ import org.exoplatform.ide.TestConstants;
  * @version $
  */
 
-public class OpenWith extends AbstractTestModule
+public class OpenWithDialog extends AbstractTestModule
 {
 
    public void checkIsOpened()
@@ -43,7 +43,7 @@ public class OpenWith extends AbstractTestModule
       fail();
    }
 
-   public void open() throws Exception
+   public void callFromMenu() throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 
@@ -132,7 +132,7 @@ public class OpenWith extends AbstractTestModule
       throws Exception
    {
       //TODO add check form
-      IDE().NAVIGATION.selectItem(fileURL);
+      IDE().WORKSPACE.selectItem(fileURL);
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       selenium().click(
          "//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" + " " + typeFile + " "

@@ -76,10 +76,10 @@ public class GoogleGadgetPreviewTest extends BaseTest
    {
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(URL);
-      IDE.NAVIGATION.selectItem(URL);
+      IDE.WORKSPACE.waitForItem(URL);
+      IDE.WORKSPACE.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(URL + FILE_NAME);
+      IDE.WORKSPACE.waitForItem(URL + FILE_NAME);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       IDE.EDITOR.waitTabPresent(0);

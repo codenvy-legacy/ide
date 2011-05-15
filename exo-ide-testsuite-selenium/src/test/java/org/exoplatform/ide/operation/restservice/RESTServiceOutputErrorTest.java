@@ -78,7 +78,7 @@ public class RESTServiceOutputErrorTest extends BaseTest
    public void testOutputError() throws Exception
    {
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);

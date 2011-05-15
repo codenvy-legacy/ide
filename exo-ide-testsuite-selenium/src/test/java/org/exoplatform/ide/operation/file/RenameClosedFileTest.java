@@ -104,13 +104,13 @@ public class RenameClosedFileTest extends BaseTest
    public void testRenameClosedFile() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
@@ -137,12 +137,12 @@ public class RenameClosedFileTest extends BaseTest
    public void testChangeMimeType() throws Exception
    {
       refresh();
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       
@@ -167,12 +167,12 @@ public class RenameClosedFileTest extends BaseTest
    public void testRenameAndChangeMimeType() throws Exception
    {
       refresh();
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       

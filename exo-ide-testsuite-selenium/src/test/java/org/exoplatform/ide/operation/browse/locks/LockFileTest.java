@@ -97,7 +97,7 @@ public class LockFileTest extends LockFileAbstract
    {
       waitForRootElement();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
 
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, false);
@@ -217,7 +217,7 @@ public class LockFileTest extends LockFileAbstract
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       //----- 1 ------------

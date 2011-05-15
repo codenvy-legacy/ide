@@ -84,14 +84,14 @@ public class RestoreVersionTest extends BaseTest
    {
       waitForRootElement();
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
 
       IDE.EDITOR.deleteFileContent();
       saveAsUsingToolbarButton(FILE_1);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_1);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_1);
 
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
@@ -237,7 +237,7 @@ public class RestoreVersionTest extends BaseTest
       selenium.refresh();
       waitForRootElement();
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       IDE.EDITOR.waitTabPresent(0);
@@ -245,7 +245,7 @@ public class RestoreVersionTest extends BaseTest
 
       IDE.EDITOR.deleteFileContent();
       saveAsUsingToolbarButton(FILE_2);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_2);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_2);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 

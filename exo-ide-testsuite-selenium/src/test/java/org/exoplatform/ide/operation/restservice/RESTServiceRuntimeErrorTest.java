@@ -48,7 +48,7 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
    {
       waitForRootElement();
       
-      createFolder(FOLDER_NAME);
+      IDE.NAVIGATION.createFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);

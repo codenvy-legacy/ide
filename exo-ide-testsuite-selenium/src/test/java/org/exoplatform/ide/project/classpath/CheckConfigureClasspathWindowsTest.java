@@ -143,7 +143,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * 2. Try to configure classpath for workspace
        */
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
       
@@ -158,7 +158,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        * 3. Try to configure classpath for project.
        * Check, that .groovyclasspath in project folder is hidden
        */
-      IDE.NAVIGATION.selectItem(WS_URL + PROJECT_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
@@ -259,7 +259,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * 10. Open form and check, that it is empty
        */
-      IDE.NAVIGATION.selectItem(WS_URL + PROJECT_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
       Thread.sleep(TestConstants.SLEEP);
       

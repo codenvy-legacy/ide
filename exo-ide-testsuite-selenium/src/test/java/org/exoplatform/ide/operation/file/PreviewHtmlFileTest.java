@@ -77,7 +77,6 @@ public class PreviewHtmlFileTest extends BaseTest
    @Test
    public void previewHtmlFile() throws Exception
    {
-      //waitForRootElement();
       IDE.WORKSPACE.waitForRootItem();
       
       /*
@@ -137,13 +136,7 @@ public class PreviewHtmlFileTest extends BaseTest
 
       /*
        * 9. Reopen "PreviewHtmlFile.html" and click "Preview".
-       */
-      
-      IDE.NAVIGATION.doubleClickOnFolder(WS_URL);
-      Thread.sleep(3000);
-      IDE.NAVIGATION.doubleClickOnFolder(WS_URL);
-      Thread.sleep(3000);
-      
+       */      
       IDE.NAVIGATION.selectAndRefreshFolder(WS_URL + FOLDER_NAME + "/");
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);

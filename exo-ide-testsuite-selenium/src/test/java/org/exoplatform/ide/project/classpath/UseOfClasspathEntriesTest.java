@@ -122,7 +122,7 @@ public class UseOfClasspathEntriesTest extends BaseTest
       IDE.NAVIGATION.assertItemVisible(WS_URL + PROJECT_NAME + "/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
       
-      IDE.NAVIGATION.selectItem(WS_URL + PROJECT_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(REST_SERVICE_FILE_NAME, false);

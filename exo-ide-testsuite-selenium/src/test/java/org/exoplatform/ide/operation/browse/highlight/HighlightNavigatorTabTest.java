@@ -76,11 +76,11 @@ public class HighlightNavigatorTabTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP);
 
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
 
@@ -94,7 +94,7 @@ public class HighlightNavigatorTabTest extends BaseTest
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       assertFalse(selenium
          .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertFalse(selenium
          .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));

@@ -62,30 +62,30 @@ public class ItemOrderingTest extends BaseTest
    {
       waitForRootElement();
       // create test files
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1_2, 0);
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, UPPERCASE_TEST_FILE_1, 0);
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1, 0);
 
       // create test folders
-      IDE.NAVIGATION.selectRootOfWorkspace();
-      createFolder(TEST_FOLDER_1_2);
-      IDE.NAVIGATION.selectRootOfWorkspace();
-      createFolder(UPPERCASE_TEST_FOLDER_1);
-      IDE.NAVIGATION.selectRootOfWorkspace();
-      createFolder(TEST_FOLDER_1);
+      IDE.WORKSPACE.selectRootItem();
+      IDE.NAVIGATION.createFolder(TEST_FOLDER_1_2);
+      IDE.WORKSPACE.selectRootItem();
+      IDE.NAVIGATION.createFolder(UPPERCASE_TEST_FOLDER_1);
+      IDE.WORKSPACE.selectRootItem();
+      IDE.NAVIGATION.createFolder(TEST_FOLDER_1);
 
       checkItemOrderingInNavigationPanel();
 
       // test ordering within the Navigation Panel after the refreshing root folder
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.IDE_INITIALIZATION_PERIOD);
 
       // test ordering within the Search Panel
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.SEARCH.performSearch("/", "", MimeType.TEXT_XML);
       checkItemOrderngInSearchResultPanel();
    }

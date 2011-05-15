@@ -76,20 +76,20 @@ public class ExploringWorkspacePanelTest extends BaseTest
    public void testExplodeCollapseFolder() throws Exception
    {
       waitForRootElement();
-      createFolder(FOLDER_1);
-      createFolder(FOLDER_1_1);
-      IDE.NAVIGATION.selectItem(FOLDER_1_URL);
-      createFolder(FOLDER_1_2);
+      IDE.NAVIGATION.createFolder(FOLDER_1);
+      IDE.NAVIGATION.createFolder(FOLDER_1_1);
+      IDE.WORKSPACE.selectItem(FOLDER_1_URL);
+      IDE.NAVIGATION.createFolder(FOLDER_1_2);
 
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_URL);
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_1_URL);
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_2_URL);
 
-      IDE.NAVIGATION.selectRootOfWorkspace();
-      createFolder(FOLDER_2);
-      createFolder(FOLDER_2_1);
-      IDE.NAVIGATION.selectItem(FOLDER_2_URL);
-      createFolder(FOLDER_2_2);
+      IDE.WORKSPACE.selectRootItem();
+      IDE.NAVIGATION.createFolder(FOLDER_2);
+      IDE.NAVIGATION.createFolder(FOLDER_2_1);
+      IDE.WORKSPACE.selectItem(FOLDER_2_URL);
+      IDE.NAVIGATION.createFolder(FOLDER_2_2);
       //Sub folders of folder "folder-1" are hidden
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_URL);
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_1_1_URL);
@@ -141,9 +141,9 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_2_1_URL);
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_2_2_URL);
       
-      IDE.NAVIGATION.selectItem(FOLDER_1_URL);
+      IDE.WORKSPACE.selectItem(FOLDER_1_URL);
       IDE.NAVIGATION.deleteSelectedItems();
-      IDE.NAVIGATION.selectItem(FOLDER_2_URL);
+      IDE.WORKSPACE.selectItem(FOLDER_2_URL);
       IDE.NAVIGATION.deleteSelectedItems();
    }
 }

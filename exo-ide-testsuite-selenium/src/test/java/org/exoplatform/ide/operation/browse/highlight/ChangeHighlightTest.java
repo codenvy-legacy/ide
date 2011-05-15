@@ -79,7 +79,7 @@ public class ChangeHighlightTest extends BaseTest
       IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       IDE.PERSPECTIVE.checkViewIsNotPresent("editor-0");
       IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
       IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       saveAsUsingToolbarButton("Gadget");
@@ -88,7 +88,7 @@ public class ChangeHighlightTest extends BaseTest
 
       IDE.PREVIEW.checkPreviewGadgetIsOpened(true);
       IDE.PERSPECTIVE.checkViewIsActive("gadgetpreview");
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
       IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
 
    }

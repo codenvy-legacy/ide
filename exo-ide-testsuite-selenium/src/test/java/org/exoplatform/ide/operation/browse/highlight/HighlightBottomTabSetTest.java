@@ -76,12 +76,12 @@ public class HighlightBottomTabSetTest extends BaseTest
    public void testHighlightBottopTabSet() throws Exception
    {
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP);
 
       //      selectItemInWorkspaceTree(FILE_NAME);
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       waitForElementPresent(SHOW_PROPERTIES_ICON_LOCATOR);

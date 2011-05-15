@@ -92,11 +92,11 @@ public class ViewVersionHistoryTest extends BaseTest
 
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
 
       //Open new file:
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
       IDE.EDITOR.waitTabPresent(0);
 
@@ -104,7 +104,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
       //Save file:
       saveAsUsingToolbarButton(FILE_0);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_0);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_0);
 
       //View version history button is present but not active:
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
@@ -139,7 +139,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
       //Save file:
       saveAsUsingToolbarButton(FILE_4);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_4);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_4);
       //View version history button is present but not active:
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
@@ -182,16 +182,16 @@ public class ViewVersionHistoryTest extends BaseTest
       waitForRootElement();
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
 
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(0);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
       //Save file
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       saveAsUsingToolbarButton(FILE_1);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_1);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_1);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 
@@ -242,9 +242,9 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       // open folder
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_1);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_1);
 
       //Open file
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_1, true);
@@ -321,9 +321,9 @@ public class ViewVersionHistoryTest extends BaseTest
 
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_1);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_1);
 
       //Open file
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_1, true);

@@ -80,7 +80,7 @@ public class GoToFolderTest extends BaseTest
       waitForRootElement();
       IDE.MENU.checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
 
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //waitForRootElement();
 
@@ -99,7 +99,7 @@ public class GoToFolderTest extends BaseTest
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //Select second file
-      IDE.NAVIGATION.selectItem(URL + FOLDER_2 + "/" + FILE_2);
+      IDE.WORKSPACE.selectItem(URL + FOLDER_2 + "/" + FILE_2);
       //Go to folder with first file
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       waitForRootElement();
@@ -107,7 +107,7 @@ public class GoToFolderTest extends BaseTest
       //TODO check selected state
       IDE.NAVIGATION.assertItemVisible(URL + FOLDER_1 + "/" + FILE_1);
 
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand("Refresh Selected Folder");
 
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
@@ -136,7 +136,7 @@ public class GoToFolderTest extends BaseTest
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       waitForRootElement();
       //Close root workspace folder
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //Thread.sleep(TestConstants.SLEEP_SHORT);
 

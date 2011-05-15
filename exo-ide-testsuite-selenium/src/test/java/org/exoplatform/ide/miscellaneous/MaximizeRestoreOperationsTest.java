@@ -119,7 +119,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       //prepare file
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(URL) ;
+      IDE.WORKSPACE.selectItem(URL) ;
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);     
       Thread.sleep(TestConstants.SLEEP);

@@ -95,13 +95,13 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 1. Open Folder
        */
-      IDE.NAVIGATION.doubleClickOnFolder(WS_URL + FOLDER + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER + "/");
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
 
       /*
        * 2. Select and open html file by doubleclicking
        */
-      IDE.NAVIGATION.doubleClickOnFile(WS_URL + FOLDER + "/" + FILE);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER + "/" + FILE);
 
       /*
        * 3. Codemirror Editor must be opened 
@@ -116,7 +116,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 5. Run File > Open With
        */
-      IDE.OPENWITH.open();
+      IDE.OPENWITH.callFromMenu();
 
       /*
        * 6. Select CKEditor and click Open
@@ -138,7 +138,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 9. Open html file by doubleclicking
        */
-      IDE.NAVIGATION.doubleClickOnFile(WS_URL + FOLDER + "/" + FILE);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER + "/" + FILE);
 
       /*
        * 10. Check Codemirror must be opened
@@ -148,7 +148,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 11. Run File > Open With
        */
-      IDE.OPENWITH.open();
+      IDE.OPENWITH.callFromMenu();
 
       /*
        * 12. Select CKEditor, check "Use as default editor" and click Open
@@ -177,7 +177,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 16. Open html file by doubleclicking
        */
-      IDE.NAVIGATION.doubleClickOnFile(WS_URL + FOLDER + "/" + FILE);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER + "/" + FILE);
 
       /*
        * 17. Check CKEditor must be opened

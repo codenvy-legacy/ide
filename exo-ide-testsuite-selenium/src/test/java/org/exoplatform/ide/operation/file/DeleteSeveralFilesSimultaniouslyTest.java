@@ -95,31 +95,31 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
    @Test
    public void testDeleteSeveralFilesSimultaniously() throws Exception
    {
-      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
 
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
       IDE.NAVIGATION.deleteSelectedItems();      
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME).getStatusCode());
       
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
       IDE.NAVIGATION.deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME).getStatusCode());
       
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
       IDE.NAVIGATION.deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME).getStatusCode());
       
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
       IDE.NAVIGATION.deleteSelectedItems();

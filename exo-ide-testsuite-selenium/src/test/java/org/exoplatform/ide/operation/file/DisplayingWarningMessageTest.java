@@ -76,7 +76,7 @@ public class DisplayingWarningMessageTest extends BaseTest
    {
       waitForRootElement();
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
 
       //--------- 1 -------------------
       //Click on "New->XML File" toolbar button to open new file on Content Panel
@@ -114,7 +114,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       //After the step 6: new file will be saved, and file tab should be closed.
 
       //check is file appeared in workspace tree
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
 
       //check is file closed
       IDE.EDITOR.checkIsTabPresentInEditorTabset(XML_FILE_NAME, false);
@@ -136,6 +136,9 @@ public class DisplayingWarningMessageTest extends BaseTest
       IDE.ASK_DIALOG.assertOpened("Info");
       IDE.ASK_DIALOG.clickNo();
 
+      
+      
+      
       //After the step 8: file tab with created earlier xml file should be opened, 
       //content in this tab should be changed, title will be marked by "*" and buttom "Save" and "File->Save" top menu command will be enabled.
 

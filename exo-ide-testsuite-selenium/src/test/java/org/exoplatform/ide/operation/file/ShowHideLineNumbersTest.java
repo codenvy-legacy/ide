@@ -84,8 +84,8 @@ public class ShowHideLineNumbersTest extends BaseTest
    @Test
    public void testShowHideLineRestService() throws Exception
    {
-      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.NAVIGATION.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
       /*
        * 1. By default menu commands "Edit > Show line numbers" and "Edit > Hide line numbers" must be hidden. 
@@ -97,7 +97,7 @@ public class ShowHideLineNumbersTest extends BaseTest
        * 2. Open XML file by doubleclicking.
        *     Line numbers must shows in editor and Menu command "Edit > Hide line numbers" must be enabled.
        */
-      IDE.NAVIGATION.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + XML);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + XML);
       IDE.EDITOR.checkLineNumbersVisible(true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
 
@@ -131,7 +131,7 @@ public class ShowHideLineNumbersTest extends BaseTest
        * 7. Open GROOVY file
        *    File must be opened in editor and line numbers must shows.
        */
-      IDE.NAVIGATION.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GROOVY);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GROOVY);
       IDE.EDITOR.checkCodeEditorOpened(0);
 
       /*
@@ -144,7 +144,7 @@ public class ShowHideLineNumbersTest extends BaseTest
        * 9. Open XML file.
        *     Line numbers must be hidden and menu command "Edit > Show Line Numbers" must be enabled.
        */
-      IDE.NAVIGATION.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + XML);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + XML);
       IDE.EDITOR.checkLineNumbersVisible(false);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 

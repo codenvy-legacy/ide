@@ -120,10 +120,10 @@ public class CopyFileTest extends BaseTest
    {
       waitForRootElement();
       
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
       
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
 
       /*
        * Check Cut and Copy commands must be enabled
@@ -157,7 +157,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Select Root in workspace panel
        */
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
 
       /*
        * Click Paste command
@@ -173,7 +173,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Open "Test 1" folder
        */
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
 
       /*
        * Open file "/Test 1/test.groovy"
@@ -198,15 +198,15 @@ public class CopyFileTest extends BaseTest
       /*
        * Open "/test.groovy"
        */
-      IDE.NAVIGATION.selectRootOfWorkspace();
+     IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
       IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
       
       /*
        * Select FILE_GROOVY file in FOLDER_1
        */
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
       
       /*
        * Open FILE_GROOVY file from FOLDER_1
@@ -216,7 +216,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Select FILE_GROOVY file in root folder
        */
-      IDE.NAVIGATION.selectItem(WS_URL + FILE_GROOVY);
+      IDE.WORKSPACE.selectItem(WS_URL + FILE_GROOVY);
       
       /*
        * Open FILE_GROOVY file from root folder

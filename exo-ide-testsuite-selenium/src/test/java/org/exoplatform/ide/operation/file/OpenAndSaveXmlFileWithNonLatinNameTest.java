@@ -92,7 +92,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
    public void testOpenAndSaveXmlFileWithNonLatinName() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP * 2);
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
 

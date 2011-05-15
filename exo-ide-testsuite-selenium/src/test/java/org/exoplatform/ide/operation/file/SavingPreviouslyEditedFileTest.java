@@ -101,7 +101,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       //Create and select "Test" in "Workspace" panel.
 
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       //----- 2 ------------
@@ -186,7 +186,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    {
       refresh();
 
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
@@ -214,7 +214,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    {
       refresh();
 
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");

@@ -93,7 +93,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    {
 
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_HTML_FILE_NAME, false);
@@ -110,7 +110,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    public void tesFormatingCss() throws Exception
    {
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_CSS_FILE_NAME, false);
@@ -129,7 +129,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    {
 
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_JS_FILE_NAME, false);
@@ -147,7 +147,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    public void tesFormatingGadget() throws Exception
    {
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_GADGET_FILE_NAME, false);

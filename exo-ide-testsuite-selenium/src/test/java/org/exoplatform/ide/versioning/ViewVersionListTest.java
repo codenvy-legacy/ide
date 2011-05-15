@@ -79,7 +79,7 @@ public class ViewVersionListTest extends BaseTest
    public void testViewVersionList() throws Exception
    {
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(0);
@@ -87,7 +87,7 @@ public class ViewVersionListTest extends BaseTest
 
      IDE.EDITOR.deleteFileContent();
       saveAsUsingToolbarButton(FILE_1);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" +FILE_1);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" +FILE_1);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
       //Edit and save file
@@ -193,7 +193,7 @@ public class ViewVersionListTest extends BaseTest
    {
       refresh();
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(0);
@@ -201,7 +201,7 @@ public class ViewVersionListTest extends BaseTest
       
      IDE.EDITOR.deleteFileContent();
       saveAsUsingToolbarButton(FILE_2);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_2);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_2);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
       //Edit and save file

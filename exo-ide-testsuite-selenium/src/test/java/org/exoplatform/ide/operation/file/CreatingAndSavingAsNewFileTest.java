@@ -99,7 +99,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    {
       waitForRootElement();
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
 
       createFileAndSaveAs(MenuCommands.New.REST_SERVICE_FILE, "grs", REST_SERVICE_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.TEXT_FILE, "txt", TXT_FILE_NAME);
@@ -121,8 +121,6 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 
       assertTrue(selenium.isTextPresent("Untitled file." + fileExtention));
       IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
-
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       assertTrue(selenium.isTextPresent("Untitled file 1." + fileExtention));
 

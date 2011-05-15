@@ -108,12 +108,12 @@ public class CutFoldersAndFilesTest extends BaseTest
    public void testCutOperation() throws Exception
    {
       waitForRootElement();
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_1 + "/"); 
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/"); 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_2 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_2 + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       //Open Gadget window, open all created files.
@@ -134,7 +134,7 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       checkButtonsDisabled();
 
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
 
       //Select files "test 1/gadgetxml", and "test 2/gadgetxml".
       selenium.controlKeyDown();
@@ -158,7 +158,7 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
 
       //Select "test 1/gadgetxml", "test 1/test 1.1" items in the Workspace Panel and press the "Cut" toolbar button.
       selenium.controlKeyDown();
@@ -182,7 +182,7 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       checkPasteButton(true);
 
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
 
       selenium.controlKeyDown();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -196,7 +196,7 @@ public class CutFoldersAndFilesTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
 
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 

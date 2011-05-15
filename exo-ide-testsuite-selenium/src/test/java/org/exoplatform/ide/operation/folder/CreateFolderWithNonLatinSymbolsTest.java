@@ -51,7 +51,7 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
    {
       Thread.sleep(3000);
       // Create folder with Cyrillic name
-      createFolder(FOLDER_NAME);
+      IDE.NAVIGATION.createFolder(FOLDER_NAME);
       //Chek in repository
       assertEquals(200, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME, "UTF-8")).getStatusCode());
       Thread.sleep(120000);

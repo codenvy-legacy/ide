@@ -57,8 +57,8 @@ public class SearchAdvancedTest extends BaseTest
       
       saveAsByTopMenu(googleGadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL + googleGadgetFileName);
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectItem(WS_URL + googleGadgetFileName);
+      IDE.WORKSPACE.selectRootItem();
       
       //Step 5
       IDE.SEARCH.performSearch("/", "text", "");
@@ -103,7 +103,7 @@ public class SearchAdvancedTest extends BaseTest
 
       //Clear test items
       selectWorkspaceTab();
-      IDE.NAVIGATION.selectItem(WS_URL + googleGadgetFileName);
+      IDE.WORKSPACE.selectItem(WS_URL + googleGadgetFileName);
       IDE.NAVIGATION.deleteSelectedItems();
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + googleGadgetFileName);

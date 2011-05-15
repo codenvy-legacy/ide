@@ -59,7 +59,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //step 1
       checkNoFileOpened();
       //step 2
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       //create new html file
 
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
@@ -67,7 +67,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.selectItem(URL);
+      IDE.WORKSPACE.selectItem(URL);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       createSaveAndCloseFile(MenuCommands.New.HTML_FILE, htmlFile, 0);
@@ -314,7 +314,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       }
       saveCurrentFile();
       IDE.EDITOR.closeTabWithNonSaving(0);
-      IDE.NAVIGATION.selectItem(URL + htmlFile);
+      IDE.WORKSPACE.selectItem(URL + htmlFile);
       IDE.NAVIGATION.deleteSelectedItems();
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + googleGadgetFile, false);
@@ -332,7 +332,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
 
-      IDE.NAVIGATION.selectItem(URL + googleGadgetFile);
+      IDE.WORKSPACE.selectItem(URL + googleGadgetFile);
       IDE.NAVIGATION.deleteSelectedItems();
 
    }

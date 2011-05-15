@@ -88,12 +88,12 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
    {
       {
          waitForRootElement();
-         IDE.NAVIGATION.selectItem(
+         IDE.WORKSPACE.selectItem(
             BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
          IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
          waitForRootElement();
 
-         IDE.NAVIGATION.selectItem(URL);
+         IDE.WORKSPACE.selectItem(URL);
          IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, true);
          IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER);
 

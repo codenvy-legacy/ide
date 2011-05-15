@@ -78,6 +78,10 @@ public class Toolbar extends AbstractTestModule
     */
    public void runCommandFromNewPopupMenu(String menuItemName) throws Exception
    {
+      runCommandFromNewPopupMenu(menuItemName, true);
+   }
+   
+   public void runCommandFromNewPopupMenu(String menuItemName, boolean wait) throws Exception {
       runCommand("New");
 
       String locator = "//table[@class='exo-popupMenuTable']//tbody//td//nobr[text()='" + menuItemName + "']";
@@ -91,11 +95,13 @@ public class Toolbar extends AbstractTestModule
 
       //selenium.mouseUp(hoverLocator);
 
-      //time to wait while gadget open new file
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      if (wait) {
+         //time to wait while gadget open new file
+         Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);         
+      }
+      
    }
+   
 
    /**
     * Check is button present on toolbar and is it enabled or disabled.

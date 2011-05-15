@@ -206,7 +206,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //---- 1 -----------------
       //open file    
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.waitForItem(URL + FILE_WITH_ERROR_FOR_CHANGING);     
+      IDE.WORKSPACE.waitForItem(URL + FILE_WITH_ERROR_FOR_CHANGING);     
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_WITH_ERROR_FOR_CHANGING, false);
 
       //---- 2 -----------------
@@ -325,7 +325,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.waitForItem(URL + FILE_WITH_ERROR);
+      IDE.WORKSPACE.waitForItem(URL + FILE_WITH_ERROR);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_WITH_ERROR, false);
       Thread.sleep(TestConstants.SLEEP);
 

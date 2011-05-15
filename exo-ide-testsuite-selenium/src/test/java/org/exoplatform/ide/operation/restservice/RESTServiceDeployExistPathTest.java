@@ -59,7 +59,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
 
       waitForRootElement();
       //TODO*****************change**************change add folder for locked file
-      createFolder(FOLDER_NAME);
+      IDE.NAVIGATION.createFolder(FOLDER_NAME);
       //*************************************
       IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
       //createFileFromToolbar("REST Service");

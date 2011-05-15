@@ -98,7 +98,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
    public void testAutocomplateList() throws Exception
    {
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       /*
@@ -248,7 +248,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
     */
    private void testSnippetInAutocomplete(String name, String snippetTemplate) throws Exception
    {
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       /*
        * 1. Open netvibes file.

@@ -53,15 +53,15 @@ public class RootFolderTest extends BaseTest
    public void testRootFolder() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
 
       //create folder
-      createFolder(folderName);
+      IDE.NAVIGATION.createFolder(folderName);
 
       //check new folder appeared in navigation tree
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/");
       //refresh workspace folder
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       //check new folder is present in navigation tree
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/");

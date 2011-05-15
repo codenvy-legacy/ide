@@ -89,16 +89,16 @@ public class CutFolderTest extends BaseTest
       /*
        * 1. Check, that "/folder 1", "/folder 2", "/folder 1/folder 2", "/folder 1/folder 2/file.groovy" are presents
        */
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 2/");
 
-      IDE.NAVIGATION.selectItem(WS_URL + "folder 1/");
+      IDE.WORKSPACE.selectItem(WS_URL + "folder 1/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/folder 2/");
 
-      IDE.NAVIGATION.selectItem(WS_URL + "folder 1/folder 2/");
+      IDE.WORKSPACE.selectItem(WS_URL + "folder 1/folder 2/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/folder 2/file.groovy");
 
@@ -121,7 +121,7 @@ public class CutFolderTest extends BaseTest
       /*
        * 3. Select folder "folder 1/folder 1.1". Click on "Cut" toolbar button.
        */
-      IDE.NAVIGATION.selectItem(WS_URL + "folder 1/folder 2/");
+      IDE.WORKSPACE.selectItem(WS_URL + "folder 1/folder 2/");
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.CUT_TOOLBAR);
 
       /*
@@ -133,7 +133,7 @@ public class CutFolderTest extends BaseTest
       /*
        * 4. Select file "folder 1/folder 1.1/test.groovy" in the Workspace Panel.
        */
-      IDE.NAVIGATION.selectItem(WS_URL + "folder 1/folder 2/file.groovy");
+      IDE.WORKSPACE.selectItem(WS_URL + "folder 1/folder 2/file.groovy");
 
       /*
        * Paste commands are enabled.
@@ -144,7 +144,7 @@ public class CutFolderTest extends BaseTest
       /*
        * 5. Select folder "folder 1/folder 1.1/" and click on "Paste" toolbar button.
        */
-      IDE.NAVIGATION.selectItem(WS_URL + "folder 1/folder 2/");
+      IDE.WORKSPACE.selectItem(WS_URL + "folder 1/folder 2/");
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
 
       /*
@@ -163,7 +163,7 @@ public class CutFolderTest extends BaseTest
       /*
        * 6. Select root item and then click on "Paste" toolbar button.
        */
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
 
       /*
@@ -182,7 +182,7 @@ public class CutFolderTest extends BaseTest
       /*
        * 7. Select "test 2" item and then select "Edit->Paste Items" topmenu command.
        */
-      IDE.NAVIGATION.selectItem(WS_URL + "folder 2/");
+      IDE.WORKSPACE.selectItem(WS_URL + "folder 2/");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       /*
@@ -200,7 +200,7 @@ public class CutFolderTest extends BaseTest
       saveCurrentFile();
      IDE.EDITOR.closeTab(0);
 
-      IDE.NAVIGATION.selectItem(WS_URL + "folder 2/folder 2/");
+      IDE.WORKSPACE.selectItem(WS_URL + "folder 2/folder 2/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + "folder 2/folder 2/file.groovy", false);

@@ -55,7 +55,7 @@ public class NetvibesDocumentationTest extends BaseTest
    @Test
    public void testNetvibesDocumentation() throws Exception
    {
-      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
       IDE.EDITOR.waitTabPresent(0);
@@ -83,7 +83,7 @@ public class NetvibesDocumentationTest extends BaseTest
       assertFalse(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
 
       refresh();
-      IDE.NAVIGATION.waitForItem(WS_URL + FILE_NAME);
+      IDE.WORKSPACE.waitForItem(WS_URL + FILE_NAME);
       waitForElementPresent(IDE_DOCUMENTATION_FRAME);
       
       assertTrue(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));

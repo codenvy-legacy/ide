@@ -78,7 +78,7 @@ public class CodeOutLineRubyTest extends BaseTest
       // Open groovy file with content
       Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
 
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);

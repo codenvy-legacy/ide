@@ -73,7 +73,7 @@ public class ChrommaticImportAssistantTest extends BaseTest
    public void testChrommaticImportAssistant() throws Exception
    {
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/"+FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);

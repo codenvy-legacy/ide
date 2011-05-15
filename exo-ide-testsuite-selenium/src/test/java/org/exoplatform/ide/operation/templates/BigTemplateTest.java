@@ -71,14 +71,14 @@ public class BigTemplateTest extends BaseTest
    @Test
    public void testBigTemplate() throws Exception
    {
-      IDE.NAVIGATION.waitForItem(WS_URL);
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.waitForItem(WS_URL);
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER + "/");
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER + "/" + FILE_NAME);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER + "/" + FILE_NAME, false);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 

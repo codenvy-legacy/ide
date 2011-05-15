@@ -19,17 +19,9 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
-import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -44,34 +36,23 @@ import org.junit.Test;
 public class RenameOpenedFileTest extends BaseTest
 {
 
-   private final static String ORIG_FILE_NAME = "fileforrename.txt";
+   private final static String FOLDER = RenameOpenedFileTest.class.getSimpleName();
 
-   private final static String RENAMED_FILE_NAME = "Renamed Test File.groovy";
+   private final static String FILE1 = "fileforrename.txt";
 
-   private final static String FOLDER_NAME = RenameOpenedFileTest.class.getSimpleName();
+   private final static String FILE2 = "Renamed Test File.groovy";
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME;
-
-   private final static String ORIG_URL = URL + "/" + ORIG_FILE_NAME;
-
-   private final static String RENAME_URL = URL + "/" + RENAMED_FILE_NAME;
-
-   private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + ORIG_FILE_NAME;
+   private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + FILE1;
 
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(PATH, MimeType.TEXT_PLAIN, ORIG_URL);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER);
+         VirtualFileSystemUtils.put(PATH, MimeType.TEXT_PLAIN, WS_URL + FOLDER + "/" + FILE1);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -82,13 +63,9 @@ public class RenameOpenedFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -98,55 +75,44 @@ public class RenameOpenedFileTest extends BaseTest
    @Test
    public void testRenameClosedFile() throws Exception
    {
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
 
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL);
+      /*
+       * 1. Open Folder
+       */
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER + "/");
 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME + "/");
+      /*
+       * 2. Open File1
+       */
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER + "/" + FILE1);
 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      /*
+       * 3. Rename opened file  
+       */
+      IDE.RENAME_DIALOG.callFromMenu();
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      assertEquals("Can't change mime-type to opened file", IDE.RENAME_DIALOG.getWarningMessage());
 
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.RENAME_DIALOG.setFileName(FILE2);
+      IDE.RENAME_DIALOG.clickRenameButton();
 
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_CANCEL_BUTTON_LOCATOR));
-      //check, that mime-type field is disabled
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.MIME_TYPE_FIELD_DISABLED_LOCATOR));
-      //check, warning message is present
-      assertTrue(selenium.isTextPresent("Can't change mime-type to opened file"));
+      /*
+       * 4. Assert file was renamed successfully.
+       */
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER + "/" + FILE2);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER + "/" + FILE1);
 
-      selenium.type(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR, RENAMED_FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER + "/" + FILE1).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER + "/" + FILE2).getStatusCode());
 
-      selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.SLEEP);
+      assertEquals(FILE2, IDE.EDITOR.getTabTitle(0));
 
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+      /*
+       * 5. Close editor
+       */
 
-      assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
-
-      assertEquals(RENAMED_FILE_NAME,IDE.EDITOR.getTabTitle(0));
-
-     IDE.EDITOR.typeTextIntoEditor(0, "change content");
-      saveCurrentFile();
-
-      //assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
-      IDE.WARNING_DIALOG.checkIsOpened();
-
-      refresh();
-
-     IDE.EDITOR.typeTextIntoEditor(0, "cookies cookies cookies cookies !!!111");
-      saveCurrentFile();
-      //      assertFalse(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
-      IDE.WARNING_DIALOG.checkIsOpened();
+      IDE.EDITOR.closeTab(0);
    }
 
 }

@@ -94,13 +94,13 @@ public class CutFileTest extends BaseTest
    {
       waitForRootElement();
 
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME_2 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
 
       //Open files "test 1/gadget.xml".
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1, false);
@@ -108,18 +108,18 @@ public class CutFileTest extends BaseTest
       checkPasteCommands(false);
       checkCutCopyCommands(true);
       
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
       
       checkPasteCommands(false);
       checkCutCopyCommands(true);
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
 
       //Call the "Edit->Cut Items" topmenu command.
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
       checkPasteCommands(true);
 
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       IDE.WARNING_DIALOG.checkIsOpened("Can't move items in the same directory!");
@@ -128,7 +128,7 @@ public class CutFileTest extends BaseTest
       checkPasteCommands(true);
 
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME_1 + "/");
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER_NAME_2 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
 
       //Select "test 2" folder item in the Workspace Panel and then select "Edit->Paste Items" topmenu command.
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
@@ -147,7 +147,7 @@ public class CutFileTest extends BaseTest
       checkPasteCommands(true);
 
       //Select root item and then click on "Paste" toolbar button.
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
       
@@ -155,7 +155,7 @@ public class CutFileTest extends BaseTest
       assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(WS_URL + FILE_NAME_1).getStatusCode());
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.selectItem(WS_URL + FILE_NAME_1);
+      IDE.WORKSPACE.selectItem(WS_URL + FILE_NAME_1);
       
       assertEquals(RANDOM_CONTENT,IDE.EDITOR.getTextFromCodeEditor(0));
 

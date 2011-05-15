@@ -67,8 +67,8 @@ public class GadgetDeployUndeployTest extends BaseTest
       VirtualFileSystemUtils.mkcol(URL);
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(URL);
-      IDE.NAVIGATION.selectItem(URL);
+      IDE.WORKSPACE.waitForItem(URL);
+      IDE.WORKSPACE.selectItem(URL);
 
       IDE.UPLOAD.open(FormName.OPEN_LOCAL_FILE, filePath, MimeType.GOOGLE_GADGET);
       waitForLoaderDissapeared();

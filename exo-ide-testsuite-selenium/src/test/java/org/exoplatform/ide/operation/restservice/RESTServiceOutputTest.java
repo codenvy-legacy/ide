@@ -76,7 +76,7 @@ public class RESTServiceOutputTest extends BaseTest
    {
 
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //TODO***********change************
       Thread.sleep(TestConstants.SLEEP);

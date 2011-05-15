@@ -137,7 +137,7 @@ public class FindReplaceTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //      Thread.sleep(TestConstants.SLEEP);
 
@@ -271,7 +271,7 @@ public class FindReplaceTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //      Thread.sleep(TestConstants.SLEEP);
 
@@ -440,7 +440,7 @@ public class FindReplaceTest extends BaseTest
       selenium.refresh();
       selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //      Thread.sleep(TestConstants.SLEEP);
 

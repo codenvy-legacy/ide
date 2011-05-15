@@ -87,15 +87,15 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
    {
 
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       IDE.NAVIGATION.clickOpenIconOfFolder(URL + FOLDER_NAME_1 + "/");
       Thread.sleep(TestConstants.SLEEP * 4);
 
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME_1 + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME_1 + "/");
       selenium.controlKeyDown();
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME_2 + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME_2 + "/");
       selenium.controlKeyUp();
 
       // TODO After of capability select the few elements in IDE navigator
@@ -104,9 +104,9 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       //      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
       //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, false);
 
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME_1 + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME_1 + "/");
       selenium.controlKeyDown();
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME_3 + "/");
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME_3 + "/");
       selenium.controlKeyUp();
 
       // TODO After of capability select the few elements in IDE navigator

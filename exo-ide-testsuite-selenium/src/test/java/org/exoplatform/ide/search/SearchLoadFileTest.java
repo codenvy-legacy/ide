@@ -81,13 +81,13 @@ public class SearchLoadFileTest extends BaseTest
    {
       waitForRootElement();
 
-      IDE.NAVIGATION.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       IDE.EDITOR.waitTabPresent(0);
       saveAsByTopMenu(restFileName);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
       IDE.EDITOR.closeTab(0);
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
 
       IDE.SEARCH.performSearch("/", "", "");
       IDE.SEARCH.waitSearchResultsPresent();
@@ -117,7 +117,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       //TODO add test selected
 
@@ -152,7 +152,7 @@ public class SearchLoadFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
       IDE.EDITOR.closeTab(0);
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
 
       IDE.SEARCH.performSearch("/", "", "");
       IDE.SEARCH.waitSearchResultsPresent();
@@ -183,7 +183,7 @@ public class SearchLoadFileTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       //TODO test selected
-      IDE.NAVIGATION.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);

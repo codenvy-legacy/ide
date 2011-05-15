@@ -20,12 +20,12 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
+import org.exoplatform.ide.utils.AbstractTextUtil;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -134,34 +134,12 @@ public class Navigation extends AbstractTestModule
    public void clickOpenIconOfFolder(String folderHref) throws Exception
    {
       System.out.println("Click on Open Icon > " + folderHref);
-      
+
       String locator = "//div[@id='" + getItemId(folderHref) + "']/table/tbody/tr/td[1]/img";
       System.out.println("Locator [" + locator + "]");
-      
+
       selenium().clickAt(locator, "0");
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-   }
-   
-   public void doubleClickOnFolder(String folderURL) throws Exception {
-      String locator = "//div[@id='" + getItemId(folderURL) + "']/table/tbody/tr/td[2]";
-      
-      selenium().mouseDown(locator);
-      selenium().mouseUp(locator);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      
-      selenium().doubleClick(locator);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-   }
-   
-   public void doubleClickOnFile(String fileURL) throws Exception {
-      String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
-      
-      selenium().mouseDown(locator);
-      selenium().mouseUp(locator);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      
-      selenium().doubleClick(locator);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
    /**
@@ -178,27 +156,6 @@ public class Navigation extends AbstractTestModule
    public String getItemIdSearch(String href) throws Exception
    {
       return TREE_PREFIX_SERCH_ID + Utils.md5(href);
-   }
-
-   /**
-    * Select item in workspace tree
-    * @param itemHref Href of item
-    * <h1>Folder href MUST ends with "/"</h1>
-    */
-   public void selectItem(String url) throws Exception
-   {
-      selenium().clickAt(getItemId(url), "0");
-      
-//      System.out.println("SELECT ITEM [" + url + "]");
-//      String locator = "//div[@id='" + getItemId(url) + "']/table/tbody/tr/td[2]/div";
-//      
-//      selenium().mouseDown(locator);
-//      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-//      selenium().mouseUp(locator);
-//      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-//      
-//      selenium().click(locator);
-//      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    /**
@@ -273,31 +230,16 @@ public class Navigation extends AbstractTestModule
     */
    public void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
    {
-      IDE().OPENWITH.open();
+      IDE().OPENWITH.callFromMenu();
       IDE().OPENWITH.selectEditorByIndex(1);
-      
-      if (checkDefault) {
+
+      if (checkDefault)
+      {
          IDE().OPENWITH.clickUseAsDefaultCheckBox();
       }
-      
+
       IDE().OPENWITH.clickOpenButton();
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-//      
-//      IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-//
-//      String locator = "//table[@id='ideOpenFileWithListGrid']";
-//      waitForElementPresent(locator);
-//
-//      if (checkDefault)
-//      {
-//         //click on checkbox Use as default editor
-//         selenium().click("ideOpenWithIsDefault");
-//         Thread.sleep(TestConstants.ANIMATION_PERIOD);
-//      }
-//
-//      selenium().click("ideOpenFileWithOkButton");
-//      //time remaining to open editor
-//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
    /**
@@ -309,7 +251,7 @@ public class Navigation extends AbstractTestModule
     */
    public void openFileFromNavigationTreeWithCodeEditor(String fileURL, boolean checkDefault) throws Exception
    {
-      selectItem(fileURL);
+      IDE().WORKSPACE.selectItem(fileURL);
       openSelectedFileWithCodeEditor(checkDefault);
    }
 
@@ -334,37 +276,60 @@ public class Navigation extends AbstractTestModule
    }
 
    /**
-    * Select the root workspace item in workspace tree.
-    * 
-    * @param name
-    * @throws Exception
-    */
-   public void selectRootOfWorkspace() throws Exception
-   {
-      selectItem(IDE().getWorkspaceURL());
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }
-
-   /**
-    * Wait for item present in workspace tree
-    * @param itemHref Href of the item
-    * @throws Exception 
-    */
-   public void waitForItem(String itemHref) throws Exception
-   {
-      waitForElementPresent(getItemId(itemHref));
-   }
-   
-   /**
     * Selects and refreshes folder in Workspace tree
     * 
     * @param itemURL
     */
-   public void selectAndRefreshFolder(String folderURL) throws Exception {
-      selectItem(folderURL);
-      
+   public void selectAndRefreshFolder(String folderURL) throws Exception
+   {
+      IDE().WORKSPACE.selectItem(folderURL);
+
       IDE().TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);      
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+   }
+
+   /**
+    * Creates folder with name folderName.
+    * 
+    * Folder, that will be parent for folderName must be selected before.
+    * 
+    * Clicks on New button on toolbar, then click on Folder menu from list.
+    * 
+    * @param folderName folder name
+    */
+   public void createFolder(String folderName) throws Exception
+   {
+      IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER, false);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+
+      //      IDE.TOOLBAR.runCommand("New");
+      //      
+      //      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
+
+      //Check creation form elements
+      assertTrue(selenium().isElementPresent("ideCreateFolderForm"));
+      assertTrue(selenium().isTextPresent("Name of new folder:"));
+      assertTrue(selenium().isElementPresent("ideCreateFolderFormNameField"));
+      assertTrue(selenium().isElementPresent("ideCreateFolderFormCreateButton"));
+      assertTrue(selenium().isElementPresent("ideCreateFolderFormCancelButton"));
+
+      //clearFocus();
+
+      String locator = "ideCreateFolderFormNameField";
+
+      //selenium.select(locator, optionLocator)
+
+      AbstractTextUtil.getInstance().typeToInput(locator, folderName, true);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+
+      selenium().click("ideCreateFolderFormCreateButton");
+
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      //Check creation form is not shown
+      assertFalse(selenium().isElementPresent("ideCreateFolderForm"));
+      //      assertElementPresentInWorkspaceTree(folderName);
+
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
 
 }

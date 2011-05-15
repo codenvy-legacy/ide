@@ -54,12 +54,12 @@ public abstract class ParsingLockTokensInIETest extends BaseTest
    {
       Thread.sleep(TestConstants.SLEEP);
       
-      createFolder(FOLDER_NAME);
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.createFolder(FOLDER_NAME);
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
       
       createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME, 0);
       
-      IDE.NAVIGATION.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       

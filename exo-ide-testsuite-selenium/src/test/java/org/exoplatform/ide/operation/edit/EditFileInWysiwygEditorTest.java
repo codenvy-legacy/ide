@@ -63,7 +63,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
             + "\t</body>\n" + "</html>";
 
       waitForRootElement();
-      IDE.NAVIGATION.selectItem(URL);
+      IDE.WORKSPACE.selectItem(URL);
       waitForRootElement();
       //------ 1 ---------------
       createSaveAndCloseFile(MenuCommands.New.HTML_FILE, HTML_FILE, 0);

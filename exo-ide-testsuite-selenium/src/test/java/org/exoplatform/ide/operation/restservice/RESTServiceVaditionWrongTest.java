@@ -39,7 +39,7 @@ public class RESTServiceVaditionWrongTest extends BaseTest
    public void testValidaton() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      createFolder("Validaton");
+      IDE.NAVIGATION.createFolder("Validaton");
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
       Thread.sleep(TestConstants.SLEEP);

@@ -51,7 +51,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       //TODO********change********
-      createFolder("Autoload");
+      IDE.NAVIGATION.createFolder("Autoload");
       //**********************
       
       IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
@@ -92,7 +92,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       
      IDE.EDITOR.closeTab(0);
       
-      IDE.NAVIGATION.selectRootOfWorkspace();
+     IDE.WORKSPACE.selectRootItem();
       
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);

@@ -109,12 +109,12 @@ public class CreateFileFromTemplateTest extends BaseTest
    public void testCreateFileFromTemplate() throws Exception
    {
       // -------- 1 ----------
-      IDE.NAVIGATION.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER + "/");
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
       
       // -------- 2-4 ----------
       testTemplate(GROOVY_REST_SERVICE, GROOVY_FILE_NAME);
@@ -136,10 +136,10 @@ public class CreateFileFromTemplateTest extends BaseTest
    public void testCreateFileFromTemplateWithDuplicatedName() throws Exception
    {
       refresh();
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER + "/");
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
       /*
        * 1. Open two html files. 
        * They will have names: Untitled file.html, Untitled file 1.html
@@ -202,10 +202,10 @@ public class CreateFileFromTemplateTest extends BaseTest
    public void testEnablingDisablingElements() throws Exception
    {
       refresh();
-      IDE.NAVIGATION.selectRootOfWorkspace();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.waitForItem(WS_URL + FOLDER + "/");
-      IDE.NAVIGATION.selectItem(WS_URL + FOLDER + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
       
       //---- 1 ----------
       //call create file from template form

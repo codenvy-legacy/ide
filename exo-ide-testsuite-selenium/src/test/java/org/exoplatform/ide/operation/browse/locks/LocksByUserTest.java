@@ -71,7 +71,7 @@ public class LocksByUserTest extends LockFileAbstract
    public void testLocksByUser() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.selectItem(URL);
+      IDE.WORKSPACE.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       //----- 1 --------
@@ -92,7 +92,7 @@ public class LocksByUserTest extends LockFileAbstract
       waitForRootElement();
 
       //----- 5 --------
-      IDE.NAVIGATION.selectItem(URL);
+      IDE.WORKSPACE.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       checkFileLocking(URL + FILE_NAME, true);
