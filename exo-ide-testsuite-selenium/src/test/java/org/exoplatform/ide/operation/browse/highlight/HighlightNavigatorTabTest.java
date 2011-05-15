@@ -35,90 +35,72 @@ import org.junit.Test;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 15, 2010 $
- *
+ * 
  */
-public class HighlightNavigatorTabTest extends BaseTest
-{
+public class HighlightNavigatorTabTest extends BaseTest {
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
+	private final static String URL = BASE_URL + REST_CONTEXT + "/"
+			+ WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
-   private static String FOLDER_NAME = HighlightNavigatorTabTest.class.getSimpleName();
+	private static String FOLDER_NAME = HighlightNavigatorTabTest.class
+			.getSimpleName();
 
-   private static String FILE_NAME = HighlightNavigatorTabTest.class.getSimpleName() + "File";
+	private static String FILE_NAME = HighlightNavigatorTabTest.class
+			.getSimpleName()
+			+ "File";
 
-   @BeforeClass
-   public static void setUp()
-   {
-      try
-      {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/edit/outline/RESTCodeOutline.groovy",
-            MimeType.GROOVY_SERVICE, URL + FOLDER_NAME + "/" + FILE_NAME);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-   }
+	@BeforeClass
+	public static void setUp() {
+		try {
+			VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+			VirtualFileSystemUtils
+					.put(
+							"src/test/resources/org/exoplatform/ide/operation/edit/outline/RESTCodeOutline.groovy",
+							MimeType.GROOVY_SERVICE, URL + FOLDER_NAME + "/"
+									+ FILE_NAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ModuleException e) {
+			e.printStackTrace();
+		}
+	}
 
-   @Test
-   public void testHighlightNavigatorTab() throws Exception
-   {
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //Thread.sleep(TestConstants.SLEEP);
+	@Test
+	public void testHighlightNavigatorTab() throws Exception {
+		waitForRootElement();
+		IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
 
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
+		IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+		waitForRootElement();
 
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(255, 255, 255)')]/"));
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-     IDE.EDITOR.typeTextIntoEditor(0, "Testing yo!  4test.");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      assertFalse(selenium
-         .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertFalse(selenium
-         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
+		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
+		IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL
+				+ FOLDER_NAME + "/" + FILE_NAME, false);
+		waitForElementPresent("//div[@panel-id='editor']");
+		IDE.PERSPECTIVE.checkViewIsActive("editor-0");
+		IDE.EDITOR.typeTextIntoEditor(0, "Testing yo!  4test.");
+		// Thread.sleep(TestConstants.SLEEP_SHORT);
+		IDE.PERSPECTIVE.checkViewIsActive("editor-0");
+		IDE.PERSPECTIVE.checkViewIsNotActive("ideWorkspaceView");
+		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
+		IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+		IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
+		IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+	}
 
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-   }
-
-   @AfterClass
-   public static void tierDown()
-   {
-      deleteCookies();
-      try
-      {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-   }
+	@AfterClass
+	public static void tierDown() {
+		deleteCookies();
+		try {
+			VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ModuleException e) {
+			e.printStackTrace();
+		}
+	}
 }

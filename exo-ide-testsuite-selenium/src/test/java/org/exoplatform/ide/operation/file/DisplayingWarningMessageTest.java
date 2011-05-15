@@ -71,7 +71,7 @@ public class DisplayingWarningMessageTest extends BaseTest
    }
 
    //IDE-36:Displaying warning message test.
-   @Test
+  // @Test
    public void displayingWarningMessage() throws Exception
    {
       waitForRootElement();

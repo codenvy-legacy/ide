@@ -348,6 +348,16 @@ public class Outline extends AbstractTestModule
       assertTrue(selenium().isElementPresent(Locators.TREE + "/div[@id='" + id + "']"));
    }
    
+   
+   
+   /**
+ *  Method close Outline codehelper
+ */
+public void closeOutline()
+   {
+      selenium().click("//div[@button-name='close-tab' and @tab-title='Outline']");
+   }
+   
    public enum LabelType 
    {
       NAME("item-name"), 

@@ -118,7 +118,8 @@ public class Perspective extends AbstractTestModule
     */
    public void clickOnIconPropertiesTab(String viewId) throws Exception
    {
-      selenium().click("//table[@id='operation-panel-switcher']/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img");
+      selenium().click("//div[@panel-id='operation']//table/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img");
+	   //selenium().click("//table[@id='operation-panel-switcher']/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img");
    }
 
    public boolean isViewActive(String viewId)

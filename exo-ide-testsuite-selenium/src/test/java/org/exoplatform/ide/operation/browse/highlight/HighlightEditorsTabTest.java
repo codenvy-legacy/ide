@@ -36,101 +36,87 @@ import org.junit.Test;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 15, 2010 $
- *
+ * 
  */
-public class HighlightEditorsTabTest extends BaseTest
-{
+public class HighlightEditorsTabTest extends BaseTest {
 
-   private final static String URL =
-      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+	private final static String URL = BASE_URL + REST_CONTEXT + "/"
+			+ WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
-   private static String FOLDER_NAME = HighlightEditorsTabTest.class.getSimpleName();
+	private static String FOLDER_NAME = HighlightEditorsTabTest.class
+			.getSimpleName();
 
-   private static String FILE_NAME = HighlightEditorsTabTest.class.getSimpleName() + "File";
+	private static String FILE_NAME = HighlightEditorsTabTest.class
+			.getSimpleName()
+			+ "File";
 
-   @BeforeClass
-   public static void setUp()
-   {
-      try
-      {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html", MimeType.TEXT_HTML,
-            URL + FOLDER_NAME + "/" + FILE_NAME);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-   }
+	@BeforeClass
+	public static void setUp() {
+		try {
+			VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+			VirtualFileSystemUtils
+					.put(
+							"src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html",
+							MimeType.TEXT_HTML, URL + FOLDER_NAME + "/"
+									+ FILE_NAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ModuleException e) {
+			e.printStackTrace();
+		}
+	}
 
-   @Test
-   public void testHighlightEditorTab() throws Exception
-   {
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //Thread.sleep(TestConstants.SLEEP);
+	@Test
+	public void testHighlightEditorTab() throws Exception {
+		waitForRootElement();
+		IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
 
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
+		IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+		waitForRootElement();
 
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
+		IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL
+				+ FOLDER_NAME + "/" + FILE_NAME, false);
+		waitForElementPresent("//div[@panel-id='editor']");
+		IDE.PERSPECTIVE.checkViewIsActive("editor-0");
 
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_OutlineForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      assertFalse(selenium
-         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
+		IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+		waitForElementPresent("ideOutlineTreeGrid");
+		IDE.PERSPECTIVE.checkViewIsActive("ideOutlineView");
+		IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
 
-      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=ideOutlineForm]/icon");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+		IDE.OUTLINE.closeOutline();
+		waitForElementNotPresent("ideOutlineTreeGrid");
+		IDE.PERSPECTIVE.checkViewIsNotPresent("ideOutlineView");
+		IDE.PERSPECTIVE.checkViewIsActive("editor-0");
 
-      assertFalse(selenium
-         .isElementPresent("//div[@eventproxy='isc_OutlineForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
+		IDE.EDITOR.closeTab(0);
 
-      IDE.EDITOR.closeTab(0);
+		openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/"
+				+ FILE_NAME, "HTML", false);
+		waitForElementPresent("//div[@panel-id='editor']");
+		IDE.PERSPECTIVE.checkViewIsActive("editor-1");
 
-      openFileFromNavigationTreeWithCkEditor(FILE_NAME, "HTML" ,false);
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_1'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
+		IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+		waitForElementNotPresent("//div[@panel-id='editor']");
+		//TODO fix problem return highlighter in workspace
+		//IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+	}
 
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='isc_BrowserForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-   }
-
-   @AfterClass
-   public static void tierDown()
-   {
-      deleteCookies();
-      try
-      {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-   }
+	@AfterClass
+	public static void tierDown() {
+		deleteCookies();
+		try {
+			VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ModuleException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
