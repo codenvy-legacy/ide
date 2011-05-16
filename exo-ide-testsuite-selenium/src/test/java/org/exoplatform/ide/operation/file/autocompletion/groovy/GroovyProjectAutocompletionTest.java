@@ -30,7 +30,6 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.CodeAssistant;
-import org.exoplatform.ide.project.classpath.ClasspathUtils;
 import org.exoplatform.ide.project.classpath.UseOfClasspathEntriesTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

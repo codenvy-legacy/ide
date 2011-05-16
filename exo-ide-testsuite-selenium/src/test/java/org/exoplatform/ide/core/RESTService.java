@@ -86,6 +86,26 @@ public class RESTService extends AbstractTestModule
    }
 
    /**
+    * Wait for Launch REST Service view to be opened.
+    * 
+    * @throws Exception
+    */
+   public void waitForLaunchRestServiceViewOpened() throws Exception
+   {
+      waitForElementPresent(REST_SERVICE_FORM);
+   }
+   
+   /**
+    * Wait for Launch REST Service view to be closed.
+    * 
+    * @throws Exception
+    */
+   public void waitForLaunchRestServiceViewClosed() throws Exception
+   {
+      waitForElementNotPresent(REST_SERVICE_FORM);
+   }
+   
+   /**
     * Validate REST Service, and check, that all ok.
     * 
     * @param fileName - name of file

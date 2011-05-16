@@ -74,11 +74,11 @@ public class RolesWithRESTServiceTest extends BaseTest
    @Test
    public void testDeveloperRoleWithRESTService() throws Exception
    {
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      waitForRootElement();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       saveAsUsingToolbarButton(FILE1);
-
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForItem(WS_URL + FILE1);
+      
       //Check controls available for administrators 
       //and developers
       checkDeployUndeployAllowed(true);
@@ -94,11 +94,10 @@ public class RolesWithRESTServiceTest extends BaseTest
       logout();
       
       standaloneLogin(TestConstants.Users.JOHN);
-      selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      waitForRootElement();
       
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE1, false);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE1, false);
+      IDE.EDITOR.waitTabPresent(0);
       //Check deploy/undeploy is not available for developer
       checkDeployUndeployAllowed(false);
       // Check run service is allowed for developer
@@ -113,27 +112,25 @@ public class RolesWithRESTServiceTest extends BaseTest
       checkLaunchService(false);
       
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
       
       //Check Launch Rest Service form appears
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
-      
-      String message = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
+      IDE.REST_SERVICE.waitForLaunchRestServiceViewOpened();
+      IDE.OUTPUT.waitForMessageShow(1);
+      String message =  IDE.OUTPUT.getOutputMessageText(1);
 
       assertTrue(message.contains("[INFO]"));
       assertTrue(message.contains(FILE1 + " validated successfully."));
       
-      message = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
+      IDE.OUTPUT.waitForMessageShow(2);
+      message =  IDE.OUTPUT.getOutputMessageText(2);
 
       assertTrue(message.contains("[INFO]"));
       assertTrue(message.contains(FILE1 + " deployed successfully."));
       
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceCancel\"]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.REST_SERVICE.closeForm();
+      IDE.REST_SERVICE.waitForLaunchRestServiceViewClosed();
       
      IDE.EDITOR.closeTab(0);
-      
-      Thread.sleep(TestConstants.SLEEP);
    }
 
    /**
@@ -145,17 +142,15 @@ public class RolesWithRESTServiceTest extends BaseTest
    public void testAdminRoleWithRESTService() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      waitForRootElement();
       
       logout();
       
       standaloneLogin(TestConstants.Users.ADMIN);
-      selenium.waitForPageToLoad(""+TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      waitForRootElement();
       
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE1, false);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE1, false);
+      IDE.EDITOR.waitTabPresent(0);
       //Check deploy/undeploy is allowed for administrator
       checkDeployUndeployAllowed(true);
       // Check run service is not available for administrator
@@ -188,19 +183,18 @@ public class RolesWithRESTServiceTest extends BaseTest
 
          //Deploy service:
          IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
-         Thread.sleep(TestConstants.SLEEP);
+         IDE.OUTPUT.waitForMessageShow(1);
          //Check successfully deployed message
-         assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
-         String message = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
+         IDE.OUTPUT.waitForOutputOpened();
+         String message = IDE.OUTPUT.getOutputMessageText(1);
          assertTrue(message.contains("[INFO]"));
          assertTrue(message.contains(FILE1 + " deployed successfully."));
 
          //Undeploy service
          IDE.TOOLBAR.runCommand(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE);
-         Thread.sleep(TestConstants.SLEEP);
+         IDE.OUTPUT.waitForMessageShow(2);
          //Check successfully undeployed message
-         assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
-         message = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
+         message = IDE.OUTPUT.getOutputMessageText(2);
          assertTrue(message.contains("[INFO]"));
          assertTrue(message.contains(FILE1 + " undeployed successfully."));
       }

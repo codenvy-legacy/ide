@@ -19,6 +19,8 @@
 package org.exoplatform.ide.core;
 
 import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by The eXo Platform SAS .
@@ -29,21 +31,36 @@ import static org.junit.Assert.fail;
 
 public class ErrorDialog extends AbstractTestModule
 {
+   private final String WARNING_DIALOG_ID = "exoWarningDialog";
+
+   private final String WARNING_MESSAGE_LOCATOR = "//div[@id=\"" + WARNING_DIALOG_ID + "\"]//div[@class=\"gwt-Label\"]";
+
+   private final String OK_BUTTON_ID = "exoWarningDialogOkButton";
    
-   public void checkIsOpened() {
+   public void waitIsOpened() throws Exception
+   {
+      waitForElementPresent(WARNING_DIALOG_ID);
+   }
+
+   public void checkIsOpened(String message)
+   {
       fail();
    }
-   
-   public void checkIsOpened(String message) {
-      fail();
+
+   public void checkMessageEquals(String message)
+   {
+      assertEquals(message, selenium().getText(WARNING_MESSAGE_LOCATOR));
    }
    
-   public void checkMessage(String message) {
-      fail();
+   public void checkMessageContains(String message)
+   {
+      String text = selenium().getText(WARNING_MESSAGE_LOCATOR);
+      assertTrue(message.contains(text));
    }
-   
-   public void clickOk() {
-      fail();
+
+   public void clickOk()
+   {
+      selenium().click(OK_BUTTON_ID);
    }
 
 }

@@ -96,8 +96,7 @@ public class RolesWithGadgetTest extends BaseTest
    public void testDeveloperRoleWithGadget() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      waitForRootElement();
       
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
@@ -106,8 +105,8 @@ public class RolesWithGadgetTest extends BaseTest
       
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       saveAsUsingToolbarButton(FILE1);
-
-      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE1);
       //Check deploy/undeploy is available for administrator
       checkDeployUndeployAllowed(true);
 
@@ -117,23 +116,19 @@ public class RolesWithGadgetTest extends BaseTest
       logout();
 
       standaloneLogin(TestConstants.Users.JOHN);
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-
+      waitForRootElement();
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);     
-      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE1, false);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE1);
+      
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE1, false);
+      IDE.EDITOR.waitTabPresent(0);
       //Check deploy/undeploy is not available for developer
       checkDeployUndeployAllowed(false);
 
      IDE.EDITOR.closeTab(0);
-      
-      Thread.sleep(TestConstants.SLEEP);
    }
 
    /**
@@ -151,17 +146,15 @@ public class RolesWithGadgetTest extends BaseTest
       logout();
 
       standaloneLogin(TestConstants.Users.ADMIN);
-      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      
+      waitForRootElement();
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);   
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE1, false);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE1);
       
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE1, false);
+      IDE.EDITOR.waitTabPresent(0);
       //Check deploy/undeploy is available for administrator
       checkDeployUndeployAllowed(true);
       
@@ -189,19 +182,18 @@ public class RolesWithGadgetTest extends BaseTest
          {
             //Deploy gadget:
             IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GADGET);
-            Thread.sleep(TestConstants.SLEEP);
             //Check successfully deployed message
-            assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
-            String message = selenium.getText("//div[contains(@eventproxy,'Record_0')]");
+            IDE.OUTPUT.waitForOutputOpened();
+            IDE.OUTPUT.waitForMessageShow(1);
+            String message = IDE.OUTPUT.getOutputMessageText(1);
             assertTrue(message.contains("[INFO]"));
             assertTrue(message.contains(FILE1 + " deployed successfully."));
 
             //Undeploy gadget
             IDE.TOOLBAR.runCommand(ToolbarCommands.Run.UNDEPLOY_GADGET);
-            Thread.sleep(TestConstants.SLEEP);
             //Check successfully undeployed message
-            assertTrue(selenium.isElementPresent("scLocator=//VLayout[ID=\"ideOutputForm\"]/"));
-            message = selenium.getText("//div[contains(@eventproxy,'Record_1')]");
+            IDE.OUTPUT.waitForMessageShow(2);
+            message = IDE.OUTPUT.getOutputMessageText(2);
             assertTrue(message.contains("[INFO]"));
             assertTrue(message.contains(FILE1 + " undeployed successfully."));
          }

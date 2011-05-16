@@ -150,7 +150,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * Configure classpath window dialog appeared. Close it
        */
-      IDE.CLASSPATH_PROJECT.waitForClasspathDialog();
+      IDE.CLASSPATH_PROJECT.waitForClasspathDialogOpen();
       IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
       IDE.CLASSPATH_PROJECT.clickCancelButton();
       
@@ -194,7 +194,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 2. Configure classpath window dialog appeared. Close it
        */
-      IDE.CLASSPATH_PROJECT.waitForClasspathDialog();
+      IDE.CLASSPATH_PROJECT.waitForClasspathDialogOpen();
       IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
       IDE.CLASSPATH_PROJECT.clickCancelButton();
       
@@ -250,7 +250,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 2. Configure classpath window dialog appeared. Close it
        */
-      IDE.CLASSPATH_PROJECT.waitForClasspathDialog();
+      IDE.CLASSPATH_PROJECT.waitForClasspathDialogOpen();
       IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
       IDE.CLASSPATH_PROJECT.clickCancelButton();
       

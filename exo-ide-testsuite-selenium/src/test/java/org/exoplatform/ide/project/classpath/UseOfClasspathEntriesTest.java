@@ -44,18 +44,18 @@ import java.io.IOException;
 public class UseOfClasspathEntriesTest extends BaseTest
 {
    private static final String FOLDER_NAME = UseOfClasspathEntriesTest.class.getSimpleName() + "-test";
-   
+
    private static final String PROJECT_NAME = UseOfClasspathEntriesTest.class.getSimpleName() + "-project";
-   
+
    private static final String EMPLOYEE_FILE_NAME = "Employee.groovy";
-   
+
    private static final String REST_SERVICE_FILE_NAME = "Sample.grs";
-   
-   private static final String CLASSPATH_FILE_CONTENT = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" 
-      + ClasspathUtils.CLASSPATH_RESOURCE_PREFIX + FOLDER_NAME + "/\"}]}";
-   
+
+   private static final String CLASSPATH_FILE_CONTENT = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" + WS_NAME + "#/"
+      + FOLDER_NAME + "/\"}]}";
+
    private static final String CLASSPATH_FILE_NAME = ".groovyclasspath";
-   
+
    @BeforeClass
    public static void setUp()
    {
@@ -69,16 +69,16 @@ public class UseOfClasspathEntriesTest extends BaseTest
          VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME + "/org/exoplatform");
          VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME + "/org/exoplatform/sample");
          //put Employee.groovy file
-         VirtualFileSystemUtils.put(filePath + "employee.groovy", MimeType.APPLICATION_GROOVY, WORKSPACE_URL + FOLDER_NAME 
-            + "/org/exoplatform/sample/" + EMPLOYEE_FILE_NAME);
-         
+         VirtualFileSystemUtils.put(filePath + "employee.groovy", MimeType.APPLICATION_GROOVY, WORKSPACE_URL
+            + FOLDER_NAME + "/org/exoplatform/sample/" + EMPLOYEE_FILE_NAME);
+
          VirtualFileSystemUtils.mkcol(WORKSPACE_URL + PROJECT_NAME);
          //put rest service file
-         VirtualFileSystemUtils.put(filePath + "rest-service.grs", MimeType.GROOVY_SERVICE, WORKSPACE_URL + PROJECT_NAME 
-            + "/" + REST_SERVICE_FILE_NAME);
+         VirtualFileSystemUtils.put(filePath + "rest-service.grs", MimeType.GROOVY_SERVICE, WORKSPACE_URL
+            + PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME);
          //put classpath file
-         VirtualFileSystemUtils.put(CLASSPATH_FILE_CONTENT.getBytes(), MimeType.APPLICATION_JSON, 
-            WORKSPACE_URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
+         VirtualFileSystemUtils.put(CLASSPATH_FILE_CONTENT.getBytes(), MimeType.APPLICATION_JSON, WORKSPACE_URL
+            + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
       }
       catch (IOException e)
       {
@@ -91,7 +91,7 @@ public class UseOfClasspathEntriesTest extends BaseTest
          fail("Can't create project structure");
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -109,34 +109,35 @@ public class UseOfClasspathEntriesTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testUsingResourcesFromClasspath() throws Exception
    {
       waitForRootElement();
-      
+
       /*
        * 1. Check, that project folder and folder with resources are present.
        * Open REST Service. 
        */
       IDE.NAVIGATION.assertItemVisible(WS_URL + PROJECT_NAME + "/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
-      
+
       IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(REST_SERVICE_FILE_NAME, false);
-      
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + PROJECT_NAME + "/"
+         + REST_SERVICE_FILE_NAME, false);
+
       /*
        * 2. Validate REST Service and check, that is was successful.
        */
-      IDE.REST_SERVICE.validate(REST_SERVICE_FILE_NAME, 0);
-      
+      IDE.REST_SERVICE.validate(REST_SERVICE_FILE_NAME, 1);
+
       /*
        * 3. Deploy REST Service.
        */
-      IDE.REST_SERVICE.deploy(PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME, 1);
-      
+      IDE.REST_SERVICE.deploy(PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME, 2);
+
       /*
        * 4. Launch REST Service and try to send request.
        */
@@ -146,11 +147,11 @@ public class UseOfClasspathEntriesTest extends BaseTest
        */
       selenium.click(IDE.REST_SERVICE.LAUNCH_SEND_BTN);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       /*
        * Check output message.
        */
-      final String msg = IDE.OUTPUT.getOutputMessageText(2);
+      final String msg = IDE.OUTPUT.getOutputMessageText(3);
       assertTrue(msg.endsWith("Hello {name} Ivanov"));
    }
 
