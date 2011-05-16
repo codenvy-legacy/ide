@@ -118,9 +118,6 @@ public class DeletingFilesTest extends BaseTest
       
       
       
-      
-      
-      
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_URL, false);
       IDE.NAVIGATION.deleteSelectedItems();
       

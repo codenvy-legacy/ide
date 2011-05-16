@@ -49,7 +49,6 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.navigation.event.OpenFileWithEvent;
 import org.exoplatform.ide.client.navigation.event.OpenFileWithHandler;
-import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 import com.google.gwt.core.client.GWT;
