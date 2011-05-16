@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.operation.file.autocompletion.ruby;
+package org.exoplatform.ide.operation.autocompletion.jsp;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -34,14 +34,15 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: RubyAutoCompletionTest May 11, 2011 11:52:33 AM evgen $
+ * @version $Id: AutoCompleteJspTest Apr 26, 2011 11:07:34 AM evgen $
  *
  */
-public class RubyAutoCompletionTest extends BaseTest
+public class AutoCompleteJspTest extends BaseTest
 {
-   private static final String FOLDER_NAME = RubyAutoCompletionTest.class.getSimpleName();
 
-   private static final String FILE_NAME = "RubyCodeAssistantTest.rb";
+   private static final String FOLDER_NAME = AutoCompleteJspTest.class.getSimpleName();
+
+   private static final String FILE_NAME = "JSPtest.jsp";
 
    @BeforeClass
    public static void setUp()
@@ -50,8 +51,8 @@ public class RubyAutoCompletionTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME + "/");
          VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/ruby/rubyAutocompletion.rb",
-            MimeType.APPLICATION_RUBY, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/jsp/testJsp.jsp",
+            MimeType.APPLICATION_JSP, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -64,9 +65,9 @@ public class RubyAutoCompletionTest extends BaseTest
          fail("Can't create test folder");
       }
    }
-
+   
    @Test
-   public void testRubyAutocompletion() throws Exception
+   public void testAutocompleteJsp() throws Exception
    {
       waitForRootElement();
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
@@ -75,77 +76,41 @@ public class RubyAutoCompletionTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
-      goToLine(26);
-
+      
+      goToLine(6);
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("h");
-      IDE.CODEASSISTANT.checkElementPresent("w");
-      IDE.CODEASSISTANT.checkElementPresent("@i");
-      IDE.CODEASSISTANT.checkElementPresent("@@ins");
-      IDE.CODEASSISTANT.checkElementPresent("$cl");
-
-      IDE.CODEASSISTANT.typeToInput("@@");
-
+      IDE.CODEASSISTANT.checkElementPresent("background-attachment");
+      IDE.CODEASSISTANT.checkElementPresent("counter-increment");
       IDE.CODEASSISTANT.insertSelectedItem();
-
-      IDE.EDITOR.typeTextIntoEditor(0, ".");
-
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("!important"));
+      
+      goToLine(11);
+      IDE.EDITOR.typeTextIntoEditor(0, "Coll");
       IDE.CODEASSISTANT.openForm();
-
-      IDE.CODEASSISTANT.checkElementPresent("prec_f()");
-      IDE.CODEASSISTANT.checkElementPresent("between?(arg1, arg2, arg3)");
-      IDE.CODEASSISTANT.checkElementPresent("abs()");
-      IDE.CODEASSISTANT.checkElementPresent("next()");
-
-      IDE.CODEASSISTANT.typeToInput("ro");
-
+      IDE.CODEASSISTANT.checkElementPresent("Collection");
+      IDE.CODEASSISTANT.checkElementPresent("Collections");
       IDE.CODEASSISTANT.insertSelectedItem();
-
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("@@ins.round()"));
-
-      goToLine(32);
-
-      IDE.EDITOR.typeTextIntoEditor(0, "M");
-
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collection"));
+     
+      goToLine(15);
+      
       IDE.CODEASSISTANT.openForm();
-
-      IDE.CODEASSISTANT.checkElementPresent("MDA");
-      IDE.CODEASSISTANT.checkElementPresent("MyClass");
-      IDE.CODEASSISTANT.checkElementPresent("Method");
-      IDE.CODEASSISTANT.checkElementPresent("Math");
-
-      IDE.CODEASSISTANT.insertSelectedItem();
-
-      IDE.EDITOR.typeTextIntoEditor(0, ".");
-      IDE.CODEASSISTANT.openForm();
-
-      IDE.CODEASSISTANT.checkElementPresent("finite?()");
-
-      IDE.CODEASSISTANT.typeToInput("inf");
-      IDE.CODEASSISTANT.insertSelectedItem();
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("MDA.infinite?()"));
-
-      goToLine(33);
-
-      IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("g");
-      IDE.CODEASSISTANT.checkElementPresent("num");
-      IDE.CODEASSISTANT.checkElementPresent("$cl");
-
-      IDE.CODEASSISTANT.insertSelectedItem();
-      IDE.EDITOR.typeTextIntoEditor(0, ".");
-      IDE.CODEASSISTANT.openForm();
-
-      IDE.CODEASSISTANT.checkElementPresent("get");
-      IDE.CODEASSISTANT.checkElementPresent("set");
-      IDE.CODEASSISTANT.checkElementPresent("hello");
-      IDE.CODEASSISTANT.checkElementPresent("initialize");
-
+      IDE.CODEASSISTANT.checkElementPresent("a");
+      IDE.CODEASSISTANT.checkElementPresent("Window");
       IDE.CODEASSISTANT.closeForm();
-
+      
+      goToLine(21);
+      
+      IDE.EDITOR.typeTextIntoEditor(0, "<t");
+      IDE.CODEASSISTANT.openForm();
+      IDE.CODEASSISTANT.checkElementPresent("table");
+      IDE.CODEASSISTANT.checkElementPresent("textarea");
+      IDE.CODEASSISTANT.closeForm();
+      
       IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      
    }
-
+   
    @AfterClass
    public static void tearDown()
    {
@@ -162,5 +127,5 @@ public class RubyAutoCompletionTest extends BaseTest
          e.printStackTrace();
       }
    }
-
+   
 }

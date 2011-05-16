@@ -16,19 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.operation.file.autocompletion;
+package org.exoplatform.ide.operation.autocompletion;
 
-import org.exoplatform.ide.operation.file.autocompletion.groovy.ChrommaticImportAssistantTest;
-import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyAnnotationAutocompleteTest;
-import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyClassMethodsCompletionTest;
-import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyClassNameCompletionTest;
-import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyJavaDocTest;
-import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyKeywordsAutocompletionTest;
-import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyLocalVariableTest;
-import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyObjectCompletionTest;
-import org.exoplatform.ide.operation.file.autocompletion.groovy.GroovyProjectAutocompletionTest;
-import org.exoplatform.ide.operation.file.autocompletion.groovy.ImportStatementInsertionTest;
-import org.exoplatform.ide.operation.file.autocompletion.jsp.AutoCompleteJspTest;
+import org.exoplatform.ide.operation.autocompletion.groovy.ChrommaticImportAssistantTest;
+import org.exoplatform.ide.operation.autocompletion.groovy.GroovyAnnotationAutocompleteTest;
+import org.exoplatform.ide.operation.autocompletion.groovy.GroovyClassMethodsCompletionTest;
+import org.exoplatform.ide.operation.autocompletion.groovy.GroovyClassNameCompletionTest;
+import org.exoplatform.ide.operation.autocompletion.groovy.GroovyJavaDocTest;
+import org.exoplatform.ide.operation.autocompletion.groovy.GroovyKeywordsAutocompletionTest;
+import org.exoplatform.ide.operation.autocompletion.groovy.GroovyLocalVariableTest;
+import org.exoplatform.ide.operation.autocompletion.groovy.GroovyObjectCompletionTest;
+import org.exoplatform.ide.operation.autocompletion.groovy.GroovyProjectAutocompletionTest;
+import org.exoplatform.ide.operation.autocompletion.groovy.ImportStatementInsertionTest;
+import org.exoplatform.ide.operation.autocompletion.jsp.AutoCompleteJspTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;

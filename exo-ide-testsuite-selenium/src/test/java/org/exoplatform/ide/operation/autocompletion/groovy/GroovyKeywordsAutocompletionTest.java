@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.operation.file.autocompletion.groovy;
+package org.exoplatform.ide.operation.autocompletion.groovy;
 
 import static org.junit.Assert.assertTrue;
 
@@ -29,47 +29,47 @@ import org.junit.Test;
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 8, 2010 12:40:45 PM evgen $
+ * @version $Id: Dec 16, 2010 3:54:57 PM evgen $
  *
  */
-public class GroovyObjectCompletionTest extends BaseTest
+//IDE-492
+public class GroovyKeywordsAutocompletionTest extends BaseTest
 {
 
    @Test
-   public void testGroovyObjectCompletion() throws Exception
+   public void testGroovyKeywordsAutocompletion() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
-      for (int i = 0; i < 10; i++)
+      for (int i = 0; i < 9; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
 
       selenium.keyDown("//body[@class='editbox']", "\\35");
-     IDE.EDITOR.typeTextIntoEditor(0, ".");
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+     IDE.EDITOR.typeTextIntoEditor(0, "n");
 
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.typeToInput("con");
+      IDE.CODEASSISTANT.checkElementPresent("name:String");
+      IDE.CODEASSISTANT.checkElementPresent("native");
+      IDE.CODEASSISTANT.checkElementPresent("new");
+      IDE.CODEASSISTANT.checkElementPresent("null");
+
+      for (int i = 0; i < 3; i++)
+      {
+         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         Thread.sleep(TestConstants.SLEEP_SHORT);
+      }
+
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("null"));
 
-      IDE.CODEASSISTANT.checkElementPresent("concat(String):String");
-      IDE.CODEASSISTANT.checkElementPresent("contains(CharSequence):boolean");
-      IDE.CODEASSISTANT.checkElementPresent("contentEquals(StringBuffer):boolean");
-      IDE.CODEASSISTANT.checkElementPresent("contentEquals(CharSequence):boolean");
-
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      IDE.CODEASSISTANT.insertSelectedItem();
-
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
 }

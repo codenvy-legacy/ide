@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.operation.file.autocompletion.groovy;
+package org.exoplatform.ide.operation.autocompletion.groovy;
 
 import static org.junit.Assert.assertTrue;
 
@@ -29,40 +29,47 @@ import org.junit.Test;
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 10, 2010 2:34:17 PM evgen $
+ * @version $Id: Dec 8, 2010 12:40:45 PM evgen $
  *
  */
-public class GroovyClassNameCompletionTest extends BaseTest
+public class GroovyObjectCompletionTest extends BaseTest
 {
 
    @Test
-   public void testGroovyClassNameCompletion() throws Exception
+   public void testGroovyObjectCompletion() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
-      for (int i = 0; i < 9; i++)
+      for (int i = 0; i < 10; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-     IDE.EDITOR.typeTextIntoEditor(0, "Colle");
 
-      //open autocomplete form
+      selenium.keyDown("//body[@class='editbox']", "\\35");
+     IDE.EDITOR.typeTextIntoEditor(0, ".");
+
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("Collections");
-      IDE.CODEASSISTANT.checkElementPresent("Collection");
+      IDE.CODEASSISTANT.typeToInput("con");
+      Thread.sleep(TestConstants.SLEEP_SHORT);
 
+      IDE.CODEASSISTANT.checkElementPresent("concat(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("contains(CharSequence):boolean");
+      IDE.CODEASSISTANT.checkElementPresent("contentEquals(StringBuffer):boolean");
+      IDE.CODEASSISTANT.checkElementPresent("contentEquals(CharSequence):boolean");
+
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       IDE.CODEASSISTANT.insertSelectedItem();
 
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
 
 }

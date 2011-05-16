@@ -16,28 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.operation.file.autocompletion.groovy;
+package org.exoplatform.ide.operation.autocompletion.groovy;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.CodeAssistant;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Created by The eXo Platform SAS.
+ * TODO: ignore this test until we consider how receive javadoc for methods with generic parameters.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 16, 2010 3:54:57 PM evgen $
+ * @version $Id: Dec 8, 2010 4:03:58 PM evgen $
  *
  */
-//IDE-492
-public class GroovyKeywordsAutocompletionTest extends BaseTest
-{
 
+public class GroovyJavaDocTest extends BaseTest
+{
+   
    @Test
-   public void testGroovyKeywordsAutocompletion() throws Exception
+   @Ignore
+   public void testGroovyJavaDoc() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
@@ -48,28 +51,31 @@ public class GroovyKeywordsAutocompletionTest extends BaseTest
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
-
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-     IDE.EDITOR.typeTextIntoEditor(0, "n");
+     IDE.EDITOR.typeTextIntoEditor(0, "Collections.");
 
-      IDE.CODEASSISTANT.openForm();
-
-      IDE.CODEASSISTANT.checkElementPresent("name:String");
-      IDE.CODEASSISTANT.checkElementPresent("native");
-      IDE.CODEASSISTANT.checkElementPresent("new");
-      IDE.CODEASSISTANT.checkElementPresent("null");
-
-      for (int i = 0; i < 3; i++)
+     IDE.CODEASSISTANT.openForm();
+      
+      for (int i = 0; i < 4; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
-
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("null"));
-
+      Thread.sleep(TestConstants.SLEEP);
+      IDE.CODEASSISTANT.checkDocFormPresent();
+      Thread.sleep(TestConstants.SLEEP);
+      selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
+      assertFalse(selenium.isElementPresent("//body/pre[text()='Not found']"));
+      IDE.selectMainFrame();
+      
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      Thread.sleep(TestConstants.SLEEP);
+      selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
+      assertFalse(selenium.isElementPresent("//body/pre[text()=\"Not found\"]"));
+      IDE.selectMainFrame();
+      
+     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
    }
-
+   
 }

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.operation.file.autocompletion.groovy;
+package org.exoplatform.ide.operation.autocompletion.groovy;
 
 import static org.junit.Assert.assertTrue;
 
@@ -29,47 +29,40 @@ import org.junit.Test;
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 16, 2010 10:46:04 AM evgen $
+ * @version $Id: Dec 10, 2010 2:34:17 PM evgen $
  *
  */
-public class GroovyAnnotationAutocompleteTest extends BaseTest
+public class GroovyClassNameCompletionTest extends BaseTest
 {
 
    @Test
-   public void testGroovyAnnotation() throws Exception
+   public void testGroovyClassNameCompletion() throws Exception
    {
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
-      for (int i = 0; i < 8; i++)
-      {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      }
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-     IDE.EDITOR.typeTextIntoEditor(0, "@");
-      
-      IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementNotPresent("hello(String):String");
-      IDE.CODEASSISTANT.checkElementPresent("Deprecated");
-      IDE.CODEASSISTANT.checkElementPresent("Documented");
-      IDE.CODEASSISTANT.checkElementPresent("Inherited");
-      IDE.CODEASSISTANT.checkElementPresent("Override");
-      IDE.CODEASSISTANT.checkElementPresent("Retention");
-      IDE.CODEASSISTANT.checkElementPresent("SuppressWarnings");
-      IDE.CODEASSISTANT.checkElementPresent("Target");
-      
-      for (int i = 0; i < 3; i++)
+      for (int i = 0; i < 9; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
-      
+      selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+     IDE.EDITOR.typeTextIntoEditor(0, "Colle");
+
+      //open autocomplete form
+      IDE.CODEASSISTANT.openForm();
+
+      IDE.CODEASSISTANT.checkElementPresent("Collections");
+      IDE.CODEASSISTANT.checkElementPresent("Collection");
+
+      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("@Override"));
+
+      IDE.CODEASSISTANT.insertSelectedItem();
+
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections"));
    }
-   
+
 }
