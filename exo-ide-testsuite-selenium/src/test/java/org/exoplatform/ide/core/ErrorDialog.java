@@ -37,27 +37,48 @@ public class ErrorDialog extends AbstractTestModule
 
    private final String OK_BUTTON_ID = "exoWarningDialogOkButton";
    
+   /**
+    * Wait error dialog is opened.
+    * 
+    * @throws Exception
+    */
    public void waitIsOpened() throws Exception
    {
       waitForElementPresent(WARNING_DIALOG_ID);
    }
 
+   /**
+    * @param message
+    */
    public void checkIsOpened(String message)
    {
       fail();
    }
 
+   /**
+    * Check message from error dialog equals the pointed one.
+    * 
+    * @param message message to compare
+    */
    public void checkMessageEquals(String message)
    {
       assertEquals(message, selenium().getText(WARNING_MESSAGE_LOCATOR));
    }
    
+   /**
+    * Check message from error dialog contains the pointed one.
+    * 
+    * @param message message to be contained
+    */
    public void checkMessageContains(String message)
    {
       String text = selenium().getText(WARNING_MESSAGE_LOCATOR);
       assertTrue(message.contains(text));
    }
 
+   /**
+    * Click "Ok" button on error dialog.
+    */
    public void clickOk()
    {
       selenium().click(OK_BUTTON_ID);

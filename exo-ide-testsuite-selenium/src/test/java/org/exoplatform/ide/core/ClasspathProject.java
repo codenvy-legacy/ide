@@ -71,11 +71,21 @@ public class ClasspathProject extends AbstractTestModule
       waitForElementNotPresent(CLASSPATH_VIEW_ID);
    }
 
+   /**
+    * Wait for choose source view to be opened.
+    * 
+    * @throws Exception
+    */
    public void waitForChooseSourceViewOpened() throws Exception
    {
       waitForElementPresent(CHOOSE_SOURCE_VIEW_ID);
    }
 
+   /**
+    * ait for choose source view to be closed.
+    * 
+    * @throws Exception
+    */
    public void waitForChooseSourceViewClosed() throws Exception
    {
       waitForElementNotPresent(CHOOSE_SOURCE_VIEW_ID);
@@ -95,6 +105,11 @@ public class ClasspathProject extends AbstractTestModule
       assertTrue(selenium().isElementPresent(CANCEL_BUTTON_ID));
    }
 
+   /**
+    * Click cancel button on Classpath dialog window.
+    * 
+    * @throws Exception
+    */
    public void clickCancelButton() throws Exception
    {
       selenium().click(CANCEL_BUTTON_ID);
@@ -103,7 +118,7 @@ public class ClasspathProject extends AbstractTestModule
    }
 
    /**
-    * Click add button.
+    * Click add button on Classpath dialog window.
     * @throws Exception
     */
    public void clickAddButton() throws Exception
@@ -112,7 +127,7 @@ public class ClasspathProject extends AbstractTestModule
    }
 
    /**
-    * Click remove button.
+    * Click remove button on Classpath dialog window.
     * @throws Exception
     */
    public void clickRemoveButton() throws Exception
@@ -121,7 +136,7 @@ public class ClasspathProject extends AbstractTestModule
    }
 
    /**
-    * Click ok button.
+    * Click ok button on choose source view.
     * @throws Exception
     */
    public void clickChooseSourceOkButton() throws Exception
@@ -130,7 +145,7 @@ public class ClasspathProject extends AbstractTestModule
    }
 
    /**
-    * Click cancel button.
+    * Click cancel button on choose source view.
     * @throws Exception
     */
    public void clickChooseSourceCancelButton() throws Exception
@@ -139,7 +154,7 @@ public class ClasspathProject extends AbstractTestModule
    }
 
    /**
-    * Click save button.
+    * Click save button on Classpath dialog window.
     * @throws Exception
     */
    public void clickSaveButton() throws Exception
@@ -149,7 +164,7 @@ public class ClasspathProject extends AbstractTestModule
 
    /**
     * Check, that ChooseSource Dialog window appeared 
-    * and has tree grid and 2 buttons: add anc cancel.
+    * and has tree grid and 2 buttons: add and cancel.
     */
    public void checkChooseSourceWindow()
    {
@@ -204,20 +219,35 @@ public class ClasspathProject extends AbstractTestModule
       selenium().doubleClickAt(locator, "0");
    }
 
+   /**
+    * Check the enabled state of "Add" button. 
+    * 
+    * @param isEnabled if <code>true</code> then button is enabled.
+    */
    public void checkAddButtonEnabledState(boolean isEnabled)
    {
       String attribute = selenium().getAttribute("//div[@id='" + ADD_BUTTON_ID + "']/@button-enabled");
       boolean buttonEnabled = Boolean.parseBoolean(attribute);
       assertEquals(isEnabled, buttonEnabled);
    }
-
+   
+   /**
+    * Check the enabled state of "Save" button. 
+    * 
+    * @param isEnabled if <code>true</code> then button is enabled.
+    */
    public void checkSaveButtonEnabledState(boolean isEnabled)
    {
       String attribute = selenium().getAttribute("//div[@id='" + SAVE_BUTTON_ID + "']/@button-enabled");
       boolean buttonEnabled = Boolean.parseBoolean(attribute);
       assertEquals(isEnabled, buttonEnabled);
    }
-
+   
+   /**
+    * Check the enabled state of "Remove" button. 
+    * 
+    * @param isEnabled if <code>true</code> then button is enabled.
+    */
    public void checkRemoveButtonEnabledState(boolean isEnabled)
    {
       String attribute = selenium().getAttribute("//div[@id='" + REMOVE_BUTTON_ID + "']/@button-enabled");
@@ -225,11 +255,22 @@ public class ClasspathProject extends AbstractTestModule
       assertEquals(isEnabled, buttonEnabled);
    }
    
+   /**
+    * Wait for "Remove" button's state to be as pointed one.
+    * 
+    * @param enabled
+    * @throws Exception
+    */
    public void waitRemoveButtonEnabled(boolean enabled) throws Exception
    {
       waitForElementPresent("//div[@id='" + REMOVE_BUTTON_ID + "' and @button-enabled=\""+enabled+"\"]");
    }
-
+   
+   /**
+    * Check the enabled state of "Cancel" button. 
+    * 
+    * @param isEnabled if <code>true</code> then button is enabled.
+    */
    public void checkCancelButtonEnabledState(boolean isEnabled)
    {
       String attribute = selenium().getAttribute("//div[@id='" + CANCEL_BUTTON_ID + "']/@button-enabled");
@@ -263,18 +304,36 @@ public class ClasspathProject extends AbstractTestModule
       assertEquals(enabled, buttonEnabled);
    }
 
+   /**
+    * Check items' size  in classpath grid equals to pointed one.
+    * 
+    * @param size size to compare
+    */
    public void checkItemsCountInClasspathGrid(int size)
    {
       int rows = selenium().getXpathCount("//table[@id=\"" + LIST_GRID_ID + "\"]/tbody[1]/tr").intValue();
       assertEquals(size, rows);
    }
 
+   /**
+    * Get path of the resource from the classpath grid by the pointed index.
+    * <b>Index starts from 1.</b>
+    * 
+    * @param index index in the grid
+    * @return {@link String} path
+    */
    public String getPathByIndex(int index)
    {
       String locator = "//table[@id=\"" + LIST_GRID_ID + "\"]/tbody[1]/tr[" + index + "]";
       return selenium().getText(locator);
    }
 
+   /**
+    * Select row in classpath grid by it's index.
+    * <b>Index starts from 1.</b>
+    * 
+    * @param index index in the grid
+    */
    public void selectRowInListGrid(int index)
    {
       String locator = "//table[@id=\"" + LIST_GRID_ID + "\"]/tbody[1]/tr[" + index + "]//span";
