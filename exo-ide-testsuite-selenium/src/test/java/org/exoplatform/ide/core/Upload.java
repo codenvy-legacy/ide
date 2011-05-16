@@ -246,6 +246,11 @@ public class Upload extends AbstractTestModule
       selenium().click(CANCEL_BUTTON_ID);
    }
 
+   /**
+    * Open list with proposed Mime types to autocomplete.
+    * 
+    * @throws Exception
+    */
    public void openMimeTypesList() throws Exception
    {
       selenium().click("//div[@id='"+UPLOAD_FORM_ID+"']//td/img");

@@ -23,10 +23,7 @@ import static org.junit.Assert.assertEquals;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -71,25 +68,24 @@ public class UploadingGoogleGadgetTest extends BaseTest
    @Test
    public void testUploadGoogleGadget() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      waitForRootElement();
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       
+      IDE.UPLOAD.open(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);
       
-      uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       
-      IDE.NAVIGATION.assertItemVisible(URL + "/" + FILE_NAME);
       String url = getSelectedItemUrl();
       
       assertEquals(URL + "/" + FILE_NAME, url);
       
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      
-      assertEquals("exo:googleGadget", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
-      assertEquals(MimeType.GOOGLE_GADGET, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
-      
+      IDE.PROPERTIES.waitForPropertiesViewOpened();
+      assertEquals("exo:googleGadget", IDE.PROPERTIES.getContentNodeType());
+      assertEquals(MimeType.GOOGLE_GADGET, IDE.PROPERTIES.getContentType());
     }
    
    @AfterClass
