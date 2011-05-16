@@ -19,10 +19,7 @@
 package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -38,6 +35,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
@@ -52,10 +51,11 @@ public class RunRestServiceCommandTest extends BaseTest
    private final static String FILE_FOR_CHANGE_CONTENT_NAME = "RestServiceChangeContent.grs";
 
    private final static String NEW_FILE_NAME = "NewRestService";
-   
+
    private final static String FOLDER_NAME = RunRestServiceCommandTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME + "/";
 
    @BeforeClass
    public static void setUp()
@@ -66,8 +66,10 @@ public class RunRestServiceCommandTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath + "RestServiceExample.groovy", MimeType.GROOVY_SERVICE, URL + SIMPLE_FILE_NAME);
-         VirtualFileSystemUtils.put(filePath + "RestServiceValidationWrongExample.groovy", MimeType.GROOVY_SERVICE, URL + NON_VALID_FILE_NAME);
+         VirtualFileSystemUtils.put(filePath + "RestServiceExample.groovy", MimeType.GROOVY_SERVICE, URL
+            + SIMPLE_FILE_NAME);
+         VirtualFileSystemUtils.put(filePath + "RestServiceValidationWrongExample.groovy", MimeType.GROOVY_SERVICE, URL
+            + NON_VALID_FILE_NAME);
          VirtualFileSystemUtils.put(filePath + "RestServiceChangeContent.groovy", MimeType.GROOVY_SERVICE, URL
             + FILE_FOR_CHANGE_CONTENT_NAME);
       }
@@ -105,16 +107,16 @@ public class RunRestServiceCommandTest extends BaseTest
    @Test
    public void testSavedFileRunRestService() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       //---- 1 -----------------
       //open file
-       IDE.WORKSPACE.selectItem(WS_URL);
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForItem(URL);
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(SIMPLE_FILE_NAME, false);
+      IDE.WORKSPACE.waitForItem(URL + SIMPLE_FILE_NAME);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + SIMPLE_FILE_NAME, false);
 
       //---- 2 -----------------
       //check Run Groovy Service button and menu
@@ -124,28 +126,18 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 3 -----------------
       //call Run Groovy Service command
-      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP * 2);
-
-      //check Launch Rest Service form appears
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      IDE.REST_SERVICE.runRESTService();
 
       //---- 4 -----------------
       //close
-      selenium.click("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]/closeButton/");
+      IDE.REST_SERVICE.closeForm();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //---- 5 -----------------
       //check messages
-      assertEquals(
-         "[INFO] " + SIMPLE_FILE_NAME + " validated successfully.",
-         selenium
-            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
-      assertEquals(
-         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT +"/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/" + SIMPLE_FILE_NAME
-            + " deployed successfully.",
-         selenium
-            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
+      assertEquals("[INFO] " + SIMPLE_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessageText(1));
+      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
+         + FOLDER_NAME + "/" + SIMPLE_FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessageText(2));
 
       //---- 6 -----------------
       //check, that hanlders removed, and after validation and deploying 
@@ -155,13 +147,13 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       //check Launch Rest Service form doesn't appear
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      IDE.REST_SERVICE.checkIsFormNotOpened();
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       //check Launch Rest Service form doesn't appear
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      IDE.REST_SERVICE.checkIsFormNotOpened();
 
    }
 
@@ -170,14 +162,15 @@ public class RunRestServiceCommandTest extends BaseTest
    {
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       //---- 1 -----------------
       //open file
-       IDE.WORKSPACE.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NON_VALID_FILE_NAME, false);
+      IDE.WORKSPACE.waitForItem(URL + NON_VALID_FILE_NAME);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + NON_VALID_FILE_NAME, false);
 
       //---- 2 -----------------
       //check Run Groovy Service button and menu
@@ -188,20 +181,18 @@ public class RunRestServiceCommandTest extends BaseTest
       //---- 3 -----------------
       //call Run Groovy Service command
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OUTPUT.waitForOutputOpened();
 
       //---- 4 -----------------
       //check that validation fails message appears.
-      String msg = selenium.getText("//font[@color='#880000']");
+      String msg = IDE.OUTPUT.getOutputMessageText(1);
       assertTrue(msg.contains("[ERROR] " + NON_VALID_FILE_NAME + " validation failed. Error (400: Bad Request)"));
 
       //---- 5 -----------------
       //fix file
-     IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      IDE.selectMainFrame();
+      IDE.EDITOR.clickOnEditor(0);
 
-     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 6 -----------------
@@ -211,13 +202,10 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 7 -----------------
       //check messages
-      assertEquals(
-         "[INFO] " + NON_VALID_FILE_NAME + " validated successfully.",
-         selenium
-            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
+      assertEquals("[INFO] " + NON_VALID_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessageText(2));
 
       //check Launch Rest Service form doesn't appear
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      IDE.REST_SERVICE.checkIsFormNotOpened();
 
    }
 
@@ -226,19 +214,19 @@ public class RunRestServiceCommandTest extends BaseTest
    {
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       //---- 1 -----------------
       //open file
-       IDE.WORKSPACE.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.SLEEP);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_FOR_CHANGE_CONTENT_NAME, false);
+      IDE.WORKSPACE.waitForItem(URL + FILE_FOR_CHANGE_CONTENT_NAME);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_FOR_CHANGE_CONTENT_NAME, false);
 
       //---- 2 -----------------
       //type some text
-     IDE.EDITOR.typeTextIntoEditor(0, "//modified file\n");
+      IDE.EDITOR.typeTextIntoEditor(0, "//modified file\n");
 
       //---- 3 -----------------
       //check Run Groovy Service button and menu
@@ -248,28 +236,20 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 4 -----------------
       //call Run Groovy Service command
-      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
-
-      //check Launch Rest Service form appears
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      IDE.REST_SERVICE.runRESTService();
 
       //---- 5 -----------------
       //close
-      selenium.click("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]/closeButton/");
+      IDE.REST_SERVICE.closeForm();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //---- 6 -----------------
       //check messages
-      assertEquals(
-         "[INFO] " + FILE_FOR_CHANGE_CONTENT_NAME + " validated successfully.",
-         selenium
-            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
-      assertEquals(
-         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/"
-            + FILE_FOR_CHANGE_CONTENT_NAME + " deployed successfully.",
-         selenium
-            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
+      assertEquals("[INFO] " + FILE_FOR_CHANGE_CONTENT_NAME + " validated successfully.",
+         IDE.OUTPUT.getOutputMessageText(1));
+      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
+         + FOLDER_NAME + "/" + FILE_FOR_CHANGE_CONTENT_NAME + " deployed successfully.",
+         IDE.OUTPUT.getOutputMessageText(2));
 
    }
 
@@ -278,14 +258,14 @@ public class RunRestServiceCommandTest extends BaseTest
    {
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       //---- 1 -----------------
       //open file
-       IDE.WORKSPACE.selectItem(WS_URL);
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForItem(URL);
+      IDE.WORKSPACE.selectItem(URL);
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
 
       //---- 2 -----------------
@@ -294,7 +274,6 @@ public class RunRestServiceCommandTest extends BaseTest
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
-      
       //---- 3 -----------------
       //call Run Groovy Service command
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
@@ -306,31 +285,25 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //check Launch Rest Service form appears
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      IDE.REST_SERVICE.checkIsFormOpened();
 
       //---- 6 -----------------
       //close
-      selenium.click("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]/closeButton/");
+      IDE.REST_SERVICE.closeForm();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //---- 7 -----------------
       //check messages
-      assertEquals(
-         "[INFO] " + NEW_FILE_NAME + " validated successfully.",
-         selenium
-            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[1]//font[@color='#007700']"));
-      assertEquals(
-         "[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT +"/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/" + NEW_FILE_NAME
-            + " deployed successfully.",
-         selenium
-            .getText("//div[@eventproxy='ideOperationPanel']/div[2][@class='tabSetContainer']/div/div/div/div[1]/div/div[2]//font[@color='#007700']"));
+      assertEquals("[INFO] " + NEW_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessageText(1));
+      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
+         + FOLDER_NAME + "/" + NEW_FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessageText(2));
 
    }
 
    @After
    public void afterMethod() throws Exception
    {
-     IDE.EDITOR.tryCloseTabWithNonSaving(0);
+      IDE.EDITOR.tryCloseTabWithNonSaving(0);
    }
 
 }

@@ -489,18 +489,55 @@ public class RESTService extends AbstractTestModule
 
    }
 
+   /**
+    * Type new value to Header parameter
+    * @param parameterIndex of parameter
+    * @param value new value
+    */
    public void typeToHeaderParameterValue(int parameterIndex, String value)
    {
       typeToTableValue(HEADER_TABLE_ID, parameterIndex, 5, value);
    }
 
+   /**
+    * Type new value to Query parameter
+    * @param parameterIndex nidex of the parameter
+    * @param value new value
+    */
    public void typeToQueryParameterValue(int parameterIndex, String value)
    {
       typeToTableValue(QUERY_TABLE_ID, parameterIndex, 5, value);
    }
 
+   /**
+    * Type text to body field
+    * @param text to type
+    */
    public void typeToBodyField(String text)
    {
       selenium().typeKeys(BODY_TEXT_FIELD, text);
+   }
+
+   /**
+    * Run REST Service and wait for Launch REST Service opened
+    * @throws Exception
+    */
+   public void runRESTService() throws Exception
+   {
+      IDE().TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
+      waitForElementPresent(REST_SERVICE_FORM);
+   }
+   
+   public void checkIsFormNotOpened()
+   {
+      assertFalse(selenium().isElementPresent(REST_SERVICE_FORM));
+   }
+
+   /**
+    * 
+    */
+   public void checkIsFormOpened()
+   {
+      assertTrue(selenium().isElementPresent(REST_SERVICE_FORM));
    }
 }

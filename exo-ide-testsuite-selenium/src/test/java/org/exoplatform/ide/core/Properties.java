@@ -28,15 +28,18 @@ import org.exoplatform.ide.ToolbarCommands;
 public class Properties extends AbstractTestModule
 {
 
-   private static final String PROPERTIES_FORM_LOCATOR = "//div[@view-id=\"ideFilePropertiesView\"]";
-
+   private final String PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyName='%1s']";
+   
+   public static final String PROPERTIES_FORM_LOCATOR = "//div[@view-id=\"ideFilePropertiesView\"]";
+   
    /**
     * Get Autoload property value
     * @return String value
     */
    public String getAutoloadProperty()
    {
-      return selenium().getText("Autoload");
+      String locator = String.format(PROPERTY_LOCATOR, "Autoload");
+      return selenium().getText(locator);
    }
 
    /**
@@ -45,7 +48,8 @@ public class Properties extends AbstractTestModule
     */
    public String getContentNodeType()
    {
-      return selenium().getText("Content-Node-Type");
+      String locator = String.format(PROPERTY_LOCATOR, "Content Node Type");
+      return selenium().getText(locator);
    }
 
    /**
@@ -54,7 +58,8 @@ public class Properties extends AbstractTestModule
     */
    public String getContentType()
    {
-      return selenium().getText("Content-Type");
+      String locator = String.format(PROPERTY_LOCATOR, "Content Type");
+      return selenium().getText(locator);
    }
 
    /**
@@ -63,7 +68,8 @@ public class Properties extends AbstractTestModule
     */
    public String getDisplayName()
    {
-      return selenium().getText("Display-Name");
+      String locator = String.format(PROPERTY_LOCATOR, "Display Name");
+      return selenium().getText(locator);
    }
 
    /**
@@ -72,7 +78,8 @@ public class Properties extends AbstractTestModule
     */
    public String getFileNodeType()
    {
-      return selenium().getText("File-Node-Type");
+      String locator = String.format(PROPERTY_LOCATOR, "File Node Type");
+      return selenium().getText(locator);
    }
 
    /**
