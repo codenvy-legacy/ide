@@ -187,22 +187,22 @@ public void chekToollbarItemExListGrid() throws InterruptedException
       checkIdeCommandItemExListGrid("Delete...", 16);
       checkIdeCommandItemExListGrid("Cut Item(s)", 21);
       checkIdeCommandItemExListGrid("Find-Replace...", 27);
-      checkIdeCommandItemExListGrid("Lock / Unlock File", 30);
-      checkIdeCommandItemExListGrid("Version History...", 32);
-      checkIdeCommandItemExListGrid("Get URL...", 37);
-      checkIdeCommandItemExListGrid("Show / Hide Documentation", 40);
-      checkIdeCommandItemExListGrid("Show Preview", 42);
-      checkIdeCommandItemExListGrid("Run in Sandbox", 49);
-      checkIdeCommandItemExListGrid("Launch REST Service", 52);
-      checkIdeCommandItemExListGrid("Preview node type", 57);
-      checkIdeCommandItemExListGrid("Initialize repository", 60);
-      checkIdeCommandItemExListGrid("Push...", 70);
-      checkIdeCommandItemExListGrid("Workspace...", 75);
-      checkIdeCommandItemExListGrid("REST Services Discovery", 80);
-      checkIdeCommandItemExListGrid("New POGO", 86);
-      checkIdeCommandItemExListGrid("Project Template...", 82);
-      checkIdeCommandItemExListGrid("New Data Object", 87);
-      checkIdeCommandItemExListGrid("New Netvibes Widget", 96);
+      checkIdeCommandItemExListGrid("Lock / Unlock File", 31);
+      checkIdeCommandItemExListGrid("Version History...", 33);
+      checkIdeCommandItemExListGrid("Get URL...", 38);
+      checkIdeCommandItemExListGrid("Show / Hide Documentation", 41);
+      checkIdeCommandItemExListGrid("Show Preview", 43);
+      checkIdeCommandItemExListGrid("Run in Sandbox", 50);
+      checkIdeCommandItemExListGrid("Launch REST Service", 53);
+      checkIdeCommandItemExListGrid("Preview node type", 58);
+      checkIdeCommandItemExListGrid("Initialize repository", 61);
+      checkIdeCommandItemExListGrid("Push...", 71);
+      checkIdeCommandItemExListGrid("Workspace...", 76);
+      checkIdeCommandItemExListGrid("REST Services Discovery", 81);
+      checkIdeCommandItemExListGrid("New POGO", 87);
+      checkIdeCommandItemExListGrid("Project Template...", 83);
+      checkIdeCommandItemExListGrid("New Data Object", 88);
+      checkIdeCommandItemExListGrid("New Netvibes Widget", 97);
    }
 
    /**
