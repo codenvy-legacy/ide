@@ -267,7 +267,6 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    * TODO this method should be verified
     * Check is node in Outline tree is selected
     * @param rowNumber number of item in treegrid starting from 1
     * @param name name of item
@@ -355,7 +354,6 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    * TODO this method should be verified 
     * Check is element present in outline tree
     * @param id of row
     */
