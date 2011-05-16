@@ -19,15 +19,11 @@
 package org.exoplatform.ide.operation.upload;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
 import java.io.File;
 
 /**
@@ -44,52 +40,26 @@ public class UploadMimeTypeAutoCompletionTest extends BaseTest
    @Test
    public void testMimeTypeAutoCompletion() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-
+      waitForRootElement();
+      
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
 
       try
       {
          File file = new File(FILE_PATH);
-         selenium.type("//input[@type='file']", file.getCanonicalPath());
+         IDE.UPLOAD.setUploadFilePath(file.getCanonicalPath());
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
 
-      selenium
-         .focus("scLocator=//Window[ID=\"ideUploadForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideUploadFormMimeTypeField]/element");
-      selenium
-         .type(
-            "scLocator=//Window[ID=\"ideUploadForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideUploadFormMimeTypeField]/element",
-            "t");
-      Robot bot = new Robot();
-
-      bot.keyPress(KeyEvent.VK_E);
-      bot.keyRelease(KeyEvent.VK_E);
-      bot.keyPress(KeyEvent.VK_X);
-      bot.keyRelease(KeyEvent.VK_X);
-      bot.keyPress(KeyEvent.VK_T);
-      bot.keyRelease(KeyEvent.VK_T);
-      bot.keyPress(KeyEvent.VK_SLASH);
-      bot.keyRelease(KeyEvent.VK_SLASH);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      assertTrue(selenium
-         .isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/item[0][Class=\"DynamicForm\"]/item[value=text/all]/[icon='picker']"));
-      assertTrue(selenium
-         .isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/item[0][Class=\"DynamicForm\"]/item[value=text/qhtml]/[icon='picker']"));
-
-      selenium
-         .click("scLocator=//Window[ID=\"ideUploadForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideUploadFormMimeTypeField]/pickList/body/row[5]/col[0]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      assertEquals(
-         "text/richtext",
-         selenium
-            .getValue("scLocator=//Window[ID=\"ideUploadForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideUploadFormMimeTypeField]/element"));
-
+      IDE.UPLOAD.typeToMimeTypeField("text/");
+      IDE.UPLOAD.checkMimeTypeContainsProposes("text/any", "text/html", "text/css", "text/plain", "text/xml");
+      String mimeTypeToSelect = "text/richtext";
+      IDE.UPLOAD.selectMimeTypeByName(mimeTypeToSelect);
+      
+      assertEquals(mimeTypeToSelect, IDE.UPLOAD.getMimeTypeValue());
    }
 
 }

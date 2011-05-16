@@ -58,28 +58,31 @@ public class Upload extends AbstractTestModule
        */
       public static final String OPEN_LOCAL_FILE = "Open Local File...";
    }
-   
+
    //---------- Id of elements, needed in this test ------------------
    /**
     * Id of upload form div.
     */
    public static final String UPLOAD_FORM_ID = "ideUploadForm";
-   
+
    public static final String BROWSER_BUTTON_ID = "ideUploadFormBrowseButton";
-   
+
    public static final String FILE_NAME_FIELD_ID = "ideUploadFormFilenameField";
-   
+
    public static final String MIME_TYPE_FILED_ID = "ideUploadFormMimeTypeField";
-   
+
    public static final String UPLOAD_BUTTON_ID = "ideUploadFormUploadButton";
-   
+
    //---------- Locators ------------------
    /**
     * Locator for div, that contains upload form.
     */
    public static final String UPLOAD_FORM_LOCATOR = "//div[@id='" + UPLOAD_FORM_ID + "']";
-   
+
    public static final String INPUT_FILE_FIELD_LOCATOR = "//input[@type='file']";
+
+   private static final String MIME_TYPE_SUGGEST_PANEL_TEXT_LOCATOR =
+      "//div[@id=\"exoSuggestPanel\"]//td[contains(., '%1s')]";
 
    public void checkIsOpened()
    {
@@ -98,10 +101,10 @@ public class Upload extends AbstractTestModule
 
       final String uploadForm = "uploadFormId";
       selenium().assignId(UPLOAD_FORM_LOCATOR, uploadForm);
-      
+
       assertTrue(selenium().isElementPresent(uploadForm));
       assertTrue(selenium().isElementPresent(BROWSER_BUTTON_ID));
-      
+
       try
       {
          File file = new File(filePath);
@@ -110,7 +113,7 @@ public class Upload extends AbstractTestModule
       catch (Exception e)
       {
       }
-      
+
       String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
       waitForTextPresent(fileName);
 
@@ -124,7 +127,7 @@ public class Upload extends AbstractTestModule
 
       assertFalse(selenium().isElementPresent(uploadForm));
    }
-   
+
    /**
     * Set path of the file to be uploaded to file's upload input.
     * 
@@ -132,7 +135,52 @@ public class Upload extends AbstractTestModule
     */
    public void setUploadFilePath(String path)
    {
-      selenium().type("//input[@type='file']", path);
+      selenium().type(INPUT_FILE_FIELD_LOCATOR, path);
    }
 
+   /**
+    * Check the mime type suggest panel contains pointed proposes.
+    * 
+    * @param proposes proposes to be contained
+    */
+   public void checkMimeTypeContainsProposes(String... proposes)
+   {
+      for (String propose : proposes)
+      {
+         String locator = String.format(MIME_TYPE_SUGGEST_PANEL_TEXT_LOCATOR, propose);
+         assertTrue(selenium().isElementPresent(locator));
+      }
+   }
+
+   /**
+    * Type text to Mime type field.
+    * 
+    * @param text text to type
+    */
+   public void typeToMimeTypeField(String text)
+   {
+      selenium().type(MIME_TYPE_FILED_ID, "");
+      selenium().typeKeys(MIME_TYPE_FILED_ID, text);
+   }
+
+   /**
+    * Select Mime type propose by name
+    * 
+    * @param mimetype Mime type to select
+    */
+   public void selectMimeTypeByName(String mimetype)
+   {
+      String locator = String.format(MIME_TYPE_SUGGEST_PANEL_TEXT_LOCATOR, mimetype);
+      selenium().click(locator);
+   }
+
+   /**
+    * Get value of Mime type field.
+    * 
+    * @return {@link String} value
+    */
+   public String getMimeTypeValue()
+   {
+      return selenium().getValue(MIME_TYPE_FILED_ID);
+   }
 }
