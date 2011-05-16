@@ -404,7 +404,13 @@ public class JavaParser extends CodeMirrorParserImpl
                }
       
                // recognize variables like this "String a, b, c;" 
-               else if (isComma(lastNodeType, lastNodeContent))
+               else if (isComma(lastNodeType, lastNodeContent)
+                        && currentToken.getLastSubToken() != null
+                        && currentToken.getLastSubToken().getLineNumber() == lineNumber
+                        && (TokenType.VARIABLE.equals(currentToken.getLastSubToken().getType())
+                              || TokenType.PROPERTY.equals(currentToken.getLastSubToken().getType())
+                            )
+                        )
                {
                   currentToken.addSubToken(new TokenBeenImpl(
                      nodeContent, 
