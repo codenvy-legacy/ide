@@ -169,7 +169,11 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       this.panelId = panelId;
       this.viewsLayer = viewsLayer;
 
+      /*
+       * For selenium tests
+       */
       getElement().setAttribute("panel-id", panelId);
+      getElement().setAttribute("is-panel", "true");
       setPanelMaximized(false);
 
       setWidth("100px");
@@ -179,6 +183,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       add(wrapper);
 
       tabPanel = new TabPanel();
+      tabPanel.getElement().setId(panelId + "-panel-switcher");
       tabPanel.setWidth("100%");
       tabPanel.setHeight("100%");
       tabPanel.setWrapperBorderSize(1);
