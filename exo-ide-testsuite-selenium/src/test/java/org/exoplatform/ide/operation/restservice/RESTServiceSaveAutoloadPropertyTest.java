@@ -116,7 +116,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       try
       {
          Utils.undeployService(BASE_URL, REST_CONTEXT, URL);
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
       }
       catch (IOException e)
       {

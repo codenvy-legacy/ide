@@ -77,22 +77,15 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
        IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(URL);
+      
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      IDE.WORKSPACE.waitForItem(URL + FILE_NAME);
+      
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      selectFolder(FOLDER);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.REST_SERVICE.validate(FILE_NAME, 0);
+      IDE.REST_SERVICE.validate(FILE_NAME, 1);
    }
-
- 
-  
-  protected void selectFolder(String folderName) throws Exception
-  {
-     selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
-        + "]/col[1]/open");
-     Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-  }
   
    
   

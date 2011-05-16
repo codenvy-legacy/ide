@@ -95,8 +95,8 @@ public class RESTService extends AbstractTestModule
    public void validate(String fileName, int numberOfRecord) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_TAB_LOCATOR));
+      waitForElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR);
+      assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR));
 
       final String msg = IDE().OUTPUT.getOutputMessageText(numberOfRecord);
 
