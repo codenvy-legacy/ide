@@ -19,84 +19,69 @@
 package org.exoplatform.ide.operation.upload;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.core.Upload;
 import org.junit.Test;
 
 import java.io.File;
 
 /**
+ * Test for "Open local file" form.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
 public class OpenLocalFileTest extends BaseTest
 {
-   private static final String MIME_TYPE_LOCATOR = "scLocator=//Window[ID=\"ideUploadForm\"]/item[0][Class=\"DynamicForm\"]/item[name=ideUploadFormMimeTypeField]/element";
-   
    private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/test";
    
    @Test
    public void testOpenFileWithoutExtention() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-       IDE.WORKSPACE.selectItem(WS_URL);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      waitForRootElement();
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.WORKSPACE.selectItem(WS_URL);
 
       //call Open Local File form
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]"));
-      checkUploadButtonEnabled(false);
+      IDE.UPLOAD.waitUploadViewOpened();
+      IDE.UPLOAD.checkButtonState(Upload.UPLOAD_BUTTON_ID, false);
       
       //select file from local driver without file extention
       try
       {
          File file = new File(FILE_PATH);
-         selenium.type("//input[@type='file']", file.getCanonicalPath());
+         IDE.UPLOAD.setUploadFilePath(file.getCanonicalPath());
       }
       catch (Exception e)
       {
       }
+      
       Thread.sleep(TestConstants.SLEEP);
-
-      assertEquals(FILE_PATH.substring(FILE_PATH.lastIndexOf("/") + 1, FILE_PATH.length()), selenium
-         .getValue("scLocator=//DynamicForm[ID=\"ideUploadFormDynamicForm\"]/item[name=ideUploadFormFilenameField]/element"));
-      assertEquals("", selenium.getText(MIME_TYPE_LOCATOR));
-      checkUploadButtonEnabled(false);
-
-      //select mime type
-      selenium.type(MIME_TYPE_LOCATOR, "text/html");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      checkUploadButtonEnabled(true);
+      String fileName = FILE_PATH.substring(FILE_PATH.lastIndexOf("/") + 1, FILE_PATH.length());
+      assertEquals(fileName, IDE.UPLOAD.getFilePathValue());
       
-      //close form
-      selenium.click("scLocator=//IButton[ID=\"ideUploadFormCloseButton\"]/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/"));
+      assertEquals("", IDE.UPLOAD.getMimeTypeValue());
+      IDE.UPLOAD.checkButtonState(Upload.UPLOAD_BUTTON_ID, false);
 
-   }
-   
-   private void checkUploadButtonEnabled(boolean enabled)
-   {
-      if (enabled)
-      {
-         assertFalse(selenium.isElementPresent(
-            "//div[@eventproxy='ideUploadFormUploadButton']//td[@class='buttonTitleDisabled' and text()='Open']"));
-         assertTrue(selenium.isElementPresent(
-         "//div[@eventproxy='ideUploadFormUploadButton']//td[@class='buttonTitle' and text()='Open']"));
-      }
-      else
-      {
-         assertTrue(selenium.isElementPresent(
-            "//div[@eventproxy='ideUploadFormUploadButton']//td[@class='buttonTitleDisabled' and text()='Open']"));
-         assertFalse(selenium.isElementPresent(
-            "//div[@eventproxy='ideUploadFormUploadButton']//td[@class='buttonTitle' and text()='Open']"));
-      }
+      IDE.UPLOAD.typeToMimeTypeField(MimeType.TEXT_HTML);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      
+      IDE.UPLOAD.checkButtonState(Upload.UPLOAD_BUTTON_ID, true);
+      
+      IDE.UPLOAD.clickUploadButton();
+
+      IDE.UPLOAD.waitUploadViewClosed();
+      
+      IDE.UPLOAD.checkIsOpened(false);
+      IDE.EDITOR.waitTabPresent(0);
+
    }
 }
