@@ -192,20 +192,21 @@ public class Locators
 
    public interface PropertiesPanel
    {
+      @Deprecated
       public static final String SC_DYNAMIC_FORM_LOCATOR = "scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]";
-
+      @Deprecated
       public static final String SC_CONTENT_TYPE_TEXTBOX = SC_DYNAMIC_FORM_LOCATOR
          + "/item[name=idePropertiesTextContentType]/textbox";
-
+      @Deprecated
       public static final String SC_CONTENT_NODE_TYPE_TEXTBOX = SC_DYNAMIC_FORM_LOCATOR
          + "/item[name=idePropertiesTextContentNodeType]/textbox";
-
+      @Deprecated
       public static final String SC_FILE_NODE_TYPE_TEXTBOX = SC_DYNAMIC_FORM_LOCATOR
          + "/item[name=idePropertiesTextFileNodeType]/textbox";
-
+      @Deprecated
       public static final String SC_CONTENT_LENGTH_TEXTBOX = SC_DYNAMIC_FORM_LOCATOR
          + "/item[name=idePropertiesTextContentLength]/textbox";
-
+      @Deprecated
       public static final String SC_DISPLAY_NAME_TEXTBOX = SC_DYNAMIC_FORM_LOCATOR
          + "/item[name=idePropertiesTextDisplayName]/textbox";
 

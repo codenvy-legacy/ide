@@ -96,5 +96,14 @@ public class Properties extends AbstractTestModule
       IDE().TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       waitForElementPresent(PROPERTIES_FORM_LOCATOR);
    }
-
+   
+   /**
+    * Wait for properties view to be opened.
+    * 
+    * @throws Exception
+    */
+   public void waitForPropertiesViewOpened() throws Exception
+   {
+      waitForElementPresent(PROPERTIES_FORM_LOCATOR);
+   }
 }

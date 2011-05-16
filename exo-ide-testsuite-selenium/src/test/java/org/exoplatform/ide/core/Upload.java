@@ -144,21 +144,19 @@ public class Upload extends AbstractTestModule
       try
       {
          File file = new File(filePath);
-         selenium().type(INPUT_FILE_FIELD_LOCATOR, file.getCanonicalPath());
+         setUploadFilePath(file.getCanonicalPath());
       }
       catch (Exception e)
       {
       }
 
       String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
-      waitForTextPresent(fileName);
-
-      assertEquals(fileName, selenium().getValue(FILE_NAME_FIELD_ID));
-
+      assertEquals(fileName, getFilePathValue());
+      
       selenium().type(MIME_TYPE_FILED_ID, mimeType);
       assertTrue(selenium().isElementPresent(UPLOAD_BUTTON_ID));
 
-      selenium().click(UPLOAD_BUTTON_ID);
+      clickUploadButton();
       waitForElementNotPresent(uploadForm);
 
       assertFalse(selenium().isElementPresent(uploadForm));

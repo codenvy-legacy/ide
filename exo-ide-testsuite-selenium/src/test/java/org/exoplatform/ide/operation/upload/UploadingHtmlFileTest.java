@@ -21,19 +21,16 @@ package org.exoplatform.ide.operation.upload;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -70,13 +67,11 @@ public class UploadingHtmlFileTest extends BaseTest
    @Test
    public void testUploadingHtml() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      waitForRootElement();
       
-      
-      uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.TEXT_HTML);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_NAME, false);
+      IDE.UPLOAD.open(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.TEXT_HTML);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + HTML_NAME, false);
+      IDE.EDITOR.waitTabPresent(0);
       IDE.EDITOR.checkCodeEditorOpened(0);
 
       String text =IDE.EDITOR.getTextFromCodeEditor(0);
@@ -87,9 +82,9 @@ public class UploadingHtmlFileTest extends BaseTest
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      assertEquals("nt:resource", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
-      assertEquals(MimeType.TEXT_HTML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
-      
+      IDE.PROPERTIES.waitForPropertiesViewOpened();
+      assertEquals("nt:resource", IDE.PROPERTIES.getContentNodeType());
+      assertEquals(MimeType.TEXT_HTML, IDE.PROPERTIES.getContentType());
    }
    
    @AfterClass
