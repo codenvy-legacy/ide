@@ -124,5 +124,15 @@ public class Upload extends AbstractTestModule
 
       assertFalse(selenium().isElementPresent(uploadForm));
    }
+   
+   /**
+    * Set path of the file to be uploaded to file's upload input.
+    * 
+    * @param path file's path
+    */
+   public void setUploadFilePath(String path)
+   {
+      selenium().type("//input[@type='file']", path);
+   }
 
 }
