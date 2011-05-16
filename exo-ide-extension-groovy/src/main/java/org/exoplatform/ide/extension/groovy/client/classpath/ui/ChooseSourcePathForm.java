@@ -94,6 +94,7 @@ public class ChooseSourcePathForm extends DialogWindow implements ChooseSourcePa
       treeGrid = new ItemTreeGrid<Item>(ID_TREE_GRID);
       ScrollPanel treeWrapper = new ScrollPanel(treeGrid);
       DOM.setStyleAttribute(treeWrapper.getElement(), "border", "1px solid #a7abb4");
+      DOM.setStyleAttribute(treeWrapper.getElement(), "zIndex", "0");
       treeWrapper.setSize("100%", "250px");
 
       mainLayout.add(treeWrapper);

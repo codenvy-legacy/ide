@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
+import com.google.gwt.user.client.DOM;
+
 import com.google.gwt.user.client.ui.TreeItem;
 
 import org.exoplatform.ide.client.framework.vfs.Folder;
@@ -43,6 +45,7 @@ public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.u
    public ItemTreeGrid(String id)
    {
       getElement().setId(id);
+      DOM.setStyleAttribute(getElement(), "zIndex", "0");
    }
 
    /**
