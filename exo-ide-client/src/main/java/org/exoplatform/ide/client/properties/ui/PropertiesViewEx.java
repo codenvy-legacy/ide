@@ -89,7 +89,8 @@ public class PropertiesViewEx extends ViewImpl implements
             String value = properties.get(key);
 
             propertiesGrid.setHTML(row, 0, "<b>" + key + ":&nbsp;&nbsp;</b>");
-            propertiesGrid.setText(row, 1, value);
+            //add id to get access to field text in Selenium test 
+            propertiesGrid.setHTML(row, 1, "<span id = "+ key.replaceAll(" ", "-")+">" + value + "</span>");
 
             DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "textAlign", "right");
             DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "width", "100%");
