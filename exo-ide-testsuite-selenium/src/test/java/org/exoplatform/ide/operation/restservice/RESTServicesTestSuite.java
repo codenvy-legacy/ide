@@ -33,7 +33,8 @@ import org.junit.runners.Suite.SuiteClasses;
    RESTServiceVaditionCorrectTest.class, RESTServiceAnnotationInheritanceTest.class, RESTServiceGetURLTest.class,
    RESTServiceDeployWrongTest.class, RESTServiceCreateTest.class, RESTServiceDeployUndeployTest.class,
    RESTServiceFilterParametersTest.class, RESTServiceComplexMediaTypeTest.class, RESTServiceDeployExistPathTest.class,
-   RESTServiceDefaultHTTPParametersTest.class, RESTServiceOutputTest.class})
+   RESTServiceDefaultHTTPParametersTest.class, RESTServiceOutputTest.class, GoToErrorInRestServiceTest.class,
+   RESTServiceSandboxTest.class, RunRestServiceCommandTest.class, UndeployOnRunRESTServiceTest.class})
 public class RESTServicesTestSuite
 {
 }
