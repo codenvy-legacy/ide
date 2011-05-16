@@ -20,8 +20,6 @@ package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -33,6 +31,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * Created by The eXo Platform SAS .
  *
@@ -42,16 +42,16 @@ import org.junit.Test;
  */
 public class UndeployOnRunRESTServiceTest extends BaseTest
 {
-   
-   
+
    private final static String FOLDER_NAME = UndeployOnRunRESTServiceTest.class.getSimpleName();
-   
+
    private final static String SIMPLE_FILE_NAME = "RestServiceExample.groovy";
-   
+
    private final static String FILE_NAME = "kjfdshglksfdghldsfbg.groovy";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/"+WEBDAV_CONTEXT+"/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
-   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME + "/";
+
    @BeforeClass
    public static void setUp()
    {
@@ -73,7 +73,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -92,70 +92,60 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testUndeployOnRunRestService() throws Exception
    {
-    //open file
-      Thread.sleep(TestConstants.SLEEP);
-       IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(SIMPLE_FILE_NAME, false);
-      
-    //call Run Groovy Service command
-      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP * 2);
-      
-      //check Launch Rest Service form appears
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
+      //open file
+      waitForRootElement();
 
+      IDE.WORKSPACE.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      IDE.WORKSPACE.waitForItem(URL + SIMPLE_FILE_NAME);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + SIMPLE_FILE_NAME, false);
+
+      //call Run Groovy Service command
+      IDE.REST_SERVICE.runRESTService();
       //close
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceSend\"]");
+      IDE.REST_SERVICE.sendRequst();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //3
-        String text = selenium.getText("//div[contains(@eventproxy,'Record_3')]");
-        System.out.println(text);
-      assertTrue(text.endsWith(SIMPLE_FILE_NAME+ " undeployed successfully.")); 
-      
-     IDE.EDITOR.closeTab(0);
+      String text = IDE.OUTPUT.getOutputMessageText(4);
+      assertTrue(text.endsWith(SIMPLE_FILE_NAME + " undeployed successfully."));
+
+      IDE.EDITOR.closeTab(0);
    }
-   
+
    @Test
-   public void testUndeloyOnCancel() throws  Exception
+   public void testUndeloyOnCancel() throws Exception
    {
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      waitForRootElement();
       //open file
-      Thread.sleep(TestConstants.SLEEP);
-       IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      
-    //call Run Groovy Service command
-      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP * 2);
-      
-      //check Launch Rest Service form appears
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideGroovyServiceOutputPreviewForm\"]"));
 
+      IDE.WORKSPACE.selectItem(WS_URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(URL);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      IDE.WORKSPACE.waitForItem(URL + FILE_NAME);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+
+      //call Run Groovy Service command
+      IDE.REST_SERVICE.runRESTService();
       //close
-      selenium.click("scLocator=//IButton[ID=\"ideGroovyServiceCancel\"]/");
+      IDE.REST_SERVICE.closeForm();
+
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //3
-        String text = selenium.getText("//div[contains(@eventproxy,'Record_2')]");
-        System.out.println(text);
-      assertTrue(text.endsWith(FILE_NAME+ " undeployed successfully.")); 
-      
-     IDE.EDITOR.closeTab(0);
+      String text = IDE.OUTPUT.getOutputMessageText(3);
+      assertTrue(text.endsWith(FILE_NAME + " undeployed successfully."));
+
+      IDE.EDITOR.closeTab(0);
    }
-   
+
 }
