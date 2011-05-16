@@ -42,14 +42,14 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
    private final static String FILE_NAME = "VaditionCorrectTest.groovy";
 
    private final static String FOLDER = RESTServiceVaditionCorrectTest.class.getSimpleName();
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
 
-   private static final String VALID_SCRIPT =
-      "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
-         + "import javax.ws.rs.PathParam\n \n" + "@Path(\"/\")\n" + "public class HelloWorld {\n" + "@GET\n"
-         + "@Path(\"helloworld/{name}\")\n" + "public String hello(@PathParam(\"name\") String name) {\n"
-         + "return \"Hello \" + name\n" + "}\n" + "}\n";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER + "/";
+
+   private static final String VALID_SCRIPT = "// simple groovy script\n" + "import javax.ws.rs.Path\n"
+      + "import javax.ws.rs.GET\n" + "import javax.ws.rs.PathParam\n \n" + "@Path(\"/\")\n"
+      + "public class HelloWorld {\n" + "@GET\n" + "@Path(\"helloworld/{name}\")\n"
+      + "public String hello(@PathParam(\"name\") String name) {\n" + "return \"Hello \" + name\n" + "}\n" + "}\n";
 
    @BeforeClass
    public static void setUp()
@@ -57,7 +57,7 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
 
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);   
+         VirtualFileSystemUtils.mkcol(URL);
          VirtualFileSystemUtils.put(VALID_SCRIPT.getBytes(), MimeType.GROOVY_SERVICE,
             TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL + FILE_NAME);
       }
@@ -71,26 +71,23 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
       }
    }
 
-  @Test
+   @Test
    public void testValidaton() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-       IDE.WORKSPACE.selectItem(WS_URL);
+      waitForRootElement();
+      IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(URL);
-      
+
       IDE.NAVIGATION.clickOpenIconOfFolder(URL);
       IDE.WORKSPACE.waitForItem(URL + FILE_NAME);
-      
+
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       IDE.REST_SERVICE.validate(FILE_NAME, 1);
    }
-  
-   
-  
-  
-  @AfterClass
+
+   @AfterClass
    public static void tearDown()
    {
       try

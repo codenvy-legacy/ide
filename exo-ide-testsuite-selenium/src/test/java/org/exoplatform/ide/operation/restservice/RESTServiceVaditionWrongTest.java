@@ -21,9 +21,9 @@ package org.exoplatform.ide.operation.restservice;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
 /**
@@ -38,24 +38,20 @@ public class RESTServiceVaditionWrongTest extends BaseTest
    @Test
    public void testValidaton() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.createFolder("Validaton");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
+      waitForRootElement();
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
 
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "1");
+      IDE.EDITOR.typeTextIntoEditor(0, "1");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
 
-      Thread.sleep(TestConstants.SLEEP);
+      waitForElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR);
 
-      assertTrue(selenium.isElementPresent("scLocator=//TabSet[ID=\"ideOperationPanel\"]/tab[ID=Output]/"));
-
-      String mess = selenium.getText("//font[@color='#880000']");
+      String mess = IDE.OUTPUT.getOutputMessageText(1);
       assertTrue(mess.contains("[ERROR] Untitled file.grs validation failed. Error (400: Bad Request)"));
    }
 
