@@ -243,7 +243,7 @@ public class Navigation extends AbstractTestModule
    public void openSelectedFileWithEditor(int editorIndex, boolean checkDefault) throws Exception
    {
       IDE().OPENWITH.callFromMenu();
-      IDE().OPENWITH.selectEditorByIndex(1);
+      IDE().OPENWITH.selectEditorByIndex(editorIndex);
 
       if (checkDefault)
       {
