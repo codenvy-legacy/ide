@@ -76,7 +76,7 @@ public class OpenGroovyLocalFileTest extends BaseTest
       IDE.WORKSPACE.waitForItem(URL);
       IDE.WORKSPACE.selectItem(URL);
 
-      uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
+      IDE.UPLOAD.open(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
       IDE.EDITOR.waitTabPresent(0);
 
       IDE.EDITOR.checkCodeEditorOpened(0);
@@ -96,6 +96,7 @@ public class OpenGroovyLocalFileTest extends BaseTest
 
       assertEquals("exo:groovyResourceContainer", IDE.PROPERTIES.getContentNodeType());
       assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
+      IDE.EDITOR.closeTab(0);
    }
 
    @AfterClass
