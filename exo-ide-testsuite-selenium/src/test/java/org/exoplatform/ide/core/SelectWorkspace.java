@@ -109,9 +109,6 @@ public class SelectWorkspace extends AbstractTestModule
       }
       selectWorkspaceInListGrid(url);
       
-      //TODO
-      Thread.sleep(TestConstants.SLEEP * 2);
-
       // test is "Ok" button enabled
       checkButtonState(OK_BUTTON_ID, true);
 

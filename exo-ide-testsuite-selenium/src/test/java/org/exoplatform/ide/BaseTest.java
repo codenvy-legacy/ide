@@ -23,24 +23,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
+import com.thoughtworks.selenium.DefaultSelenium;
+import com.thoughtworks.selenium.Selenium;
 
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.common.http.client.ProtocolNotSuppException;
 import org.exoplatform.ide.core.Navigation;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.exoplatform.ide.utils.InternetExplorerUtil;
 import org.exoplatform.ide.utils.TextUtil;
 import org.exoplatform.ide.utils.WebKitUtil;
@@ -53,8 +43,17 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -930,25 +929,6 @@ public abstract class BaseTest
 
       // test is workspace opened
       assertTrue(selenium.isTextPresent(workspaceName));
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   /**
-    * Open file by its path
-    * @param fileUrl
-    * @throws Exception
-    */
-   protected void openFileByFilePath(String fileUrl) throws Exception
-   {
-      //runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
-
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideOpenFileByPathWindow\"]"));
-      selenium.type(
-         "scLocator=//DynamicForm[ID=\"ideOpenFileByPathForm\"]/item[name=ideOpenFileByPathFormFilePathField]/element",
-         fileUrl);
-      selenium.click("scLocator=//IButton[ID=\"ideOpenFileByPathFormOpenButton\"]/icon");
-
       Thread.sleep(TestConstants.SLEEP);
    }
 
