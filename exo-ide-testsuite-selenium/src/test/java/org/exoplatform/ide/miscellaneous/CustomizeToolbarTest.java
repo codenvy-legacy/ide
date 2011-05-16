@@ -196,13 +196,13 @@ public void chekToollbarItemExListGrid() throws InterruptedException
       checkIdeCommandItemExListGrid("Launch REST Service", 53);
       checkIdeCommandItemExListGrid("Preview node type", 58);
       checkIdeCommandItemExListGrid("Initialize repository", 61);
-      checkIdeCommandItemExListGrid("Push...", 71);
-      checkIdeCommandItemExListGrid("Workspace...", 76);
-      checkIdeCommandItemExListGrid("REST Services Discovery", 81);
-      checkIdeCommandItemExListGrid("New POGO", 87);
-      checkIdeCommandItemExListGrid("Project Template...", 83);
-      checkIdeCommandItemExListGrid("New Data Object", 88);
-      checkIdeCommandItemExListGrid("New Netvibes Widget", 97);
+      checkIdeCommandItemExListGrid("Push...", 72);
+      checkIdeCommandItemExListGrid("Workspace...", 77);
+      checkIdeCommandItemExListGrid("REST Services Discovery", 82);
+      checkIdeCommandItemExListGrid("New POGO", 88);
+      checkIdeCommandItemExListGrid("Project Template...", 84);
+      checkIdeCommandItemExListGrid("New Data Object", 89);
+      checkIdeCommandItemExListGrid("New Netvibes Widget", 98);
    }
 
    /**
