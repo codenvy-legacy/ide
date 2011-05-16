@@ -223,7 +223,7 @@ public interface MenuCommands
    {
       public static final String WINDOW = "Window";
 
-      public static final String SELECT_WORKSPACE = "Workspace...";
+      public static final String SELECT_WORKSPACE = "Select Workspace...";
 
       public static final String CUSTOMIZE_HOTKEYS = "Customize Hotkeys...";
 
