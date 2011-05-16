@@ -230,6 +230,18 @@ public class Navigation extends AbstractTestModule
     */
    public void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
    {
+      openSelectedFileWithEditor(1, checkDefault);
+   }
+
+   /**
+    * Opens "Open With..." dialog, selects editor with specified index and opens selected file in this editor. 
+    * 
+    * @param editorIndex index of editor
+    * @param checkDefault is needs to check "Use as default editor"
+    * @throws Exception
+    */
+   public void openSelectedFileWithEditor(int editorIndex, boolean checkDefault) throws Exception
+   {
       IDE().OPENWITH.callFromMenu();
       IDE().OPENWITH.selectEditorByIndex(1);
 

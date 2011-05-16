@@ -37,14 +37,14 @@ import org.junit.runners.Suite.SuiteClasses;
 //   ShowHideLineNumbersTest.class,
 //   
 //   RenameOpenedFileTest.class
+//   RenameClosedFileTest.class
+
+   DeletingFilesTest.class
    
-   RenameClosedFileTest.class
-
 //   DisplayingWarningMessageTest.class,
-
 //   StoreOpenedFilesHistoryTest.class
 //   SavingPreviouslyEditedFileTest.class,
-//   DeletingFilesTest.class,
+//   
 //   ClosingAndSaveAsFileTest.class,
 //   ChekIconsTests.class,
 //   NavigationPanelWithoutSelectedItemTest.class
