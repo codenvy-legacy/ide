@@ -21,19 +21,17 @@ package org.exoplatform.ide.operation.upload;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -42,14 +40,16 @@ import org.junit.Test;
  */
 public class OpenGroovyLocalFileTest extends BaseTest
 {
-   
+
    private static String FOLDER_NAME = OpenGroovyLocalFileTest.class.getSimpleName();
 
    private static String GROOVY_NAME = "Приклад.groovy";
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
-   
-   private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME + "/";
+
+   private static final String FILE_PATH =
+      "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
 
    @BeforeClass
    public static void setUp()
@@ -67,19 +67,20 @@ public class OpenGroovyLocalFileTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testOpenGroovy() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      
+      IDE.WORKSPACE.waitForItem(URL);
+      IDE.WORKSPACE.selectItem(URL);
+
       uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitTabPresent(0);
 
       IDE.EDITOR.checkCodeEditorOpened(0);
-      String text =IDE.EDITOR.getTextFromCodeEditor(0);
+      String text = IDE.EDITOR.getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
 
@@ -89,15 +90,14 @@ public class OpenGroovyLocalFileTest extends BaseTest
 
       saveAsByTopMenu(GROOVY_NAME);
 
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForItem(URL + GROOVY_NAME);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      
-      assertEquals("exo:groovyResourceContainer", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
-      assertEquals(MimeType.GROOVY_SERVICE, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
+
+      assertEquals("exo:groovyResourceContainer", IDE.PROPERTIES.getContentNodeType());
+      assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
    }
-   
-   
+
    @AfterClass
    public static void tearDown()
    {
