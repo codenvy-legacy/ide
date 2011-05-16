@@ -548,13 +548,14 @@ public abstract class BaseTest
    }
 
    /**
-    * Open Upload or Open Local File form. And Upload file.
+    * Use instead IDE.UPLOAD.open(String formName, String filePath, String mimeType);
     * 
     * @param formName name of the form
     * @param filePath path to file 
     * @param mimeType mime type of the file
     * @throws InterruptedException 
     */
+   @Deprecated
    protected void uploadFile(String formName, String filePath, String mimeType) throws Exception
    {
       if (!MenuCommands.File.OPEN_LOCAL_FILE.equals(formName) && !MenuCommands.File.UPLOAD_FILE.equals(formName))
