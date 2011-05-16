@@ -41,7 +41,15 @@ public class OulineTreeHelper extends BaseTest
    private Map<Integer, OutlineItemInfo> outlineTreeInfo = new HashMap<Integer, OutlineItemInfo>();
    
    static int outlineTreeInfoIndex = 0;
- 
+
+   /**
+    * Set outlineTreeInfoIndex = 0 
+    */
+   public static void init()
+   {
+      outlineTreeInfoIndex = 0;
+   }
+   
    /**
     * Add item to into the outlineTreeInfo list
     * @param itemRowNumber starting from 1
@@ -178,7 +186,7 @@ public class OulineTreeHelper extends BaseTest
 
          if (outlineItem.isCheckItemFromFile())
          {
-// TODO            checkOutlineItemFromFile(item.getKey(), outlineItem.getName(), outlineItem.getFileLineNumber());  
+            checkOutlineItemFromFile(item.getKey(), outlineItem.getName(), outlineItem.getFileLineNumber());  
          }
       }      
    } 
@@ -196,7 +204,7 @@ public class OulineTreeHelper extends BaseTest
       
       goToLine(1);
       goToLine(1);
-     IDE.EDITOR.clickOnEditor(0);
+      IDE.EDITOR.clickOnEditor(0);
            
       // go to the end of file
       do
@@ -244,6 +252,7 @@ public class OulineTreeHelper extends BaseTest
    }
    
    /**
+    * TODO must be checked
     * check icon near outline item
     * @param rowNumber starting from 0
     * @param iconText
@@ -265,6 +274,7 @@ public class OulineTreeHelper extends BaseTest
    }
 
    /**
+    * TODO must be checked
     * click the outline item node
     * @param rowNumber startign from 0
     * @throws Exception
@@ -274,14 +284,6 @@ public class OulineTreeHelper extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(rowNumber)
          + "]/col[1]");
       Thread.sleep(TestConstants.SLEEP);
-   }
-
-   /**
-    * Set outlineTreeInfoIndex = 0 
-    */
-   public static void init()
-   {
-      outlineTreeInfoIndex = 0;
    }
    
 }

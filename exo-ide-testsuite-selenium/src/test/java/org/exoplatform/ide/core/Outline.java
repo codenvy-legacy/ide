@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -39,8 +40,17 @@ public class Outline extends AbstractTestModule
       static final String TREE_PREFIX_ID = "outline-";
       
       static final String TREE = "//div[@id='" + TREE_ID + "']/";
+      
+      static final String scrollTopLocator =
+         "document.getElementById('ideOutlineTreeGrid').parentNode.parentNode.parentNode.scrollTop";
    }
+   
+   private static final String LINE_HIGHLIGHTER_LOCATOR = Locators.TREE + "/div[@class='ide-Tree-item-selected']";
 
+   private static final int LINE_HEIGHT = 28;
+
+   private static final int EDITOR_TOP_OFFSET_POSITION = 94;
+   
    public enum TokenType {
       CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION, 
       /** Property type for JSON */
@@ -265,18 +275,24 @@ public class Outline extends AbstractTestModule
     */
    public void checkOutlineTreeNodeSelected(int rowNumber, String name, boolean isSelected)
    {
-      String divIndex = String.valueOf(rowNumber + 1);
+      Number linePositionTop = EDITOR_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
+      
+      // taking in mind vertical scrolling
+      Integer scrollTop = getScrollTop();
+      if (scrollTop != null)
+      {
+         linePositionTop = linePositionTop.intValue() - scrollTop;
+      }
+
+      selenium().isElementPresent(LINE_HIGHLIGHTER_LOCATOR);
+      
       if (isSelected)
       {
-         assertTrue(selenium().isElementPresent(
-            "//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" + divIndex
-               + "]/td[@class='treeCellSelected']//nobr[text()='" + name + "']"));
+         assertEquals("Outline row number " + rowNumber + " should be selected.", linePositionTop, selenium().getElementPositionTop(LINE_HIGHLIGHTER_LOCATOR));
       }
       else
       {
-         assertTrue(selenium().isElementPresent(
-            "//div[@eventproxy='ideOutlineTreeGrid']//table[@class='listTable']/tbody/tr[" + divIndex
-               + "]/td[@class='treeCell']//nobr[text()='" + name + "']"));
+         assertFalse("Outline row number " + rowNumber + " should not be selected.", selenium().getElementPositionTop(LINE_HIGHLIGHTER_LOCATOR) == linePositionTop);
       }
    }
 
@@ -348,15 +364,35 @@ public class Outline extends AbstractTestModule
       assertTrue(selenium().isElementPresent(Locators.TREE + "/div[@id='" + id + "']"));
    }
    
-   
-   
    /**
- *  Method close Outline codehelper
- */
-public void closeOutline()
+    *  Method close Outline codehelper
+    */
+   public void closeOutline()
    {
       selenium().click("//div[@button-name='close-tab' and @tab-title='Outline']");
    }
+
+   /**
+    * Return outline scroll top. Method return <b>null</b> in Internet Explorer, because this browser doesn't support window.document.getElementsByClassName() method still. 
+    */
+   private Integer getScrollTop()
+   {
+      Integer scrollTop = null;
+
+      try
+      {
+         // trying to read the property from Firefox         
+         scrollTop =
+            Integer.parseInt(selenium().getEval("var win = selenium.browserbot.getCurrentWindow(); win."
+               + Locators.scrollTopLocator + ";"));
+      }
+      catch (NumberFormatException e)
+      {
+         return null;
+      }
+
+      return scrollTop;
+   }   
    
    public enum LabelType 
    {
