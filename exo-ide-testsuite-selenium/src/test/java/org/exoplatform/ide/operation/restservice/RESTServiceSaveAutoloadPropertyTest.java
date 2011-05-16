@@ -21,17 +21,17 @@ package org.exoplatform.ide.operation.restservice;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,95 +41,75 @@ import org.junit.Test;
 public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
 {
 
+   /**
+    * 
+    */
+   private static final String FOLDER_NAME = "Autoload";
+
    private static final String FILE_NAME = System.currentTimeMillis() + ".groovy";
-   
-   private final static String URL = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FILE_NAME;
-   
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME + "/" + FILE_NAME;
+
    @Test
    public void testAutoload() throws Exception
    {
+      waitForRootElement();
+      IDE.NAVIGATION.createFolder(FOLDER_NAME);
+
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      
-      //TODO********change********
-      IDE.NAVIGATION.createFolder("Autoload");
-      //**********************
-      
-      IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
-      Thread.sleep(TestConstants.SLEEP);
-      
+
       saveAsUsingToolbarButton(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);      
-      
-     IDE.EDITOR.closeTab(0);
-            
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      
+      IDE.WORKSPACE.waitForItem(URL);
+
+      IDE.EDITOR.closeTab(0);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL, false);
+
       IDE.MENU.runCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-      
-      String mess = selenium.getText("//font[@color='#880000']");
-      
+
+      String mess = IDE.OUTPUT.getOutputMessageText(1);
+
       assertTrue(mess.contains("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
-      
-      //***********change*******
-      //TODO static string message
-      //assertTrue(mess.contains("Can't unbind script " + FILE_NAME + ", not bound or has wrong mapping to the resource class"));
-      //************************
-      
+
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD);
       Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.TOOLBAR.assertButtonEnabled("Unset REST Service Autoload", true);
-      
+
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.UNSET_AUTOLOAD, true);
+
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      
-      assertEquals("true", selenium.getText("scLocator=//DynamicForm[ID=\"ideDynamicPropertiesForm\"]/item[name=idePropertiesTextAutoload||title=%3Cb%3EAutoload%3C%24fs%24b%3E||value=false||index=0||Class=StaticTextItem]/textbox"));
-      
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "/// test comment 1\n");
-      
+
+      assertEquals("true", IDE.PROPERTIES.getAutoloadProperty());
+
+//      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "/// test comment 1\n");
+      IDE.EDITOR.typeTextIntoEditor(0, "/// test comment 1\n");
+
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
-      
-     IDE.EDITOR.closeTab(0);
-      
-     IDE.WORKSPACE.selectRootItem();
-      
+
+      IDE.EDITOR.closeTab(0);
+
+      IDE.WORKSPACE.selectRootItem();
+
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-     
-      //TODO*********change*********
-      selectFolder("Autoload");
-      //************************
-      
-      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+
+      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.waitForItem(URL);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL, false);
+      IDE.EDITOR.checkCodeEditorOpened(0);
       
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-     
-    
-      // selectMainFrame();
-      //*******change*********
-      //   assertTrue(selenium.isTextPresent("[INFO] ")); 
-      //assertTrue(selenium.isTextPresent(FILE_NAME + " undeployed successfully."));
-      //******************************
-      //Thread.sleep(120000);
-      mess = selenium.getText("//font[@color='#007700']");
-      
+
+      mess = IDE.OUTPUT.getOutputMessageText(2);
+
       assertTrue(mess.contains("[INFO]"));
       assertTrue(mess.contains(FILE_NAME + " undeployed successfully."));
    }
-   
-  
-   
-   protected void selectFolder(String folderName) throws Exception
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[name=" + folderName
-         + "]/col[1]/open");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-   }
-    
-   
+
    @AfterClass
    public static void tearDown()
    {
