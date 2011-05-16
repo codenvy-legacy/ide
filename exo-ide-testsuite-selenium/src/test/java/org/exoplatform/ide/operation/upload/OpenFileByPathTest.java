@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -44,15 +45,15 @@ public class OpenFileByPathTest extends BaseTest
    
    private static final String OPEN_FILE_BY_PATH_FORM_ID = "ideOpenFileByPathForm";
 
-   private static final String OPEN_FILE_BY_PATH_FORM_OPEN_BUTTON_ID = "ideOpenFileByPathFormOpenButton";
+   private static final String OPEN_BUTTON_ID = "ideOpenFileByPathFormOpenButton";
 
-   private static final String OPEN_FILE_BY_PATH_FORM_CANCEL_BUTTON_ID = "ideOpenFileByPathFormCancelButton";
+   private static final String CANCEL_BUTTON_ID = "ideOpenFileByPathFormCancelButton";
 
-   private static final String OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_NAME = "ideOpenFileByPathFormFilePathField";
+   private static final String FILE_PATH_FIELD_NAME = "ideOpenFileByPathFormFilePathField";
    
-   private static final String OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"" + OPEN_FILE_BY_PATH_FORM_ID + "\"]/item[name=" + OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_NAME + "]/element";   
+   private static final String OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"" + OPEN_FILE_BY_PATH_FORM_ID + "\"]/item[name=" + FILE_PATH_FIELD_NAME + "]/element";   
    
-   private static final String FILE_NAME = OpenFileByPathTest.class.getSimpleName() + "__приклад.grs";
+   private static final String FILE_NAME = OpenFileByPathTest.class.getSimpleName() + ".grs";
    
    private static final String NOT_FOUND_ERROR_MESSAGE = "404 Not Found\n\n\nPossible reasons:\nService is not deployed.\nResource not found.";
    
@@ -67,9 +68,12 @@ public class OpenFileByPathTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
+      final String filePath = "src/test/resources/org/exoplatform/ide/operation/upload/open-file-by-path.grs";
       try
       {
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE,
+            TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, WS_URL + TEST_FOLDER + "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -79,56 +83,61 @@ public class OpenFileByPathTest extends BaseTest
       {
          e.printStackTrace();
       }
+      
    }
    
    @Test
    public void testOpenFileByPath() throws Exception
    { 
       waitForRootElement();
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.assertItemVisible(WS_URL+ TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);   
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL+ TEST_FOLDER + "/" + FILE_NAME);
 
       // create file 
-      createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME, 0);     
-      
+      IDE.WORKSPACE.selectItem(WS_URL+ TEST_FOLDER + "/" + FILE_NAME);
       // get file's url
       IDE.NAVIGATION.assertItemVisible(WS_URL+ TEST_FOLDER + "/" + FILE_NAME);
       fileUrl = getSelectedItemUrl();
       
       // switch on to second workspace
-      secondWorkspaceName = getNonActiveWorkspaceName();
-      selectWorkspace(secondWorkspaceName);     
+//      secondWorkspaceName = getNonActiveWorkspaceName();
+      secondWorkspaceName = WS_NAME_2;
+      IDE.SELECT_WORKSPACE.changeWorkspace(secondWorkspaceName);
       
       // call Open File By Path form
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"" + OPEN_FILE_BY_PATH_WINDOW_ID + "\"]"));
-      assertTrue(selenium.isElementPresent(OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_LOCATOR));      
-      checkOpenButton(false);
-      checkCancelButtonEnabled();      
+      waitForElementPresent(OPEN_FILE_BY_PATH_WINDOW_ID);
+      assertTrue(selenium.isElementPresent(OPEN_FILE_BY_PATH_WINDOW_ID));
+      assertTrue(selenium.isElementPresent(FILE_PATH_FIELD_NAME));
+      checkButtonState(OPEN_BUTTON_ID, false);
+      checkButtonState(CANCEL_BUTTON_ID, true);
       
       // trying to type file path
-      selenium.click(OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_LOCATOR);
-      selenium.type(OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_LOCATOR, "h");      
-      checkOpenButton(true);
+      selenium.type(FILE_PATH_FIELD_NAME, "h");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      checkButtonState(OPEN_BUTTON_ID, true);
       
       // empty file path field
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);      
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkOpenButton(false);
+      selenium.type(FILE_PATH_FIELD_NAME, "");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      checkButtonState(OPEN_BUTTON_ID, false);
       
       // close form by clicking "Cancel" button
-      selenium.click("scLocator=//IButton[ID=\"" + OPEN_FILE_BY_PATH_FORM_CANCEL_BUTTON_ID + "\"]/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"" + OPEN_FILE_BY_PATH_WINDOW_ID + "\"]"));
+      selenium.click(CANCEL_BUTTON_ID);
+      waitForElementNotPresent(OPEN_FILE_BY_PATH_WINDOW_ID);
       
-      checkClosingFormByEscapeKey();
-      
-      // trying to open file by wrong url and using "Enter" key
+      // trying to open file by wrong url
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
-      selenium.type(OPEN_FILE_BY_PATH_FORM_FILE_PATH_FIELD_LOCATOR, "h");
+      selenium.type(FILE_PATH_FIELD_NAME, "h");
+      selenium.click(OPEN_BUTTON_ID);
+      
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       
       selenium.isTextPresent(NOT_FOUND_ERROR_MESSAGE);
@@ -161,26 +170,37 @@ public class OpenFileByPathTest extends BaseTest
    
    private void checkOpenButton(boolean enabled)
    {
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"" + OPEN_FILE_BY_PATH_FORM_OPEN_BUTTON_ID + "\"]/"));
+      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"" + OPEN_BUTTON_ID + "\"]/"));
       
       if (enabled)
       {
          assertFalse(selenium.isElementPresent(
-            "//div[@eventproxy='" + OPEN_FILE_BY_PATH_FORM_OPEN_BUTTON_ID + "']//td[@class='buttonTitleDisabled' and text()='Open']"));
+            "//div[@eventproxy='" + OPEN_BUTTON_ID + "']//td[@class='buttonTitleDisabled' and text()='Open']"));
       }
       else
       {
          assertTrue(selenium.isElementPresent(
-            "//div[@eventproxy='" + OPEN_FILE_BY_PATH_FORM_OPEN_BUTTON_ID + "']//td[@class='buttonTitleDisabled' and text()='Open']"));
+            "//div[@eventproxy='" + OPEN_BUTTON_ID + "']//td[@class='buttonTitleDisabled' and text()='Open']"));
       }
    }
    
    private void checkCancelButtonEnabled()
    {
       assertTrue(selenium.isElementPresent(
-         "scLocator=//IButton[ID=\"" + OPEN_FILE_BY_PATH_FORM_CANCEL_BUTTON_ID + "\"]/"));
+         "scLocator=//IButton[ID=\"" + CANCEL_BUTTON_ID + "\"]/"));
       assertTrue(selenium.isElementPresent(
-      "//div[@eventproxy='" + OPEN_FILE_BY_PATH_FORM_CANCEL_BUTTON_ID + "']//td[@class='buttonTitle' and text()='Cancel']"));
+      "//div[@eventproxy='" + CANCEL_BUTTON_ID + "']//td[@class='buttonTitle' and text()='Cancel']"));
+   }
+   
+   /**
+    * Check the state of button (enabled, disabled) by button id.
+    * 
+    * @param buttonId - the id of button
+    * @param isEnabled - is enabled
+    */
+   public void checkButtonState(String buttonId, boolean isEnabled)
+   {
+      assertTrue(selenium.isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
    }
    
    @AfterClass

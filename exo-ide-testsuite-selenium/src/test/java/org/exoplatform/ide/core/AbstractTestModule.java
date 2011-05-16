@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.IDE;
@@ -146,6 +147,17 @@ public abstract class AbstractTestModule
 
          Thread.sleep(100);
       }
+   }
+   
+   /**
+    * Check the state of button (enabled, disabled) by button id.
+    * 
+    * @param buttonId - the id of button
+    * @param isEnabled - is enabled
+    */
+   public void checkButtonState(String buttonId, boolean isEnabled)
+   {
+      assertTrue(selenium().isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
    }
 
 }

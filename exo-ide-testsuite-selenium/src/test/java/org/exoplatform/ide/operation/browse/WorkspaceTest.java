@@ -56,7 +56,7 @@ public class WorkspaceTest extends BaseTest
    @Test
    public void testSelectWorkspace() throws Exception
    {
-      String secondWorkspace = IDE.SELECTWORKSPACE.getNonActiveWorkspaceName1();
+      String secondWorkspace = IDE.SELECT_WORKSPACE.getNonActiveWorkspaceName1();
       //----- 1 ---------------
       //check form Workspace
       //call select workspace window

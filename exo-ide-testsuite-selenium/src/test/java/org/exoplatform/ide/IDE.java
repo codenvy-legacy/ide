@@ -111,7 +111,7 @@ public class IDE
    
    public Statusbar STATUSBAR = new Statusbar();
    
-   public SelectWorkspace SELECTWORKSPACE = new SelectWorkspace();
+   public SelectWorkspace SELECT_WORKSPACE = new SelectWorkspace();
    
    public Workspace WORKSPACE = new Workspace();
    

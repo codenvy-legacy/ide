@@ -428,25 +428,23 @@ public abstract class BaseTest
     */
    protected String getSelectedItemUrl() throws Exception
    {
-      //Click get URL 
-      //      runTopMenuCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
-
+      final String getItemUrlFormLocator = "//div[@view-id='ideGetItemURLForm']";
+      final String okButtonId = "ideGetItemURLFormOkButton";
+      final String urlFieldName = "ideGetItemURLFormURLField";
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
 
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideGetItemURLForm\"]"));
-      assertTrue(selenium.isElementPresent("ideGetItemURLFormOkButton"));
-      assertTrue(selenium
-         .isElementPresent("//form[@id=\"ideGetItemURLFormDynamicForm\"]//div/input[@name=\"ideGetItemURLFormURLField\"]"));
+      waitForElementPresent(getItemUrlFormLocator);
+      assertTrue(selenium.isElementPresent(getItemUrlFormLocator));
+      assertTrue(selenium.isElementPresent(okButtonId));
+      assertTrue(selenium.isElementPresent(urlFieldName));
 
-      String url =
-         selenium
-            .getValue("//form[@id=\"ideGetItemURLFormDynamicForm\"]//div/input[@name=\"ideGetItemURLFormURLField\"]");
+      final String url = selenium.getValue(urlFieldName);
 
       //Close form
-      selenium.click("ideGetItemURLFormOkButton");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("//div[@view-id=\"ideGetItemURLForm\"]"));
+      selenium.click(okButtonId);
+      waitForElementNotPresent(getItemUrlFormLocator);
+      assertFalse(selenium.isElementPresent(getItemUrlFormLocator));
       return url;
    }
 
@@ -479,19 +477,20 @@ public abstract class BaseTest
 
 
    /**
-    * Use to create new file in selected folder
+    * Use to create new file in selected folder.
     * 
     * @param menuCommand name of command from New button on toolbar
     * @param fileName name of file
+    * @param tabIndex - index of tab, where new file will be opened (starts with 0)
     * @throws Exception
     */
    protected void createSaveAndCloseFile(String menuCommand, String fileName, int tabIndex) throws Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(menuCommand);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.EDITOR.waitTabPresent(tabIndex);
 
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS, true, TestConstants.EDITOR_OPEN_PERIOD * 2);
       saveAsUsingToolbarButton(fileName);
-      Thread.sleep(TestConstants.SLEEP);
 
       IDE.EDITOR.closeTab(tabIndex);
       Thread.sleep(TestConstants.SLEEP);

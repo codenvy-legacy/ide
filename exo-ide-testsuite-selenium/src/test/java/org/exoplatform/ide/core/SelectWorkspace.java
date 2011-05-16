@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.core;
 
+import static org.junit.Assert.assertFalse;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -29,9 +31,16 @@ import org.exoplatform.ide.TestConstants;
 */
 public class SelectWorkspace extends AbstractTestModule
 {
+   private static final String SELECT_WORKSPACE_FORM_LOCATOR = "//div[@view-id='ideSelectWorkspaceView']";
+   
+   private static final String LIST_GRID_ID = "ideEntryPointListGrid";
+   
+   private static final String OK_BUTTON_ID = "ideEntryPointOkButton";
+   
+   
    //!!!secondworkspace locator prescribe hardcode 
-   private static String SELECTED_WORKSPACE_LOCATOR =
-      "//div[@view-id='ideSelectWorkspaceView']//table[@id='ideEntryPointListGrid']/tbody/tr[1]";
+   private static String SELECTED_WORKSPACE_LOCATOR = SELECT_WORKSPACE_FORM_LOCATOR
+      + "//table[@id='ideEntryPointListGrid']/tbody/tr[1]";
 
    //TODO Method shold be refactor. After add in change in UI IDE and set attribute on  select element in Workspace Window tree
    public String getNonActiveWorkspaceName1() throws Exception
@@ -41,11 +50,6 @@ public class SelectWorkspace extends AbstractTestModule
       Thread.sleep(TestConstants.SLEEP);
       selenium().click(SELECTED_WORKSPACE_LOCATOR);
 
-      // click "UP" to go to previous workspace in the list
-      //      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_UP);
-      //      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_UP);
-      //      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      //      // test if "Ok" button is enabled
       if (selenium().isElementPresent(
          "//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
       {
@@ -82,6 +86,45 @@ public class SelectWorkspace extends AbstractTestModule
       secondWorkspaceName = secondWorkspaceName.replace("/", "");
 
       return secondWorkspaceName;
+   }
+   
+   /**
+    * Call "Select workspace" dialog and select workspace by workspaceName.
+    *  
+    * @param workspaceName
+    * @throws Exception
+    * @throws InterruptedException
+    */
+   public void changeWorkspace(String workspaceName) throws Exception, InterruptedException
+   {
+      IDE().MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+
+      waitForElementPresent(SELECTED_WORKSPACE_LOCATOR);
+      waitForElementPresent(LIST_GRID_ID);
+      checkButtonState(OK_BUTTON_ID, false);
+      String url = BaseTest.ENTRY_POINT_URL + workspaceName;
+      if (!url.endsWith("/"))
+      {
+         url += "/";
+      }
+      selectWorkspaceInListGrid(url);
+      
+      //TODO
+      Thread.sleep(TestConstants.SLEEP * 2);
+
+      // test is "Ok" button enabled
+      checkButtonState(OK_BUTTON_ID, true);
+
+      // click the "Ok" button 
+      selenium().click(OK_BUTTON_ID);
+      waitForElementNotPresent(SELECT_WORKSPACE_FORM_LOCATOR);
+      assertFalse(selenium().isElementPresent(SELECT_WORKSPACE_FORM_LOCATOR));
+   }
+   
+   public void selectWorkspaceInListGrid(String workspaceUrl) throws InterruptedException
+   {
+      selenium().clickAt(SELECT_WORKSPACE_FORM_LOCATOR + "//span[text()='" + workspaceUrl + "']", "");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
 }
