@@ -19,16 +19,12 @@
 package org.exoplatform.ide.operation.upload;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,16 +38,18 @@ import java.io.IOException;
  * @version $Id: $
  *
  */
-public class UploadingGroovyFileTest extends BaseTest 
+public class UploadingGroovyFileTest extends BaseTest
 {
    private static final String FOLDER_NAME = UploadingGroovyFileTest.class.getSimpleName();
-   
+
    private static String GROOVY_NAME = "Приклад.groovy";
-   
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
-   
-   private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
-   
+
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME;
+
+   private static final String FILE_PATH =
+      "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
+
    @BeforeClass
    public static void setUp()
    {
@@ -72,18 +70,15 @@ public class UploadingGroovyFileTest extends BaseTest
    @Test
    public void testUploadingGroovy() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      
-      uploadFile(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GROOVY_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-      
+      IDE.UPLOAD.open(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + GROOVY_NAME, false);
+      IDE.EDITOR.waitTabPresent(0);
+
       IDE.EDITOR.checkCodeEditorOpened(0);
-      String text =IDE.EDITOR.getTextFromCodeEditor(0);
+      String text = IDE.EDITOR.getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
 
@@ -92,63 +87,47 @@ public class UploadingGroovyFileTest extends BaseTest
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-
-      assertEquals("exo:groovyResourceContainer", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
-      assertEquals(MimeType.GROOVY_SERVICE, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
-
+      IDE.PROPERTIES.waitForPropertiesViewOpened();
+      assertEquals("exo:groovyResourceContainer", IDE.PROPERTIES.getContentNodeType());
+      assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
    }
-   
+
    //IDE-322 Issue
    @Test
    public void testAllMimeTypesArePresent() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      
-      String formName = MenuCommands.File.UPLOAD_FILE;
-      
+      refresh();
+
       //----- 1 --------------
       //open upload form
-      IDE.MENU.runCommand(MenuCommands.File.FILE, formName);
-
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/body/"));
-      assertTrue(selenium.isElementPresent("//div[@class='stretchImgButtonDisabled' and @eventproxy='ideUploadFormUploadButton']"));
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
+      IDE.UPLOAD.waitUploadViewOpened();
 
       //----- 2 --------------
       //type path to file on local system to upload
       try
       {
          File file = new File(FILE_PATH);
-         selenium.type("//input[@type='file']", file.getCanonicalPath());
+         IDE.UPLOAD.setUploadFilePath(file.getCanonicalPath());
       }
       catch (Exception e)
       {
       }
-      Thread.sleep(TestConstants.SLEEP);
-
       assertEquals(FILE_PATH.substring(FILE_PATH.lastIndexOf("/") + 1, FILE_PATH.length()),
-         selenium.getValue(
-            "scLocator=//DynamicForm[ID=\"ideUploadFormDynamicForm\"]/item[name=ideUploadFormFilenameField]/element"));
-      
+         IDE.UPLOAD.getFilePathValue());
+
       //----- 2 --------------
       //click to open mime types list
-      selenium.click("scLocator=//Window[ID=\"ideUploadForm\"]/item[0][Class=\"DynamicForm\"]"
-         + "/item[name=ideUploadFormMimeTypeField]/[icon='picker']");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.UPLOAD.openMimeTypesList();
       //check, all mime types for groovy extention are present
-      assertTrue(selenium.isElementPresent("//nobr[text()='script/groovy']"));
-      assertTrue(selenium.isElementPresent("//nobr[text()='application/x-groovy']"));
-      assertTrue(selenium.isElementPresent("//nobr[text()='application/x-jaxrs+groovy']"));
-      assertTrue(selenium.isElementPresent("//nobr[text()='application/x-groovy+html']"));
-      assertTrue(selenium.isElementPresent("//nobr[text()='application/x-chromattic+groovy']"));
-      
-      //close form
-      selenium.click("scLocator=//Window[ID=\"ideUploadForm\"]/closeButton/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.UPLOAD.checkMimeTypeContainsProposes("script/groovy", "application/x-groovy", "application/x-jaxrs+groovy",
+         "application/x-groovy+html", "application/x-chromattic+groovy");
 
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/"));
-      Thread.sleep(TestConstants.SLEEP);
+      //close form
+      IDE.UPLOAD.clickCancelButton();
+      IDE.UPLOAD.waitUploadViewClosed();
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -165,5 +144,5 @@ public class UploadingGroovyFileTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
 }

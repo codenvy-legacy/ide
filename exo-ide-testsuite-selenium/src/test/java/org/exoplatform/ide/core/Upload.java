@@ -72,6 +72,8 @@ public class Upload extends AbstractTestModule
 
    public static final String UPLOAD_BUTTON_ID = "ideUploadFormUploadButton";
 
+   public static final String CANCEL_BUTTON_ID = "ideUploadFormCloseButton";
+
    //---------- Locators ------------------
    /**
     * Locator for div, that contains upload form.
@@ -109,7 +111,7 @@ public class Upload extends AbstractTestModule
          assertFalse(selenium().isElementPresent(UPLOAD_BUTTON_ID));
       }
    }
-   
+
    /**
     * Wait for upload view to be opened.
     * 
@@ -119,7 +121,7 @@ public class Upload extends AbstractTestModule
    {
       waitForElementPresent(UPLOAD_FORM_ID);
    }
-   
+
    /**
     * Wait for upload view to be closed.
     * 
@@ -152,7 +154,7 @@ public class Upload extends AbstractTestModule
 
       String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
       assertEquals(fileName, getFilePathValue());
-      
+
       selenium().type(MIME_TYPE_FILED_ID, mimeType);
       assertTrue(selenium().isElementPresent(UPLOAD_BUTTON_ID));
 
@@ -217,7 +219,7 @@ public class Upload extends AbstractTestModule
    {
       return selenium().getValue(MIME_TYPE_FILED_ID);
    }
-   
+
    /**
     * Get value of file path field.
     * 
@@ -227,12 +229,26 @@ public class Upload extends AbstractTestModule
    {
       return selenium().getValue(FILE_NAME_FIELD_ID);
    }
-   
+
    /**
     * Click upload button.
     */
    public void clickUploadButton()
    {
       selenium().click(UPLOAD_BUTTON_ID);
+   }
+
+   /**
+    * Click cancel button.
+    */
+   public void clickCancelButton()
+   {
+      selenium().click(CANCEL_BUTTON_ID);
+   }
+
+   public void openMimeTypesList() throws Exception
+   {
+      selenium().click("//div[@id='"+UPLOAD_FORM_ID+"']//td/img");
+      waitForElementPresent("exoSuggestPanel");
    }
 }
