@@ -20,18 +20,17 @@ package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -149,10 +148,12 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       waitForRootElement();
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_GADGET_FILE_NAME, false);
+      waitForRootElement();
+      IDE.WORKSPACE.selectItem(STORAGE_URL + NON_FORMAT_GADGET_FILE_NAME);
+      IDE.NAVIGATION.openSelectedFileWithEditor(2, false);
+      
+    
       waitForElementPresent("//div[@panel-id='editor']");
-
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 
       String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
