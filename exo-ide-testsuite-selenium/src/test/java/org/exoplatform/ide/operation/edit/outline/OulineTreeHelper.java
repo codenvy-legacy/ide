@@ -53,98 +53,124 @@ public class OulineTreeHelper extends BaseTest
    /**
     * Add item to into the outlineTreeInfo list
     * @param itemRowNumber starting from 1
-    * @param itemName
+    * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
     */
-   protected void addOutlineItem(int itemRowNumber, String itemName, int fileLineNumber)
+   protected void addOutlineItem(int itemRowNumber, String itemLabel, int fileLineNumber)
    {
-      addOutlineItem(itemRowNumber, itemName, fileLineNumber, true);
+      addOutlineItem(itemRowNumber, itemLabel, fileLineNumber, true);
    }
    
    /**
     * Add item to into the outlineTreeInfo list with index starting from 1
-    * @param itemName
+    * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
     * @param TokenType type of token displayed as item 
     */
-   protected void addOutlineItem(String itemName, int fileLineNumber, TokenType tokenType)
+   protected void addOutlineItem(String itemLabel, int fileLineNumber, TokenType tokenType)
    {
-      addOutlineItem(0, itemName, fileLineNumber, true, tokenType);
+      addOutlineItem(0, itemLabel, fileLineNumber, true, tokenType, null);
    }
    
    /**
     * Add item to into the outlineTreeInfo list with index starting from 1
-    * @param itemName
+    * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
     */
-   protected void addOutlineItem(String itemName, int fileLineNumber)
+   protected void addOutlineItem(String itemLabel, int fileLineNumber)
    {
-      addOutlineItem(0, itemName, fileLineNumber, true, null);
+      addOutlineItem(0, itemLabel, fileLineNumber, true, null, null);
    }
    
    /**
     * Add item to into the outlineTreeInfo list
     * @param itemRowNumber starting from 1
-    * @param itemName
+    * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
     * @param TokenType type of token displayed as item
     */
-   protected void addOutlineItem(int itemRowNumber, String itemName, int fileLineNumber, TokenType tokenType)
+   protected void addOutlineItem(int itemRowNumber, String itemLabel, int fileLineNumber, TokenType tokenType)
    {
-      addOutlineItem(itemRowNumber, itemName, fileLineNumber, true, tokenType);
+      addOutlineItem(itemRowNumber, itemLabel, fileLineNumber, true, tokenType, null);
    }
+
+   /**
+    * Add item to into the outlineTreeInfo list
+    * @param itemLabel
+    * @param fileLineNumber number of line with this item in the code starting from 1
+    * @param TokenType type of token displayed as item
+    * @param itemName represent token's name 
+    */
+   protected void addOutlineItem(String itemLabel, int fileLineNumber, TokenType tokenType, String itemName)
+   {
+      addOutlineItem(0, itemLabel, fileLineNumber, true, tokenType, itemName);
+   }   
+
+   /**
+    * Add item to into the outlineTreeInfo list
+    * @param itemLabel
+    * @param fileLineNumber number of line with this item in the code starting from 1
+    * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel 
+    * @param TokenType type of token displayed as item
+    * @param itemName represent token's name
+    */
+   protected void addOutlineItem(String itemLabel, int fileLineNumber, boolean checkFromFile, TokenType tokenType, String itemName)
+   {
+      addOutlineItem(0, itemLabel, fileLineNumber, checkFromFile, tokenType, itemName);
+   }   
+   
    
    /**
     * Add item to into the outlineTreeInfo list with index starting from 1
-    * @param itemName
+    * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
     * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel
     */
-   protected void addOutlineItem(String itemName, int fileLineNumber, boolean checkFromFile)
+   protected void addOutlineItem(String itemLabel, int fileLineNumber, boolean checkFromFile)
    {
-      addOutlineItem(0, itemName, fileLineNumber, checkFromFile, null);
+      addOutlineItem(0, itemLabel, fileLineNumber, checkFromFile, null, null);
    }
    
    /**
     * Add item to into the outlineTreeInfo list with index starting from 1
-    * @param itemName
+    * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
     * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel
     * @param TokenType type of token displayed as item 
     */
-   protected void addOutlineItem(String itemName, int fileLineNumber, boolean checkFromFile, TokenType tokenType)
+   protected void addOutlineItem(String itemLabel, int fileLineNumber, boolean checkFromFile, TokenType tokenType)
    {
-      addOutlineItem(0, itemName, fileLineNumber, checkFromFile, tokenType);
+      addOutlineItem(0, itemLabel, fileLineNumber, checkFromFile, tokenType, null);
    }
    
    /**
     * 
     * @param itemRowNumber starting from 0
-    * @param itemName
+    * @param itemLabel
     * @param fileLineNumber starting from 1
     * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel
     */
-   protected void addOutlineItem(int itemRowNumber, String itemName, int fileLineNumber, boolean checkFromFile)
+   protected void addOutlineItem(int itemRowNumber, String itemLabel, int fileLineNumber, boolean checkFromFile)
    {
-      this.outlineTreeInfo.put(itemRowNumber, new OutlineItemInfo(itemName, fileLineNumber, checkFromFile, null));
+      addOutlineItem(itemRowNumber, itemLabel, fileLineNumber, checkFromFile, null, null);
    }
 
    /**
     * 
     * @param itemRowNumber starting from 1. If itemRowNumber=0 then outlineTreeInfoIndex value will be used
-    * @param itemName
+    * @param itemLabel
     * @param fileLineNumber starting from 1
     * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel
     * @param TokenType type of token displayed as item 
     */
-   protected void addOutlineItem(int itemRowNumber, String itemName, int fileLineNumber, boolean checkFromFile, TokenType tokenType)
+   protected void addOutlineItem(int itemRowNumber, String itemLabel, int fileLineNumber, boolean checkFromFile, TokenType tokenType, String itemName)
    {
       if (itemRowNumber == 0)
          itemRowNumber = ++outlineTreeInfoIndex;
       else
          outlineTreeInfoIndex = itemRowNumber;   
 
-      this.outlineTreeInfo.put(itemRowNumber, new OutlineItemInfo(itemName, fileLineNumber, checkFromFile, tokenType));
+      this.outlineTreeInfo.put(itemRowNumber, new OutlineItemInfo(itemLabel, fileLineNumber, checkFromFile, tokenType, itemName));
       
    }
    
@@ -171,9 +197,10 @@ public class OulineTreeHelper extends BaseTest
          Entry<Integer, OutlineItemInfo> item = iterator.next();
          OutlineItemInfo outlineItem = item.getValue();
          
-         System.out.println(">>> test outline item from outline panel: item row = " + item.getKey() + ", item name = '" + outlineItem.getName() + "', file line number = " + outlineItem.getFileLineNumber());
+         System.out.println(">>> test outline item from outline panel: item row = " + item.getKey() + ", item label = '" + outlineItem.getLabel() + "', file line number = " + outlineItem.getFileLineNumber());
          
-         checkOutlineItemFromOutlinePanel(item.getKey(), outlineItem.getName(), outlineItem.getFileLineNumber());
+         checkItemPresent(outlineItem.getId());
+         checkOutlineItemFromOutlinePanel(item.getKey(), outlineItem.getLabel(), outlineItem.getFileLineNumber());
       }
 
       // test outline item from file
@@ -182,15 +209,25 @@ public class OulineTreeHelper extends BaseTest
          Entry<Integer, OutlineItemInfo> item = iterator.next();
          OutlineItemInfo outlineItem = item.getValue();
          
-         System.out.println(">>> test outline item from file: item row = " + item.getKey() + ", item name = '" + outlineItem.getName() + "', file line number = " + outlineItem.getFileLineNumber());
+         System.out.println(">>> test outline item from file: item row = " + item.getKey() + ", item label = '" + outlineItem.getLabel() + "', file line number = " + outlineItem.getFileLineNumber());
 
          if (outlineItem.isCheckItemFromFile())
          {
-            checkOutlineItemFromFile(item.getKey(), outlineItem.getName(), outlineItem.getFileLineNumber());  
+            checkOutlineItemFromFile(item.getKey(), outlineItem.getLabel(), outlineItem.getFileLineNumber());  
          }
       }      
    } 
    
+   /**
+    * Check item present by checking its id like "a:PROPERTY:23"
+    * @param itemId item's id
+    */
+   private void checkItemPresent(String itemId)
+   {
+      if (itemId != null)    
+         IDE.OUTLINE.assertElmentPresentById(itemId);
+   }
+
    /**
     * Expand outline tree by goto from the first line to the last in the file tab. Then cursor will be returned to the line 1.
     * @throws Exception 
@@ -229,9 +266,9 @@ public class OulineTreeHelper extends BaseTest
     * @throws Exception 
     * @throws Exception 
     */
-   private void checkOutlineItemFromOutlinePanel(Integer itemRowNumber, String itemName, int fileLineNumber) throws Exception
+   private void checkOutlineItemFromOutlinePanel(Integer itemRowNumber, String itemLabel, int fileLineNumber) throws Exception
    {
-      assertEquals(itemName, IDE.OUTLINE.getItemLabel(itemRowNumber));
+      assertEquals(itemLabel, IDE.OUTLINE.getItemLabel(itemRowNumber));
       IDE.OUTLINE.selectRow(itemRowNumber);
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(fileLineNumber + " : 1", IDE.STATUSBAR.getCursorPosition());      
@@ -240,15 +277,15 @@ public class OulineTreeHelper extends BaseTest
    /**
     * Check outline item by goto <b>fileLineNumber</b> line in the file and verifying is <b>itemRowNumber</b> is selected in the Outline Panel   
     * @param itemRowNumber starting from 0
-    * @param itemName
+    * @param itemLabel
     * @param fileLineNumber starting from 1
     * @throws Exception 
     */
-   private void checkOutlineItemFromFile(int itemRowNumber, String itemName, int fileLineNumber) throws Exception
+   private void checkOutlineItemFromFile(int itemRowNumber, String itemLabel, int fileLineNumber) throws Exception
    {
       goToLine(fileLineNumber);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.OUTLINE.checkOutlineTreeNodeSelected(itemRowNumber, itemName, true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(itemRowNumber, itemLabel, true);
    }
    
    /**
@@ -295,6 +332,14 @@ public class OulineTreeHelper extends BaseTest
  * @version $Id
  */
 class OutlineItemInfo {
+   /**
+    * Full label including parameters and element type 
+    */
+   private String label;
+   
+   /**
+    * Name of token presented by item, without parameters and element type
+    */
    private String name;
    
    private int fileLineNumber;
@@ -309,17 +354,31 @@ class OutlineItemInfo {
     */
    private boolean checkItemFromFile = true;
    
-   public OutlineItemInfo(String name, int fileLineNumber, boolean checkItemFromFile, TokenType tokenType)
+   public OutlineItemInfo(String label, int fileLineNumber, boolean checkItemFromFile, TokenType tokenType, String name)
    {
-      this.name = name;
+      this.label = label;
       this.fileLineNumber = fileLineNumber;
       this.checkItemFromFile = checkItemFromFile;
       this.tokenType = tokenType;
+      this.name = name;
    }
    
-   public String getName()
+   /**
+    * Get item's id in pattern like "a:METHOD:26"
+    * @return item's id or null, if (name == null or tokenType == null)
+    */
+   public String getId()
    {
-      return name;
+      if (name != null && tokenType != null)
+         return name + ":" + tokenType + ":" + fileLineNumber;
+      
+      else
+         return null;
+   }
+
+   public String getLabel()
+   {
+      return label;
    }
    
    public int getFileLineNumber()
