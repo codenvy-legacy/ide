@@ -26,6 +26,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Navigation;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -88,7 +89,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    }
 
    @Test
-   public void tesFormatingHtml() throws Exception
+   public void testFormatingHtml() throws Exception
    {
 
       waitForRootElement();
@@ -106,7 +107,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    }
 
    @Test
-   public void tesFormatingCss() throws Exception
+   public void testFormatingCss() throws Exception
    {
       waitForRootElement();
       IDE.WORKSPACE.selectItem(WS_URL);
@@ -124,7 +125,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    }
 
    @Test
-   public void tesFormatingJS() throws Exception
+   public void testFormatingJS() throws Exception
    {
 
       waitForRootElement();
@@ -143,14 +144,14 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    }
 
    @Test
-   public void tesFormatingGadget() throws Exception
+   public void testFormatingGadget() throws Exception
    {
       waitForRootElement();
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       waitForRootElement();
       IDE.WORKSPACE.selectItem(STORAGE_URL + NON_FORMAT_GADGET_FILE_NAME);
-      IDE.NAVIGATION.openSelectedFileWithEditor(2, false);
+      IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CKEDITOR, false);
       
     
       waitForElementPresent("//div[@panel-id='editor']");

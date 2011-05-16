@@ -42,7 +42,7 @@ public class Navigation extends AbstractTestModule
    static final String TREE_PREFIX_ID = "navigation-";
 
    static final String TREE_PREFIX_SERCH_ID = "search-";
-
+   
    /**
     * Select row in navigation tree.
     * 1 - number of root node (workspace).
@@ -230,20 +230,20 @@ public class Navigation extends AbstractTestModule
     */
    public void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
    {
-      openSelectedFileWithEditor(1, checkDefault);
+      openSelectedFileWithEditor(Editor.CODEMIRROR, checkDefault);
    }
 
    /**
     * Opens "Open With..." dialog, selects editor with specified index and opens selected file in this editor. 
     * 
-    * @param editorIndex index of editor
+    * @param editor
     * @param checkDefault is needs to check "Use as default editor"
     * @throws Exception
     */
-   public void openSelectedFileWithEditor(int editorIndex, boolean checkDefault) throws Exception
+   public void openSelectedFileWithEditor(Editor editor, boolean checkDefault) throws Exception
    {
       IDE().OPENWITH.callFromMenu();
-      IDE().OPENWITH.selectEditorByIndex(editorIndex);
+      IDE().OPENWITH.selectEditorByIndex(editor.getIndex());
 
       if (checkDefault)
       {
@@ -344,4 +344,23 @@ public class Navigation extends AbstractTestModule
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
 
+   public enum Editor 
+   {
+      CODEMIRROR(1), 
+      CKEDITOR(2); 
+
+      private int index;
+
+      Editor(int index)
+      {
+         this.index = index;
+      }
+
+      public int getIndex()
+      {
+         return this.index;
+      }
+   }
+   
+   
 }
