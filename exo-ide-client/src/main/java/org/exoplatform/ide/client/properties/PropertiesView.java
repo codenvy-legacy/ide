@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.properties.ui;
+package org.exoplatform.ide.client.properties;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -44,7 +44,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * @version $
  */
 
-public class PropertiesViewEx extends ViewImpl implements
+public class PropertiesView extends ViewImpl implements
    org.exoplatform.ide.client.properties.PropertiesPresenter.Display
 {
 
@@ -52,7 +52,7 @@ public class PropertiesViewEx extends ViewImpl implements
    
    private Grid propertiesGrid;   
 
-   public PropertiesViewEx()
+   public PropertiesView()
    {
       super(ID, ViewType.OPERATION, "Properties", new Image(IDEImageBundle.INSTANCE.properties()));
 
@@ -89,8 +89,10 @@ public class PropertiesViewEx extends ViewImpl implements
             String value = properties.get(key);
 
             propertiesGrid.setHTML(row, 0, "<b>" + key + ":&nbsp;&nbsp;</b>");
-            //add id to get access to field text in Selenium test 
-            propertiesGrid.setHTML(row, 1, "<span id = "+ key.replaceAll(" ", "-")+">" + value + "</span>");
+            propertiesGrid.setHTML(row, 1, value);
+
+            //add id to get access to field's text from Selenium tests 
+            DOM.setElementAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "propertyName", key);
 
             DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "textAlign", "right");
             DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "width", "100%");

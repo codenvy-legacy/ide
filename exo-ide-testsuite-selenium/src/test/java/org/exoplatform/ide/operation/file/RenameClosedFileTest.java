@@ -44,7 +44,8 @@ import java.io.IOException;
 
 public class RenameClosedFileTest extends BaseTest
 {
-   private static String FOLDER_NAME;
+   
+   private static final String FOLDER_NAME = "RenameClosedFileTest";
 
    private static final String ORIG_FILE_NAME = "fileforrename.txt";
    
@@ -52,31 +53,17 @@ public class RenameClosedFileTest extends BaseTest
    
    private static final String FILE_CONTENT = "file for rename";
    
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME;
-   
    private static final String PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + ORIG_FILE_NAME;
-
-   private static String ORIG_URL;
-   
-   private static String RENAME_URL;
 
    @Before
    public void setUp()
    {
-      FOLDER_NAME = RenameClosedFileTest.class.getSimpleName() + "-" + System.currentTimeMillis();
-      ORIG_URL = URL + "/" + FOLDER_NAME + "/" + ORIG_FILE_NAME;
-      RENAME_URL = URL + "/" + FOLDER_NAME + "/" + RENAMED_FILE_NAME;
-      
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + "/" + FOLDER_NAME);
-         VirtualFileSystemUtils.put(PATH, MimeType.TEXT_PLAIN, ORIG_URL);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(PATH, MimeType.TEXT_PLAIN, WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -87,82 +74,86 @@ public class RenameClosedFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + "/" + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
 
-   //IDE-121 Rename Closed File
-   @Test
-   public void testRenameClosedFile() throws Exception
-   {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
-      
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
-      
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_ITEM_WINDOW_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_MIME_TYPE_FIELD_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.RenameItemForm.SC_CANCEL_BUTTON_LOCATOR));
-      
-      selenium.type(Locators.RenameItemForm.SC_NAME_FIELD_LOCATOR, RENAMED_FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
-      
-      assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
-   }
+//   //IDE-121 Rename Closed File
+//   @Test
+//   public void testRenameClosedFile() throws Exception
+//   {
+//      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+//
+//      /*
+//       * 1. Refresh test folder and select file
+//       */
+//      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+//      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+//      
+//      /*
+//       * 2. Run menu command File > Rename
+//       */
+//      IDE.RENAME_DIALOG.callFromMenu();
+//      IDE.RENAME_DIALOG.setFileName(RENAMED_FILE_NAME);
+//      IDE.RENAME_DIALOG.clickRenameButton();
+//      
+//      /*
+//       * 3. Assert File was renamed successfully.
+//       */
+//      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
+//      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+//      
+//      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME).getStatusCode());
+//      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME).getStatusCode());
+//   }
    
    @Test
    public void testChangeMimeType() throws Exception
    {
-      refresh();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      
+      /*
+       * 1. Refresh Folder and select File
+       */
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
-      
-      selenium.type(Locators.RenameItemForm.SC_MIME_TYPE_FIELD_LOCATOR, MimeType.TEXT_XML);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      selenium.click(Locators.RenameItemForm.SC_RENAME_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(ORIG_FILE_NAME, false);
-      
+//      /*
+//       * 2. Run menu command File > Rename, change mime-type in Rename dialog and click Rename
+//       */
+//      IDE.RENAME_DIALOG.callFromMenu();
+//      IDE.RENAME_DIALOG.setMimeType(MimeType.TEXT_XML);
+//      IDE.RENAME_DIALOG.clickRenameButton();
+
+      /*
+       * 3. Open File in editor, check it's content
+       */
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       final String textFromEditor =IDE.EDITOR.getTextFromCodeEditor(0);
-      
       assertEquals(FILE_CONTENT, textFromEditor);
+
+      /*
+       * 4. Show Properties and check for mime-type was changed successfully.
+       */
+      IDE.PROPERTIES.openProperties();
+      assertEquals(MimeType.TEXT_XML, IDE.PROPERTIES.getContentType());
+      
+      /*
+       * 5. Close Properties and Editor
+       */
+      IDE.PROPERTIES.closeProperties();
+      
       
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       
       assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
    }
    
+   /*
    @Test
    public void testRenameAndChangeMimeType() throws Exception
    {
@@ -197,5 +188,6 @@ public class RenameClosedFileTest extends BaseTest
       
       assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
    }
+   */
    
 }

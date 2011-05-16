@@ -94,8 +94,6 @@ public class Locators
    {
       public static final String OPERATION_TABSET_LOCATOR = "scLocator=//TabSet[ID=\"ideOperationPanel\"]";
 
-      public static final String PROPERTIES_FORM_LOCATOR = "//div[@view-id=\"ideFilePropertiesView\"]";
-
       public static final String PROPERTIES_TAB_LOCATOR = OPERATION_TABSET_LOCATOR + "/tab[ID=idePropertiesView]";
 
       public static final String OUTPUT_TAB_LOCATOR = OPERATION_TABSET_LOCATOR + "/tab[ID=Output]";
@@ -190,41 +188,6 @@ public class Locators
       public static final String ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR = "ideAskForValueDialogCancelButton";
 
       public static final String ASK_FOR_VALUE_TEXT_FIELD_LOCATOR = "ideAskForValueDialogValueField";
-   }
-
-   /**
-    * Locators for elements from Rename Item dialog window.
-    */
-   public interface RenameItemForm
-   {
-      public static final String SC_RENAME_ITEM_WINDOW_LOCATOR = "scLocator=//Window[ID=\"ideRenameItemForm\"]";
-
-      public static final String SC_RENAME_ITEM_DYNAMIC_FORM_LOCATOR =
-         "scLocator=//DynamicForm[ID=\"ideRenameItemFormDynamicForm\"]";
-
-      public static final String SC_NAME_FIELD_LOCATOR = SC_RENAME_ITEM_DYNAMIC_FORM_LOCATOR
-         + "/item[name=ideRenameItemFormRenameField]/element";
-
-      public static final String SC_MIME_TYPE_FIELD_LOCATOR = SC_RENAME_ITEM_DYNAMIC_FORM_LOCATOR
-         + "/item[name=ideRenameItemFormMimeTypeField]/element";
-
-      public static final String SC_RENAME_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideRenameItemFormRenameButton\"]";
-
-      public static final String SC_CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideRenameItemFormCancelButton\"]";
-
-      public static final String RENAME_ITEN_WINDOW_LOCATOR = "//div[@eventproxy='ideRenameItemForm']";
-
-      /**
-       * Non-smartGWT locator for disabled mime-type field.
-       */
-      public static final String MIME_TYPE_FIELD_DISABLED_LOCATOR = RENAME_ITEN_WINDOW_LOCATOR
-         + "//input[@class='selectItemTextDisabled' and @name='ideRenameItemFormMimeTypeField']";
-
-      /**
-       * Non-smartGWT locator for mime-type field.
-       */
-      public static final String MIME_TYPE_FIELD_LOCATOR = RENAME_ITEN_WINDOW_LOCATOR
-         + "//input[@name='ideRenameItemFormMimeTypeField']";
    }
 
    public interface PropertiesPanel

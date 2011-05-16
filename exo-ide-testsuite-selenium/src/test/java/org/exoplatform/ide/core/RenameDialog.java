@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 
@@ -31,9 +30,9 @@ import org.exoplatform.ide.TestConstants;
 
 public class RenameDialog extends AbstractTestModule
 {
-   
+
    private static String RENAME_BUTTON_ID = "ideRenameItemFormRenameButton";
-   
+
    private static String CANCEL_BUTTON_ID = "ideRenameItemFormCancelButton";
 
    private static String FORM_LOCATOR = "//div[@id='ideRenameItemForm']";
@@ -47,6 +46,11 @@ public class RenameDialog extends AbstractTestModule
 
    private static String WARNING_MESSAGE_LOCATOR = FORM_LOCATOR + "//div[@class='gwt-Label exo-rename-warning-msg']";
 
+   /**
+    * Runs menu command "File > Rename" and waits for Rename dialog is appear.
+    * 
+    * @throws Exception
+    */
    public void callFromMenu() throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
@@ -55,25 +59,74 @@ public class RenameDialog extends AbstractTestModule
       waitForElementPresent(RENAME_TO_LOCATOR);
    }
 
+   /**
+    * Gets Warning message
+    * 
+    * @return
+    */
    public String getWarningMessage()
    {
       return selenium().getText(WARNING_MESSAGE_LOCATOR);
    }
-   
-   public String getFileName() {
+
+   /**
+    * Gets file name
+    * 
+    * @return
+    */
+   public String getFileName()
+   {
       return selenium().getText(RENAME_TO_LOCATOR);
    }
-   
-   public void setFileName(String newFileName) {
+
+   /**
+    * Sets new file name
+    * 
+    * @param newFileName
+    */
+   public void setFileName(String newFileName)
+   {
       selenium().type(RENAME_TO_LOCATOR, newFileName);
    }
-   
-   public void clickRenameButton() throws Exception {
+
+   /**
+    * Gets mime type
+    * 
+    * @return
+    */
+   public String getMimeType()
+   {
+      return selenium().getText(MIME_TYPE_LOCATOR);
+   }
+
+   /**
+    * Sets new mime type
+    * 
+    * @param mimeType
+    */
+   public void setMimeType(String mimeType)
+   {
+      selenium().type(MIME_TYPE_LOCATOR, mimeType);
+   }
+
+   /**
+    * Clicks on Rename button
+    * 
+    * @throws Exception
+    */
+   public void clickRenameButton() throws Exception
+   {
       selenium().click(FORM_LOCATOR + "//div[@id='" + RENAME_BUTTON_ID + "']");
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
-   
-   public void clickCancelButton() throws Exception {
+
+   /**
+    * Clicks on Cancel button
+    * 
+    * @throws Exception
+    */
+   public void clickCancelButton() throws Exception
+   {
       selenium().click(FORM_LOCATOR + "//div[@id='" + CANCEL_BUTTON_ID + "']");
       waitForElementNotPresent(FORM_LOCATOR);
    }

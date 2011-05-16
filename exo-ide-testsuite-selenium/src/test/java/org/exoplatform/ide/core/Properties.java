@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
-
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.ToolbarCommands;
 
 /**
@@ -30,6 +27,8 @@ import org.exoplatform.ide.ToolbarCommands;
  */
 public class Properties extends AbstractTestModule
 {
+
+   private static final String PROPERTIES_FORM_LOCATOR = "//div[@view-id=\"ideFilePropertiesView\"]";
 
    /**
     * Get Autoload property value
@@ -82,13 +81,13 @@ public class Properties extends AbstractTestModule
    public void closeProperties() throws Exception
    {
       selenium().click("//div[@button-name='close-tab' and @tab-title='Properties']");
-      waitForElementNotPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR);
+      waitForElementNotPresent(PROPERTIES_FORM_LOCATOR);
    }
 
    public void openProperties() throws Exception
    {
       IDE().TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
-      waitForElementPresent(Locators.OperationForm.PROPERTIES_FORM_LOCATOR);
+      waitForElementPresent(PROPERTIES_FORM_LOCATOR);
    }
 
 }
