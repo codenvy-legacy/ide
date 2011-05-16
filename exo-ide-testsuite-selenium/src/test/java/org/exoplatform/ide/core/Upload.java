@@ -21,7 +21,6 @@ package org.exoplatform.ide.core;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.MenuCommands;
 
@@ -84,14 +83,51 @@ public class Upload extends AbstractTestModule
    private static final String MIME_TYPE_SUGGEST_PANEL_TEXT_LOCATOR =
       "//div[@id=\"exoSuggestPanel\"]//td[contains(., '%1s')]";
 
+   /**
+    * Check Upload view is opened.
+    */
    public void checkIsOpened()
    {
-      fail();
+      assertTrue(selenium().isElementPresent(UPLOAD_FORM_ID));
+      assertTrue(selenium().isElementPresent(UPLOAD_BUTTON_ID));
    }
 
+   /**
+    * Check the opened state of the Upload view.
+    * 
+    * @param isOpened if <code>true</code> view is opened
+    */
    public void checkIsOpened(boolean isOpened)
    {
-      fail();
+      if (isOpened)
+      {
+         checkIsOpened();
+      }
+      else
+      {
+         assertFalse(selenium().isElementPresent(UPLOAD_FORM_ID));
+         assertFalse(selenium().isElementPresent(UPLOAD_BUTTON_ID));
+      }
+   }
+   
+   /**
+    * Wait for upload view to be opened.
+    * 
+    * @throws Exception
+    */
+   public void waitUploadViewOpened() throws Exception
+   {
+      waitForElementPresent(UPLOAD_FORM_ID);
+   }
+   
+   /**
+    * Wait for upload view to be closed.
+    * 
+    * @throws Exception
+    */
+   public void waitUploadViewClosed() throws Exception
+   {
+      waitForElementNotPresent(UPLOAD_FORM_ID);
    }
 
    public void open(String formName, String filePath, String mimeType) throws Exception
@@ -182,5 +218,23 @@ public class Upload extends AbstractTestModule
    public String getMimeTypeValue()
    {
       return selenium().getValue(MIME_TYPE_FILED_ID);
+   }
+   
+   /**
+    * Get value of file path field.
+    * 
+    * @return {@link String} value
+    */
+   public String getFilePathValue()
+   {
+      return selenium().getValue(FILE_NAME_FIELD_ID);
+   }
+   
+   /**
+    * Click upload button.
+    */
+   public void clickUploadButton()
+   {
+      selenium().click(UPLOAD_BUTTON_ID);
    }
 }

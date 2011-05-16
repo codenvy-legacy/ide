@@ -19,15 +19,12 @@
 package org.exoplatform.ide.operation.upload;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -48,8 +45,9 @@ public class UploadingZippedFolderTest extends BaseTest
 {
    private static final String FOLDER_NAME = UploadingZippedFolderTest.class.getSimpleName();
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
-   
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME;
+
    private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/sample.zip";
 
    @BeforeClass
@@ -68,7 +66,7 @@ public class UploadingZippedFolderTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -85,16 +83,15 @@ public class UploadingZippedFolderTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testUploadingHtml() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      
+
       uploadZippedFolder(FILE_PATH);
-      
+
       final String testFolder = "test";
       final String folder = "folder";
       final String projectFolder = "project";
@@ -102,65 +99,55 @@ public class UploadingZippedFolderTest extends BaseTest
       final String settingsFile = "settings.xml";
       final String sampleFile = "sample.txt";
       final String mineFile = "mine.xml";
-      
-      
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      IDE.NAVIGATION.assertItemVisible(URL + "/" + testFolder + "/");
-      IDE.NAVIGATION.assertItemVisible(URL + "/" + folder + "/");
-      IDE.NAVIGATION.assertItemVisible(URL + "/" + sampleFile);
-      IDE.NAVIGATION.assertItemVisible(URL + "/" + settingsFile);
-      
-      IDE.WORKSPACE.selectItem(URL + "/" + folder + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.assertItemVisible(URL + "/" + folder + "/" + projectFolder + "/");
-      
-      IDE.WORKSPACE.selectItem(URL + "/" + testFolder + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.assertItemVisible(URL + "/" + testFolder + "/" + exoFolder + "/");      
-      IDE.NAVIGATION.assertItemVisible(URL + "/" + mineFile);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(settingsFile, false);
-      IDE.EDITOR.checkCodeEditorOpened(0);
 
-      String text =IDE.EDITOR.getTextFromCodeEditor(0);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+
+      IDE.WORKSPACE.waitForItem(WS_URL + testFolder + "/");
+      
+      IDE.NAVIGATION.assertItemVisible(WS_URL + testFolder + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + folder + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + sampleFile);
+      IDE.NAVIGATION.assertItemVisible(WS_URL +  settingsFile);
+
+      IDE.WORKSPACE.selectItem(WS_URL +  folder + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + folder + "/" + projectFolder + "/");
+
+      IDE.WORKSPACE.selectItem(WS_URL + testFolder + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.NAVIGATION.assertItemVisible(WS_URL +  testFolder + "/" + exoFolder + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + testFolder + "/" + mineFile);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + settingsFile, false);
+      IDE.EDITOR.waitTabPresent(0);
+
+      String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.length() > 0);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      assertEquals("nt:resource", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
-      assertEquals(MimeType.TEXT_XML, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
-      
+      waitForElementPresent(IDE.PROPERTIES.PROPERTIES_FORM_LOCATOR);
+      assertEquals("nt:resource", IDE.PROPERTIES.getContentNodeType());
+      assertEquals(MimeType.TEXT_XML, IDE.PROPERTIES.getContentType());
+
    }
-   
+
    protected void uploadZippedFolder(String filePath) throws Exception
    {
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FOLDER);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/body/"));
-      assertTrue(selenium.isElementPresent("//div[@class='stretchImgButtonDisabled' and @eventproxy='ideUploadFormUploadButton']"));
+      IDE.UPLOAD.waitUploadViewOpened();
+      
       try
       {
          File file = new File(filePath);
-         selenium.type("//input[@type='file']", file.getCanonicalPath());
+         IDE.UPLOAD.setUploadFilePath(file.getCanonicalPath());
       }
       catch (Exception e)
       {
       }
-      Thread.sleep(TestConstants.SLEEP);
 
       assertEquals(
-         filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()),
-         selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideUploadFormDynamicForm\"]/item[name=ideUploadFormFilenameField]/element"));
-
-      assertTrue(selenium
-         .isElementPresent("//div[@class='stretchImgButton' and @eventproxy='ideUploadFormUploadButton']"));
-
-      selenium.click("scLocator=//IButton[ID=\"ideUploadFormUploadButton\"]/");
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideUploadForm\"]/"));
+         filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()), IDE.UPLOAD.getFilePathValue());
+      IDE.UPLOAD.clickUploadButton();
+      IDE.UPLOAD.waitUploadViewClosed();
    }
-   
 }
