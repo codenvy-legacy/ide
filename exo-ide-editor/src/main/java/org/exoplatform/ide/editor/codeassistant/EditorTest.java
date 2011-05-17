@@ -401,6 +401,12 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/csscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/phpcolors.css']" // code styles
          )));   
+
+      addEditor(new CodeMirrorProducer(MimeType.DIFF, "CodeMirror diff editor", "diff", "", true,
+         new CodeMirrorConfiguration("['parsediff.js']", // generic code parsers
+            "['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']" // code styles
+         )));
+      
       
       // ckeditor
       addEditor(new CKEditorProducer(MimeType.TEXT_HTML, "CKEditor HTML editor", "html", "", false,
@@ -804,6 +810,26 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          }
       });
 
+      Button diffButton = new Button();
+      diffButton.setTitle("Create CodeMorror Editor for diff");
+      diffButton.setText("Diff");
+      diffButton.addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            params.put(EditorParameters.MIME_TYPE, MimeType.DIFF);
+
+            editor = codeEditors.get(MimeType.DIFF).createEditor(ExamplesBundle.INSTANCE.diffExample().getText(), eventBus, params);
+            panel.clear();
+            panel.add(editor);
+
+         }
+      });
+      
+      
+      
       toolbar.add(cssButton);
       toolbar.add(htmlButton);
       toolbar.add(jsButton);
@@ -817,7 +843,9 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       toolbar.add(javaButton);
       toolbar.add(jspButton);
       toolbar.add(rubyButton);
-      toolbar.add(phpButton);     
+      toolbar.add(phpButton);
+      toolbar.add(diffButton);      
+      
 
       toolbar.add(htmlCKEditorButton);
       toolbar.add(googleGadgetCKEditorButton);

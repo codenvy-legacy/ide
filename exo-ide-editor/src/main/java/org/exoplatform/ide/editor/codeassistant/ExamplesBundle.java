@@ -69,4 +69,7 @@ public interface ExamplesBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/public/example/php.txt")   
    TextResource phpExample();
+   
+   @Source("org/exoplatform/ide/editor/public/example/diff.txt")   
+   TextResource diffExample();   
 }
