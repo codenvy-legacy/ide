@@ -103,5 +103,15 @@ public class Workspace extends AbstractTestModule
    {
       waitForElementPresent(getItemId(itemHref));
    }
+   
+   /**
+    * Wait for item not present in workspace tree
+    * @param itemHref Href of the item
+    * @throws Exception 
+    */
+   public void waitForItemNotPresent(String itemHref) throws Exception
+   {
+      waitForElementNotPresent(getItemId(itemHref));
+   }
 
 }

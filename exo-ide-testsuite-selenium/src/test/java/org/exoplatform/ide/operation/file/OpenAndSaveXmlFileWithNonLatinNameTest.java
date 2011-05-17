@@ -20,19 +20,16 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * IDE-48: Opening and Saving new XML file with non-latin name.
@@ -91,11 +88,11 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
    @Test
    public void testOpenAndSaveXmlFileWithNonLatinName() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP * 2);
+      waitForRootElement();
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-
+      IDE.EDITOR.waitTabPresent(0);
       assertEquals("Untitled file.xml *", IDE.EDITOR.getTabTitle(0));
 
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
@@ -105,9 +102,11 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
 
       saveAsUsingToolbarButton(FILE_NAME);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.closeTab(0);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(0);
       IDE.EDITOR.deleteFileContent();
       IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT_2);
 

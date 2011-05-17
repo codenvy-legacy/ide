@@ -19,20 +19,18 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-import java.io.IOException;
-import java.net.URLEncoder;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * IDE-49: Deleting XML file with non-latin name.
@@ -76,16 +74,13 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
    @Test
    public void testDeletingXmlFileWithNonLatinName() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
+      waitForRootElement();
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-//      Thread.sleep(TestConstants.SLEEP);
-      
+      IDE.WORKSPACE.waitForItem(WS_URL + FILE_NAME);
       IDE.WORKSPACE.selectItem(WS_URL + FILE_NAME);
       IDE.NAVIGATION.deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideItemTreeGrid\"]/body/row[name=" + FILE_NAME
-         + "]/col[1]"));
+      IDE.WORKSPACE.waitForItemNotPresent(WS_URL + FILE_NAME);
+      
       assertEquals(404, VirtualFileSystemUtils.get(STORAGE_URL + URLEncoder.encode(FILE_NAME,"UTF-8")).getStatusCode());
    }
    
@@ -98,12 +93,10 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       catch (ModuleException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }

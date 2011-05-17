@@ -53,6 +53,16 @@ public class Properties extends AbstractTestModule
    }
 
    /**
+    * Get Content Length property value.
+    * @return String value
+    */
+   public String getContentLength()
+   {
+      String locator = String.format(PROPERTY_LOCATOR, "Content Length");
+      return selenium().getText(locator);
+   }
+   
+   /**
     * Get Content Type property value
     * @return String value
     */

@@ -19,23 +19,19 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.net.URLEncoder;
 
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -49,7 +45,7 @@ import java.util.ResourceBundle;
  */
 public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 {
-   
+
    /**
     * Resource bundle for non-lating names.
     */
@@ -68,17 +64,16 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
    /**
     * Content of first XML file.
     */
-   private static final String XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>\n"
-                                             + "<test>test</test>";
-   
+   private static final String XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>\n" + "<test>test</test>";
+
    /**
     * Content of secont XML file.
     */
-   private static final String XML_CONTENT_2 = "<?xml version='1.0' encoding='UTF-8'?>\n"
-                                             + "<settings>test</settings>";
-   
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
+   private static final String XML_CONTENT_2 = "<?xml version='1.0' encoding='UTF-8'?>\n" + "<settings>test</settings>";
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
+
    @AfterClass
    public static void tearDown()
    {
@@ -94,7 +89,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       {
          e.printStackTrace();
       }
-      
+
       try
       {
          VirtualFileSystemUtils.delete(URL + URLEncoder.encode(NEW_XML_FILE, "UTF-8"));
@@ -113,55 +108,55 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
    @Test
    public void testCreateAndSaveAsXmlWithNonLatinName() throws Exception
    {
+      waitForRootElement();
 
-      Thread.sleep(TestConstants.SLEEP*2);
-      IDE.NAVIGATION.assertItemVisible(WS_URL);
       IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      assertEquals("Untitled file.xml *",IDE.EDITOR.getTabTitle(0));
+      IDE.EDITOR.waitTabPresent(0);
+
+      assertEquals("Untitled file.xml *", IDE.EDITOR.getTabTitle(0));
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
-      
-     IDE.EDITOR.deleteFileContent();
-      
-     IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      saveAsUsingToolbarButton(XML_FILE);
-      
-      assertEquals(XML_FILE,IDE.EDITOR.getTabTitle(0));
-      
-      //check file properties
-      showAndCheckProperties(String.valueOf(XML_CONTENT.length()+1), MimeType.TEXT_XML, XML_FILE);
 
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.deleteFileContent();
+
+      IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
+
+      saveAsUsingToolbarButton(XML_FILE);
+      IDE.WORKSPACE.waitForItem(WS_URL + XML_FILE);
+
+      assertEquals(XML_FILE, IDE.EDITOR.getTabTitle(0));
+
+      //check file properties
+      IDE.PROPERTIES.openProperties();
+      checkProperties(String.valueOf(XML_CONTENT.length() + 1), MimeType.TEXT_XML, XML_FILE);
+
+      IDE.EDITOR.closeTab(0);
 
       //check file on server
       checkFileExists(URL + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + XML_FILE);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE, false);
-
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + XML_FILE, false);
+      IDE.EDITOR.waitTabPresent(0);
       IDE.EDITOR.checkCodeEditorOpened(0);
 
       //change file content
-     IDE.EDITOR.deleteFileContent();
-      
-     IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT_2);
+      IDE.EDITOR.deleteFileContent();
+
+      IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT_2);
 
       //save as file
-      
+
       saveAsUsingToolbarButton(NEW_XML_FILE);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertEquals(NEW_XML_FILE,IDE.EDITOR.getTabTitle(0));
+      IDE.WORKSPACE.waitForItem(WS_URL + NEW_XML_FILE);
 
-      showAndCheckProperties(String.valueOf(XML_CONTENT_2.length()+1), MimeType.TEXT_XML, NEW_XML_FILE);
+      assertEquals(NEW_XML_FILE, IDE.EDITOR.getTabTitle(0));
+      checkProperties(String.valueOf(XML_CONTENT_2.length() + 1), MimeType.TEXT_XML, NEW_XML_FILE);
 
-     IDE.EDITOR.closeTab(0);
-      
+      IDE.EDITOR.closeTab(0);
+
       //check two files exist
       checkFileExists(URL + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
       checkFileExists(URL + URLEncoder.encode(NEW_XML_FILE, "UTF-8"), XML_CONTENT_2);
@@ -170,7 +165,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       IDE.NAVIGATION.assertItemVisible(WS_URL + NEW_XML_FILE);
 
    }
-   
+
    /**
     * Check is file created and check file content.
     * 
@@ -186,17 +181,21 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       assertEquals(fileContent + "\n", response.getText());
    }
 
-   private void showAndCheckProperties(String contentLength, String contentType, String displayName) throws Exception
+   /**
+    * Check properties values.
+    * 
+    * @param contentLength content length property 
+    * @param contentType content type
+    * @param displayName display name
+    * @throws Exception
+    */
+   private void checkProperties(String contentLength, String contentType, String displayName) throws Exception
    {
-      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
-      
-      assertTrue(selenium.isElementPresent(Locators.OperationForm.PROPERTIES_TAB_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.PropertiesPanel.SC_DYNAMIC_FORM_LOCATOR));
-      assertEquals(contentLength, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_LENGTH_TEXTBOX));
-      assertEquals("nt:resource", selenium.getText(Locators.PropertiesPanel.SC_CONTENT_NODE_TYPE_TEXTBOX));
-      assertEquals(contentType, selenium.getText(Locators.PropertiesPanel.SC_CONTENT_TYPE_TEXTBOX));
-      assertEquals(displayName, selenium.getText(Locators.PropertiesPanel.SC_DISPLAY_NAME_TEXTBOX));
-      assertEquals("nt:file", selenium.getText(Locators.PropertiesPanel.SC_FILE_NODE_TYPE_TEXTBOX));
+      assertEquals(contentLength, IDE.PROPERTIES.getContentLength());
+      assertEquals("nt:resource", IDE.PROPERTIES.getContentNodeType());
+      assertEquals(contentType, IDE.PROPERTIES.getContentType());
+      assertEquals(displayName, IDE.PROPERTIES.getDisplayName());
+      assertEquals("nt:file", IDE.PROPERTIES.getFileNodeType());
    }
-   
+
 }
