@@ -92,14 +92,14 @@ public class AutoCompleteJspTest extends BaseTest
       IDE.CODEASSISTANT.insertSelectedItem();
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collection"));
      
-      goToLine(15);
+      goToLine(18);
       
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("a");
       IDE.CODEASSISTANT.checkElementPresent("Window");
       IDE.CODEASSISTANT.closeForm();
       
-      goToLine(21);
+      goToLine(24);
       
       IDE.EDITOR.typeTextIntoEditor(0, "<t");
       IDE.CODEASSISTANT.openForm();
