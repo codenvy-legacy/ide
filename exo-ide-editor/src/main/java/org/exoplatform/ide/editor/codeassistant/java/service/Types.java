@@ -26,7 +26,7 @@ package org.exoplatform.ide.editor.codeassistant.java.service;
  *
  */
 public enum Types {
-  CALSS, ANNOTATION, INTERFACE; 
+  CLASS, ANNOTATION, INTERFACE; 
   
   public String toString() {
      return this.name().toLowerCase();

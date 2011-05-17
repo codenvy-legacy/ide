@@ -157,7 +157,7 @@ public abstract class CodeAssistantService
     * @param prefix the prefix with type name starts (can be null)
     * @param callback - the callback which client has to implement
     */
-   public void fintType(Types type, String prefix, AsyncRequestCallback<List<Token>> callback)
+   public void findType(Types type, String prefix, AsyncRequestCallback<List<Token>> callback)
    {
       String url = restServiceContext + FIND_TYPE + type.toString();
       if (prefix != null && !prefix.isEmpty())

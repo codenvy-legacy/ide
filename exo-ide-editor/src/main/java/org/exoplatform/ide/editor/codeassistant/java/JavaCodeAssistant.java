@@ -230,7 +230,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                action = Action.ANNOTATION;
                beforeToken += "@";
                tokenToComplete = tokenToComplete.substring(1);
-               service.fintType(Types.ANNOTATION, tokenToComplete,
+               service.findType(Types.ANNOTATION, tokenToComplete,
                   new AsyncRequestCallback<List<Token>>()
                   {
 
