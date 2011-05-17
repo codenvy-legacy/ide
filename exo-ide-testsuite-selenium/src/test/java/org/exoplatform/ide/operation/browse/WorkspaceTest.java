@@ -75,6 +75,7 @@ public class WorkspaceTest extends BaseTest
       assertTrue(IDE.SELECT_WORKSPACE.getCancelButtonState());
       //click Cancel button and check form disappeared
       IDE.SELECT_WORKSPACE.clickCancelButton();
+      IDE.SELECT_WORKSPACE.waitForDialogNotPresent();
       //check workspace doesn't changed
       assertEquals(WS_NAME, selenium.getText(IDE.NAVIGATION.getItemId(WS_URL)));
 

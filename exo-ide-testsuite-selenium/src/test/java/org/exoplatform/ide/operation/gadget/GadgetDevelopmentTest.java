@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.gadget;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.common.http.client.ModuleException;
@@ -90,12 +91,15 @@ public class GadgetDevelopmentTest extends BaseTest
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME_FULL, false);
       IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.checkIsTabPresentInEditorTabset("Test Gadget File.xml", true);
+      
+      final String tabTitle = IDE.EDITOR.getTabTitle(0);
+      assertTrue(tabTitle.equals(FILE_NAME_FULL)|| tabTitle.equals(FILE_NAME_FULL + " *"));
    }
 
    @AfterClass
    public static void tearDown() throws IOException, ModuleException
    {
+      cleanRegistry();
       VirtualFileSystemUtils.delete(URL);
    }
 

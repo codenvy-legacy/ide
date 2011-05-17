@@ -59,22 +59,17 @@ public class OpenWithDialog extends AbstractTestModule
    }
 
    /**
-    * Selects editor by it's position in the list of editors.
-    * Note that numbering starts at 1.
+    * Selects editor by it's name in the list of editors. <p/>
     * 
-    * @param index
+    * Note, that name of editor - it is not the whole title of 
+    * row in the list. The name - it can be part of row, that can uniquely identify
+    * editor in list.
+    * @param name - the name of editor
     */
-   public void selectEditorByIndex(int index)
+   public void selectEditor(String name)
    {
       IDE().selectMainFrame();
-      String locator = "//table[@id='ideOpenFileWithListGrid']/tbody[1]/tr[" + index + "]/td/div";
-      selenium().click(locator);
-   }
-
-   public void selectEditor(String value)
-   {
-      IDE().selectMainFrame();
-      String locator = "//table[@id='ideOpenFileWithListGrid']/tbody/tr/td/div[text()='" + value + "']";
+      String locator = "//table[@id='ideOpenFileWithListGrid']/tbody/tr/td/div[contains(text(), '" + name + "')]";
       selenium().click(locator);
    }
 

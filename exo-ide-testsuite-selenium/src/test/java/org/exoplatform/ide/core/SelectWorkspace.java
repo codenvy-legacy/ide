@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertFalse;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 
 /**
- * Created by The eXo Platform SAS.
+ * Operations with form for selection and changing current workspace.
+ * 
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
  * @version $Id: $
 */
@@ -65,42 +64,78 @@ public class SelectWorkspace extends AbstractTestModule
       checkButtonState(OK_BUTTON_ID, true);
 
       // click the "Ok" button 
-      selenium().click(OK_BUTTON_ID);
+      clickOkButton();
       waitForElementNotPresent(SELECT_WORKSPACE_FORM_LOCATOR);
-      assertFalse(selenium().isElementPresent(SELECT_WORKSPACE_FORM_LOCATOR));
    }
    
+   /**
+    * Select workspace by URL in list grid.
+    * @param workspaceUrl - the URL of workspace
+    * @throws InterruptedException
+    */
    public void selectWorkspaceInListGrid(String workspaceUrl) throws InterruptedException
    {
       selenium().click(SELECT_WORKSPACE_FORM_LOCATOR + "//span[text()='" + workspaceUrl + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
+   /**
+    * Wait while "Select workspace" dialog appears.
+    * 
+    * @throws Exception
+    */
    public void waitForDialog() throws Exception
    {
       waitForElementPresent(SELECT_WORKSPACE_FORM_LOCATOR);
    }
    
+   /**
+    * Wait while "Select workspace" dialog disappears.
+    * 
+    * @throws Exception
+    */
+   public void waitForDialogNotPresent() throws Exception
+   {
+      waitForElementNotPresent(SELECT_WORKSPACE_FORM_LOCATOR);
+   }
+   
+   /**
+    * Return is Ok button enabled.
+    * 
+    * @return boolean
+    * @throws Exception
+    */
    public boolean getOkButtonState() throws Exception
    {
       return getButtonState(OK_BUTTON_ID);
    }
    
+   /**
+    * Return is Ok button enabled.
+    * @return boolean
+    * @throws Exception
+    */
    public boolean getCancelButtonState() throws Exception
    {
       return getButtonState(CANCEL_BUTTON_ID);
    }
    
+   /**
+    * Click Ok button.
+    * @throws Exception
+    */
    public void clickOkButton() throws Exception
    {
       selenium().click(OK_BUTTON_ID);
-      waitForElementNotPresent(SELECT_WORKSPACE_FORM_LOCATOR);
    }
    
+   /**
+    * Click Cancel button.
+    * @throws Exception
+    */
    public void clickCancelButton() throws Exception
    {
       selenium().click(CANCEL_BUTTON_ID);
-      waitForElementNotPresent(SELECT_WORKSPACE_FORM_LOCATOR);
    }
 
 }

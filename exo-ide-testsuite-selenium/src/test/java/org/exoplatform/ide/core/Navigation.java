@@ -243,7 +243,8 @@ public class Navigation extends AbstractTestModule
    public void openSelectedFileWithEditor(Editor editor, boolean checkDefault) throws Exception
    {
       IDE().OPENWITH.callFromMenu();
-      IDE().OPENWITH.selectEditorByIndex(editor.getIndex());
+      IDE().OPENWITH.selectEditor(editor.getName());
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       if (checkDefault)
       {
@@ -346,20 +347,24 @@ public class Navigation extends AbstractTestModule
 
    public enum Editor 
    {
-      CODEMIRROR(1), 
-      CKEDITOR(2); 
+      CODEMIRROR("CodeMirror"), 
+      CKEDITOR("CKEditor"); 
 
-      private int index;
+      /**
+       * Name of editor - the title, that displayed in Open With form.
+       */
+      private String name;
 
-      Editor(int index)
+      Editor(String name)
       {
-         this.index = index;
+         this.name = name;
       }
 
-      public int getIndex()
+      public String getName()
       {
-         return this.index;
+         return this.name;
       }
+      
    }
    
    

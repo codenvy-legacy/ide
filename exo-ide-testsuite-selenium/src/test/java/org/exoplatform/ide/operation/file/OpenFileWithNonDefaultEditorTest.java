@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Navigation;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -121,7 +122,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 6. Select CKEditor and click Open
        */
-      IDE.OPENWITH.selectEditorByIndex(2);
+      IDE.OPENWITH.selectEditor(Navigation.Editor.CKEDITOR.getName());
       IDE.OPENWITH.clickOpenButton();
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
@@ -153,7 +154,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 12. Select CKEditor, check "Use as default editor" and click Open
        */
-      IDE.OPENWITH.selectEditorByIndex(2);
+      IDE.OPENWITH.selectEditor(Navigation.Editor.CKEDITOR.getName());
       IDE.OPENWITH.clickUseAsDefaultCheckBox();
       IDE.OPENWITH.clickOpenButton();
 
