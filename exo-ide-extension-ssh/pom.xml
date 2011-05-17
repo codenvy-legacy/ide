@@ -11,6 +11,29 @@
    <packaging>jar</packaging>
    <name>eXo IDE :: Extension : SSH</name>
    <dependencies>
+
+      <!-- CLIENT SIDE -->
+      <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-user</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-commons</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-ui</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-framework-client</artifactId>
+      </dependency>
+      <!-- CLIENT SIDE END -->
+
    </dependencies>
    <build>
       <resources>
