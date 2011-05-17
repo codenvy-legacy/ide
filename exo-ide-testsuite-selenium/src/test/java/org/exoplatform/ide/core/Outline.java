@@ -114,8 +114,10 @@ public class Outline extends AbstractTestModule
       {
          if (selenium().isVisible(
             "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]"))
-            ;
-         index++;
+         {
+            index++;
+         }
+         
          if (index == rowNumber)
          {
             if (labelType != null)
@@ -177,8 +179,10 @@ public class Outline extends AbstractTestModule
       {
          if (selenium().isVisible(
             "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]"))
-            ;
-         index++;
+         {
+            index++;
+         }
+         
          if (index == row)
          {
             selenium().doubleClickAt(
@@ -231,8 +235,10 @@ public class Outline extends AbstractTestModule
       {
          if (selenium().isVisible(
             "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]"))
-            ;
-         index++;
+         {
+            index++;
+         }
+         
          if (index == rowNumber)
          {
             selenium().clickAt(
@@ -392,6 +398,15 @@ public class Outline extends AbstractTestModule
       return scrollTop;
    }   
    
+
+   public void selectRowTemp(int rowNumber)
+   {
+      if (rowNumber <= 0)
+         return;
+      selenium().mouseDown(Locators.TREE + "/" +"div[" + String.valueOf(rowNumber + 2) + "]" );
+      //selenium().mouseUp(Locators.TREE + "/" +"div[" + String.valueOf(rowNumber + 2) + "]" );
+  }
+  
    public enum LabelType 
    {
       NAME("item-name"), 
