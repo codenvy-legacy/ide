@@ -94,6 +94,7 @@ public class GadgetDevelopmentTest extends BaseTest
       
       final String tabTitle = IDE.EDITOR.getTabTitle(0);
       assertTrue(tabTitle.equals(FILE_NAME_FULL)|| tabTitle.equals(FILE_NAME_FULL + " *"));
+      IDE.EDITOR.closeTab(0);
    }
 
    @AfterClass

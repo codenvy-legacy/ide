@@ -59,7 +59,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + FILE_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, TestConstants.NodeTypes.EXO_GOOGLE_GADGET, URL + FILE_NAME);
       }
       catch (IOException e)
       {
