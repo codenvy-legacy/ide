@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.SelectWorkspace;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -36,8 +36,6 @@ import org.junit.Test;
  */
 public class WorkspaceTest extends BaseTest
 {
-   private String secondWorkspace;
-
    @AfterClass
    public static void tearDown()
    {
@@ -47,58 +45,48 @@ public class WorkspaceTest extends BaseTest
    @Test
    public void testDefaultEntryPoint() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       //check default workspace is root of navigation tree
       IDE.NAVIGATION.assertItemVisible(WS_URL);
-      checkCurrentWorkspace(WS_NAME);
+      assertEquals(WS_NAME, IDE.NAVIGATION.getRowTitle(1));
    }
 
    @Test
    public void testSelectWorkspace() throws Exception
    {
-      String secondWorkspace = IDE.SELECT_WORKSPACE.getNonActiveWorkspaceName1();
+      waitForRootElement();
       //----- 1 ---------------
       //check form Workspace
       //call select workspace window
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      IDE.SELECT_WORKSPACE.waitForDialog();
       //check select workspace window
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
-      assertTrue(selenium.isTextPresent("Workspace"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]"));
-      assertTrue(selenium.isTextPresent(ENTRY_POINT_URL + secondWorkspace + "/"));
+      assertTrue(selenium.isElementPresent(SelectWorkspace.SELECT_WORKSPACE_FORM_LOCATOR));
+      assertTrue(selenium.isElementPresent(IDE.SELECT_WORKSPACE.getGwtDialogCaptionLocator("Workspace")));
+      assertTrue(selenium.isElementPresent(SelectWorkspace.OK_BUTTON_ID));
+      assertTrue(selenium.isElementPresent(SelectWorkspace.CANCEL_BUTTON_ID));
+      assertTrue(selenium.isElementPresent(SelectWorkspace.LIST_GRID_ID));
+      assertTrue(selenium.isTextPresent(ENTRY_POINT_URL + WS_NAME_2 + "/"));
       assertTrue(selenium.isTextPresent(ENTRY_POINT_URL + WS_NAME + "/"));
 
       //check Ok button is disabled
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitleDisabled' and text()='OK']"));
+      assertFalse(IDE.SELECT_WORKSPACE.getOkButtonState());
       //check Cancel button is enabled
-      assertTrue(selenium
-         .isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormCancelButton']//td[@class='buttonTitle' and text()='Cancel']"));
+      assertTrue(IDE.SELECT_WORKSPACE.getCancelButtonState());
       //click Cancel button and check form disappeared
-      selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideSelectWorkspaceForm\"]"));
+      IDE.SELECT_WORKSPACE.clickCancelButton();
       //check workspace doesn't changed
-      checkCurrentWorkspace(WS_NAME);
+      assertEquals(WS_NAME, selenium.getText(IDE.NAVIGATION.getItemId(WS_URL)));
 
       //----- 2 ---------------
       //check changing of workspace
       //select second workspace
-      selectWorkspace(secondWorkspace);
-      checkCurrentWorkspace(secondWorkspace);
+      IDE.SELECT_WORKSPACE.changeWorkspace(WS_NAME_2);
+      assertEquals(WS_NAME_2, IDE.NAVIGATION.getRowTitle(1));
 
       // return to initial workspace
-      selectWorkspace(WS_NAME);
-      checkCurrentWorkspace(WS_NAME);
-
-   }
-
-   private void checkCurrentWorkspace(String workspaceName) throws Exception
-   {
-
-      assertEquals(workspaceName, selenium.getText(IDE.NAVIGATION.getItemId(WS_URL)));
+      IDE.SELECT_WORKSPACE.changeWorkspace(WS_NAME);
+      assertEquals(WS_NAME, IDE.NAVIGATION.getRowTitle(1));
    }
 
 }

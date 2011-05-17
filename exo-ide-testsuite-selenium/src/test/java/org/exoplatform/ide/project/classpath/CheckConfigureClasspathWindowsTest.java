@@ -188,7 +188,8 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * Check, that all workspaces are present in list grid
        */
-      IDE.CLASSPATH_PROJECT.checkElementsInChooseSourceTreeGrid(WORKSPACES);
+      String[] workspaces = {WS_NAME, WS_NAME_2};
+      IDE.CLASSPATH_PROJECT.checkElementsInChooseSourceTreeGrid(workspaces);
       IDE.CLASSPATH_PROJECT.checkChooseSourceOkButtonEnabledState(false);
       IDE.CLASSPATH_PROJECT.checkChooseSourceCancelButtonEnabledState(true);
 

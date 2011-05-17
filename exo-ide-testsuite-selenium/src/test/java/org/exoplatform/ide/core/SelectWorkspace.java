@@ -31,63 +31,18 @@ import org.exoplatform.ide.TestConstants;
 */
 public class SelectWorkspace extends AbstractTestModule
 {
-   private static final String SELECT_WORKSPACE_FORM_LOCATOR = "//div[@view-id='ideSelectWorkspaceView']";
+   public static final String SELECT_WORKSPACE_FORM_LOCATOR = "//div[@view-id='ideSelectWorkspaceView']";
    
-   private static final String LIST_GRID_ID = "ideEntryPointListGrid";
+   public static final String LIST_GRID_ID = "ideEntryPointListGrid";
    
-   private static final String OK_BUTTON_ID = "ideEntryPointOkButton";
+   public static final String OK_BUTTON_ID = "ideEntryPointOkButton";
    
+   public static final String CANCEL_BUTTON_ID = "ideEntryPointCancelButton";
    
    //!!!secondworkspace locator prescribe hardcode 
-   private static String SELECTED_WORKSPACE_LOCATOR = SELECT_WORKSPACE_FORM_LOCATOR
+   private static String SECOND_ROW_LOCATOR = SELECT_WORKSPACE_FORM_LOCATOR
       + "//table[@id='ideEntryPointListGrid']/tbody/tr[1]";
 
-   //TODO Method shold be refactor. After add in change in UI IDE and set attribute on  select element in Workspace Window tree
-   public String getNonActiveWorkspaceName1() throws Exception
-   {
-      String secondWorkspaceUrl = null;
-      IDE().MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
-      Thread.sleep(TestConstants.SLEEP);
-      selenium().click(SELECTED_WORKSPACE_LOCATOR);
-
-      if (selenium().isElementPresent(
-         "//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
-      {
-         secondWorkspaceUrl = selenium().getText(SELECTED_WORKSPACE_LOCATOR);
-      }
-      else
-      {
-         // click "DOWN" to go to next workspace in the list
-         selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-         // test if "Ok" button is enabled
-         if (selenium().isElementPresent(
-            "//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
-         {
-            secondWorkspaceUrl = selenium().getText(SELECTED_WORKSPACE_LOCATOR);
-         }
-      }
-
-      if ((secondWorkspaceUrl == null) || ("".equals(secondWorkspaceUrl)))
-      {
-         System.out.println("Error. It is impossible to recognise second workspace!");
-      }
-
-      // click the "Cancel" button
-      selenium().click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]");
-
-      // remove text before workspace name
-      String secondWorkspaceName =
-         secondWorkspaceUrl.toLowerCase().replace((BaseTest.ENTRY_POINT_URL).toLowerCase(), "");
-
-      // remove ended '/'
-      secondWorkspaceName = secondWorkspaceName.replace("/", "");
-
-      return secondWorkspaceName;
-   }
-   
    /**
     * Call "Select workspace" dialog and select workspace by workspaceName.
     *  
@@ -99,7 +54,7 @@ public class SelectWorkspace extends AbstractTestModule
    {
       IDE().MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
 
-      waitForElementPresent(SELECTED_WORKSPACE_LOCATOR);
+      waitForElementPresent(SECOND_ROW_LOCATOR);
       waitForElementPresent(LIST_GRID_ID);
       checkButtonState(OK_BUTTON_ID, false);
       String url = BaseTest.ENTRY_POINT_URL + workspaceName;
@@ -120,8 +75,35 @@ public class SelectWorkspace extends AbstractTestModule
    
    public void selectWorkspaceInListGrid(String workspaceUrl) throws InterruptedException
    {
-      selenium().clickAt(SELECT_WORKSPACE_FORM_LOCATOR + "//span[text()='" + workspaceUrl + "']", "");
+      selenium().click(SELECT_WORKSPACE_FORM_LOCATOR + "//span[text()='" + workspaceUrl + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
+   }
+   
+   public void waitForDialog() throws Exception
+   {
+      waitForElementPresent(SELECT_WORKSPACE_FORM_LOCATOR);
+   }
+   
+   public boolean getOkButtonState() throws Exception
+   {
+      return getButtonState(OK_BUTTON_ID);
+   }
+   
+   public boolean getCancelButtonState() throws Exception
+   {
+      return getButtonState(CANCEL_BUTTON_ID);
+   }
+   
+   public void clickOkButton() throws Exception
+   {
+      selenium().click(OK_BUTTON_ID);
+      waitForElementNotPresent(SELECT_WORKSPACE_FORM_LOCATOR);
+   }
+   
+   public void clickCancelButton() throws Exception
+   {
+      selenium().click(CANCEL_BUTTON_ID);
+      waitForElementNotPresent(SELECT_WORKSPACE_FORM_LOCATOR);
    }
 
 }

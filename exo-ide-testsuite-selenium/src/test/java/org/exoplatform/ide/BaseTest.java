@@ -111,15 +111,9 @@ public abstract class BaseTest
    public static final IDE IDE = new IDE(selenium);
 
    /**
-    * Workspaces for IDE. 
-    * Element with 0 index - default workspace.
-    */
-   protected static final String[] WORKSPACES = {"dev-monit", "production"};
-
-   /**
     * URL of default workspace in IDE.
     */
-   protected static final String WORKSPACE_URL = ENTRY_POINT_URL + WORKSPACES[0] + "/";
+   protected static final String WORKSPACE_URL = ENTRY_POINT_URL + WS_NAME + "/";
 
    @BeforeClass
    public static void startSelenium() throws Exception

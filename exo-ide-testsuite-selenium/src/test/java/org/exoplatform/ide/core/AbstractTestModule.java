@@ -152,12 +152,40 @@ public abstract class AbstractTestModule
    /**
     * Check the state of button (enabled, disabled) by button id.
     * 
+    * Use instead of this method <code>assertTrue(getButtonState(buttonId));</code>
+    * 
     * @param buttonId - the id of button
     * @param isEnabled - is enabled
     */
    public void checkButtonState(String buttonId, boolean isEnabled)
    {
       assertTrue(selenium().isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
+   }
+   
+   /**
+    * Get the state of button (enabled, disabled) by button id.
+    * @param buttonId - the id of button
+    * @return is button enabled or disabled
+    * @throws InterruptedException 
+    */
+   public boolean getButtonState(String buttonId) throws Exception
+   {
+      if (selenium().isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='true']"))
+         return true;
+      if (selenium().isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='false']"))
+         return false;
+      throw new Exception("Can't determine is button enabled or disabled");
+   }
+   
+   /**
+    * To check the title of gwt dialog.
+    * 
+    * @param title - the title of gwt dialog
+    * @return
+    */
+   public String getGwtDialogCaptionLocator(String title)
+   {
+      return "//div[@class='gwt-DialogBox']//div[@class='Caption']/span[text()='" + title + "']";
    }
 
 }
