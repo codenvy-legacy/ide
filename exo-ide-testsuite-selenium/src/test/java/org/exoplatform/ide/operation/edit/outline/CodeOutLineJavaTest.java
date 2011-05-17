@@ -106,7 +106,7 @@ public class CodeOutLineJavaTest extends BaseTest
       outlineTreeHelper.addOutlineItem("sfill : String", 12, false, TokenType.PROPERTY, "fill");      
       outlineTreeHelper.addOutlineItem("ColoredRect(int, int, int, int, Color, Color) : void", 17, TokenType.METHOD, "ColoredRect");
       outlineTreeHelper.addOutlineItem("draw(@Graphics) : void", 27, TokenType.METHOD, "draw");
-      outlineTreeHelper.addOutlineItem("color : String", 8, TokenType.VARIABLE, "color");
+      outlineTreeHelper.addOutlineItem("color : String", 30, false, TokenType.VARIABLE, "color");   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();
