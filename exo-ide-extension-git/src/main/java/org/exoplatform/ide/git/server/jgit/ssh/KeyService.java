@@ -73,29 +73,29 @@ public class KeyService
       return Response.ok().build();
    }
 
-   /**
-    * Add prepared private key.
-    */
-   @POST
-   @Path("add")
-   @RolesAllowed({"users"})
-   public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host, byte[] keyBody)
-   {
-      if (!security.isSecure())
-         throw new WebApplicationException(Response.status(400)
-            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
-      try
-      {
-         delegate.addPrivateKey(host, keyBody);
-      }
-      catch (IOException ioe)
-      {
-         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
-            .build());
-      }
-      return Response.ok().build();
-   }
-
+//   /**
+//    * Add prepared private key.
+//    */
+//   @POST
+//   @Path("add")
+//   @RolesAllowed({"users"})
+//   public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host, byte[] keyBody)
+//   {
+//      if (!security.isSecure())
+//         throw new WebApplicationException(Response.status(400)
+//            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+//      try
+//      {
+//         delegate.addPrivateKey(host, keyBody);
+//      }
+//      catch (IOException ioe)
+//      {
+//         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
+//            .build());
+//      }
+//      return Response.ok().build();
+//   }
+   
    /**
     * Get public key.
     * 
