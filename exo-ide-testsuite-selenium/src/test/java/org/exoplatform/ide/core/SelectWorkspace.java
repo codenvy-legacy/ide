@@ -39,10 +39,6 @@ public class SelectWorkspace extends AbstractTestModule
    
    public static final String CANCEL_BUTTON_ID = "ideEntryPointCancelButton";
    
-   //!!!secondworkspace locator prescribe hardcode 
-   private static String SECOND_ROW_LOCATOR = SELECT_WORKSPACE_FORM_LOCATOR
-      + "//table[@id='ideEntryPointListGrid']/tbody/tr[1]";
-
    /**
     * Call "Select workspace" dialog and select workspace by workspaceName.
     *  
@@ -54,9 +50,10 @@ public class SelectWorkspace extends AbstractTestModule
    {
       IDE().MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
 
-      waitForElementPresent(SECOND_ROW_LOCATOR);
+      waitForElementPresent(SELECT_WORKSPACE_FORM_LOCATOR);
       waitForElementPresent(LIST_GRID_ID);
-      checkButtonState(OK_BUTTON_ID, false);
+      waitForElementPresent(OK_BUTTON_ID);
+      waitForElementPresent(CANCEL_BUTTON_ID);
       String url = BaseTest.ENTRY_POINT_URL + workspaceName;
       if (!url.endsWith("/"))
       {
