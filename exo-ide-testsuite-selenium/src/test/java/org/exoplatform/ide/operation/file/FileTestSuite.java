@@ -34,21 +34,20 @@ import org.junit.runners.Suite.SuiteClasses;
 //   DeleteSeveralFilesSimultaniouslyTest.class,
 //   CreatingAndSavingAsNewFileTest.class,
 //   OpenFileWithNonDefaultEditorTest.class,   
-//   ShowHideLineNumbersTest.class,
-//   
+//   ShowHideLineNumbersTest.class,   
 //   RenameOpenedFileTest.class
 //   RenameClosedFileTest.class
+//   DeletingFilesTest.class
 
-   DeletingFilesTest.class
-   
+   ClosingAndSaveAsFileTest.class
 //   DisplayingWarningMessageTest.class,
+   
 //   StoreOpenedFilesHistoryTest.class
 //   SavingPreviouslyEditedFileTest.class,
-//   
-//   ClosingAndSaveAsFileTest.class,
 //   ChekIconsTests.class,
 //   NavigationPanelWithoutSelectedItemTest.class
 
+   
 //   OpenAndSaveXmlFileWithNonLatinNameTest.class
 //   CreateSaveAsXmlWithNonLatinNameTest.class,
 //   DeletingXmlFileWithNonLatinNameTest.class,

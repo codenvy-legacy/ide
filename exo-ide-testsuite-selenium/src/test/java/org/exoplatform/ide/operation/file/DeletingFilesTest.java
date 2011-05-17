@@ -20,20 +20,13 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-11: Deleting files. 
@@ -63,8 +56,7 @@ public class DeletingFilesTest extends BaseTest
    
    private static String CUR_TIME = String.valueOf(System.currentTimeMillis());
 
-   private final static String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
-      + FOLDER_NAME + "/";
+   private final static String STORAGE_URL = WS_URL + FOLDER_NAME + "/";
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
@@ -83,23 +75,30 @@ public class DeletingFilesTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-      String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
       try
       {
-         VirtualFileSystemUtils.mkcol(url);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
          VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, HTML_FILE_URL);
          VirtualFileSystemUtils.put(PATH + GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE, GROOVY_FILE_URL);
          VirtualFileSystemUtils.put(PATH + GOOGLE_GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, GOOGLE_GADGET_FILE_URL);
-         VirtualFileSystemUtils
-            .put(PATH + JAVA_SCRIPT_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, JAVA_SCRIPT_FILE_URL);
+         VirtualFileSystemUtils.put(PATH + JAVA_SCRIPT_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, JAVA_SCRIPT_FILE_URL);
          VirtualFileSystemUtils.put(PATH + XML_FILE_NAME, MimeType.APPLICATION_XML, XML_FILE_URL);
          VirtualFileSystemUtils.put(PATH + TEXT_FILE_NAME, MimeType.TEXT_PLAIN, TEXT_FILE_URL);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
+   }
+   
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(STORAGE_URL);
+      }
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -109,97 +108,38 @@ public class DeletingFilesTest extends BaseTest
    @Test
    public void testDeletingFile() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
       
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_URL, false);
+      IDE.WORKSPACE.doubleClickOnFile(GROOVY_FILE_URL);
       IDE.NAVIGATION.deleteSelectedItems();
-      
       assertEquals(404, VirtualFileSystemUtils.get(GROOVY_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(GROOVY_FILE_NAME));
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GOOGLE_GADGET_FILE_URL, false);
-
-      // delete selected items by using "Enter" key to verify issue IDE-488 "Keyboard keys are handled incorrect in the "Delete Item(s)" dialog form."
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.DELETE);
-      // click "Esc" to close dialog
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      
-      
-      
-      
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.DELETE);
-      assertTrue(selenium.isElementPresent(Locators.DeleteForm.SC_DELETE_FORM));
-      
-      // click "Enter" to remove selected items
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(selenium.isElementPresent(Locators.DeleteForm.SC_DELETE_FORM));
-      
+      IDE.WORKSPACE.doubleClickOnFile(GOOGLE_GADGET_FILE_URL);
+      IDE.NAVIGATION.deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(GOOGLE_GADGET_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + GOOGLE_GADGET_FILE_NAME));
 
-      
-      
-      
-      
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(CUR_TIME + JAVA_SCRIPT_FILE_NAME, false);
+      IDE.WORKSPACE.doubleClickOnFile(JAVA_SCRIPT_FILE_URL);
       IDE.NAVIGATION.deleteSelectedItems();
-      
       assertEquals(404, VirtualFileSystemUtils.get(JAVA_SCRIPT_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + JAVA_SCRIPT_FILE_NAME));
 
-      
-      
-      
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(CUR_TIME + XML_FILE_NAME, false);
+      IDE.WORKSPACE.doubleClickOnFile(XML_FILE_URL);
       IDE.NAVIGATION.deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(XML_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + XML_FILE_NAME));
-      
-      
-      
-      
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(CUR_TIME + TEXT_FILE_NAME, false);
+
+      IDE.WORKSPACE.doubleClickOnFile(TEXT_FILE_URL);
       IDE.NAVIGATION.deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(TEXT_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + TEXT_FILE_NAME));
 
-      
-      
-      
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(CUR_TIME + HTML_FILE_NAME, false);
+      IDE.WORKSPACE.doubleClickOnFile(HTML_FILE_URL);
       IDE.NAVIGATION.deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(HTML_FILE_URL).getStatusCode());
       assertFalse(selenium.isTextPresent(CUR_TIME + HTML_FILE_NAME));
    }
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(STORAGE_URL);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-   }
 }

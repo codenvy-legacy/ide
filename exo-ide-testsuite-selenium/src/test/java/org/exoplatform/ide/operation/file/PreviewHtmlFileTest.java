@@ -156,7 +156,7 @@ public class PreviewHtmlFileTest extends BaseTest
      IDE.EDITOR.closeTab(1);
      IDE.EDITOR.closeTab(0);
       
-      IDE.SAVE_AS.checkSaveAsIsOpened(true);
+      IDE.SAVE_AS.checkIsOpened(true);
       IDE.SAVE_AS.clickNo();
       
       IDE.PREVIEW.close();

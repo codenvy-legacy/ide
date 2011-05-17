@@ -21,6 +21,8 @@ package org.exoplatform.ide.core;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.exoplatform.ide.TestConstants;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -30,9 +32,10 @@ import static org.junit.Assert.fail;
 
 public class SaveAs extends AbstractTestModule
 {
-   public static final String SAVE_AS_DIALOG_LOCATOR = "//div[@id='ideAskForValueDialog']//div[@class='Caption']/span[text()='Save file as']";
+   public static final String SAVE_AS_DIALOG_LOCATOR =
+      "//div[@id='ideAskForValueDialog']//div[@class='Caption']/span[text()='Save file as']";
 
-   public void checkSaveAsIsOpened(boolean isOpened)
+   public void checkIsOpened(boolean isOpened)
    {
       assertEquals(isOpened, selenium().isElementPresent(SAVE_AS_DIALOG_LOCATOR));
    }
@@ -48,23 +51,27 @@ public class SaveAs extends AbstractTestModule
       fail();
    }
 
-   public void clickYes()
+   public void clickYes() throws Exception
    {
       String locator = "//div[@id='ideAskForValueDialog']//div[@id='ideAskForValueDialogOkButton']";
       selenium().click(locator);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
 
-   public void clickNo()
+   public void clickNo() throws Exception
    {
       String locator = "//div[@id='ideAskForValueDialog']//div[@id='ideAskForValueDialogNoButton']";
       selenium().click(locator);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
-   public void clickCancel()
+   public void clickCancel() throws Exception
    {
-      fail();
+      String locator = "//div[@id='ideAskForValueDialog']//div[@id='ideAskForValueDialogCancelButton']";
+      selenium().click(locator);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
    public void waitForDialog() throws Exception
    {
       waitForElementPresent(SAVE_AS_DIALOG_LOCATOR);
