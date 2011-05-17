@@ -22,21 +22,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.restservice.RESTServiceDefaultHTTPParametersTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -84,123 +82,61 @@ public class RestServicesDiscoveryTest extends BaseTest
       }
    }
 
-   @Ignore
    @Test
    public void testRestServicesDiscovery() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE
-         .selectItem(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      waitForRootElement();
-
-      // open folder
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      waitForRootElement();
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.REST_SERVICES);
       waitForElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]");
       assertTrue(selenium.isElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]"));
-      assertTrue(selenium
-         .isElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]//div//span[text()=\"OK\"]"));
+      assertTrue(selenium.isElementPresent("exoRestServicesDiscoveryOkButton"));
+      
+      openNode(Utils.md5("/aa"));
+      waitForElementPresent(Utils.md5("/aa/testService11/"));
+      openNode(Utils.md5("/aa/testService11/"));
+      waitForElementPresent(Utils.md5("/aa/testService11/Inner/{pathParam}"));
 
-      assertEquals("/aa", getTitle("/aa"));
+      openNode(Utils.md5("/aa/testService11/Inner/{pathParam}"));
+      waitForElementPresent(Utils.md5("/aa/testService11/Inner/{pathParam}") + ":POST");
+      assertTrue(selenium.isElementPresent(Utils.md5("/aa/testService11/Inner/{pathParam}") + ":POST"));
+      assertTrue(selenium.isElementPresent(Utils.md5("/aa/testService11/Inner/{pathParam}") + ":GET"));
 
-      openNode(0, 0);
-      Thread.sleep(TestConstants.SLEEP);
-      openNode(1, 0);
-      Thread.sleep(TestConstants.SLEEP);
+      selectNode(Utils.md5("/aa/testService11/Inner/{pathParam}"));
 
-      assertEquals("/testService11", getTitle("/testService11"));
+      assertFalse(selenium.isVisible("ideRestServiceDiscoveryParameters"));
+      assertFalse(selenium.isVisible("ideResponseType"));
+      assertFalse(selenium.isVisible("ideRequestType"));
 
-      //      assertEquals("/Inner/{pathParam}", selenium.getText("scLocator=//TreeGrid[ID=\"ideRestServiceTreeGrid\"]/body/row[2]/col[0]"));
-      assertEquals("/Inner/{pathParam}", getTitle("/Inner/{pathParam}"));
+      selectNode(Utils.md5("/aa/testService11/Inner/{pathParam}") + ":POST");
 
-      openNode(2, 0);
+      assertEquals("application/xml", selenium.getValue("ideRequestType"));
 
-      assertEquals("GET", getTitle("GET"));
+      assertEquals("*/*", selenium.getValue("ideResponseType"));
 
-      assertEquals("POST", getTitle("POST"));
+      selectNode(Utils.md5("/aa/testService11/") + ":OPTIONS");
 
-      assertEquals("OPTIONS", getTitle("OPTIONS"));
+      assertEquals("n/a", selenium.getValue("ideRequestType"));
 
-      //      clickNode(1);
+      assertEquals("application/vnd.sun.wadl+xml", selenium.getValue("ideResponseType"));
 
-      assertFalse(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/"));
-      assertFalse(selenium
-         .isElementPresent("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideResponseType]/element"));
-      assertFalse(selenium
-         .isElementPresent("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideRequestType]/element"));
-
-      clickNode(3);
-
-      assertEquals("application/xml",
-         selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideRequestType]/element"));
-
-      assertEquals("*/*",
-         selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideResponseType]/element"));
-
-      assertTrue(selenium
-         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=Test-Header]/col[0]"));
-      assertTrue(selenium
-         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=TestQueryParam%201]/col[0]"));
-      assertTrue(selenium
-         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=pathParam||default=pathParam%20Default]/col[0]"));
-
-      clickNode(5);
-
-      assertEquals("n/a",
-         selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideRequestType]/element"));
-
-      assertEquals("application/vnd.sun.wadl+xml",
-         selenium
-            .getValue("scLocator=//DynamicForm[ID=\"ideRestServiceDiscoveryForm\"]/item[name=ideResponseType]/element"));
-
-      assertFalse(selenium
-         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=Test-Header]/col[0]"));
-      assertFalse(selenium
-         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=TestQueryParam%201]/col[0]"));
-      assertFalse(selenium
-         .isElementPresent("scLocator=//ListGrid[ID=\"ideRestServiceDiscoveryParameters\"]/body/row[name=pathParam||default=pathParam%20Default]/col[0]"));
-      assertTrue(selenium.isElementPresent("//input[@name='ideRequestType' and @class='textItemDisabled']"));
-      selenium.click("scLocator=//IButton[ID=\"ideRestServiceDiscoveryOkButton\"]/");
+      selenium.click("exoRestServicesDiscoveryOkButton");
 
    }
 
+   private void openNode(String id)
+   {
+      String locator = "//div[@id='" + id + "']/table/tbody/tr/td[1]/img";
+      selenium.clickAt(locator, "0");
+   }
+
    /**
-    * click the outline item node
-    * @param rowNumber startign from 0
+    * click the item node
+    * @param rowID
     * @throws Exception
     */
-   protected static void clickNode(int rowNumber) throws Exception
+   protected static void selectNode(String rowID) throws Exception
    {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideRestServiceTreeGrid\"]/body/row[" + String.valueOf(rowNumber)
-         + "]/col[0]");
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   /**
-    * @throws InterruptedException
-    */
-   private void openNode(int row, int col) throws InterruptedException
-   {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideRestServiceTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col["
-         + String.valueOf(col) + "]/open");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-
-   private String getTitle(String elementDiscovery)
-   {
-      return selenium.getText("//div[@class=\"ide-Tree-label\" and text()=\"/aa\"]");
+      selenium.clickAt(rowID, "0");
    }
 
    @AfterClass
