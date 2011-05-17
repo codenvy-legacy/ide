@@ -10,7 +10,7 @@
 		<c:HPanel>
 			<c:Border margin="5">
 					<g:ScrollPanel width="100%" height="100%">
-						<rd:RestServiceTree width="100%" height="100%" ui:field="treeGrid"></rd:RestServiceTree>
+						<rd:RestServiceTree width="100%" height="100%" ui:field="treeGrid" treeId="exoRestServicesDiscoveryTree"></rd:RestServiceTree>
 					</g:ScrollPanel>
 			</c:Border>
 			
@@ -23,7 +23,7 @@
 						<g:FlowPanel height="6px"></g:FlowPanel>
 
 						<c:Border ui:field="parametersListGridContainer">
-							<rd:RestServiceParameterListGrid ui:field="parametersListGrid"></rd:RestServiceParameterListGrid>
+							<rd:RestServiceParameterListGrid ui:field="parametersListGrid" ID="ideRestServiceDiscoveryParameters" ></rd:RestServiceParameterListGrid>
 						</c:Border>						
 					</c:VPanel>
 			</c:Border>
@@ -32,7 +32,7 @@
 		<c:Panel height="40px">
 			<g:HorizontalPanel spacing="5" width="100%" height="100%">
 				<g:cell horizontalAlignment='ALIGN_CENTER' verticalAlignment="ALIGN_MIDDLE">
-					<c:ImageButton text="Ok" imageName="ok" ui:field="okButton"></c:ImageButton>
+					<c:ImageButton text="Ok" imageName="ok" ui:field="okButton" buttonId="exoRestServicesDiscoveryOkButton"></c:ImageButton>
 				</g:cell>
 			</g:HorizontalPanel>
 		</c:Panel>

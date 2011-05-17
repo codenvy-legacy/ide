@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.wadl.Request;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.ui.client.component.Tree;
 import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.discovery.RestService;
 import org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid;
 
@@ -38,11 +39,21 @@ import com.google.gwt.user.client.ui.TreeItem;
  */
 public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
 {
-   
+
    private Set<String> restClassPaths;
-   
-   public RestServiceTree() {
+
+   public RestServiceTree()
+   {
       getElement().getStyle().setZIndex(0);
+   }
+
+   /**
+    * Set id attribute
+    * @param id
+    */
+   public void setTreeId(String id)
+   {
+      getElement().setId(id);
    }
 
    /**
@@ -51,19 +62,19 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
    @Override
    public void setRootValue(RestService item, Set<String> restClassPath)
    {
-      
+
       this.restClassPaths = restClassPath;
       tree.removeItems();
       for (RestService rs : item.getChildServices().values())
       {
          addRestService(null, rs);
       }
-      if(tree.getItemCount() > 0)
+      if (tree.getItemCount() > 0)
       {
          tree.setSelectedItem(tree.getItem(0));
       }
    }
-   
+
    /**
     * @see org.exoplatform.gwtframework.ui.client.component.Tree#moveHighlight(com.google.gwt.user.client.ui.TreeItem)
     */
@@ -71,9 +82,9 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
    protected void moveHighlight(TreeItem currentItem)
    {
       super.moveHighlight(currentItem);
-      if(currentItem.getElement().getFirstChildElement().getOffsetWidth() > tree.getOffsetWidth())
+      if (currentItem.getElement().getFirstChildElement().getOffsetWidth() > tree.getOffsetWidth())
       {
-         hiPanel.setWidth(currentItem.getElement().getFirstChildElement().getOffsetWidth() + 10+ "px");
+         hiPanel.setWidth(currentItem.getElement().getFirstChildElement().getOffsetWidth() + 10 + "px");
       }
       else
       {
@@ -126,6 +137,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
    {
       TreeItem node = new TreeItem(createItemWidget(icon, rs.getPath()));
       node.setUserObject(rs);
+      node.getElement().setId(Utils.md5(rs.getFullPath()));
       return node;
    }
 
@@ -149,8 +161,9 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
                   title = title.substring(rs.getFullPath().length());
             }
 
-            TreeItem newNode = new TreeItem(createItemWidget(Images.RestService.RESOURCE,  title));
+            TreeItem newNode = new TreeItem(createItemWidget(Images.RestService.RESOURCE, title));
             newNode.setUserObject(r);
+            newNode.getElement().setId(Utils.md5(r.getPath()));
             parentNode.addItem(newNode);
 
             if (r.getMethodOrResource() != null && !r.getMethodOrResource().isEmpty())
@@ -178,6 +191,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
             }
             TreeItem newNode = new TreeItem(createItemWidget(Images.RestService.METHOD, m.getName()));
             newNode.setUserObject(m);
+            newNode.getElement().setId(Utils.md5(m.getHref()) + ":" + m.getName());
             parentNode.addItem(newNode);
          }
 
@@ -199,10 +213,10 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
          if (node != null)
             break;
       }
-      
+
       if (node == null)
          return;
-      
+
       node.removeItems();
 
       fillServiceTree(node, resources);
@@ -213,9 +227,9 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
    {
 
       Object o = parent.getUserObject();
-      if(o != null && o instanceof RestService)
+      if (o != null && o instanceof RestService)
       {
-         if(((RestService)o).getFullPath().equals(name))
+         if (((RestService)o).getFullPath().equals(name))
          {
             return parent;
          }
