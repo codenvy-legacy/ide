@@ -811,7 +811,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       });
 
       Button diffButton = new Button();
-      diffButton.setTitle("Create CodeMorror Editor for diff");
+      diffButton.setTitle("Create CodeMirror Editor for diff");
       diffButton.setText("Diff");
       diffButton.addClickHandler(new ClickHandler()
       {
@@ -819,8 +819,6 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            params.put(EditorParameters.MIME_TYPE, MimeType.DIFF);
-
             editor = codeEditors.get(MimeType.DIFF).createEditor(ExamplesBundle.INSTANCE.diffExample().getText(), eventBus, params);
             panel.clear();
             panel.add(editor);
