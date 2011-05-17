@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.git.shared;
 
-
 /**
- * Request to show changes between commits.
+ * Request to show changes between commits. Use {@link #commitA} and {@link #commitB} to specify values for comparison.
+ * <ul>
+ * <li>If both are omitted then view changes between index and working tree.</li>
+ * <li>If both are specified then view changes between two commits.</li>
+ * <li>If {@link #commitA} is specified ONLY then behavior is dependent on state of {@link #cached}. If
+ * <code>cached==false<code> then view changes between specified commit and working tree. If
+ * <code>cached==true<code> then view changes between specified commit and index.</li>
+ * </ul>
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: DiffRequest.java 22817 2011-03-22 09:17:52Z andrew00x $
@@ -68,8 +74,8 @@ public class DiffRequest extends GitRequest
    }
 
    /**
-    * Filter of file to show diff. It may be either list of file names to show
-    * diff or name of directory to show all files under them.
+    * Filter of file to show diff. It may be either list of file names to show diff or name of directory to show all
+    * files under them.
     */
    private String[] fileFilter;
 
@@ -86,19 +92,55 @@ public class DiffRequest extends GitRequest
    private boolean noRenames = true;
 
    /**
-    * Limit of showing renames in diff output. This attribute has sense if
-    * {@link #noRenames} is <code>false</code>.
+    * Limit of showing renames in diff output. This attribute has sense if {@link #noRenames} is <code>false</code>.
     */
    private int renameLimit;
 
    /**
-    * @param fileFilter filter of file to show diff. It may be either list of
-    *           file names to show diff or name of directory to show all files
-    *           under them
+    * First commit to view changes.
+    */
+   private String commitA;
+
+   /**
+    * Second commit to view changes.
+    */
+   private String commitB;
+
+   /**
+    * If <code>false</code> (default) view changes between {@link #commitA} and working tree otherwise between
+    * {@link #commitA} and index.
+    */
+   private boolean cached;
+
+   public DiffRequest(String[] fileFilter, DiffType type, boolean noRenames, int renameLimit, String commitA,
+      String commitB)
+   {
+      this.fileFilter = fileFilter;
+      this.type = type;
+      this.noRenames = noRenames;
+      this.renameLimit = renameLimit;
+      this.commitA = commitA;
+      this.commitB = commitB;
+   }
+
+   public DiffRequest(String[] fileFilter, DiffType type, boolean noRenames, int renameLimit, String commitA,
+      boolean cached)
+   {
+      this.fileFilter = fileFilter;
+      this.type = type;
+      this.noRenames = noRenames;
+      this.renameLimit = renameLimit;
+      this.commitA = commitA;
+      this.cached = cached;
+   }
+
+   /**
+    * @param fileFilter filter of file to show diff. It may be either list of file names to show diff or name of
+    *           directory to show all files under them
     * @param type type of diff output
     * @param noRenames do not show renames. Default is <code>true</code>
-    * @param renameLimit limit of showing renames in diff output. This attribute
-    *           has sense if {@link #noRenames} is <code>false</code>
+    * @param renameLimit limit of showing renames in diff output. This attribute has sense if {@link #noRenames} is
+    *           <code>false</code>
     */
    public DiffRequest(String[] fileFilter, DiffType type, boolean noRenames, int renameLimit)
    {
@@ -109,16 +151,15 @@ public class DiffRequest extends GitRequest
    }
 
    /**
-    * "Empty" diff request. Corresponding setters used to setup required
-    * parameters.
+    * "Empty" diff request. Corresponding setters used to setup required parameters.
     */
    public DiffRequest()
    {
    }
 
    /**
-    * @return filter of file to show diff. It may be either list of file names
-    *         or name of directory to show all files under them
+    * @return filter of file to show diff. It may be either list of file names or name of directory to show all files
+    *         under them
     */
    public String[] getFileFilter()
    {
@@ -126,8 +167,8 @@ public class DiffRequest extends GitRequest
    }
 
    /**
-    * @param fileFilter filter of file to show diff. It may be either list of
-    *           file names or name of directory to show all files under them
+    * @param fileFilter filter of file to show diff. It may be either list of file names or name of directory to show
+    *           all files under them
     */
    public void setFileFilter(String[] fileFilter)
    {
@@ -159,8 +200,7 @@ public class DiffRequest extends GitRequest
    }
 
    /**
-    * @param noRenames <code>true</code> if renames must not be showing in diff
-    *           result
+    * @param noRenames <code>true</code> if renames must not be showing in diff result
     */
    public void setNoRenames(boolean noRenames)
    {
@@ -168,8 +208,8 @@ public class DiffRequest extends GitRequest
    }
 
    /**
-    * @return limit of showing renames in diff output. This attribute has sense
-    *         if {@link #noRenames} is <code>false</code>
+    * @return limit of showing renames in diff output. This attribute has sense if {@link #noRenames} is
+    *         <code>false</code>
     */
    public int getRenameLimit()
    {
@@ -177,11 +217,61 @@ public class DiffRequest extends GitRequest
    }
 
    /**
-    * @param renameLimit limit of showing renames in diff output. This attribute
-    *           has sense if {@link #noRenames} is <code>false</code>
+    * @param renameLimit limit of showing renames in diff output. This attribute has sense if {@link #noRenames} is
+    *           <code>false</code>
     */
    public void setRenameLimit(int renameLimit)
    {
       this.renameLimit = renameLimit;
+   }
+
+   /**
+    * @return first commit to view changes
+    */
+   public String getCommitA()
+   {
+      return commitA;
+   }
+
+   /**
+    * @param commitA first commit to view changes
+    */
+   public void setCommitA(String commitA)
+   {
+      this.commitA = commitA;
+   }
+
+   /**
+    * @return second commit to view changes
+    */
+   public String getCommitB()
+   {
+      return commitB;
+   }
+
+   /**
+    * @param commitB second commit to view changes
+    */
+   public void setCommitB(String commitB)
+   {
+      this.commitB = commitB;
+   }
+
+   /**
+    * @return if <code>false</code> (default) view changes between {@link #commitA} and working tree otherwise between
+    *         {@link #commitA} and index
+    */
+   public boolean isCached()
+   {
+      return cached;
+   }
+
+   /**
+    * @param cached if <code>false</code> (default) view changes between {@link #commitA} and working tree otherwise
+    *           between {@link #commitA} and index
+    */
+   public void setCached(boolean cached)
+   {
+      this.cached = cached;
    }
 }

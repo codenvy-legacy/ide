@@ -46,8 +46,6 @@ import org.eclipse.jgit.api.errors.NotMergedException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
@@ -85,9 +83,7 @@ import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
-import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.exoplatform.ide.git.server.DiffPage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitException;
@@ -520,81 +516,7 @@ public class JGitConnection implements GitConnection
    @Override
    public DiffPage diff(DiffRequest request) throws GitException
    {
-      try
-      {
-         ObjectId head = repository.resolve(Constants.HEAD);
-
-         RevWalk revWalk = new RevWalk(repository);
-         RevTree headTree;
-         try
-         {
-            headTree = revWalk.parseTree(head);
-         }
-         finally
-         {
-            revWalk.release();
-         }
-
-         TreeWalk treeWalk = new TreeWalk(repository);
-         treeWalk.reset();
-         treeWalk.setRecursive(true);
-         List<DiffEntry> diff;
-         try
-         {
-            treeWalk.addTree(headTree);
-            treeWalk.addTree(new FileTreeIterator(repository));
-
-            String[] rawFileFilter = request.getFileFilter();
-            TreeFilter pathFilter =
-               (rawFileFilter != null && rawFileFilter.length > 0) ? pathFilter =
-                  PathFilterGroup.createFromStrings(Arrays.asList(rawFileFilter)) : TreeFilter.ALL;
-
-            treeWalk.setFilter(AndTreeFilter.create(TreeFilter.ANY_DIFF, pathFilter));
-
-            diff = DiffEntry.scan(treeWalk);
-         }
-         finally
-         {
-            treeWalk.release();
-         }
-
-         if (!request.isNoRenames())
-         {
-            RenameDetector rd = new RenameDetector(repository);
-            int renameLimit = request.getRenameLimit();
-            if (renameLimit > 0)
-               rd.setRenameLimit(renameLimit);
-            rd.addAll(diff);
-            diff = rd.compute();
-         }
-
-         // To avoid closing repository before diff-page serialized.
-         // Repository will be closed in DiffPage.writeTo(OutputStream).
-         // See also org.eclipse.jgit.lib.Repository.close().
-         repository.incrementOpen();
-
-         return new JGitDiffPage(diff, request, repository);
-      }
-      catch (MissingObjectException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (IncorrectObjectTypeException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (CorruptObjectException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (AmbiguousObjectException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (IOException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
+      return new JGitDiffPage(request, repository);
    }
 
    /**

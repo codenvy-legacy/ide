@@ -38,6 +38,7 @@ import java.util.List;
  */
 public class DiffTest extends BaseTest
 {
+   private Git git;
 
    @Override
    protected void setUp() throws Exception
@@ -45,14 +46,11 @@ public class DiffTest extends BaseTest
       super.setUp();
       Repository repository = getDefaultRepository();
       addFile(repository.getWorkTree(), "aaa", "AAA\n");
-
       new File(repository.getWorkTree(), "README.txt").delete();
-      Git git = new Git(repository);
-
-      git.add().addFilepattern(".").call();
+      git = new Git(repository);
    }
 
-   public void testDiffNameAndStatus() throws Exception
+   public void testDiffNameStatus() throws Exception
    {
       List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_STATUS, false, 0));
       assertEquals(2, diff.size());
@@ -60,9 +58,31 @@ public class DiffTest extends BaseTest
       assertTrue(diff.contains("A\taaa"));
    }
 
-   public void testDiffNameAndStatusWithFileFilter() throws Exception
+   public void testDiffNameStatusWithCommits() throws Exception
+   {
+      git.add().addFilepattern("aaa").call();
+      git.rm().addFilepattern("README.txt").call();
+      git.commit().setMessage("testDiffNameStatusWithCommits").setAuthor("andrey", "andrey@mail.com").call();
+      List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_STATUS, false, 0, "HEAD^", "HEAD"));
+      assertEquals(2, diff.size());
+      assertTrue(diff.contains("D\tREADME.txt"));
+      assertTrue(diff.contains("A\taaa"));
+   }
+
+   public void testDiffNameStatusWithFileFilter() throws Exception
    {
       List<String> diff = readDiff(new DiffRequest(new String[]{"aaa"}, DiffType.NAME_STATUS, false, 0));
+      assertEquals(1, diff.size());
+      assertTrue(diff.contains("A\taaa"));
+   }
+
+   public void testDiffNameStatusWithFileFilterAndCommits() throws Exception
+   {
+      git.add().addFilepattern("aaa").call();
+      git.rm().addFilepattern("README.txt").call();
+      git.commit().setMessage("testDiffNameStatusWithFileFilterAndCommits").setAuthor("andrey", "andrey@mail.com")
+         .call();
+      List<String> diff = readDiff(new DiffRequest(new String[]{"aaa"}, DiffType.NAME_STATUS, false, 0, "HEAD^1", "HEAD"));
       assertEquals(1, diff.size());
       assertTrue(diff.contains("A\taaa"));
    }
@@ -75,11 +95,75 @@ public class DiffTest extends BaseTest
       assertTrue(diff.contains("aaa"));
    }
 
+   public void testDiffNameOnlyWithCommits() throws Exception
+   {
+      git.add().addFilepattern("aaa").call();
+      git.rm().addFilepattern("README.txt").call();
+      git.commit().setMessage("testDiffNameOnlyWithCommits").setAuthor("andrey", "andrey@mail.com").call();
+      List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_ONLY, false, 0, "HEAD^1", "HEAD"));
+      assertEquals(2, diff.size());
+      assertTrue(diff.contains("README.txt"));
+      assertTrue(diff.contains("aaa"));
+   }
+
+   public void testDiffNameOnlyCached() throws Exception
+   {
+      git.add().addFilepattern("aaa").call();
+      List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_ONLY, false, 0, "HEAD", true));
+      assertEquals(1, diff.size());
+      assertTrue(diff.contains("aaa"));
+   }
+
+   public void testDiffNameOnlyCachedNoCommit() throws Exception
+   {
+      git.add().addFilepattern("aaa").call();
+      List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_ONLY, false, 0, null, true));
+      assertEquals(1, diff.size());
+      assertTrue(diff.contains("aaa"));
+   }
+
+   public void testDiffNameOnlyWorkingTree() throws Exception
+   {
+      List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_ONLY, false, 0, "HEAD", false));
+      assertEquals(2, diff.size());
+      assertTrue(diff.contains("README.txt"));
+      assertTrue(diff.contains("aaa"));
+   }
+
    public void testDiffNameOnlyWithFileFilter() throws Exception
    {
       List<String> diff = readDiff(new DiffRequest(new String[]{"aaa"}, DiffType.NAME_ONLY, false, 0));
       assertEquals(1, diff.size());
       assertTrue(diff.contains("aaa"));
+   }
+
+   public void testDiffNameOnlyWithFileFilterAndCommits() throws Exception
+   {
+      git.add().addFilepattern("aaa").call();
+      git.rm().addFilepattern("README.txt").call();
+      git.commit().setMessage("testDiffNameOnlyWithFileFilterAndCommits").setAuthor("andrey", "andrey@mail.com").call();
+      List<String> diff = readDiff(new DiffRequest(new String[]{"aaa"}, DiffType.NAME_ONLY, false, 0, "HEAD^1", "HEAD"));
+      assertEquals(1, diff.size());
+      assertTrue(diff.contains("aaa"));
+   }
+
+   public void testDiffRaw() throws Exception
+   {
+      DiffRequest request = new DiffRequest(null, DiffType.RAW, false, 0);
+      DiffPage diffPage = (DiffPage)getDefaultConnection().diff(request);
+      // TODO
+      diffPage.writeTo(System.out);
+   }
+
+   public void testDiffRawWithCommits() throws Exception
+   {
+      git.add().addFilepattern("aaa").call();
+      git.rm().addFilepattern("README.txt").call();
+      git.commit().setMessage("testDiffRawWithCommits").call();
+      DiffRequest request = new DiffRequest(null, DiffType.RAW, false, 0, "HEAD^1", "HEAD");
+      DiffPage diffPage = (DiffPage)getDefaultConnection().diff(request);
+      // TODO
+      diffPage.writeTo(System.out);
    }
 
    private List<String> readDiff(DiffRequest request) throws Exception
@@ -95,13 +179,5 @@ public class DiffTest extends BaseTest
          diff.add(line);
 
       return diff;
-   }
-
-   public void testDiffRaw() throws Exception
-   {
-      DiffRequest request = new DiffRequest(null, DiffType.RAW, false, 0);
-      DiffPage diffPage = (DiffPage)getDefaultConnection().diff(request);
-      // TODO
-      diffPage.writeTo(System.out);
    }
 }
