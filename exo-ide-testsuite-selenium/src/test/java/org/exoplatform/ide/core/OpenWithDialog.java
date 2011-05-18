@@ -32,7 +32,14 @@ import org.exoplatform.ide.TestConstants;
 
 public class OpenWithDialog extends AbstractTestModule
 {
-
+   private static final String CKEDITOR_NAME = "CKEditor"; 
+   
+   private static final String CODEMIRROR_NAME = "CodeMirror"; 
+   
+   private static final String OPEN_WITH_VIEW_ID = "ideOpenFileWithView"; 
+   
+   private static final String OPEN_WITH_VIEW_LOCATOR = "//div[@view-id='"+OPEN_WITH_VIEW_ID+"']";
+   
    public void checkIsOpened()
    {
       fail();
@@ -41,6 +48,16 @@ public class OpenWithDialog extends AbstractTestModule
    public void checkIsOpened(boolean isOpened)
    {
       fail();
+   }
+   
+   public void waitForOpenWithDialogClosed() throws Exception
+   {
+      waitForElementNotPresent(OPEN_WITH_VIEW_LOCATOR);
+   }
+   
+   public void waitForOpenWithDialogOpened() throws Exception
+   {
+      waitForElementPresent(OPEN_WITH_VIEW_LOCATOR);
    }
 
    public void callFromMenu() throws Exception
@@ -59,17 +76,22 @@ public class OpenWithDialog extends AbstractTestModule
    }
 
    /**
-    * Selects editor by it's name in the list of editors. <p/>
+    * Selects editor by it's position in the list of editors.
+    * Note that numbering starts at 1.
     * 
-    * Note, that name of editor - it is not the whole title of 
-    * row in the list. The name - it can be part of row, that can uniquely identify
-    * editor in list.
-    * @param name - the name of editor
+    * @param index
     */
-   public void selectEditor(String name)
+   public void selectEditorByIndex(int index)
    {
       IDE().selectMainFrame();
-      String locator = "//table[@id='ideOpenFileWithListGrid']/tbody/tr/td/div[contains(text(), '" + name + "')]";
+      String locator = "//table[@id='ideOpenFileWithListGrid']/tbody[1]/tr[" + index + "]/td/div";
+      selenium().click(locator);
+   }
+
+   public void selectEditor(String value)
+   {
+      IDE().selectMainFrame();
+      String locator = "//table[@id='ideOpenFileWithListGrid']//tr//div[contains(., '"+value+"')]";
       selenium().click(locator);
    }
 
@@ -101,20 +123,14 @@ public class OpenWithDialog extends AbstractTestModule
    public void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-
-      String locator = "//table[@id='ideOpenFileWithListGrid']";
-      waitForElementPresent(locator);
-
+      waitForOpenWithDialogOpened();
+      selectEditor(CODEMIRROR_NAME);
       if (checkDefault)
       {
-         //click on checkbox Use as default editor
-         selenium().click("//span[@id='ideOpenFileWithDefaulCheckbox']/input");
-         Thread.sleep(TestConstants.ANIMATION_PERIOD);
+         clickUseAsDefaultCheckBox();
       }
-
-      selenium().click("ideOpenFileWithOkButton");
-      //time remaining to open editor
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      clickOpenButton();
+      waitForOpenWithDialogClosed();
    }
 
    /**
@@ -123,28 +139,18 @@ public class OpenWithDialog extends AbstractTestModule
     * @param checkDefault do mark checkbox Use by default
     * @throws Exception
     */
-   public void openFileFromNavigationTreeWithCkEditor(String fileURL, String typeFile, boolean checkDefault)
+   public void openSelectedFileWithCkEditor(boolean checkDefault)
       throws Exception
    {
-      //TODO add check form
-      IDE().WORKSPACE.selectItem(fileURL);
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-      selenium().click(
-         "//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" + " " + typeFile + " "
-            + "editor" + "'" + "]");
+      waitForOpenWithDialogOpened();
+      selectEditor(CKEDITOR_NAME);
       if (checkDefault)
       {
-         //click on checkbox Use as default editor
-         selenium()
-            .click(
-               "scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
-         Thread.sleep(TestConstants.SLEEP);
+         clickUseAsDefaultCheckBox();
       }
-      selenium().click("ideOpenFileWithOkButton");
-      Thread.sleep(TestConstants.SLEEP);
-      //time remaining to open CK editor
-      Thread.sleep(TestConstants.SLEEP);
-      //TODO add check that editor opened
+      clickOpenButton();
+      waitForOpenWithDialogClosed();
    }
 
 }
