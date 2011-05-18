@@ -151,7 +151,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       waitForRootElement();
       IDE.WORKSPACE.selectItem(STORAGE_URL + NON_FORMAT_GADGET_FILE_NAME);
-      IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CKEDITOR, false);
+      IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
       
     
       waitForElementPresent("//div[@panel-id='editor']");

@@ -38,48 +38,47 @@ public class Outline extends AbstractTestModule
       static final String TREE_ID = "ideOutlineTreeGrid";
 
       static final String TREE_PREFIX_ID = "outline-";
-      
+
       static final String TREE = "//div[@id='" + TREE_ID + "']/";
-      
+
       static final String scrollTopLocator =
          "document.getElementById('ideOutlineTreeGrid').parentNode.parentNode.parentNode.scrollTop";
    }
-   
+
    private static final String LINE_HIGHLIGHTER_LOCATOR = Locators.TREE + "/div[@class='ide-Tree-item-selected']";
 
    private static final int LINE_HEIGHT = 28;
 
    private static final int EDITOR_TOP_OFFSET_POSITION = 94;
-   
+
    public enum TokenType {
-      CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION, 
+      CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION,
       /** Property type for JSON */
       PROPERTY,
-      
+
       /**
        * HTML or XML tag.
        */
       TAG,
-      
+
       /**
        * HTML or XML attribute; 
        */
-      ATTRIBUTE,
-      CDATA,
+      ATTRIBUTE, CDATA,
 
       /** Property type for JavaScript */
-      BLOCK, 
-      
+      BLOCK,
+
       /** Property type for Groovy code */
       GROOVY_TAG, PACKAGE, IMPORT, PARAMETER, TYPE,
-      
+
       /** Property type for Java code */
       JSP_TAG,
-      
+
       /** Property type for Ruby code **/
       ROOT, MODULE, LOCAL_VARIABLE, GLOBAL_VARIABLE, CLASS_VARIABLE, INSTANCE_VARIABLE, CONSTANT;
    }
-   
+
    @Deprecated
    /**
     * Get title of outline node.
@@ -94,7 +93,7 @@ public class Outline extends AbstractTestModule
          "scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col["
             + String.valueOf(col) + "]");
    }
-   
+
    /**
     * Return label of item at row
     * 1 - number of root node (workspace).  
@@ -103,9 +102,8 @@ public class Outline extends AbstractTestModule
     * @return
     */
    public String getItemLabel(int rowNumber, LabelType labelType)
-   {      
-      int size =
-         selenium().getXpathCount("//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label']").intValue();
+   {
+      int size = selenium().getXpathCount("//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label']").intValue();
       if (size <= 0)
          return null;
       int index = 0;
@@ -117,16 +115,19 @@ public class Outline extends AbstractTestModule
          {
             index++;
          }
-         
+
          if (index == rowNumber)
          {
             if (labelType != null)
             {
-               return selenium().getText("xpath=(//div[@id='" + Locators.TREE_ID + "']//span[@class='" + labelType + "'])[position()=" + i + "]");               
+               return selenium().getText(
+                  "xpath=(//div[@id='" + Locators.TREE_ID + "']//span[@class='" + labelType + "'])[position()=" + i
+                     + "]");
             }
             else
             {
-               return selenium().getText("xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]");
+               return selenium().getText(
+                  "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]");
             }
          }
       }
@@ -142,7 +143,7 @@ public class Outline extends AbstractTestModule
    {
       return getItemLabel(rowNumber, null);
    }
-   
+
    @Deprecated
    /**
     * Click on open icon of outline node.
@@ -169,8 +170,7 @@ public class Outline extends AbstractTestModule
     */
    public void doubleClickItem(int row) throws Exception
    {
-      int size =
-         selenium().getXpathCount("//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label']").intValue();
+      int size = selenium().getXpathCount("//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label']").intValue();
       if (size <= 0)
          return;
       int index = 0;
@@ -182,7 +182,7 @@ public class Outline extends AbstractTestModule
          {
             index++;
          }
-         
+
          if (index == row)
          {
             selenium().doubleClickAt(
@@ -191,7 +191,7 @@ public class Outline extends AbstractTestModule
          }
       };
    }
-   
+
    /**
     * Double click the item with label 
     * 
@@ -201,8 +201,7 @@ public class Outline extends AbstractTestModule
    {
       selenium().doubleClickAt("xpath=(//div[@id='" + Locators.TREE_ID + "']//span[text() = '" + label + "']", "0");
    }
-   
-   
+
    @Deprecated
    /**
     * Select row in outline tree.
@@ -217,7 +216,7 @@ public class Outline extends AbstractTestModule
       selenium().click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(row) + "]/col[1]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
    /**
     * Select row in outline tree.
     * @param row - number of row (from 1).
@@ -225,8 +224,7 @@ public class Outline extends AbstractTestModule
     */
    public void selectRow(int rowNumber) throws Exception
    {
-      int size =
-         selenium().getXpathCount("//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label']").intValue();
+      int size = selenium().getXpathCount("//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label']").intValue();
       if (size <= 0)
          return;
       int index = 0;
@@ -238,7 +236,7 @@ public class Outline extends AbstractTestModule
          {
             index++;
          }
-         
+
          if (index == rowNumber)
          {
             selenium().clickAt(
@@ -247,7 +245,7 @@ public class Outline extends AbstractTestModule
          }
       }
    }
-   
+
    /**
     * Check is Outline Panel visible.
     * Note: you can't use this method, to check is Outline Panel visible,
@@ -281,7 +279,7 @@ public class Outline extends AbstractTestModule
    public void checkOutlineTreeNodeSelected(int rowNumber, String name, boolean isSelected)
    {
       Number linePositionTop = EDITOR_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
-      
+
       // taking in mind vertical scrolling
       Integer scrollTop = getScrollTop();
       if (scrollTop != null)
@@ -290,14 +288,16 @@ public class Outline extends AbstractTestModule
       }
 
       selenium().isElementPresent(LINE_HIGHLIGHTER_LOCATOR);
-      
+
       if (isSelected)
       {
-         assertEquals("Outline row number " + rowNumber + " should be selected.", linePositionTop, selenium().getElementPositionTop(LINE_HIGHLIGHTER_LOCATOR));
+         assertEquals("Outline row number " + rowNumber + " should be selected.", linePositionTop, selenium()
+            .getElementPositionTop(LINE_HIGHLIGHTER_LOCATOR));
       }
       else
       {
-         assertFalse("Outline row number " + rowNumber + " should not be selected.", selenium().getElementPositionTop(LINE_HIGHLIGHTER_LOCATOR) == linePositionTop);
+         assertFalse("Outline row number " + rowNumber + " should not be selected.",
+            selenium().getElementPositionTop(LINE_HIGHLIGHTER_LOCATOR) == linePositionTop);
       }
    }
 
@@ -339,7 +339,7 @@ public class Outline extends AbstractTestModule
    {
       selenium().click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[name=" + name + "]/col[1]");
    }
-   
+
    /**
     * TODO this method should be fixed 
     * Select item in tree
@@ -349,14 +349,19 @@ public class Outline extends AbstractTestModule
    {
       selenium().clickAt("//div[@id='" + Locators.TREE_ID + "']//span[contains(text(), '" + name + "')]", "0");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }  
-   
+   }
+
    /**
     * Check is outline tree present in DOM 
     */
    public void assertOutlineTreePresent()
    {
       assertTrue(selenium().isElementPresent(Locators.TREE));
+   }
+
+   public void assertOutlineTreeNotPresent()
+   {
+      assertFalse(selenium().isElementPresent(Locators.TREE));
    }
 
    /**
@@ -367,11 +372,12 @@ public class Outline extends AbstractTestModule
    {
       assertTrue(selenium().isElementPresent(Locators.TREE + "/div[@id='" + id + "']"));
    }
-   
+
    /**
     *  Method close Outline codehelper
+    * @throws InterruptedException 
     */
-   public void closeOutline()
+   public void closeOutline() throws InterruptedException
    {
       selenium().click("//div[@button-name='close-tab' and @tab-title='Outline']");
    }
@@ -387,8 +393,8 @@ public class Outline extends AbstractTestModule
       {
          // trying to read the property from Firefox         
          scrollTop =
-            Integer.parseInt(selenium().getEval("var win = selenium.browserbot.getCurrentWindow(); win."
-               + Locators.scrollTopLocator + ";"));
+            Integer.parseInt(selenium().getEval(
+               "var win = selenium.browserbot.getCurrentWindow(); win." + Locators.scrollTopLocator + ";"));
       }
       catch (NumberFormatException e)
       {
@@ -396,23 +402,18 @@ public class Outline extends AbstractTestModule
       }
 
       return scrollTop;
-   }   
-   
+   }
 
    public void selectRowTemp(int rowNumber)
    {
       if (rowNumber <= 0)
          return;
-      selenium().mouseDown(Locators.TREE + "/" +"div[" + String.valueOf(rowNumber + 2) + "]" );
+      selenium().mouseDown(Locators.TREE + "/" + "div[" + String.valueOf(rowNumber + 2) + "]");
       //selenium().mouseUp(Locators.TREE + "/" +"div[" + String.valueOf(rowNumber + 2) + "]" );
-  }
-  
-   public enum LabelType 
-   {
-      NAME("item-name"), 
-      TYPE("item-type"), 
-      PARAMETER("item-parameter"),
-      MODIFIER("item-modifier");
+   }
+
+   public enum LabelType {
+      NAME("item-name"), TYPE("item-type"), PARAMETER("item-parameter"), MODIFIER("item-modifier");
 
       private String className;
 

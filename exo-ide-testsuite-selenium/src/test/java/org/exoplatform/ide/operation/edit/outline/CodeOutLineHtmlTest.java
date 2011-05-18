@@ -92,10 +92,10 @@ public class CodeOutLineHtmlTest extends BaseTest
    {
       //---- 1-3 -----------------
       //open file with text
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/"+ FILE_NAME, false);
 
       //---- 4 ----
       //show Outline

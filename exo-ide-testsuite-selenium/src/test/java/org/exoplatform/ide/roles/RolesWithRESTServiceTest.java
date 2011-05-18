@@ -74,6 +74,10 @@ public class RolesWithRESTServiceTest extends BaseTest
    @Test
    public void testDeveloperRoleWithRESTService() throws Exception
    {
+      //fix for run tests where new session start after 7 testcases passes   
+      logout();
+      standaloneLogin(TestConstants.Users.ROOT);
+      
       waitForRootElement();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       saveAsUsingToolbarButton(FILE1);

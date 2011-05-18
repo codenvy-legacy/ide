@@ -70,7 +70,10 @@ public class LocksByUserTest extends LockFileAbstract
    @Test
    public void testLocksByUser() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      logout();
+      standaloneLogin(TestConstants.Users.ROOT);
+      waitForRootElement();
+      
       IDE.WORKSPACE.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
