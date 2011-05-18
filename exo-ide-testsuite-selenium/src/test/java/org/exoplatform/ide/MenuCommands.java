@@ -135,7 +135,7 @@ public interface MenuCommands
 
       public static final String OPEN_FILE_BY_PATH = "Open File By Path...";
 
-      public static final String DOWNLOAD = "Download File...";
+      public static final String DOWNLOAD = "Download...";
 
       public static final String DOWNLOAD_ZIPPED_FOLDER = "Download Zipped Folder...";
 

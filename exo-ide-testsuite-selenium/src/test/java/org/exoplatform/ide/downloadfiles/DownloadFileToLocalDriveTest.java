@@ -19,6 +19,7 @@
 package org.exoplatform.ide.downloadfiles;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -29,11 +30,11 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,9 +50,9 @@ public class DownloadFileToLocalDriveTest extends BaseTest
 
    private static final String RANDOM_STRING = UUID.randomUUID().toString();
 
-   private static final String FILE_NAME = String.valueOf(System.currentTimeMillis());
+   private static final String FILE_NAME = DownloadFileToLocalDriveTest.class.getSimpleName();
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME 
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/";
 
    @BeforeClass
@@ -76,7 +77,6 @@ public class DownloadFileToLocalDriveTest extends BaseTest
       }
    }
 
-   @Ignore
    @Test
    public void testDownloadFileToLocalDrive() throws Exception
    {
@@ -84,18 +84,20 @@ public class DownloadFileToLocalDriveTest extends BaseTest
 
       IDE.WORKSPACE.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-
-      IDE.WORKSPACE.selectItem(URL + FILE_NAME );
+      IDE.WORKSPACE.waitForItem(URL + FILE_NAME);
+      IDE.WORKSPACE.selectItem(URL + FILE_NAME);
+      IDE.MENU.waitForMenuItemPresent(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
-  
-//      //TODO fix download option in menu (see issue 721);(further code is not working)
+
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD);
+
       /*
        * File will be downloaded automaticaly.
        */
-
-      Thread.sleep(TestConstants.SLEEP * 3); //wait for download file
       String donwloadPath = System.getProperty("java.io.tmpdir");
+
+      waitForFileDownloaded(donwloadPath + "/" + FILE_NAME, TestConstants.SLEEP * 3);
+
       FileInputStream fstream = new FileInputStream(donwloadPath + "/" + FILE_NAME);
       DataInputStream in = new DataInputStream(fstream);
       BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -119,6 +121,34 @@ public class DownloadFileToLocalDriveTest extends BaseTest
       catch (ModuleException e)
       {
          e.printStackTrace();
+      }
+   }
+
+   /**
+    * Wait while file will be downloaded.
+    * 
+    * @param filePath - absolute file path
+    * @param waitPeriod - wait period in ms
+    * @throws InterruptedException
+    */
+   private void waitForFileDownloaded(String filePath, int waitPeriod) throws InterruptedException
+   {
+      int WAITING_MAX_SECONDS = 10;
+
+      for (int second = 0;; second++)
+      {
+         if (second >= WAITING_MAX_SECONDS * 10)
+         {
+            fail("timeout for downloading file " + filePath);
+         }
+
+         File file = new File(filePath);
+         if (file.exists())
+         {
+            break;
+         }
+
+         Thread.sleep(100);
       }
    }
 

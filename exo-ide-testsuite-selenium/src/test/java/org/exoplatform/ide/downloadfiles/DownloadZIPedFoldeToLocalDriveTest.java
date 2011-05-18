@@ -19,16 +19,17 @@
 package org.exoplatform.ide.downloadfiles;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedOutputStream;
@@ -47,7 +48,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * Created by The eXo Platform SAS.
+ * Test for Download Zipped folder feature.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
@@ -57,9 +59,9 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
 
    private static final String RANDOM_STRING_TXT = UUID.randomUUID().toString();
 
-   private static final String FOLDER_NAME = UUID.randomUUID().toString();;
+   private static final String FOLDER_NAME = DownloadZIPedFoldeToLocalDriveTest.class.getSimpleName();
 
-   private static final String FILE_NAME = "EXO" + String.valueOf(System.currentTimeMillis());
+   private static final String FILE_NAME = "EXO" + DownloadZIPedFoldeToLocalDriveTest.class.getSimpleName();
 
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/" + FOLDER_NAME + "/";
@@ -82,39 +84,39 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
          e.printStackTrace();
       }
    }
-   @Ignore
+
    @Test
    public void testDownloadZIPedFoldeToLocalDrive() throws Exception
    {
-      {
-         waitForRootElement();
-         IDE.WORKSPACE.selectItem(
-            BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
-         IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-         waitForRootElement();
+      waitForRootElement();
 
-         IDE.WORKSPACE.selectItem(URL);
-         IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, true);
-         IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER);
+      IDE.WORKSPACE.selectItem(URL);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(URL);
+      IDE.WORKSPACE.selectItem(URL);
+      
+      IDE.MENU.waitForMenuItemPresent(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, true);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER);
 
-         selenium.keyPressNative("10");
-         Thread.sleep(TestConstants.SLEEP * 3); //wait for download file
-         String donwloadPath = System.getProperty("java.io.tmpdir");
-         unzip(donwloadPath + "/" + FOLDER_NAME + ".zip");
-         //TODO fix download zip folder option (see issue 721);(further code is not working)
-                  FileInputStream fstream = new FileInputStream("target/" + FOLDER_NAME + "/" + FILE_NAME);
-                  DataInputStream in = new DataInputStream(fstream);
-                  BufferedReader br = new BufferedReader(new InputStreamReader(in));
-                  String controlStrLine;
-                  controlStrLine = br.readLine();
-                  assertEquals(RANDOM_STRING, controlStrLine);
-                  
-                  fstream = new FileInputStream("target/" + FOLDER_NAME + "/" + FILE_NAME + ".txt");
-                  in = new DataInputStream(fstream);
-                  br = new BufferedReader(new InputStreamReader(in));
-                  controlStrLine = br.readLine();
-                  assertEquals(RANDOM_STRING_TXT, controlStrLine);
-      }
+      selenium.keyPressNative("10");
+      
+      String donwloadPath = System.getProperty("java.io.tmpdir");
+      waitForFileDownloaded(donwloadPath + "/" + FOLDER_NAME + ".zip", TestConstants.SLEEP * 3);
+      unzip(donwloadPath + "/" + FOLDER_NAME + ".zip");
+      
+      FileInputStream fstream = new FileInputStream("target/" + FOLDER_NAME + "/" + FILE_NAME);
+      DataInputStream in = new DataInputStream(fstream);
+      BufferedReader br = new BufferedReader(new InputStreamReader(in));
+      String controlStrLine;
+      controlStrLine = br.readLine();
+      assertEquals(RANDOM_STRING, controlStrLine);
+
+      fstream = new FileInputStream("target/" + FOLDER_NAME + "/" + FILE_NAME + ".txt");
+      in = new DataInputStream(fstream);
+      br = new BufferedReader(new InputStreamReader(in));
+      controlStrLine = br.readLine();
+      assertEquals(RANDOM_STRING_TXT, controlStrLine);
 
    }
 
@@ -168,6 +170,34 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
       in.close();
       out.close();
    }
+   
+   /**
+    * Wait while file will be downloaded.
+    * 
+    * @param filePath - absolute file path
+    * @param waitPeriod - wait period in ms
+    * @throws InterruptedException
+    */
+   private void waitForFileDownloaded(String filePath, int waitPeriod) throws InterruptedException
+   {
+      int WAITING_MAX_SECONDS = 10;
+
+      for (int second = 0;; second++)
+      {
+         if (second >= WAITING_MAX_SECONDS * 10)
+         {
+            fail("timeout for downloading file " + filePath);
+         }
+
+         File file = new File(filePath);
+         if (file.exists())
+         {
+            break;
+         }
+
+         Thread.sleep(100);
+      }
+   }
 
    @AfterClass
    public static void tearDown()
@@ -178,12 +208,10 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       catch (ModuleException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }

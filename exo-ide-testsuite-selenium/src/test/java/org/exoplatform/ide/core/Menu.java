@@ -125,5 +125,16 @@ public class Menu extends AbstractTestModule
    {
       waitForElementPresent(getMenuLocator(itemName));
    }
+   
+   public void waitForMenuItemPresent(String menuName, String itemName) throws Exception
+   {
+      final String menuLocator = getMenuLocator(menuName);
+      waitForElementPresent(menuLocator);
+      selenium().mouseDown(menuLocator);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      waitForElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + itemName + "']");
+      selenium().mouseDown("//div[@class='exo-lockLayer']/");
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+   }
 
 }

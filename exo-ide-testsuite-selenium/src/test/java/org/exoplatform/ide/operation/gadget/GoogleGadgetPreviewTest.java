@@ -74,6 +74,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
    @Test
    public void testGadgetPreview() throws Exception
    {
+      waitForRootElement();
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(URL);
