@@ -32,10 +32,6 @@ import org.exoplatform.ide.TestConstants;
 
 public class OpenWithDialog extends AbstractTestModule
 {
-   private static final String CKEDITOR_NAME = "CKEditor"; 
-   
-   private static final String CODEMIRROR_NAME = "CodeMirror"; 
-   
    private static final String OPEN_WITH_VIEW_ID = "ideOpenFileWithView"; 
    
    private static final String OPEN_WITH_VIEW_LOCATOR = "//div[@view-id='"+OPEN_WITH_VIEW_ID+"']";
@@ -124,7 +120,7 @@ public class OpenWithDialog extends AbstractTestModule
    {
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       waitForOpenWithDialogOpened();
-      selectEditor(CODEMIRROR_NAME);
+      selectEditor(Navigation.Editor.CODEMIRROR.getName());
       if (checkDefault)
       {
          clickUseAsDefaultCheckBox();
@@ -144,7 +140,7 @@ public class OpenWithDialog extends AbstractTestModule
    {
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       waitForOpenWithDialogOpened();
-      selectEditor(CKEDITOR_NAME);
+      selectEditor(Navigation.Editor.CKEDITOR.getName());
       if (checkDefault)
       {
          clickUseAsDefaultCheckBox();
