@@ -41,7 +41,7 @@ import org.exoplatform.ide.git.client.control.RemotesControl;
 import org.exoplatform.ide.git.client.control.RemoveFilesControl;
 import org.exoplatform.ide.git.client.control.ResetFilesControl;
 import org.exoplatform.ide.git.client.control.ResetToCommitControl;
-import org.exoplatform.ide.git.client.control.ShowInHistoryControl;
+import org.exoplatform.ide.git.client.control.ShowHistoryControl;
 import org.exoplatform.ide.git.client.control.ShowStatusControl;
 import org.exoplatform.ide.git.client.create.InitRepositoryPresenter;
 import org.exoplatform.ide.git.client.fetch.FetchPresenter;
@@ -88,7 +88,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new PullControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new RemotesControl(), DockTarget.NONE, false);
       
-      IDE.getInstance().addControl(new ShowInHistoryControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ShowHistoryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ShowStatusControl(), DockTarget.NONE, false);
       
       //Create presenters:

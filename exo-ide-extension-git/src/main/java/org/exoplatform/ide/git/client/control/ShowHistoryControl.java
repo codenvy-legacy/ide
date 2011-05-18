@@ -28,24 +28,24 @@ import org.exoplatform.ide.git.client.history.ShowInHistoryEvent;
  * @version $Id:  Apr 29, 2011 3:04:01 PM anya $
  *
  */
-public class ShowInHistoryControl extends GitControl
+public class ShowHistoryControl extends GitControl
 {
    /**
     * Control ID.
     */
-   public static final String ID = "Git/Show in history...";
+   public static final String ID = "Git/Show history...";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Show in history...";
+   public static final String TITLE = "Show history...";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Show in history";
+   public static final String PROMPT = "Show history...";
 
-   public ShowInHistoryControl()
+   public ShowHistoryControl()
    {
       super(ID);
       setTitle(TITLE);
