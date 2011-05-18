@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.operation.chromattic;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
@@ -32,28 +29,65 @@ import org.exoplatform.ide.ToolbarCommands;
  */
 public abstract class AbstractDataObjectTest extends BaseTest
 {
+   
+   //---Elements from Deploy Node Type dialog-------
+   
+   public static final String DEPLOY_NODE_TYPE_DIALOG_ID = "ideDeployNodeTypeForm";
+   
+   public static final String DEPLOY_NODE_TYPE_FORMAT_FIELD_NAME = "ideDeployNodeTypeFormFormatField";
+   
+   public static final String DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME = "ideDeployNodeTypeFormAlreadyExistBehaviorField";
+   
+   public static final String DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID = "ideDeployNodeTypeFormDeployButton";
+   
+   public static final String DEPLOY_NODE_TYPE_CANCEL_BUTTON_ID = "ideDeployNodeTypeFormCancelButton";
+   
+   //---Elements from Generate Node Type dialog-------
+   
+   public static final String IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR = "//div[@view-id='ideGeneratedTypePreviewView']";
+   
+   public static final String GENERATE_NODE_TYPE_DIALOG_ID = "ideGenerateNodeTypeForm";
+   
+   public static final String GENERATE_NODE_TYPE_FORMAT_FIELD = "ideGenerateNodeTypeFormFormatField";
+   
+   public static final String GENERATE_NODE_TYPE_GENERATE_BUTTON_ID = "ideGenerateNodeTypeFormGenerateButton";
+   
+   public static final String GENERATE_NODE_TYPE_CANCEL_BUTTON_ID = "ideGenerateNodeTypeFormCancelButton";
+   
    /**
-    * Check form for generating node type definition is present.
+    * Wait while "Deploy node type" dialog will be present.
+    * @throws Exception
     */
-   protected void checkGenerateNodeTypeFormPresent()
+   public void waitForDeployNodeTypeDialog() throws Exception
    {
-      assertTrue(selenium
-         .isElementPresent("scLocator=//DynamicForm[ID=\"ideGenerateNodeTypeFormDynamicForm\"]/item[name=ideGenerateNodeTypeFormFormatField||value=EXO]/textbox"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideGenerateNodeTypeFormCancelButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideGenerateNodeTypeFormGenerateButton\"]"));
+      waitForElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
    }
-
+   
    /**
-    * Check form for deploying node type definition is present.
+    * Wait while "Deploy node type" dialog will not be present.
+    * @throws Exception
     */
-   protected void checkDeployNodeTypeFormPresent()
+   public void waitForDeployNodeTypeDialogNotPresent() throws Exception
    {
-      assertTrue(selenium
-         .isElementPresent("scLocator=//DynamicForm[ID=\"ideDeployNodeTypeFormDynamicForm\"]/item[name=ideDeployNodeTypeFormFormatField]/textbox"));
-      assertTrue(selenium
-         .isElementPresent("scLocator=//DynamicForm[ID=\"ideDeployNodeTypeFormDynamicForm\"]/item[name=ideDeployNodeTypeFormAlreadyExistBehaviorField]/textbox"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeployNodeTypeFormCancelButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeployNodeTypeFormDeployButton\"]"));
+      waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
+   }
+   
+   /**
+    * Wait while "Generate node type" dialog will be present.
+    * @throws Exception
+    */
+   public void waitForGenerateNodeTypeDialog() throws Exception
+   {
+      waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
+   }
+   
+   /**
+    * Wait while "Generate node type" dialog will not be present.
+    * @throws Exception
+    */
+   public void waitForGenerateNodeTypeDialogNotPresent() throws Exception
+   {
+      waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
    }
 
    /**
@@ -92,23 +126,4 @@ public abstract class AbstractDataObjectTest extends BaseTest
       }
    }
 
-   /**
-    * Checks whether editor with generated node type definition is present.
-    * 
-    * @param isPresent is present or not
-    */
-   protected void checkViewWithGeneratedCodePresent(boolean isPresent)
-   {
-      assertEquals(isPresent, selenium.isElementPresent("//div[@eventproxy='ideGeneratedTypePreviewPanel']"));
-   }
-
-   /**
-    * Get content of message in dialog window.
-    * 
-    * @return {@link String} message
-    */
-   protected String getMessageFromGloabalWarning()
-   {
-      return selenium.getText("scLocator=//Dialog[ID=\"isc_globalWarn\"]");
-   }
 }

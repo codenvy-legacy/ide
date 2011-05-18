@@ -44,6 +44,11 @@ public class Editor extends AbstractTestModule
    public interface EditorLocators
    {
       /**
+       * XPATH CodeMirror locator. 
+       */
+      public static final String CODE_MIRROR_EDITOR = "//body[@class='editbox']";
+      
+      /**
        * XPATH CK editor locator.
        */
       public static final String CK_EDITOR = "//table[@class='cke_editor']";

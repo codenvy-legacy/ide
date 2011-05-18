@@ -20,12 +20,14 @@ package org.exoplatform.ide.operation.chromattic;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Editor;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -56,15 +58,6 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
          + "<!--Node type generation prototype-->"
          + "<nodeTypes xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\" xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\">"
-         + "<!-- Node type generated for the class java.lang.Object -->"
-         + "<nodeType name=\"nt:base\" isMixin=\"false\" hasOrderableChildNodes=\"false\">"
-         + "<supertypes>"
-         + "<supertype>nt:base</supertype>"
-         + "<supertype>mix:referenceable</supertype>"
-         + "</supertypes>"
-         + "<propertyDefinitions/>"
-         + "<childNodeDefinitions/>"
-         + "</nodeType>"
          + "<!-- Node type generated for the class A -->"
          + "<nodeType name=\"file\" isMixin=\"false\" hasOrderableChildNodes=\"false\">"
          + "<supertypes>"
@@ -80,9 +73,11 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
     * The sample CND node type format.
     */
    private final String generatedCNDFormat = "<jcr = 'http://www.jcp.org/jcr/1.0'>"
-      + "<nt = 'http://www.jcp.org/jcr/nt/1.0'>" + "<mix = 'http://www.jcp.org/jcr/mix/1.0'>"
-      + "[nt:base] > nt:base, mix:referenceable" + "[file] > nt:base, mix:referenceable" + "- name (String)";
-
+      + "<nt = 'http://www.jcp.org/jcr/nt/1.0'>" 
+      + "<mix = 'http://www.jcp.org/jcr/mix/1.0'>"
+      + "[file] > nt:base, mix:referenceable" 
+      + "- name (String)";
+   
    /**
     * Create test folder and test data object file.
     */
@@ -143,40 +138,50 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
    @Test
    public void testGenerateNodeTypeForm() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      waitForRootElement();
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(0);
 
       //Check controls are present and enabled:
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      checkPreviewNodeTypeButton(true, true);
-      checkDeployNodeTypeButton(true, true);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkGenerateNodeTypeFormPresent();
+      waitForGenerateNodeTypeDialog();
+
+      //check dialog
+      assertTrue(selenium.isElementPresent(GENERATE_NODE_TYPE_DIALOG_ID));
+      assertTrue(selenium.isElementPresent(GENERATE_NODE_TYPE_FORMAT_FIELD));
+      assertTrue(selenium.isElementPresent(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID));
+      assertTrue(selenium.isElementPresent(GENERATE_NODE_TYPE_CANCEL_BUTTON_ID));
 
       //Click "Cancel" button
-      selenium.click("scLocator=//IButton[ID=\"ideGenerateNodeTypeFormCancelButton\"]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGenerateNodeTypeForm\"]"));
+      selenium.click(GENERATE_NODE_TYPE_CANCEL_BUTTON_ID);
+      waitForGenerateNodeTypeDialogNotPresent();
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkGenerateNodeTypeFormPresent();
+      waitForGenerateNodeTypeDialog();
 
       //Click "Generate" button
-      selenium.click("scLocator=//IButton[ID=\"ideGenerateNodeTypeFormGenerateButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGenerateNodeTypeForm\"]"));
-      checkViewWithGeneratedCodePresent(true);
+      selenium.click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
+      waitForGenerateNodeTypeDialogNotPresent();
+
+      waitForElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
+      assertTrue(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
 
       //Close file and check view with generated code is closed.
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.SLEEP);
-      checkViewWithGeneratedCodePresent(false);
+      IDE.EDITOR.closeTab(0);
+      waitForElementNotPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
+      assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
    }
 
    /**
@@ -185,34 +190,30 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
    @Test
    public void testGenerateExoFormat() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(0);
 
-      //Check controls are present and enabled:
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      checkPreviewNodeTypeButton(true, true);
-      checkDeployNodeTypeButton(true, true);
-
+      //Wait while buttons will be enabled
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
+      
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkGenerateNodeTypeFormPresent();
+      waitForGenerateNodeTypeDialog();
 
       //Click "Generate" button
-      selenium.click("scLocator=//IButton[ID=\"ideGenerateNodeTypeFormGenerateButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGenerateNodeTypeForm\"]"));
-      checkViewWithGeneratedCodePresent(true);
+      selenium.click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
+      waitForGenerateNodeTypeDialogNotPresent();
 
       //Check generated code:
-      selenium
-         .selectFrame("//div[@eventproxy='ideGeneratedTypePreviewForm']//div[@class='CodeMirror-wrapping']/iframe");
+      waitForElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
 
-      String text = selenium.getText("//body[@class='editbox']");
+      String text = getTextFromNodeTypePreviewTab();
+      
       //Clear formatting:
       text = text.replaceAll("\n", "");
       for (int i = 0; i < 8; i++)
@@ -220,12 +221,11 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
          text = text.replaceAll(" <", "<");
       }
 
-      IDE.selectMainFrame();
       assertEquals(generatedEXOFormat, text);
 
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.SLEEP);
-      checkViewWithGeneratedCodePresent(false);
+      IDE.EDITOR.closeTab(0);
+      waitForElementNotPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
+      assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
    }
 
    /**
@@ -236,39 +236,32 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
    @Test
    public void testGenerateCndFormat() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      refresh();
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(0);
 
-      //Check controls are present and enabled:
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      checkPreviewNodeTypeButton(true, true);
-      checkDeployNodeTypeButton(true, true);
+      //Wait while buttons will be enabled
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      checkGenerateNodeTypeFormPresent();
-
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGenerateNodeTypeFormDynamicForm\"]/item[name=ideGenerateNodeTypeFormFormatField]/[icon='picker']");
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideGenerateNodeTypeFormDynamicForm\"]/item[name=ideGenerateNodeTypeFormFormatField]/pickList/body/row[ideGenerateNodeTypeFormFormatField=CND||1]/col[fieldName=ideGenerateNodeTypeFormFormatField||0]");
+      waitForGenerateNodeTypeDialog();
+      
+      selenium.select(GENERATE_NODE_TYPE_FORMAT_FIELD, "label=CND");
 
       //Click "Generate" button
-      selenium.click("scLocator=//IButton[ID=\"ideGenerateNodeTypeFormGenerateButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGenerateNodeTypeForm\"]"));
-      checkViewWithGeneratedCodePresent(true);
+      selenium.click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
+      waitForGenerateNodeTypeDialogNotPresent();
+      waitForElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
 
       //Check generated code:
-      selenium
-         .selectFrame("//div[@eventproxy='ideGeneratedTypePreviewForm']//div[@class='CodeMirror-wrapping']/iframe");
 
-      String text = selenium.getText("//body[@class='editbox']");
+      String text = getTextFromNodeTypePreviewTab();
+
       //Clear formatting:
       text = text.replaceAll("\n", "");
       for (int i = 0; i < 8; i++)
@@ -276,12 +269,26 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
          text = text.replaceAll(" <", "<");
       }
 
-      IDE.selectMainFrame();
       assertEquals(generatedCNDFormat, text);
 
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.SLEEP);
-      checkViewWithGeneratedCodePresent(false);
+      IDE.EDITOR.closeTab(0);
+      waitForElementNotPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
+      assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+   }
+   
+   /**
+    * Get the text from preview node type tab. 
+    * @return {@link String}
+    * @throws Exception
+    */
+   public String getTextFromNodeTypePreviewTab() throws Exception
+   {
+      final String iframeLocator = IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR + "//iframe";
+      selenium.selectFrame(iframeLocator);
+      waitForElementPresent(Editor.EditorLocators.CODE_MIRROR_EDITOR);
+      final String text = selenium.getText(Editor.EditorLocators.CODE_MIRROR_EDITOR);
+      IDE.selectMainFrame();
+      return text;
    }
 
 }

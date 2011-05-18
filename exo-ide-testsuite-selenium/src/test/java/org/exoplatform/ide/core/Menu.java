@@ -121,7 +121,8 @@ public class Menu extends AbstractTestModule
       return "//td[@class='exo-menuBarItem' and text()='" + title + "']";
    }
    
-   public void waitForMenuItemPresent(String itemName) throws Exception {
+   public void waitForMenuItemPresent(String itemName) throws Exception
+   {
       waitForElementPresent(getMenuLocator(itemName));
    }
 
