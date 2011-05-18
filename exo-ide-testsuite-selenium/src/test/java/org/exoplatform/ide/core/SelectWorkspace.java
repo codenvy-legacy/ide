@@ -137,5 +137,16 @@ public class SelectWorkspace extends AbstractTestModule
    {
       selenium().click(CANCEL_BUTTON_ID);
    }
-
+   
+   /**
+    * Make double click on workspace pointed by name.
+    * 
+    * @param workspaceUrl workspace's name
+    * @throws InterruptedException
+    */
+   public void doubleClickInListGrid(String workspaceName) throws InterruptedException
+   {
+      selenium().click("//table[@id='"+LIST_GRID_ID+"']//tr[contains(., '" + workspaceName + "')]");
+      selenium().doubleClick("//table[@id='"+LIST_GRID_ID+"']//tr[contains(., '" + workspaceName + "')]");
+   }
 }
