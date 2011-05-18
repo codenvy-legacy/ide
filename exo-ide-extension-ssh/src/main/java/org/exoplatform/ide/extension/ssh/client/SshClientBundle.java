@@ -18,28 +18,26 @@
  */
 package org.exoplatform.ide.extension.ssh.client;
 
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
-import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerControl;
-import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter;
+import com.google.gwt.core.client.GWT;
+
+import com.google.gwt.resources.client.ImageResource;
+
+import com.google.gwt.resources.client.ClientBundle;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: SshExtension May 17, 2011 5:00:33 PM evgen $
+ * @version $Id: SshClientBundle May 18, 2011 9:23:17 AM evgen $
  *
  */
-public class SshExtension extends Extension
+public interface SshClientBundle extends ClientBundle
 {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.getInstance().addControl(new SshKeyManagerControl(), DockTarget.NONE, false);
-      new SshKeyManagerPresenter();
-   }
+   SshClientBundle INSTANCE = GWT.create(SshClientBundle.class);
+
+   @Source("org/exoplatform/ide/extension/ssh/client/images/ssh-key-manager_Disabled.png")
+   ImageResource sshKeyManagerDisabled();
+
+   @Source("org/exoplatform/ide/extension/ssh/client/images/ssh-key-manager.png")
+   ImageResource sshKeyManager();
 
 }

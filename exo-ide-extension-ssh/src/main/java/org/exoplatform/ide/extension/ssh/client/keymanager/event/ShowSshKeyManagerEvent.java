@@ -16,30 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.ssh.client;
+package org.exoplatform.ide.extension.ssh.client.keymanager.event;
 
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
-import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerControl;
-import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: SshExtension May 17, 2011 5:00:33 PM evgen $
+ * @version $Id: ShowSshKeyManagerEvent May 18, 2011 9:52:40 AM evgen $
  *
  */
-public class SshExtension extends Extension
+public class ShowSshKeyManagerEvent extends GwtEvent<ShowSshKeyManagerHandler>
 {
 
+   public static final GwtEvent.Type<ShowSshKeyManagerHandler> TYPE = new Type<ShowSshKeyManagerHandler>();
+
    /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public void initialize()
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowSshKeyManagerHandler> getAssociatedType()
    {
-      IDE.getInstance().addControl(new SshKeyManagerControl(), DockTarget.NONE, false);
-      new SshKeyManagerPresenter();
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(ShowSshKeyManagerHandler handler)
+   {
+      handler.onShowSshKeyManager(this);
    }
 
 }

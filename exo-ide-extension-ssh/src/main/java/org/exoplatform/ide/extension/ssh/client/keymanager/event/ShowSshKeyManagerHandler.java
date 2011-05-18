@@ -16,30 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.ssh.client;
+package org.exoplatform.ide.extension.ssh.client.keymanager.event;
 
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
-import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerControl;
-import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: SshExtension May 17, 2011 5:00:33 PM evgen $
+ * @version $Id: ShowSshKeyManagerHandler May 18, 2011 9:53:01 AM evgen $
  *
  */
-public class SshExtension extends Extension
+public interface ShowSshKeyManagerHandler extends EventHandler
 {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.getInstance().addControl(new SshKeyManagerControl(), DockTarget.NONE, false);
-      new SshKeyManagerPresenter();
-   }
+   void onShowSshKeyManager(ShowSshKeyManagerEvent event);
 
 }
