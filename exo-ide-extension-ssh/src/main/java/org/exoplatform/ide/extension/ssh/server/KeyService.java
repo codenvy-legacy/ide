@@ -47,7 +47,7 @@ import javax.ws.rs.core.UriInfo;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/keys")
+@Path("ide/ssh-keys")
 public class KeyService
 {
    private SshKeyProvider delegate;
@@ -168,8 +168,8 @@ public class KeyService
                .type(MediaType.TEXT_PLAIN).build());
          }
          result.add((bytes != null) //
-            ? new KeyItem(host, uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build().toString()) //
-            : new KeyItem(host, null));
+            ? new KeyItem(host, uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build().toString(), uriInfo.getBaseUriBuilder().path(getClass(),"removeKeys").queryParam("host", host).build().toString()) //
+            : new KeyItem(host, null, uriInfo.getBaseUriBuilder().path(getClass(),"removeKeys").queryParam("host", host).build().toString()));
       }
       return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
    }

@@ -29,11 +29,15 @@ public class KeyItem
    
    /** URL for download public key. May be <code>null</code> if public key no available. */
    private String publicKeyURL;
+   
+   /** URL for remove key. */
+   private String removeKeyURL;
 
-   public KeyItem(String host, String publicKeyURL)
+   public KeyItem(String host, String publicKeyURL, String removeKeyURL)
    {
       this.host = host;
       this.publicKeyURL = publicKeyURL;
+      this.removeKeyURL = removeKeyURL;
    }
 
    public KeyItem()
@@ -58,5 +62,15 @@ public class KeyItem
    public void setPublicKeyURL(String publicKeyURL)
    {
       this.publicKeyURL = publicKeyURL;
+   }
+   
+   public void setRemoveKeyURL(String removeKeyURL)
+   {
+      this.removeKeyURL = removeKeyURL;
+   }
+   
+   public String getRemoveKeyURL()
+   {
+      return removeKeyURL;
    }
 }
