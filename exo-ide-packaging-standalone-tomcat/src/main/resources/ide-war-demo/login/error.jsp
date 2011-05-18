@@ -4,7 +4,7 @@
 <body bgcolor="white">
 <table width="100%" height="100%">
 	<tr align="center" valign="bottom">
-		<td><img alt="ide" src="../../eXo-IDE-Logo.png"></td>
+		<td><img alt="ide" src="/IDE/eXo-IDE-Logo.png"></td>
 	</tr>
 	<tr align="center" valign="top">
 		<td>

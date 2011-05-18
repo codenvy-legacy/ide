@@ -392,9 +392,12 @@
                               </move>
                               <!-- war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false"> <fileset dir="${project.build.directory}/packager-conf/unwar" 
                                  /> </war -->
-                              <copy todir="${project.build.directory}/tomcat-ide/webapps/IDE">
+                              <!-- copy todir="${project.build.directory}/tomcat-ide/webapps/IDE">
                                  <fileset dir="${project.build.directory}/packager-conf/unwar" />
-                              </copy>
+                              </copy-->
+                              <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
+                                 <fileset dir="${project.build.directory}/packager-conf/unwar" />
+                              </war>
 
                            </tasks>
                         </configuration>
