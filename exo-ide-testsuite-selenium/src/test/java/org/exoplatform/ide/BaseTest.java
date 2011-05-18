@@ -115,6 +115,10 @@ public abstract class BaseTest
     */
    protected static final String WORKSPACE_URL = ENTRY_POINT_URL + WS_NAME + "/";
 
+   private static int maxRunTestsOnOneSession = 5;
+
+   private static int testsCounter = 0;
+
    @BeforeClass
    public static void startSelenium() throws Exception
    {
@@ -135,12 +139,19 @@ public abstract class BaseTest
             new TextUtil(selenium);
       }
 
-      selenium.start();
-      selenium.windowFocus();
-      selenium.windowMaximize();
+      testsCounter++;
+      if (testsCounter % maxRunTestsOnOneSession == 1)
+      {
+         selenium.start();
+         selenium.windowFocus();
+         selenium.windowMaximize();
+         selenium.open(APPLICATION_URL);
+         selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+         standaloneLogin(USER_NAME);
+      }
+
       selenium.open(APPLICATION_URL);
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-
       if (isRunIdeUnderPortal())
       {
          loginInPortal();
@@ -161,14 +172,14 @@ public abstract class BaseTest
          }
       }
 
-      else if (isRunIdeAsStandalone())
-      {
-         standaloneLogin(USER_NAME);
-      }
+      //      else if (isRunIdeAsStandalone())
+      //      {
+      //         standaloneLogin(USER_NAME);
+      //      }
 
       IDE.setWorkspaceURL(WS_URL);
    }
-   
+
    protected void logout() throws Exception
    {
       if (isRunIdeUnderPortal())
@@ -177,13 +188,13 @@ public abstract class BaseTest
          //log out from ide
          fail("Can't logout under portal. Fix it!!!");
       }
-      else if (isRunIdeAsStandalone())
-      {
-         standaloneLogout();
-      }
+            else if (isRunIdeAsStandalone())
+            {
+               standaloneLogout();
+            }
    }
 
-   private void standaloneLogout() throws Exception
+   private static void standaloneLogout() throws Exception
    {
       selenium.clickAt("//a[@href='login/logout.jsp']", "");
       selenium.waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
@@ -222,7 +233,19 @@ public abstract class BaseTest
    @AfterClass
    public static void stopSelenium()
    {
-      selenium.stop();
+      if (testsCounter % maxRunTestsOnOneSession == 0)
+      {
+         selenium.stop();
+      }
+      //      try
+      //      {
+      //         standaloneLogout();
+      //      }
+      //      catch (Exception e)
+      //      {
+      //         // TODO Auto-generated catch block
+      //         e.printStackTrace();
+      //      }
    }
 
    /**
@@ -305,9 +328,6 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
      }*/
 
-   
-   
-
    /**
     * Calls Save As command by clicking Save As... icon on toolbar.
     * <p/>
@@ -368,12 +388,14 @@ public abstract class BaseTest
     * @param checkDefault do mark checkbox Use by default
     * @throws Exception
     */
-   protected void openFileFromNavigationTreeWithCkEditor(String fileURL, String typeFile, boolean checkDefault) throws Exception
+   protected void openFileFromNavigationTreeWithCkEditor(String fileURL, String typeFile, boolean checkDefault)
+      throws Exception
    {
       //TODO add check form
       IDE.WORKSPACE.selectItem(fileURL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-      selenium.click("//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" +" "+typeFile+ " " +"editor"+"'"+"]");
+      selenium.click("//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" + " "
+         + typeFile + " " + "editor" + "'" + "]");
       if (checkDefault)
       {
          //click on checkbox Use as default editor
@@ -449,12 +471,13 @@ public abstract class BaseTest
       selenium.click("//div[@panel-id='navigation']//td[text()='Workspace']");
    }
 
-  /* *//**
-    * Select "Search Result" tab in navigation panel
-    *//*
+   /* *//**
+         * Select "Search Result" tab in navigation panel
+         */
+   /*
    protected void selectSearchResultTab()
    {
-      selenium.click("scLocator=//TabSet[ID=\"ideNavigationTabSet\"]/tab[ID=SearchResultPanel]");
+   selenium.click("scLocator=//TabSet[ID=\"ideNavigationTabSet\"]/tab[ID=SearchResultPanel]");
    }*/
 
    /**
@@ -467,7 +490,6 @@ public abstract class BaseTest
    {
       return selenium.getText("//table[@class='exo-statusText-table']");
    }
-
 
    /**
     * Use to create new file in selected folder.
@@ -612,19 +634,15 @@ public abstract class BaseTest
    {
       assertTrue(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='"
          + templateName + "']"));
-      
-      
+
       selenium.mouseDownAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName
          + "']", "2,2");
-      
-      
+
       selenium.mouseUpAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName
          + "']", "2,2");
-      
-      
+
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      
       if (fileName != null)
       {
          //type file name into name field
@@ -984,7 +1002,7 @@ public abstract class BaseTest
    {
       for (int second = 0;; second++)
       {
-         if (second >= TestConstants.WAIT_PERIOD*20)
+         if (second >= TestConstants.WAIT_PERIOD * 20)
             fail("timeout for element " + locator);
 
          if (selenium.isElementPresent(locator))
@@ -1060,7 +1078,7 @@ public abstract class BaseTest
       selenium.click(locator + "CancelButton");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
    /**
     * Wait, while loader dissapears (which meens, that operation is done).
     * @throws Exception
