@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.jgit.ssh;
+package org.exoplatform.ide.extension.ssh.server;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -36,9 +36,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
@@ -54,7 +59,7 @@ import javax.jcr.Session;
  * 
  * <pre>
  * &lt;component&gt;
- *    &lt;type&gt;org.exoplatform.ide.git.server.jgit.ssh.JcrSshKeyProvider&lt;/type&gt;
+ *    &lt;type&gt;org.exoplatform.ide.extension.ssh.server.JcrSshKeyProvider&lt;/type&gt;
  *    &lt;init-params&gt;
  *       &lt;value-param&gt;
  *          &lt;name&gt;workspace&lt;/name&gt;
@@ -135,6 +140,8 @@ public class JcrSshKeyProvider implements SshKeyProvider
          }
       }
    }
+
+   private static final Pattern keyPattern = Pattern.compile("(.+)\\.key");
 
    /** Name of JCR workspace that store SSH keys. */
    private String workspace;
@@ -337,7 +344,8 @@ public class JcrSshKeyProvider implements SshKeyProvider
          session = repository.login(workspace);
          String user = session.getUserID();
 
-         for (String keyPath : new String[]{keyStore + user + "/" + host + ".key", keyStore + user + "/" + host + ".pub"})
+         for (String keyPath : new String[]{keyStore + user + "/" + host + ".key",
+            keyStore + user + "/" + host + ".pub"})
          {
             try
             {
@@ -349,6 +357,49 @@ public class JcrSshKeyProvider implements SshKeyProvider
             }
          }
          session.save();
+      }
+      catch (RepositoryException re)
+      {
+         throw new RuntimeException(re.getMessage(), re);
+      }
+      finally
+      {
+         if (session != null)
+            session.logout();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.ssh.server.SshKeyProvider#getAll()
+    */
+   @Override
+   public Set<String> getAll()
+   {
+      Session session = null;
+      try
+      {
+         ManageableRepository repository = repositoryService.getCurrentRepository();
+         // Login with current identity. ConversationState.getCurrent(). 
+         session = repository.login(workspace);
+         String user = session.getUserID();
+         String userKeysPath = keyStore + user;
+         try
+         {
+            Node userKeys = (Node)session.getItem(userKeysPath);
+            Set<String> hosts = new HashSet<String>();
+            for (NodeIterator iter = userKeys.getNodes(); iter.hasNext();)
+            {
+               String name = iter.nextNode().getName();
+               Matcher m = keyPattern.matcher(name);
+               if (m.matches())
+                  hosts.add(m.group(1));
+            }
+            return hosts;
+         }
+         catch (PathNotFoundException pnfe)
+         {
+         }
+         return java.util.Collections.emptySet();
       }
       catch (RepositoryException re)
       {

@@ -16,30 +16,47 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.jgit.ssh;
-
-import java.io.IOException;
+package org.exoplatform.ide.extension.ssh.shared;
 
 /**
- * SSH key.
- * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Key
+public class KeyItem
 {
-   /**
-    * Identifier of key file.
-    * 
-    * @return identifier of key file
-    */
-   String getIdentifier();
+   /** Host name. */
+   private String host;
+   
+   /** URL for download public key. May be <code>null</code> if public key no available. */
+   private String publicKeyURL;
 
-   /**
-    * Get SSH key as byte array.
-    * 
-    * @return SSH key as byte array or <code>null</code> if key is not exist
-    * @throws IOException if any i/o error occurs
-    */
-   byte[] getBytes() throws IOException;
+   public KeyItem(String host, String publicKeyURL)
+   {
+      this.host = host;
+      this.publicKeyURL = publicKeyURL;
+   }
+
+   public KeyItem()
+   {
+   }
+
+   public String getHost()
+   {
+      return host;
+   }
+
+   public void setHost(String host)
+   {
+      this.host = host;
+   }
+
+   public String getPublicKeyURL()
+   {
+      return publicKeyURL;
+   }
+
+   public void setPublicKeyURL(String publicKeyURL)
+   {
+      this.publicKeyURL = publicKeyURL;
+   }
 }

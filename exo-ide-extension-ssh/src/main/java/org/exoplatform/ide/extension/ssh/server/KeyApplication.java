@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.rest;
+package org.exoplatform.ide.extension.ssh.server;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,18 +24,17 @@ import java.util.Set;
 import javax.ws.rs.core.Application;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: GitApplication.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class GitApplication extends Application
+public class KeyApplication extends Application
 {
    private Set<Class<?>> classes;
 
-   public GitApplication()
+   public KeyApplication()
    {
-      classes = new HashSet<Class<?>>(2);
-      classes.add(GitService.class);
-      classes.add(GitRepoService.class);
+      classes = new HashSet<Class<?>>(1);
+      classes.add(KeyService.class);
    }
 
    /**

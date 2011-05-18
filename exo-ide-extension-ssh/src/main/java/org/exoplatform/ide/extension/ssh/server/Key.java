@@ -16,34 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.rest;
+package org.exoplatform.ide.extension.ssh.server;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
+import java.io.IOException;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: GitApplication.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * SSH key.
+ * 
+ * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class GitApplication extends Application
+public interface Key
 {
-   private Set<Class<?>> classes;
-
-   public GitApplication()
-   {
-      classes = new HashSet<Class<?>>(2);
-      classes.add(GitService.class);
-      classes.add(GitRepoService.class);
-   }
+   /**
+    * Identifier of key file.
+    * 
+    * @return identifier of key file
+    */
+   String getIdentifier();
 
    /**
-    * @see javax.ws.rs.core.Application#getClasses()
+    * Get SSH key as byte array.
+    * 
+    * @return SSH key as byte array or <code>null</code> if key is not exist
+    * @throws IOException if any i/o error occurs
     */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+   byte[] getBytes() throws IOException;
 }

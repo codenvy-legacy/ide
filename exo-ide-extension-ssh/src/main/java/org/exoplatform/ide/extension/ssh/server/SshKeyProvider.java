@@ -16,9 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.jgit.ssh;
+package org.exoplatform.ide.extension.ssh.server;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * SSH key manager.
@@ -73,4 +74,11 @@ public interface SshKeyProvider
     * @throws IOException if any i/o error occurs
     */
    void removeKeys(String host);
+
+   /**
+    * Get list of hosts for which keys are available.
+    * 
+    * @return list of hosts. Even there is no keys for any host empty set returned never <code>null</code>
+    */
+   Set<String> getAll();
 }

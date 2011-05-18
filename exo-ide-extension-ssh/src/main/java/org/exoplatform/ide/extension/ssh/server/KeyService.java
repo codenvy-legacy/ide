@@ -16,9 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.jgit.ssh;
+package org.exoplatform.ide.extension.ssh.server;
+
+import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
+import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
@@ -32,6 +39,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * REST interface to SshKeyProvider.
@@ -73,29 +81,29 @@ public class KeyService
       return Response.ok().build();
    }
 
-//   /**
-//    * Add prepared private key.
-//    */
-//   @POST
-//   @Path("add")
-//   @RolesAllowed({"users"})
-//   public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host, byte[] keyBody)
-//   {
-//      if (!security.isSecure())
-//         throw new WebApplicationException(Response.status(400)
-//            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
-//      try
-//      {
-//         delegate.addPrivateKey(host, keyBody);
-//      }
-//      catch (IOException ioe)
-//      {
-//         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
-//            .build());
-//      }
-//      return Response.ok().build();
-//   }
-   
+   //   /**
+   //    * Add prepared private key.
+   //    */
+   //   @POST
+   //   @Path("add")
+   //   @RolesAllowed({"users"})
+   //   public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host, byte[] keyBody)
+   //   {
+   //      if (!security.isSecure())
+   //         throw new WebApplicationException(Response.status(400)
+   //            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+   //      try
+   //      {
+   //         delegate.addPrivateKey(host, keyBody);
+   //      }
+   //      catch (IOException ioe)
+   //      {
+   //         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
+   //            .build());
+   //      }
+   //      return Response.ok().build();
+   //   }
+
    /**
     * Get public key.
     * 
@@ -135,5 +143,34 @@ public class KeyService
    public void removeKeys(@QueryParam("host") String host)
    {
       delegate.removeKeys(host);
+   }
+
+   @GET
+   @Path("all")
+   @RolesAllowed({"users"})
+   @Produces(MediaType.APPLICATION_JSON)
+   public Response getKeys(@Context UriInfo uriInfo)
+   {
+      Set<String> all = delegate.getAll();
+      if (all.size() == 0)
+         return Response.ok().entity(Collections.emptyList()).type(MediaType.APPLICATION_JSON).build();
+      List<KeyItem> result = new ArrayList<KeyItem>(all.size());
+      for (String host : all)
+      {
+         byte[] bytes = null;
+         try
+         {
+            bytes = delegate.getPublicKey(host).getBytes();
+         }
+         catch (IOException ioe)
+         {
+            throw new WebApplicationException(Response.serverError().entity(ioe.getMessage())
+               .type(MediaType.TEXT_PLAIN).build());
+         }
+         result.add((bytes != null) //
+            ? new KeyItem(host, uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build().toString()) //
+            : new KeyItem(host, null));
+      }
+      return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
    }
 }

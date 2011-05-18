@@ -26,6 +26,8 @@ import org.eclipse.jgit.transport.OpenSshConfig;
 import org.eclipse.jgit.transport.SshConfigSessionFactory;
 import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.util.FS;
+import org.exoplatform.ide.extension.ssh.server.Key;
+import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
 import org.picocontainer.Startable;
 
 import java.io.IOException;

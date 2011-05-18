@@ -153,10 +153,10 @@
             <version>${project.version}</version>
          </dependency>
 
-     <dependency>
-          <groupId>org.exoplatform.ide</groupId>
-          <artifactId>exo-ide-codeassistant-framework</artifactId>
-          <version>${project.version}</version>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-framework</artifactId>
+            <version>${project.version}</version>
          </dependency>
 
          <dependency>
@@ -182,8 +182,8 @@
             <artifactId>exo-ide-editor</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
-          <dependency>
+
+         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-extension-gadget</artifactId>
             <version>${project.version}</version>
@@ -196,15 +196,15 @@
          </dependency>
 
          <dependency>
-           <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-editor-extension-java</artifactId>
-           <version>${project.version}</version>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-extension-java</artifactId>
+            <version>${project.version}</version>
          </dependency>
 
          <dependency>
-           <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-editor-extension-jsp</artifactId>
-           <version>${project.version}</version>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-extension-jsp</artifactId>
+            <version>${project.version}</version>
          </dependency>
 
          <dependency>
@@ -212,13 +212,13 @@
             <artifactId>exo-ide-editor-extension-chromattic</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-extension-gtmpl</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-extension-netvibes</artifactId>
@@ -226,23 +226,23 @@
          </dependency>
 
          <dependency>
-           <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-editor-extension-ruby</artifactId>
-           <version>${project.version}</version>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-extension-ruby</artifactId>
+            <version>${project.version}</version>
          </dependency>
 
          <dependency>
-           <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-editor-extension-php</artifactId>
-           <version>${project.version}</version>
-         </dependency>         
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-extension-php</artifactId>
+            <version>${project.version}</version>
+         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-chromattic</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-git</artifactId>
@@ -277,9 +277,9 @@
          </dependency>
 
          <dependency>
-           <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-vfs</artifactId>
-           <version>${project.version}</version>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs</artifactId>
+            <version>${project.version}</version>
          </dependency>
 
          <dependency>
@@ -490,11 +490,11 @@
             <version>${chromattic.version}</version>
          </dependency>
          <dependency>
-           <groupId>org.chromattic</groupId>
-           <artifactId>chromattic.exo</artifactId>
-           <version>${chromattic.version}</version> 
-        </dependency>
-        <dependency>
+            <groupId>org.chromattic</groupId>
+            <artifactId>chromattic.exo</artifactId>
+            <version>${chromattic.version}</version>
+         </dependency>
+         <dependency>
             <groupId>org.chromattic</groupId>
             <artifactId>chromattic.metamodel</artifactId>
             <version>${chromattic.version}</version>
@@ -525,30 +525,36 @@
             <version>${groovy.version}</version>
          </dependency>
 
-        <dependency>
+         <dependency>
             <groupId>quartz</groupId>
             <artifactId>quartz</artifactId>
             <version>1.5.2</version>
-        </dependency>
-    
-        <dependency>
+         </dependency>
+
+         <dependency>
             <groupId>org.jboss.cache</groupId>
             <artifactId>jbosscache-core</artifactId>
             <version>3.2.6.GA</version>
             <exclusions>
-                <exclusion>
-                    <groupId>jgroups</groupId>
-                    <artifactId>jgroups</artifactId>
-                </exclusion>
+               <exclusion>
+                  <groupId>jgroups</groupId>
+                  <artifactId>jgroups</artifactId>
+               </exclusion>
             </exclusions>
-        </dependency>
-    
-        <dependency>
+         </dependency>
+
+         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-core</artifactId>
             <version>4.1.0.FINAL</version>
-        </dependency>      
-         
+         </dependency>
+
+         <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.44-1</version>
+         </dependency>
+
       </dependencies>
    </dependencyManagement>
    <build>
@@ -659,10 +665,10 @@
 
       <module>exo-ide-vfs-webdav-client</module>
 
-      <!--module>exo-ide-vfs</module-->
-     
+      <!--module>exo-ide-vfs</module -->
+
       <module>exo-ide-codeassistant-framework</module>
-      
+
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-extension-gadget</module>
       <module>exo-ide-editor-extension-groovy</module>
@@ -673,7 +679,7 @@
       <module>exo-ide-editor-extension-jsp</module>
       <module>exo-ide-editor-extension-ruby</module>
       <module>exo-ide-editor-extension-php</module>
-    
+
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>
       <module>exo-ide-extension-java</module>
@@ -681,15 +687,15 @@
       <module>exo-ide-extension-chromattic</module>
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>
-      
+
 
       <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
-      
+
 
       <module>exo-ide-client-application</module>
-       <!-- Not build on GWT 2.2.0 -->
+      <!-- Not build on GWT 2.2.0 -->
       <!-- module>exo-ide-client-gadget</module -->
       <module>exo-ide-packaging-standalone-tomcat</module>
 

@@ -166,7 +166,7 @@ public abstract class JcrFileSystemTest extends TestCase
    protected void validateLinks(Item item)
    {
       Map<String, Link> links = item.getLinks();
-      
+
       if (links.size() == 0)
          fail("Links not found. ");
 
