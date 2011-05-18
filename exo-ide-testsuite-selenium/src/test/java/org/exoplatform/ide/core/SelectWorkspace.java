@@ -146,7 +146,7 @@ public class SelectWorkspace extends AbstractTestModule
     */
    public void doubleClickInListGrid(String workspaceName) throws InterruptedException
    {
-      selenium().click("//table[@id='"+LIST_GRID_ID+"']//tr[contains(., '" + workspaceName + "')]");
-      selenium().doubleClick("//table[@id='"+LIST_GRID_ID+"']//tr[contains(., '" + workspaceName + "')]");
+      selenium().click("//table[@id='"+LIST_GRID_ID+"']//tr//span[contains(., '" + workspaceName + "')]");
+      selenium().doubleClick("//table[@id='"+LIST_GRID_ID+"']//tr//span[contains(., '" + workspaceName + "')]");
    }
 }

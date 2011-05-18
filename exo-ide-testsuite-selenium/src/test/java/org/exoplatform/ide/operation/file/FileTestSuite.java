@@ -39,18 +39,16 @@ import org.junit.runners.Suite.SuiteClasses;
 //   RenameClosedFileTest.class
 //   DeletingFilesTest.class
 
-   ClosingAndSaveAsFileTest.class
+   ClosingAndSaveAsFileTest.class,
 //   DisplayingWarningMessageTest.class,
    
 //   StoreOpenedFilesHistoryTest.class
 //   SavingPreviouslyEditedFileTest.class,
-//   ChekIconsTests.class,
-//   NavigationPanelWithoutSelectedItemTest.class
 
    
-//   OpenAndSaveXmlFileWithNonLatinNameTest.class
-//   CreateSaveAsXmlWithNonLatinNameTest.class,
-//   DeletingXmlFileWithNonLatinNameTest.class,
+   OpenAndSaveXmlFileWithNonLatinNameTest.class,
+   CreateSaveAsXmlWithNonLatinNameTest.class,
+   DeletingXmlFileWithNonLatinNameTest.class
 //   CheckHilightTextTest.class,
 })
 public class FileTestSuite

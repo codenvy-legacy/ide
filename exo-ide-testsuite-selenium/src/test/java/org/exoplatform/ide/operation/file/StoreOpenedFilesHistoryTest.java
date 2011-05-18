@@ -118,45 +118,58 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    {
       waitForRootElement();
     
-      secondWorkspaceName = getNonActiveWorkspaceName();
+      secondWorkspaceName = WS_NAME_2;
       SECOND_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + secondWorkspaceName + "/";
       
       //select another workspace
-      selectWorkspace(secondWorkspaceName);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      IDE.SELECT_WORKSPACE.waitForDialog();
+      IDE.SELECT_WORKSPACE.doubleClickInListGrid(secondWorkspaceName);
       
+      IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL);   
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/");
+      IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL+ TEST_FOLDER_TO_DELETE + "/");
+      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL+ TEST_FOLDER_TO_DELETE + "/");
       
       //create txt file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.EDITOR.waitTabPresent(0);
       saveAsUsingToolbarButton(TEXT_FILE);
-      
+      IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
       
       //create html file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.EDITOR.waitTabPresent(1);
       saveAsUsingToolbarButton(HTML_FILE);
+      IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
       
       //create google gadget file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.EDITOR.waitTabPresent(2);
       saveAsUsingToolbarButton(GADGET_FILE);
+      IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
       
       //create groovy script file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      IDE.EDITOR.waitTabPresent(3);
       
       //closing all files
      IDE.EDITOR.closeTab(0);
      IDE.EDITOR.closeTab(0);
      IDE.EDITOR.closeTab(0);
      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TEXT_FILE, false);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GADGET_FILE, false);
-      openFileFromNavigationTreeWithCkEditor(HTML_FILE, "HTML" ,true);
-      
+     IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
+      IDE.OPENWITH.openSelectedFileWithCodeEditor(false);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
+      IDE.OPENWITH.openSelectedFileWithCodeEditor(false);
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
+      IDE.OPENWITH.openSelectedFileWithCkEditor(true);
+      IDE.EDITOR.waitTabPresent(2);
       IDE.EDITOR.checkCkEditorOpened(2);
       
       //delete Test Folder to Delete from server
@@ -175,13 +188,9 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       
       selenium.open("http://www.google.com.ua/");
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
       
       selenium.goBack();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
-      refresh();
-//      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
+      waitForRootElement();
       waitForElementPresent(Editor.EditorLocators.CK_EDITOR);
       
       IDE.EDITOR.checkCkEditorOpened(1);
@@ -215,14 +224,13 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       //select Gadget file
      IDE.EDITOR.selectTab(0);
       
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, true);
+      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
    
 }

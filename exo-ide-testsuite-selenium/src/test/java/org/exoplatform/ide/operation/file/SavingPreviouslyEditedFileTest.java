@@ -99,25 +99,27 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    {
       //----- 1 ------------
       //Create and select "Test" in "Workspace" panel.
-
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
 
       //----- 2 ------------
       //Click "New -> XML File" button.
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.EDITOR.waitTabPresent(0);
 
       //You will see default XML content  in the new file tab of "Content" panel.
       //is file openededitor()
-      assertEquals("Untitled file.xml *",IDE.EDITOR.getTabTitle(0));
+      assertEquals("Untitled file.xml *", IDE.EDITOR.getTabTitle(0));
       assertEquals(DEFAULT_XML_CONTENT,IDE.EDITOR.getTextFromCodeEditor(0));
 
       //----- 3-4 ------------
       //Click "Save As" button.
       //Enter "RepoFile.xml" as name of the file and click "Ok" button.
       saveAsUsingToolbarButton(FILE_NAME);
-
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       //is file saved
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
@@ -125,7 +127,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
 
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+
       assertEquals(FILE_NAME,IDE.EDITOR.getTabTitle(0));
      IDE.EDITOR.closeTab(0);
 
@@ -138,8 +140,9 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       //----- 6 ------------
       //Go back to gadget window, do some changes in "Content" panel, click "Save" button.
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-     IDE.EDITOR.selectIFrameWithEditor(0);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
+     IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.selectIFrameWithEditor(0);
      IDE.EDITOR.deleteFileContent();
       IDE.selectMainFrame();
      IDE.EDITOR.typeTextIntoEditor(0, XML_TEXT);
@@ -161,7 +164,8 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       //----- 8 ------------
       //Open "RepoFile.xml" file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(0);
       //You must see the content of your file in "Content" panel.
       assertEquals(FORMATTED_XML_TEXT,IDE.EDITOR.getTextFromCodeEditor(0));
 
@@ -188,12 +192,14 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
 
       saveAsUsingToolbarButton(FILE_NAME);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      
      IDE.EDITOR.typeTextIntoEditor(0, "X");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
@@ -216,18 +222,18 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-
+      IDE.EDITOR.waitTabPresent(0);
       saveAsUsingToolbarButton(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      
      IDE.EDITOR.closeTab(0);
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
      IDE.EDITOR.typeTextIntoEditor(0, "X");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
