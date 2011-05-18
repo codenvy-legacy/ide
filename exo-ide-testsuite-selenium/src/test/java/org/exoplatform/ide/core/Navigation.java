@@ -42,7 +42,7 @@ public class Navigation extends AbstractTestModule
    static final String TREE_PREFIX_ID = "navigation-";
 
    static final String TREE_PREFIX_SERCH_ID = "search-";
-   
+
    /**
     * Select row in navigation tree.
     * 1 - number of root node (workspace).
@@ -61,8 +61,9 @@ public class Navigation extends AbstractTestModule
       {
          if (selenium().isVisible(
             "xpath=(//div[@id='" + NAVIGATION_TREE + "']//div[@class='ide-Tree-label'])[position()=" + i + "]"))
-            ;
-         index++;
+         {
+            index++;
+         }
          if (index == rowNumber)
          {
             selenium().clickAt(
@@ -89,8 +90,9 @@ public class Navigation extends AbstractTestModule
       {
          if (selenium().isVisible(
             "xpath=(//div[@id='" + NAVIGATION_TREE + "']//div[@class='ide-Tree-label'])[position()=" + i + "]"))
-            ;
-         index++;
+         {
+            index++;
+         }
          if (index == rowNumber)
          {
             return selenium().getText(
@@ -112,8 +114,9 @@ public class Navigation extends AbstractTestModule
       {
          if (selenium().isVisible(
             "xpath=(//div[@id='" + SEARCH_RESULT_TREE + "']//div[@class='ide-Tree-label'])[position()=" + i + "]"))
-            ;
-         index++;
+         {
+            index++;
+         }
          if (index == rowNumber)
          {
             return selenium().getText(
@@ -345,10 +348,8 @@ public class Navigation extends AbstractTestModule
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
 
-   public enum Editor 
-   {
-      CODEMIRROR("CodeMirror"), 
-      CKEDITOR("CKEditor"); 
+   public enum Editor {
+      CODEMIRROR("CodeMirror"), CKEDITOR("CKEditor");
 
       /**
        * Name of editor - the title, that displayed in Open With form.
@@ -364,8 +365,7 @@ public class Navigation extends AbstractTestModule
       {
          return this.name;
       }
-      
+
    }
-   
-   
+
 }
