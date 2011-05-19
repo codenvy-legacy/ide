@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.debug.SeleniumTestsHelper;
+import org.exoplatform.ide.client.download.DownloadForm;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
@@ -93,6 +94,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(EVENT_BUS, ideForm, controlsRegistration);
+      new DownloadForm(EVENT_BUS);
       new ViewHighlightManager(EVENT_BUS);
 
       new ApplicationStateSnapshotListener(EVENT_BUS);
