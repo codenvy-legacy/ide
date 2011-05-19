@@ -255,7 +255,7 @@ public class Navigation extends AbstractTestModule
       }
 
       IDE().OPENWITH.clickOpenButton();
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE().EDITOR.waitEditorFileOpened();
    }
 
    /**

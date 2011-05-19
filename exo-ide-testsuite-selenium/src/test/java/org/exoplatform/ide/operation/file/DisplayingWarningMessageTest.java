@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -71,17 +72,18 @@ public class DisplayingWarningMessageTest extends BaseTest
    }
 
    //IDE-36:Displaying warning message test.
-  // @Test
+   @Test
    public void displayingWarningMessage() throws Exception
    {
       waitForRootElement();
-
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
+      
 
       //--------- 1 -------------------
       //Click on "New->XML File" toolbar button to open new file on Content Panel
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
 
       //--------- 2,3 -------------------
       //Try to close file tab.
@@ -103,7 +105,6 @@ public class DisplayingWarningMessageTest extends BaseTest
       //--------- 4 -------------------
       //Click on "File->New->XML File" top menu command to open new file on Content Panel
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //check is file opened
       assertEquals(XML_FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
@@ -111,7 +112,8 @@ public class DisplayingWarningMessageTest extends BaseTest
       //--------- 5 -------------------
       //Try to close file tab again.
       //IDE.EDITOR.closeNewFile(0, true, null);
-      IDE.EDITOR.clickCloseEditorButton(0);      
+      IDE.EDITOR.saveAndCloseFile(0, null);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
 
       //After the step 6: new file will be saved, and file tab should be closed.
 
@@ -125,7 +127,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       //Open created earlier xml file and change file content. 
       //Open new file by clicking on "New->Java Script File" button.
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME, false);
-
+      
       changeFileContent();
 
       //open javascript file
@@ -134,24 +136,17 @@ public class DisplayingWarningMessageTest extends BaseTest
       //--------- 8 -------------------
       //Trying to reopen created earlier xml file. 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME, false);
+      assertTrue(IDE.ASK_DIALOG.isOpened());
+      IDE.ASK_DIALOG.clickYes();
       
-      IDE.ASK_DIALOG.assertOpened("Info");
-      IDE.ASK_DIALOG.clickNo();
-
-      
-      
+      Thread.sleep(1000);
       
       //After the step 8: file tab with created earlier xml file should be opened, 
       //content in this tab should be changed, title will be marked by "*" and buttom "Save" and "File->Save" top menu command will be enabled.
 
-      System.out.println("opened file 1 > " + IDE.EDITOR.getTabTitle(0));
-      System.out.println("opened file 2 > " + IDE.EDITOR.getTabTitle(1));
-      
       assertEquals(XML_FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
       IDE.EDITOR.checkIsTabPresentInEditorTabset(XML_FILE_NAME + " *", true);
       
-      
-
       IDE.EDITOR.checkEditorTabSelected(XML_FILE_NAME, true);
       IDE.EDITOR.checkCodeEditorOpened(0);
 
@@ -170,9 +165,9 @@ public class DisplayingWarningMessageTest extends BaseTest
       //---------- 9 -----------------
       //Save, close file tab and open created earlier xml file again.
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      Thread.sleep(1000);
       IDE.EDITOR.closeFile(0);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME, false);
 
       //After the step 9: there is saved file content in the new file tab with title without mark "*".
 

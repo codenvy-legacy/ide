@@ -202,6 +202,7 @@ public class Editor extends AbstractTestModule
        * Wait for remembered files to be closed.
        */
       waitForRememberFileClosed();
+      Thread.sleep(1);
    }
 
    /**
@@ -368,7 +369,9 @@ public class Editor extends AbstractTestModule
       }
       else if (IDE().ASK_FOR_VALUE_DIALOG.isOpened())
       {
-         IDE().ASK_FOR_VALUE_DIALOG.setValue(newFileName);
+         if (newFileName != null && !newFileName.isEmpty()) {
+            IDE().ASK_FOR_VALUE_DIALOG.setValue(newFileName);            
+         }
          IDE().ASK_FOR_VALUE_DIALOG.clickOkButton();
       }
       else

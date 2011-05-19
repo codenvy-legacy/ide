@@ -108,20 +108,6 @@ public class CheckHilightTextTest extends BaseTest
       }
    }
 
-   @Test
-   public void testOpeningSavingAndClosingTabsWithFile() throws Exception
-   {
-
-      //------------3---------------------    
-      // Refresh Workspace:
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-
-   }
-
    //check_hilight_code
 
    @Test

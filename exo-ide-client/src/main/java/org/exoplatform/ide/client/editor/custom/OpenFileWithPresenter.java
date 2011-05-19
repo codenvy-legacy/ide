@@ -29,6 +29,8 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -69,7 +71,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id: $
 */
 public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFileClosedHandler, OpenFileWithHandler,
-   ItemsSelectedHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler
+   ItemsSelectedHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler
 {
 
    public interface Display extends IsView
@@ -98,11 +100,11 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
    private File selectedFile;
 
    private Map<String, File> openedFiles;
-   
+
    private Map<String, String> openedEditorDescriptions = new HashMap<String, String>();
 
    private ApplicationSettings applicationSettings;
-   
+
    public OpenFileWithPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -113,6 +115,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
 
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onOpenFileWith(OpenFileWithEvent event)
@@ -168,16 +171,17 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
 
       fillEditorListGrid();
    }
-   
-   private void onEditorSelected(EditorProducer editor) {
-//      if (openedEditorDescriptions.get(selectedFile.getHref()) != null &&
-//         editor.getDescription().equals(openedEditorDescriptions.get(selectedFile.getHref()))) {
-//         display.setOpenButtonEnabled(false);
-//         return;
-//      }
+
+   private void onEditorSelected(EditorProducer editor)
+   {
+      //      if (openedEditorDescriptions.get(selectedFile.getHref()) != null &&
+      //         editor.getDescription().equals(openedEditorDescriptions.get(selectedFile.getHref()))) {
+      //         display.setOpenButtonEnabled(false);
+      //         return;
+      //      }
 
       selectedEditor = editor;
-      display.setOpenButtonEnabled(true);      
+      display.setOpenButtonEnabled(true);
    }
 
    /**
@@ -361,6 +365,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
       if (display != null)
       {
          IDE.getInstance().closeView(display.asView().getId());
+         display = null;
       }
    }
 
@@ -384,6 +389,17 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
+   }
+
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      if (display != null)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+         display = null;
+      }
+
    }
 
 }

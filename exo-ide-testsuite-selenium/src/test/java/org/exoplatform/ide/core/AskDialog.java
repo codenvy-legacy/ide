@@ -49,11 +49,6 @@ public class AskDialog extends AbstractTestModule
       waitForElementNotPresent(Locators.ASK_DIALOG_ID);
    }
 
-   public void assertOpened()
-   {
-      assertTrue(selenium().isElementPresent(Locators.ASK_DIALOG_ID));
-   }
-
    public void assertOpened(String title)
    {
       assertTrue(isOpened(title));
@@ -78,7 +73,7 @@ public class AskDialog extends AbstractTestModule
    public void clickYes() throws Exception
    {
       selenium().click("//div[@id='exoAskDialog']//div[@id='exoAskDialogYesButton']");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      waitForElementNotPresent(Locators.ASK_DIALOG_ID);
    }
    
    public void waitForDialog() throws Exception
