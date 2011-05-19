@@ -54,6 +54,11 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
    @Test
    public void testOutlineWhenSeveralFilesOpen() throws Exception
    {
+     
+      //fix for run tests where new session start after 7 testcases passes (Outline panel  remains is open after the previous test )   
+      logout();
+      standaloneLogin(TestConstants.Users.ROOT);
+      
       waitForRootElement();
       //---- 1 --------------
       //open new javascript file

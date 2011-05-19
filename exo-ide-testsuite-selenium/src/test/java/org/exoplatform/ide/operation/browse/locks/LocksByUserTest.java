@@ -70,6 +70,7 @@ public class LocksByUserTest extends LockFileAbstract
    @Test
    public void testLocksByUser() throws Exception
    {
+    //fix for run tests where new session start after 7 testcases passes  
       logout();
       standaloneLogin(TestConstants.Users.ROOT);
       waitForRootElement();
