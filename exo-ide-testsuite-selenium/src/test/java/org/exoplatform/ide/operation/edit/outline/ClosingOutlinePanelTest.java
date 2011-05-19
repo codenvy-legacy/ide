@@ -63,9 +63,8 @@ public class ClosingOutlinePanelTest extends BaseTest
 
       try
       {
-         //*******TODO****Fix
+
          VirtualFileSystemUtils.mkcol(URL);
-         //*******************
 
          VirtualFileSystemUtils.put(javaScriptFilePath, MimeType.APPLICATION_JAVASCRIPT, URL + JAVASCRIPT_FILE_NAME);
          VirtualFileSystemUtils.put(textFilePath, MimeType.TEXT_PLAIN, URL + TEXT_FILE_NAME);
@@ -110,51 +109,46 @@ public class ClosingOutlinePanelTest extends BaseTest
    {
       //----- 1 -------------
       //open JavaScript file.
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
+      waitForRootElement();
+      IDE.WORKSPACE.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(JAVASCRIPT_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + JAVASCRIPT_FILE_NAME, false);
 
       //----- 2 -------------
       //show Code Outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      Thread.sleep(TestConstants.SLEEP);
+
+      waitForElementPresent("ideOutlineTreeGrid");
       //check Code Outline present
-      checkCodeHelperPanelPresent(true);
+      IDE.OUTLINE.assertOutlineTreePresent();
 
       //----- 3 -------------
       //open text file.
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TEXT_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + TEXT_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       //check Code Outline in Not Present
-      checkCodeHelperPanelVisibility(false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OUTLINE.checkOtlineTreeIsNotPresent();
 
       //return to the tab with JavaScript.
-     IDE.EDITOR.selectTab(0);
+      IDE.EDITOR.selectTab(0);
       //check Code Outline present
-      checkCodeHelperPanelVisibility(true);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OUTLINE.assertOutlineTreePresent();
 
       //----- 4 -------------
       //close code outline panel.
-      
-     IDE.EDITOR.closeFile(0);
+
+      IDE.EDITOR.closeTab(0);
       //check Code Outline in Not Present
-      checkCodeHelperPanelVisibility(false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OUTLINE.checkOtlineTreeIsNotPresent();
 
       //----- 5 -------------
       //refresh page
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       //check outline is not present
-      checkCodeHelperPanelPresent(false);
+      IDE.OUTLINE.checkOtlineTreeIsNotPresent();
 
    }
 

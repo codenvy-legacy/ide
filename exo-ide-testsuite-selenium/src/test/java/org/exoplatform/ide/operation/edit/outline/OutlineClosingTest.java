@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.junit.Test;
 
@@ -34,18 +33,22 @@ import org.junit.Test;
  *
  */
 //http://jira.exoplatform.org/browse/IDE-417
-public class OutlineClosingTest extends BaseTest 
+public class OutlineClosingTest extends BaseTest
 {
+
+   static private String OUTLINE_TAB_LABEL =
+      "//div[@panel-id='information']//table/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[2]['Outline']";
+
    @Test
    public void test() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      
+
       openAndCloseOutline();
-      
+
       openAndCloseOutline();
-      
+
       openAndCloseOutline();
    }
 
@@ -57,16 +60,15 @@ public class OutlineClosingTest extends BaseTest
    {
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      Thread.sleep(TestConstants.SLEEP);
-      
+      waitForElementPresent("ideOutlineTreeGrid");
+
       // check for presence of tab outline
-      assertTrue(selenium.isVisible("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]"));
-      assertEquals("Outline", selenium.getText("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[index=0]/title"));
-      
-      selenium.click("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]/tab[ID=ideOutlineForm]/icon");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-      assertFalse(selenium.isVisible("scLocator=//TabSet[ID=\"ideCodeHelperPanel\"]"));
+      IDE.OUTLINE.assertOutlineTreePresent();
+      assertEquals("Outline", selenium.getText(OUTLINE_TAB_LABEL));
+
+      IDE.OUTLINE.closeOutline();
+
+      IDE.OUTLINE.assertOutlineTreeNotPresent();
    }
-   
+
 }

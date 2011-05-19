@@ -32,6 +32,11 @@ import org.exoplatform.ide.ToolbarCommands;
  * @version $Id:  May 11, 2011 9:45:54 AM anya $
  *
  */
+/**
+ * @author <a href="mailto:foo@bar.org">Foo Bar</a>
+ * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z aheritier $
+ *
+ */
 public class Versions extends AbstractTestModule
 {
    private static final String VERSION_CONTENT_VIEW_ID = "ideVersionContentView";
@@ -46,6 +51,10 @@ public class Versions extends AbstractTestModule
 
    private final String OPEN_VERSION_BUTTON_ID = "ideViewVersionsFormOpenVersionButton";
 
+   private final String ACTIVE_VERSIONS_LIST_VIEW = "//div[@view-id='ideVersionContentView' and @is-active='true']";
+   
+   private final String NOT_ACTIVE_VERSIONS_LIST_VIEW = "//div[@view-id='ideVersionContentView' and @is-active='false']";
+
    private final String CLOSE_BUTTON_ID = "ideViewVersionsFormCloseButton";
 
    /**
@@ -59,7 +68,7 @@ public class Versions extends AbstractTestModule
       waitForElementVisible(VERSION_CONTENT_VIEW_LOCATOR);
       IDE().TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_OLDER_VERSION, true, 5000);
    }
-   
+
    /**
     * Wait till version content view is closed.
     * 
@@ -216,7 +225,7 @@ public class Versions extends AbstractTestModule
       IDE().MENU.checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST, enabled);
       IDE().TOOLBAR.assertButtonEnabled(ToolbarCommands.View.VIEW_VERSION, enabled);
    }
-   
+
    /**
     * Wait till view with list of versions is opened.
     * 
@@ -226,7 +235,7 @@ public class Versions extends AbstractTestModule
    {
       waitForElementPresent(VERSIONS_LIST_VIEW_LOCATOR);
    }
-   
+
    /**
     * Wait till view with list of versions is closed.
     * 
@@ -343,4 +352,23 @@ public class Versions extends AbstractTestModule
    {
       waitForElementPresent("//div[@id='" + OPEN_VERSION_BUTTON_ID + "' and @button-enabled=\"true\"]");
    }
+
+   /**
+    * checks  selection version tab (if the tab on panel several) 
+    * @throws Exception
+    */
+   public void checkVersionPanelIsActive() throws Exception
+   {
+      assertTrue(selenium().isElementPresent(ACTIVE_VERSIONS_LIST_VIEW));
+   }
+   
+   /**
+    *  checks  version tab is not active (if the tab on panel several) 
+    * @throws Exception
+    */
+   public void checkVersionPanelIsNotActive() throws Exception
+   {
+      assertTrue(selenium().isElementPresent(NOT_ACTIVE_VERSIONS_LIST_VIEW));
+   }
+   
 }

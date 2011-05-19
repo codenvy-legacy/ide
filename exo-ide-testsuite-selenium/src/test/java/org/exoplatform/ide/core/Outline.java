@@ -41,6 +41,10 @@ public class Outline extends AbstractTestModule
 
       static final String TREE = "//div[@id='" + TREE_ID + "']/";
 
+      static final String ACTIVE_OUTLINE_TAB = "//div[@view-id='ideOutlineView' and @is-active='true']";
+
+      static final String NOT_ACTIVE_OUTLINE_TAB = "//div[@view-id='ideOutlineView' and @is-active='false']";
+
       static final String scrollTopLocator =
          "document.getElementById('ideOutlineTreeGrid').parentNode.parentNode.parentNode.scrollTop";
    }
@@ -373,6 +377,12 @@ public class Outline extends AbstractTestModule
       assertTrue(selenium().isElementPresent(Locators.TREE + "/div[@id='" + id + "']"));
    }
 
+   public void checkOtlineTreeIsNotPresent()
+   {
+      assertTrue(selenium().isElementPresent(
+         "//div/table/tbody/tr/td[@style='text-align: center;' and text()='An outline is not available.']"));
+   }
+
    /**
     *  Method close Outline codehelper
     * @throws InterruptedException 
@@ -380,6 +390,8 @@ public class Outline extends AbstractTestModule
    public void closeOutline() throws InterruptedException
    {
       selenium().click("//div[@button-name='close-tab' and @tab-title='Outline']");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+
    }
 
    /**
@@ -410,6 +422,24 @@ public class Outline extends AbstractTestModule
          return;
       selenium().mouseDown(Locators.TREE + "/" + "div[" + String.valueOf(rowNumber + 2) + "]");
       //selenium().mouseUp(Locators.TREE + "/" +"div[" + String.valueOf(rowNumber + 2) + "]" );
+   }
+
+   /**
+    * checks  selection outline tab (if the tab on panel several) 
+    * @throws Exception
+    */
+   public void checkOutlinePanelIsActive() throws Exception
+   {
+      assertTrue(selenium().isElementPresent(Locators.ACTIVE_OUTLINE_TAB));
+   }
+
+   /**
+    *  checks  outline tab is not active (if the tab on panel several) 
+    * @throws Exception
+    */
+   public void checkOutlinePanelIsNotActive() throws Exception
+   {
+      assertTrue(selenium().isElementPresent(Locators.NOT_ACTIVE_OUTLINE_TAB));
    }
 
    public enum LabelType {

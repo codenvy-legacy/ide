@@ -29,6 +29,7 @@ import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Navigation;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -46,19 +47,19 @@ import java.io.IOException;
  * @version $Id: Nov 23, 2010 $
  *
  */
-public class OutlineWithOtherTabsInPanelTest extends BaseTest 
+public class OutlineWithOtherTabsInPanelTest extends BaseTest
 {
    private final static String TEXT_FILE_NAME = "file-1.txt";
-   
+
    private final static String HTML_FILE_NAME = "file-2.html";
-   
+
    private final static String XML_FILE_NAME = "file-3.xml";
 
    private final static String FOLDER_NAME = OutlineWithOtherTabsInPanelTest.class.getSimpleName();
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/" + FOLDER_NAME + "/";
-   
+
    @BeforeClass
    public static void setUp()
    {
@@ -66,7 +67,6 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       final String textFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/sample-text.txt";
       final String htmlFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/sample-html.html";
       final String xmlFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/sample-xml.xml";
-
 
       try
       {
@@ -87,7 +87,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
          fail("Can't create folder and files");
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -105,90 +105,95 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testOutlineWithOtherTabsInPanel() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      waitForRootElement();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
+
       //----- 1 -------------
       //open xml file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+      IDE.WORKSPACE.selectItem(URL + XML_FILE_NAME);
+      IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
+      //IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
+      //Thread.sleep(TestConstants.SLEEP_SHORT);
+
       //----- 2 -------------
       //open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      waitForElementPresent("ideOutlineTreeGrid");
       //check outline visible
-      assertTrue(selenium.isVisible(Locators.CodeHelperPanel.SC_OUTLINE_TAB_LOCATOR));
-      
+      IDE.OUTLINE.assertOutlineTreePresent();
+
       //----- 3 -------------
       //open html file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.WORKSPACE.selectItem(URL + HTML_FILE_NAME);
+      IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
+      //IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
+
       //check outline visible
-      assertTrue(selenium.isVisible(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR));
-      
+      IDE.OUTLINE.assertOutlineTreePresent();
+
       //----- 4 -------------
       //open text file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TEXT_FILE_NAME, false);
+      IDE.WORKSPACE.selectItem(URL + TEXT_FILE_NAME);
+      IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check outline is not visible
-      assertFalse(selenium.isVisible(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR));
-      
+      IDE.OUTLINE.checkOtlineTreeIsNotPresent();
+
       //----- 5 -------------
       //type text to file and save (create new version)
-     IDE.EDITOR.typeTextIntoEditor(2, "hello");
+      IDE.EDITOR.typeTextIntoEditor(2, "hello");
       saveCurrentFile();
-      
+
       //----- 6 -------------
       //open version tab
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
       //check version tab is visible, outline tab is not visible
-      assertTrue(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_VERSION_TAB_LOCATOR));
-      assertFalse(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_OUTLINE_TAB_LOCATOR));
-      
+
+      IDE.OUTLINE.checkOutlinePanelIsNotActive();
+      IDE.VERSIONS.checkVersionPanelIsActive();
+
       //----- 7 -------------
       //go to xml file
-     IDE.EDITOR.selectTab(0);
-      
+      IDE.EDITOR.selectTab(0);
+
       //version tab is closed, outline is visible
-      assertFalse(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_VERSION_TAB_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_OUTLINE_TAB_LOCATOR));
-      
+      IDE.OUTLINE.assertOutlineTreePresent();
+      IDE.VERSIONS.checkViewVersionsListPanel(false);
+
       //----- 8 -------------
       //type text and save
-     IDE.EDITOR.typeTextIntoEditor(0, "abc");
+      IDE.EDITOR.typeTextIntoEditor(0, "abc");
       saveCurrentFile();
-      
+
       //----- 9 -------------
       //open versions tab
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
-      assertTrue(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_VERSION_TAB_LOCATOR));
-      assertTrue(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_OUTLINE_TAB_LOCATOR));
-      
+      IDE.OUTLINE.assertOutlineTreePresent();
+      IDE.VERSIONS.checkVersionPanelIsActive();
+
       //----- 10 -------------
       //close outline tab by clicking on close icon (x)
-      selenium.click(Locators.CodeHelperPanel.SC_OUTLINE_TAB_LOCATOR + Locators.CLOSE_ICON);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+      IDE.OUTLINE.closeOutline();
+
       //outline panel is closed and versions tab is visible
-      assertTrue(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_VERSION_TAB_LOCATOR));
-      assertFalse(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_OUTLINE_TAB_LOCATOR));
-      
+      IDE.OUTLINE.assertOutlineTreeNotPresent();
+
       //----- 11 -------------
       //select text file
-     IDE.EDITOR.selectTab(2);
-      assertFalse(selenium.isVisible(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR));
-      
+      IDE.EDITOR.selectTab(2);
+      IDE.OUTLINE.assertOutlineTreeNotPresent();
+
       //----- 12 -------------
       //select html file
-     IDE.EDITOR.selectTab(1);
-      assertFalse(selenium.isElementPresent(Locators.CODE_HELPER_PANEL_LOCATOR + Locators.CodeHelperPanel.XPATH_OUTLINE_TAB_LOCATOR));
-      
+      IDE.EDITOR.selectTab(1);
+      IDE.OUTLINE.assertOutlineTreeNotPresent();
+
    }
 
 }
