@@ -53,7 +53,15 @@ public class Outline extends AbstractTestModule
 
    private static final int LINE_HEIGHT = 28;
 
-   private static final int EDITOR_TOP_OFFSET_POSITION = 94;
+   /**
+    * Windows XP 1680*1050
+    */
+//   private static final int EDITOR_TOP_OFFSET_POSITION = 94;
+
+   /**
+    * SUSE 1680*1050
+    */
+   private static final int EDITOR_TOP_OFFSET_POSITION = 91;
 
    public enum TokenType {
       CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION,
