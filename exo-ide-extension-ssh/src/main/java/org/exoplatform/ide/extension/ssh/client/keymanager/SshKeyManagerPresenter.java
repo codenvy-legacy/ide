@@ -31,11 +31,14 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.StringValueReceivedHandler;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.ssh.client.SshService;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
@@ -83,7 +86,21 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
-      System.out.println("SshKeyManagerPresenter.onShowSshKeyManager()");
+      SshService.get().getAllKeys(new AsyncRequestCallback<List<KeyItem>>()
+      {
+
+         @Override
+         protected void onSuccess(List<KeyItem> result)
+         {
+            display.getKeyItemGrid().setValue(result);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
+         }
+      });
    }
 
    /**
@@ -100,30 +117,26 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
-      
+
       display.getKeyItemGrid().addViewButtonSelectionHandler(new SelectionHandler<KeyItem>()
       {
-         
+
          @Override
          public void onSelection(SelectionEvent<KeyItem> event)
          {
-            System.out.println("Show public key for host: " + event.getSelectedItem().getHost());            
+            System.out.println("Show public key for host: " + event.getSelectedItem().getHost());
          }
       });
-      
+
       display.getKeyItemGrid().addDeleteButtonSelectionHandler(new SelectionHandler<KeyItem>()
       {
-         
+
          @Override
          public void onSelection(SelectionEvent<KeyItem> event)
          {
             System.out.println("Delete key for host: " + event.getSelectedItem().getHost());
          }
       });
-      
-      List<KeyItem> items = new ArrayList<KeyItem>();
-      items.add(new KeyItem("test", "test", "test"));
-      display.getKeyItemGrid().setValue(items);
    }
 
    /**

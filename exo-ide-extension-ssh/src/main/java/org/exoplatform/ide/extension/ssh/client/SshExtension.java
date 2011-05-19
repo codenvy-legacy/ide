@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.ssh.client;
 
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -29,7 +31,7 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresente
  * @version $Id: SshExtension May 17, 2011 5:00:33 PM evgen $
  *
  */
-public class SshExtension extends Extension
+public class SshExtension extends Extension implements InitializeServicesHandler
 {
 
    /**
@@ -40,6 +42,16 @@ public class SshExtension extends Extension
    {
       IDE.getInstance().addControl(new SshKeyManagerControl(), DockTarget.NONE, false);
       new SshKeyManagerPresenter();
+      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
+    */
+   @Override
+   public void onInitializeServices(InitializeServicesEvent event)
+   {
+      new SshService(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
 }
