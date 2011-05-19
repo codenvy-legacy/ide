@@ -99,7 +99,7 @@ public class JspImplicitObjectsTest extends BaseTest
       
       IDE.CODEASSISTANT.closeForm();
       
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
    }
 

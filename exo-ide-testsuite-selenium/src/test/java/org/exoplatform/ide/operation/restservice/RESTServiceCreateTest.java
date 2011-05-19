@@ -118,7 +118,7 @@ public class RESTServiceCreateTest extends BaseTest
 
       assertProperties(SECOND_NAME);
       
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    /**

@@ -16,20 +16,43 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.toolbar.event;
+package org.exoplatform.ide.client.properties;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Created by The eXo Platform SAS .
+ * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:zhulevaanna@gmail.com">Anna Zhuleva</a>
+ * @version $Id: 
  */
 
-public interface CustomizeToolbarHandler extends EventHandler
+public class ShowPropertiesEvent extends GwtEvent<ShowPropertiesHandler>
 {
+   public static final GwtEvent.Type<ShowPropertiesHandler> TYPE = new GwtEvent.Type<ShowPropertiesHandler>();
 
-   void onCustomizeToolBar(CustomizeToolbarEvent event);
+   private boolean showProperties;
+
+   public ShowPropertiesEvent(boolean showProperties)
+   {
+      this.showProperties = showProperties;
+   }
+
+   public boolean isShowProperties()
+   {
+      return showProperties;
+   }
+
+   @Override
+   protected void dispatch(ShowPropertiesHandler handler)
+   {
+      handler.onShowProperties(this);
+   }
+
+   @Override
+   public Type<ShowPropertiesHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

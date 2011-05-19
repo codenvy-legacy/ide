@@ -158,7 +158,7 @@ public class OpenFileByPathTest extends BaseTest
       waitForElementNotPresent(OPEN_FILE_BY_PATH_WINDOW_ID);
       IDE.EDITOR.waitTabPresent(0);
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       // return to initial workspace
       IDE.SELECT_WORKSPACE.changeWorkspace(WS_NAME);

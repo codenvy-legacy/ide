@@ -195,7 +195,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       /*
        * Close saved file
        */
-      IDE.EDITOR.closeTab(1);
+      IDE.EDITOR.closeFile(1);
    }
    //TODO fix problem in issue GWTX-100
    //@Test
@@ -287,7 +287,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       //"Workspace" panel in the "Gadget " window and in the root folder of  "Server" window.
       assertEquals(fileName, IDE.EDITOR.getTabTitle(0));
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER + "/" + fileName);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       //check file created on server
       HTTPResponse response = VirtualFileSystemUtils.get(URL + FOLDER + "/" + fileName);

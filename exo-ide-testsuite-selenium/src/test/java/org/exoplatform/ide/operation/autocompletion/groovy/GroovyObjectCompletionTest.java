@@ -69,7 +69,8 @@ public class GroovyObjectCompletionTest extends BaseTest
       IDE.CODEASSISTANT.insertSelectedItem();
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
 }

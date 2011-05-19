@@ -232,7 +232,7 @@ public class Templates extends AbstractTestModule
     * @throws Exception
     */
    public void createFileFromTemplate(String templateName, String fileName) throws Exception {
-      IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE, false);
+      IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
 
       //wait for File from template form appeared
       IDE().TEMPLATES.waitForFileFromTemplateForm();

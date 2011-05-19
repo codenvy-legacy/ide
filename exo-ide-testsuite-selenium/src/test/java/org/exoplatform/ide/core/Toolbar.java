@@ -22,7 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.MenuCommands;
 
 /**
  * 
@@ -39,36 +39,14 @@ public class Toolbar extends AbstractTestModule
     * Performs click on toolbar button and makes pause after it.
     * @param buttonTitle toolbar button title
     */
-   public void runCommand(String buttonTitle, boolean wait) throws Exception
-   {
-      String locator =
-         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
-
-      selenium().mouseOver(locator);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      selenium().click(locator);
-      //selenium.mouseUpAt(locator, "");
-      if (wait)
-      {
-         Thread.sleep(TestConstants.REDRAW_PERIOD);
-      }
-      try
-      {
-         selenium().mouseOut(locator);
-      }
-      catch (Exception e)
-      {
-      }
-   }
-
-   /**
-    * Performs click on toolbar button and makes pause after it.
-    * @param buttonTitle toolbar button title
-    */
    public void runCommand(String buttonTitle) throws Exception
    {
-      runCommand(buttonTitle, true);
+      String locator = "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
+      selenium().click(locator);
+
+      if ("New".equals(buttonTitle)) {
+         waitForElementPresent("//div[@id='menu-lock-layer-id']//table[@class='exo-popupMenuTable']");
+      }
    }
 
    /**
@@ -78,30 +56,50 @@ public class Toolbar extends AbstractTestModule
     */
    public void runCommandFromNewPopupMenu(String menuItemName) throws Exception
    {
-      runCommandFromNewPopupMenu(menuItemName, true);
-   }
-   
-   public void runCommandFromNewPopupMenu(String menuItemName, boolean wait) throws Exception {
       runCommand("New");
 
       String locator = "//table[@class='exo-popupMenuTable']//tbody//td//nobr[text()='" + menuItemName + "']";
-      selenium().mouseOver(locator);
-      //selenium.click(locator);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
       selenium().click(locator);
-      //String hoverLocator =
-      //   "//table[@class='exo-popupMenuTable']//tbody//td//nobr[text()='" + menuItemName + "']";
 
-      //selenium.mouseUp(hoverLocator);
-
-      if (wait) {
-         //time to wait while gadget open new file
-         Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);         
+      if (menuItemName.equals(MenuCommands.New.PROJECT_TEMPLATE))
+      {
+         waitForElementPresent("ideCreateProjectTemplateForm");
       }
-      
+      else if (menuItemName.equals(MenuCommands.New.FOLDER))
+      {
+         waitForElementPresent("ideCreateFolderForm");
+      }
+      else if (menuItemName.equals(MenuCommands.New.PROJECT_FROM_TEMPLATE))
+      {
+         waitForElementPresent("//div[@view-id='ideCreateProjectFromTemplateView']");
+      }
+      else if (menuItemName.equals(MenuCommands.New.FILE_FROM_TEMPLATE))
+      {
+         waitForElementPresent("ideCreateFileFromTemplateForm");
+      }
+      else if (menuItemName.equals(MenuCommands.New.GOOGLE_GADGET_FILE) ||
+               menuItemName.equals(MenuCommands.New.REST_SERVICE_FILE) ||
+               menuItemName.equals(MenuCommands.New.GROOVY_SCRIPT_FILE) ||
+               menuItemName.equals(MenuCommands.New.CHROMATTIC) ||
+               menuItemName.equals(MenuCommands.New.HTML_FILE) ||
+               menuItemName.equals(MenuCommands.New.JAVASCRIPT_FILE) ||
+               menuItemName.equals(MenuCommands.New.CSS_FILE) ||
+               menuItemName.equals(MenuCommands.New.GROOVY_TEMPLATE_FILE) ||
+               menuItemName.equals(MenuCommands.New.XML_FILE) ||
+               menuItemName.equals(MenuCommands.New.TEXT_FILE) ||
+               menuItemName.equals(MenuCommands.New.NETVIBES_WIDGET) ||
+               menuItemName.equals(MenuCommands.New.JAVA_CLASS) ||
+               menuItemName.equals(MenuCommands.New.JSP) ||
+               menuItemName.equals(MenuCommands.New.RUBY) ||
+               menuItemName.equals(MenuCommands.New.PHP)
+               ) {
+         IDE().EDITOR.waitEditorFileOpened();
+      }
+      else
+      {
+         waitForElementNotPresent("menu-lock-layer-id");
+      }
    }
-   
 
    /**
     * Check is button present on toolbar and is it enabled or disabled.

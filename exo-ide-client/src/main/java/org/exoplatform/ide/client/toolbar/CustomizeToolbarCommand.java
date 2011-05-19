@@ -22,7 +22,6 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.toolbar.event.CustomizeToolbarEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 

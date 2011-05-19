@@ -113,8 +113,7 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
 
       assertTrue(mess.contains("PathParam:Ñ‚ÐµÑ�Ñ‚"));
       
-      IDE.EDITOR.closeTab(0);
-
+      IDE.EDITOR.closeFile(0);
    }
 
    /**

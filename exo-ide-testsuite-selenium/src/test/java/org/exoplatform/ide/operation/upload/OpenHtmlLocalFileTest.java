@@ -99,7 +99,7 @@ public class OpenHtmlLocalFileTest extends BaseTest
 
       assertEquals(MimeType.TEXT_HTML, IDE.PROPERTIES.getContentType());
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass

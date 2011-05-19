@@ -109,7 +109,7 @@ public class RESTServiceSandboxTest extends BaseTest
       assertTrue(mess.contains("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    /**

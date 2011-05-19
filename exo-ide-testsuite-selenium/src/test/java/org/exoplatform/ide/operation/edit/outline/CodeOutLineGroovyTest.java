@@ -126,7 +126,7 @@ public class CodeOutLineGroovyTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
       cleanDefaultWorkspace();
    }
 }

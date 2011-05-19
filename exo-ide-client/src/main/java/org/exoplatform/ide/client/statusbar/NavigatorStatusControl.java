@@ -122,17 +122,14 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    private String tuneMessage(String originalStatusMessage, String icon)
    {
       String table =
-         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"height:16px; border-collapse: collapse;\"><tr>"
-            + "<td style=\"width:3px;\"><img src=\""
-            + Images.BLANK
-            + "\" style=\"width:1px; height:1px;\"></td>"
-            + "<td style=\"width:16px; height:16px;\">"
-            + "<img src=\""
-            + icon
-            + "\" style=\"width:16px; height:16px;\">"
-            + "</td><td "
-            + " style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; \"><nobr>&nbsp;"
-            + originalStatusMessage + "</nobr></td></tr></table>";
+         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"height:16px; border-collapse: collapse;\">" +
+         "<tr>" +
+            "<td style=\"width:3px;\"><img src=\"" + Images.BLANK + "\" style=\"width:1px; height:1px;\"></td>" +
+            "<td style=\"width:16px; height:16px;\"><img src=\"" + icon + "\" style=\"width:16px; height:16px;\"></td>" +
+            "<td style=\"width:3px;\"><img src=\"" + Images.BLANK + "\" style=\"width:1px; height:1px;\"></td>" +
+            "<td style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; \"><nobr>"+ originalStatusMessage + "</nobr></td>" +
+         "</tr>" +
+         "</table>";
       return table;
    }
 

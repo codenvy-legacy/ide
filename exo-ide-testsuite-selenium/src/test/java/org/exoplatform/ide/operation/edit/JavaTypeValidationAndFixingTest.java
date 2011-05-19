@@ -291,8 +291,9 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      IDE.EDITOR.closeFileTabIgnoreChanges(1);
-      IDE.EDITOR.closeTab(0);
+      //IDE.EDITOR.closeFileTabIgnoreChanges(1);
+      IDE.EDITOR.closeTabIgnoringChanges(1);      
+      IDE.EDITOR.closeFile(0);
 
       try
       {

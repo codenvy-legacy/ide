@@ -287,7 +287,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       //step 25
       saveCurrentFile();
-      IDE.EDITOR.closeTabWithNonSaving(1);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
 
       //step 26
       //     //TODO must be set id in upload meme type form 
@@ -313,7 +313,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
          waitForElementNotPresent("exoAskDialog");
       }
       saveCurrentFile();
-      IDE.EDITOR.closeTabWithNonSaving(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
       IDE.WORKSPACE.selectItem(URL + htmlFile);
       IDE.NAVIGATION.deleteSelectedItems();
 
@@ -325,7 +325,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
          waitForElementNotPresent("exoAskDialog");
       }
       saveCurrentFile();
-      IDE.EDITOR.closeTabWithNonSaving(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
 
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.UNDO, false);
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.REDO, false);

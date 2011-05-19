@@ -21,6 +21,7 @@ package org.exoplatform.ide;
 import com.thoughtworks.selenium.Selenium;
 
 import org.exoplatform.ide.core.AskDialog;
+import org.exoplatform.ide.core.AskForValueDialog;
 import org.exoplatform.ide.core.ClasspathProject;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.CreateProjectTemplate;
@@ -106,6 +107,8 @@ public class IDE
    public ErrorDialog ERROR_DIALOG = new ErrorDialog();
    
    public AskDialog ASK_DIALOG = new AskDialog();
+   
+   public AskForValueDialog ASK_FOR_VALUE_DIALOG = new AskForValueDialog();
    
    public InformationDialog INFORMATION_DIALOG = new InformationDialog();
    

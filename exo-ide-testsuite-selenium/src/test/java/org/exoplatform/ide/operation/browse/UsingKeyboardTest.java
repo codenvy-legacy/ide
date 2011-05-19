@@ -118,7 +118,8 @@ public class UsingKeyboardTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       waitForRootElement();
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    /**
@@ -242,7 +243,7 @@ public class UsingKeyboardTest extends BaseTest
       IDE.OUTLINE.assertElementPresentOutlineTree("CDATA");
       assertEquals("6 : 1", getCursorPositionUsingStatusBar());
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    @After

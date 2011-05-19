@@ -139,7 +139,7 @@ public class RestoreVersionTest extends BaseTest
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text);
 
       //Reopen file to check content:
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_1, false);
       IDE.EDITOR.waitTabPresent(0);
@@ -308,7 +308,7 @@ public class RestoreVersionTest extends BaseTest
    @After
    public void cleanResults() throws Exception
    {
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
 }

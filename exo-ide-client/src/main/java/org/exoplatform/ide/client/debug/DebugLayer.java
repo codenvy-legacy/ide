@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.application.ui;
+package org.exoplatform.ide.client.debug;
 
 import org.exoplatform.gwtframework.ui.client.button.ext.IconButton;
 import org.exoplatform.ide.client.Log;
@@ -54,8 +54,6 @@ public class DebugLayer extends Layer
 
    private FlowPanel textPanel;
 
-   //private HTML control;
-   
    private IconButton control;
 
    boolean active = false;
@@ -63,13 +61,13 @@ public class DebugLayer extends Layer
    public DebugLayer()
    {
       super("debug");
+
       backgroundPanel = new AbsolutePanel();
       backgroundPanel.setVisible(false);
       DOM.setStyleAttribute(backgroundPanel.getElement(), "background", BACKGROUNG_COLOR);
       DOM.setStyleAttribute(backgroundPanel.getElement(), "border", "#eeeeee 1px solid");
       DOM.setStyleAttribute(backgroundPanel.getElement(), "opacity", "0.7");
 
-      //add(backgroundPanel, 10, 10);
       add(backgroundPanel, 0, 0);
 
       textPanel = new FlowPanel();
@@ -78,18 +76,11 @@ public class DebugLayer extends Layer
       add(textPanel, 15, 15);
 
       control = new IconButton(new Image("debug-icon.png"));
-      
-//      control = new HTML("<center>Debug <b>Disabled</b></center>");
-//      control.setWidth("" + WIDTH + "px");
-//      control.setHeight("" + HEIGHT + "px");
-
-      //DOM.setStyleAttribute(control.getElement(), "border", "#CC7766 1px solid");
       DOM.setStyleAttribute(control.getElement(), "cursor", "pointer");
       add(control);
       control.addClickHandler(controlButtonClickHandler);
 
       new InBrowserLogger();
-
    }
 
    @Override
@@ -133,7 +124,6 @@ public class DebugLayer extends Layer
       backgroundPanel.setVisible(true);
       textPanel.setVisible(true);
       active = true;
-//      control.setHTML("<center>Debug <b><font color=\"red\">Enabled</font></b></center>");
    }
 
    public void hideDebug()
@@ -146,7 +136,6 @@ public class DebugLayer extends Layer
       backgroundPanel.setVisible(false);
       textPanel.setVisible(false);
       active = false;
-//      control.setHTML("<center>Debug <b>Disabled</b></center>");
    }
 
    public boolean isDebugActive()

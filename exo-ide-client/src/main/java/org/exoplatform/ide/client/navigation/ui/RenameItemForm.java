@@ -171,18 +171,6 @@ public class RenameItemForm extends DialogWindow implements
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
 
-//      renameButton = new IButton("Rename");
-//      renameButton.setID(ID_RENAME_BUTTON);
-//      renameButton.setWidth(BUTTON_WIDTH);
-//      renameButton.setHeight(BUTTON_HEIGHT);
-//      renameButton.setIcon(Images.Buttons.OK);
-//
-//      cancelButton = new IButton("Cancel");
-//      cancelButton.setID(ID_CANCEL_BUTTON);
-//      cancelButton.setWidth(BUTTON_WIDTH);
-//      cancelButton.setHeight(BUTTON_HEIGHT);
-//      cancelButton.setIcon(Images.Buttons.NO);
-
       renameButton = new ImageButton("Rename", "ok");
       renameButton.setId(ID_RENAME_BUTTON);
 
@@ -258,7 +246,6 @@ public class RenameItemForm extends DialogWindow implements
     */
    public void enableRenameButton()
    {
-      //renameButton.enable();
       renameButton.setEnabled(true);
    }
 
@@ -267,7 +254,6 @@ public class RenameItemForm extends DialogWindow implements
     */
    public void disableRenameButton()
    {
-      //renameButton.disable();
       renameButton.setEnabled(false);
    }
 

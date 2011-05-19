@@ -142,7 +142,7 @@ public class RenameClosedFileTest extends BaseTest
        * 5. Close Properties and Editor
        */
       IDE.PROPERTIES.closeProperties();
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    @Test
@@ -187,7 +187,7 @@ public class RenameClosedFileTest extends BaseTest
        * 5. Close Properties and Editor
        */
       IDE.PROPERTIES.closeProperties();
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
 }

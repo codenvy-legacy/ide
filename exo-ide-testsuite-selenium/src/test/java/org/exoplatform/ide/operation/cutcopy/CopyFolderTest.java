@@ -177,7 +177,7 @@ public class CopyFolderTest extends BaseTest
       /* 
        * Close opened file
        */
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
       
       /* 
        * Open "/Test 1.1/test.groovy"

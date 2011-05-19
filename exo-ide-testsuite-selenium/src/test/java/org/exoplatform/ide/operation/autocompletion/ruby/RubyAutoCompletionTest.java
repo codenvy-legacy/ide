@@ -143,7 +143,8 @@ public class RubyAutoCompletionTest extends BaseTest
 
       IDE.CODEASSISTANT.closeForm();
 
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @AfterClass

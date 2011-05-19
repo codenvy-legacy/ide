@@ -19,7 +19,6 @@
 package org.exoplatform.ide.miscellaneous;
 
 import static org.exoplatform.ide.Locators.CODE_HELPER_PANEL_LOCATOR;
-import static org.exoplatform.ide.Locators.EDITOR_TABSET_LOCATOR;
 import static org.exoplatform.ide.Locators.MAIN_FORM_LOCATOR;
 import static org.exoplatform.ide.Locators.NAVIGATION_PANEL_LOCATOR;
 import static org.exoplatform.ide.Locators.OPERATION_PANEL_LOCATOR;
@@ -27,6 +26,8 @@ import static org.exoplatform.ide.Locators.VERTICAL_SPLIT_LAYOUT_LOCATOR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -36,12 +37,10 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Editor;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-97:One-click maximize/restore for editor and actions view.
@@ -135,8 +134,8 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       operationPanelNormalWidth = selenium.getElementWidth(OPERATION_PANEL_LOCATOR);
       operationPanelNormalHeight = selenium.getElementHeight(OPERATION_PANEL_LOCATOR);
       
-      contentPanelNormalWidth = selenium.getElementWidth(EDITOR_TABSET_LOCATOR);
-      contentPanelNormalHeight =  selenium.getElementHeight(EDITOR_TABSET_LOCATOR);
+      contentPanelNormalWidth = selenium.getElementWidth(Editor.Locators.EDITOR_TABSET_LOCATOR);
+      contentPanelNormalHeight =  selenium.getElementHeight(Editor.Locators.EDITOR_TABSET_LOCATOR);
       
       navigationPanelNormalWidth = selenium.getElementWidth(NAVIGATION_PANEL_LOCATOR);
       navigationPanelNormalHeight = selenium.getElementHeight(NAVIGATION_PANEL_LOCATOR);
@@ -242,7 +241,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       assertTrue(selenium.isElementPresent(CODE_HELPER_PANEL_LOCATOR));
       
       operationPanelNormalWidth = selenium.getElementWidth(OPERATION_PANEL_LOCATOR);
-      contentPanelNormalWidth = selenium.getElementWidth(EDITOR_TABSET_LOCATOR);
+      contentPanelNormalWidth = selenium.getElementWidth(Editor.Locators.EDITOR_TABSET_LOCATOR);
       codeHelperPanelNormalWidth = selenium.getElementWidth(CODE_HELPER_PANEL_LOCATOR);
       codeHelperPanelNormalHeight = selenium.getElementHeight(CODE_HELPER_PANEL_LOCATOR);
       
@@ -330,7 +329,8 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       
       //---- 16 -----------------
       //Close and remove created file.
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
+     IDE.EDITOR.closeTabIgnoringChanges(1);
       
       Thread.sleep(TestConstants.SLEEP);
    }
@@ -347,17 +347,17 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    {
       //TODO
       assertEquals(selenium.getElementWidth(MAIN_FORM_LOCATOR).intValue(),
-         selenium.getElementWidth(EDITOR_TABSET_LOCATOR).intValue() + 5);
+         selenium.getElementWidth(Editor.Locators.EDITOR_TABSET_LOCATOR).intValue() + 5);
       //1 pixel - it is height of delimeter
       assertEquals(selenium.getElementHeight(MAIN_FORM_LOCATOR).intValue(),
-         selenium.getElementHeight(EDITOR_TABSET_LOCATOR).intValue() + 1);
+         selenium.getElementHeight(Editor.Locators.EDITOR_TABSET_LOCATOR).intValue() + 1);
 
    }
    
    private void checkContentPanelRestored()
    {
-      assertEquals(contentPanelNormalWidth, selenium.getElementWidth(EDITOR_TABSET_LOCATOR));
-      assertEquals(contentPanelNormalHeight, selenium.getElementHeight(EDITOR_TABSET_LOCATOR));
+      assertEquals(contentPanelNormalWidth, selenium.getElementWidth(Editor.Locators.EDITOR_TABSET_LOCATOR));
+      assertEquals(contentPanelNormalHeight, selenium.getElementHeight(Editor.Locators.EDITOR_TABSET_LOCATOR));
    }
    
    private void checkOperationsPanelMaximized()
@@ -413,14 +413,14 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    {
       if (isVisible)
       {
-         assertTrue(selenium.isElementPresent(EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
-         assertFalse(selenium.isElementPresent(EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
+         assertTrue(selenium.isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
+         assertFalse(selenium.isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
       }
       else
       {
          
-         assertTrue(selenium.isElementPresent(EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
-         assertFalse(selenium.isElementPresent(EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
+         assertTrue(selenium.isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
+         assertFalse(selenium.isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
       }
    }
    
@@ -468,15 +468,15 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    
    private void clickMaximizeInContentPanel() throws Exception
    {
-      selenium.mouseDownAt(EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
-      selenium.mouseUpAt(EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
+      selenium.mouseDownAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
+      selenium.mouseUpAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
    
    private void clickMinimizeInContentPanel() throws Exception
    {
-      selenium.mouseDownAt(EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
-      selenium.mouseUpAt(EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
+      selenium.mouseDownAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
+      selenium.mouseUpAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
    

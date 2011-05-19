@@ -102,7 +102,7 @@ public class ReopenJustCreatedFileTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
       
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NETVIBES_FILE_NAME, false);
       

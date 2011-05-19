@@ -74,7 +74,6 @@ public class RolesWithGadgetTest extends BaseTest
    {
       try
       {
-       IDE.EDITOR.closeTab(0);
     	  VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
@@ -110,7 +109,7 @@ public class RolesWithGadgetTest extends BaseTest
       //Check deploy/undeploy is available for administrator
       checkDeployUndeployAllowed(true);
 
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
       
       //Logout and login as developer
       logout();
@@ -128,7 +127,7 @@ public class RolesWithGadgetTest extends BaseTest
       //Check deploy/undeploy is not available for developer
       checkDeployUndeployAllowed(false);
 
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
    }
 
    /**
@@ -158,7 +157,7 @@ public class RolesWithGadgetTest extends BaseTest
       //Check deploy/undeploy is available for administrator
       checkDeployUndeployAllowed(true);
       
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
    }
    
    /**

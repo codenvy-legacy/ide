@@ -107,7 +107,8 @@ public class JspTagsTest extends BaseTest
       
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("<jsp:useBean id=\"\"></jsp:useBean>"));
       
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @AfterClass

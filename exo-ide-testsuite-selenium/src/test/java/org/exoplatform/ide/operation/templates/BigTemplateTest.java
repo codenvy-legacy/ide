@@ -97,7 +97,7 @@ public class BigTemplateTest extends BaseTest
       //click OK button
       IDE.INFORMATION_DIALOG.clickOk();
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitForFileFromTemplateForm();
 
@@ -109,7 +109,8 @@ public class BigTemplateTest extends BaseTest
       
       IDE.EDITOR.waitTabPresent(0);
 
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);      
    }
 
    @AfterClass

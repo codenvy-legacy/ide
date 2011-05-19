@@ -274,8 +274,10 @@ public class HighlightCurrentLineTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+//      IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
+//      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
       cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
    }
 

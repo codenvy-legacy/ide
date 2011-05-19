@@ -22,7 +22,6 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -37,7 +36,7 @@ import com.google.gwt.event.shared.HandlerManager;
 public class RestServicesDiscoveryControl extends SimpleControl implements IDEControl
 {
    public static final String ID = "Help/REST Services Discovery";
-   
+
    public static final String TITLE = "REST Services Discovery";
 
    public static final String PROMPT = "REST Services Discovery";
@@ -50,7 +49,8 @@ public class RestServicesDiscoveryControl extends SimpleControl implements IDECo
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.restServicesDiscovery(), IDEImageBundle.INSTANCE.restServicesDiscoveryDisabled());
+      setImages(IDEImageBundle.INSTANCE.restServicesDiscovery(),
+         IDEImageBundle.INSTANCE.restServicesDiscoveryDisabled());
       setEvent(new ShowRestServicesDiscoveryEvent());
       setVisible(true);
       setEnabled(true);
@@ -61,7 +61,7 @@ public class RestServicesDiscoveryControl extends SimpleControl implements IDECo
     */
    public void initialize(HandlerManager eventBus)
    {
-      
+
    }
 
 }

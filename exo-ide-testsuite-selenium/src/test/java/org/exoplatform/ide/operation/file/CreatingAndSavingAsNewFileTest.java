@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.SaveFileUtils;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -127,9 +126,10 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE_AS);
       SaveFileUtils.checkSaveAsDialogAndSave(fileName, false);
 
-      IDE.EDITOR.closeTab(1);
+      IDE.EDITOR.closeFile(1);
 
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);      
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + fileName);
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + fileName).getStatusCode());

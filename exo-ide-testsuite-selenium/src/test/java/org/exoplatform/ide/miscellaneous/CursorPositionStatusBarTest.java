@@ -131,7 +131,7 @@ public class CursorPositionStatusBarTest extends BaseTest
 //
 //      //			check status bar
 //      assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @AfterClass

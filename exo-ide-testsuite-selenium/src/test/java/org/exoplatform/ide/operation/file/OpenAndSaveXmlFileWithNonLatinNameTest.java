@@ -103,7 +103,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
 
       saveAsUsingToolbarButton(FILE_NAME);
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       IDE.EDITOR.waitTabPresent(0);

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.debug;
 
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -51,6 +52,8 @@ public class ShowImagesPresenter implements ShowImagesHandler, ViewClosedHandler
    private Display display;
    
    public ShowImagesPresenter(HandlerManager eventBus) {
+      eventBus.fireEvent(new RegisterControlEvent(new ShowImagesControl()));
+      
       eventBus.addHandler(ShowImagesEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }

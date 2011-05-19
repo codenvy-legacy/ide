@@ -18,13 +18,9 @@
  */
 package org.exoplatform.ide;
 
-import static org.exoplatform.ide.Locators.AskForValue.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import com.thoughtworks.selenium.Selenium;
-
-import org.exoplatform.ide.utils.AbstractTextUtil;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -33,12 +29,6 @@ import org.exoplatform.ide.utils.AbstractTextUtil;
  */
 public class SaveFileUtils
 {
-   private static Selenium selenium;
-   
-   static
-   {
-      selenium = BaseTest.selenium;
-   }
 
    /**
     * Check is dialog window Save as file appeared
@@ -63,15 +53,19 @@ public class SaveFileUtils
       checkSaveAsDialog(noButtonPresent);
    
       //clearFocus();
-   
       if (name != null)
       {
-         AbstractTextUtil.getInstance().typeToInput(ASK_FOR_VALUE_TEXT_FIELD_LOCATOR, name, true);
+         IDE.getInstance().ASK_FOR_VALUE_DIALOG.setValue(name);
+         //AbstractTextUtil.getInstance().typeToInput(ASK_FOR_VALUE_TEXT_FIELD_LOCATOR, name, true);
       }
    
-      selenium.click(ASK_FOR_VALUE_OK_BUTTON_LOCATOR);
+      IDE.getInstance().ASK_FOR_VALUE_DIALOG.clickOkButton();
+//      selenium.click(ASK_FOR_VALUE_OK_BUTTON_LOCATOR);
+      
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      assertFalse(selenium.isElementPresent(ASK_FOR_VALUE_DIALOG_LOCATOR));
+
+      assertFalse(IDE.getInstance().ASK_FOR_VALUE_DIALOG.isOpened());
+      //assertFalse(selenium.isElementPresent(ASK_FOR_VALUE_DIALOG_LOCATOR));
    }
    
    /**
@@ -82,15 +76,18 @@ public class SaveFileUtils
     */
    public static void checkSaveAsDialog(boolean noButtonPresent) throws Exception
    {
-      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_DIALOG_LOCATOR));
-      assertTrue(selenium.isTextPresent("Save file as"));
-      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_TEXT_FIELD_LOCATOR));
-      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_OK_BUTTON_LOCATOR));
-      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR));
-      if (noButtonPresent)
-      {
-         assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_NO_BUTTON_LOCATOR));
-      }
+      assertTrue(IDE.getInstance().ASK_FOR_VALUE_DIALOG.isOpened());
+      assertEquals(noButtonPresent, IDE.getInstance().ASK_FOR_VALUE_DIALOG.isNoButtonPresent());
+      
+//      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_DIALOG_LOCATOR));
+//      assertTrue(selenium.isTextPresent("Save file as"));
+//      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_TEXT_FIELD_LOCATOR));
+//      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_OK_BUTTON_LOCATOR));
+//      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR));
+//      if (noButtonPresent)
+//      {
+//         assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_NO_BUTTON_LOCATOR));
+//      }
    }
    
 }

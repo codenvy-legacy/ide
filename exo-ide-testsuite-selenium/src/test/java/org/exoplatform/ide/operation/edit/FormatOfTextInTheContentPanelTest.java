@@ -102,7 +102,8 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
 
       String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_HTML_FILE_NAME);
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
       assertEquals(formatingSource, postFormating);
    }
 
@@ -120,7 +121,8 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
 
       String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_CSS_FILE_NAME);
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
       assertEquals(formatingSource, postFormating);
    }
 
@@ -138,7 +140,8 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
 
       String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_JS_FILE_NAME);
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
       assertEquals(formatingSource, postFormating);
 
    }
@@ -159,7 +162,8 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
 
       String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_GADGET_FILE_NAME);
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
       assertEquals(formatingSource, postFormating);
    }
 

@@ -94,14 +94,14 @@ public class HighlightEditorsTabTest extends BaseTest {
 		IDE.PERSPECTIVE.checkViewIsNotPresent("ideOutlineView");
 		IDE.PERSPECTIVE.checkViewIsActive("editor-0");
 
-		IDE.EDITOR.closeTab(0);
+		IDE.EDITOR.closeFile(0);
 
 		openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/"
 				+ FILE_NAME, "HTML", false);
 		waitForElementPresent("//div[@panel-id='editor']");
 		IDE.PERSPECTIVE.checkViewIsActive("editor-1");
 
-		IDE.EDITOR.closeTab(0);
+		IDE.EDITOR.closeFile(0);
 		waitForElementNotPresent("//div[@panel-id='editor']");
 		//TODO fix problem return highlighter in workspace
 		//IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");

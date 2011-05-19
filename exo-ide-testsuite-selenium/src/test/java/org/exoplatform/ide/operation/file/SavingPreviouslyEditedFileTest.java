@@ -129,7 +129,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
 
       assertEquals(FILE_NAME,IDE.EDITOR.getTabTitle(0));
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
 
       //----- 5 ------------
       //Go to server window and check that the files created on the server
@@ -148,7 +148,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
      IDE.EDITOR.typeTextIntoEditor(0, XML_TEXT);
       saveCurrentFile();
 
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
 
       //----- 7 ------------
       //Refresh page, go to "Test" in "Workspace" panel.
@@ -230,7 +230,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);

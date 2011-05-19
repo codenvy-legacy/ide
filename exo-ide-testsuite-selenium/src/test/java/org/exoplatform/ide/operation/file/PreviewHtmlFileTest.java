@@ -128,7 +128,7 @@ public class PreviewHtmlFileTest extends BaseTest
       /*
        * 8. Close "PreviewHtmlFile.html" and check "Preview" button.
        */
-     IDE.EDITOR.closeTab(1);
+     IDE.EDITOR.closeFile(1);
 
       IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.SHOW_PREVIEW, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, false);
@@ -153,11 +153,13 @@ public class PreviewHtmlFileTest extends BaseTest
       /*
        * 11. Close all tabs in editor.
        */
-     IDE.EDITOR.closeTab(1);
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(1);
+     IDE.EDITOR.clickCloseEditorButton(0);
       
       IDE.SAVE_AS.checkIsOpened(true);
+      IDE.EDITOR.rememberFileToBeClosed(0);
       IDE.SAVE_AS.clickNo();
+      IDE.EDITOR.waitForRememberFileClosed();
       
       IDE.PREVIEW.close();
    }

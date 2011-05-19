@@ -98,7 +98,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
    @After
    public void cleanTest() throws Exception
    {
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    /**
@@ -155,7 +155,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       IDE.WARNING_DIALOG.checkIsOpened("Unsupported content type:text/x-jcr-cnd");
       IDE.WARNING_DIALOG.clickOk();
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
    
    /**
@@ -193,7 +193,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       //check, that there is no view with generated code
       assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
    
    /**
@@ -233,7 +233,7 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       //check, that there is no view with generated code
       assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
 }

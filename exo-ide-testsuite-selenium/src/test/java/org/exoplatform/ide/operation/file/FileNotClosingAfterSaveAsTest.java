@@ -82,7 +82,8 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
       
      IDE.EDITOR.typeTextIntoEditor(0, "test test test");
       
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);     
       
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       

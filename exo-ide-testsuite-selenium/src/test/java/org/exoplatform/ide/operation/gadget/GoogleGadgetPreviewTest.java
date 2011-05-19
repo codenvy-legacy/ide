@@ -110,7 +110,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'Hello,world!')]"));
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass

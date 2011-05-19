@@ -16,20 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.properties.event;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.client.framework.util;
 
 /**
- * Created by The eXo Platform SAS.
+ * Created by The eXo Platform SAS .
  * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Anna Zhuleva</a>
- * @version $Id: 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
 
-public interface ShowPropertiesHandler extends EventHandler
+public class TextUtils
 {
+   
+   public static native String javaScriptDecodeURI(String text) /*-{
+      return decodeURI(text);
+   }-*/;
 
-   void onShowProperties(ShowPropertiesEvent event);
+   public static native String javaScriptEncodeURI(String text) /*-{
+      return encodeURI(text);
+   }-*/;
+   
+   public static native String javaScriptDecodeURIComponent(String text) /*-{
+      return decodeURIComponent(text);
+   }-*/;
 
+   public static native String javaScriptEncodeURIComponent(String text) /*-{
+      return encodeURIComponent(text);
+   }-*/;
+   
 }

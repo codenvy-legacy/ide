@@ -91,7 +91,7 @@ public class Workspace extends AbstractTestModule
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       selenium().doubleClick(locator);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE().EDITOR.waitEditorFileOpened();
    }
    
    /**

@@ -20,9 +20,10 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.SaveFileUtils;
 import org.exoplatform.ide.TestConstants;
@@ -31,8 +32,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-156:HotKeys customization.
@@ -118,8 +117,11 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //check, that Save As dialog window appeared
       SaveFileUtils.checkSaveAsDialog(false);
       //close
-      selenium.click(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
-      waitForElementNotPresent(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
+      //selenium.click(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
+      IDE.ASK_FOR_VALUE_DIALOG.clickCancelButton();
+      
+      //waitForElementNotPresent(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
+      IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
    }
 
    /**
@@ -199,7 +201,8 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
 
       //check new html file created
       assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
+      IDE.EDITOR.closeTabIgnoringChanges(3);
       Thread.sleep(TestConstants.SLEEP);
 
       //select first tab
@@ -213,7 +216,8 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
 
       //check new html file created
       assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
+      IDE.EDITOR.closeTabIgnoringChanges(3);
       Thread.sleep(TestConstants.SLEEP);
 
       //select second tab
@@ -229,13 +233,17 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
 
       //check new html file created
       assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
+      IDE.EDITOR.closeTabIgnoringChanges(3);
       Thread.sleep(TestConstants.SLEEP);
 
       //close all tabs
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    /**
@@ -308,7 +316,8 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
 
       //check new html file created
       assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(0));
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
       Thread.sleep(TestConstants.SLEEP);
 
       //----- 3 ------------

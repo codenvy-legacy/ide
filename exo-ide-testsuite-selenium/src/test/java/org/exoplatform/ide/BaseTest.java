@@ -139,19 +139,31 @@ public abstract class BaseTest
             new TextUtil(selenium);
       }
 
-      testsCounter++;
-      if (testsCounter % maxRunTestsOnOneSession == 1)
-      {
-         selenium.start();
-         selenium.windowFocus();
-         selenium.windowMaximize();
-         selenium.open(APPLICATION_URL);
-         selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-         standaloneLogin(USER_NAME);
-      }
+//      testsCounter++;
+//      if (testsCounter % maxRunTestsOnOneSession == 1)
+//      {
+//         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 1");
+//         selenium.start();
+//         selenium.windowFocus();
+//         selenium.windowMaximize();
+//         selenium.open(APPLICATION_URL);
+//         selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+//         standaloneLogin(USER_NAME);
+//      }
+//      
+//      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 2");
+//      selenium.open(APPLICATION_URL);
+//      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);         
 
+      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 1");
+      selenium.start();
+      selenium.windowFocus();
+      selenium.windowMaximize();
       selenium.open(APPLICATION_URL);
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      standaloneLogin(USER_NAME);      
+      
+      System.out.println("isRunIdeUnderPortal() >>> " + isRunIdeUnderPortal());
       if (isRunIdeUnderPortal())
       {
          loginInPortal();
@@ -233,10 +245,13 @@ public abstract class BaseTest
    @AfterClass
    public static void stopSelenium()
    {
-      if (testsCounter % maxRunTestsOnOneSession == 0)
-      {
-         selenium.stop();
-      }
+//      if (testsCounter % maxRunTestsOnOneSession == 0)
+//      {
+//         selenium.stop();
+//      }
+      
+      selenium.stop();
+      
       //      try
       //      {
       //         standaloneLogout();
@@ -507,7 +522,7 @@ public abstract class BaseTest
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS, true, TestConstants.EDITOR_OPEN_PERIOD * 2);
       saveAsUsingToolbarButton(fileName);
 
-      IDE.EDITOR.closeTab(tabIndex);
+      IDE.EDITOR.closeFile(tabIndex);
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -976,7 +991,6 @@ public abstract class BaseTest
     */
    public void refresh() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       //      Thread.sleep(TestConstants.SLEEP_SHORT);

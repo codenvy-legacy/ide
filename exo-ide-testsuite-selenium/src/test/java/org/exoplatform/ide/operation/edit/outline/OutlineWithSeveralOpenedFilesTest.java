@@ -26,6 +26,7 @@ import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.core.Editor;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -73,7 +74,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       //---- 1 --------------
       //open new javascript file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
-      waitForElementPresent(Locators.EDITOR_TABSET_LOCATOR);
+      waitForElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR);
       //no outline panel
       IDE.OUTLINE.assertOutlineTreeNotPresent();
 
@@ -91,7 +92,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       //---- 3 --------------
       //open new html file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      waitForElementPresent(Locators.EDITOR_TABSET_LOCATOR);
+      waitForElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR);
 
       //      //check outline present
       IDE.OUTLINE.assertOutlineTreePresent();
@@ -106,12 +107,14 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       //---- 5 --------------
       //go to javascript file
       IDE.EDITOR.selectTab(0);
-      waitForElementPresent(Locators.EDITOR_TABSET_LOCATOR);
+      waitForElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR);
 
       //TODO fix problem with selenium click on outline form (after  IDE.OUTLINE.closeOutline();)
       //end
-      // IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      // IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+//     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+//     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
 }

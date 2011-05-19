@@ -87,14 +87,14 @@ public class GadgetDevelopmentTest extends BaseTest
 
       assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FILE_NAME_FULL).getStatusCode());
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME_FULL, false);
       IDE.EDITOR.waitTabPresent(0);
       
       final String tabTitle = IDE.EDITOR.getTabTitle(0);
       assertTrue(tabTitle.equals(FILE_NAME_FULL)|| tabTitle.equals(FILE_NAME_FULL + " *"));
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass

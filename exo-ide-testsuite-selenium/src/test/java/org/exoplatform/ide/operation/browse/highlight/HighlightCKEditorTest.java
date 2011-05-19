@@ -94,7 +94,7 @@ public class HighlightCKEditorTest extends BaseTest {
 		//IDE.PERSPECTIVE.checkViewIsActive("editor-0");					
 		//IDE.PERSPECTIVE.checkViewIsNotActive("idePreviewHTMLView");			
 		// ------------------------------------------------------------
-		IDE.EDITOR.closeTab(0);
+		IDE.EDITOR.closeFile(0);
 	}
 
 	@AfterClass

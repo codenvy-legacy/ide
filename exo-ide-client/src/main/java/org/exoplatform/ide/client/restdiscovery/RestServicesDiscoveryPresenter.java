@@ -42,8 +42,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryEvent;
-import org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryHandler;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 
 import com.google.gwt.core.client.GWT;
@@ -64,12 +62,13 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id: Dec 22, 2010 9:39:28 AM evgen $
  *
  */
-public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscoveryHandler, InitializeServicesHandler, ViewClosedHandler
+public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscoveryHandler, InitializeServicesHandler,
+   ViewClosedHandler
 {
 
    public interface Display extends IsView
    {
-      
+
       String ID = "ideResrServicesDiscoveryView";
 
       HasClickHandlers getOkButton();
@@ -79,22 +78,19 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       ListGridItem<ParamExt> getParametersListGrid();
 
       HasValue<String> getPathField();
-      
+
       HasValue<String> getRequestTypeField();
 
       HasValue<String> getResponseTypeField();
-      
-      
+
       void setResponseFieldVisible(boolean visible);
 
       void setResponseFieldEnabled(boolean enabled);
 
-      
       void setRequestFieldVisible(boolean visible);
 
       void setRequestFieldEnabled(boolean enabled);
 
-      
       void setParametersListGridVisible(boolean visible);
 
       void setParametersListGridEnabled(boolean enabled);
@@ -125,22 +121,23 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
     */
    public void onShowRestServicesDiscovery(ShowRestServicesDiscoveryEvent event)
    {
-      if (display == null) {
+      if (display == null)
+      {
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
          bindDisplay();
          loadRestServices();
       }
    }
-   
+
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof Display) {
+      if (event.getView() instanceof Display)
+      {
          display = null;
       }
    }
-   
 
    private void bindDisplay()
    {
@@ -178,11 +175,11 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
             }
             else
             {
-               if(event.getSelectedItem() instanceof RestService)
+               if (event.getSelectedItem() instanceof RestService)
                {
                   display.getPathField().setValue(((RestService)event.getSelectedItem()).getFullPath());
                }
-               else if(event.getSelectedItem() instanceof Resource)
+               else if (event.getSelectedItem() instanceof Resource)
                {
                   display.getPathField().setValue(((Resource)event.getSelectedItem()).getPath());
                }
@@ -203,9 +200,8 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       display.setParametersListGridVisible(false);
       display.setRequestFieldVisible(false);
       display.setResponseFieldVisible(false);
-//      dispaly.setPathFieldVisible(false);
+      //      dispaly.setPathFieldVisible(false);
    }
-
 
    /**
     * Update method info
@@ -213,7 +209,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
     */
    private void updateMethodInfo(Method method)
    {
-//      dispaly.setPathFieldVisible(true);
+      //      dispaly.setPathFieldVisible(true);
       display.getPathField().setValue(method.getHref());
 
       if (method.getRequest() != null)
@@ -356,23 +352,24 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       });
    }
 
-   private void loadRestServices() {
+   private void loadRestServices()
+   {
       DiscoveryService.getInstance().getRestServices(new AsyncRequestCallback<List<RestService>>()
+      {
+         @Override
+         protected void onSuccess(List<RestService> result)
          {
-            @Override
-            protected void onSuccess(List<RestService> result)
-            {
-               refreshRestServices(result);
-            }
+            refreshRestServices(result);
+         }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
-            }
-         });      
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+         }
+      });
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedHandler#onRestServicesReceived(org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedEvent)
     */
@@ -472,6 +469,5 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          restContext = restContext.substring(0, restContext.length());
       }
    }
-
 
 }

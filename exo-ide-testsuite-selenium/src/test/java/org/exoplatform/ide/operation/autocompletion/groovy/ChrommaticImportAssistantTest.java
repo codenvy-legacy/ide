@@ -75,7 +75,7 @@ public class ChrommaticImportAssistantTest extends BaseTest
       waitForRootElement();
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/"+FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);
 
       selenium.click("//div[@class='CodeMirror-line-numbers']/div[contains(text(), '2')]");
@@ -85,6 +85,8 @@ public class ChrommaticImportAssistantTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
+      
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    private String getErrorCorrectionListItemLocator(String packageName)
@@ -95,8 +97,6 @@ public class ChrommaticImportAssistantTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-     IDE.EDITOR.closeFileTabIgnoreChanges(0);
-
       try
       {
          VirtualFileSystemUtils.delete(URL + TEST_FOLDER);

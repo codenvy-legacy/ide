@@ -131,7 +131,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       IDE.PROPERTIES.openProperties();
       checkProperties(String.valueOf(XML_CONTENT.length() + 1), MimeType.TEXT_XML, XML_FILE);
 
-      IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
 
       //check file on server
       checkFileExists(URL + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
@@ -155,8 +155,8 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       assertEquals(NEW_XML_FILE, IDE.EDITOR.getTabTitle(0));
       checkProperties(String.valueOf(XML_CONTENT_2.length() + 1), MimeType.TEXT_XML, NEW_XML_FILE);
 
-      IDE.EDITOR.closeTab(0);
-
+     IDE.EDITOR.closeFile(0);
+      
       //check two files exist
       checkFileExists(URL + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
       checkFileExists(URL + URLEncoder.encode(NEW_XML_FILE, "UTF-8"), XML_CONTENT_2);

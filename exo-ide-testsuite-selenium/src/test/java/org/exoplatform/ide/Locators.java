@@ -69,7 +69,7 @@ public class Locators
    /**
     * GWT locator for editor tabset
     */
-   public static final String EDITOR_TABSET_LOCATOR = "//div[@panel-id='editor']";
+   
 
    /**
     * XPath locator for status bar of IDE. Non-smartGWt.
@@ -158,36 +158,6 @@ public class Locators
        * Non smartGWT locator for versions tab.
        */
       public static final String XPATH_VERSION_TAB_LOCATOR = "//div[@eventproxy='ideVersionContentPanel']";
-   }
-
-   /**
-    * Return locator for close icon of tab (tab with file) in editor tabset.
-    * 
-    * @param index - index of editor tab (numeration start with 0).
-    * 
-    * @return {@link String}
-    */
-   public static String getTabCloseButtonLocator(int index)
-   {
-      return EDITOR_TABSET_LOCATOR + "//td[@tab-bar-index='" + index + "']//div[@button-name='close-tab']";
-   }
-
-   /**
-    * Locators for components of Ask for value dialog window.
-    * 
-    * E.g. when you try to Save As new file.
-    */
-   public interface AskForValue
-   {
-      public static final String ASK_FOR_VALUE_DIALOG_LOCATOR = "ideAskForValueDialog";
-
-      public static final String ASK_FOR_VALUE_OK_BUTTON_LOCATOR = "ideAskForValueDialogOkButton";
-
-      public static final String ASK_FOR_VALUE_NO_BUTTON_LOCATOR = "ideAskForValueDialogNoButton";
-
-      public static final String ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR = "ideAskForValueDialogCancelButton";
-
-      public static final String ASK_FOR_VALUE_TEXT_FIELD_LOCATOR = "ideAskForValueDialogValueField";
    }
 
    public interface PropertiesPanel

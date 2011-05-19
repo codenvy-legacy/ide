@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.IDE;
+import org.exoplatform.ide.TestConstants;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -39,7 +40,7 @@ public abstract class AbstractTestModule
    {
       return IDE.getInstance().getSelenium();
    }
-   
+
    protected IDE IDE()
    {
       return IDE.getInstance();
@@ -53,24 +54,63 @@ public abstract class AbstractTestModule
     */
    protected void waitForElementPresent(String locator) throws Exception
    {
-      int WAITING_MAX_SECONDS = 10;
-
-      for (int second = 0;; second++)
+      long startTime = System.currentTimeMillis();
+      while (true)
       {
-         if (second >= WAITING_MAX_SECONDS * 10)
-         {
-            fail("timeout for element " + locator);
-         }
-
          if (selenium().isElementPresent(locator))
          {
             break;
          }
+         
+         long time = System.currentTimeMillis() - startTime;
+         if (time > TestConstants.TIMEOUT)
+         {
+            fail("Timeout waiting for element > " + locator);
+         }
 
-         Thread.sleep(100);
+         Thread.sleep(1);
+      }
+      
+      
+//      int WAITING_MAX_SECONDS = 10;
+//
+//      for (int second = 0;; second++)
+//      {
+//         if (second >= WAITING_MAX_SECONDS * 10)
+//         {
+//            fail("timeout for element " + locator);
+//         }
+//
+//         if (selenium().isElementPresent(locator))
+//         {
+//            break;
+//         }
+//
+//         Thread.sleep(100);
+//      }
+   }
+
+   protected void waitForElementTextIsNotEmpty(String locator) throws Exception
+   {
+      long startTime = System.currentTimeMillis();
+      while (true)
+      {
+         String text = selenium().getText("debug-editor-active-file-url");
+         if (text != null && !text.isEmpty())
+         {
+            break;
+         }
+
+         long time = System.currentTimeMillis() - startTime;
+         if (time > TestConstants.TIMEOUT)
+         {
+            fail("Timeout in waitEditorFileOpened");
+         }
+
+         Thread.sleep(1);
       }
    }
-   
+
    /**
     * Wait while element is visible.
     * 
@@ -79,24 +119,41 @@ public abstract class AbstractTestModule
     */
    protected void waitForElementVisible(String locator) throws Exception
    {
-      int WAITING_MAX_SECONDS = 10;
-
-      for (int second = 0;; second++)
+      long startTime = System.currentTimeMillis();
+      while (true)
       {
-         if (second >= WAITING_MAX_SECONDS * 10)
-         {
-            fail("timeout for element " + locator);
-         }
-
          if (selenium().isVisible(locator))
          {
             break;
          }
+         
+         long time = System.currentTimeMillis() - startTime;
+         if (time > TestConstants.TIMEOUT)
+         {
+            fail("Timeout for element > " + locator);
+         }
 
-         Thread.sleep(100);
-      }
+         Thread.sleep(1);
+      }      
+      
+//      int WAITING_MAX_SECONDS = 10;
+//
+//      for (int second = 0;; second++)
+//      {
+//         if (second >= WAITING_MAX_SECONDS * 10)
+//         {
+//            fail("timeout for element " + locator);
+//         }
+//
+//         if (selenium().isVisible(locator))
+//         {
+//            break;
+//         }
+//
+//         Thread.sleep(100);
+//      }
    }
-   
+
    /**
     * Wait while element not present.
     * 
@@ -105,24 +162,41 @@ public abstract class AbstractTestModule
     */
    protected void waitForElementNotPresent(String locator) throws Exception
    {
-      int WAITING_MAX_SECONDS = 10;
-
-      for (int second = 0;; second++)
+      long startTime = System.currentTimeMillis();
+      while (true)
       {
-         if (second >= WAITING_MAX_SECONDS * 10)
-         {
-            fail("timeout for element " + locator);
-         }
-
          if (!selenium().isElementPresent(locator))
          {
             break;
          }
+         
+         long time = System.currentTimeMillis() - startTime;
+         if (time > TestConstants.TIMEOUT)
+         {
+            fail("Timeout for element > " + locator);
+         }
 
-         Thread.sleep(100);
-      }
+         Thread.sleep(1);
+      }      
+      
+//      int WAITING_MAX_SECONDS = 10;
+//
+//      for (int second = 0;; second++)
+//      {
+//         if (second >= WAITING_MAX_SECONDS * 10)
+//         {
+//            fail("timeout for element " + locator);
+//         }
+//
+//         if (!selenium().isElementPresent(locator))
+//         {
+//            break;
+//         }
+//
+//         Thread.sleep(100);
+//      }
    }
-   
+
    /**
     * Wait while text present.
     * 
@@ -131,24 +205,41 @@ public abstract class AbstractTestModule
     */
    protected void waitForTextPresent(String text) throws Exception
    {
-      int WAITING_MAX_SECONDS = 10;
-
-      for (int second = 0;; second++)
+      long startTime = System.currentTimeMillis();
+      while (true)
       {
-         if (second >= WAITING_MAX_SECONDS * 10)
-         {
-            fail("timeout for text " + text);
-         }
-
          if (selenium().isTextPresent(text))
          {
             break;
          }
+         
+         long time = System.currentTimeMillis() - startTime;
+         if (time > TestConstants.TIMEOUT)
+         {
+            fail("Timeout for text > " + text);
+         }
 
-         Thread.sleep(100);
+         Thread.sleep(1);
       }
+      
+//      int WAITING_MAX_SECONDS = 10;
+//
+//      for (int second = 0;; second++)
+//      {
+//         if (second >= WAITING_MAX_SECONDS * 10)
+//         {
+//            fail("timeout for text " + text);
+//         }
+//
+//         if (selenium().isTextPresent(text))
+//         {
+//            break;
+//         }
+//
+//         Thread.sleep(100);
+//      }
    }
-   
+
    /**
     * Check the state of button (enabled, disabled) by button id.
     * 
@@ -159,7 +250,8 @@ public abstract class AbstractTestModule
     */
    public void checkButtonState(String buttonId, boolean isEnabled)
    {
-      assertTrue(selenium().isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
+      assertTrue(selenium().isElementPresent(
+         "//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
    }
    
    /**
@@ -187,5 +279,6 @@ public abstract class AbstractTestModule
    {
       return "//div[@class='gwt-DialogBox']//div[@class='Caption']/span[text()='" + title + "']";
    }
+
 
 }

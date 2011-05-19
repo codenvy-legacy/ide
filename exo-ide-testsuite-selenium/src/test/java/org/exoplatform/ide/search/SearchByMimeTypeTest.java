@@ -76,7 +76,7 @@ public class SearchByMimeTypeTest extends BaseTest
 
       saveAsUsingToolbarButton(copyJsFileName);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       IDE.WORKSPACE.selectItem(WS_URL + folder2Name + "/");
 

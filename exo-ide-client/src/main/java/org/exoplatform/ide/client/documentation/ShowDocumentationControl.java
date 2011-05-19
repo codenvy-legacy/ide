@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.documentation;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.documentation.event.ShowDocumentationEvent;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
@@ -36,13 +35,13 @@ public class ShowDocumentationControl extends SimpleControl implements IDEContro
 {
 
    public static final String ID = "View/Show \\ Hide Documentation";
-   
+
    public static final String TITLE = "Documentation";
 
    public static final String PROMPT_SHOW = "Show Documentation";
 
    public static final String PROMPT_HIDE = "Hide Documentation";
-   
+
    public ShowDocumentationControl()
    {
       super(ID);

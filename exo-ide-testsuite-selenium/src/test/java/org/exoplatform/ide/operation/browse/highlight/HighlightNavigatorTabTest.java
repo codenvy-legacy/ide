@@ -89,7 +89,8 @@ public class HighlightNavigatorTabTest extends BaseTest {
 		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
 		IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
 		IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
-		IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+		//IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+		IDE.EDITOR.closeTabIgnoringChanges(0);
 	}
 
 	@AfterClass

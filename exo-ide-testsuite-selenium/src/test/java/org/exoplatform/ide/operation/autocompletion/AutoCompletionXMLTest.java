@@ -76,7 +76,8 @@ public class AutoCompletionXMLTest extends BaseTest
       String textAfter =IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(textAfter.contains("<root></root>"));
 
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
 }

@@ -60,11 +60,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
          VirtualFileSystemUtils.put(NETVIBES_CONTENT.getBytes(), MimeType.UWA_WIDGET, WORKSPACE_URL + FOLDER_NAME + "/"
             + NETVIBES_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -73,17 +69,14 @@ public class AutocompleteNetvibesJsTest extends BaseTest
    @After
    public void tearDown() throws Exception
    {
-     IDE.EDITOR.closeFileTabIgnoreChanges(0);
+     //IDE.EDITOR.closeFileTabIgnoreChanges(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
 
       try
       {
          VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

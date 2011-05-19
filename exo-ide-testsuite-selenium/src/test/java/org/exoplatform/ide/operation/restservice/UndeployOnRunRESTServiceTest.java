@@ -116,7 +116,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       String text = IDE.OUTPUT.getOutputMessageText(4);
       assertTrue(text.endsWith(SIMPLE_FILE_NAME + " undeployed successfully."));
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    @Test
@@ -145,7 +145,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       String text = IDE.OUTPUT.getOutputMessageText(3);
       assertTrue(text.endsWith(FILE_NAME + " undeployed successfully."));
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
 }

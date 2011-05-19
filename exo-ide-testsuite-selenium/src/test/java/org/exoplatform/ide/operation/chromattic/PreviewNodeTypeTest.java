@@ -129,7 +129,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
    @After
    public void cleanTest() throws Exception
    {
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
    }
 
    /**
@@ -179,7 +179,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       assertTrue(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
 
       //Close file and check view with generated code is closed.
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       waitForElementNotPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
       assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
    }
@@ -223,7 +223,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
 
       assertEquals(generatedEXOFormat, text);
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       waitForElementNotPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
       assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
    }
@@ -271,7 +271,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
 
       assertEquals(generatedCNDFormat, text);
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       waitForElementNotPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
       assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
    }
@@ -285,8 +285,8 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
    {
       final String iframeLocator = IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR + "//iframe";
       selenium.selectFrame(iframeLocator);
-      waitForElementPresent(Editor.EditorLocators.CODE_MIRROR_EDITOR);
-      final String text = selenium.getText(Editor.EditorLocators.CODE_MIRROR_EDITOR);
+      waitForElementPresent(Editor.Locators.CODE_MIRROR_EDITOR);
+      final String text = selenium.getText(Editor.Locators.CODE_MIRROR_EDITOR);
       IDE.selectMainFrame();
       return text;
    }

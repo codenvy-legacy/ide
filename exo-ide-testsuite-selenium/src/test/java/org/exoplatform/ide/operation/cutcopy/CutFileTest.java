@@ -169,7 +169,7 @@ public class CutFileTest extends BaseTest
       final String oldText =IDE.EDITOR.getTextFromCodeEditor(0);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_NAME_1, false);
       assertEquals(oldText,IDE.EDITOR.getTextFromCodeEditor(0));

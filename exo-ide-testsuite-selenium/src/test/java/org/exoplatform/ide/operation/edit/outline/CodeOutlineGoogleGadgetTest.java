@@ -154,7 +154,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       assertFalse(selenium.isElementPresent("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[12]/col[0]"));
 
       //close file      
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
 
       //close dialog window by pressing "No"
       selenium

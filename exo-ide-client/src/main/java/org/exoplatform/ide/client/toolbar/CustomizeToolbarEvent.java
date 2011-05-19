@@ -16,41 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.properties.event;
+package org.exoplatform.ide.client.toolbar;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Created by The eXo Platform SAS.
+ * Created by The eXo Platform SAS .
  * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Anna Zhuleva</a>
- * @version $Id: 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
 
-public class ShowPropertiesEvent extends GwtEvent<ShowPropertiesHandler>
+public class CustomizeToolbarEvent extends GwtEvent<CustomizeToolbarHandler>
 {
-   public static final GwtEvent.Type<ShowPropertiesHandler> TYPE = new GwtEvent.Type<ShowPropertiesHandler>();
 
-   private boolean showProperties;
+   public static final GwtEvent.Type<CustomizeToolbarHandler> TYPE = new GwtEvent.Type<CustomizeToolbarHandler>();
 
-   public ShowPropertiesEvent(boolean showProperties)
+   @Override
+   protected void dispatch(CustomizeToolbarHandler handler)
    {
-      this.showProperties = showProperties;
-   }
-
-   public boolean isShowProperties()
-   {
-      return showProperties;
+      handler.onCustomizeToolBar(this);
    }
 
    @Override
-   protected void dispatch(ShowPropertiesHandler handler)
-   {
-      handler.onShowProperties(this);
-   }
-
-   @Override
-   public Type<ShowPropertiesHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<CustomizeToolbarHandler> getAssociatedType()
    {
       return TYPE;
    }

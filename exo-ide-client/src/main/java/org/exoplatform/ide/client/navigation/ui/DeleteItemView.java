@@ -46,7 +46,7 @@ public class DeleteItemView extends ViewImpl implements
 
    public static final int DEFAULT_WIDTH = 500;
 
-   public static final int DEFAULT_HEIGHT = 130;
+   public static final int DEFAULT_HEIGHT = 150;
 
    public static final String ID_OK_BUTTON = "ideDeleteItemFormOkButton";
 

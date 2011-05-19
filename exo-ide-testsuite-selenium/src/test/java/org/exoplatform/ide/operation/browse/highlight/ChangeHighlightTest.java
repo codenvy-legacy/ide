@@ -76,7 +76,8 @@ public class ChangeHighlightTest extends BaseTest
       IDE.PERSPECTIVE.checkViewIsActive("editor-0");
       IDE.PERSPECTIVE.checkViewIsNotActive("ideWorkspaceView");
 
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
       IDE.PERSPECTIVE.checkViewIsNotPresent("editor-0");
       IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
       IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");

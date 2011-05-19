@@ -18,15 +18,13 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 
-import org.exoplatform.ide.Locators;
-import org.exoplatform.ide.SaveFileUtils;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 
@@ -41,17 +39,24 @@ import org.exoplatform.ide.utils.AbstractTextUtil;
 public class Editor extends AbstractTestModule
 {
 
-   public interface EditorLocators
+   public interface Locators
    {
       /**
        * XPATH CodeMirror locator. 
        */
       public static final String CODE_MIRROR_EDITOR = "//body[@class='editbox']";
-      
+
       /**
        * XPATH CK editor locator.
        */
-      public static final String CK_EDITOR = "//table[@class='cke_editor']";
+      String CK_EDITOR = "//table[@class='cke_editor']";
+
+      String EDITOR_TABSET_LOCATOR = "//div[@panel-id='editor']";
+
+      String DEBUG_EDITOR_ACTIVE_FILE_URL = "debug-editor-active-file-url";
+
+      String DEBUG_EDITOR_PREVIOUS_ACTIVE_FILE_URL = "debug-editor-previous-active-file-url";
+
    }
 
    /**
@@ -93,132 +98,243 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Close tab by it's index.
+    * Click on Close Tab button.
+    * Old name of this method is "clickCloseTabButton(int tabIndex)"
     * 
-    * @param index numeration starts with 0 index
+    * @param tabIndex index of tab, starts at 0
     */
-   public void closeTab(int index) throws Exception
+   public void clickCloseEditorButton(int tabIndex) throws Exception
    {
-      String tabLocator = Locators.getTabCloseButtonLocator(index);
-      if (selenium().isElementPresent(tabLocator))
-      {
-         selenium().mouseOver(tabLocator);
-         Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      String tabLocator = getTabCloseButtonLocator(tabIndex);
+      selenium().click(tabLocator);
+      Thread.sleep(1);
+   }
 
-         selenium().click(tabLocator);
-         Thread.sleep(TestConstants.REDRAW_PERIOD);
+   //   /**
+   //    * In case tab with index as tabIndex is exist in editor, close it without saving. 
+   //    * 
+   //   * @param tabIndex
+   //   */
+   //   public void tryCloseTabWithNonSaving(int tabIndex) throws Exception
+   //   {
+   //      //if file is opened, close it
+   //      if (selenium().isElementPresent("//div[@panel-id='editor']//td[@tab-bar-index='" + tabIndex + "']"))
+   //      {
+   //         closeTabIgnoringChanges(tabIndex);
+   //      }
+   //   }
+
+   private String fileHrefToBeClosed;
+
+   public void rememberFileToBeClosed(int tabIndex)
+   {
+      /*
+       * Get HREF of file which will be closed.
+       */
+      String fileHrefLocator =
+         "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//td[@class='gwt-DecoratedTabBarPanel']"
+            + "/table[@class='gwt-DecoratedTabBar']//td[@tab-bar-index='"
+            + tabIndex
+            + "']//div[@class='tabMiddleCenterInner']//table//span@title";
+      fileHrefToBeClosed = selenium().getAttribute(fileHrefLocator);
+   }
+
+   public void waitForRememberFileClosed() throws Exception
+   {
+      /*
+       * Waiting for editor tab was closed.
+       */
+
+      String closedTabLocator =
+         "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//td[@class='gwt-DecoratedTabBarPanel']"
+            + "/table[@class='gwt-DecoratedTabBar']//div[@class='tabMiddleCenterInner']//table//span[@title='"
+            + fileHrefToBeClosed + "']";
+
+      //      String closedTabLocator = "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//td[@class='gwt-DecoratedTabBarPanel']" +
+      //      "/table[@class='gwt-DecoratedTabBar']//td[@tab-bar-index='" + tabIndex + "']//div[@class='tabMiddleCenterInner']//table//span[@title='" + fileHrefToClose + "']";      
+
+      long startTime = System.currentTimeMillis();
+      while (true)
+      {
+         String nowActiveFile = selenium().getText(Locators.DEBUG_EDITOR_ACTIVE_FILE_URL);
+         System.out.println("NOW ACTIVE FILE [" + nowActiveFile + "]");
+         if (!selenium().isElementPresent(closedTabLocator))
+         {
+            break;
+         }
+
+         long time = System.currentTimeMillis() - startTime;
+         if (time > TestConstants.TIMEOUT)
+         {
+            fail();
+         }
+
+         Thread.sleep(1);
       }
+
+      Thread.sleep(1);
    }
 
    /**
-    * In case tab with index as tabIndex is exist in editor, close it without saving. 
+    * Closes file 
     * 
-   * @param tabIndex
-   */
-   public void tryCloseTabWithNonSaving(int tabIndex) throws Exception
+    * @param tabIndex
+    */
+   public void closeFile(int tabIndex) throws Exception
    {
-      //if file is opened, close it
-      if (selenium().isElementPresent("//div[@panel-id='editor']//td[@tab-bar-index='" + tabIndex + "']"))
-      {
-         closeTabWithNonSaving(tabIndex);
-      }
+      /*
+       * Remember file to be closed.
+       */
+      rememberFileToBeClosed(tabIndex);
+
+      /*
+       * Get tab's locator.
+       */
+      String tabLocator = getTabCloseButtonLocator(tabIndex);
+
+      /*
+       * Closing tab
+       */
+      selenium().click(tabLocator);
+      Thread.sleep(1);
+
+      /*
+       * Wait for remembered files to be closed.
+       */
+      waitForRememberFileClosed();
    }
 
    /**
     * Close tab in editor. Close ask window in case it appear while closing.
     * 
-   * @param tabIndex
+   * @param tabIndex index of tab, starts at 0
    * @throws Exception
    */
-   public void closeTabWithNonSaving(int tabIndex) throws Exception
+   public void closeTabIgnoringChanges(int tabIndex) throws Exception
    {
-      closeTab(tabIndex);
+      rememberFileToBeClosed(tabIndex);
 
-      //check is warning dialog appears
-      if (IDE().ASK_DIALOG.isDialogOpened("Close file"))
+      /*
+       * Return if tab is not exist.
+       */
+      String tabLocator = getTabCloseButtonLocator(tabIndex);
+      //      if (!selenium().isElementPresent(tabLocator))
+      //      {
+      //         return;
+      //      }
+
+      /*
+       * Closing tab
+       */
+      selenium().click(tabLocator);
+      Thread.sleep(1);
+
+      /*
+       * Closing ask dialogs if them is appears.
+       */
+      if (IDE().ASK_DIALOG.isOpened())
       {
          IDE().ASK_DIALOG.clickNo();
       }
-      else if (selenium().isElementPresent(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR))
+      else if (IDE().ASK_FOR_VALUE_DIALOG.isOpened())
       {
-         selenium().click(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
+         IDE().ASK_FOR_VALUE_DIALOG.clickNoButton();
       }
+      else
+      {
+         fail("Dialog has been not found!");
+      }
+
+      waitForRememberFileClosed();
    }
 
    /**
-    * Close unsaved file without saving it.
+    * Return locator for close icon of tab (tab with file) in editor tabset.
     * 
-    * Close tab with tabIndex. Check is warning dialog appears.
-    * Click No (Discard) button if file is new.
+    * @param index - index of editor tab (numeration start with 0).
     * 
-    * @param tabIndex index of tab to close
-    * @throws Exception
+    * @return {@link String}
     */
-   public void closeUnsavedFileAndDoNotSave(int tabIndex) throws Exception
+   public static String getTabCloseButtonLocator(int index)
+   {
+      return Locators.EDITOR_TABSET_LOCATOR + "//td[@tab-bar-index='" + index + "']//div[@button-name='close-tab']";
+   }
+
+   //   /**
+   //    * Close unsaved file without saving it.
+   //    * 
+   //    * Close tab with tabIndex. Check is warning dialog appears.
+   //    * Click No (Discard) button if file is new.
+   //    * 
+   //    * @param tabIndex index of tab to close
+   //    * @throws Exception
+   //    */
+   //   public void closeUnsavedFileAndDoNotSave(int tabIndex) throws Exception
+   //   {
+   //      //check, that file is unsaved
+   //      final String tabName = getTabTitle(Integer.valueOf(tabIndex));
+   //      assertTrue(tabName.endsWith("*"));
+   //
+   //      String previousActiveFile = selenium().getText(EditorLocators.DEBUG_EDITOR_PREVIOUS_ACTIVE_FILE_URL);
+   //      System.out.println("PREVIOUS ACTIVE FILE [" + previousActiveFile + "]");
+   //      if (previousActiveFile == null) {
+   //         previousActiveFile = "";
+   //      }
+   //      selenium().click(EditorLocators.DEBUG_EDITOR_ACTIVE_FILE_URL);
+   //      
+   //      closeTab(tabIndex);
+   //      
+   //      if (IDE().ASK_DIALOG.isOpened()) {
+   //         IDE().ASK_DIALOG.clickNo();
+   //      } else if (IDE().ASK_FOR_VALUE_DIALOG.isOpened()) {
+   //         IDE().ASK_FOR_VALUE_DIALOG.clickNoButton();
+   //      } else {
+   //         fail("I don't understand why!");
+   //      }
+   //      
+   //      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   //   }
+
+   /**
+    * 
+    * 
+    * @param tabIndex index of tab, starts at 0
+    * @return
+    */
+   public boolean isNewFile(int tabIndex)
    {
       //check, that file is unsaved
       final String tabName = getTabTitle(Integer.valueOf(tabIndex));
-      assertTrue(tabName.endsWith("*"));
-      closeTab(tabIndex);
-
-      /*
-       * close existed file
-       * SmartGWT not destroy warning dialog(only hide, maybe set smoller z-index property ),
-       * so need check is warning dialogs is visible
-       */
-      if (selenium().isElementPresent("exoAskDialog") && selenium().isVisible("exoAskDialog"))
-      {
-         //check is warning dialog appears
-         assertTrue(selenium().isElementPresent(
-            "//div[@id='exoAskDialog']//div[@class='Caption']/span[contains(text(), 'Close file')]"));
-
-         assertTrue(selenium().isElementPresent("exoAskDialogYesButton"));
-         assertTrue(selenium().isElementPresent("exoAskDialogNoButton"));
-
-         selenium().mouseOver("exoAskDialogNoButton");
-         Thread.sleep(TestConstants.ANIMATION_PERIOD);
-         
-         //click No button
-         selenium().click("exoAskDialogNoButton");
-      }
-      //close new file
-      else if (selenium().isElementPresent(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR)
-         && selenium().isVisible(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR))
-      {
-         selenium().mouseOver(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
-         Thread.sleep(TestConstants.ANIMATION_PERIOD);
-         selenium().click(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
-      }
-      else
-      {
-         fail("Unknown warning dialog!");
-      }
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      return tabName.endsWith("*");
    }
 
-   /**
-    * Close file tab, and don't see into file has changes or no.
-    * 
-    * If tab's title doesn't ends with *, simple close tab.
-    * Otherwise, waits for warning dialog window and click No button.
-    * 
-    * @param tabIndex - index of tab with file to close
-    * @throws Exception
-    */
-   public void closeFileTabIgnoreChanges(int tabIndex) throws Exception
-   {
-      //check, is file was changed
-      final String tabName = getTabTitle(Integer.valueOf(tabIndex));
-
-      if (tabName.endsWith("*"))
-      {
-         closeUnsavedFileAndDoNotSave(tabIndex);
-      }
-      else
-      {
-         closeTab(tabIndex);
-      }
-   }
+   //   /**
+   //    * Close file tab, and don't see into file has changes or no.
+   //    * 
+   //    * If tab's title doesn't ends with *, simple close tab.
+   //    * Otherwise, waits for warning dialog window and click No button.
+   //    * 
+   //    * @param tabIndex - index of tab with file to close
+   //    * @throws Exception
+   //    */
+   //   public void closeFileTabIgnoreChanges(int tabIndex) throws Exception
+   //   {
+   //      if (isNewFile(tabIndex)) {
+   //         
+   //      }
+   //      
+   //      //check, is file was changed
+   //      final String tabName = getTabTitle(Integer.valueOf(tabIndex));
+   //
+   //      if (tabName.endsWith("*"))
+   //      {
+   //         closeUnsavedFileAndDoNotSave(tabIndex);
+   //      }
+   //      else
+   //      {
+   //         closeTab(tabIndex);
+   //      }
+   //   }
 
    /**
     * Close new file. 
@@ -231,21 +347,36 @@ public class Editor extends AbstractTestModule
     * @param fileName - name of new file
     * @throws Exception
     */
-   public void closeNewFile(int tabIndex, boolean saveFile, String fileName) throws Exception
+   public void saveAndCloseFile(int tabIndex, String newFileName) throws Exception
    {
-      closeTab(tabIndex);
+      rememberFileToBeClosed(tabIndex);
 
-      if (saveFile)
+      String tabLocator = getTabCloseButtonLocator(tabIndex);
+
+      /*
+       * Closing tab
+       */
+      selenium().click(tabLocator);
+      Thread.sleep(1);
+
+      /*
+       * Saving file
+       */
+      if (IDE().ASK_DIALOG.isOpened())
       {
-         SaveFileUtils.checkSaveAsDialogAndSave(fileName, true);
+         IDE().ASK_DIALOG.clickYes();
+      }
+      else if (IDE().ASK_FOR_VALUE_DIALOG.isOpened())
+      {
+         IDE().ASK_FOR_VALUE_DIALOG.setValue(newFileName);
+         IDE().ASK_FOR_VALUE_DIALOG.clickOkButton();
       }
       else
       {
-         SaveFileUtils.checkSaveAsDialog(true);
-         selenium().click(Locators.AskForValue.ASK_FOR_VALUE_NO_BUTTON_LOCATOR);
+         fail();
       }
 
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      waitForRememberFileClosed();
    }
 
    public void checkEditorTabSelected(String tabTitle, boolean isSelected)
@@ -256,7 +387,8 @@ public class Editor extends AbstractTestModule
          //used //td[contains(@class, 'tabTitleSelected')] locator, instead of equals,
          //because after refreshing tab is overed by mouse and there is no 'tabTitleSelected'
          //class, but there is 'tabTitleSelectedOver'.
-         locator += "//td[contains(@class, 'gwt-TabBarItem-wrapper-selected')]//span[contains(text(), '" + tabTitle + "')]";
+         locator +=
+            "//td[contains(@class, 'gwt-TabBarItem-wrapper-selected')]//span[contains(text(), '" + tabTitle + "')]";
       }
       else
       {
@@ -264,7 +396,7 @@ public class Editor extends AbstractTestModule
       }
 
       System.out.println("locator [" + locator + "]");
-      
+
       assertTrue(selenium().isElementPresent(locator));
    }
 
@@ -312,6 +444,20 @@ public class Editor extends AbstractTestModule
             }
          }
       }
+   }
+
+   /**
+    * Determines whether the file with specified URL is opened in Editor.
+    * 
+    * @param fileURL
+    * @return
+    */
+   public boolean isFileOpened(String fileURL)
+   {
+      String locator =
+         "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//table[@class='gwt-DecoratedTabBar']//"
+            + "span[@title='" + fileURL + "']";
+      return selenium().isElementPresent(locator);
    }
 
    /**
@@ -560,7 +706,17 @@ public class Editor extends AbstractTestModule
       waitForElementPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
-   
+
+   public void waitEditorFileOpened() throws Exception
+   {
+      /*
+       * click for element to clear it's text
+       */
+      selenium().click("debug-editor-active-file-url");
+      Thread.sleep(1);
+      waitForElementTextIsNotEmpty("debug-editor-active-file-url");
+   }
+
    /**
     * Check is file in tabIndex tab opened with CK editor.
     * 
@@ -588,6 +744,19 @@ public class Editor extends AbstractTestModule
       assertTrue(selenium().isElementPresent(locator));
    }
    
+   /**
+    * Determines whether specified tab opened in Editor.
+    * 
+    * @param tabIndex index of tab, starts at 0
+    * @return
+    */
+   public boolean isTabOpened(int tabIndex) {
+//      String locator = "//div[@panel-id='editor' and @is-panel='true']//tabe[@id='editor-panel-switcher']" +
+//      		"//table[@class='gwt-DecoratedTabBar']/tbody/tr/td/[@tab-bar-index='" + tabIndex +  "']";
+      String locator = "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//table[@class='gwt-DecoratedTabBar']/tbody/tr/td[@tab-bar-index='0']";
+      return selenium().isElementPresent(locator);
+   }
+
    /**
     * Check is line numbers are shown in editor
     * 

@@ -84,7 +84,7 @@ public class SearchInRootFolderTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folder2Name + "/" + restFileName);
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       IDE.WORKSPACE.selectRootItem();
 

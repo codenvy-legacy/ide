@@ -198,7 +198,7 @@ public class CutFolderTest extends BaseTest
        */
      IDE.EDITOR.typeTextIntoEditor(0, CHANGED_FILE_CONTENT);
       saveCurrentFile();
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
 
       IDE.WORKSPACE.selectItem(WS_URL + "folder 2/folder 2/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
@@ -220,7 +220,7 @@ public class CutFolderTest extends BaseTest
       /*
        * close editor
        */
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
    }
 
    /**

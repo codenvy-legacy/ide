@@ -40,6 +40,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client.about.AboutIDEPresenter.Display
 {
+   
+   private static final String ID = "ideAboutView";
 
    private static final int WIDTH = 280;
 

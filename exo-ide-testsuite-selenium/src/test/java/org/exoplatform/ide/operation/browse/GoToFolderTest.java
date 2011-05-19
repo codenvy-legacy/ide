@@ -121,9 +121,9 @@ public class GoToFolderTest extends BaseTest
       IDE.NAVIGATION.assertItemVisible(URL + FOLDER_2 + "/" + FILE_2);
 
       //Close opened tabs
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
+     IDE.EDITOR.closeFile(0);
+     
       waitForRootElement();
       IDE.MENU.checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
    }

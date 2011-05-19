@@ -150,7 +150,7 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
       IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
       IDE.CODEASSISTANT.closeForm();
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
    }
 
    /**

@@ -65,7 +65,7 @@ public abstract class ParsingLockTokensInIETest extends BaseTest
       
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
       
       assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
    }

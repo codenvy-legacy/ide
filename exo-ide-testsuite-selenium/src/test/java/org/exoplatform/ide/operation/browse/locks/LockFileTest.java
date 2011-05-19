@@ -166,7 +166,7 @@ public class LockFileTest extends LockFileAbstract
 
       //----- 8 ------------
       //close HTML file, open and check, that file is unlocked
-      IDE.EDITOR.closeTab(1);
+      IDE.EDITOR.closeFile(1);
       IDE.EDITOR.checkIsTabPresentInEditorTabset(FILE_NAME_2, false);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME_2, false);
 
@@ -192,8 +192,10 @@ public class LockFileTest extends LockFileAbstract
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
       IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, false);
 
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(2);
-      waitForElementNotPresent(Locators.EDITOR_TABSET_LOCATOR);
+//      IDE.EDITOR.closeUnsavedFileAndDoNotSave(2);
+//      waitForElementNotPresent(Locators.EDITOR_TABSET_LOCATOR);
+      
+      IDE.EDITOR.closeTabIgnoringChanges(2);
 
       //----- 11 ------------
       //check, that HTML file is locked

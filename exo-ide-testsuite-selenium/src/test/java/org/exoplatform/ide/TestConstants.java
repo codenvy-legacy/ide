@@ -32,7 +32,7 @@ public interface TestConstants
 
    public static final int TYPE_DELAY_PERIOD = 70;
 
-   public static final int ANIMATION_PERIOD = 100;
+   public static final int ANIMATION_PERIOD = 10;
 
    public static final int FOLDER_REFRESH_PERIOD = 1000;
    
@@ -45,6 +45,11 @@ public interface TestConstants
    public static final int SLEEP = 3000;
 
    public static final int SLEEP_SHORT = 500;
+   
+   /**
+    * Timeout in milliseconds to wait for element present.
+    */
+   public static final int TIMEOUT = 10000;
    
    /**
     * Period to wait for element present.

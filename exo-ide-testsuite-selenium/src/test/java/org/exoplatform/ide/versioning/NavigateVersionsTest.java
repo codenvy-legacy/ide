@@ -87,7 +87,7 @@ public class NavigateVersionsTest extends BaseTest
    @After
    public void cleanResults() throws Exception
    {
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass
@@ -257,7 +257,7 @@ public class NavigateVersionsTest extends BaseTest
       /*
        * 14. Close file.
        */
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       /*
        * Version history button dissapeared.

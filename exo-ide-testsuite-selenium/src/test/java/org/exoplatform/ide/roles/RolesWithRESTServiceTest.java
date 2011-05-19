@@ -52,7 +52,6 @@ public class RolesWithRESTServiceTest extends BaseTest
    {
       try
       {
-        IDE.EDITOR.closeTab(0);
          VirtualFileSystemUtils.delete(URL+FILE1);
       }
       catch (IOException e)
@@ -92,7 +91,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       checkLaunchService(true);
       checkValidateService(true);
       
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
       
       //Logout and login as developer
       logout();
@@ -134,7 +133,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       IDE.REST_SERVICE.closeForm();
       IDE.REST_SERVICE.waitForLaunchRestServiceViewClosed();
       
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
    }
 
    /**
@@ -168,7 +167,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       // Check launch service is allowed for administrator
       checkLaunchService(true);
       
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
    }
    
    /**

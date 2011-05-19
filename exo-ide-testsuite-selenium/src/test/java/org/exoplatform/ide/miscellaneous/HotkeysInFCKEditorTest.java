@@ -152,7 +152,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //check tab title is not marked by *
       assertEquals(GOOGLE_GADGET_FILE,IDE.EDITOR.getTabTitle(0));
       //close file      
-     IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
    
    /**
@@ -219,7 +219,9 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       assertFalse(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
       
       Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.closeFileTabIgnoreChanges(0);
+
+      //IDE.EDITOR.closeFileTabIgnoreChanges(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
    
    //@Test
@@ -323,10 +325,8 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       
       IDE.selectMainFrame();
-      
-      Thread.sleep(TestConstants.SLEEP);
-      
-     IDE.EDITOR.closeFileTabIgnoreChanges(0);
+      //IDE.EDITOR.closeFileTabIgnoreChanges(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
    
    //@Test
@@ -351,9 +351,8 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_N);
       
       checkCreateFileFromTemplateFormAndClose();
-      
-      Thread.sleep(TestConstants.SLEEP);
-     IDE.EDITOR.closeFileTabIgnoreChanges(0);
+      //IDE.EDITOR.closeFileTabIgnoreChanges(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
    
    private String getTextFromCkEditor(int tabIndex) throws Exception

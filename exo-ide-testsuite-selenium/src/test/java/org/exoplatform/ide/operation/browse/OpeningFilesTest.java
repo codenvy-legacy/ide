@@ -24,6 +24,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
@@ -53,16 +54,16 @@ public class OpeningFilesTest extends BaseTest
       IDE.NAVIGATION.createFolder(folderName);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      waitForElementPresent(Locators.EDITOR_TABSET_LOCATOR);
+      
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, file1Content);
       saveAsUsingToolbarButton(file1Name);
       waitForRootElement();
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       saveAsUsingToolbarButton(file2Name);
       waitForRootElement();
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
 
       // Delete one file  
@@ -73,7 +74,8 @@ public class OpeningFilesTest extends BaseTest
 
       //Open another file from the same folder
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + folderName + "/" + file1Name, false);
-      waitForElementPresent(Locators.EDITOR_TABSET_LOCATOR);
+      waitForElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR);
+      
       //Check text of opened file
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertEquals(file1Content, text);

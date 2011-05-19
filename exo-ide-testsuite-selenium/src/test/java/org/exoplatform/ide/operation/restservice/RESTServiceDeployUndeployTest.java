@@ -59,7 +59,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       System.out.println(FILE_URL);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_URL, false);
@@ -91,7 +91,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       assertTrue(mess.contains("Can't unbind script " + FOLDER_NAME +"/" + FILE_NAME
          + ", not bound or has wrong mapping to the resource class"));
       //****************************************
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       IDE.NAVIGATION.assertItemVisible(FILE_URL);
 

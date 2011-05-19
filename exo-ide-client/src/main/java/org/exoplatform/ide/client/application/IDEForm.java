@@ -16,11 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.application.ui;
+package org.exoplatform.ide.client.application;
 
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
 import org.exoplatform.ide.client.menu.Menu;
@@ -64,9 +63,6 @@ public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandle
       ideRootPanel.setHeight("100%");
 
       RootPanel.get().add(ideRootPanel);
-
-      //      BackgroundLayer background = new BackgroundLayer();
-      //      addLayer(background);
 
       createMenu();
       createToolbar();
@@ -132,7 +128,7 @@ public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandle
       operationPanel.acceptType("operation");
 
       Panel editorPanel = perspective.addPanel("editor", PanelDirection.CENTER, 0);
-      editorPanel.acceptType("editor");      
+      editorPanel.acceptType("editor");
    }
 
    /**

@@ -65,7 +65,7 @@ public class GetItemUrlTest extends BaseTest
       saveAsUsingToolbarButton(file1Name);
       Thread.sleep(TestConstants.SLEEP * 3);
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + file1Name);
 
       IDE.NAVIGATION.createFolder(folderName);
@@ -75,7 +75,7 @@ public class GetItemUrlTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content2);
       saveAsUsingToolbarButton(file2Name);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
 
       //Refresh root item

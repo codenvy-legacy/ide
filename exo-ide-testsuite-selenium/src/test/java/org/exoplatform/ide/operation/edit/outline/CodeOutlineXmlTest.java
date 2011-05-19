@@ -126,7 +126,8 @@ public class CodeOutlineXmlTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
      
-     IDE.EDITOR.closeFileTabIgnoreChanges(0);
+     //IDE.EDITOR.closeFileTabIgnoreChanges(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
    
    private void checkCodeNavigation() throws Exception

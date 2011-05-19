@@ -246,8 +246,10 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
 
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+//      IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
+//      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.EDITOR.closeTabIgnoringChanges(0);      
    }
 
    @AfterClass

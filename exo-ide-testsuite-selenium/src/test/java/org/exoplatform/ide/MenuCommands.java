@@ -28,37 +28,47 @@ public interface MenuCommands
 {
    public interface New
    {
-      public static final String NEW = "New";
+      
+      String NEW = "New";
 
-      public static final String XML_FILE = "XML";
+      String XML_FILE = "XML";
 
-      public static final String HTML_FILE = "HTML";
+      String HTML_FILE = "HTML";
 
-      public static final String TEXT_FILE = "Text";
+      String TEXT_FILE = "Text";
 
-      public static final String JAVASCRIPT_FILE = "JavaScript";
+      String JAVASCRIPT_FILE = "JavaScript";
 
-      public static final String CSS_FILE = "CSS";
+      String CSS_FILE = "CSS";
 
-      public static final String GOOGLE_GADGET_FILE = "Google Gadget";
+      String GOOGLE_GADGET_FILE = "Google Gadget";
 
-      public static final String REST_SERVICE_FILE = "REST Service";
+      String REST_SERVICE_FILE = "REST Service";
 
-      public static final String GROOVY_SCRIPT_FILE = "POGO";
+      String GROOVY_SCRIPT_FILE = "POGO";
 
-      public static final String NETVIBES_WIDGET = "Netvibes Widget";
+      String NETVIBES_WIDGET = "Netvibes Widget";
 
-      public static final String GROOVY_TEMPLATE_FILE = "Template";
+      String GROOVY_TEMPLATE_FILE = "Template";
 
-      public static final String FILE_FROM_TEMPLATE = "File From Template...";
+      String FILE_FROM_TEMPLATE = "File From Template...";
 
-      public static final String PROJECT_FROM_TEMPLATE = "Project From Template...";
+      String PROJECT_FROM_TEMPLATE = "Project From Template...";
 
-      public static final String FOLDER = "Folder...";
+      String FOLDER = "Folder...";
 
-      public static final String CHROMATTIC = "Data Object";
+      String CHROMATTIC = "Data Object";
 
-      public static final String PROJECT_TEMPLATE = "Project Template...";
+      String PROJECT_TEMPLATE = "Project Template...";
+      
+      String JAVA_CLASS = "Java Class";
+      
+      String JSP = "JSP";
+      
+      String RUBY = "Ruby File";
+      
+      String PHP = "PHP File";
+      
    }
 
    public interface Run

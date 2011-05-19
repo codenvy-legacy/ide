@@ -123,7 +123,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkViewVersionHistoryButtonState(true);
 
       //Close file:
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
       //Open versioned file again:
@@ -145,7 +145,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 
       //Close second file, versioned file becomes active:
-      IDE.EDITOR.closeTab(1);
+      IDE.EDITOR.closeFile(1);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(true);
       //Open second file (is not versioned):
@@ -166,8 +166,8 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 
-      IDE.EDITOR.closeTab(0);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    /**
@@ -223,7 +223,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
       IDE.VERSIONS.checkVersionPanelState(true);
       //Close file:
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       IDE.VERSIONS.waitVersionContentViewClosed();
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
    }
@@ -302,7 +302,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
       //Close file
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       IDE.VERSIONS.waitVersionContentViewClosed();
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
    }
@@ -422,9 +422,9 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text);
 
-      IDE.EDITOR.closeTab(0);
-      IDE.EDITOR.closeTab(0);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass

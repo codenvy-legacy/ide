@@ -278,7 +278,7 @@ public class Navigation extends AbstractTestModule
     */
    public void deleteSelectedItems() throws Exception
    {
-      IDE().TOOLBAR.runCommand(ToolbarCommands.File.DELETE, false);
+      IDE().TOOLBAR.runCommand(ToolbarCommands.File.DELETE);
 
       //check deletion form
       //assertTrue(selenium.isElementPresent("//div[@view-id='ideDeleteItemsView']"));
@@ -315,7 +315,7 @@ public class Navigation extends AbstractTestModule
     */
    public void createFolder(String folderName) throws Exception
    {
-      IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER, false);
+      IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //      IDE.TOOLBAR.runCommand("New");

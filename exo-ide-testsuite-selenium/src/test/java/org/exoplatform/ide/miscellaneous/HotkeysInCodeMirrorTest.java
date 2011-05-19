@@ -105,7 +105,8 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       closeForm(GO_TO_LINE_FORM_LOCATOR);
       IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @Test
@@ -182,7 +183,8 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
 
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @Test
@@ -228,7 +230,8 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
 
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    /**
@@ -255,7 +258,8 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selenium.keyUp("//", "13");
 
       //close file
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
 
    }
 

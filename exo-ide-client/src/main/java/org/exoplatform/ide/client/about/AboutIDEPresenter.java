@@ -43,13 +43,9 @@ public class AboutIDEPresenter implements ShowAboutDialogHandler, ViewClosedHand
    public interface Display extends IsView
    {
 
-      String ID = "ideAboutView";
-
       HasClickHandlers getOkButton();
 
    }
-
-   private HandlerManager eventBus;
 
    private Display display;
 
@@ -57,8 +53,6 @@ public class AboutIDEPresenter implements ShowAboutDialogHandler, ViewClosedHand
 
    public AboutIDEPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
-
       eventBus.addHandler(ShowAboutDialogEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
@@ -68,22 +62,20 @@ public class AboutIDEPresenter implements ShowAboutDialogHandler, ViewClosedHand
    {
       if (display == null)
       {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView(d.asView());
-         bindDisplay(d);
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+         bindDisplay();
       }
    }
 
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      display = d;
-
       okButtonClickHandlerRegistration = display.getOkButton().addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
    }

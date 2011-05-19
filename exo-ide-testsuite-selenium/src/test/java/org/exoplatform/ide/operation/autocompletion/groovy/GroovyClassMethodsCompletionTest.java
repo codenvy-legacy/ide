@@ -43,7 +43,7 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
    public void testGroovyClassMethodCompletion() throws Exception
    {
       waitForRootElement();
-      
+
       /*
        * 1. Open REST Service file.
        */
@@ -61,16 +61,16 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
       selenium.keyDown(Locators.EDITOR_LOCATOR, "" + java.awt.event.KeyEvent.VK_END);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      
+
       /*
        * 3. Type text "Collections."
        */
-     IDE.EDITOR.typeTextIntoEditor(0, "Collections.");
+      IDE.EDITOR.typeTextIntoEditor(0, "Collections.");
 
       /*
        * 4. Call autocomplete form.
        */
-     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
+      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium.isElementPresent(CodeAssistant.Locators.PANEL_ID));
 
@@ -99,17 +99,18 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
        */
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       /*
        * Check, that autocomplete form dissapeared, and new text in editor appeared.
        */
       assertFalse(selenium.isElementPresent(CodeAssistant.Locators.PANEL_ID));
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections.sort(List, Comparator)"));
-      
+
       /*
        * 8. Close file
        */
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
 }

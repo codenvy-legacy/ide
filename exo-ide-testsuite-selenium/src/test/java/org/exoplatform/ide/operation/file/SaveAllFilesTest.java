@@ -85,7 +85,7 @@ public class SaveAllFilesTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
       saveAsUsingToolbarButton(SAVED_XML);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       /*
        * 3. Create "Saved File.groovy" in "Folder2"
@@ -94,7 +94,7 @@ public class SaveAllFilesTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
       saveAsByTopMenu(SAVED_GROOVY);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       /*
        * 4. Save All command must be disabled
@@ -154,7 +154,7 @@ public class SaveAllFilesTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
       IDE.EDITOR.selectTab(0);
       saveAsUsingToolbarButton(NEW_HTML);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       /*
        * 13. Save "Untitled file.txt" to Folder2
@@ -162,7 +162,7 @@ public class SaveAllFilesTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_2 + "/");
       IDE.EDITOR.selectTab(0);
       saveAsUsingToolbarButton(NEW_TEXT);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       /*
        * 14. Open "Untitled file.groovy" and "Untitled file.xml"
@@ -179,10 +179,10 @@ public class SaveAllFilesTest extends BaseTest
       assertEquals(NEW_HTML, IDE.EDITOR.getTabTitle(2));
       assertEquals(NEW_TEXT, IDE.EDITOR.getTabTitle(3));
 
-      IDE.EDITOR.closeTab(0);
-      IDE.EDITOR.closeTab(0);
-      IDE.EDITOR.closeTab(0);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(3);
+      IDE.EDITOR.closeFile(2);
+      IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.closeFile(0);
    }
 
 }

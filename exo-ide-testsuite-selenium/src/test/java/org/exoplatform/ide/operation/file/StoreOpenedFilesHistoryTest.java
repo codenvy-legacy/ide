@@ -156,10 +156,10 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.EDITOR.waitTabPresent(3);
       
       //closing all files
-     IDE.EDITOR.closeTab(0);
-     IDE.EDITOR.closeTab(0);
-     IDE.EDITOR.closeTab(0);
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeFile(0);
+     IDE.EDITOR.closeFile(0);
+     IDE.EDITOR.closeFile(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);     
       
      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
       IDE.OPENWITH.openSelectedFileWithCodeEditor(false);
@@ -191,14 +191,14 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       
       selenium.goBack();
       waitForRootElement();
-      waitForElementPresent(Editor.EditorLocators.CK_EDITOR);
+      waitForElementPresent(Editor.Locators.CK_EDITOR);
       
       IDE.EDITOR.checkCkEditorOpened(1);
       
       checkOpenedFilesHistory();
       
-     IDE.EDITOR.closeTab(0);
-     IDE.EDITOR.closeTabWithNonSaving(0);
+     IDE.EDITOR.closeFile(0);
+     IDE.EDITOR.closeFile(0);
       
       //open folder to select html file
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");

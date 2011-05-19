@@ -193,7 +193,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Close file
        */
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
 
       /*
        * Open "/test.groovy"

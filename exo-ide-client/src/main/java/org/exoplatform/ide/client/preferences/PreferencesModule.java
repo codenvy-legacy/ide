@@ -38,9 +38,9 @@ import org.exoplatform.ide.client.model.discovery.DiscoveryServiceImpl;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryControl;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
 import org.exoplatform.ide.client.toolbar.CustomizeToolbarCommand;
+import org.exoplatform.ide.client.toolbar.CustomizeToolbarEvent;
 import org.exoplatform.ide.client.toolbar.CustomizeToolbarForm;
-import org.exoplatform.ide.client.toolbar.event.CustomizeToolbarEvent;
-import org.exoplatform.ide.client.toolbar.event.CustomizeToolbarHandler;
+import org.exoplatform.ide.client.toolbar.CustomizeToolbarHandler;
 import org.exoplatform.ide.client.workspace.SelectWorkspaceControl;
 import org.exoplatform.ide.client.workspace.SelectWorkspacePresenter;
 
@@ -103,7 +103,6 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
 
       new CustomizeToolbarForm(eventBus, applicationSettings, controls);
    }
-
 
    @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

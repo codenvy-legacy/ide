@@ -122,12 +122,12 @@ public class OpenLockedFileTest extends LockFileAbstract
 
       //----- 5 ----------
       //close and open file
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       checkCantSaveLockedFile();
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
 }

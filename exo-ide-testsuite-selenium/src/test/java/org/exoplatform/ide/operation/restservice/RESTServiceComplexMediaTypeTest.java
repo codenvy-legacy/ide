@@ -176,7 +176,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
 
       assertTrue(mess.contains("{\"value\" : \"value4\"}"));
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    /**

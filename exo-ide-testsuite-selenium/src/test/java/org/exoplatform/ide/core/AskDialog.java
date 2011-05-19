@@ -33,38 +33,38 @@ public class AskDialog extends AbstractTestModule
    interface Locators
    {
 
-      String ASK_ID = "exoAskDialog";
+      String ASK_DIALOG_ID = "exoAskDialog";
 
-      String ASK_TITLE = "//div[@id='" + ASK_ID + "']//div[@class='Caption']/span";
+      String ASK_TITLE = "//div[@id='" + ASK_DIALOG_ID + "']//div[@class='Caption']/span";
 
    }
 
    public void waitForAskDialogOpened() throws Exception
    {
-      waitForElementPresent(Locators.ASK_ID);
+      waitForElementPresent(Locators.ASK_DIALOG_ID);
    }
 
    public void waitForAskDialogClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.ASK_ID);
+      waitForElementNotPresent(Locators.ASK_DIALOG_ID);
    }
 
    public void assertOpened()
    {
-      assertTrue(selenium().isElementPresent(Locators.ASK_ID));
+      assertTrue(selenium().isElementPresent(Locators.ASK_DIALOG_ID));
    }
 
    public void assertOpened(String title)
    {
-      assertTrue(isDialogOpened(title));
+      assertTrue(isOpened(title));
    }
 
-   public boolean isDialogOpened()
+   public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.ASK_ID);
+      return selenium().isElementPresent(Locators.ASK_DIALOG_ID);
    }
 
-   public boolean isDialogOpened(String title)
+   public boolean isOpened(String title)
    {
       return selenium().isElementPresent(Locators.ASK_TITLE + "[contains(text(), '" + title + "')]");
    }
@@ -72,7 +72,7 @@ public class AskDialog extends AbstractTestModule
    public void clickNo() throws Exception
    {
       selenium().click("exoAskDialogNoButton");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      waitForElementNotPresent(Locators.ASK_DIALOG_ID);
    }
 
    public void clickYes() throws Exception
@@ -83,7 +83,7 @@ public class AskDialog extends AbstractTestModule
    
    public void waitForDialog() throws Exception
    {
-      waitForElementPresent(Locators.ASK_ID);
+      waitForElementPresent(Locators.ASK_DIALOG_ID);
    }
    
    public void waitForDialog(String message) throws Exception
@@ -94,7 +94,7 @@ public class AskDialog extends AbstractTestModule
    
    public void waitForDialogNotPresent() throws Exception
    {
-      waitForElementNotPresent(Locators.ASK_ID);
+      waitForElementNotPresent(Locators.ASK_DIALOG_ID);
    }
 
 }

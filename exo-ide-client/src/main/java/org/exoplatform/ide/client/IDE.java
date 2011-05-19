@@ -22,10 +22,11 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.GWTDialogs;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
+import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
-import org.exoplatform.ide.client.application.ui.IDEForm;
+import org.exoplatform.ide.client.debug.SeleniumTestsHelper;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
@@ -69,9 +70,14 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new GWTDialogs();
       
       /*
-       * registering icons
+       * Registering Icons
        */
       IDEIconSet.init();
+      
+      /*
+       * Initialise SeleniumTestsHelper
+       */
+      new SeleniumTestsHelper(EVENT_BUS);
 
       context = new ApplicationContext();
 

@@ -86,7 +86,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.EDITOR.waitTabPresent(0);
       saveAsByTopMenu(restFileName);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       IDE.WORKSPACE.selectRootItem();
 
       IDE.SEARCH.performSearch("/", "", "");
@@ -140,7 +140,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.waitTabPresent(0);
@@ -151,7 +151,7 @@ public class SearchLoadFileTest extends BaseTest
       saveAsByTopMenu(gadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       IDE.WORKSPACE.selectRootItem();
 
       IDE.SEARCH.performSearch("/", "", "");

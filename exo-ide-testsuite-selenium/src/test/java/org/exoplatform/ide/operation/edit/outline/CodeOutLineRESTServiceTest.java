@@ -80,7 +80,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
       try
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME);

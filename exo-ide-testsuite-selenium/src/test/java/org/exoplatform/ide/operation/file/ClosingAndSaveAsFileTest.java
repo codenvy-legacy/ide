@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
@@ -39,7 +41,7 @@ public class ClosingAndSaveAsFileTest extends BaseTest
 
    private static String FOLDER = ClosingAndSaveAsFileTest.class.getSimpleName();
 
-   private static final String FILE = "file-" + ClosingAndSaveAsFileTest.class.getSimpleName();
+   private static final String FILE = "testfile";
 
    @Before
    public void setUp()
@@ -72,69 +74,112 @@ public class ClosingAndSaveAsFileTest extends BaseTest
    public void testClosingAnsSaveAsFile() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
-
-      //----- 1 ----------
-      //open 2 new files
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
+      
+      String textFileURL = WS_URL + FOLDER + "/Untitled file.txt";
+      String xmlFileURL = WS_URL + FOLDER + "/Untitled file.xml";
+      
+      /*
+       * 1. Create TEXT and XML files.
+       *     - TEXT and XML files must be opened.
+       */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      
+      assertTrue(IDE.EDITOR.isFileOpened(textFileURL));
+      assertTrue(IDE.EDITOR.isFileOpened(xmlFileURL));
 
-      //----- 2 ----------
-      //try to close xml file
-      IDE.EDITOR.closeTab(1);
+      /*
+       * 2. Click on Close XML file button ( index 1 )
+       *     -  AskForValue dialog must be opened.
+       */
+      IDE.EDITOR.clickCloseEditorButton(1);
+      assertTrue(IDE.ASK_FOR_VALUE_DIALOG.isOpened());
+      
+      /*
+       * 3. Click "Cancel" button of dialog.
+       *     - AskForValue dialog must be closed.
+       *     - File must be still opened.
+       */
+      IDE.ASK_FOR_VALUE_DIALOG.clickCancelButton();
+      IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
+      assertTrue(IDE.EDITOR.isFileOpened(xmlFileURL));      
 
-      //save file as dialog appears
-      IDE.SAVE_AS.checkIsOpened(true);
-
-      //close save file as dialog
-      IDE.SAVE_AS.clickCancel();
-
-      //file stays in editor panel
-      IDE.EDITOR.checkCodeEditorOpened(1);
-
-      //----- 3 ----------
-      //select first file (text file)
+      /*
+       * 4. Select TEXT file and Save it
+       *     - File must be present in Workspace tree.
+       *     - Text FILE and XML files must be still opened in editor.
+       */
       IDE.EDITOR.selectTab(0);
-
-      //save file from tab
       saveAsUsingToolbarButton(FILE);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/" + FILE);
 
+      assertTrue(IDE.EDITOR.isTabOpened(0));
+      assertTrue(IDE.EDITOR.isTabOpened(1));
+      
       //file stays in editor panel
       IDE.EDITOR.checkCodeEditorOpened(0);
       IDE.EDITOR.checkCodeEditorOpened(1);
       assertEquals(FILE, IDE.EDITOR.getTabTitle(0));
       
       // close editor
-      IDE.EDITOR.closeTab(1);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.EDITOR.closeFile(0);
    }
 
-   /*
    @Test
    public void testSaveAsFileAfterTryingToCloseNewFile() throws Exception
    {
+      /*
+       * 1. Refresh page
+       */
       refresh();
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
+
+      /*
+       * 2. Select folder and ctreate XML file.
+       */
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
-
-      //----- 1 ----------
-      //open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      
+      String createdFileURL = WS_URL + FOLDER + "/Untitled file.xml";
+      assertTrue(IDE.EDITOR.isFileOpened(createdFileURL));
+      
+      /*
+       * 3. Click on Close file button
+       *     - AskForValue dialog must be opened.
+       */
+      IDE.EDITOR.clickCloseEditorButton(0);
+      assertTrue(IDE.ASK_FOR_VALUE_DIALOG.isOpened());
 
-      //----- 2 ----------
-      //try to close xml file
-      IDE.EDITOR.closeTab(0);
-      //save file as dialog appears
-      SaveFileUtils.checkSaveAsDialog(true);
-      //close save file as dialog
-      closeForm(Locators.AskForValue.ASK_FOR_VALUE_DIALOG_LOCATOR);
-      //file stays in editor panel
-      IDE.EDITOR.checkCodeEditorOpened(0);
-
-      //----- 3 ----------
-      //try to save as new xml file
-      saveAsUsingToolbarButton(FILE);
-      //file stays in editor panel
-      IDE.EDITOR.checkCodeEditorOpened(0);
+      /*
+       * 5. Click on "Close" button.
+       *     - AskForValue dialog must be closed.
+       */
+      IDE.ASK_FOR_VALUE_DIALOG.closeDialog();
+      assertFalse(IDE.ASK_FOR_VALUE_DIALOG.isOpened());
+      
+      /*
+       * 6. Click on Close file button
+       *     -  AskForValue dialog must be opened.
+       */
+      IDE.EDITOR.clickCloseEditorButton(0);
+      assertTrue(IDE.ASK_FOR_VALUE_DIALOG.isOpened());
+      
+      /*
+       * 7. Click "Ok" button.
+       *     - File must be closed.
+       *     - File must be present in the tree.
+       */
+      
+      IDE.EDITOR.rememberFileToBeClosed(0);
+      IDE.ASK_FOR_VALUE_DIALOG.setValue("new XML file.xml");
+      IDE.ASK_FOR_VALUE_DIALOG.clickOkButton();
+      IDE.EDITOR.waitForRememberFileClosed();
+      
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/new XML file.xml");
+      
+      assertFalse(IDE.EDITOR.isFileOpened(createdFileURL));
    }
-   */
 
 }

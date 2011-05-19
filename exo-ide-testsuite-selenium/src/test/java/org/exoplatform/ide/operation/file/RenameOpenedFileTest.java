@@ -112,7 +112,7 @@ public class RenameOpenedFileTest extends BaseTest
        * 5. Close editor
        */
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
 }

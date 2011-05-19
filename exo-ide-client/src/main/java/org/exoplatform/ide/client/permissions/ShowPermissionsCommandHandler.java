@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.client.permissions;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -30,12 +32,8 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.permissions.event.ShowPermissionsEvent;
-import org.exoplatform.ide.client.permissions.event.ShowPermissionsHandler;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * This class handle {@link ShowPermissionsEvent} event,

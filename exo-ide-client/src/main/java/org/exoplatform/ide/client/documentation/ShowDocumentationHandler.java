@@ -16,38 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.application.ui;
+package org.exoplatform.ide.client.documentation;
 
-import org.exoplatform.ide.client.ui.impl.Layer;
-
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: ShowDocumentationHandler Jan 21, 2011 11:14:45 AM evgen $
+ *
  */
-
-public class BackgroundLayer extends Layer
+public interface ShowDocumentationHandler extends EventHandler
 {
 
-   private Image backgroundImage;
-
-   public BackgroundLayer()
-   {
-      super("background");
-      backgroundImage = new Image("ide-background.jpg");
-      backgroundImage.setWidth("100%");
-      backgroundImage.setHeight("100%");
-      add(backgroundImage);
-   }
-
-   @Override
-   public void onResize(int width, int height)
-   {
-      backgroundImage.setWidth(width + "px");
-      backgroundImage.setHeight(height + "px");
-   }
-
+   void onShowDocumentation(ShowDocumentationEvent event);
+   
 }

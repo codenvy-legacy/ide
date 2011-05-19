@@ -23,7 +23,6 @@ import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Image;
@@ -33,24 +32,22 @@ import com.google.gwt.user.client.ui.Image;
  * @version $Id: DocumentationForm Jan 21, 2011 12:23:13 PM evgen $
  *
  */
-public class DocumentationForm extends ViewImpl implements DocumentationPresenter.Display
+public class DocumentationView extends ViewImpl implements DocumentationPresenter.Display
 {
+   
+   private static final String ID = "ideDocumentationView";
 
    private static final String FRAME_ID = "ideDocumentationFrame";
 
    private Image DOCUMENTATION_TAB_ICON = new Image(IDEImageBundle.INSTANCE.documentation());
 
-   private HandlerManager eventBus;
-
    private Frame iFrame;
 
-   public DocumentationForm(HandlerManager eventBus)
+   public DocumentationView()
    {
       super(ID, ViewType.INFORMATION , "Documentation");
-      this.eventBus = eventBus;
       setIcon(DOCUMENTATION_TAB_ICON);
 
-      //      browser = new DocumentationBrowser();
       iFrame = new Frame();
       DOM.setElementAttribute(iFrame.getElement(), "scrolling", "no");
       DOM.setElementAttribute(iFrame.getElement(), "frameborder", "0");
@@ -72,44 +69,17 @@ public class DocumentationForm extends ViewImpl implements DocumentationPresente
       iFrame.setUrl(url);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.documentation.DocumentationPresenter.Display#bindClickHandlers()
-    */
-   @Override
-   public void bindClickHandlers()
-   {
-//      new Timer()
-//      {
-//
-//         @Override
-//         public void run()
-//         {
-//            //            addHandler(IFrameElement.as(iFrame.getElement()));
-//
-//         }
-//      }.schedule(500);
-   }
-
    private native void addHandler(Element e)/*-{
       var type = "mousedown";
       var instance = this;
       if(typeof e.contentDocument != "undefined")
       {
-         e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.documentation.DocumentationForm::activate()();},false);
+         e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.documentation.DocumentationView::activate()();},false);
       }
       else
       {
-         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.documentation.DocumentationForm::activate()();});
+         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.documentation.DocumentationView::activate()();});
       }
    }-*/;
-
-   /**
-    * @see org.exoplatform.ide.client.documentation.DocumentationPresenter.Display#removeHandlers()
-    */
-   @Override
-   public void removeHandlers()
-   {
-      
-   }
 
 }

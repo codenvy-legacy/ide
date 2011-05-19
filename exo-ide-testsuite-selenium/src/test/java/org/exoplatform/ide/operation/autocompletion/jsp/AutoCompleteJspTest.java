@@ -107,7 +107,8 @@ public class AutoCompleteJspTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("textarea");
       IDE.CODEASSISTANT.closeForm();
       
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
       
    }
    

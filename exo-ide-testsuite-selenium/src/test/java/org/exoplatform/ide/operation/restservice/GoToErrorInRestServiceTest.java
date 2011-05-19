@@ -102,7 +102,8 @@ public class GoToErrorInRestServiceTest extends BaseTest
       openAndValidateRestService();
       //---- 1 -----------------
       //close tab
-     IDE.EDITOR.tryCloseTabWithNonSaving(0);
+     //IDE.EDITOR.tryCloseTabWithNonSaving(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
 
       //---- 2 -----------------
       //click on validation message to go to error
@@ -146,7 +147,8 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 3 -----------------
       //close file
-     IDE.EDITOR.tryCloseTabWithNonSaving(1);
+     //IDE.EDITOR.tryCloseTabWithNonSaving(1);
+     IDE.EDITOR.closeTabIgnoringChanges(1);
 
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
@@ -165,7 +167,8 @@ public class GoToErrorInRestServiceTest extends BaseTest
       openAndValidateRestService();
       //---- 1 -----------------
       //close tab
-     IDE.EDITOR.tryCloseTabWithNonSaving(0);
+     //IDE.EDITOR.tryCloseTabWithNonSaving(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
 
       //---- 2 -----------------
       //delete file
@@ -344,8 +347,10 @@ public class GoToErrorInRestServiceTest extends BaseTest
    public void afterMethod() throws Exception
    {
       //check, if opened, close two files
-     IDE.EDITOR.tryCloseTabWithNonSaving(0);
-     IDE.EDITOR.tryCloseTabWithNonSaving(0);
+//     IDE.EDITOR.tryCloseTabWithNonSaving(0);
+//     IDE.EDITOR.tryCloseTabWithNonSaving(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @AfterClass

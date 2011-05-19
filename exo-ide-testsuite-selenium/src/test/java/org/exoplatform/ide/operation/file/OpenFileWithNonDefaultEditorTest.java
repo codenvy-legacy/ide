@@ -112,7 +112,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 4. Close editor
        */
-      IDE.EDITOR.closeTabWithNonSaving(0);
+      IDE.EDITOR.closeFile(0);
 
       /*
        * 5. Run File > Open With
@@ -134,7 +134,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 8. Close editor
        */
-      IDE.EDITOR.closeTabWithNonSaving(0);
+      IDE.EDITOR.closeFile(0);
 
       /*
        * 9. Open html file by doubleclicking
@@ -173,7 +173,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 15. Close editor
        */
-      IDE.EDITOR.closeTabWithNonSaving(0);
+      IDE.EDITOR.closeFile(0);
 
       /*
        * 16. Open html file by doubleclicking
@@ -188,7 +188,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 18. Close editor
        */
-      IDE.EDITOR.closeTabWithNonSaving(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
 }

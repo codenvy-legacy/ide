@@ -123,7 +123,7 @@ public class ShowHideLineNumbersTest extends BaseTest
        * 6. Close XML file.
        *     Menu commands Edit > Show / Hide line numbers must be hidden.
        */
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, false);
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, false);
 
@@ -138,7 +138,7 @@ public class ShowHideLineNumbersTest extends BaseTest
        * 8. Run menu command Edit > Hide line numbers and close editor.
        */
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       /*
        * 9. Open XML file.
@@ -159,7 +159,7 @@ public class ShowHideLineNumbersTest extends BaseTest
       /*
        * 11. Close editor.
        */
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
 }

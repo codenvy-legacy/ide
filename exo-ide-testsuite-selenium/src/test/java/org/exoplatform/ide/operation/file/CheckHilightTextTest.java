@@ -122,20 +122,6 @@ public class CheckHilightTextTest extends BaseTest
 
    }
 
-   //****************TODO fix  Task IDE-445
-   public void checkSaveDialog() throws InterruptedException
-   {
-      if (selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/member/"))
-      {
-         selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
-         Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      }
-      else
-      {
-         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      }
-   }
-
    //check_hilight_code
 
    @Test
@@ -143,34 +129,23 @@ public class CheckHilightTextTest extends BaseTest
    {
       openXML();
       checkHilightXML();
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      //TODO fix  Task IDE-445
-      checkSaveDialog();
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
-  @Test
+   @Test
    public void chekTXT() throws InterruptedException, Exception
    {
       openTXT();
       checkHiligtTXT();
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      //TODO fix  Task IDE-445
-      checkSaveDialog();
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
-  @Test
+   @Test
    public void checkJavaScript() throws InterruptedException, Exception
    {
       openJavaScript();
       checkHilightJavaScript();
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      //TODO fix  Task IDE-445
-      checkSaveDialog();
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @Test
@@ -178,23 +153,15 @@ public class CheckHilightTextTest extends BaseTest
    {
       openHtml();
       checkHilightHTML();
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      //TODO fix  Task IDE-445
-      checkSaveDialog();
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
-  @Test
+   @Test
    public void checkGroovy() throws InterruptedException, Exception
    {
       openGroovy();
       checkHilightGroovy();
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      //TODO fix  Task IDE-445
-      checkSaveDialog();
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @Test
@@ -202,11 +169,7 @@ public class CheckHilightTextTest extends BaseTest
    {
       openCss();
       chekHilightingInCssFile();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-     IDE.EDITOR.closeTab(0);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      //TODO fix  Task IDE-445
-      checkSaveDialog();
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    public void openXML() throws InterruptedException, Exception
@@ -736,7 +699,7 @@ public class CheckHilightTextTest extends BaseTest
 
       try
       {
-        IDE.EDITOR.selectIFrameWithEditor(0);
+         IDE.EDITOR.selectIFrameWithEditor(0);
       }
       catch (Exception e)
       {
@@ -932,7 +895,7 @@ public class CheckHilightTextTest extends BaseTest
    {
       try
       {
-        IDE.EDITOR.selectIFrameWithEditor(0);
+         IDE.EDITOR.selectIFrameWithEditor(0);
       }
       catch (Exception e)
       {

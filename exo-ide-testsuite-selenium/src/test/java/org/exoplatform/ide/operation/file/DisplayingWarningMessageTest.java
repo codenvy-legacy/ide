@@ -88,7 +88,8 @@ public class DisplayingWarningMessageTest extends BaseTest
       //Click on "No" button in confirmation dialog.
 
       //After the step 2: You will see smartGWT Dialogs.showError dialog 
-      IDE.EDITOR.closeNewFile(0, false, null);
+      //IDE.EDITOR.closeNewFile(0, false, null);
+      IDE.EDITOR.closeTabIgnoringChanges(0);      
       
       //After the step 3: new file tab will be closed, Content Panel will become empty, 
       //"Save" and "Save As" buttons, and "File->Save", "File->Save As" top menu commands 
@@ -109,7 +110,8 @@ public class DisplayingWarningMessageTest extends BaseTest
 
       //--------- 5 -------------------
       //Try to close file tab again.
-      IDE.EDITOR.closeNewFile(0, true, null);
+      //IDE.EDITOR.closeNewFile(0, true, null);
+      IDE.EDITOR.clickCloseEditorButton(0);      
 
       //After the step 6: new file will be saved, and file tab should be closed.
 
@@ -168,8 +170,7 @@ public class DisplayingWarningMessageTest extends BaseTest
       //---------- 9 -----------------
       //Save, close file tab and open created earlier xml file again.
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      IDE.EDITOR.closeTab(0);
-      
+      IDE.EDITOR.closeFile(0);
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
 

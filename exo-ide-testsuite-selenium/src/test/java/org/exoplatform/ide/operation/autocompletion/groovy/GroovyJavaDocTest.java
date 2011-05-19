@@ -37,7 +37,7 @@ import org.junit.Test;
 
 public class GroovyJavaDocTest extends BaseTest
 {
-   
+
    @Test
    @Ignore
    public void testGroovyJavaDoc() throws Exception
@@ -53,10 +53,10 @@ public class GroovyJavaDocTest extends BaseTest
       }
       selenium.keyDown("//body[@class='editbox']", "\\35");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-     IDE.EDITOR.typeTextIntoEditor(0, "Collections.");
+      IDE.EDITOR.typeTextIntoEditor(0, "Collections.");
 
-     IDE.CODEASSISTANT.openForm();
-      
+      IDE.CODEASSISTANT.openForm();
+
       for (int i = 0; i < 4; i++)
       {
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -68,14 +68,15 @@ public class GroovyJavaDocTest extends BaseTest
       selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
       assertFalse(selenium.isElementPresent("//body/pre[text()='Not found']"));
       IDE.selectMainFrame();
-      
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP);
       selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
       assertFalse(selenium.isElementPresent("//body/pre[text()=\"Not found\"]"));
       IDE.selectMainFrame();
-      
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
-   
+
 }

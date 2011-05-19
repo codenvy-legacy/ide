@@ -180,7 +180,7 @@ public class ViewVersionListTest extends BaseTest
       IDE.VERSIONS.checkViewVersionListButtonState(true);
       IDE.VERSIONS.checkTextOnVersionPanel("");
 
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
    }
 
    /**
@@ -321,7 +321,7 @@ public class ViewVersionListTest extends BaseTest
       IDE.VERSIONS.checkNewerVersionButtonState(true);
       IDE.VERSIONS.checkTextOnVersionPanel("");
 
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
    }
 
 }

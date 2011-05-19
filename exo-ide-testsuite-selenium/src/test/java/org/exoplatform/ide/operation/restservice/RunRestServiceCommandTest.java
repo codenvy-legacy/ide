@@ -303,7 +303,8 @@ public class RunRestServiceCommandTest extends BaseTest
    @After
    public void afterMethod() throws Exception
    {
-      IDE.EDITOR.tryCloseTabWithNonSaving(0);
+      //IDE.EDITOR.tryCloseTabWithNonSaving(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);      
    }
 
 }

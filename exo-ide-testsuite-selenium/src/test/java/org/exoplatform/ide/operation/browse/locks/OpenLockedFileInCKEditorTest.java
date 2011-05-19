@@ -129,7 +129,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
 
       //----- 5 ----------
       //close file
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       //----- 6 ----------
       //open file in CK editor and check is file locked
@@ -141,7 +141,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
 
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       assertFalse(selenium.isElementPresent("exoAskDialog"));
    }
 

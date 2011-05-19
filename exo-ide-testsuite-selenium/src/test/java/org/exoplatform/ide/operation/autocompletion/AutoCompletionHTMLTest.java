@@ -55,7 +55,8 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       htmlTest();
       
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    /**
@@ -84,7 +85,8 @@ public class AutoCompletionHTMLTest extends BaseTest
       //************fixed
       GoogleGadgetTest();
       //***********
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
     @Test
@@ -137,7 +139,7 @@ public class AutoCompletionHTMLTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("a");
       IDE.CODEASSISTANT.closeForm();
 
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    private void htmlTest() throws Exception

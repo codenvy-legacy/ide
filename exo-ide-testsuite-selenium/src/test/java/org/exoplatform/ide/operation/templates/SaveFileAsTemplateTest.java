@@ -171,8 +171,9 @@ public class SaveFileAsTemplateTest extends BaseTest
       
       //------------ 5 ----------
       //Close files "Test File.groovy" and "Test Groovy File.groovy".
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
-     IDE.EDITOR.closeTab(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
+     IDE.EDITOR.closeTabIgnoringChanges(1);     
+     IDE.EDITOR.closeFile(0);
    }
    
 }

@@ -427,7 +427,8 @@ public class FindReplaceTest extends BaseTest
 
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
 
-      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);      
    }
 
    /**

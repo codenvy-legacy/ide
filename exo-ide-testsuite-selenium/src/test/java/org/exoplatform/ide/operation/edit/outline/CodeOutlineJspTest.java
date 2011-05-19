@@ -111,7 +111,7 @@ private final static String FILE_NAME = "JspCodeOutline.jsp";
       IDE.OUTLINE.assertElmentPresentById("identity:PROPERTY:17");
       IDE.OUTLINE.assertElmentPresentById("i:PROPERTY:18");      
       
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
 }

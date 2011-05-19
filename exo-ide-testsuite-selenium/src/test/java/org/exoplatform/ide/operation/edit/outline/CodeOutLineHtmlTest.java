@@ -187,7 +187,8 @@ public class CodeOutLineHtmlTest extends BaseTest
 
       //---- 8 ----
       //close file
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
    
    private void checkTreeCorrectlyCreated() throws Exception

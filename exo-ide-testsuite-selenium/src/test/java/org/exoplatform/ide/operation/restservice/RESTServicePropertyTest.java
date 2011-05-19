@@ -94,7 +94,7 @@ public class RESTServicePropertyTest extends BaseTest
       assertEquals(FILE_NAME, IDE.PROPERTIES.getDisplayName());
       assertEquals(TestConstants.NodeTypes.NT_FILE, IDE.PROPERTIES.getFileNodeType());
       
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass

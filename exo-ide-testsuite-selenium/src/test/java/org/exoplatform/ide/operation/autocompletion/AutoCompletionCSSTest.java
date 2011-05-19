@@ -20,13 +20,13 @@ package org.exoplatform.ide.operation.autocompletion;
 
 import static org.junit.Assert.assertTrue;
 
+import java.awt.event.KeyEvent;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
-
-import java.awt.event.KeyEvent;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -43,7 +43,8 @@ public class AutoCompletionCSSTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
 
       cssTest();
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @Test
@@ -57,7 +58,6 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-
 
       //************fixed**********
       for (int i = 0; i < 16; i++)
@@ -79,7 +79,8 @@ public class AutoCompletionCSSTest extends BaseTest
 
       cssTest();
 
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @Test
@@ -110,7 +111,8 @@ public class AutoCompletionCSSTest extends BaseTest
 
       cssTest();
 
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    /**
@@ -119,8 +121,8 @@ public class AutoCompletionCSSTest extends BaseTest
    private void cssTest() throws Exception
    {
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
-     IDE.EDITOR.typeTextIntoEditor(0, "main{");
-     IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_ENTER);
+      IDE.EDITOR.typeTextIntoEditor(0, "main{");
+      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_ENTER);
 
       IDE.CODEASSISTANT.openForm();
 
@@ -134,7 +136,7 @@ public class AutoCompletionCSSTest extends BaseTest
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.CODEASSISTANT.insertSelectedItem();
 
-      String text =IDE.EDITOR.getTextFromCodeEditor(0);
+      String text = IDE.EDITOR.getTextFromCodeEditor(0);
 
       assertTrue(text.contains("list-style-type:"));
 

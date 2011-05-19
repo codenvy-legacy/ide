@@ -280,7 +280,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       saveAsUsingToolbarButton(jsFile);
       Thread.sleep(TestConstants.SLEEP);
       
-     IDE.EDITOR.closeTab(0);
+     IDE.EDITOR.closeFile(0);
       
       //text file is active, Outline panel is hidden
       assertEquals(TestConstants.UNTITLED_FILE_NAME + ".txt *",IDE.EDITOR.getTabTitle(0));
@@ -434,12 +434,13 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       secondCheckJavaScriptOutlineTree();
 
       // close google gadget file
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(2);
-      Thread.sleep(TestConstants.SLEEP);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(2);
+     IDE.EDITOR.closeTabIgnoringChanges(2);
+      //Thread.sleep(TestConstants.SLEEP);
 
       // close js file
      
-     IDE.EDITOR.closeTab(1);
+     IDE.EDITOR.closeFile(1);
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(jsFile, false);
       Thread.sleep(TestConstants.SLEEP);
@@ -453,8 +454,9 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // close text file
-     IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      Thread.sleep(TestConstants.SLEEP);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+     IDE.EDITOR.closeTabIgnoringChanges(0);
+      //Thread.sleep(TestConstants.SLEEP);
    }
 
    private void firstCheckJavaScriptOutlineTree() throws Exception

@@ -16,9 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.permissions.event;
-
-import org.exoplatform.ide.client.permissions.ShowPermissionsControl;
+package org.exoplatform.ide.client.permissions;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -31,7 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class ShowPermissionsEvent extends GwtEvent<ShowPermissionsHandler>
 {
-   
+
    public static GwtEvent.Type<ShowPermissionsHandler> TYPE = new Type<ShowPermissionsHandler>();
 
    /**
@@ -49,7 +47,7 @@ public class ShowPermissionsEvent extends GwtEvent<ShowPermissionsHandler>
    @Override
    protected void dispatch(ShowPermissionsHandler handler)
    {
-      handler.onShowPermissions(this);      
+      handler.onShowPermissions(this);
    }
 
 }

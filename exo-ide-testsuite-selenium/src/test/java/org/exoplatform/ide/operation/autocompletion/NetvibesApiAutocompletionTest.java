@@ -20,7 +20,6 @@ package org.exoplatform.ide.operation.autocompletion;
 
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
@@ -29,8 +28,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -55,11 +52,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
          VirtualFileSystemUtils.put(NETVIBES_CONTENT.getBytes(), MimeType.UWA_WIDGET, WORKSPACE_URL + FOLDER_NAME + "/"
             + NETVIBES_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -68,17 +61,14 @@ public class NetvibesApiAutocompletionTest extends BaseTest
    @After
    public void tearDown() throws Exception
    {
-     IDE.EDITOR.closeFileTabIgnoreChanges(0);
+      //IDE.EDITOR.closeFileTabIgnoreChanges(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
 
       try
       {
          VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -94,8 +84,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       /*
        * 1. Open netvibes file.
        */
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/"
-         + NETVIBES_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/" + NETVIBES_NAME, false);
 
       /*
        * 2. Go inside <code><script></code> tag.
@@ -112,7 +101,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-     IDE.EDITOR.typeTextIntoEditor(0, ".");
+      IDE.EDITOR.typeTextIntoEditor(0, ".");
       IDE.CODEASSISTANT.openForm();
 
       IDE.CODEASSISTANT.checkElementPresent("addBody(content)");
@@ -121,14 +110,14 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       IDE.CODEASSISTANT.typeToInput("getE");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
+
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("widget.getElement(selector)"));
-      
+
       IDE.CODEASSISTANT.moveCursorDown(1);
-      
-     IDE.EDITOR.typeTextIntoEditor(0, "UWA.");
+
+      IDE.EDITOR.typeTextIntoEditor(0, "UWA.");
       IDE.CODEASSISTANT.openForm();
-      
+
       IDE.CODEASSISTANT.checkElementPresent("Array");
       IDE.CODEASSISTANT.checkElementPresent("Data");
       IDE.CODEASSISTANT.checkElementPresent("Element");
@@ -136,17 +125,17 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("String");
       IDE.CODEASSISTANT.checkElementPresent("Utils");
       IDE.CODEASSISTANT.checkElementPresent("Widget");
-      
+
       IDE.CODEASSISTANT.typeToInput("Data");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
+
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("UWA.Data"));
-      
-     IDE.EDITOR.typeTextIntoEditor(0, ".");
-      
+
+      IDE.EDITOR.typeTextIntoEditor(0, ".");
+
       IDE.CODEASSISTANT.openForm();
-      
+
       IDE.CODEASSISTANT.checkElementPresent("domainMatch(url, options) : Boolean");
       IDE.CODEASSISTANT.checkElementPresent("getFeed(url, callback)");
       IDE.CODEASSISTANT.checkElementPresent("getOfflineCache()");
@@ -155,15 +144,15 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("proxifyUrl(url, options)");
       IDE.CODEASSISTANT.checkElementPresent("request(url, options)");
       IDE.CODEASSISTANT.checkElementPresent("storeInCache(url, callbackArguments)");
-      
+
       IDE.CODEASSISTANT.typeToInput("getF");
-      
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
+
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("UWA.Data.getFeed(url, callback)"));
    }
-   
+
    @Test
    public void testNetvibesLocalVar() throws Exception
    {
@@ -172,7 +161,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       waitForRootElement();
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
+
       waitForRootElement();
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
@@ -180,8 +169,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       /*
        * 1. Open netvibes file.
        */
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/"
-         + NETVIBES_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + FOLDER_NAME + "/" + NETVIBES_NAME, false);
 
       /*
        * 2. Go inside <code><script></code> tag.
@@ -189,7 +177,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-     IDE.EDITOR.typeTextIntoEditor(0, "var a = new Array(); \n var b = new UWA.Element(); \n a.");
+      IDE.EDITOR.typeTextIntoEditor(0, "var a = new Array(); \n var b = new UWA.Element(); \n a.");
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("concat(array2, array3, ...): Array");
       IDE.CODEASSISTANT.checkElementPresent("detect(iterator): Boolean");
@@ -199,18 +187,18 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("forEach(fn, bind)");
       IDE.CODEASSISTANT.checkElementPresent("length:Number");
       IDE.CODEASSISTANT.typeToInput("som");
-      
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
+
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("a.some(fn, bind)"));
-      
+
       IDE.CODEASSISTANT.moveCursorDown(1);
-      
-     IDE.EDITOR.typeTextIntoEditor(0, "b.");
-      
+
+      IDE.EDITOR.typeTextIntoEditor(0, "b.");
+
       IDE.CODEASSISTANT.openForm();
-      
+
       IDE.CODEASSISTANT.checkElementPresent("addClassName(className) : Object");
       IDE.CODEASSISTANT.checkElementPresent("getPosition() : Object");
       IDE.CODEASSISTANT.checkElementPresent("hide() : Object");
@@ -218,12 +206,12 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("setHTML(html) : Object");
       IDE.CODEASSISTANT.checkElementPresent("setContent(content) : Object");
       IDE.CODEASSISTANT.checkElementPresent("inject(el, where) : Object");
-      
+
       IDE.CODEASSISTANT.typeToInput("setOpa");
-      
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
+
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("b.setOpacity(value)"));
    }
 }

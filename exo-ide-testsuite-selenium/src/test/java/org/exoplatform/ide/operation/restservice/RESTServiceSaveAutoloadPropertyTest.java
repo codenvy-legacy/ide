@@ -63,7 +63,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
       IDE.WORKSPACE.waitForItem(URL);
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL, false);
 
@@ -89,7 +89,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
 
       IDE.WORKSPACE.selectRootItem();
 

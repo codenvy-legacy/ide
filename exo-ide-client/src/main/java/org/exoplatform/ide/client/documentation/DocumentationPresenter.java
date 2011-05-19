@@ -21,8 +21,6 @@ package org.exoplatform.ide.client.documentation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.ide.client.documentation.event.ShowDocumentationEvent;
-import org.exoplatform.ide.client.documentation.event.ShowDocumentationHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationEvent;
@@ -34,6 +32,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
@@ -41,6 +40,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -52,20 +52,12 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    ViewOpenedHandler, ViewClosedHandler, RegisterDocumentationHandler, ApplicationSettingsReceivedHandler
 {
 
-   public interface Display
+   public interface Display extends IsView
    {
-
-      String ID = "ideDocumentationView";
 
       void setDocumentationURL(String url);
 
-      void bindClickHandlers();
-
-      void removeHandlers();
-
    }
-
-   private HandlerManager eventBus;
 
    private Display display;
 
@@ -75,8 +67,6 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
 
    private ApplicationSettings settings;
 
-   private boolean isClosedByUser = true;
-
    private Map<String, String> docs = new HashMap<String, String>();
 
    /**
@@ -85,13 +75,13 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    public DocumentationPresenter(HandlerManager eventBus)
    {
 
-      this.eventBus = eventBus;
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ShowDocumentationEvent.TYPE, this);
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(RegisterDocumentationEvent.TYPE, this);
+
       control = new ShowDocumentationControl();
       eventBus.fireEvent(new RegisterControlEvent(control, DockTarget.TOOLBAR));
    }
@@ -104,16 +94,16 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    {
       activeFile = event.getFile();
 
-      boolean opened =
+      boolean isDocumentationOpened =
          settings.getValueAsBoolean("documentation") == null ? false : settings.getValueAsBoolean("documentation");
 
       if (activeFile != null)
       {
          if (docs.containsKey(activeFile.getContentType()))
          {
-            if (opened)
+            if (isDocumentationOpened)
             {
-               openDocForm();
+               openDocumentationView();
                control.setPrompt(ShowDocumentationControl.PROMPT_HIDE);
                control.setVisible(true);
                return;
@@ -130,22 +120,25 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
       control.setVisible(false);
       if (display != null)
       {
-         display.removeHandlers();
-         isClosedByUser = false;
-         IDE.getInstance().closeView(DocumentationForm.ID);
+         IDE.getInstance().closeView(display.asView().getId());
       }
-
    }
 
    /**
     * 
     */
-   private void openDocForm()
+   private void openDocumentationView()
    {
-      DocumentationForm view = new DocumentationForm(eventBus);
-      display = view;
-      display.setDocumentationURL(docs.get(activeFile.getContentType()));
-      IDE.getInstance().openView(view);
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         display.setDocumentationURL(docs.get(activeFile.getContentType()));
+         IDE.getInstance().openView(display.asView());
+      }
+      else
+      {
+         display.asView().setViewVisible();
+      }
    }
 
    /**
@@ -158,12 +151,16 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
       SettingsService.getInstance().saveSettingsToCookies(settings);
       if (event.isShow())
       {
-         openDocForm();
+         openDocumentationView();
       }
       else
       {
-         display.removeHandlers();
-         IDE.getInstance().closeView(DocumentationForm.ID);
+         if (display != null)
+         {
+            settings.setValue("documentation", false, Store.COOKIES);
+            SettingsService.getInstance().saveSettingsToCookies(settings);
+            IDE.getInstance().closeView(display.asView().getId());
+         }
       }
    }
 
@@ -175,7 +172,6 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    {
       if (event.getView() instanceof Display)
       {
-         display.bindClickHandlers();
          control.setSelected(true);
          control.setEvent(new ShowDocumentationEvent(false));
          control.setPrompt(ShowDocumentationControl.PROMPT_HIDE);
@@ -188,18 +184,13 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof Display && isClosedByUser)
+      if (event.getView() instanceof Display)
       {
-         settings.setValue("documentation", false, Store.COOKIES);
-         SettingsService.getInstance().saveSettingsToCookies(settings);
-         control.setSelected(false);
-         display.removeHandlers();
          display = null;
+         control.setSelected(false);
          control.setEvent(new ShowDocumentationEvent(true));
          control.setPrompt(ShowDocumentationControl.PROMPT_SHOW);
       }
-
-      isClosedByUser = true;
    }
 
    /**

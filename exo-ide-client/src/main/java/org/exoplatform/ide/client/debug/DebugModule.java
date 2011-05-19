@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.debug;
 
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
-
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -34,9 +32,9 @@ public class DebugModule
 
    public DebugModule(HandlerManager eventBus)
    {
-      eventBus.fireEvent(new RegisterControlEvent(new ShowImagesControl()));
+
+      //new ShowImagesPresenter(eventBus);
       
-      new ShowImagesPresenter(eventBus);
    }
 
 }

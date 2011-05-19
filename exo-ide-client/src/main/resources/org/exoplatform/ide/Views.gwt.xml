@@ -89,4 +89,8 @@
 		<when-type-is class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter.Display" />
 	</replace-with>
 
+	<replace-with class="org.exoplatform.ide.client.documentation.DocumentationView">
+		<when-type-is class="org.exoplatform.ide.client.documentation.DocumentationPresenter.Display" />
+	</replace-with>
+
 </module>
