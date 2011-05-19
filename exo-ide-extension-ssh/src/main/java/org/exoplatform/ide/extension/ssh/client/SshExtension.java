@@ -25,13 +25,16 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerControl;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter;
+import org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyHandler;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshExtension May 17, 2011 5:00:33 PM evgen $
  *
  */
-public class SshExtension extends Extension implements InitializeServicesHandler
+public class SshExtension extends Extension implements InitializeServicesHandler, ShowPublicSshKeyHandler
 {
 
    /**
@@ -43,6 +46,7 @@ public class SshExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new SshKeyManagerControl(), DockTarget.NONE, false);
       new SshKeyManagerPresenter();
       IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ShowPublicSshKeyEvent.TYPE, this);
    }
 
    /**
@@ -52,6 +56,15 @@ public class SshExtension extends Extension implements InitializeServicesHandler
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new SshService(event.getApplicationConfiguration().getContext(), event.getLoader());
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyHandler#onShowPublicSshKey(org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyEvent)
+    */
+   @Override
+   public void onShowPublicSshKey(ShowPublicSshKeyEvent event)
+   {
+      new SshPublicKeyPresenter(event.getKeyItem());
    }
 
 }

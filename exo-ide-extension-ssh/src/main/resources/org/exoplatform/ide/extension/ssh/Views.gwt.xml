@@ -23,5 +23,8 @@
    
    <replace-with class="org.exoplatform.ide.extension.ssh.client.keymanager.ui.SshKeyManagerView">
       <when-type-is class="org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display" />
+   </replace-with>
+   <replace-with class="org.exoplatform.ide.extension.ssh.client.keymanager.ui.SshPublicKeyView">
+      <when-type-is class="org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display" />
    </replace-with> 
 </module>

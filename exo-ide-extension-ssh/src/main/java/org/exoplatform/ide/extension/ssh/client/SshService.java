@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.ssh.client.marshaller.GenerateSshKeysMarshaller;
 import org.exoplatform.ide.extension.ssh.client.marshaller.SshKeysUnmarshaller;
+import org.exoplatform.ide.extension.ssh.client.marshaller.SshPublicKeyUnmarshaller;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
@@ -95,17 +96,27 @@ public class SshService
    }
 
    /**
-    * Get 
-    * @param host
+    * Get public ssh key
+    * @param keyItem to get public key
     * @param callback
     */
-   public void getPublicKey(String host, AsyncRequestCallback<String> callback)
+   public void getPublicKey(KeyItem keyItem, AsyncRequestCallback<String> callback)
    {
-      KeyItem keyItem = new KeyItem();
-
       callback.setEventBus(IDE.EVENT_BUS);
+      callback.setPayload(new SshPublicKeyUnmarshaller(callback));
+      AsyncRequest.build(RequestBuilder.GET, keyItem.getPublicKeyURL(), loader).send(callback);
+   }
 
-      String url = restContext + "/ide/ssh-keys/gen";
+   /**
+    * Delete ssh key
+    * @param keyItem to delete
+    * @param callback
+    */
+   public void deleteKey(KeyItem keyItem, AsyncRequestCallback<KeyItem> callback)
+   {
+      callback.setEventBus(IDE.EVENT_BUS);
+      callback.setResult(keyItem);
+      AsyncRequest.build(RequestBuilder.POST, keyItem.getRemoveKeyURL(), loader).send(callback);
    }
 
 }

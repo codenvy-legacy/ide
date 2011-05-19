@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.StringValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -34,6 +35,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.ssh.client.SshService;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
@@ -130,7 +132,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
          @Override
          public void onSelection(SelectionEvent<KeyItem> event)
          {
-            System.out.println("Show public key for host: " + event.getSelectedItem().getHost());
+            IDE.EVENT_BUS.fireEvent(new ShowPublicSshKeyEvent(event.getSelectedItem()));
          }
       });
 
@@ -140,7 +142,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
          @Override
          public void onSelection(SelectionEvent<KeyItem> event)
          {
-            System.out.println("Delete key for host: " + event.getSelectedItem().getHost());
+            deleteSshPublicKey(event.getSelectedItem());
          }
       });
 
@@ -157,12 +159,54 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
                   @Override
                   public void stringValueReceived(String value)
                   {
-                     if (!"".equals(value))
+                     if (value != null && !"".equals(value))
                      {
                         generateKey(value);
                      }
                   }
                });
+         }
+      });
+   }
+
+   /**
+    * @param keyItem
+    */
+   private void deleteSshPublicKey(final KeyItem keyItem)
+   {
+      Dialogs.getInstance().ask("IDE", "Do you want to delete ssh keys for <b>" + keyItem.getHost() + "</b> host?",
+         new BooleanValueReceivedHandler()
+         {
+
+            @Override
+            public void booleanValueReceived(Boolean value)
+            {
+               if(value != null && value)
+               {
+                  doDeleteKey(keyItem);
+               }
+            }
+         });
+   }
+
+   /**
+    * @param keyItem
+    */
+   private void doDeleteKey(KeyItem keyItem)
+   {
+      SshService.get().deleteKey(keyItem, new AsyncRequestCallback<KeyItem>()
+      {
+         
+         @Override
+         protected void onSuccess(KeyItem result)
+         {
+            refreshKeys();
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }
