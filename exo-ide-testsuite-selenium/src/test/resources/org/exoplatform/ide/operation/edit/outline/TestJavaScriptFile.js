@@ -24,5 +24,21 @@ function d() {
     var e;
   e;
   
-  function f(){}
+function f(){var i = {a: 1}}
   f();
+
+var a = UWA.Data({"type": 1});
+     var h = window.document.getElementById("a")
+var l = Array()
+  var d = ...UWA.Data();  // error
+
+var b = 11;  // atomic type Number
+   var c = true    // atomic type Boolean
+var f = null; var g = "string"
+
+    var e = widget;
+var k = window.document 
+
+
+   var i = {a: 1}
+var j = [1, "two", false, null, undefined]
