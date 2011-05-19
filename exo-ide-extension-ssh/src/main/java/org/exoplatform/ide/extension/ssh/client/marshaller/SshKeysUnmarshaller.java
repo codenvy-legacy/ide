@@ -18,17 +18,11 @@
  */
 package org.exoplatform.ide.extension.ssh.client.marshaller;
 
-import com.google.gwt.json.client.JSONObject;
-
-import com.google.gwt.json.client.JSONValue;
-
-import com.google.gwt.json.client.JSONParser;
-
-import com.google.gwt.json.client.JSONArray;
-
-import com.google.gwt.user.client.Window;
-
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
