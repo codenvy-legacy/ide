@@ -27,6 +27,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -39,6 +40,19 @@ import org.junit.Test;
 
 public class OutlineWithSeveralOpenedFilesTest extends BaseTest
 {
+
+   ////fix for run tests where new session start after 7 testcases passes (Outline panel  remains is open after the previous test )
+   @BeforeClass
+   public static void chekOutliePresentAfterPrevTest() throws InterruptedException
+   {
+      if (selenium.isElementPresent("ideOutlineTreeGrid"))
+      {
+         IDE.OUTLINE.closeOutline();
+      }
+      else
+      {
+      }
+   }
 
    @AfterClass
    public static void tearDown()
@@ -54,11 +68,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
    @Test
    public void testOutlineWhenSeveralFilesOpen() throws Exception
    {
-     
-      //fix for run tests where new session start after 7 testcases passes (Outline panel  remains is open after the previous test )   
-      logout();
-      standaloneLogin(TestConstants.Users.ROOT);
-      
+
       waitForRootElement();
       //---- 1 --------------
       //open new javascript file
