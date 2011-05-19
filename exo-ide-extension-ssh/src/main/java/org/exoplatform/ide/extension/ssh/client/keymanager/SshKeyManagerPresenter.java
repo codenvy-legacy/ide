@@ -18,22 +18,17 @@
  */
 package org.exoplatform.ide.extension.ssh.client.keymanager;
 
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.StringValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -41,9 +36,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.ssh.client.SshService;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler;
+import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,6 +55,8 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
       HasSshGrid<KeyItem> getKeyItemGrid();
 
       HasClickHandlers getCloseButton();
+
+      HasClickHandlers getGenerateButton();
 
    }
 
@@ -86,6 +83,15 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
+
+      refreshKeys();
+   }
+
+   /**
+    * 
+    */
+   private void refreshKeys()
+   {
       SshService.get().getAllKeys(new AsyncRequestCallback<List<KeyItem>>()
       {
 
@@ -135,6 +141,47 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
          public void onSelection(SelectionEvent<KeyItem> event)
          {
             System.out.println("Delete key for host: " + event.getSelectedItem().getHost());
+         }
+      });
+
+      display.getGenerateButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            Dialogs.getInstance().askForValue("Generate Ssh Key", "Host name (w/o port): ", "",
+               new StringValueReceivedHandler()
+               {
+
+                  @Override
+                  public void stringValueReceived(String value)
+                  {
+                     if (!"".equals(value))
+                     {
+                        generateKey(value);
+                     }
+                  }
+               });
+         }
+      });
+   }
+
+   private void generateKey(String host)
+   {
+      SshService.get().generateKey(new GenKeyRequest(host, "", ""), new AsyncRequestCallback<GenKeyRequest>()
+      {
+
+         @Override
+         protected void onSuccess(GenKeyRequest result)
+         {
+            refreshKeys();
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }
