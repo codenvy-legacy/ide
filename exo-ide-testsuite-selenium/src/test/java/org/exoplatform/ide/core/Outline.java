@@ -61,7 +61,7 @@ public class Outline extends AbstractTestModule
    /**
     * SUSE 1680*1050
     */
-   private static final int EDITOR_TOP_OFFSET_POSITION = 91;
+   private static final int EDITOR_TOP_OFFSET_POSITION = 94;
 
    public enum TokenType {
       CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION,

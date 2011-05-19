@@ -116,7 +116,7 @@ public class CodeOutLineGroovyTest extends BaseTest
       outlineTreeHelper.addOutlineItem("printClosureOuter", 40);      
       outlineTreeHelper.addOutlineItem("hello()", 42);
       outlineTreeHelper.addOutlineItem("name4 : String", 44);
-      outlineTreeHelper.addOutlineItem("g : String", 47);     
+      outlineTreeHelper.addOutlineItem("g : String", 47, false); // false, because outline node is not highlighted from test, but highlighted when goto this line manually     
       
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();

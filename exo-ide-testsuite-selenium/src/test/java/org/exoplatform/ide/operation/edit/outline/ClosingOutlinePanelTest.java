@@ -138,7 +138,7 @@ public class ClosingOutlinePanelTest extends BaseTest
       //----- 4 -------------
       //close code outline panel.
 
-      IDE.EDITOR.closeTab(0);
+      IDE.EDITOR.closeFile(0);
       //check Code Outline in Not Present
       IDE.OUTLINE.checkOtlineTreeIsNotPresent();
 
