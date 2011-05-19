@@ -59,7 +59,7 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
 
    private static final String RANDOM_STRING_TXT = UUID.randomUUID().toString();
 
-   private static final String FOLDER_NAME = DownloadZIPedFoldeToLocalDriveTest.class.getSimpleName();
+   private static final String FOLDER_NAME = UUID.randomUUID().toString();
 
    private static final String FILE_NAME = "EXO" + DownloadZIPedFoldeToLocalDriveTest.class.getSimpleName();
 
@@ -98,8 +98,6 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
       IDE.MENU.waitForMenuItemPresent(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, true);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER);
-
-      selenium.keyPressNative("10");
       
       String donwloadPath = System.getProperty("java.io.tmpdir");
       waitForFileDownloaded(donwloadPath + "/" + FOLDER_NAME + ".zip", TestConstants.SLEEP * 3);
@@ -204,7 +202,7 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FILE_NAME);
+         VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
       {

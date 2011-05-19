@@ -137,7 +137,7 @@
     <NC:handlerProp RDF:resource="urn:mimetype:handler:application/java-archive"/>
   </RDF:Description>
   <RDF:Description RDF:about="urn:mimetype:handler:application/x-gzip"
-                   NC:alwaysAsk="true"
+                   NC:alwaysAsk="false"
                    NC:saveToDisk="true">
     <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-gzip"/>
   </RDF:Description>
@@ -168,7 +168,7 @@
                    NC:prettyName=""
                    NC:path="" />
   <RDF:Description RDF:about="urn:mimetype:handler:application/x-bzip2"
-                   NC:alwaysAsk="true"
+                   NC:alwaysAsk="false"
                    NC:saveToDisk="true">
     <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-bzip2"/>
   </RDF:Description>
@@ -320,7 +320,7 @@
     <NC:handlerProp RDF:resource="urn:mimetype:handler:video/x-ms-wmv"/>
   </RDF:Description>
   <RDF:Description RDF:about="urn:mimetype:handler:application/zip"
-                   NC:alwaysAsk="true"
+                   NC:alwaysAsk="false"
                    NC:saveToDisk="true"
                    NC:useSystemDefault="false">
     <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/zip"/>
@@ -561,7 +561,7 @@
                    NC:prettyName="Mibbit"
                    NC:uriTemplate="https://www.mibbit.com/?url=%s" />
   <RDF:Description RDF:about="urn:mimetype:handler:application/x-zip"
-                   NC:alwaysAsk="true"
+                   NC:alwaysAsk="false"
                    NC:saveToDisk="true">
     <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/x-zip"/>
   </RDF:Description>
@@ -596,7 +596,7 @@
                    NC:prettyName=""
                    NC:path="" />
   <RDF:Description RDF:about="urn:mimetype:handler:application/gzip"
-                   NC:alwaysAsk="true"
+                   NC:alwaysAsk="false"
                    NC:saveToDisk="true">
     <NC:externalApplication RDF:resource="urn:mimetype:externalApplication:application/gzip"/>
   </RDF:Description>
