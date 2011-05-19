@@ -9,7 +9,7 @@ public class JavaCodeOutline extends DrawableRect {
   // These are new fields defined by this class.
   @AnnotationTest
   final protected Color border;
-  static private String name;
+  static private String name, fill;
 
   /**
    * This constructor uses super() to invoke the superclass constructor
