@@ -50,6 +50,8 @@ public class SshPublicKeyPresenter implements ViewClosedHandler
 
       HasValue<String> getKeyField();
       
+      void addHostToTitle(String host);
+      
    }
 
    private KeyItem keyItem;
@@ -69,6 +71,8 @@ public class SshPublicKeyPresenter implements ViewClosedHandler
       display = GWT.create(Display.class);
 
       bind();
+      
+      display.addHostToTitle(keyItem.getHost());
       
       IDE.getInstance().openView(display.asView());
 

@@ -43,6 +43,8 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter
 public class SshPublicKeyView extends ViewImpl implements Display
 {
 
+   private static final String TITLE = "Public Ssh Key: ";
+
    private static SshPublicKeyViewUiBinder uiBinder = GWT.create(SshPublicKeyViewUiBinder.class);
 
    interface SshPublicKeyViewUiBinder extends UiBinder<Widget, SshPublicKeyView>
@@ -57,7 +59,7 @@ public class SshPublicKeyView extends ViewImpl implements Display
 
    public SshPublicKeyView()
    {
-      super(ID, ViewType.MODAL, "Public Ssh Key: ", null, 400, 300);
+      super(ID, ViewType.MODAL, TITLE, null, 400, 300);
       add(uiBinder.createAndBindUi(this));      
       UIHelper.setAsReadOnly("exoSshPublicKeyField");
    }
@@ -78,6 +80,15 @@ public class SshPublicKeyView extends ViewImpl implements Display
    public HasValue<String> getKeyField()
    {
       return publicSshKeyField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#addHostToTitle(java.lang.String)
+    */
+   @Override
+   public void addHostToTitle(String host)
+   {
+      setTitle(TITLE + host); 
    }
 
 }
