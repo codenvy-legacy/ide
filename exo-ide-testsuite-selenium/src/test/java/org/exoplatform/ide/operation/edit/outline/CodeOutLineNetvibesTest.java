@@ -93,65 +93,20 @@ public class CodeOutLineNetvibesTest extends BaseTest
    @Test
    public void testCodeOutLineNetvibes() throws Exception
    {
-      //------ 1-3 ------------
+      //------ 1 ------------
       //open file with text
       waitForRootElement();
       IDE.WORKSPACE.doubleClickOnFolder(URL + FOLDER_NAME + "/");
       waitForElementNotPresent(IDE.NAVIGATION.getItemId(URL + FOLDER_NAME + "/" + FILE_NAME));
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
-      //------ 4 ------------
+      //------ 2 ------------
       //show Outline
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       waitForElementPresent("ideOutlineTreeGrid");
-      checkTreeCorrectlyCreated();
 
-      //      //check Outline tree
-      //      checkTreeCorrectlyCreated();
-      //      
-      //      //------ 6 ------------
-      //      //check navigation in tree
-      //      //click on "p" tag
-      //      IDE.OUTLINE.select(3);
-      //      
-      //      assertEquals("51 : 1", getCursorPositionUsingStatusBar());
-      //      
-      //      //close "p" tag
-      //      IDE.OUTLINE.clickOpenImg(3, 1);
-      //      assertEquals("51 : 1", getCursorPositionUsingStatusBar());
-      //      
-      //      //open "p" tag
-      //      IDE.OUTLINE.clickOpenImg(3, 1);
-      //      assertEquals("51 : 1", getCursorPositionUsingStatusBar());
-      //      IDE.OUTLINE.checkOutlineTreeNodeSelected(3, "p", true);
-      //      
-      //      goToLine(7);
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      IDE.OUTLINE.checkOutlineTreeNodeSelected(2, "meta", true);
-      //      
-      //      //press Ctrl+D to delete lines
-      //      //click on editor
-      //      selenium.clickAt("//body[@class='editbox']", "5,5");
-      //      for (int i = 0; i < 5; i++)
-      //      {
-      //        IDE.EDITOR.runHotkeyWithinEditor(0, true, false, 68);
-      //         Thread.sleep(TestConstants.SLEEP_SHORT*2);
-      //      }
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      
-      //      IDE.OUTLINE.checkOutlineTreeNodeSelected(2, "link", true);
-      //      
-      //      assertEquals("html", IDE.OUTLINE.getTitle(0, 0));
-      //      assertEquals("head", IDE.OUTLINE.getTitle(1, 0));
-      //      
-      //      assertEquals("link", IDE.OUTLINE.getTitle(2, 0));
-      //      assertEquals("script", IDE.OUTLINE.getTitle(3, 0));
-      //      assertEquals("title", IDE.OUTLINE.getTitle(4, 0));
-      //      assertEquals("link", IDE.OUTLINE.getTitle(5, 0));
-      //      assertEquals("widget:preferences", IDE.OUTLINE.getTitle(6, 0));
-      //      assertEquals("style", IDE.OUTLINE.getTitle(7, 0));
-      //      assertEquals("script", IDE.OUTLINE.getTitle(8, 0));
-      //      assertEquals("body", IDE.OUTLINE.getTitle(9, 0));
+      //------3--------
+      checkTreeCorrectlyCreated();
 
    }
 
