@@ -35,7 +35,7 @@ public abstract class TemplateCreatedCallback extends AsyncRequestCallback<Templ
    @Override
    protected void onFailure(Throwable exception)
    {
-      fireEvent(new ExceptionThrownEvent("Registry service is not deployed.<br>Template already exist."));
+      fireEvent(new ExceptionThrownEvent(exception, "Registry service is not deployed.<br>Template already exist."));
    }
 
 }

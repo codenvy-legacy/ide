@@ -102,7 +102,7 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));               
+               eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));               
             }
          });
       }
@@ -164,7 +164,7 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));                  
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));                  
                }
             });
          }

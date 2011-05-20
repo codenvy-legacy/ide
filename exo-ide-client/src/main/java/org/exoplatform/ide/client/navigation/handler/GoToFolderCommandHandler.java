@@ -154,7 +154,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
          protected void onFailure(Throwable exception)
          {
             exception.printStackTrace();
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Parent folder not found."));
          }
       });
    }

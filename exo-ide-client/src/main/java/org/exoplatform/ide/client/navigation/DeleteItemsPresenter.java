@@ -245,7 +245,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+               eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));
             }
          });
       }
@@ -306,7 +306,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
             IDE.getInstance().closeView(Display.ID);
          }
       });

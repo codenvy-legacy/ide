@@ -28,14 +28,14 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
  */
 public abstract class TemplateDeletedCallback extends AsyncRequestCallback<Template>
 {
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
    protected void onFailure(Throwable exception)
    {
-      fireEvent(new ExceptionThrownEvent("Registry service is not deployed.<br>Template not found."));
+      fireEvent(new ExceptionThrownEvent(exception, "Registry service is not deployed.<br>Template not found."));
    }
 
 }

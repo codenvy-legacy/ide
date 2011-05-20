@@ -35,7 +35,7 @@ public abstract class DefaultEntryPointCallback extends AsyncRequestCallback<Str
    @Override
    protected void onFailure(Throwable exception)
    {
-      fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+      fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));
    }
 
 }

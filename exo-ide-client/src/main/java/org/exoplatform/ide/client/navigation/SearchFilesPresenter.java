@@ -182,7 +182,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Search path does not exist."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Search path does not exist."));
          }
       });
    }

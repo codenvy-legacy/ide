@@ -86,11 +86,12 @@ public class SettingsServiceImpl extends SettingsService
       this.userName = userName;
 
    }
-   
+
    private String getURL()
    {
       String url =
-         registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/" + IDEConfigurationLoader.APPLICATION_NAME;
+         registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/"
+            + IDEConfigurationLoader.APPLICATION_NAME;
       return url;
    }
 
@@ -101,14 +102,14 @@ public class SettingsServiceImpl extends SettingsService
    {
       getApplicationSettings(applicationSettings, new AsyncRequestCallback<ApplicationSettings>()
       {
-         
+
          @Override
          protected void onSuccess(ApplicationSettings result)
          {
             ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
             eventBus.fireEvent(event);
          }
-         
+
          @Override
          protected void onFailure(Throwable exception)
          {
@@ -148,7 +149,7 @@ public class SettingsServiceImpl extends SettingsService
    }
 
    @Override
-   public void saveSettingsToRegistry(ApplicationSettings applicationSettings,  
+   public void saveSettingsToRegistry(ApplicationSettings applicationSettings,
       AsyncRequestCallback<ApplicationSettings> callback)
    {
       String url = getURL() + "/?createIfNotExist=true";
@@ -161,7 +162,7 @@ public class SettingsServiceImpl extends SettingsService
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
 
    }
-   
+
    //------- Implementation --------------
 
    private void storeCookies(ApplicationSettings applicationSettings)
@@ -282,7 +283,7 @@ public class SettingsServiceImpl extends SettingsService
       {
          if (name.startsWith(prefix))
          {
-            
+
             cookies.add(name.substring(prefix.length()));
          }
       }
@@ -389,11 +390,11 @@ public class SettingsServiceImpl extends SettingsService
    }
 
    private static native String javaScriptDecodeURIComponent(String text) /*-{
-                                                                          return decodeURIComponent(text);
-                                                                          }-*/;
+		return decodeURIComponent(text);
+   }-*/;
 
    private static native String javaScriptEncodeURIComponent(String text) /*-{
-                                                                          return encodeURIComponent(text);
-                                                                          }-*/;
+		return encodeURIComponent(text);
+   }-*/;
 
 }

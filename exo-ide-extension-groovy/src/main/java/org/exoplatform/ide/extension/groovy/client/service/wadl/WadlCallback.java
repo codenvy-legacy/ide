@@ -78,7 +78,7 @@ public abstract class WadlCallback extends ClientRequestCallback
    
    public void fireErrorEvent(Throwable exception)
    {
-      eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+      eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));
    }
 
 }

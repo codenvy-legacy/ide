@@ -219,7 +219,7 @@ public class ChooseSourcePathPresenter
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Parent folder not found."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Parent folder not found."));
          }
       });
    }

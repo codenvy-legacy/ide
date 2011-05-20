@@ -81,7 +81,7 @@ public abstract class FileContentSaveCallback extends AsyncRequestCallback<FileD
    @Override
    protected void onFailure(Throwable exception)
    {
-      fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found."));
+      fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
    }
 
 }

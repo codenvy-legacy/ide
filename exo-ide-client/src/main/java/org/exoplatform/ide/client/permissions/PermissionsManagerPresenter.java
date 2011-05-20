@@ -194,7 +194,7 @@ public class PermissionsManagerPresenter
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource not found.<br /> Resource locked."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found.<br /> Resource locked."));
             dispaly.closeForm();            
          }
       });

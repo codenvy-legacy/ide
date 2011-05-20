@@ -36,7 +36,7 @@ public abstract class DiscoveryCallback extends AsyncRequestCallback<List<EntryP
    @Override
    protected void onFailure(Throwable exception)
    {
-      fireEvent(new ExceptionThrownEvent("Service is not deployed."));
+      fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));
    }
 
 }

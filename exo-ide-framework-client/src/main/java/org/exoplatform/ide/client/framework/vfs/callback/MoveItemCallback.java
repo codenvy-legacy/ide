@@ -36,15 +36,15 @@ public abstract class MoveItemCallback extends AsyncRequestCallback<MoveItemData
    public class MoveItemData
    {
       private Item item;
-      
+
       private String oldHref;
-      
+
       public MoveItemData(Item item, String href)
       {
          this.item = item;
          this.oldHref = href;
       }
-      
+
       /**
        * @return the item
        */
@@ -52,7 +52,7 @@ public abstract class MoveItemCallback extends AsyncRequestCallback<MoveItemData
       {
          return item;
       }
-      
+
       /**
        * @return the oldHref
        */
@@ -60,10 +60,9 @@ public abstract class MoveItemCallback extends AsyncRequestCallback<MoveItemData
       {
          return oldHref;
       }
-      
+
    }
-   
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
@@ -71,7 +70,7 @@ public abstract class MoveItemCallback extends AsyncRequestCallback<MoveItemData
    protected void onFailure(Throwable exception)
    {
       exception.printStackTrace();
-      fireEvent(new ExceptionThrownEvent(
+      fireEvent(new ExceptionThrownEvent(exception,
          "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
    }
 

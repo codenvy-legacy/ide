@@ -35,7 +35,7 @@ public abstract class FolderCreateCallback extends AsyncRequestCallback<Folder>
    @Override
    protected void onFailure(Throwable exception)
    {
-      fireEvent(new ExceptionThrownEvent("Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
+      fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
    }
 
 }

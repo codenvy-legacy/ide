@@ -67,7 +67,7 @@ public abstract class CopyCallback extends AsyncRequestCallback<CopyItemData>
    @Override
    protected void onFailure(Throwable exception)
    {
-      fireEvent(new ExceptionThrownEvent(
+      fireEvent(new ExceptionThrownEvent(exception,
          "Service is not deployed.<br>Destination path does not exist.<br>Folder already has item with same name."));
    }
 
