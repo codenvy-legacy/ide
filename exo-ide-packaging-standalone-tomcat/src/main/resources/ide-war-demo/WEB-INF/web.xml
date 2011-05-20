@@ -66,37 +66,34 @@
       <filter-class>org.exoplatform.ide.extension.gadget.server.filter.MakeRequestHeaderFilter</filter-class>
    </filter> 
    
-  <!--filter>
+  <filter>
       <filter-name>RevertFromHttpsToHttpFilter</filter-name>
       <filter-class>org.exoplatform.ide.authentication.RevertFromHttpsToHttpFilter</filter-class>
         <init-param>
-            <param-name>httpPortNumber</param-name>
+            <param-name>HTTP_PORT</param-name>
             <param-value>8080</param-value>
         </init-param>
+
+        <init-param>                                                                                                                                                                                           
+            <param-name>HTTPS_PORT</param-name>                                                                                                                                                                
+            <param-value>8443</param-value>                                                                                                                                                                    
+        </init-param>
+
+        <init-param>                                                                                                                                                                                           
+            <param-name>SSL_SERVLET_PATH</param-name>                                                                                                                                                                
+            <param-value>/rest/ssl</param-value>                                                                                                                                                                    
+        </init-param>
   </filter>
+
   <filter-mapping>
       <filter-name>RevertFromHttpsToHttpFilter</filter-name>
-            <url-pattern>*.jsp</url-pattern>
+            <url-pattern>/*</url-pattern>
   </filter-mapping>
-  <filter-mapping>
-      <filter-name>RevertFromHttpsToHttpFilter</filter-name>
-            <url-pattern>*.do</url-pattern>
+
+    <filter-mapping>                                                                                                                                                                                            
+    <filter-name>SetCurrentIdentityFilter</filter-name>                                                                                                                                                        
+    <url-pattern>/rest/*</url-pattern>                                                                                                                                                                         
   </filter-mapping>
-  <filter-mapping>
-      <filter-name>RevertFromHttpsToHttpFilter</filter-name>
-            <url-pattern>*.html</url-pattern>
-  </filter-mapping-->
-
-
-   <filter-mapping>
-      <filter-name>RestEncodingFilter</filter-name>
-      <url-pattern>/rest/*</url-pattern>
-   </filter-mapping>
-
-   <filter-mapping>
-    <filter-name>SetCurrentIdentityFilter</filter-name>
-    <url-pattern>/rest/*</url-pattern>
-  </filter-mapping> 
 
    <filter-mapping>
       <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
@@ -294,17 +291,15 @@
     <web-resource-collection>
       <web-resource-name>IDE</web-resource-name>
       <url-pattern>/rest/private/*</url-pattern>
-      <url-pattern>*.html</url-pattern>
-      <http-method>POST</http-method>
-      <http-method>GET</http-method>
+      <url-pattern>/Application.html</url-pattern>
     </web-resource-collection>
     <auth-constraint>
       <role-name>users</role-name>
     </auth-constraint>
     <user-data-constraint>
-      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      <transport-guarantee>NONE</transport-guarantee>
     </user-data-constraint>
-  </security-constraint>
+  </security-constraint> 
 
   <login-config>
     <auth-method>FORM</auth-method>
@@ -314,7 +309,6 @@
       <form-error-page>/login/error.jsp</form-error-page>
     </form-login-config>
   </login-config>
-
 
   <security-role>
     <description>the user role</description>
