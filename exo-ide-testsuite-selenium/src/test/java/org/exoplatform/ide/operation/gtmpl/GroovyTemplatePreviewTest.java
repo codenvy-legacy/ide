@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.operation.gtmpl;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Preview;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -78,21 +78,29 @@ public class GroovyTemplatePreviewTest extends BaseTest
    @Test
    public void testGtmplPreview() throws Exception
    {
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      waitForRootElement();
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      //open file
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
       IDE.EDITOR.waitTabPresent(0);
-      
+
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+      waitForElementPresent(Preview.Locators.GROOVY_TEMPLATE_PREVIEW);
       IDE.PREVIEW.selectPreviewIFrame();
       assertTrue(selenium.isTextPresent("root"));
+      IDE.selectMainFrame();
+      
+      //close preview tab and open again
+      IDE.PREVIEW.close();
+      waitForElementNotPresent(Preview.Locators.GROOVY_TEMPLATE_PREVIEW);
+      assertFalse(IDE.PREVIEW.isGroovyTemplateVisible());
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
+      waitForElementPresent(Preview.Locators.GROOVY_TEMPLATE_PREVIEW);
+      IDE.PREVIEW.selectPreviewIFrame();
+      assertTrue(selenium.isTextPresent("root"));
+      IDE.selectMainFrame();
    }
 
    @AfterClass

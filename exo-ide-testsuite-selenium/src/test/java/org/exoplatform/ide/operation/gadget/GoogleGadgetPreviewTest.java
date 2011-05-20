@@ -29,6 +29,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -105,11 +106,24 @@ public class GoogleGadgetPreviewTest extends BaseTest
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, hello);
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
-
+      
+      IDE.MENU.waitForMenuItemPresent(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForElementPresent(Preview.Locators.GADGET_PREVIEW);
 
       assertTrue(selenium.isElementPresent("//div[contains(text(), 'Hello,world!')]"));
+      
+      //close preview
+      IDE.PREVIEW.close();
+      waitForElementNotPresent(Preview.Locators.GADGET_PREVIEW);
+      
+      //and open again
+      IDE.MENU.waitForMenuItemPresent(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
+      waitForElementPresent(Preview.Locators.GADGET_PREVIEW);
+
+      assertTrue(selenium.isElementPresent("//div[contains(text(), 'Hello,world!')]"));
+      
       IDE.EDITOR.closeFile(0);
    }
 

@@ -31,6 +31,12 @@ import org.exoplatform.ide.TestConstants;
 
 public class Preview extends AbstractTestModule
 {
+   public interface Locators
+   {
+      public static final String GROOVY_TEMPLATE_PREVIEW = "//div[@view-id='Preview']";
+      
+      public static final String GADGET_PREVIEW = "//div[@view-id='gadgetpreview']";
+   }
 
    public void checkPreviewHTMLIsOpened(boolean isOpened)
    {
@@ -40,13 +46,17 @@ public class Preview extends AbstractTestModule
 
    public void checkPreviewGadgetIsOpened(boolean isOpened)
    {
-      String locator = "//div[@view-id='gadgetpreview']";
-      assertEquals(isOpened, selenium().isElementPresent(locator));
+      assertEquals(isOpened, selenium().isElementPresent(Locators.GADGET_PREVIEW));
    }
    
    public void selectIFrame(String iFrameURL)
    {
       selenium().selectFrame("//iframe[@src='" + iFrameURL + "']");
+   }
+   
+   public boolean isGroovyTemplateVisible()
+   {
+      return selenium().isElementPresent(Locators.GROOVY_TEMPLATE_PREVIEW);
    }
    
    /**
