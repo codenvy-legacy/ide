@@ -30,18 +30,6 @@ public class PreviewHTMLEvent extends GwtEvent<PreviewHTMLHandler>
 
    public static final GwtEvent.Type<PreviewHTMLHandler> TYPE = new GwtEvent.Type<PreviewHTMLHandler>();
 
-   private boolean showPreview;
-
-   public PreviewHTMLEvent(boolean showPreview)
-   {
-      this.showPreview = showPreview;
-   }
-
-   public boolean isShowPreview()
-   {
-      return showPreview;
-   }
-
    @Override
    protected void dispatch(PreviewHTMLHandler handler)
    {

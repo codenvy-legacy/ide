@@ -88,20 +88,12 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
    @Override
    public void onPreviewHTMLFile(PreviewHTMLEvent event)
    {
-      if (event.isShowPreview() && display == null)
+      if (display == null)
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView((View)display);
-         previewActiveFile();
-
-         return;
       }
-
-      if (!event.isShowPreview() && display != null)
-      {
-         IDE.getInstance().closeView(Display.ID);
-      }
-
+      previewActiveFile();
    }
 
    private void previewActiveFile()

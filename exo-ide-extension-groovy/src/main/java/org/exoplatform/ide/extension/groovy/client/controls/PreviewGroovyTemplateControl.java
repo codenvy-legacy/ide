@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
-import org.exoplatform.ide.extension.groovy.client.event.ShowGroovyTemplatePreviewEvent;
+import org.exoplatform.ide.extension.groovy.client.event.PreviewGroovyTemplateEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -36,20 +36,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class ShowGroovyTemplatePreviewControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class PreviewGroovyTemplateControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Run/Show Template Preview";
 
    public static final String TITLE = "Show Template Preview";
 
-   public ShowGroovyTemplatePreviewControl()
+   public PreviewGroovyTemplateControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(GroovyClientBundle.INSTANCE.preview(), GroovyClientBundle.INSTANCE.previewDisabled());
-      setEvent(new ShowGroovyTemplatePreviewEvent());
+      setEvent(new PreviewGroovyTemplateEvent());
    }
 
    /**

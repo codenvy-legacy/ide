@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.gadget.client.ui;
 
+import com.google.gwt.user.client.ui.FlowPanel;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.LoadEvent;
@@ -54,17 +56,37 @@ public class GadgetPreviewPane extends ViewImpl
    public static final String ID = "gadgetpreview";
 
    private IDEConfiguration configuration;
+   
+   private FlowPanel framePanel;
 
    /**
     * @param eventBus
     * @param gadgetMetadata
     */
-   public GadgetPreviewPane(IDEConfiguration configuration, GadgetMetadata gadgetMetadata)
+   public GadgetPreviewPane()
    {
       super(ID, ViewType.OPERATION, TITLE);
+      
+      framePanel = new FlowPanel();
+      framePanel.setSize("100%", "100%");
+      add(framePanel);    
+
+   }
+   
+   /**
+    * @param configuration the configuration to set
+    */
+   public void setConfiguration(IDEConfiguration configuration)
+   {
       this.configuration = configuration;
-      metadata = gadgetMetadata;
-      showGadget();
+   }
+   
+   /**
+    * @param metadata the metadata to set
+    */
+   public void setMetadata(GadgetMetadata metadata)
+   {
+      this.metadata = metadata;
    }
 
    private native String getST()/*-{
@@ -84,7 +106,7 @@ public class GadgetPreviewPane extends ViewImpl
     * Gadget will be load here.
     * 
     */
-   private void showGadget()
+   public void showGadget()
    {
 
       String url = metadata.getIframeUrl();
@@ -116,7 +138,8 @@ public class GadgetPreviewPane extends ViewImpl
          }
       });
 
-      add(frame);
+      framePanel.clear();
+      framePanel.add(frame);      
    }
 
    private native void setHandler(Element e)/*-{

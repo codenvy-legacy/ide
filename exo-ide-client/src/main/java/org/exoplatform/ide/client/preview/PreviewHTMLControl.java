@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.preview;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -25,12 +27,6 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -39,7 +35,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class PreviewHTMLControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, ViewOpenedHandler, ViewClosedHandler
+public class PreviewHTMLControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Run/Show Preview";
@@ -52,7 +48,7 @@ public class PreviewHTMLControl extends SimpleControl implements IDEControl, Edi
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.preview(), IDEImageBundle.INSTANCE.previewDisabled());
-      setEvent(new PreviewHTMLEvent(true));
+      setEvent(new PreviewHTMLEvent());
    }
 
    /**
@@ -61,8 +57,6 @@ public class PreviewHTMLControl extends SimpleControl implements IDEControl, Edi
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -90,24 +84,6 @@ public class PreviewHTMLControl extends SimpleControl implements IDEControl, Edi
       {
          setVisible(false);
          setEnabled(false);
-      }
-   }
-
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof PreviewHTMLPresenter.Display) {
-         setSelected(false);
-         setEvent(new PreviewHTMLEvent(true));
-      }
-   }
-
-   @Override
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-      if (event.getView() instanceof PreviewHTMLPresenter.Display) {
-         setSelected(true);
-         setEvent(new PreviewHTMLEvent(false));
       }
    }
    

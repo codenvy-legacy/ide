@@ -29,6 +29,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.netvibes.client.controls.DeployUwaWidgetControl;
 import org.exoplatform.ide.extension.netvibes.client.controls.ShowNetvibesPreviewControl;
@@ -46,7 +48,8 @@ import com.google.gwt.user.client.ui.Image;
  * @version $Id: $
  */
 
-public class NetvibesExtension extends Extension implements InitializeServicesHandler, PreviewNetvibesHandler, EditorActiveFileChangedHandler
+public class NetvibesExtension extends Extension implements InitializeServicesHandler, PreviewNetvibesHandler,
+   EditorActiveFileChangedHandler, ViewClosedHandler
 {
    private HandlerManager eventBus;
 
@@ -61,6 +64,8 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
    private File activeFile;
    
    private boolean previewOpened = false;
+   
+   private PreviewForm previewForm;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
@@ -77,6 +82,7 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       eventBus.addHandler(PreviewNetvibesEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
 
       new DeployUwaWidgetPresenter(eventBus);
 
@@ -109,12 +115,21 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
       String href = activeFile.getHref();
       href = href.replace("jcr", "ide/netvibes");
       
-      PreviewForm form = new PreviewForm();
-      form.setIcon(new Image(NetvibesClientBundle.INSTANCE.preview()));
-      form.showPreview(href);
+      if (previewForm == null)
+      {
+         previewForm = new PreviewForm();
+         previewForm.setIcon(new Image(NetvibesClientBundle.INSTANCE.preview()));
+      }
+      previewForm.showPreview(href);
       
-//      eventBus.fireEvent(new OpenViewEvent(form));
-      IDE.getInstance().openView(form);
+      if (previewOpened)
+      {
+         previewForm.setViewVisible();
+      }
+      else
+      {
+         IDE.getInstance().openView(previewForm);
+      }
       previewOpened = true;
    }
 
@@ -129,6 +144,21 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
       {
          IDE.getInstance().closeView(PreviewForm.ID);
          previewOpened = false;
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (previewForm == null)
+         return;
+      if (event.getView().getId().equals(previewForm.getId()))
+      {
+         previewOpened = false;
+         previewForm = null;
       }
    }
 

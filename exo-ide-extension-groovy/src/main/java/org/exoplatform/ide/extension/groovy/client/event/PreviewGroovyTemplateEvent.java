@@ -25,16 +25,16 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: ShowGroovyTemplatePreview Feb 17, 2011 5:05:12 PM evgen $
  *
  */
-public class ShowGroovyTemplatePreviewEvent extends GwtEvent<ShowGroovyTemplatePreviewHandler>
+public class PreviewGroovyTemplateEvent extends GwtEvent<PreviewGroovyTemplateHandler>
 {
 
-   public static Type<ShowGroovyTemplatePreviewHandler> TYPE = new Type<ShowGroovyTemplatePreviewHandler>();
+   public static Type<PreviewGroovyTemplateHandler> TYPE = new Type<PreviewGroovyTemplateHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowGroovyTemplatePreviewHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<PreviewGroovyTemplateHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -43,9 +43,9 @@ public class ShowGroovyTemplatePreviewEvent extends GwtEvent<ShowGroovyTemplateP
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ShowGroovyTemplatePreviewHandler handler)
+   protected void dispatch(PreviewGroovyTemplateHandler handler)
    {
-      handler.onShowGroovyTemplatePreview(this);
+      handler.onPreviewGroovyTemplate(this);
    }
 
 }

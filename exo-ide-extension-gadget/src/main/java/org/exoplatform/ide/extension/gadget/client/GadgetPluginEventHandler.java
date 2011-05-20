@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -29,6 +33,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetHadndler;
@@ -42,17 +48,13 @@ import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
 import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
 import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.Image;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
 public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployGadgetHandler,
-   EditorActiveFileChangedHandler, PreviewGadgetHandler, ConfigurationReceivedSuccessfullyHandler
+   EditorActiveFileChangedHandler, PreviewGadgetHandler, ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler
 {
 
    private HandlerManager eventBus;
@@ -62,6 +64,8 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    private IDEConfiguration applicationConfiguration;
 
    private boolean previewOpened = false;
+   
+   private GadgetPreviewPane gadgetPreviewPane;
 
    public GadgetPluginEventHandler(HandlerManager eventBus)
    {
@@ -72,6 +76,7 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
       eventBus.addHandler(UndeployGadgetEvent.TYPE, this);
       eventBus.addHandler(PreviewGadgetEvent.TYPE, this);
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
 
    }
 
@@ -208,10 +213,24 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
          @Override
          protected void onSuccess(GadgetMetadata result)
          {
-            GadgetPreviewPane gadgetPreviewPane = new GadgetPreviewPane(applicationConfiguration, result);
-            gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
-            IDE.getInstance().openView(gadgetPreviewPane);
-            //            eventBus.fireEvent(new OpenViewEvent(gadgetPreviewPane));
+            if (gadgetPreviewPane == null)
+            {
+               gadgetPreviewPane = new GadgetPreviewPane();
+               gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
+               IDE.getInstance().openView(gadgetPreviewPane);
+            }
+            else
+            {
+               if (!gadgetPreviewPane.isViewVisible())
+               {
+                  gadgetPreviewPane.setViewVisible();
+               }
+            }
+            
+            gadgetPreviewPane.setConfiguration(applicationConfiguration);
+            gadgetPreviewPane.setMetadata(result);
+            gadgetPreviewPane.showGadget();
+
             previewOpened = true;
          }
 
@@ -230,6 +249,21 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
       applicationConfiguration = event.getConfiguration();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (gadgetPreviewPane == null)
+         return;
+      if (event.getView().getId().equals(gadgetPreviewPane.getId()))
+      {
+         previewOpened = false;
+         gadgetPreviewPane = null;
+      }
    }
 
 }

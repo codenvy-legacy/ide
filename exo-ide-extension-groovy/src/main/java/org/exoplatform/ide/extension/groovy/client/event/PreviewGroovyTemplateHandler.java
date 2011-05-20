@@ -25,9 +25,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id: ShowGroovyTemplatePreviewHandler Feb 17, 2011 5:05:42 PM evgen $
  *
  */
-public interface ShowGroovyTemplatePreviewHandler extends EventHandler
+public interface PreviewGroovyTemplateHandler extends EventHandler
 {
 
-   void onShowGroovyTemplatePreview(ShowGroovyTemplatePreviewEvent event);
+   void onPreviewGroovyTemplate(PreviewGroovyTemplateEvent event);
    
 }
