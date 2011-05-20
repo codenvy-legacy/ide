@@ -73,7 +73,7 @@ public class CodeOutLineRubyTest extends BaseTest
    }
 
    @Test
-   public void testCodeOutLineGroovy() throws Exception
+   public void testCodeOutLineRuby() throws Exception
    {
       // Open groovy file with content
       Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
