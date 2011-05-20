@@ -50,7 +50,6 @@ public class SshPublicKeyPresenter implements ViewClosedHandler
 
       HasValue<String> getKeyField();
       
-      void updateTitle(String title);
    }
 
    private KeyItem keyItem;
@@ -72,7 +71,6 @@ public class SshPublicKeyPresenter implements ViewClosedHandler
       bind();
       
       IDE.getInstance().openView(display.asView());
-      display.updateTitle(keyItem.getHost());
 
       showPublicKey();
    }

@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.extension.ssh.client.keymanager.HasSshGrid;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
@@ -33,7 +32,7 @@ public class SshKeyManagerView extends ViewImpl implements Display
 
    public SshKeyManagerView()
    {
-      super(ID, ViewType.MODAL, "Ssh Keys", null, 300, 400);
+      super(ID, ViewType.MODAL, "Ssh Keys", null, 333, 400);
       add(uiBinder.createAndBindUi(this));
    }
 

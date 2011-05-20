@@ -80,13 +80,4 @@ public class SshPublicKeyView extends ViewImpl implements Display
       return publicSshKeyField;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#updateTitle(java.lang.String)
-    */
-   @Override
-   public void updateTitle(String title)
-   {
-      setTitle(getTitle() + title);
-   }
-
 }

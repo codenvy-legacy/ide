@@ -18,18 +18,19 @@
  */
 package org.exoplatform.ide.extension.ssh.client.keymanager.ui;
 
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
-import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.extension.ssh.client.keymanager.HasSshGrid;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
 /**
@@ -60,7 +61,7 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
             return object.getHost();
          }
       };
-      publicKeyColumn = new Column<KeyItem, String>(new ButtonCell())
+      publicKeyColumn = new Column<KeyItem, String>(new Link())
       {
          
          @Override
@@ -69,7 +70,9 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
             return "View";
          }
       };
-      deleteKeyColumn = new Column<KeyItem, String>(new ButtonCell())
+      
+      
+      deleteKeyColumn = new Column<KeyItem, String>(new Link())
       {
          
          @Override
@@ -145,5 +148,28 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
          super(selectedItem);
       }
       
+   }
+   
+   private class Link extends ClickableTextCell
+   {
+      /**
+       * @see com.google.gwt.cell.client.ClickableTextCell#render(com.google.gwt.cell.client.Cell.Context, com.google.gwt.safehtml.shared.SafeHtml, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
+       */
+      @Override
+      protected void render(com.google.gwt.cell.client.Cell.Context context, final SafeHtml value, SafeHtmlBuilder sb)
+      {
+         SafeHtml s = new SafeHtml()
+         {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public String asString()
+            {
+               return "<u style=\"cursor: pointer; color:#2039f8\">" + value.asString() + "</u>";
+            }
+         };
+         sb.append(s);
+       
+      }
    }
 }
