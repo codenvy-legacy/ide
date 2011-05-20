@@ -127,25 +127,6 @@ public class Navigation extends AbstractTestModule
    }
 
    /**
-    * Click open icon of folder in navigation tree.
-    * If folder is closed, it will be opened,
-    * if it is opened, it will be closed.
-    * 
-    * @param folderHref - the folder href.
-    * @throws Exception
-    */
-   public void clickOpenIconOfFolder(String folderHref) throws Exception
-   {
-      System.out.println("Click on Open Icon > " + folderHref);
-
-      String locator = "//div[@id='" + getItemId(folderHref) + "']/table/tbody/tr/td[1]/img";
-      System.out.println("Locator [" + locator + "]");
-
-      selenium().clickAt(locator, "0");
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-   }
-
-   /**
     * Generate item id 
     * @param href of item 
     * @return id of item

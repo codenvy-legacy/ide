@@ -20,13 +20,9 @@ package org.exoplatform.ide.operation.autocompletion.groovy;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -50,20 +46,14 @@ public class ChrommaticImportAssistantTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-
       String serviceFilePath =
          "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/importAssistantChrommatic.groovy";
-
       try
       {
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
          VirtualFileSystemUtils.put(serviceFilePath, MimeType.GROOVY_SERVICE, URL + TEST_FOLDER + "/" + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -72,11 +62,9 @@ public class ChrommaticImportAssistantTest extends BaseTest
    @Test
    public void testChrommaticImportAssistant() throws Exception
    {
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP * 2);
 
       selenium.click("//div[@class='CodeMirror-line-numbers']/div[contains(text(), '2')]");
       Thread.sleep(TestConstants.SLEEP);
@@ -101,13 +89,10 @@ public class ChrommaticImportAssistantTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
+   
 }

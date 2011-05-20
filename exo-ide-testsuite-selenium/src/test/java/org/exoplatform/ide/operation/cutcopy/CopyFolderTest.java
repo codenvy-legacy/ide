@@ -112,13 +112,10 @@ public class CopyFolderTest extends BaseTest
    @Test
    public void copyOperationTestIde116() throws Exception
    {
-      waitForRootElement();
-     
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForRootItem();
       
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/" + FILE_1, false);
 

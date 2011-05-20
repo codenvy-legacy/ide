@@ -40,7 +40,7 @@ public class UploadMimeTypeAutoCompletionTest extends BaseTest
    @Test
    public void testMimeTypeAutoCompletion() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
 

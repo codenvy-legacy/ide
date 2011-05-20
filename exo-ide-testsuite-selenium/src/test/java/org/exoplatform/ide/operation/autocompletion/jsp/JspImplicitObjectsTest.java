@@ -58,12 +58,7 @@ public class JspImplicitObjectsTest extends BaseTest
             "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/jsp/testImplicitObject.jsp",
             MimeType.APPLICATION_JSP, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-         fail("Can't create test folder");
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
          fail("Can't create test folder");
@@ -73,11 +68,8 @@ public class JspImplicitObjectsTest extends BaseTest
    @Test
    public void testJspImplicitObjects() throws Exception
    {
-      waitForRootElement();
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
-
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
@@ -110,11 +102,7 @@ public class JspImplicitObjectsTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

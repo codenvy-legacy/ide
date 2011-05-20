@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -43,21 +42,22 @@ import org.junit.Test;
 public class StoreOpenedFilesHistoryTest extends BaseTest
 {
    private static final String TEST_FOLDER = StoreOpenedFilesHistoryTest.class.getSimpleName();
-   
+
    private static final String TEST_FOLDER_TO_DELETE = StoreOpenedFilesHistoryTest.class.getSimpleName() + "-to Delete";
 
    private static String SECOND_WORKSPACE_URL;
-   
+
    private String secondWorkspaceName;
-   
+
    private static final String TEXT_FILE = "Text File";
-   
+
    private static final String HTML_FILE = "Html File";
-   
+
    private static final String GADGET_FILE = "Gadget File";
-   
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME_2 + "/";
-   
+
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME_2
+      + "/";
+
    @BeforeClass
    public static void setUp()
    {
@@ -66,18 +66,13 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER_TO_DELETE);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-         fail("Can't create folders");
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
          fail("Can't create folders");
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -85,129 +80,117 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(SECOND_WORKSPACE_URL + TEST_FOLDER);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-      
+
       try
       {
          VirtualFileSystemUtils.delete(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-      
+
       deleteCookies();
       cleanRegistry();
    }
-   
+
    //IDE-66
    //Store Opened Files History 
    @Test
    public void storeOpenedFilesHistory() throws Exception
    {
-      waitForRootElement();
-    
+      IDE.WORKSPACE.waitForRootItem();
+
       secondWorkspaceName = WS_NAME_2;
-      SECOND_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + secondWorkspaceName + "/";
-      
+      SECOND_WORKSPACE_URL =
+         BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + secondWorkspaceName + "/";
+
       //select another workspace
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
       IDE.SELECT_WORKSPACE.waitForDialog();
       IDE.SELECT_WORKSPACE.doubleClickInListGrid(secondWorkspaceName);
-      
-      IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL);   
+
+      IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL);
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL+ TEST_FOLDER_TO_DELETE + "/");
-      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL+ TEST_FOLDER_TO_DELETE + "/");
-      
+      IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/");
+      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/");
+
       //create txt file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
       saveAsUsingToolbarButton(TEXT_FILE);
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
-      
+
       //create html file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitTabPresent(1);
       saveAsUsingToolbarButton(HTML_FILE);
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
-      
+
       //create google gadget file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.EDITOR.waitTabPresent(2);
       saveAsUsingToolbarButton(GADGET_FILE);
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
-      
+
       //create groovy script file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      IDE.EDITOR.waitTabPresent(3);
-      
+
       //closing all files
-     IDE.EDITOR.closeFile(0);
-     IDE.EDITOR.closeFile(0);
-     IDE.EDITOR.closeFile(0);
-     IDE.EDITOR.closeTabIgnoringChanges(0);     
-      
-     IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
+      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
+
+      IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
       IDE.OPENWITH.openSelectedFileWithCodeEditor(false);
-      IDE.EDITOR.waitTabPresent(0);
+      
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
       IDE.OPENWITH.openSelectedFileWithCodeEditor(false);
-      IDE.EDITOR.waitTabPresent(1);
+      
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
       IDE.OPENWITH.openSelectedFileWithCkEditor(true);
-      IDE.EDITOR.waitTabPresent(2);
-      IDE.EDITOR.checkCkEditorOpened(2);
       
+      IDE.EDITOR.checkCkEditorOpened(2);
+
       //delete Test Folder to Delete from server
       try
       {
          VirtualFileSystemUtils.delete(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-      
+
       selenium.open("http://www.google.com.ua/");
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      
+
       selenium.goBack();
-      waitForRootElement();
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+
+      //IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
       waitForElementPresent(Editor.Locators.CK_EDITOR);
-      
+
       IDE.EDITOR.checkCkEditorOpened(1);
-      
+
       checkOpenedFilesHistory();
-      
-     IDE.EDITOR.closeFile(0);
-     IDE.EDITOR.closeFile(0);
-      
+
+      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
+
       //open folder to select html file
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
+
       IDE.NAVIGATION.assertItemVisible(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
       IDE.NAVIGATION.assertItemVisible(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
    }
-   
+
    /**
     * Check, that two files: gadget and html file are opened
     * and check menu commands for enabling and disabling.
@@ -218,19 +201,23 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    {
       //check that files are opened and in right order.
       //check that tab with html file is selected
-      assertEquals(GADGET_FILE,IDE.EDITOR.getTabTitle(0));
-      assertTrue(IDE.EDITOR.getTabTitle(1).equals(HTML_FILE) ||IDE.EDITOR.getTabTitle(1).equals(HTML_FILE + " *"));
-      
+      assertEquals(GADGET_FILE, IDE.EDITOR.getTabTitle(0));
+      assertTrue(IDE.EDITOR.getTabTitle(1).equals(HTML_FILE) || IDE.EDITOR.getTabTitle(1).equals(HTML_FILE + " *"));
+
       //select Gadget file
-     IDE.EDITOR.selectTab(0);
-      
+      IDE.EDITOR.selectTab(0);
+
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
+
+      //      Thread.sleep(2000);
+      //      
+      //      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
+      //      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT, true);
+
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
    }
-   
+
 }

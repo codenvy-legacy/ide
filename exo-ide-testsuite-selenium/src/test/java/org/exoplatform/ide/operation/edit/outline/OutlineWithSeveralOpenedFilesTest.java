@@ -61,7 +61,6 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       deleteCookies();
       cleanRegistry();
       cleanDefaultWorkspace();
-
    }
 
    //Check, that Outline tab correctly works, when we
@@ -69,12 +68,12 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
    @Test
    public void testOutlineWhenSeveralFilesOpen() throws Exception
    {
+      IDE.WORKSPACE.waitForRootItem();
 
-      waitForRootElement();
       //---- 1 --------------
       //open new javascript file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
-      waitForElementPresent(Locators.EDITOR_LOCATOR);
+      
       //no outline panel
       IDE.OUTLINE.assertOutlineTreeNotPresent();
 
@@ -92,7 +91,6 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       //---- 3 --------------
       //open new html file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      waitForElementPresent(Locators.EDITOR_LOCATOR);
 
       //      //check outline present
       IDE.OUTLINE.assertOutlineTreePresent();

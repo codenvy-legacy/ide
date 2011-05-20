@@ -78,7 +78,7 @@ public class ViewVersionListTest extends BaseTest
    @Test
    public void testViewVersionList() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
@@ -192,7 +192,7 @@ public class ViewVersionListTest extends BaseTest
    public void testViewVersionListWithNavigateVersions() throws Exception
    {
       refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);

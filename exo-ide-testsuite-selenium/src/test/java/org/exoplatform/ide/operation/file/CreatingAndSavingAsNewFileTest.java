@@ -96,8 +96,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    @Test
    public void testCreatingAndSavingAsNewFiles() throws Exception
    {
-      waitForRootElement();
-
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
 
       createFileAndSaveAs(MenuCommands.New.REST_SERVICE_FILE, "grs", REST_SERVICE_FILE_NAME);

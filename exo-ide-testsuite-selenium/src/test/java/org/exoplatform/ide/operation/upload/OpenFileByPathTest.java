@@ -85,7 +85,7 @@ public class OpenFileByPathTest extends BaseTest
    @Test
    public void testOpenFileByPath() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
 
       // open folder

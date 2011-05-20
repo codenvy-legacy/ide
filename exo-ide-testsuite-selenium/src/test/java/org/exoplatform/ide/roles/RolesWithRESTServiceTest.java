@@ -77,7 +77,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       logout();
       standaloneLogin(TestConstants.Users.ROOT);
       
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       saveAsUsingToolbarButton(FILE1);
       IDE.WORKSPACE.waitForItem(WS_URL + FILE1);
@@ -97,7 +97,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       logout();
       
       standaloneLogin(TestConstants.Users.JOHN);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE1, false);
       IDE.EDITOR.waitTabPresent(0);
@@ -145,12 +145,12 @@ public class RolesWithRESTServiceTest extends BaseTest
    public void testAdminRoleWithRESTService() throws Exception
    {
       selenium.refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       
       logout();
       
       standaloneLogin(TestConstants.Users.ADMIN);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE1, false);
       IDE.EDITOR.waitTabPresent(0);

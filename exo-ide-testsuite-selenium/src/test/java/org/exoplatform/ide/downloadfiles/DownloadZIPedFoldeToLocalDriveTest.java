@@ -88,7 +88,7 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
    @Test
    public void testDownloadZIPedFoldeToLocalDrive() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);

@@ -120,7 +120,13 @@ public class OpenWithDialog extends AbstractTestModule
    {
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
       waitForOpenWithDialogOpened();
+
+      Thread.sleep(2000);
+      
       selectEditor(Navigation.Editor.CODEMIRROR.getName());
+      
+      Thread.sleep(2000);
+      
       if (checkDefault)
       {
          clickUseAsDefaultCheckBox();

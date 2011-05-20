@@ -80,7 +80,7 @@ public class DownloadFileToLocalDriveTest extends BaseTest
    @Test
    public void testDownloadFileToLocalDrive() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);

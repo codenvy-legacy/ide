@@ -51,7 +51,8 @@ public class CodeOutlineJavaScriptTest extends BaseTest
    @Test
    public void testCodeOutlineJavascript() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
+      
       //---- 2 -----------------
       //Create new JavaScript file and click on Show Outline button
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);

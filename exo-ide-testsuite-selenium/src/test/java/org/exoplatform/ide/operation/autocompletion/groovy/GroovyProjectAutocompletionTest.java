@@ -21,15 +21,10 @@ package org.exoplatform.ide.operation.autocompletion.groovy;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.project.classpath.UseOfClasspathEntriesTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -85,12 +80,7 @@ public class GroovyProjectAutocompletionTest extends BaseTest
          VirtualFileSystemUtils.put(CLASSPATH_FILE_CONTENT.getBytes(), MimeType.APPLICATION_JSON, WORKSPACE_URL
             + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-         fail("Can't create project structure");
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
          fail("Can't create project structure");
@@ -100,7 +90,8 @@ public class GroovyProjectAutocompletionTest extends BaseTest
    @Test
    public void testGroovyClassNameProject() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
+
       /*
        * 1. Check, that project folder and folder with resources are present.
        * Open REST Service. 
@@ -108,45 +99,44 @@ public class GroovyProjectAutocompletionTest extends BaseTest
       IDE.NAVIGATION.assertItemVisible(WS_URL + PROJECT_NAME + "/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
 
-      IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + PROJECT_NAME + "/");
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL
-         + PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + PROJECT_NAME + "/"
+         + REST_SERVICE_FILE_NAME, false);
 
       IDE.CODEASSISTANT.moveCursorDown(12);
 
-     IDE.EDITOR.typeTextIntoEditor(0, "Po");
-      
+      IDE.EDITOR.typeTextIntoEditor(0, "Po");
+
       IDE.CODEASSISTANT.openForm();
-      
+
       IDE.CODEASSISTANT.checkElementPresent("Pojo");
-      
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import org.exoplatform.sample.Pojo"));
-      
-     IDE.EDITOR.typeTextIntoEditor(0, " p");
-      
+
+      IDE.EDITOR.typeTextIntoEditor(0, " p");
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
-     IDE.EDITOR.typeTextIntoEditor(0, "p.");
-      
+
+      IDE.EDITOR.typeTextIntoEditor(0, "p.");
+
       IDE.CODEASSISTANT.openForm();
-      
+
       IDE.CODEASSISTANT.checkElementPresent("getName():String");
       IDE.CODEASSISTANT.checkElementPresent("printText(String):void");
       IDE.CODEASSISTANT.checkElementPresent("setName(String):void");
-      
+
       IDE.CODEASSISTANT.typeToInput("pr");
-      
+
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("p.printText(String)"));
-      
+
    }
 
    @AfterClass
@@ -157,11 +147,7 @@ public class GroovyProjectAutocompletionTest extends BaseTest
          VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
          VirtualFileSystemUtils.delete(WORKSPACE_URL + PROJECT_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

@@ -39,7 +39,7 @@ public class AutoCompletionCSSTest extends BaseTest
    @Test
    public void testPlainCSS() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
 
       cssTest();
@@ -51,8 +51,8 @@ public class AutoCompletionCSSTest extends BaseTest
    public void testGoogleGadget() throws Exception
    {
       refresh();
+      IDE.WORKSPACE.waitForRootItem();      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -79,7 +79,6 @@ public class AutoCompletionCSSTest extends BaseTest
 
       cssTest();
 
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
@@ -87,10 +86,9 @@ public class AutoCompletionCSSTest extends BaseTest
    public void testHTML() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.SLEEP);
+      selenium.waitForPageToLoad("" + TestConstants.PAGE_LOAD_PERIOD);
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);

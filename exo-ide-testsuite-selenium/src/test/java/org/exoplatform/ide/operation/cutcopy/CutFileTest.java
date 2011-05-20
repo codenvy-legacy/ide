@@ -47,12 +47,6 @@ public class CutFileTest extends BaseTest
 
    private static final String FOLDER_NAME_2 = CutFileTest.class.getSimpleName() + "-2";
 
-   //  private static final String FOLDER_NAME_1_URL = WS_URL + FOLDER_NAME_1 + "/";
-   //   
-   //   private static final String FOLDER_NAME_2_URL = WS_URL + FOLDER_NAME_2 + "/";
-   //
-   //   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-
    private static final String RANDOM_CONTENT = UUID.randomUUID().toString();
 
    @BeforeClass
@@ -92,13 +86,14 @@ public class CutFileTest extends BaseTest
    @Test
    public void testCutFile() throws Exception
    {
-      waitForRootElement();
-
-      IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME_1 + "/");
       
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+//      waitForRootElement();
+//      IDE.WORKSPACE.selectRootItem();
+//      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+//      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
+//      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
 
@@ -127,7 +122,7 @@ public class CutFileTest extends BaseTest
 
       checkPasteCommands(true);
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME_1 + "/");
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
 
       //Select "test 2" folder item in the Workspace Panel and then select "Edit->Paste Items" topmenu command.

@@ -54,18 +54,19 @@ public class ItemOrderingTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      cleanRepository(WS_URL);
    }
 
    @Test
    public void testItemOrdering() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();      
       // create test files
-      IDE.WORKSPACE.selectRootItem();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1_2, 0);
+      
       IDE.WORKSPACE.selectRootItem();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, UPPERCASE_TEST_FILE_1, 0);
+      
       IDE.WORKSPACE.selectRootItem();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1, 0);
 

@@ -54,7 +54,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
    @Test
    public void testAutoload() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.NAVIGATION.createFolder(FOLDER_NAME);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
@@ -96,7 +96,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.waitForItem(URL);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL, false);

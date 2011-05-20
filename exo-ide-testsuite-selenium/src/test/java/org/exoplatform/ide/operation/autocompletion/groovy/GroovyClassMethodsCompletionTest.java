@@ -42,13 +42,12 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
    @Test
    public void testGroovyClassMethodCompletion() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       /*
        * 1. Open REST Service file.
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
 
       /*
        * 2. Go inside hello() method.

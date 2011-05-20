@@ -93,7 +93,7 @@ public class CodeOutLineHtmlTest extends BaseTest
    {
       //---- 1 -----------------
       //open file with text
-      waitForRootElement();
+      IDE.WORKSPACE.waitForItem(URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(URL + FOLDER_NAME + "/");
       waitForElementNotPresent(IDE.NAVIGATION.getItemId(URL + FOLDER_NAME + "/" + FILE_NAME));
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);

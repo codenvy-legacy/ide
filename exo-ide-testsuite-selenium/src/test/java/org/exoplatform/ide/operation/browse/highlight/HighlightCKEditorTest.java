@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -40,73 +34,72 @@ import org.junit.Test;
  * @version $Id: Nov 15, 2010 $
  * 
  */
-public class HighlightCKEditorTest extends BaseTest {
-	private final static String URL = BASE_URL + REST_CONTEXT + "/"
-			+ WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+public class HighlightCKEditorTest extends BaseTest
+{
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
 
-	private static String FOLDER_NAME = HighlightCKEditorTest.class
-			.getSimpleName();
+   private static String FOLDER_NAME = HighlightCKEditorTest.class.getSimpleName();
 
-	private static String FILE_NAME = HighlightCKEditorTest.class
-			.getSimpleName()
-			+ "File";
+   private static String FILE_NAME = HighlightCKEditorTest.class.getSimpleName() + "File";
 
-	@BeforeClass
-	public static void setUp() {
-		try {
-			VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-			VirtualFileSystemUtils
-					.put(
-							"src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html",
-							MimeType.TEXT_HTML, URL + FOLDER_NAME + "/"
-									+ FILE_NAME);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ModuleException e) {
-			e.printStackTrace();
-		}
-	}
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(
+            "src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html", MimeType.TEXT_HTML,
+            URL + FOLDER_NAME + "/" + FILE_NAME);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
 
-	// This test will fail until IDE-424
-	@Test
-	public void testHighlightCKEdditor() throws Exception {
-		waitForRootElement();
-		IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
-		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
+   // This test will fail until IDE-424
+   @Test
+   public void testHighlightCKEdditor() throws Exception
+   {
+      IDE.WORKSPACE.waitForRootItem();      
+      
+      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+      
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      
+      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
+      openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + FILE_NAME, "HTML", false);
+      waitForElementPresent("//div[@panel-id='editor']");
 
-		IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-		waitForRootElement();
-		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
-		openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/"
-				+ FILE_NAME, "HTML", false);
-		waitForElementPresent("//div[@panel-id='editor']");
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      IDE.PERSPECTIVE.checkViewIsActive("idePreviewHTMLView");
+      IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
 
-		IDE.MENU
-				.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
-		waitForRootElement();
-		IDE.PERSPECTIVE.checkViewIsActive("idePreviewHTMLView");
-		IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
+      IDE.EDITOR.clickOnEditor();
 
-		IDE.EDITOR.clickOnEditor();
+      // TODO should be compled should be completed after fix problem|
+      // highlighting in codeeditor after setting cursor in text		
+      //IDE.PERSPECTIVE.checkViewIsActive("editor-0");					
+      //IDE.PERSPECTIVE.checkViewIsNotActive("idePreviewHTMLView");			
+      // ------------------------------------------------------------
+      IDE.EDITOR.closeFile(0);
+   }
 
-		// TODO should be compled should be completed after fix problem|
-		// highlighting in codeeditor after setting cursor in text		
-		//IDE.PERSPECTIVE.checkViewIsActive("editor-0");					
-		//IDE.PERSPECTIVE.checkViewIsNotActive("idePreviewHTMLView");			
-		// ------------------------------------------------------------
-		IDE.EDITOR.closeFile(0);
-	}
-
-	@AfterClass
-	public static void tierDown() {
-		deleteCookies();
-		try {
-			VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ModuleException e) {
-			e.printStackTrace();
-		}
-	}
+   @AfterClass
+   public static void tierDown()
+   {
+      deleteCookies();
+      try
+      {
+         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
 
 }

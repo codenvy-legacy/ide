@@ -68,7 +68,7 @@ public class UploadingGoogleGadgetTest extends BaseTest
    @Test
    public void testUploadGoogleGadget() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       
       IDE.UPLOAD.open(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);

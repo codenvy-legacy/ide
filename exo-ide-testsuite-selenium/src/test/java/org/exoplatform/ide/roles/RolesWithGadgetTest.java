@@ -95,7 +95,7 @@ public class RolesWithGadgetTest extends BaseTest
    public void testDeveloperRoleWithGadget() throws Exception
    {
       selenium.refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
@@ -115,7 +115,7 @@ public class RolesWithGadgetTest extends BaseTest
       logout();
 
       standaloneLogin(TestConstants.Users.JOHN);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -145,7 +145,7 @@ public class RolesWithGadgetTest extends BaseTest
       logout();
 
       standaloneLogin(TestConstants.Users.ADMIN);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");

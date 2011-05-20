@@ -128,7 +128,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //refresh, to clear console and close it
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       openAndValidateRestService();
       //---- 1 -----------------
@@ -162,7 +162,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //refresh, to clear console and close it
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       
       openAndValidateRestService();
       //---- 1 -----------------
@@ -204,11 +204,11 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //refresh, to clear console and close it
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       
       //---- 1 -----------------
       //open file    
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(URL + FILE_WITH_ERROR_FOR_CHANGING);     
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_WITH_ERROR_FOR_CHANGING, false);
 
@@ -327,7 +327,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(URL + FILE_WITH_ERROR);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_WITH_ERROR, false);
       Thread.sleep(TestConstants.SLEEP);

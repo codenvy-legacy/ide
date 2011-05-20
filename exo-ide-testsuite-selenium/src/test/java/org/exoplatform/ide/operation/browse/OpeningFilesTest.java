@@ -39,6 +39,7 @@ import org.junit.Test;
  */
 public class OpeningFilesTest extends BaseTest
 {
+   
    private final String folderName = OpeningFilesTest.class.getSimpleName();
 
    private final String file1Name = "File1";
@@ -50,26 +51,27 @@ public class OpeningFilesTest extends BaseTest
    @Test
    public void testDeleteFileAndOpenFromOneFolder() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForRootItem();
+
       IDE.NAVIGATION.createFolder(folderName);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, file1Content);
       saveAsUsingToolbarButton(file1Name);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.EDITOR.closeFile(0);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       saveAsUsingToolbarButton(file2Name);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.EDITOR.closeFile(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
 
       // Delete one file  
       IDE.WORKSPACE.selectItem(WS_URL + folderName + "/" + file2Name);
       IDE.NAVIGATION.deleteSelectedItems();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + folderName + "/" + file2Name);
 
       //Open another file from the same folder
@@ -83,7 +85,7 @@ public class OpeningFilesTest extends BaseTest
       //Delete folder with file
       IDE.WORKSPACE.selectItem(WS_URL + folderName + "/");
       IDE.NAVIGATION.deleteSelectedItems();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       //Check items not present in navigation tree
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + folderName + "/");

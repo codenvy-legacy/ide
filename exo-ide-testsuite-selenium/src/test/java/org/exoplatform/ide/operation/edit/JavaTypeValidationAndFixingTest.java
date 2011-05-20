@@ -21,18 +21,13 @@ package org.exoplatform.ide.operation.edit;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
@@ -48,9 +43,6 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
 
    private final static String TEST_FOLDER = JavaTypeValidationAndFixingTest.class.getSimpleName();
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
-
    @BeforeClass
    public static void setUp()
    {
@@ -59,21 +51,16 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
 
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(serviceFilePath, MimeType.GROOVY_SERVICE, URL + TEST_FOLDER + "/"
+         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.put(serviceFilePath, MimeType.GROOVY_SERVICE, WS_URL + TEST_FOLDER + "/"
             + SERVICE_FILE_NAME);
-         VirtualFileSystemUtils.put(templateFilePath, MimeType.GROOVY_TEMPLATE, URL + TEST_FOLDER + "/"
+         VirtualFileSystemUtils.put(templateFilePath, MimeType.GROOVY_TEMPLATE, WS_URL + TEST_FOLDER + "/"
             + TEMPLATE_FILE_NAME);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-
    }
 
    //   IDE-436: "Recognize error "cannot resolve to a type" within the POGO file or REST service file in the Code Editor."
@@ -94,13 +81,11 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    @Test
    public void testServiceFile() throws Exception
    {
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+
       // Open groovy file with test content
-      waitForRootElement();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(0);
 
       // test error marks
       firstTestErrorMarks();
@@ -234,12 +219,10 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    public void testTemplateFile() throws Exception
    {
       // Open template file with test content
-      waitForRootElement();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
+
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + TEMPLATE_FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(1);
 
       // test error marks
       assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(6, "'Path' cannot be resolved to a type; ")));
@@ -292,18 +275,14 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    public static void tearDown() throws Exception
    {
       //IDE.EDITOR.closeFileTabIgnoreChanges(1);
-      IDE.EDITOR.closeTabIgnoringChanges(1);      
+      IDE.EDITOR.closeTabIgnoringChanges(1);
       IDE.EDITOR.closeFile(0);
 
       try
       {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

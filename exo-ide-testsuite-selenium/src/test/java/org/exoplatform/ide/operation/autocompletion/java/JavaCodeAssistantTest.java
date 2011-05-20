@@ -20,16 +20,12 @@ package org.exoplatform.ide.operation.autocompletion.java;
 
 import static org.junit.Assert.fail;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -52,12 +48,7 @@ public class JavaCodeAssistantTest extends BaseTest
             "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/codeassistantj.txt",
             MimeType.APPLICATION_JAVA, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-         fail("Can't create test folder");
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
          fail("Can't create test folder");
@@ -67,15 +58,12 @@ public class JavaCodeAssistantTest extends BaseTest
    @Test
    public void testJavaCodeAssistant() throws Exception
    {
-      waitForRootElement();
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
-
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       goToLine(32);
-     IDE.EDITOR.typeTextIntoEditor(0, "a");
+      IDE.EDITOR.typeTextIntoEditor(0, "a");
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.clearInput();
       IDE.CODEASSISTANT.checkElementNotPresent("in");
@@ -84,26 +72,22 @@ public class JavaCodeAssistantTest extends BaseTest
 
       IDE.CODEASSISTANT.closeForm();
 
-     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-     IDE.EDITOR.closeTabIgnoringChanges(0);
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
 
    }
 
-      @AfterClass
-      public static void tearDown()
+   @AfterClass
+   public static void tearDown()
+   {
+      try
       {
-         try
-         {
-            VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-         catch (ModuleException e)
-         {
-            e.printStackTrace();
-         }
+         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
       }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
 
 }

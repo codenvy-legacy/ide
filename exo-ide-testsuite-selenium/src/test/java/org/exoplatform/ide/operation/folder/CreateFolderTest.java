@@ -45,9 +45,6 @@ public class CreateFolderTest extends BaseTest
 
    private static String FOLDER_NAME_DEFOLT = "New Folder";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
-
    /**
     * Test to create folder using ToolBar button. (TestCase IDE-3)
     * 
@@ -71,8 +68,8 @@ public class CreateFolderTest extends BaseTest
       waitForElementNotPresent("ideCreateFolderFormNameField");
       assertFalse(selenium.isElementPresent("ideCreateFolderFormNameField"));
       assertTrue(selenium.isTextPresent(FOLDER_NAME_TOOLBAR));
-      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_NAME_TOOLBAR + "/");
-      assertEquals(200, VirtualFileSystemUtils.get(URL + FOLDER_NAME_TOOLBAR).getStatusCode());
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME_TOOLBAR + "/");
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_TOOLBAR).getStatusCode());
    }
 
    /**
@@ -86,8 +83,8 @@ public class CreateFolderTest extends BaseTest
       //refresh page
       selenium.refresh();
       //wait...
-      waitForRootElement();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForRootItem();
+      
       //run command for create folder
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       //create folder
@@ -95,8 +92,8 @@ public class CreateFolderTest extends BaseTest
       //check disapear menu after create of folder
       assertFalse(selenium.isElementPresent("ideCreateFolderForm"));
       //check folder in tread menu
-      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_NAME_DEFOLT + "/");
-      assertEquals(200, VirtualFileSystemUtils.get(URL + URLEncoder.encode("New Folder", "UTF-8")).getStatusCode());
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME_DEFOLT + "/");
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + URLEncoder.encode("New Folder", "UTF-8")).getStatusCode());
    }
 
    /**
@@ -107,14 +104,10 @@ public class CreateFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME_TOOLBAR);
-         VirtualFileSystemUtils.delete(URL + URLEncoder.encode("New Folder", "UTF-8"));
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_TOOLBAR);
+         VirtualFileSystemUtils.delete(WS_URL + URLEncoder.encode("New Folder", "UTF-8"));
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

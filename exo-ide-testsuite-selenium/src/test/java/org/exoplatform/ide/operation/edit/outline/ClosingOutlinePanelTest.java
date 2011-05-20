@@ -21,9 +21,6 @@ package org.exoplatform.ide.operation.edit.outline;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
@@ -43,37 +40,25 @@ import org.junit.Test;
 
 public class ClosingOutlinePanelTest extends BaseTest
 {
-   private final static String JAVASCRIPT_FILE_NAME = "TestJavaScriptFile.js";
 
-   //   private final static String LAP = ;
+   private final static String JAVASCRIPT_FILE_NAME = "TestJavaScriptFile.js";
 
    private final static String TEXT_FILE_NAME = "SampleTextFile.txt";
 
    private final static String FOLDER_NAME = ClosingOutlinePanelTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME + "/";
-
    @BeforeClass
    public static void setUp()
    {
-
       String javaScriptFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/TestJavaScriptFile.js";
       String textFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/SampleTextFile.txt";
-
       try
       {
-
-         VirtualFileSystemUtils.mkcol(URL);
-
-         VirtualFileSystemUtils.put(javaScriptFilePath, MimeType.APPLICATION_JAVASCRIPT, URL + JAVASCRIPT_FILE_NAME);
-         VirtualFileSystemUtils.put(textFilePath, MimeType.TEXT_PLAIN, URL + TEXT_FILE_NAME);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(javaScriptFilePath, MimeType.APPLICATION_JAVASCRIPT, WS_URL + FOLDER_NAME + "/" + JAVASCRIPT_FILE_NAME);
+         VirtualFileSystemUtils.put(textFilePath, MimeType.TEXT_PLAIN, WS_URL + FOLDER_NAME + "/" + TEXT_FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -84,13 +69,9 @@ public class ClosingOutlinePanelTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -109,11 +90,11 @@ public class ClosingOutlinePanelTest extends BaseTest
    {
       //----- 1 -------------
       //open JavaScript file.
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      waitForRootElement();
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + JAVASCRIPT_FILE_NAME, false);
+      
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + JAVASCRIPT_FILE_NAME, false);
 
       //----- 2 -------------
       //show Code Outline panel
@@ -125,8 +106,8 @@ public class ClosingOutlinePanelTest extends BaseTest
 
       //----- 3 -------------
       //open text file.
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + TEXT_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEXT_FILE_NAME, false);
+
       //check Code Outline in Not Present
       IDE.OUTLINE.checkOtlineTreeIsNotPresent();
 
@@ -146,7 +127,8 @@ public class ClosingOutlinePanelTest extends BaseTest
       //refresh page
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
+      
       //check outline is not present
       IDE.OUTLINE.checkOtlineTreeIsNotPresent();
 

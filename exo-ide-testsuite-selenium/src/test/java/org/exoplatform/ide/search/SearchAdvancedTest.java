@@ -48,7 +48,7 @@ public class SearchAdvancedTest extends BaseTest
    @Test
    public void testAdvancedSearch() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.waitTabPresent(0);

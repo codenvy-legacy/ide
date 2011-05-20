@@ -85,21 +85,17 @@ public class CutFolderTest extends BaseTest
    @Test
    public void testCutFolderOperation() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       /*
        * 1. Check, that "/folder 1", "/folder 2", "/folder 1/folder 2", "/folder 1/folder 2/file.groovy" are presents
        */
-      IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 2/");
 
-      IDE.WORKSPACE.selectItem(WS_URL + "folder 1/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + "folder 1/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/folder 2/");
 
-      IDE.WORKSPACE.selectItem(WS_URL + "folder 1/folder 2/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + "folder 1/folder 2/");      
       IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/folder 2/file.groovy");
 
       /*

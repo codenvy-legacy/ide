@@ -39,7 +39,7 @@ public class MoveCursorInEditBox extends BaseTest
    @Test
    public void testCursorNavigationInEditBox() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       String locator =

@@ -59,12 +59,7 @@ public class JspTagsTest extends BaseTest
             "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/jsp/testJspTag.jsp",
             MimeType.APPLICATION_JSP, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-         fail("Can't create test folder");
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
          fail("Can't create test folder");
@@ -74,11 +69,8 @@ public class JspTagsTest extends BaseTest
    @Test
    public void testJspTag() throws Exception
    {
-      waitForRootElement();
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
-
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
@@ -118,11 +110,7 @@ public class JspTagsTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

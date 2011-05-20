@@ -40,7 +40,7 @@ public class CustomizeToolbarTest extends BaseTest
    {
 
       // --------1----------
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //run Customize Toolbar
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       //wait for draw panel
@@ -96,7 +96,7 @@ public class CustomizeToolbarTest extends BaseTest
       selenium.click("ideCustomizeToolbarFormOkButton");
 
       // ------6-------
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       waitForElementPresent("ideCustomizeToolbarForm");
       //select first element and move down
@@ -107,7 +107,7 @@ public class CustomizeToolbarTest extends BaseTest
       //confirm selection
       selenium.click("ideCustomizeToolbarFormOkButton");
       // ---------7-------
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       waitForElementPresent("ideCustomizeToolbarForm");
       checkAppearCustomizeToolbarForm();
@@ -115,7 +115,7 @@ public class CustomizeToolbarTest extends BaseTest
       checkElementPresentInItemListGrid("New * [Popup]", 3);
       selenium.click("ideCustomizeToolbarFormOkButton");
       // ----------- 8 ---------
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       waitForElementPresent("ideCustomizeToolbarForm");
       checkAppearCustomizeToolbarForm();
@@ -124,7 +124,7 @@ public class CustomizeToolbarTest extends BaseTest
       selenium.click("ideCustomizeToolbarFormDeleteButton");
       selenium.click("ideCustomizeToolbarFormOkButton");
       // ----------9---------
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       waitForElementPresent("ideCustomizeToolbarForm");
       //chek element after delete (after delete should be "Save" instead of "New * [Popup]")
@@ -140,7 +140,7 @@ public class CustomizeToolbarTest extends BaseTest
       checkElementPresentInItemListGrid("Delimiter", 3);
       selenium.click("ideCustomizeToolbarFormOkButton");
       // ----10-----
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       waitForElementPresent("ideCustomizeToolbarForm");
       // delete delimiter
@@ -150,7 +150,7 @@ public class CustomizeToolbarTest extends BaseTest
       checkElementPresentInItemListGrid("Delimiter", 3);
       selenium.click("ideCustomizeToolbarFormOkButton");
       // -------11------
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       waitForElementPresent("ideCustomizeToolbarForm");
       //add new element on toolbar
@@ -165,7 +165,7 @@ public class CustomizeToolbarTest extends BaseTest
       // -----12------
       selenium.click("ideCustomizeToolbarFormOkButton");
       // -----15------
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       waitForElementPresent("ideCustomizeToolbarForm");
       //restore default settings and check

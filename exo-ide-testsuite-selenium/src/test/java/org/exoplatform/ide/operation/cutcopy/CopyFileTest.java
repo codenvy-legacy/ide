@@ -118,11 +118,9 @@ public class CopyFileTest extends BaseTest
    @Test
    public void testCopyFile() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
-      
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");      
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
 
       /*

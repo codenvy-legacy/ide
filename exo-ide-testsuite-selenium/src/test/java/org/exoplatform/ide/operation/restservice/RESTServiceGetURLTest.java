@@ -72,14 +72,14 @@ public class RESTServiceGetURLTest extends BaseTest
    @Test
    public void testGetUrl() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
 
       //TODO**********change************
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.SLEEP);
       //****************************
 

@@ -75,9 +75,8 @@ public class DisplayingWarningMessageTest extends BaseTest
    @Test
    public void displayingWarningMessage() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      
 
       //--------- 1 -------------------
       //Click on "New->XML File" toolbar button to open new file on Content Panel

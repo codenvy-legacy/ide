@@ -43,22 +43,16 @@ private final static String FILE_NAME = "JspCodeOutline.jsp";
    
    private final static String FOLDER_NAME = CodeOutlineJspTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
    @BeforeClass
    public static void setUp()
    {
       String filePath ="src/test/resources/org/exoplatform/ide/operation/edit/outline/test-jsp.jsp";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_JSP, URL + FOLDER_NAME + "/" + FILE_NAME);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_JSP, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -69,13 +63,9 @@ private final static String FILE_NAME = "JspCodeOutline.jsp";
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -84,9 +74,9 @@ private final static String FILE_NAME = "JspCodeOutline.jsp";
    @Test
    public void testCodeOutlineJSP() throws Exception
    {
-      waitForRootElement();
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" +FILE_NAME, false);
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       waitForElementPresent(Locators.CodeHelperPanel.OUTLINE_TAB_LOCATOR);

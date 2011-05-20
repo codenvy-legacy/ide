@@ -113,7 +113,7 @@ public class UseOfClasspathEntriesTest extends BaseTest
    @Test
    public void testUsingResourcesFromClasspath() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       /*
        * 1. Check, that project folder and folder with resources are present.

@@ -18,16 +18,8 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -40,68 +32,63 @@ import org.junit.Test;
  * @version $Id: Nov 15, 2010 $
  * 
  */
-public class HighlightNavigatorTabTest extends BaseTest {
+public class HighlightNavigatorTabTest extends BaseTest
+{
 
-	private final static String URL = BASE_URL + REST_CONTEXT + "/"
-			+ WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private static String FOLDER_NAME = HighlightNavigatorTabTest.class.getSimpleName();
 
-	private static String FOLDER_NAME = HighlightNavigatorTabTest.class
-			.getSimpleName();
+   private static String FILE_NAME = HighlightNavigatorTabTest.class.getSimpleName() + "File";
 
-	private static String FILE_NAME = HighlightNavigatorTabTest.class
-			.getSimpleName()
-			+ "File";
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(
+            "src/test/resources/org/exoplatform/ide/operation/edit/outline/RESTCodeOutline.groovy",
+            MimeType.GROOVY_SERVICE, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
 
-	@BeforeClass
-	public static void setUp() {
-		try {
-			VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-			VirtualFileSystemUtils
-					.put(
-							"src/test/resources/org/exoplatform/ide/operation/edit/outline/RESTCodeOutline.groovy",
-							MimeType.GROOVY_SERVICE, URL + FOLDER_NAME + "/"
-									+ FILE_NAME);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ModuleException e) {
-			e.printStackTrace();
-		}
-	}
+   @Test
+   public void testHighlightNavigatorTab() throws Exception
+   {
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
 
-	@Test
-	public void testHighlightNavigatorTab() throws Exception {
-		waitForRootElement();
-		IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
-		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-		IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-		waitForRootElement();
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      waitForElementPresent("//div[@panel-id='editor']");
+      IDE.PERSPECTIVE.checkViewIsActive("editor-0");
+      IDE.EDITOR.typeTextIntoEditor(0, "Testing yo!  4test.");
+      // Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.PERSPECTIVE.checkViewIsActive("editor-0");
+      IDE.PERSPECTIVE.checkViewIsNotActive("ideWorkspaceView");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+      IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
+   }
 
-		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
-		IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL
-				+ FOLDER_NAME + "/" + FILE_NAME, false);
-		waitForElementPresent("//div[@panel-id='editor']");
-		IDE.PERSPECTIVE.checkViewIsActive("editor-0");
-		IDE.EDITOR.typeTextIntoEditor(0, "Testing yo!  4test.");
-		// Thread.sleep(TestConstants.SLEEP_SHORT);
-		IDE.PERSPECTIVE.checkViewIsActive("editor-0");
-		IDE.PERSPECTIVE.checkViewIsNotActive("ideWorkspaceView");
-		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-		IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
-		IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
-		//IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-		IDE.EDITOR.closeTabIgnoringChanges(0);
-	}
-
-	@AfterClass
-	public static void tierDown() {
-		deleteCookies();
-		try {
-			VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ModuleException e) {
-			e.printStackTrace();
-		}
-	}
+   @AfterClass
+   public static void tierDown()
+   {
+      deleteCookies();
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
 }

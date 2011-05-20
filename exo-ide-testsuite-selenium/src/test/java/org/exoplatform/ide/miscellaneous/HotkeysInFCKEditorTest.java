@@ -99,8 +99,8 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       // Select editors option in "Open File With" form Don't work see issue 732
       //open Google Gadget file with CK editor
       //and check Ctrl+B, Ctrl+I, Ctrl+U
-      waitForRootElement();
-      openFolder();
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
       openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE,"Google Gadget",false);
       
      IDE.EDITOR.selectIFrameWithEditor(0);
@@ -164,7 +164,9 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
    public void testTypicalHotkeysInFCKEditor() throws Exception
    {
       refresh();
-      openFolder();
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+
       //----- 1 ------------
       //open file in WYDIWYG editor
       openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, "Google Gadget" ,false);
@@ -228,7 +230,9 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
    public void testCopyPasteUndoRedo() throws Exception
    {
       refresh();
-      openFolder();
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+
       //----- 1 ------------
       //open file in WYDIWYG editor
       openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, "Google Gadget" ,false);
@@ -333,7 +337,8 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
    public void testHotkeysRunFromFCKEditor() throws Exception
    {
       refresh();
-      openFolder();
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
       
       //----- 1 ------------
       //press Ctrl+N to check hotkey

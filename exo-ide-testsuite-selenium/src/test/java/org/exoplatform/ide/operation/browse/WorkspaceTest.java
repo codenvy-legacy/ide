@@ -45,7 +45,7 @@ public class WorkspaceTest extends BaseTest
    @Test
    public void testDefaultEntryPoint() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //check default workspace is root of navigation tree
       IDE.NAVIGATION.assertItemVisible(WS_URL);
       assertEquals(WS_NAME, IDE.NAVIGATION.getRowTitle(1));
@@ -54,7 +54,8 @@ public class WorkspaceTest extends BaseTest
    @Test
    public void testSelectWorkspace() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();      
+
       //----- 1 ---------------
       //check form Workspace
       //call select workspace window

@@ -37,9 +37,8 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testPlainJS() throws InterruptedException, Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
-      Thread.sleep(TestConstants.SLEEP);
 
       javaScriptTestVar();
       javaScriptTestFunction();
@@ -52,9 +51,8 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -82,9 +80,8 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      Thread.sleep(TestConstants.SLEEP);
 
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
@@ -138,9 +135,9 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    @Test
    public void testGroovyTemplate() throws InterruptedException, Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+
       IDE.EDITOR.deleteFileContent();
 
       IDE.EDITOR.typeTextIntoEditor(0, " <script>");

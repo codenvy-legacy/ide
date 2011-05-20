@@ -55,18 +55,13 @@ public class GoogleGadgetPreviewTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/Calculator.xml";
       try
       {
          VirtualFileSystemUtils.mkcol(URL);
          VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, TestConstants.NodeTypes.EXO_GOOGLE_GADGET, URL + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -75,16 +70,10 @@ public class GoogleGadgetPreviewTest extends BaseTest
    @Test
    public void testGadgetPreview() throws Exception
    {
-      waitForRootElement();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(URL);
-      IDE.WORKSPACE.selectItem(URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL + FILE_NAME);
+      IDE.WORKSPACE.doubleClickOnFolder(URL);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(0);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);

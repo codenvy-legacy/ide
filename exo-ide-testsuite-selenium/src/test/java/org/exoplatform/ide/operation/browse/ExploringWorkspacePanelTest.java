@@ -75,7 +75,8 @@ public class ExploringWorkspacePanelTest extends BaseTest
    @Test
    public void testExplodeCollapseFolder() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
+      
       IDE.NAVIGATION.createFolder(FOLDER_1);
       IDE.NAVIGATION.createFolder(FOLDER_1_1);
       IDE.WORKSPACE.selectItem(FOLDER_1_URL);
@@ -100,8 +101,8 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.NAVIGATION.assertItemVisible(FOLDER_2_2_URL);
 
       //Close folder "folder-2"
-      IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER_2_URL);
-      waitForRootElement();
+      IDE.WORKSPACE.clickOpenIconOfFolder(FOLDER_2_URL);
+
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_URL);
       IDE.NAVIGATION.assertItemVisible(FOLDER_2_URL);
       //Sub folders of folder "folder-2" are hidden
@@ -109,8 +110,8 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_2_2_URL);
       
       //Open "folder-1"
-      IDE.NAVIGATION.clickOpenIconOfFolder(FOLDER_1_URL);
-      waitForRootElement();
+      IDE.WORKSPACE.clickOpenIconOfFolder(FOLDER_1_URL);
+
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_URL);
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_1_URL);
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_2_URL);
@@ -118,11 +119,9 @@ public class ExploringWorkspacePanelTest extends BaseTest
       //Sub folders of folder "folder-2" are hidden 
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_2_1_URL);
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_2_2_URL);
-      waitForRootElement();
 
       //Close workspace item
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL);
-      waitForRootElement();
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL);
       //All sub folders hide
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_1_URL);
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_1_1_URL);
@@ -132,8 +131,8 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_2_2_URL);
 
       //Open workspace item
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL);
-      waitForRootElement();
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL);
+
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_URL);
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_1_URL);
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_2_URL);

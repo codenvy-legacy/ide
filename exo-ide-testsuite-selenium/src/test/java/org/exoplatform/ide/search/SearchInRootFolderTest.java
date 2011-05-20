@@ -60,7 +60,7 @@ public class SearchInRootFolderTest extends BaseTest
    @Test
    public void testSearchInRootFolder() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.NAVIGATION.createFolder(folder1Name);
       //Create and save 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);

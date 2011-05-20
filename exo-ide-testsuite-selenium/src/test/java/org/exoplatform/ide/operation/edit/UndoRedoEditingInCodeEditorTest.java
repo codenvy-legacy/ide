@@ -20,9 +20,6 @@ package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -48,16 +45,11 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
 
    private static String UNDO_REDO_TXT = "undo-redo.txt";
 
-   private final static String STORAGE_URL =
-      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-
    @Test
    public void testUndoRedoEditingInCodeEditor() throws Exception
    {
-
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      waitForRootElement();
 
       saveAsByTopMenu(UNDO_REDO_TXT);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "1");
@@ -246,10 +238,10 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
 
-//      IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
-//      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //      IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
+      //      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       IDE.EDITOR.closeTabIgnoringChanges(1);
-      IDE.EDITOR.closeTabIgnoringChanges(0);      
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @AfterClass
@@ -257,17 +249,12 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(STORAGE_URL + UNDO_REDO_TXT);
+         VirtualFileSystemUtils.delete(WS_URL + UNDO_REDO_TXT);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }
+   
 }

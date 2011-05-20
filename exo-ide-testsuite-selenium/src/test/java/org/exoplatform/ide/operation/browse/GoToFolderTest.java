@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.operation.browse;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -41,8 +38,6 @@ import org.junit.Test;
  */
 public class GoToFolderTest extends BaseTest
 {
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
 
    private final static String FOLDER_1 = "GoToFolderTest1";
 
@@ -58,17 +53,26 @@ public class GoToFolderTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/empty.xml";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_2);
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_XML, URL + FOLDER_1 + "/" + FILE_1);
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_XML, URL + FOLDER_2 + "/" + FILE_2);
-
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_2);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_XML, WS_URL + FOLDER_1 + "/" + FILE_1);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_XML, WS_URL + FOLDER_2 + "/" + FILE_2);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
+   }
+
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_1);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_2);
+      }
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -77,54 +81,47 @@ public class GoToFolderTest extends BaseTest
    @Test
    public void testGoToFolder() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
 
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //waitForRootElement();
-
       //Open first folder and file in it
-      waitForRootElement();
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_1 + "/");
-      waitForRootElement();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_1, false);
-      waitForRootElement();
-      waitForRootElement();
-      //Close first folder
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_1 + "/");
-      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_1 + "/" + FILE_1);
 
-      waitForRootElement();
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      //Close first folder
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_1 + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_1 + "/" + FILE_1);
+
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
+
       //Select second file
-      IDE.WORKSPACE.selectItem(URL + FOLDER_2 + "/" + FILE_2);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_2 + "/" + FILE_2);
+
       //Go to folder with first file
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      waitForRootElement();
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+
       //Check file is shown in tree
       //TODO check selected state
-      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_1 + "/" + FILE_1);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_1 + "/" + FILE_1);
 
       IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand("Refresh Selected Folder");
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
-      waitForRootElement();
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_2 + "/" + FILE_2, false);
-      waitForRootElement();
+
       //Go to folder with first file
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      waitForRootElement();
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+
       //TODO check selected state
-      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_2 + "/" + FILE_2);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_2 + "/" + FILE_2);
 
       //Close opened tabs
-     IDE.EDITOR.closeFile(0);
-     IDE.EDITOR.closeFile(0);
-     
-      waitForRootElement();
+      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
+
       IDE.MENU.checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, false);
    }
 
@@ -132,58 +129,39 @@ public class GoToFolderTest extends BaseTest
    public void testGoToFolderSearchPanel() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad("30000");
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      waitForRootElement();
-      //Close root workspace folder
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //Thread.sleep(TestConstants.SLEEP_SHORT);
+      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      
+      IDE.WORKSPACE.waitForRootItem();
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL);
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_1 + "/" + FILE_1);
-      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_2 + "/" + FILE_2);
-      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_1 + "/");
-      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_2 + "/");
+      
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_1 + "/" + FILE_1);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_2 + "/" + FILE_2);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_1 + "/");
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_2 + "/");
 
       IDE.SEARCH.performSearch("/", "", "");
-      waitForRootElement();
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      
       //Check files are found
-      IDE.NAVIGATION.selectItemInSearchTree(URL + FOLDER_1 + "/" + FILE_1);
-      IDE.NAVIGATION.selectItemInSearchTree(URL + FOLDER_2 + "/" + FILE_2);
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL + FOLDER_1 + "/" + FILE_1);
+      IDE.NAVIGATION.selectItemInSearchTree(WS_URL + FOLDER_2 + "/" + FILE_2);
       //Open second file
       //      selectItemInSearchResultsTree(FILE_2);
-      openFileFromSearchResultsWithCodeEditor(URL + FOLDER_2 + "/" + FILE_2);
+      openFileFromSearchResultsWithCodeEditor(WS_URL + FOLDER_2 + "/" + FILE_2);
       //Go to folder with second file
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
+      
       IDE.MENU.checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, true);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       //TODO check selected
-      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_2 + "/" + FILE_2);
-      IDE.NAVIGATION.assertItemNotVisible(URL + FOLDER_1 + "/" + FILE_1);
-      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_1 + "/");
-      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_2 + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_2 + "/" + FILE_2);
+      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_1 + "/" + FILE_1);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_1 + "/");
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_2 + "/");
    }
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(URL + FOLDER_1);
-         VirtualFileSystemUtils.delete(URL + FOLDER_2);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-
-   }
 }

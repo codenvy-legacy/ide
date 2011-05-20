@@ -78,7 +78,6 @@ public class GroovyTemplatePreviewTest extends BaseTest
    @Test
    public void testGtmplPreview() throws Exception
    {
-      waitForRootElement();
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);

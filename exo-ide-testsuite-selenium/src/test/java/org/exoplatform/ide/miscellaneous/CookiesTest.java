@@ -77,17 +77,17 @@ public class CookiesTest extends BaseTest
    public void testCookies() throws Exception
    {
       //wait
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //select
       IDE.WORKSPACE
          .selectItem(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
       //refresh
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //select and open file
       IDE.WORKSPACE.selectItem(URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
       //Chek cookies

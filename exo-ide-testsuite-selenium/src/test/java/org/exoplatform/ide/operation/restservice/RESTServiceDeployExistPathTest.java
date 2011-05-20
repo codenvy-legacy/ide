@@ -56,8 +56,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
    @Test
    public void testDeployExistPath() throws Exception
    {
-
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //TODO*****************change**************change add folder for locked file
       IDE.NAVIGATION.createFolder(FOLDER_NAME);
       //*************************************

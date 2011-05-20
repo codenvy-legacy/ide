@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.browse;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -31,8 +33,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -62,24 +62,21 @@ public class UsingKeyboardTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-      waitForRootElement();
    }
 
    /**
     * Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
     * @throws Exception
     */
-  @Test
+   @Test
    public void testUsingKeyboardInNavigationPanel() throws Exception
    {
+      IDE.WORKSPACE.waitForRootItem();
+
       // Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
       if (!BROWSER_COMMAND.equals(EnumBrowserCommand.CHROME)
          && !BROWSER_COMMAND.toString().toLowerCase().contains("firefox"))
@@ -90,22 +87,22 @@ public class UsingKeyboardTest extends BaseTest
       VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       //refresh workspace    
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
 
@@ -114,9 +111,9 @@ public class UsingKeyboardTest extends BaseTest
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       IDE.EDITOR.closeTabIgnoringChanges(0);
@@ -129,6 +126,8 @@ public class UsingKeyboardTest extends BaseTest
    @Test
    public void testUsingKeyboardInSearchPanel() throws Exception
    {
+      IDE.WORKSPACE.waitForRootItem();
+
       // Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
       if (!BROWSER_COMMAND.equals(EnumBrowserCommand.CHROME)
          && !BROWSER_COMMAND.toString().toLowerCase().contains("firefox"))
@@ -137,8 +136,8 @@ public class UsingKeyboardTest extends BaseTest
       }
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      waitForRootElement();
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
 
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
 

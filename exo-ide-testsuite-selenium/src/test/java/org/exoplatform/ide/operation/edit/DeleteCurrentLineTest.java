@@ -46,9 +46,6 @@ public class DeleteCurrentLineTest extends BaseTest
 
    private static final String FILE_NAME_2 = "file-" + DeleteCurrentLineTest.class.getSimpleName() + "111";
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
-
    private static final String WAIT_APPEAR_STATUSBAR = Locators.STATUS_BAR_LOCATOR + "[text()='1 : 1']";
 
    private interface Lines
@@ -82,15 +79,11 @@ public class DeleteCurrentLineTest extends BaseTest
 
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(filePath1, MimeType.TEXT_HTML, URL + TEST_FOLDER + "/" + FILE_NAME_1);
-         VirtualFileSystemUtils.put(filePath2, MimeType.TEXT_PLAIN, URL + TEST_FOLDER + "/" + FILE_NAME_2);
+         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.put(filePath1, MimeType.TEXT_HTML, WS_URL + TEST_FOLDER + "/" + FILE_NAME_1);
+         VirtualFileSystemUtils.put(filePath2, MimeType.TEXT_PLAIN, WS_URL + TEST_FOLDER + "/" + FILE_NAME_2);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -101,13 +94,9 @@ public class DeleteCurrentLineTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -117,11 +106,10 @@ public class DeleteCurrentLineTest extends BaseTest
    @Test
    public void deleteLine() throws Exception
    {
-      waitForRootElement();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + TEST_FOLDER + "/" + FILE_NAME_1, false);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
+      
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME_1, false);
 
       currentTextInEditor = Lines.DEFAULT_TEXT;
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
@@ -174,7 +162,7 @@ public class DeleteCurrentLineTest extends BaseTest
 
       //----- 7 -----------
       //Open empty text file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + TEST_FOLDER + "/" + FILE_NAME_2, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME_2, false);
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
 
       assertEquals("1 : 1", selenium.getText(Locators.STATUS_BAR_LOCATOR));

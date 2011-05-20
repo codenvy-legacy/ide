@@ -18,17 +18,13 @@
  */
 package org.exoplatform.ide.operation.autocompletion.groovy;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -59,11 +55,7 @@ public class GroovyLocalVariableTest extends BaseTest
             MimeType.GROOVY_SERVICE, TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL + TEST_FOLDER + "/"
                + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -72,14 +64,10 @@ public class GroovyLocalVariableTest extends BaseTest
    @Test
    public void testLocalVariable() throws Exception
    {
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
+
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
       moveCursorDown(15);
 
       IDE.CODEASSISTANT.openForm();
@@ -88,7 +76,7 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
       IDE.CODEASSISTANT.checkElementNotPresent("s:String");
       IDE.CODEASSISTANT.closeForm();
-      
+
       moveCursorDown(5);
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("hello(String):String");
@@ -150,7 +138,7 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
       IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
       IDE.CODEASSISTANT.closeForm();
-     IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    /**
@@ -173,11 +161,7 @@ public class GroovyLocalVariableTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

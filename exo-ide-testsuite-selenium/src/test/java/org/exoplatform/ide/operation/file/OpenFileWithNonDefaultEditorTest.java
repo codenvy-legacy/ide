@@ -51,7 +51,6 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    {
       deleteCookies();
       cleanRegistry();
-
       try
       {
          VirtualFileSystemUtils.mkcol(WS_URL + FOLDER);
@@ -77,9 +76,6 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       {
          deleteCookies();
          cleanRegistry();
-
-         //cleanRepository(WS_URL);
-
          VirtualFileSystemUtils.delete(WS_URL + FOLDER);
       }
       catch (Exception e)
@@ -91,7 +87,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    @Test
    public void testOpenFileWithNonDefaultEditor() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
 
       /*
        * 1. Open Folder

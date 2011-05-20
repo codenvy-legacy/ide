@@ -31,13 +31,12 @@ import org.junit.Test;
  */
 public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
 {
+   
    @Test
    public void testDuplication() throws Exception
    {
-      waitForRootElement();
-
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
-      Thread.sleep(TestConstants.SLEEP);
 
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR,
          "var a;\n \n function a() {\n}");

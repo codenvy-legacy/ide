@@ -60,7 +60,7 @@ public class SearchByMimeTypeTest extends BaseTest
    @Test
    public void testSearchByMimeType() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.NAVIGATION.createFolder(folder1Name);
 
       //Create and save 

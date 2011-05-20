@@ -87,7 +87,7 @@ public class UploadingZippedFolderTest extends BaseTest
    @Test
    public void testUploadingHtml() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       uploadZippedFolder(FILE_PATH);

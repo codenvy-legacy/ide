@@ -38,7 +38,7 @@ public class RESTServiceVaditionWrongTest extends BaseTest
    @Test
    public void testValidaton() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 

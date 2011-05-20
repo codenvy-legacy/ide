@@ -33,6 +33,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.google.gwt.user.client.ui.IsWidget;
+
 /**
  * IDE-156:HotKeys customization.
  * 
@@ -135,8 +137,9 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
    public void testHotkeysInSeveralTabs() throws Exception
    {
       refresh();
-      waitForRootElement();
-      openFolder();
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      
       //----- 1 ------------
       //Open several tabs (open existed documents and create some new)
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);

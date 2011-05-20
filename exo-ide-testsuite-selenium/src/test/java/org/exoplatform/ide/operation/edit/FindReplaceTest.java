@@ -141,7 +141,7 @@ public class FindReplaceTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //      Thread.sleep(TestConstants.SLEEP);
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME_TXT, false);
@@ -275,7 +275,7 @@ public class FindReplaceTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //      Thread.sleep(TestConstants.SLEEP);
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -445,7 +445,7 @@ public class FindReplaceTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //      Thread.sleep(TestConstants.SLEEP);
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME_HTML, false);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);

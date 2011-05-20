@@ -117,7 +117,7 @@ public class OpenLockedFileTest extends LockFileAbstract
       checkCantSaveLockedFile();
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(URL + FOLDER_NAME + "/");
       checkFileLocking(URL + FOLDER_NAME + "/" + FILE_NAME, true);
 
       //----- 5 ----------

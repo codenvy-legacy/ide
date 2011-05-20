@@ -56,11 +56,7 @@ public class ChangeHighlightTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -69,7 +65,8 @@ public class ChangeHighlightTest extends BaseTest
    @Test
    public void testChangeHighlihtTest() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();      
+
       IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       waitForElementPresent("//div[@panel-id='editor']");
@@ -102,11 +99,7 @@ public class ChangeHighlightTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

@@ -82,7 +82,7 @@ public class RestoreVersionTest extends BaseTest
    @Test
    public void testRestoreVersion() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
@@ -235,7 +235,7 @@ public class RestoreVersionTest extends BaseTest
    public void testRestoreVersionAndEditFile() throws Exception
    {
       selenium.refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file

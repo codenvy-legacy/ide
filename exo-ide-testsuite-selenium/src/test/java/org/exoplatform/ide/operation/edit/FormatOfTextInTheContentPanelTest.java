@@ -20,7 +20,6 @@ package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -30,8 +29,6 @@ import org.exoplatform.ide.core.Navigation;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -43,6 +40,7 @@ import java.io.IOException;
 
 public class FormatOfTextInTheContentPanelTest extends BaseTest
 {
+   
    private static String FORMAT_HTML_FILE_NAME = "formating.html";
 
    private static String NON_FORMAT_HTML_FILE_NAME = "non-formating.html";
@@ -61,42 +59,48 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/formating/";
 
-   private final static String STORAGE_URL =
-      BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.put(PATH + NON_FORMAT_HTML_FILE_NAME, MimeType.TEXT_HTML, STORAGE_URL
+         VirtualFileSystemUtils.put(PATH + NON_FORMAT_HTML_FILE_NAME, MimeType.TEXT_HTML, WS_URL
             + NON_FORMAT_HTML_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + NON_FORMAT_CSS_FILE_NAME, MimeType.TEXT_CSS, STORAGE_URL
+         VirtualFileSystemUtils.put(PATH + NON_FORMAT_CSS_FILE_NAME, MimeType.TEXT_CSS, WS_URL
             + NON_FORMAT_CSS_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + NON_FORMAT_JS_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, STORAGE_URL
+         VirtualFileSystemUtils.put(PATH + NON_FORMAT_JS_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, WS_URL
             + NON_FORMAT_JS_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + NON_FORMAT_GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, STORAGE_URL
+         VirtualFileSystemUtils.put(PATH + NON_FORMAT_GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, WS_URL
             + NON_FORMAT_GADGET_FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
+   
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + NON_FORMAT_HTML_FILE_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + NON_FORMAT_CSS_FILE_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + NON_FORMAT_JS_FILE_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + NON_FORMAT_GADGET_FILE_NAME);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }   
 
    @Test
    public void testFormatingHtml() throws Exception
    {
-
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_HTML_FILE_NAME, false);
+      IDE.WORKSPACE.waitForRootItem();
+      
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + NON_FORMAT_HTML_FILE_NAME, false);
       waitForElementPresent("//div[@panel-id='editor']");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 
@@ -110,11 +114,9 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    @Test
    public void testFormatingCss() throws Exception
    {
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + NON_FORMAT_CSS_FILE_NAME);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_CSS_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + NON_FORMAT_CSS_FILE_NAME, false);
       waitForElementPresent("//div[@panel-id='editor']");
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
@@ -129,12 +131,9 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    @Test
    public void testFormatingJS() throws Exception
    {
+      IDE.WORKSPACE.waitForItem(WS_URL + NON_FORMAT_JS_FILE_NAME);
 
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + NON_FORMAT_JS_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + NON_FORMAT_JS_FILE_NAME, false);
       waitForElementPresent("//div[@panel-id='editor']");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
 
@@ -149,13 +148,10 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    @Test
    public void testFormatingGadget() throws Exception
    {
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(STORAGE_URL + NON_FORMAT_GADGET_FILE_NAME);
+      IDE.WORKSPACE.waitForItem(WS_URL + NON_FORMAT_GADGET_FILE_NAME);
+
+      IDE.WORKSPACE.selectItem(WS_URL + NON_FORMAT_GADGET_FILE_NAME);
       IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
-      
     
       waitForElementPresent("//div[@panel-id='editor']");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
@@ -165,28 +161,6 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       IDE.EDITOR.closeTabIgnoringChanges(0);
       assertEquals(formatingSource, postFormating);
-   }
-
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(STORAGE_URL + NON_FORMAT_HTML_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + NON_FORMAT_CSS_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + NON_FORMAT_JS_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + NON_FORMAT_GADGET_FILE_NAME);
-      }
-      catch (IOException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
    }
 
 }

@@ -68,7 +68,7 @@ public class CursorPositionStatusBarTest extends BaseTest
    @Test
    public void testCursorPositionInStatusBar() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.selectItem(URL + TEST_FOLDER + "/");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -77,10 +77,10 @@ public class CursorPositionStatusBarTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       saveAsUsingToolbarButton(FILE_1);
 
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //TODO****try****fix
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //****************
 
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));

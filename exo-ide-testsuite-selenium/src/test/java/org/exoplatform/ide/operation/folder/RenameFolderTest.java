@@ -59,11 +59,7 @@ public class RenameFolderTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(ORIG_URL);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -77,10 +73,8 @@ public class RenameFolderTest extends BaseTest
    @Test
    public void testRenameFolder() throws Exception
    {
-      waitForRootElement();
-      //select and refresh workspace for appper folder
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(ORIG_URL + "/");
+      
       //select folder and run rename command
       IDE.WORKSPACE.selectItem(ORIG_URL + "/");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
@@ -118,13 +112,10 @@ public class RenameFolderTest extends BaseTest
          VirtualFileSystemUtils.delete(ORIG_URL);
          VirtualFileSystemUtils.delete(RENAME_URL);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
+   
 }

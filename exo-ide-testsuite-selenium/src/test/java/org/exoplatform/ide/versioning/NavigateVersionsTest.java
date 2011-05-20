@@ -110,7 +110,7 @@ public class NavigateVersionsTest extends BaseTest
    @Test
    public void testNavigateOlderVersion() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.waitForMenuItemPresent(MenuCommands.View.VIEW);
 
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
@@ -313,7 +313,7 @@ public class NavigateVersionsTest extends BaseTest
    public void testNavigateNewerVersion() throws Exception
    {
       refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       // Version Histrory button is not present.
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
@@ -442,7 +442,7 @@ public class NavigateVersionsTest extends BaseTest
    public void testNavigateNewerVersionWithSave() throws Exception
    {
       refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -555,7 +555,7 @@ public class NavigateVersionsTest extends BaseTest
    public void testNavigateVersionWithClosePanel() throws Exception
    {
       refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");

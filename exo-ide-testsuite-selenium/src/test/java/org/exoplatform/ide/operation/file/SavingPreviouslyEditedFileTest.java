@@ -62,16 +62,11 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    @Before
    public void setUp()
    {
-
       try
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME + "/");
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -84,11 +79,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME + "/");
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -99,9 +90,6 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    {
       //----- 1 ------------
       //Create and select "Test" in "Workspace" panel.
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
 
@@ -122,11 +110,11 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       //is file saved
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
 
       assertEquals(FILE_NAME,IDE.EDITOR.getTabTitle(0));
      IDE.EDITOR.closeFile(0);
@@ -158,7 +146,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       //Test folder is closed, no file in navigation tree
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       //open Test folder
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       //see xml file in navigation tree
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
 

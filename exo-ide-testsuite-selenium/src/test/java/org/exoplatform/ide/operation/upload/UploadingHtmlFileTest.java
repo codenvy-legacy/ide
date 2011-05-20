@@ -67,7 +67,7 @@ public class UploadingHtmlFileTest extends BaseTest
    @Test
    public void testUploadingHtml() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       
       IDE.UPLOAD.open(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.TEXT_HTML);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + HTML_NAME, false);

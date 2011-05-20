@@ -18,16 +18,9 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,8 +35,6 @@ import org.junit.Test;
  */
 public class HighlightBottomTabSetTest extends BaseTest
 {
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
 
    private static String FOLDER_NAME = HighlightBottomTabSetTest.class.getSimpleName();
 
@@ -57,16 +48,12 @@ public class HighlightBottomTabSetTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
          VirtualFileSystemUtils.put(
             "src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html", MimeType.TEXT_HTML,
-            URL + FOLDER_NAME + "/" + FILE_NAME);
+            WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -75,14 +62,11 @@ public class HighlightBottomTabSetTest extends BaseTest
    @Test
    public void testHighlightBottopTabSet() throws Exception
    {
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //Thread.sleep(TestConstants.SLEEP);
-
-      //      selectItemInWorkspaceTree(FILE_NAME);
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL);
+      
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       waitForElementPresent(SHOW_PROPERTIES_ICON_LOCATOR);
       
@@ -93,8 +77,6 @@ public class HighlightBottomTabSetTest extends BaseTest
       // assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_PropertiesForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       selenium.click(SHOW_PROPERTIES_ICON_LOCATOR);
       IDE.PERSPECTIVE.checkViewIsActive("ideFilePropertiesView");
-     
-      
       
       
       IDE.EDITOR.clickOnEditor();
@@ -124,13 +106,9 @@ public class HighlightBottomTabSetTest extends BaseTest
       deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

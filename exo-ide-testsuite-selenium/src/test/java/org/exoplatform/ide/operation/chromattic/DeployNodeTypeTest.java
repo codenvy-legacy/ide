@@ -40,12 +40,10 @@ import java.io.IOException;
  */
 public class DeployNodeTypeTest extends AbstractDataObjectTest
 {
+
+   private final static String FOLDER_NAME = DeployNodeTypeTest.class.getSimpleName();
+   
    private static final String FILE_NAME = DeployNodeTypeTest.class.getSimpleName() + ".groovy";
-
-   private final static String TEST_FOLDER = DeployNodeTypeTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
 
    /**
     * Create test folder and test data object file.
@@ -55,16 +53,11 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
    {
       try
       {
-         String url = URL + TEST_FOLDER + "/";
-         VirtualFileSystemUtils.mkcol(url);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
          VirtualFileSystemUtils.put("src/test/resources/org/exoplatform/ide/operation/chromattic/A.groovy",
-            MimeType.CHROMATTIC_DATA_OBJECT, url + FILE_NAME);
+            MimeType.CHROMATTIC_DATA_OBJECT, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -78,13 +71,9 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -107,15 +96,10 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
    @Test
    public void testGenerateNodeTypeForm() throws Exception
    {
-      waitForRootElement();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       IDE.EDITOR.waitTabPresent(0);
 
       //Check controls are present and enabled:
@@ -167,12 +151,10 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
    public void testDeployIgnoreIfExist() throws Exception
    {
       refresh();
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       //Wait while buttons will be enabled
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
@@ -205,11 +187,10 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
    public void testDeployFailIfExist() throws Exception
    {
       refresh();
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       IDE.EDITOR.waitTabPresent(0);
 
       //Wait while buttons will be enabled

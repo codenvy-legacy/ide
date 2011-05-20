@@ -108,10 +108,8 @@ public class CopyFoldersAndFilesTest extends BaseTest
    @Test
    public void testCopyFoldersAndFiles() throws Exception
    {
-      waitForRootElement();
-
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_GROOVY, false);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_GADGET, false);

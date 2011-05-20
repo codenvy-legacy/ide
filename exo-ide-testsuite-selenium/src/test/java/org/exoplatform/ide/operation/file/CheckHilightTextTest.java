@@ -26,7 +26,6 @@ import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -40,7 +39,7 @@ import org.junit.Test;
 public class CheckHilightTextTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = OpeningSavingAndClosingFilesTest.class.getSimpleName();
+   private static String FOLDER_NAME = CheckHilightTextTest.class.getSimpleName();
 
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
@@ -58,28 +57,21 @@ public class CheckHilightTextTest extends BaseTest
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
-   private final static String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
-      + WS_NAME + "/" + FOLDER_NAME + "/";
-
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(STORAGE_URL);
-         VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, STORAGE_URL + HTML_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + CSS_FILE_NAME, MimeType.TEXT_CSS, STORAGE_URL + CSS_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + JS_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, STORAGE_URL + JS_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, STORAGE_URL + GADGET_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE, STORAGE_URL + GROOVY_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + XML_FILE_NAME, MimeType.TEXT_XML, STORAGE_URL + XML_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + TXT_FILE_NAME, MimeType.TEXT_PLAIN, STORAGE_URL + TXT_FILE_NAME);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + CSS_FILE_NAME, MimeType.TEXT_CSS, WS_URL + FOLDER_NAME + "/" + CSS_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + JS_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, WS_URL + FOLDER_NAME + "/" + JS_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, WS_URL + FOLDER_NAME + "/" + GADGET_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE, WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + XML_FILE_NAME, MimeType.TEXT_XML, WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + TXT_FILE_NAME, MimeType.TEXT_PLAIN, WS_URL + FOLDER_NAME + "/" + TXT_FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -90,137 +82,68 @@ public class CheckHilightTextTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(STORAGE_URL + HTML_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + CSS_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + JS_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + GADGET_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + GROOVY_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + XML_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + TXT_FILE_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-
-   //check_hilight_code
-
+   
    @Test
    public void checkXML() throws InterruptedException, Exception
    {
-      openXML();
+      IDE.WORKSPACE.waitForItem(WS_URL);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      
+      /*
+       *1. Check highlighting XML
+       */
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
       checkHilightXML();
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-   }
-
-   @Test
-   public void chekTXT() throws InterruptedException, Exception
-   {
-      openTXT();
+      IDE.EDITOR.closeFile(0);
+      
+      /*
+       * 2. Check highlighting TXT
+       */
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + TXT_FILE_NAME);
       checkHiligtTXT();
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-   }
-
-   @Test
-   public void checkJavaScript() throws InterruptedException, Exception
-   {
-      openJavaScript();
+      IDE.EDITOR.closeFile(0);
+      
+      /*
+       * 3. Check highlighting JavaScript
+       */
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + JS_FILE_NAME);
       checkHilightJavaScript();
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-   }
-
-   @Test
-   public void checkHtml() throws InterruptedException, Exception
-   {
-      openHtml();
+      IDE.EDITOR.closeFile(0);
+      
+      /*
+       * 4. Check highlighting HTML
+       */
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
       checkHilightHTML();
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-   }
-
-   @Test
-   public void checkGroovy() throws InterruptedException, Exception
-   {
-      openGroovy();
+      IDE.EDITOR.closeFile(0);
+      
+      /*
+       * 5. Check highlighting GROOVY
+       */
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
       checkHilightGroovy();
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-   }
-
-   @Test
-   public void checkHilightCSS() throws InterruptedException, Exception
-   {
-      openCss();
+      IDE.EDITOR.closeFile(0);
+      
+      /*
+       * 6. Check highlighting CSS
+       */
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + CSS_FILE_NAME);
       chekHilightingInCssFile();
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-   }
-
-   public void openXML() throws InterruptedException, Exception
-   {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   public void openTXT() throws InterruptedException, Exception
-   {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TXT_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   public void openJavaScript() throws InterruptedException, Exception
-   {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(JS_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   public void openHtml() throws InterruptedException, Exception
-   {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      //    runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   public void openGroovy() throws InterruptedException, Exception
-   {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      //runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   public void openGooglegadget() throws InterruptedException, Exception
-   {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GADGET_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   public void openCss() throws InterruptedException, Exception
-   {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(CSS_FILE_NAME, false);
+      IDE.EDITOR.closeFile(0);
+      
+      /*
+       * 7. Check highlighting CSS
+       */
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GADGET_FILE_NAME);
+      checkHiligtGoogleGadget();
+      IDE.EDITOR.closeFile(0);
    }
 
    public void checkHilightXML()
@@ -258,8 +181,6 @@ public class CheckHilightTextTest extends BaseTest
 
    public void checkHiligtTXT()
    {
-      //selenium.selectFrame("relative=top");
-      // selenium.selectFrame("//div[@class='tabSetContainer']/div/div[7]//iframe");
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[1][@class='css-selector' and text()=\"text \"]"));
       assertTrue(selenium

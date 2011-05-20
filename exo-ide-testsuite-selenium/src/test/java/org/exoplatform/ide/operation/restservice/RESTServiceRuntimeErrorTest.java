@@ -46,7 +46,7 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
    @Test
    public void testDeployUndeploy() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       
       IDE.NAVIGATION.createFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.SLEEP);

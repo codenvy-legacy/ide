@@ -97,7 +97,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
    {
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);

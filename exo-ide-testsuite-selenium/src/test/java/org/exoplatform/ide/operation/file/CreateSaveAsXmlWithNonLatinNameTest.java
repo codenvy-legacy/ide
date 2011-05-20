@@ -81,11 +81,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(URL + URLEncoder.encode(XML_FILE, "UTF-8"));
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -94,11 +90,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(URL + URLEncoder.encode(NEW_XML_FILE, "UTF-8"));
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -108,11 +100,8 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
    @Test
    public void testCreateAndSaveAsXmlWithNonLatinName() throws Exception
    {
-      waitForRootElement();
-
-      IDE.WORKSPACE.selectRootItem();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      IDE.EDITOR.waitTabPresent(0);
 
       assertEquals("Untitled file.xml *", IDE.EDITOR.getTabTitle(0));
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);

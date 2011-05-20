@@ -97,12 +97,12 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
    public void testUndeployOnRunRestService() throws Exception
    {
       //open file
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(URL);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
       IDE.WORKSPACE.waitForItem(URL + SIMPLE_FILE_NAME);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + SIMPLE_FILE_NAME, false);
@@ -124,13 +124,13 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
    {
       selenium.refresh();
       selenium.waitForPageToLoad("30000");
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //open file
 
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(URL);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
       IDE.WORKSPACE.waitForItem(URL + FILE_NAME);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);

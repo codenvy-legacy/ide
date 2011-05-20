@@ -91,7 +91,7 @@ public class CodeOutlineXmlTest extends BaseTest
    {
       //---- 1 -----------------
       //open file with text
-      waitForRootElement();
+      IDE.WORKSPACE.waitForItem(URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.doubleClickOnFolder(URL + TEST_FOLDER + "/");
       waitForElementNotPresent(IDE.NAVIGATION.getItemId(URL + TEST_FOLDER + "/" + FILE_NAME));
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);

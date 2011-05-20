@@ -52,23 +52,20 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       final String URL =
          BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FolderName + "/";
 
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       VirtualFileSystemUtils.mkcol(URL);
 
       //step 1
       checkNoFileOpened();
+
       //step 2
       IDE.WORKSPACE.selectRootItem();
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       //create new html file
 
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       IDE.WORKSPACE.selectItem(URL);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       createSaveAndCloseFile(MenuCommands.New.HTML_FILE, htmlFile, 0);
       //open with WYSIWYG editor and make default

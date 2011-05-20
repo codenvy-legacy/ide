@@ -107,13 +107,14 @@ public class RunRestServiceCommandTest extends BaseTest
    @Test
    public void testSavedFileRunRestService() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
+      
       //---- 1 -----------------
       //open file
       IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(URL);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
       IDE.WORKSPACE.waitForItem(URL + SIMPLE_FILE_NAME);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + SIMPLE_FILE_NAME, false);
@@ -162,12 +163,12 @@ public class RunRestServiceCommandTest extends BaseTest
    {
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //---- 1 -----------------
       //open file
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
       IDE.WORKSPACE.waitForItem(URL + NON_VALID_FILE_NAME);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + NON_VALID_FILE_NAME, false);
@@ -214,12 +215,12 @@ public class RunRestServiceCommandTest extends BaseTest
    {
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //---- 1 -----------------
       //open file
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
       IDE.WORKSPACE.waitForItem(URL + FILE_FOR_CHANGE_CONTENT_NAME);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_FOR_CHANGE_CONTENT_NAME, false);
@@ -258,7 +259,7 @@ public class RunRestServiceCommandTest extends BaseTest
    {
       selenium.refresh();
       selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //---- 1 -----------------
       //open file
       IDE.WORKSPACE.selectItem(WS_URL);

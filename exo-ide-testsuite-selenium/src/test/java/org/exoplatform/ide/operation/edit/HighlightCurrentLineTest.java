@@ -47,9 +47,6 @@ public class HighlightCurrentLineTest extends BaseTest
 
    private static final String FILE_NAME = "HtmlTemplate.html";
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FILE_NAME;
-
    private static final String LINE_HIGHLIGHTER_LOCATOR = "//div[@class='CodeMirror-line-highlighter']";
 
    private static final int LINE_HEIGHT = 16;
@@ -66,18 +63,13 @@ public class HighlightCurrentLineTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-
       String filePath =
          "src/test/resources/org/exoplatform/ide/operation/edit/highlightCurrentLineTest/HtmlTemplate.html";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, WS_URL + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -86,11 +78,8 @@ public class HighlightCurrentLineTest extends BaseTest
    @Test
    public void highlightCurrentLine() throws Exception
    {
+      IDE.WORKSPACE.waitForItem(WS_URL + FILE_NAME);
       //open HTML-file with required text
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      waitForRootElement();
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_NAME, false);
 

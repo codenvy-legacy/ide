@@ -58,7 +58,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
    @Test
    public void testHotkeysWithinCodeEditor() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //----- 1 ------------
       //Create new text file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);

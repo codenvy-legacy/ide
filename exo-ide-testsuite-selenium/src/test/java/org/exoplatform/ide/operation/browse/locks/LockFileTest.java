@@ -20,18 +20,13 @@ package org.exoplatform.ide.operation.browse.locks;
 
 import static org.junit.Assert.fail;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Check the work of Lock/Unlock feature.
@@ -47,10 +42,8 @@ import java.io.IOException;
  */
 public class LockFileTest extends LockFileAbstract
 {
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
 
-   private static String FOLDER_NAME;
+   private static String FOLDER_NAME = LockFileTest.class.getSimpleName();
 
    private static final String FILE_NAME_1 = "file-" + LockFileTest.class.getSimpleName() + "_1";
 
@@ -59,16 +52,11 @@ public class LockFileTest extends LockFileAbstract
    @Before
    public void setUp()
    {
-      FOLDER_NAME = LockFileTest.class.getSimpleName() + "-" + System.currentTimeMillis();
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -80,13 +68,9 @@ public class LockFileTest extends LockFileAbstract
       deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -95,11 +79,10 @@ public class LockFileTest extends LockFileAbstract
    @Test
    public void testLockFileManually() throws Exception
    {
-      waitForRootElement();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
+      IDE.WORKSPACE.waitForRootItem();
 
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, false);
 
       //----- 1 ------------
@@ -168,7 +151,7 @@ public class LockFileTest extends LockFileAbstract
       //close HTML file, open and check, that file is unlocked
       IDE.EDITOR.closeFile(1);
       IDE.EDITOR.checkIsTabPresentInEditorTabset(FILE_NAME_2, false);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME_2, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME_2, false);
 
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
@@ -192,9 +175,9 @@ public class LockFileTest extends LockFileAbstract
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
       IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, false);
 
-//      IDE.EDITOR.closeUnsavedFileAndDoNotSave(2);
-//      waitForElementNotPresent(Locators.EDITOR_TABSET_LOCATOR);
-      
+      //      IDE.EDITOR.closeUnsavedFileAndDoNotSave(2);
+      //      waitForElementNotPresent(Locators.EDITOR_TABSET_LOCATOR);
+
       IDE.EDITOR.closeTabIgnoringChanges(2);
 
       //----- 11 ------------
@@ -215,21 +198,22 @@ public class LockFileTest extends LockFileAbstract
    {
       createFileViaWebDav(FILE_NAME_1);
       createFileViaWebDav(FILE_NAME_2);
+
       refresh();
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       //----- 1 ------------
       //open files
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME_1, false);
-     
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME_1, false);
+
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, true);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME_2, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME_2, false);
 
       IDE.EDITOR.selectTab(0);
 
@@ -243,12 +227,12 @@ public class LockFileTest extends LockFileAbstract
       //----- 3 ------------
       //refresh IDE
       refresh();
-      waitForRootElement();
-      
+      IDE.WORKSPACE.waitForRootItem();
+
       //TODO After fix problem in IDE-774 should be remove
       IDE.EDITOR.selectTab(0);
       //------------------------
-      
+
       IDE.EDITOR.checkEditorTabSelected(FILE_NAME_1, true);
 
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
@@ -266,14 +250,9 @@ public class LockFileTest extends LockFileAbstract
       final String filePath = "src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL + FOLDER_NAME + "/" + fileName);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, WS_URL + FOLDER_NAME + "/" + fileName);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-         fail("Can't put file to webdav");
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
          fail("Can't put file to webdav");

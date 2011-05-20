@@ -56,20 +56,17 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
 
    private final static String FILE_NAME = "test.groovy";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
-
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME_1);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME_1 + "/" + FOLDER_NAME_2);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME_3);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_1 + "/" + FOLDER_NAME_2);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_3);
          VirtualFileSystemUtils.put(
             "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy",
-            MimeType.GROOVY_SERVICE, URL + "/" + FOLDER_NAME_3 + "/" + FILE_NAME);
+            MimeType.GROOVY_SERVICE, WS_URL + "/" + FOLDER_NAME_3 + "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -85,17 +82,12 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
    @Test
    public void testDeleteSeveralFoldersSimultaneously() throws Exception
    {
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME_1 + "/");
 
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL + FOLDER_NAME_1 + "/");
-      Thread.sleep(TestConstants.SLEEP * 4);
-
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
       selenium.controlKeyDown();
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME_2 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
       selenium.controlKeyUp();
 
       // TODO After of capability select the few elements in IDE navigator
@@ -104,9 +96,9 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       //      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
       //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, false);
 
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
       selenium.controlKeyDown();
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME_3 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_3 + "/");
       selenium.controlKeyUp();
 
       // TODO After of capability select the few elements in IDE navigator
@@ -127,8 +119,8 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME_3 + "/");
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME_3 + "/" + "test.groovy");
 
-      assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_1, "UTF-8")).getStatusCode());
-      assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME_3, "UTF-8")).getStatusCode());
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + URLEncoder.encode(FOLDER_NAME_1, "UTF-8")).getStatusCode());
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + URLEncoder.encode(FOLDER_NAME_3, "UTF-8")).getStatusCode());
    }
 
    public void chekDisappearDeleteItemForm()
@@ -147,16 +139,13 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME_1);
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME_3);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_1);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_3);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
+   
 }

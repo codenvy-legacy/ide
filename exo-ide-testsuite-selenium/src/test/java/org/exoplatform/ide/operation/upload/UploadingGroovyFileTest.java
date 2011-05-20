@@ -70,7 +70,7 @@ public class UploadingGroovyFileTest extends BaseTest
    @Test
    public void testUploadingGroovy() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.UPLOAD.open(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
 

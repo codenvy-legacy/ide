@@ -48,7 +48,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
    @Test
    public void testDeployUndeploy() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       //TODO*******************change add folder for locked file
       IDE.NAVIGATION.createFolder(FOLDER_NAME);
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);

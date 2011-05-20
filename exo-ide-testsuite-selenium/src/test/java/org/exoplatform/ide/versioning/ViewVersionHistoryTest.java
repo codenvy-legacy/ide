@@ -88,12 +88,12 @@ public class ViewVersionHistoryTest extends BaseTest
    public void testViewVersionHistoryButton() throws Exception
    {
       selenium.refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
 
       //Open new file:
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -179,7 +179,7 @@ public class ViewVersionHistoryTest extends BaseTest
    public void testViewVersionHistoryOneFile() throws Exception
    {
       selenium.refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -238,7 +238,7 @@ public class ViewVersionHistoryTest extends BaseTest
    public void testOpenCloseVersionPanel() throws Exception
    {
       selenium.refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       // open folder
@@ -317,7 +317,7 @@ public class ViewVersionHistoryTest extends BaseTest
    public void testVersionPanelForFewFiles() throws Exception
    {
       selenium.refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);

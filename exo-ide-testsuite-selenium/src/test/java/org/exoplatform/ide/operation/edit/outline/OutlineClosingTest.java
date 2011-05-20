@@ -42,7 +42,8 @@ public class OutlineClosingTest extends BaseTest
    @Test
    public void test() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
+      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
 
       openAndCloseOutline();

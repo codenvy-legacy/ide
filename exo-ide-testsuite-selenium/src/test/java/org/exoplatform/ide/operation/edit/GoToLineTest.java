@@ -41,9 +41,8 @@ public class GoToLineTest extends BaseTest
    {
       //      Open new Groovy file in editor.
 
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       String text = IDE.STATUSBAR.getCursorPosition();
       System.out.println("cursor position > [" + text + "]");

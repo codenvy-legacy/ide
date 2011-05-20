@@ -59,14 +59,21 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
       {
          VirtualFileSystemUtils.put(XML_CONTENT.getBytes(), MimeType.TEXT_XML, STORAGE_URL + URLEncoder.encode(FILE_NAME,"UTF-8"));
       }
-      catch (IOException e)
+      catch (Exception e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
-      catch (ModuleException e)
+   }
+
+   @AfterClass
+   public static void tearDown()
+   {
+      try
       {
-         // TODO Auto-generated catch block
+         VirtualFileSystemUtils.delete(STORAGE_URL + URLEncoder.encode(FILE_NAME,"UTF-8"));
+      }
+      catch (Exception e)
+      {
          e.printStackTrace();
       }
    }
@@ -74,8 +81,9 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
    @Test
    public void testDeletingXmlFileWithNonLatinName() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      
       IDE.WORKSPACE.waitForItem(WS_URL + FILE_NAME);
       IDE.WORKSPACE.selectItem(WS_URL + FILE_NAME);
       IDE.NAVIGATION.deleteSelectedItems();
@@ -84,20 +92,4 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
       assertEquals(404, VirtualFileSystemUtils.get(STORAGE_URL + URLEncoder.encode(FILE_NAME,"UTF-8")).getStatusCode());
    }
    
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(STORAGE_URL + URLEncoder.encode(FILE_NAME,"UTF-8"));
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-   }
 }

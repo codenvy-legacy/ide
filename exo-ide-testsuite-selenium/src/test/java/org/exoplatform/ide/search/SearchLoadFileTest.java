@@ -79,7 +79,7 @@ public class SearchLoadFileTest extends BaseTest
    @Test
    public void testLoadFoundFile() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);

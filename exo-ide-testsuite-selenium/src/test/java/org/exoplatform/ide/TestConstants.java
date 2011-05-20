@@ -30,7 +30,7 @@ public interface TestConstants
    
    public static final int REDRAW_PERIOD = 500;
 
-   public static final int TYPE_DELAY_PERIOD = 70;
+   public static final int TYPE_DELAY_PERIOD = 50;
 
    public static final int ANIMATION_PERIOD = 10;
 

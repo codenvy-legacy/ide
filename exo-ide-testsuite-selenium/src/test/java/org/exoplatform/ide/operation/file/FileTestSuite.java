@@ -39,8 +39,8 @@ import org.junit.runners.Suite.SuiteClasses;
    ClosingAndSaveAsFileTest.class,
    DisplayingWarningMessageTest.class,
    CheckHilightTextTest.class,
+   StoreOpenedFilesHistoryTest.class,
    
-//   StoreOpenedFilesHistoryTest.class
 //   SavingPreviouslyEditedFileTest.class,
 // RenameOpenedFileTest.class,
 // RenameClosedFileTest.class,

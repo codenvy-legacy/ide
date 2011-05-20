@@ -416,19 +416,17 @@ public abstract class BaseTest
          //click on checkbox Use as default editor
          selenium
             .click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
-         Thread.sleep(TestConstants.SLEEP);
+         Thread.sleep(TestConstants.REDRAW_PERIOD);
       }
       selenium.click("ideOpenFileWithOkButton");
       Thread.sleep(TestConstants.SLEEP);
       //time remaining to open CK editor
-      Thread.sleep(TestConstants.SLEEP);
-      //TODO add check that editor opened
    }
 
    protected void saveCurrentFile() throws Exception
    {
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
 
    /**
@@ -1055,14 +1053,14 @@ public abstract class BaseTest
       }
    }
 
-   /**
-    * Wait while root element of navigation tree appears.
-    */
-   public void waitForRootElement() throws Exception
-   {
-      waitForElementPresent(Navigation.NAVIGATION_TREE);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
+//   /**
+//    * Wait while root element of navigation tree appears.
+//    */
+//   public void waitForRootElement() throws Exception
+//   {
+//      waitForElementPresent(Navigation.NAVIGATION_TREE);
+//      Thread.sleep(TestConstants.REDRAW_PERIOD);
+//   }
 
    @AfterFailure
    public void captureScreenShotOnFailure(Throwable failure)

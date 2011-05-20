@@ -46,32 +46,29 @@ public class EditFileInWysiwygEditorTest extends BaseTest
    private final static String HTML_FILE = "EditFileInWysiwygEditor.html";
 
    private final static String TEST_FOLDER = EditFileInWysiwygEditorTest.class.getSimpleName();
-   
-   private final static String DIALOG_ASK_REOPEN ="Do you want to reopen Copy Of Untitled file.html in selected editor?";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
+   private final static String DIALOG_ASK_REOPEN =
+      "Do you want to reopen Copy Of Untitled file.html in selected editor?";
 
    @Test
    public void editFileInWysiwygEditor() throws Exception
    {
-
-      VirtualFileSystemUtils.mkcol(URL);
+      VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER + "/");
 
       final String defaultText =
          "<html>\n" + "\t<head>\n" + "\t\t<title></title>\n" + "\t</head>\n" + "\t<body>\n" + "\t\t<br />\n"
             + "\t</body>\n" + "</html>";
 
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(URL);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+
       //------ 1 ---------------
       createSaveAndCloseFile(MenuCommands.New.HTML_FILE, HTML_FILE, 0);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       //------ 2 ---------------
-      openFileFromNavigationTreeWithCkEditor(URL + HTML_FILE,"HTML" ,false);
-      Thread.sleep(2000);
+      openFileFromNavigationTreeWithCkEditor(WS_URL + TEST_FOLDER + "/" + HTML_FILE, "HTML", false);
+
       // waitForElementPresent("ideOpenFileWithForm");
       IDE.EDITOR.checkCkEditorOpened(0);
       //TODO:
@@ -114,21 +111,21 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
       assertEquals("Table Properties", selenium.getText("//div[@class='cke_dialog_body']/div"));
 
-//      //TODO fix problem in issue IDE-762
-//      //------ 6 ---------------
-//      //type qwe to Height field
-//      selenium
-//         .typeKeys(
-//            "//table[@class='cke_dialog_contents']/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr/td[2]/div/table/tbody//tr[2]/td/table/tbody/tr/td/div/div[2]/div/input",
-//            "qwe");
-//
-//      //click Ok button
-//      selenium.click("//div[@class='cke_dialog_footer']//span[text()='OK']");
-//
-//      //warning dialog
-//      
-//      //------ 7 ---------------
-//      //click Ok button in warning dialog
+      //      //TODO fix problem in issue IDE-762
+      //      //------ 6 ---------------
+      //      //type qwe to Height field
+      //      selenium
+      //         .typeKeys(
+      //            "//table[@class='cke_dialog_contents']/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr/td[2]/div/table/tbody//tr[2]/td/table/tbody/tr/td/div/div[2]/div/input",
+      //            "qwe");
+      //
+      //      //click Ok button
+      //      selenium.click("//div[@class='cke_dialog_footer']//span[text()='OK']");
+      //
+      //      //warning dialog
+      //      
+      //      //------ 7 ---------------
+      //      //click Ok button in warning dialog
 
       //click Cancel button in Table Properties dialog
       selenium.click("//div[@class='cke_dialog_footer']//span[text()='Cancel']");
@@ -167,7 +164,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[@view-id=\"idePreviewHTMLView\"]"));
 
       //select iframe in Preview tab
-      selenium.selectFrame("//iframe[@src='" + URL + HTML_FILE + "']");
+      selenium.selectFrame("//iframe[@src='" + WS_URL + TEST_FOLDER + "/" + HTML_FILE + "']");
 
       checkTable2x3Present();
 
@@ -226,11 +223,11 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       checkSourceAreaActiveInCkEditor(0, true);
       assertEquals(textWithTable2x4InCkEditor, getTextFromSourceInCkEditor(0));
 
-      assertEquals(200, VirtualFileSystemUtils.get(URL).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + TEST_FOLDER + "/").getStatusCode());
 
       //------ 14 ---------------
       //reopen file with CodeMirror
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + HTML_FILE, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + HTML_FILE, false);
       //reopne confirmatioin dialog
       assertTrue(selenium.isElementPresent("exoAskDialog"));
       assertEquals("IDE", selenium.getText("//div[@id='exoAskDialog']//div[@class='Caption']/span['info']"));
@@ -430,16 +427,10 @@ public class EditFileInWysiwygEditorTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }

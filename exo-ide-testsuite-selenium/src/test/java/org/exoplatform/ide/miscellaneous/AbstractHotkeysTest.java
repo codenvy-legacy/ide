@@ -132,12 +132,12 @@ public abstract class AbstractHotkeysTest extends BaseTest
       return null;
    }
    
-   void openFolder() throws Exception
-   {
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-   }
+//   void openFolder() throws Exception
+//   {
+//      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+//      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
+//      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+//   }
    
    void clickButton(String buttonLocator) throws Exception
    {

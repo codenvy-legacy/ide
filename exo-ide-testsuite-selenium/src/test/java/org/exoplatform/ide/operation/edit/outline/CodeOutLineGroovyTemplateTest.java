@@ -43,12 +43,10 @@ import java.io.IOException;
  */
 public class CodeOutLineGroovyTemplateTest extends BaseTest
 {
+   
    private final static String FILE_NAME = "GroovyTemplateCodeOutline.gtmpl";
 
    private final static String TEST_FOLDER = JavaTypeValidationAndFixingTest.class.getSimpleName();
-
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
 
    private static final String WAIT_FOR_PARSING_TEST_LOCATOR =
       "//html[@style='border-width: 0pt;']//body[@class='editbox']//span[284][@class='xml-tagname']";
@@ -56,18 +54,13 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/GroovyTemplateCodeOutline.gtmpl";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_TEMPLATE, URL + TEST_FOLDER + "/" + FILE_NAME);
+         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_TEMPLATE, WS_URL + TEST_FOLDER + "/" + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -78,13 +71,9 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -97,12 +86,11 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       //---- 1-2 -----------------
       //open file with text
       // Open groovy file with test content
-      waitForRootElement();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
 
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
       waitForElementPresent(WAIT_FOR_PARSING_TEST_LOCATOR);
 
       //---- 3 -----------------

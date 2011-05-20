@@ -69,10 +69,9 @@ public class AutocompleteNetvibesJsTest extends BaseTest
    @After
    public void tearDown() throws Exception
    {
-     //IDE.EDITOR.closeFileTabIgnoreChanges(0);
      IDE.EDITOR.closeTabIgnoringChanges(0);
 
-      try
+     try
       {
          VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
       }
@@ -90,9 +89,8 @@ public class AutocompleteNetvibesJsTest extends BaseTest
    @Test
    public void testAutocomplateList() throws Exception
    {
-      waitForRootElement();
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
       /*
        * 1. Open netvibes file.

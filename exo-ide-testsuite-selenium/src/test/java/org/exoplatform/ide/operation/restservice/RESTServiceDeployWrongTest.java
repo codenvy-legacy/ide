@@ -66,7 +66,7 @@ public class RESTServiceDeployWrongTest extends BaseTest
    @Test
    public void testDeployUndeploy() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");

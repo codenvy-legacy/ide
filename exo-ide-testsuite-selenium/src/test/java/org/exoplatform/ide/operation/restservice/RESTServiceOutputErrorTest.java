@@ -77,11 +77,11 @@ public class RESTServiceOutputErrorTest extends BaseTest
    @Test
    public void testOutputError() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
 
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);

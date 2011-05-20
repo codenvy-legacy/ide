@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -26,8 +25,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Test that file, locked by another user, became unchangable
@@ -40,28 +37,34 @@ import java.io.IOException;
 public class LocksByUserTest extends LockFileAbstract
 {
 
+   private final static String FOLDER_NAME = LocksByUserTest.class.getSimpleName();
+
    private final static String FILE_NAME = "file-" + LocksByUserTest.class.getSimpleName();
-
-   private final static String TEST_FOLDER = LocksByUserTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
          VirtualFileSystemUtils.put(
             "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy",
-            MimeType.GROOVY_SERVICE, URL + FILE_NAME);
+            MimeType.GROOVY_SERVICE, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
+   }
+
+   @AfterClass
+   public static void tierDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+      }
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -70,17 +73,16 @@ public class LocksByUserTest extends LockFileAbstract
    @Test
    public void testLocksByUser() throws Exception
    {
-    //fix for run tests where new session start after 7 testcases passes  
+      //fix for run tests where new session start after 7 testcases passes  
       logout();
       standaloneLogin(TestConstants.Users.ROOT);
-      waitForRootElement();
-      
-      IDE.WORKSPACE.selectItem(URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForRootItem();
+
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
       //----- 1 --------
       //open file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       //----- 2 --------
       //lock file
@@ -93,33 +95,16 @@ public class LocksByUserTest extends LockFileAbstract
       //----- 4 --------
       //login under another user
       standaloneLogin(TestConstants.Users.JOHN);
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       //----- 5 --------
-      IDE.WORKSPACE.selectItem(URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
-      checkFileLocking(URL + FILE_NAME, true);
+      checkFileLocking(WS_URL + FOLDER_NAME + "/" + FILE_NAME, true);
       //open file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       checkCantSaveLockedFile();
    }
 
-   @AfterClass
-   public static void tierDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(URL);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-   }
 }

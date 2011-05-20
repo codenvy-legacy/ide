@@ -78,7 +78,6 @@ public class CutFoldersAndFilesTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-      
       try
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
@@ -89,11 +88,7 @@ public class CutFoldersAndFilesTest extends BaseTest
          VirtualFileSystemUtils.put(RANDOM_CONTENT_2.getBytes(), MimeType.APPLICATION_GROOVY, URL + FOLDER_1 + "/" + FILE_2);
          VirtualFileSystemUtils.put(RANDOM_CONTENT_3.getBytes(), MimeType.GOOGLE_GADGET, URL + FOLDER_2 + "/" + FILE_3);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -107,14 +102,10 @@ public class CutFoldersAndFilesTest extends BaseTest
    @Test
    public void testCutOperation() throws Exception
    {
-      waitForRootElement();
-      IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForRootItem();
       
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/"); 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_2 + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_2 + "/");
       
       //Open Gadget window, open all created files.
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_1, false);

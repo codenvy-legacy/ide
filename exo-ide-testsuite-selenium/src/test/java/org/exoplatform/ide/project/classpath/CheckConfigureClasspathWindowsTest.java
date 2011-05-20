@@ -118,7 +118,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
    @Test
    public void testConfigureClasspathAndChooseSourceWindows() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
 
       /*
        * 0. Check, there is no .groovyclasspath file in workspace directory
@@ -309,7 +309,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
    public void testConfigureClasspathAppeared() throws Exception
    {
       refresh();
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       
       //1. Create new project: New -> Project from template
       IDE.TEMPLATES.createProjectFromTemplate(Templates.DEFAULT_PROJECT_TEMPLATE_NAME, CREATED_PROJECT_NAME);

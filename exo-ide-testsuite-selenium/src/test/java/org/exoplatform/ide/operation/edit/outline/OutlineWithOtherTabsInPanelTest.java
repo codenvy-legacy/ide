@@ -49,6 +49,7 @@ import java.io.IOException;
  */
 public class OutlineWithOtherTabsInPanelTest extends BaseTest
 {
+   
    private final static String TEXT_FILE_NAME = "file-1.txt";
 
    private final static String HTML_FILE_NAME = "file-2.html";
@@ -57,31 +58,22 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
 
    private final static String FOLDER_NAME = OutlineWithOtherTabsInPanelTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME + "/";
-
    @BeforeClass
    public static void setUp()
    {
-
       final String textFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/sample-text.txt";
       final String htmlFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/sample-html.html";
       final String xmlFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/sample-xml.xml";
 
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
 
-         VirtualFileSystemUtils.put(textFilePath, MimeType.TEXT_PLAIN, URL + TEXT_FILE_NAME);
-         VirtualFileSystemUtils.put(xmlFilePath, MimeType.TEXT_XML, URL + XML_FILE_NAME);
-         VirtualFileSystemUtils.put(htmlFilePath, MimeType.TEXT_HTML, URL + HTML_FILE_NAME);
+         VirtualFileSystemUtils.put(textFilePath, MimeType.TEXT_PLAIN, WS_URL + FOLDER_NAME + "/" + TEXT_FILE_NAME);
+         VirtualFileSystemUtils.put(xmlFilePath, MimeType.TEXT_XML, WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
+         VirtualFileSystemUtils.put(htmlFilePath, MimeType.TEXT_HTML, WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-         fail("Can't create folder and files");
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
          fail("Can't create folder and files");
@@ -94,13 +86,9 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -109,14 +97,12 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
    @Test
    public void testOutlineWithOtherTabsInPanel() throws Exception
    {
-      waitForRootElement();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
       //----- 1 -------------
       //open xml file
-      IDE.WORKSPACE.selectItem(URL + XML_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
       IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
       //IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       //Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -130,7 +116,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
 
       //----- 3 -------------
       //open html file
-      IDE.WORKSPACE.selectItem(URL + HTML_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
       IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
       //IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
 
@@ -139,7 +125,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
 
       //----- 4 -------------
       //open text file
-      IDE.WORKSPACE.selectItem(URL + TEXT_FILE_NAME);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + TEXT_FILE_NAME);
       IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check outline is not visible

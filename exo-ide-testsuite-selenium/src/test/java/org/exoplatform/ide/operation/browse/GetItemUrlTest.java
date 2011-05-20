@@ -37,6 +37,7 @@ import org.junit.Test;
  */
 public class GetItemUrlTest extends BaseTest
 {
+   
    private final String WORK_SPACE_LOCATOR = "//div[@ID=\"ideNavigatorItemTreeGrid\"]//div[@class=\"ide-Tree-label\"]/";
 
    private final String content1 = "<p> Hello!!! </p>";
@@ -57,24 +58,23 @@ public class GetItemUrlTest extends BaseTest
    public void testGetFileUrl() throws Exception
    {
       //Create first file
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.deleteLinesInEditor(7);
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content1);
       saveAsUsingToolbarButton(file1Name);
-      Thread.sleep(TestConstants.SLEEP * 3);
 
       IDE.EDITOR.closeFile(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + file1Name);
 
       IDE.NAVIGATION.createFolder(folderName);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content2);
       saveAsUsingToolbarButton(file2Name);
-      Thread.sleep(TestConstants.SLEEP);
+      
       IDE.EDITOR.closeFile(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
 
@@ -114,7 +114,7 @@ public class GetItemUrlTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //Check get URL for the file in the folder
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + folderName + "/");
+      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + folderName + "/");
       Thread.sleep(TestConstants.SLEEP);
       IDE.WORKSPACE.selectItem(WS_URL + folderName + "/" + file2Name);
       url = getSelectedItemUrl();

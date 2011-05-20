@@ -53,26 +53,31 @@ public class RubyAutoCompletionTest extends BaseTest
             "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/ruby/rubyAutocompletion.rb",
             MimeType.APPLICATION_RUBY, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-         fail("Can't create test folder");
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
          fail("Can't create test folder");
       }
    }
 
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
    @Test
    public void testRubyAutocompletion() throws Exception
    {
-      waitForRootElement();
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
-
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       goToLine(26);
@@ -145,23 +150,6 @@ public class RubyAutoCompletionTest extends BaseTest
 
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       IDE.EDITOR.closeTabIgnoringChanges(0);
-   }
-
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
 
 }

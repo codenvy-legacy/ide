@@ -74,12 +74,12 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
    @Test
    public void testValidaton() throws Exception
    {
-      waitForRootElement();
+      IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(URL);
 
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
       IDE.WORKSPACE.waitForItem(URL + FILE_NAME);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);

@@ -57,11 +57,7 @@ public class DeleteFolderTest extends BaseTest
          VirtualFileSystemUtils.mkcol(URL_TOOLBAR);
          VirtualFileSystemUtils.mkcol(URL_MENU);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -75,10 +71,8 @@ public class DeleteFolderTest extends BaseTest
    @Test
    public void testDeleteFolderFromToolbar() throws Exception
    {
-      waitForRootElement();
-      //select workspace and refresh
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(URL_TOOLBAR + "/");
+
       //select folder
       IDE.WORKSPACE.selectItem(URL_TOOLBAR + "/");
       //run delete
@@ -99,11 +93,8 @@ public class DeleteFolderTest extends BaseTest
    @Test
    public void testDeleteFolderFromMainMenu() throws Exception
    {
+      IDE.WORKSPACE.waitForItem(URL_MENU + "/");
 
-      waitForRootElement();
-      //select workspace and refresh
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       //select folder
       IDE.WORKSPACE.selectItem(URL_MENU + "/");
       //run command through menicommands
@@ -115,8 +106,6 @@ public class DeleteFolderTest extends BaseTest
       IDE.NAVIGATION.assertItemNotVisible(URL_MENU + FOLDER_NAME_MENU + "/");
       assertEquals(404, VirtualFileSystemUtils.get(URL_MENU).getStatusCode());
    }
-
-   
 
    public void chekDisappearDeleteItemForm()
    {
@@ -137,11 +126,7 @@ public class DeleteFolderTest extends BaseTest
          VirtualFileSystemUtils.delete(URL_TOOLBAR);
          VirtualFileSystemUtils.delete(URL_MENU);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

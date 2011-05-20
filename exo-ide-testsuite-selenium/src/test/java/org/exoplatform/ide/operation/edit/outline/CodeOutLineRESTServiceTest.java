@@ -100,8 +100,11 @@ public class CodeOutLineRESTServiceTest extends BaseTest
 
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      
       Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      
+      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
+      
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
