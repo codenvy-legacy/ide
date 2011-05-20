@@ -262,9 +262,17 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       }
 
       // display type of javascript variables
-      else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType()) && token.getElementType() != null)
+      else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType()))
       {
-         name = "<span class='item-name'>" + name + "</span><span style='color:#644a17;' class='item-type' style='margin-left: 5px;'>" + getElementType(token) + "</span>";
+         if (TokenType.FUNCTION.equals(token.getType()))
+         {
+            name = "<span class='item-name'>" + name + "()</span>"; 
+         }
+         
+         else if (token.getElementType() != null)
+         {
+            name = "<span class='item-name'>" + name + "</span><span style='color:#644a17;' class='item-type' style='margin-left: 5px;'>" + getElementType(token) + "</span>";
+         }
       }
 
       // display type of RUBY variables
