@@ -18,21 +18,18 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.io.IOException;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -44,28 +41,26 @@ public class CodeOutLineRESTServiceTest extends BaseTest
 {
 
    private final static String FILE_NAME = "RESTCodeOutline.groovy";
+
+   private final static String FOLDER = CodeOutLineRESTServiceTest.class.getSimpleName();
+
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
    
-   private final static String FOLDER_NAME = CodeOutLineRESTServiceTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
-
    private OulineTreeHelper outlineTreeHelper;
-
+   
    public CodeOutLineRESTServiceTest()
    {
       this.outlineTreeHelper = new OulineTreeHelper();
    }
-
+   
    @BeforeClass
    public static void setUp()
    {
-
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME;
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FOLDER_NAME + "/" + FILE_NAME);
+         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, "exo:groovyResourceContainer", URL + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -83,7 +78,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
      IDE.EDITOR.closeFile(0);
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(URL + FOLDER);
       }
       catch (IOException e)
       {
@@ -100,25 +95,29 @@ public class CodeOutLineRESTServiceTest extends BaseTest
    @Test
    public void testCodeOutLineRestService() throws Exception
    {
-      // Open groovy file with content
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      // Open REST service file with content
+      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
 
+      IDE.WORKSPACE.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.clickOpenIconOfFolder(URL);
+      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+      Thread.sleep(TestConstants.SLEEP);
+      
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
-      // check for presence of tab outline
-      assertTrue(selenium.isElementPresent(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR));
-      assertEquals("Outline", selenium.getText(Locators.CodeHelperPanel.SC_OUTLINE_TAB_LOCATOR + "/title"));
+      // check for presence and visibility of outline tab
+      IDE.OUTLINE.assertOutlineTreePresent();
+      IDE.OUTLINE.checkOutlinePanelVisibility(true);
 
       // create initial outline tree map
-      outlineTreeHelper.addOutlineItem(0, "@  TestService", 6, false);
-      outlineTreeHelper.addOutlineItem(1, "Dep", 32, false);
+      outlineTreeHelper.init();
+      outlineTreeHelper.addOutlineItem("@TestService", 6, false);
+      outlineTreeHelper.addOutlineItem("Dep", 32, false);
 
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();
@@ -128,21 +127,18 @@ public class CodeOutLineRESTServiceTest extends BaseTest
 
       // create opened outline tree map
       outlineTreeHelper.clearOutlineTreeInfo();
-
-      // TODO update content of node
-      outlineTreeHelper.addOutlineItem(0, "@  TestService", 6);
-      outlineTreeHelper.addOutlineItem(1, "@  post1(@   String, @   String, @   String, String) : String", 12);
-      outlineTreeHelper.addOutlineItem(2, "@  post2(@   String, @   java.lang.String, @   String, java.lang.String) : java.lang.String", 24);
-
-      outlineTreeHelper.addOutlineItem(3, "Dep", 32);
-      outlineTreeHelper.addOutlineItem(4, "name : String", 34);
-      outlineTreeHelper.addOutlineItem(5, "age : int", 35);
-      outlineTreeHelper.addOutlineItem(6, "addYear() : void", 37);
-      outlineTreeHelper.addOutlineItem(7, "greet(@   String) : java.lang.String", 39);
-      outlineTreeHelper.addOutlineItem(8, "address : int", 42);
+      outlineTreeHelper.init();      
+      outlineTreeHelper.addOutlineItem("@TestService", 6);
+      outlineTreeHelper.addOutlineItem("@post1(@String, @String, @String, String) : String", 12);
+      outlineTreeHelper.addOutlineItem("@post2(@String, @java.lang.String, @String, java.lang.String) : java.lang.String", 24);
+      outlineTreeHelper.addOutlineItem("Dep", 32);
+      outlineTreeHelper.addOutlineItem("name : String", 34);
+      outlineTreeHelper.addOutlineItem("age : int", 35);
+      outlineTreeHelper.addOutlineItem("addYear() : void", 37);
+      outlineTreeHelper.addOutlineItem("greet(@String) : java.lang.String", 39);
+      outlineTreeHelper.addOutlineItem("address : int", 42, false);   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
 
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();
    }
-
 }

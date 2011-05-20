@@ -53,15 +53,7 @@ public class Outline extends AbstractTestModule
 
    private static final int LINE_HEIGHT = 28;
 
-   /**
-    * Windows XP 1680*1050
-    */
-//   private static final int EDITOR_TOP_OFFSET_POSITION = 94;
-
-   /**
-    * SUSE 1680*1050
-    */
-   private static final int EDITOR_TOP_OFFSET_POSITION = 94;
+   private static final int OUTLINE_TOP_OFFSET_POSITION = 94;
 
    public enum TokenType {
       CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION,
@@ -290,14 +282,14 @@ public class Outline extends AbstractTestModule
     */
    public void checkOutlineTreeNodeSelected(int rowNumber, String name, boolean isSelected)
    {
-      Number linePositionTop = EDITOR_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
+      Number linePositionTop = OUTLINE_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
 
       // taking in mind vertical scrolling
-      Integer scrollTop = getScrollTop();
-      if (scrollTop != null)
-      {
-         linePositionTop = linePositionTop.intValue() - scrollTop;
-      }
+//      Integer scrollTop = getScrollTop();
+//      if (scrollTop != null)
+//      {
+//         linePositionTop = linePositionTop.intValue() - scrollTop;
+//      }
 
       selenium().isElementPresent(LINE_HIGHLIGHTER_LOCATOR);
 
@@ -422,14 +414,6 @@ public class Outline extends AbstractTestModule
       }
 
       return scrollTop;
-   }
-
-   public void selectRowTemp(int rowNumber)
-   {
-      if (rowNumber <= 0)
-         return;
-      selenium().mouseDown(Locators.TREE + "/" + "div[" + String.valueOf(rowNumber + 2) + "]");
-      //selenium().mouseUp(Locators.TREE + "/" +"div[" + String.valueOf(rowNumber + 2) + "]" );
    }
 
    /**
