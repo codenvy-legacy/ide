@@ -154,9 +154,9 @@ public class JavaScriptParser extends CodeMirrorParserImpl
          }   
                
          // to recognize variable declaration like "var i = {"               
-         else if ((newToken = isVariableWithObjectValue((Stack<Node>) nodeStack.clone(), lineNumber)) != null)
+         else if ((newToken = isVariableWithObjectValue((Stack<Node>) nodeStack.clone())) != null)
          {
-            addSubToken(currentToken, newToken);
+            addSubToken(lineNumber, currentToken, newToken);
             enclosers.push(TokenType.BLOCK);
          }
          
@@ -740,7 +740,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
     * @param non-safe nodeStack 
     * @return node of variable with array type
     */
-   private TokenBeenImpl isVariableWithObjectValue(Stack<Node> nodeStack, int lineNumber)
+   private TokenBeenImpl isVariableWithObjectValue(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 3)
       {
