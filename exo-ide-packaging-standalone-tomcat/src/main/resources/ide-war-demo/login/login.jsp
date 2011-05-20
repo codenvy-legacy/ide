@@ -2,7 +2,7 @@
 <%
    if(!request.isSecure())
    {
-      String location = "https://" + request.getServerName() + ":8443" + request.getRequestURI();
+      String location = "https://" + request.getServerName() + ":8443" + "/IDE/Application.html";
       response.sendRedirect(location);
       return;
    } 
