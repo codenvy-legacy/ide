@@ -44,17 +44,18 @@ import org.junit.Test;
  */
 public class CodeOutLineNetvibesTest extends BaseTest
 {
-   
+
    private final static String FILE_NAME = "NetvibesCodeOutline.html";
-   
+
    private final static String FOLDER_NAME = CodeOutLineNetvibesTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
+
    @BeforeClass
    public static void setUp()
    {
-      String filePath ="src/test/resources/org/exoplatform/ide/operation/edit/outline/NetvibesCodeOutline.html";
+      String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/NetvibesCodeOutline.html";
       try
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
@@ -69,7 +70,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -87,133 +88,102 @@ public class CodeOutLineNetvibesTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    // IDE-473 Issue
    @Test
    public void testCodeOutLineNetvibes() throws Exception
    {
       //------ 1-3 ------------
       //open file with text
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME +"/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
+      waitForRootElement();
+      IDE.WORKSPACE.doubleClickOnFolder(URL + FOLDER_NAME + "/");
+      waitForElementNotPresent(IDE.NAVIGATION.getItemId(URL + FOLDER_NAME + "/" + FILE_NAME));
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       //------ 4 ------------
       //show Outline
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      
-      Thread.sleep(TestConstants.SLEEP);
-
-      //press key DOWN and key UP 
-      //TODO: check why code outline works incorrectly without this
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-     
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      Thread.sleep(TestConstants.SLEEP);
-
-      //------ 5 ------------
-      //check Outline tree
+      waitForElementPresent("ideOutlineTreeGrid");
       checkTreeCorrectlyCreated();
-      
-      //------ 6 ------------
-      //check navigation in tree
-      //click on "p" tag
-      IDE.OUTLINE.select(3);
-      
-      assertEquals("51 : 1", getCursorPositionUsingStatusBar());
-      
-      //close "p" tag
-      IDE.OUTLINE.clickOpenImg(3, 1);
-      assertEquals("51 : 1", getCursorPositionUsingStatusBar());
-      
-      //open "p" tag
-      IDE.OUTLINE.clickOpenImg(3, 1);
-      assertEquals("51 : 1", getCursorPositionUsingStatusBar());
-      IDE.OUTLINE.checkOutlineTreeNodeSelected(3, "p", true);
-      
-      goToLine(7);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.OUTLINE.checkOutlineTreeNodeSelected(2, "meta", true);
-      
-      //press Ctrl+D to delete lines
-      //click on editor
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      for (int i = 0; i < 5; i++)
-      {
-        IDE.EDITOR.runHotkeyWithinEditor(0, true, false, 68);
-         Thread.sleep(TestConstants.SLEEP_SHORT*2);
-      }
-      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.OUTLINE.checkOutlineTreeNodeSelected(2, "link", true);
-      
-      assertEquals("html", IDE.OUTLINE.getTitle(0, 0));
-      assertEquals("head", IDE.OUTLINE.getTitle(1, 0));
-      
-      assertEquals("link", IDE.OUTLINE.getTitle(2, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(3, 0));
-      assertEquals("title", IDE.OUTLINE.getTitle(4, 0));
-      assertEquals("link", IDE.OUTLINE.getTitle(5, 0));
-      assertEquals("widget:preferences", IDE.OUTLINE.getTitle(6, 0));
-      assertEquals("style", IDE.OUTLINE.getTitle(7, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(8, 0));
-      assertEquals("body", IDE.OUTLINE.getTitle(9, 0));
+
+      //      //check Outline tree
+      //      checkTreeCorrectlyCreated();
+      //      
+      //      //------ 6 ------------
+      //      //check navigation in tree
+      //      //click on "p" tag
+      //      IDE.OUTLINE.select(3);
+      //      
+      //      assertEquals("51 : 1", getCursorPositionUsingStatusBar());
+      //      
+      //      //close "p" tag
+      //      IDE.OUTLINE.clickOpenImg(3, 1);
+      //      assertEquals("51 : 1", getCursorPositionUsingStatusBar());
+      //      
+      //      //open "p" tag
+      //      IDE.OUTLINE.clickOpenImg(3, 1);
+      //      assertEquals("51 : 1", getCursorPositionUsingStatusBar());
+      //      IDE.OUTLINE.checkOutlineTreeNodeSelected(3, "p", true);
+      //      
+      //      goToLine(7);
+      //      Thread.sleep(TestConstants.SLEEP);
+      //      IDE.OUTLINE.checkOutlineTreeNodeSelected(2, "meta", true);
+      //      
+      //      //press Ctrl+D to delete lines
+      //      //click on editor
+      //      selenium.clickAt("//body[@class='editbox']", "5,5");
+      //      for (int i = 0; i < 5; i++)
+      //      {
+      //        IDE.EDITOR.runHotkeyWithinEditor(0, true, false, 68);
+      //         Thread.sleep(TestConstants.SLEEP_SHORT*2);
+      //      }
+      //      Thread.sleep(TestConstants.SLEEP);
+      //      
+      //      IDE.OUTLINE.checkOutlineTreeNodeSelected(2, "link", true);
+      //      
+      //      assertEquals("html", IDE.OUTLINE.getTitle(0, 0));
+      //      assertEquals("head", IDE.OUTLINE.getTitle(1, 0));
+      //      
+      //      assertEquals("link", IDE.OUTLINE.getTitle(2, 0));
+      //      assertEquals("script", IDE.OUTLINE.getTitle(3, 0));
+      //      assertEquals("title", IDE.OUTLINE.getTitle(4, 0));
+      //      assertEquals("link", IDE.OUTLINE.getTitle(5, 0));
+      //      assertEquals("widget:preferences", IDE.OUTLINE.getTitle(6, 0));
+      //      assertEquals("style", IDE.OUTLINE.getTitle(7, 0));
+      //      assertEquals("script", IDE.OUTLINE.getTitle(8, 0));
+      //      assertEquals("body", IDE.OUTLINE.getTitle(9, 0));
 
    }
-   
+
    private void checkTreeCorrectlyCreated() throws Exception
    {
-      //check for presence of tab outline
-      assertTrue(selenium.isElementPresent(Locators.CodeHelperPanel.SC_OUTLINE_TAB_LOCATOR));
-      assertEquals("Outline", selenium.getText(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR 
-         + "/tab[index=0]/title"));
-      
-      //check tree correctly created:
-      //all nodes closed, except root
-      assertEquals("html", IDE.OUTLINE.getTitle(0, 0));
-      assertEquals("head", IDE.OUTLINE.getTitle(1, 0));
-      assertEquals("body", IDE.OUTLINE.getTitle(2, 0));
-      
-      //open "head" node
-      IDE.OUTLINE.clickOpenImg(1, 0);
-      //check new nodes appeard
-      assertEquals("meta", IDE.OUTLINE.getTitle(2, 0));
-      assertEquals("meta", IDE.OUTLINE.getTitle(3, 0));
-      assertEquals("meta", IDE.OUTLINE.getTitle(4, 0));
-      assertEquals("meta", IDE.OUTLINE.getTitle(5, 0));
-      assertEquals("meta", IDE.OUTLINE.getTitle(6, 0));
-      assertEquals("link", IDE.OUTLINE.getTitle(7, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(8, 0));
-      assertEquals("title", IDE.OUTLINE.getTitle(9, 0));
-      assertEquals("link", IDE.OUTLINE.getTitle(10, 0));
-      assertEquals("widget:preferences", IDE.OUTLINE.getTitle(11, 0));
-      assertEquals("style", IDE.OUTLINE.getTitle(12, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(13, 0));
-      assertEquals("body", IDE.OUTLINE.getTitle(14, 0));
-      
-      //open "script" node
-      IDE.OUTLINE.clickOpenImg(13, 0);
-      assertEquals("YourWidgetName : Object", IDE.OUTLINE.getTitle(14, 0));
-      assertEquals("function()", IDE.OUTLINE.getTitle(15, 0));
-      assertEquals("function()", IDE.OUTLINE.getTitle(16, 0));      
-      assertEquals("body", IDE.OUTLINE.getTitle(17, 0));
-     
-      //close "head" node
-      IDE.OUTLINE.clickOpenImg(1, 0);
-      
-      //open "body" node
-      IDE.OUTLINE.clickOpenImg(2, 0);
-      assertEquals("p", IDE.OUTLINE.getTitle(3, 0));
+      //check html node
+      IDE.OUTLINE.assertElmentPresentById("html:TAG:4");
+
+      //check head tag and subnodes head
+      IDE.OUTLINE.assertElmentPresentById("head:TAG:6");
+      IDE.OUTLINE.assertElmentPresentById("meta:TAG:7");
+      IDE.OUTLINE.assertElmentPresentById("meta:TAG:8");
+      IDE.OUTLINE.assertElmentPresentById("meta:TAG:9");
+      IDE.OUTLINE.assertElmentPresentById("meta:TAG:10");
+      IDE.OUTLINE.assertElmentPresentById("meta:TAG:11");
+      IDE.OUTLINE.assertElmentPresentById("link:TAG:12");
+      IDE.OUTLINE.assertElmentPresentById("script:TAG:14");
+      IDE.OUTLINE.assertElmentPresentById("title:TAG:16");
+      IDE.OUTLINE.assertElmentPresentById("link:TAG:17");
+      IDE.OUTLINE.assertElmentPresentById("widget:preferences:TAG:20");
+      IDE.OUTLINE.assertElmentPresentById("style:TAG:22");
+
+      //check script tag and subnodes script
+      IDE.OUTLINE.assertElmentPresentById("script:TAG:26");
+      IDE.OUTLINE.assertElmentPresentById("YourWidgetName:VARIABLE:31");
+      IDE.OUTLINE.assertElmentPresentById("function():FUNCTION:37");
+      IDE.OUTLINE.assertElmentPresentById("function():FUNCTION:44");
+
+      //check body tag and subnodes body
+      IDE.OUTLINE.assertElmentPresentById("body:TAG:50");
+      IDE.OUTLINE.assertElmentPresentById("p:TAG:51");
+
    }
 
 }
