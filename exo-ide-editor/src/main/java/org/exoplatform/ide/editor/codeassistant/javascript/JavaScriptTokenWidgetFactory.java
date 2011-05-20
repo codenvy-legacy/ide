@@ -21,6 +21,7 @@ package org.exoplatform.ide.editor.codeassistant.javascript;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+import org.exoplatform.ide.editor.codeassistant.javascript.ui.JsFunctionWidget;
 import org.exoplatform.ide.editor.codeassistant.javascript.ui.JsKeyWordWidget;
 import org.exoplatform.ide.editor.codeassistant.javascript.ui.JsObjectWidget;
 import org.exoplatform.ide.editor.codeassistant.javascript.ui.JsTemplateWidtet;
@@ -54,8 +55,10 @@ public class JavaScriptTokenWidgetFactory implements TokenWidgetFactory
          case METHOD :
          case VARIABLE :
          case PROPERTY :
-         case FUNCTION :
             return new JsWidget(token);
+            
+         case FUNCTION :
+            return new JsFunctionWidget(token);
 
          default :
             return new JsKeyWordWidget(token);

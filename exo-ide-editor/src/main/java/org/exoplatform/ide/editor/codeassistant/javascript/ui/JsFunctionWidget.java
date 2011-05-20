@@ -19,8 +19,6 @@
 package org.exoplatform.ide.editor.codeassistant.javascript.ui;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 
 import com.google.gwt.user.client.ui.Grid;
@@ -29,45 +27,33 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: JsWodget Feb 24, 2011 4:22:18 PM evgen $
+ * @author <a href="mailto:dnochevnov@gmail.com">Dmytro Nochevnov</a>
+ * @version $Id:
  *
  */
-public class JsWidget extends JSBaseWidget
+public class JsFunctionWidget extends JSBaseWidget
 {
 
    /**
     * @param token
     */
-   public JsWidget(Token token)
+   public JsFunctionWidget(Token token)
    {
       super(token);
       grid = new Grid(1, 3);
       grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
 
-      Image i = getImage();
+      Image i = new Image(CodeAssistantClientBundle.INSTANCE.functionItem());
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
-      String name = token.getName();
-      if (token.getType() == TokenType.FUNCTION)
-      {
-         name += "()";
-      }
-      if (token.hasProperty(TokenProperties.SHORT_HINT))
-      {
-         name += token.getProperty(TokenProperties.SHORT_HINT).isStringProperty().stringValue();
-      }
+      String name = token.getName() + "()";
 
       Label nameLabel = new Label(name, false);
 
       grid.setWidget(0, 1, nameLabel);
       String pack = "";
-      if (token.hasProperty(TokenProperties.FQN))
-      {
-         pack = "-" + token.getProperty(TokenProperties.FQN).isStringProperty().stringValue();
-      }
 
       Label l = new Label(pack, false);
       l.setStyleName(CodeAssistantClientBundle.INSTANCE.css().fqnStyle());
@@ -84,26 +70,11 @@ public class JsWidget extends JSBaseWidget
    }
 
    /**
-    * Image that represent current token type(Class, Interface or Annotation)
-    * 
-    * @return {@link Image}
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenValue()
     */
-   private Image getImage()
+   @Override
+   public String getTokenValue()
    {
-      switch (token.getType())
-      {
-         case METHOD :
-            return new Image(CodeAssistantClientBundle.INSTANCE.methodItem());
-         case VARIABLE :
-            return new Image(CodeAssistantClientBundle.INSTANCE.varItem());
-         case PROPERTY :
-            return new Image(CodeAssistantClientBundle.INSTANCE.property());
-         case FUNCTION :
-            return new Image(CodeAssistantClientBundle.INSTANCE.functionItem());
-         default :
-            return new Image(CodeAssistantClientBundle.INSTANCE.template());
-
-      }
-
+      return token.getName() + "()";
    }
 }
