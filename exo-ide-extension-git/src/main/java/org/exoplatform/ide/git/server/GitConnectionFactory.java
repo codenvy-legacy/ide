@@ -35,7 +35,7 @@ public abstract class GitConnectionFactory
    private static ServiceLoader<GitConnectionFactory> gitConnectionFactories = ServiceLoader
       .load(GitConnectionFactory.class);
 
-   public static GitConnectionFactory getIntance() throws GitException
+   public static GitConnectionFactory getInstance() throws GitException
    {
       Iterator<GitConnectionFactory> iter = gitConnectionFactories.iterator();
       if (!iter.hasNext())

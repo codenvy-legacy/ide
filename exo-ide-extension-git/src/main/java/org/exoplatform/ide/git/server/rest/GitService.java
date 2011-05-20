@@ -579,6 +579,6 @@ public class GitService
       Principal principal = sctx.getUserPrincipal();
       if (principal != null)
          user = new GitUser(principal.getName());
-      return GitConnectionFactory.getIntance().getConnection(workDir, user);
+      return GitConnectionFactory.getInstance().getConnection(workDir, user);
    }
 }

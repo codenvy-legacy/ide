@@ -35,7 +35,7 @@ public class ConnectionFactoryTest extends BaseTest
 {
    public void testClientFactory() throws Exception
    {
-      GitConnectionFactory gitConnectionFactory = GitConnectionFactory.getIntance();
+      GitConnectionFactory gitConnectionFactory = GitConnectionFactory.getInstance();
 
       URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
       File target = new File(testCls.toURI()).getParentFile();
