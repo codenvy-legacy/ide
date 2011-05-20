@@ -91,17 +91,20 @@ public class CodeOutLineHtmlTest extends BaseTest
    @Test
    public void testCodeOutLineHtml() throws Exception
    {
-      //---- 1-3 -----------------
+      //---- 1 -----------------
       //open file with text
       waitForRootElement();
       IDE.WORKSPACE.doubleClickOnFolder(URL + FOLDER_NAME + "/");
       waitForElementNotPresent(IDE.NAVIGATION.getItemId(URL + FOLDER_NAME + "/" + FILE_NAME));
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
-      //---- 4 ----
+      //---- 2 ----
       //show Outline
       IDE.TOOLBAR.runCommand("Show Outline");
       waitForElementPresent("ideOutlineTreeGrid");
+
+      //-----3------
+      checkTreeCorrectlyCreated();
 
    }
 
