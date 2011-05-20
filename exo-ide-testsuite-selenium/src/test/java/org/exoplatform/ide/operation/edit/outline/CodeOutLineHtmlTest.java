@@ -43,17 +43,18 @@ import org.junit.Test;
  */
 public class CodeOutLineHtmlTest extends BaseTest
 {
-   
+
    private final static String FILE_NAME = "HtmlCodeOutline.html";
-   
+
    private final static String FOLDER_NAME = CodeOutLineHtmlTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
+
    @BeforeClass
    public static void setUp()
    {
-      String filePath ="src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html";
+      String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html";
       try
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
@@ -68,7 +69,7 @@ public class CodeOutLineHtmlTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -93,220 +94,69 @@ public class CodeOutLineHtmlTest extends BaseTest
       //---- 1-3 -----------------
       //open file with text
       waitForRootElement();
-      IDE.NAVIGATION.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/"+ FILE_NAME, false);
+      IDE.WORKSPACE.doubleClickOnFolder(URL + FOLDER_NAME +"/" );
+       waitForElementNotPresent(IDE.NAVIGATION.getItemId(URL + FOLDER_NAME +"/"));
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       //---- 4 ----
       //show Outline
-      Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommand("Show Outline");
-      Thread.sleep(TestConstants.SLEEP);
+      waitForElementPresent("ideOutlineTreeGrid");
 
-      //---- 5 ----
-      //check Outline tree
-      checkTreeCorrectlyCreated();
-      
-      //---- 6 ----
-      //check navigation in tree
-      //click on td tag from tbody of first table
-      IDE.OUTLINE.select(15);
-      assertEquals("21 : 1", getCursorPositionUsingStatusBar());
-      
-      //close tr tag
-      IDE.OUTLINE.clickOpenImg(13, 1);
-      assertEquals("21 : 1", getCursorPositionUsingStatusBar());
-      
-      //open tr tag
-      IDE.OUTLINE.clickOpenImg(13, 1);
-      assertEquals("21 : 1", getCursorPositionUsingStatusBar());
-      IDE.OUTLINE.checkOutlineTreeNodeSelected(15, "td", true);
-      
-      //click on another td tab from the second table
-//      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[28]/col[1]/open");
-//      Thread.sleep(TestConstants.SLEEP_SHORT);
-//      assertEquals("46 : 1", getCursorPositionUsingStatusBar());
-      
-      //click on first table node in Outlite tree
-      IDE.OUTLINE.select(8);
-      assertEquals("14 : 1", getCursorPositionUsingStatusBar());
-      
-      //---- 7 ----
-      //check, that tree will correctly updated, after changing content
-      
-      //delete table tag from html file
-      //press Ctrl+D to delete lines
-      for (int i = 0; i < 11; i++)
-      {
-        IDE.EDITOR.runHotkeyWithinEditor(0, true, false, 68);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-      }
-      Thread.sleep(TestConstants.SLEEP);
-      
-      //check updated tree
-      assertEquals("html", IDE.OUTLINE.getTitle(0, 0));
-      assertEquals("head", IDE.OUTLINE.getTitle(1, 0));
-      assertEquals("body", IDE.OUTLINE.getTitle(2, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(3, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(4, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(5, 0));
-      assertEquals("style", IDE.OUTLINE.getTitle(6, 0));
-      assertEquals("table", IDE.OUTLINE.getTitle(7, 0));
-      
-      //check, that first br tag is selected
-      IDE.OUTLINE.checkOutlineTreeNodeSelected(3, "br", true);
-      assertEquals("14 : 1", getCursorPositionUsingStatusBar());
-      
-      //click on editor
-     IDE.EDITOR.clickOnEditor();
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      //press key DOWN to navigate in editor
-      for (int i = 0; i < 18; i++){
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-      }
-      Thread.sleep(TestConstants.SLEEP);
-      assertEquals("19 : 1", getCursorPositionUsingStatusBar());
-      //check updated tree
-      //node script must be opened and displayGreeting selected (and opened too)
-      assertEquals("html", IDE.OUTLINE.getTitle(0, 0));
-      assertEquals("head", IDE.OUTLINE.getTitle(1, 0));
-      assertEquals("body", IDE.OUTLINE.getTitle(2, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(3, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(4, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(5, 0));
-      assertEquals("prefs : gadgets.Prefs", IDE.OUTLINE.getTitle(6, 0));
-      assertEquals("displayGreeting()", IDE.OUTLINE.getTitle(7, 0));
-      assertEquals("today : Date", IDE.OUTLINE.getTitle(8, 0));
-      assertEquals("time : Object", IDE.OUTLINE.getTitle(9, 0));
-      assertEquals("html : Object", IDE.OUTLINE.getTitle(10, 0));  
-      assertEquals("style", IDE.OUTLINE.getTitle(11, 0));
-      assertEquals("table", IDE.OUTLINE.getTitle(12, 0));
-      
-      Thread.sleep(TestConstants.SLEEP);
-
-      //---- 8 ----
-      //close file
-     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
-   
+
    private void checkTreeCorrectlyCreated() throws Exception
    {
-      //check for presence of tab outline
-      assertTrue(selenium.isElementPresent(Locators.CodeHelperPanel.SC_OUTLINE_TAB_LOCATOR));
-      assertEquals("Outline", selenium.getText(Locators.CodeHelperPanel.SC_CODE_HELPER_TABSET_LOCATOR 
-         + "/tab[index=0]/title"));
-      
-      //check tree correctly created:
-      //all nodes closed, except root
-      assertEquals("html", IDE.OUTLINE.getTitle(0, 0));
-      assertEquals("head", IDE.OUTLINE.getTitle(1, 0));
-      assertEquals("body", IDE.OUTLINE.getTitle(2, 0));
-      
-      //open head node
-      IDE.OUTLINE.clickOpenImg(1, 0);
-      //check new nodes appeard
-      assertEquals("meta", IDE.OUTLINE.getTitle(2, 0));
-      assertEquals("link", IDE.OUTLINE.getTitle(3, 0));
-      assertEquals("title", IDE.OUTLINE.getTitle(4, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(5, 0));
-      assertEquals("style", IDE.OUTLINE.getTitle(6, 0));
-      assertEquals("body", IDE.OUTLINE.getTitle(7, 0));
-      
-      Thread.sleep(TestConstants.SLEEP*2);
-      IDE.OUTLINE.clickOpenImg(7, 0);
-      Thread.sleep(TestConstants.SLEEP*2);
-      
-      //check new nodes appeard
-      assertEquals("table", IDE.OUTLINE.getTitle(8, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(9, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(10, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(11, 0));
-      assertEquals("style", IDE.OUTLINE.getTitle(12, 0));
-      assertEquals("table", IDE.OUTLINE.getTitle(13, 0));
-      
-      //open table node
-      IDE.OUTLINE.clickOpenImg(8, 0);
-      //check subnodes of table
-      assertEquals("thead", IDE.OUTLINE.getTitle(9, 0));
-      assertEquals("tbody", IDE.OUTLINE.getTitle(10, 0));
-      //check other nodes
-      assertEquals("br", IDE.OUTLINE.getTitle(11, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(12, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(13, 0));
-      assertEquals("style", IDE.OUTLINE.getTitle(14, 0));
-      assertEquals("table", IDE.OUTLINE.getTitle(15, 0));
-      
-      //open thead node
-      IDE.OUTLINE.clickOpenImg(9, 0);
-      //check subnodes of thead
-      assertEquals("tr", IDE.OUTLINE.getTitle(10, 0));
-      //check other nodes
-      assertEquals("tbody", IDE.OUTLINE.getTitle(11, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(12, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(13, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(14, 0));
-      assertEquals("style", IDE.OUTLINE.getTitle(15, 0));
-      assertEquals("table", IDE.OUTLINE.getTitle(16, 0));
-      
-      //open tr node
-      IDE.OUTLINE.clickOpenImg(10, 0);
-      //check subnodes of tr
-      assertEquals("td", IDE.OUTLINE.getTitle(11, 0));
-      //check other nodes
-      assertEquals("tbody", IDE.OUTLINE.getTitle(12, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(13, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(14, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(15, 0));
-      assertEquals("style", IDE.OUTLINE.getTitle(16, 0));
-      assertEquals("table", IDE.OUTLINE.getTitle(17, 0));
-      
-      //open tbody node
-      IDE.OUTLINE.clickOpenImg(12, 0);
-      //check subnodes of tbody
-      assertEquals("tr", IDE.OUTLINE.getTitle(13, 0));
-      //check other nodes
-      assertEquals("br", IDE.OUTLINE.getTitle(14, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(15, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(16, 0));
-      assertEquals("style", IDE.OUTLINE.getTitle(17, 0));
-      assertEquals("table", IDE.OUTLINE.getTitle(18, 0));
-      
-      //open tr node
-      IDE.OUTLINE.clickOpenImg(13, 0);
-      //check subnodes of tr
-      assertEquals("td", IDE.OUTLINE.getTitle(14, 0));
-      assertEquals("td", IDE.OUTLINE.getTitle(15, 0));
-      assertEquals("td", IDE.OUTLINE.getTitle(16, 0));
-      //check other nodes
-      assertEquals("br", IDE.OUTLINE.getTitle(17, 0));
-      assertEquals("br", IDE.OUTLINE.getTitle(18, 0));
-      assertEquals("script", IDE.OUTLINE.getTitle(19, 0));
-      assertEquals("style", IDE.OUTLINE.getTitle(20, 0));
-      assertEquals("table", IDE.OUTLINE.getTitle(21, 0));
-      
-      //open script node
-      IDE.OUTLINE.clickOpenImg(19, 0);
-      //check subnodes of script
-      assertEquals("prefs : gadgets.Prefs", IDE.OUTLINE.getTitle(20, 0));
-      assertEquals("displayGreeting()", IDE.OUTLINE.getTitle(21, 0));
-      //check other nodes
-      assertEquals("style", IDE.OUTLINE.getTitle(22, 0));
-      assertEquals("table", IDE.OUTLINE.getTitle(23, 0));
-      
-      //open displayGreeting node
-      IDE.OUTLINE.clickOpenImg(21, 0);
-      //check subnodes of displayGreeting
-      assertEquals("today : Date", IDE.OUTLINE.getTitle(22, 0));
-      assertEquals("time : Object", IDE.OUTLINE.getTitle(23, 0));
-      assertEquals("html : Object", IDE.OUTLINE.getTitle(24, 0));      
 
-      //check other nodes
-      assertEquals("style", IDE.OUTLINE.getTitle(25, 0));
-      assertEquals("table", IDE.OUTLINE.getTitle(26, 0));
-      
-      Thread.sleep(TestConstants.SLEEP);
+      //check html node
+      IDE.OUTLINE.assertElmentPresentById("html:TAG:1");
+
+      //check head tag and subnodes head
+      IDE.OUTLINE.assertElmentPresentById("head:TAG:2");
+      IDE.OUTLINE.assertElmentPresentById("meta:TAG:3");
+      IDE.OUTLINE.assertElmentPresentById("link:TAG:4");
+      IDE.OUTLINE.assertElmentPresentById("title:TAG:5");
+      IDE.OUTLINE.assertElmentPresentById("script:TAG:6");
+      IDE.OUTLINE.assertElmentPresentById("style:TAG:7");
+
+      //check body tag and subnodes body
+      IDE.OUTLINE.assertElmentPresentById("body:TAG:13");
+
+      //check table tag and subnodes table
+      IDE.OUTLINE.assertElmentPresentById("table:TAG:14");
+      IDE.OUTLINE.assertElmentPresentById("thead:TAG:15");
+      IDE.OUTLINE.assertElmentPresentById("tr:TAG:16");
+      IDE.OUTLINE.assertElmentPresentById("td:TAG:16");
+
+      //check tbody tag and subnodes tbody
+      IDE.OUTLINE.assertElmentPresentById("tbody:TAG:18");
+      IDE.OUTLINE.assertElmentPresentById("tr:TAG:19");
+      IDE.OUTLINE.assertElmentPresentById("td:TAG:20");
+      IDE.OUTLINE.assertElmentPresentById("td:TAG:21");
+      IDE.OUTLINE.assertElmentPresentById("td:TAG:22");
+      IDE.OUTLINE.assertElmentPresentById("br:TAG:25");
+      IDE.OUTLINE.assertElmentPresentById("br:TAG:26");
+
+      //check script tag and subnodes script
+      IDE.OUTLINE.assertElmentPresentById("script:TAG:27");
+      IDE.OUTLINE.assertElmentPresentById("prefs:VARIABLE:28");
+      IDE.OUTLINE.assertElmentPresentById("displayGreeting():FUNCTION:30");
+      IDE.OUTLINE.assertElmentPresentById("today:VARIABLE:31");
+      IDE.OUTLINE.assertElmentPresentById("html:VARIABLE:33");
+
+      //check style tag
+      IDE.OUTLINE.assertElmentPresentById("style:TAG:36");
+
+      //check tr and subnodes tag
+      IDE.OUTLINE.assertElmentPresentById("tr:TAG:45");
+      IDE.OUTLINE.assertElmentPresentById("td:TAG:46");
+      IDE.OUTLINE.assertElmentPresentById("td:TAG:47");
+
+      //check tr and subnodes tag
+      IDE.OUTLINE.assertElmentPresentById("tr:TAG:49");
+      IDE.OUTLINE.assertElmentPresentById("td:TAG:50");
+      IDE.OUTLINE.assertElmentPresentById("td:TAG:51");
+
    }
 
 }
