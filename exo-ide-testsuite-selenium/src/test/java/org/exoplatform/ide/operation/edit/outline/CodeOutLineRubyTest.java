@@ -126,7 +126,7 @@ public class CodeOutLineRubyTest extends BaseTest
       outlineTreeHelper.addOutlineItem("method", 72, TokenType.METHOD);
       outlineTreeHelper.addOutlineItem("@@t : TrueClass", 73, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("A : Symbol", 76, TokenType.CONSTANT);
-      outlineTreeHelper.addOutlineItem("ascii1 : Ascii", 77, TokenType.LOCAL_VARIABLE);
+      outlineTreeHelper.addOutlineItem("ascii1 : Ascii", 77, false, TokenType.LOCAL_VARIABLE);   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       outlineTreeHelper.addOutlineItem("@field : nil", 78, TokenType.INSTANCE_VARIABLE);      
       
       // check is tree created correctly      
