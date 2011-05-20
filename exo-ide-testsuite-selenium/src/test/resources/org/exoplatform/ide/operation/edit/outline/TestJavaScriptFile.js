@@ -7,10 +7,10 @@ var a = {
   
   var b = b1.b2;
   
-  var c = function()
+  var c = function(aa1)
   {};
-function d() {
-  var d1 = d2.d3;
+function d(aa1,aa2) 
+  { var d1 = d2.d3;
   var d4 = function() {};
   function d5(){};
     }
@@ -18,18 +18,18 @@ function d() {
     var g = function() {
     var g1 = g2.g3;
   var g4 = function() {};
-  function g5(){};
+  function g5(aa1, aa2){};
     }
     
     var e;
   e;
   
-function f(){var i = {a: 1}}
-  f();
+function f(aa1){var i = {a: 1}
+}  f();
 
 var a = UWA.Data({"type": 1});
      var h = window.document.getElementById("a")
-var l = Array()
+var l = Array(3)
   var d = ...UWA.Data();  // error
 
 var b = 11;  // atomic type Number

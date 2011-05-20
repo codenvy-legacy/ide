@@ -37,7 +37,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({CodeOutLineBaseOperationTest.class, CodeOutlineGoogleGadgetTest.class, CodeOutLineGroovyTemplateTest.class, CodeOutLineHtmlTest.class,
    CodeOutlineJavaScriptTest.class, CodeOutlineXmlTest.class, ClosingOutlinePanelTest.class,
    CodeOutLineGroovyTest.class, CodeOutLineRESTServiceTest.class, OutlineWithSeveralOpenedFilesTest.class,
-   CodeOutLineRubyTest.class, CodeOutLineJavaTest.class})
+   CodeOutLineRubyTest.class, CodeOutLineJavaTest.class, CodeOutLineNetvibesTest.class, CodeOutlineJspTest.class, OutlineClosingTest.class,
+   OutlineWithOtherTabsInPanelTest.class, ShowOutlineButtonTest.class})
 public class CodeOutlineTestSuite
 {
 

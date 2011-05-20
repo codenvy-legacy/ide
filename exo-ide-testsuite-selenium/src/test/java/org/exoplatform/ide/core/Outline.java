@@ -369,12 +369,12 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    * Check is element present in outline tree
+    * Check is element present in outline tree 
     * @param id of row
     */
    public void assertElmentPresentById(String id)
    {
-      assertTrue(selenium().isElementPresent(Locators.TREE + "/div[@id='" + id + "']"));
+      assertTrue("Node with id='" + id + "' is absent in Outline Tree.", selenium().isElementPresent(Locators.TREE + "/div[@id='" + id + "']"));
    }
 
    public void checkOtlineTreeIsNotPresent()
