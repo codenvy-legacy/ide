@@ -45,9 +45,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
 
    private static final String TEST_FOLDER_TO_DELETE = StoreOpenedFilesHistoryTest.class.getSimpleName() + "-to Delete";
 
-   private static String SECOND_WORKSPACE_URL;
-
-   private String secondWorkspaceName;
+   private static String SECOND_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME_2 + "/";
 
    private static final String TEXT_FILE = "Text File";
 
@@ -55,8 +53,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
 
    private static final String GADGET_FILE = "Gadget File";
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME_2
-      + "/";
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME_2 + "/";
 
    @BeforeClass
    public static void setUp()
@@ -105,14 +102,10 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    {
       IDE.WORKSPACE.waitForRootItem();
 
-      secondWorkspaceName = WS_NAME_2;
-      SECOND_WORKSPACE_URL =
-         BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + secondWorkspaceName + "/";
-
       //select another workspace
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
       IDE.SELECT_WORKSPACE.waitForDialog();
-      IDE.SELECT_WORKSPACE.doubleClickInListGrid(secondWorkspaceName);
+      IDE.SELECT_WORKSPACE.doubleClickInListGrid(WS_NAME_2);
 
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL);
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL);
@@ -146,13 +139,19 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.EDITOR.closeTabIgnoringChanges(0);
 
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       IDE.OPENWITH.openSelectedFileWithCodeEditor(false);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       IDE.OPENWITH.openSelectedFileWithCodeEditor(false);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       IDE.OPENWITH.openSelectedFileWithCkEditor(true);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       
       IDE.EDITOR.checkCkEditorOpened(2);
 
@@ -210,14 +209,6 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true);
-
-      //      Thread.sleep(2000);
-      //      
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT, true);
-
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
    }
 
 }
