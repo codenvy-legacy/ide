@@ -193,21 +193,21 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
        * 
        * @param values categories
        */
-      void setCategoryValueMap(LinkedHashMap<String, String> values);
+      void setCategoryValues(String[] values);
 
       /**
        * Set regions values to display.
        * 
        * @param values regions
        */
-      void setRegionValueMap(LinkedHashMap<String, String> values);
+      void setRegionValues(String[] values);
 
       /**
        * Set languages values to display.
        * 
        * @param values languages
        */
-      void setLanguageValueMap(LinkedHashMap<String, String> values);
+      void setLanguageValues(String[] values);
 
    }
 
@@ -408,8 +408,11 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
       display.updateNextButtonState(true, false);
       display.updatePrevButtonState(false, false);
 
-      display.setLanguageValueMap(Languages.getLanguagesMap());
-      display.setRegionValueMap(Regions.getRegionsMap());
+      int languagesSize = Languages.getLanguagesMap().values().size();
+      int regionsSize = Regions.getRegionsMap().values().size();
+      
+      display.setLanguageValues(Languages.getLanguagesMap().values().toArray(new String[languagesSize]));
+      display.setRegionValues(Regions.getRegionsMap().values().toArray(new String[regionsSize]));
    }
 
    /**
@@ -498,7 +501,8 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
             protected void onSuccess(Categories result)
             {
                categories = result;
-               display.setCategoryValueMap(result.getCategoryMap());
+               int categoriesSize = result.getCategoryMap().size();
+               display.setCategoryValues(result.getCategoryMap().values().toArray(new String[categoriesSize]));
             }
 
             @Override
@@ -516,7 +520,8 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
       }
       else
       {
-         display.setCategoryValueMap(categories.getCategoryMap());
+         int categoriesSize = categories.getCategoryMap().values().size();
+         display.setCategoryValues(categories.getCategoryMap().values().toArray(new String[categoriesSize]));
       }
    }
 
@@ -528,15 +533,12 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
    {
       DeployWidget widget = new DeployWidget();
       widget.setApiKey(display.getApiKey().getValue());
-      widget.setCategoryId(display.getCategory().getValue());
-      String categoryName =
-         (display.getCategory().getValue() != null) ? categories.getCategoryMap().get(display.getCategory().getValue())
-            : "";
-      widget.setCategoryName(categoryName);
+      widget.setCategoryId(getKeyByValue(categories.getCategoryMap(), display.getCategory().getValue()));
+      widget.setCategoryName(display.getCategory().getValue());
       widget.setDescription(display.getDescription().getValue());
       widget.setKeywords(display.getKeywords().getValue());
-      widget.setMainLanguage(display.getLanguage().getValue());
-      widget.setRegion(display.getRegion().getValue());
+      widget.setMainLanguage(getKeyByValue(Languages.getLanguagesMap(), display.getLanguage().getValue()));
+      widget.setRegion(getKeyByValue(Regions.getRegionsMap(), display.getRegion().getValue()));
       widget.setSecretKey(display.getSecretKey().getValue());
       widget.setThumbnail(display.getThumbnail().getValue());
       widget.setUrl(display.getUrlValue().getValue());
@@ -563,7 +565,7 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent("Can't deploye widget"));
+               eventBus.fireEvent(new ExceptionThrownEvent("Can't deploy widget"));
             }
          });
    }
@@ -582,8 +584,17 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
       String region = display.getRegion().getValue();
       //Check region, language and category values are not null and exist in defined list of values:
       return (language != null && category != null && region != null
-         && Languages.getLanguagesMap().containsKey(language) && Regions.getRegionsMap().containsKey(region) && categories
-         .getCategoryMap().containsKey(category));
+         && Languages.getLanguagesMap().values().contains(language) && Regions.getRegionsMap().values().contains(region) && categories
+         .getCategoryMap().values().contains(category));
    }
-
+   
+   protected String getKeyByValue(LinkedHashMap<String, String> map, String value)
+   {
+      for (String key : map.keySet())
+      {
+         if (value.equals(map.get(key)))
+            return key;
+      }
+      return null;
+   }
 }

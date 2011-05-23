@@ -620,36 +620,6 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter.Display#setCategoryValueMap(java.util.LinkedHashMap)
-    */
-   public void setCategoryValueMap(LinkedHashMap<String, String> values)
-   {
-      categories.clear();
-      categories.putAll(values);
-      categoryField.setValueMap(values);
-      if (values != null && values.keySet().iterator().hasNext())
-      {
-         categoryField.setValue(values.keySet().iterator().next());
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter.Display#setRegionValueMap(java.util.LinkedHashMap)
-    */
-   public void setRegionValueMap(LinkedHashMap<String, String> values)
-   {
-      regionField.setValueMap(values);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter.Display#setLanguageValueMap(java.util.LinkedHashMap)
-    */
-   public void setLanguageValueMap(LinkedHashMap<String, String> values)
-   {
-      languageField.setValueMap(values);
-   }
-
-   /**
     * @see org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter.Display#getLogin()
     */
    public TextFieldItem getLogin()
@@ -663,5 +633,32 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    public TextFieldItem getPassword()
    {
       return passwordField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetPresenter.Display#setLanguageValues(java.lang.String[])
+    */
+   @Override
+   public void setLanguageValues(String[] values)
+   {
+      languageField.setValueMap(values);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetPresenter.Display#setCategoryValues(java.lang.String[])
+    */
+   @Override
+   public void setCategoryValues(String[] values)
+   {
+      categoryField.setValueMap(values);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetPresenter.Display#setRegionValues(java.lang.String[])
+    */
+   @Override
+   public void setRegionValues(String[] values)
+   {
+      regionField.setValueMap(values);
    }
 }
